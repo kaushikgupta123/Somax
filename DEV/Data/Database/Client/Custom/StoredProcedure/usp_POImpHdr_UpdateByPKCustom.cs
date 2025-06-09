@@ -1,0 +1,85 @@
+﻿using System;
+using System.Data;
+using System.Data.SqlClient;
+
+using Database.Business;
+using Database.SqlClient;
+
+namespace Database.StoredProcedure
+{
+  /// <summary>
+  /// Access the usp_POImpHdr_UpdateByPK stored procedure.
+  /// </summary>
+  public class usp_POImpHdr_UpdateByPKCustom
+  {
+    /// <summary>
+    /// Constants.
+    /// </summary>
+    private static string STOREDPROCEDURE_NAME = "usp_POImpHdr_UpdateByPKCustom";
+
+    /// <summary>
+    /// Default constructor.
+    /// </summary>
+    public usp_POImpHdr_UpdateByPKCustom()
+    {
+    }
+
+    /// <summary>
+    /// Static method to call the usp_POImpHdr_UpdateByPK stored procedure using SqlClient.
+    /// </summary>
+    /// <param name="command">SqlCommand object to use to call the stored procedure</param>
+    /// <param name="callerUserInfoId">long that identifies the user calling the database</param>
+    /// <param name="callerUserName">string that identifies the user calling the database</param>
+    /// <param name="updateIndexOut">int that contains the value of the @UpdateIndexOut parameter</param>
+    public static void CallStoredProcedure(
+        SqlCommand command,
+        long callerUserInfoId,
+        string callerUserName,
+        b_POImpHdr obj
+    )
+    {
+      SqlParameter RETURN_CODE_parameter = null;
+      SqlParameter updateIndexOut_parameter = null;
+      int retCode = 0;
+
+      // Setup command.
+      command.SetProcName(STOREDPROCEDURE_NAME);
+      RETURN_CODE_parameter = command.GetReturnCodeParameter();
+      command.SetInputParameter(SqlDbType.BigInt, "CallerUserInfoId", callerUserInfoId);
+      command.SetStringInputParameter(SqlDbType.NVarChar, "CallerUserName", callerUserName, 256);
+      command.SetInputParameter(SqlDbType.BigInt, "ClientId", obj.ClientId);
+      command.SetInputParameter(SqlDbType.BigInt, "POImpHdrId", obj.POImpHdrId);
+      command.SetInputParameter(SqlDbType.BigInt, "SiteId", obj.SiteId);
+      command.SetStringInputParameter(SqlDbType.NVarChar, "PONumber", obj.PONumber, 15);
+      command.SetInputParameter(SqlDbType.Int, "Revision", obj.Revision);
+      command.SetInputParameter(SqlDbType.BigInt, "EXPOID", obj.EXPOID);
+      command.SetInputParameter(SqlDbType.BigInt, "EXPRID", obj.EXPRID);
+      command.SetStringInputParameter(SqlDbType.NVarChar, "SOMAXPRNumber", obj.SOMAXPRNumber, 15);
+      command.SetInputParameter(SqlDbType.BigInt, "SOMAXPRID", obj.SOMAXPRID);
+      command.SetInputParameter(SqlDbType.DateTime2, "POCreateDate", obj.POCreateDate);
+      command.SetStringInputParameter(SqlDbType.NVarChar, "Currency", obj.Currency, 15);
+      command.SetStringInputParameter(SqlDbType.NVarChar, "EXVendor", obj.EXVendor, 31);
+      command.SetInputParameter(SqlDbType.BigInt, "EXVendorId", obj.EXVendorId);
+      command.SetInputParameter(SqlDbType.DateTime2, "RequiredDate", obj.RequiredDate);
+      command.SetStringInputParameter(SqlDbType.NVarChar, "PaymentTerms", obj.PaymentTerms, 50);
+      command.SetStringInputParameter(SqlDbType.NVarChar, "Status", obj.Status, 31);
+      command.SetStringInputParameter(SqlDbType.NVarChar, "ErrorCodes", obj.ErrorCodes, 127);
+      command.SetStringInputParameter(SqlDbType.NVarChar, "ErrorMessage", obj.ErrorMessage, 511);
+      command.SetInputParameter(SqlDbType.DateTime2, "LastProcess", obj.LastProcess);
+      command.SetInputParameter(SqlDbType.Int, "UpdateIndex", obj.UpdateIndex);
+
+      // Setup updateIndexOut parameter.
+      updateIndexOut_parameter = command.Parameters.Add("@UpdateIndexOut", SqlDbType.Int);
+      updateIndexOut_parameter.Direction = ParameterDirection.Output;
+
+      // Execute stored procedure.
+      command.ExecuteNonQuery();
+
+      obj.UpdateIndex = (int)updateIndexOut_parameter.Value;
+
+      // Process the RETURN_CODE parameter value
+      retCode = (int)RETURN_CODE_parameter.Value;
+      AbstractTransactionManager.CheckReturnCodeStatus(STOREDPROCEDURE_NAME, retCode);
+    }
+  }
+}

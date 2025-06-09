@@ -1,0 +1,190 @@
+/*
+***************************************************************************************************
+* PROPRIETARY DATA 
+***************************************************************************************************
+* This work is PROPRIETARY to SOMAX Inc and is protected 
+* under Federal Law as an unpublished Copyrighted work and under State Law as 
+* a Trade Secret. 
+***************************************************************************************************
+* Copyright (c) 2014 by SOMAX Inc.
+* All rights reserved. 
+***************************************************************************************************
+* Date        Task ID   Person             Description
+* =========== ======== =================== ========================================================
+* 2015-Oct-21 SOM-828  Roger Lawton        Added Default Site Id parameter
+***************************************************************************************************
+*/
+ 
+using System;
+using System.Data;
+using System.Data.SqlClient;
+
+using Database.Business;
+using System.Collections.Generic;
+using Database.SqlClient;
+
+namespace Database.StoredProcedure
+{
+    /// <summary>
+    /// Access the usp_Personnel_RetrieveByPK stored procedure.
+    /// </summary>
+    public class usp_Personnel_RetrieveByUserInfoId_V2
+    {
+        /// <summary>
+        /// Constants.
+        /// </summary>
+        private static string STOREDPROCEDURE_NAME = "usp_Personnel_RetrieveByUserInfoId_V2";
+
+        /// <summary>
+        /// Default constructor.
+        /// </summary>
+        public usp_Personnel_RetrieveByUserInfoId_V2()
+        {
+        }
+
+        /// <summary>
+        /// Static method to call the usp_Personnel_RetrieveByPK stored procedure using SqlClient.
+        /// </summary>
+        /// <param name="command">SqlCommand object to use to call the stored procedure</param>
+        /// <param name="processRow">ProcessRow delegate containing method to call to process the row into an object.</param>
+        /// <param name="callerUserInfoId">long that identifies the user calling the database</param>
+        /// <param name="callerUserName">string that identifies the user calling the database</param>
+        /// <returns>ArrayList containing the results of the query</returns>
+        public static List<Object> CallStoredProcedure(
+            SqlCommand command,
+            long callerUserInfoId,
+            string callerUserName,
+            b_UserDataSet obj
+        )
+        {
+            List<Object> records = new List<Object>();
+            SqlDataReader reader = null;
+            SqlParameter RETURN_CODE_parameter = null;
+            int retCode = 0;
+
+            // Setup command.
+            command.SetProcName(STOREDPROCEDURE_NAME);
+            RETURN_CODE_parameter = command.GetReturnCodeParameter();
+            command.SetInputParameter(SqlDbType.BigInt, "CallerUserInfoId", callerUserInfoId);
+            command.SetStringInputParameter(SqlDbType.NVarChar, "CallerUserName", callerUserName, 256);
+            command.SetInputParameter(SqlDbType.BigInt, "ClientId", obj.Client.ClientId);
+            command.SetInputParameter(SqlDbType.BigInt, "UserInfoId", obj.User.UserInfoId);
+            command.SetInputParameter(SqlDbType.BigInt, "DefaultSiteId", obj.User.DefaultSiteId);
+
+            try
+            {
+                // Execute stored procedure.
+                reader = command.ExecuteReader();
+
+                Object tempRecord = null;
+
+                // Loop through dataset.
+                while (reader.Read())
+                {
+                    // Add the record to the list.
+                    tempRecord = b_Personnel.ProcessRowForSiteName(reader);
+                }
+
+                records.Add(tempRecord);
+
+                // 
+                reader.NextResult();
+
+                while (reader.Read())
+                {
+                    // Add the record to the list.
+                    records.Add(reader.GetString(0));
+                }
+            }
+            finally
+            {
+                if (null != reader)
+                {
+                    if (false == reader.IsClosed)
+                    {
+                        reader.Close();
+                    }
+                    reader = null;
+                }
+            }
+
+            // Process the RETURN_CODE parameter value
+            retCode = (int) RETURN_CODE_parameter.Value;
+            AbstractTransactionManager.CheckReturnCodeStatus(STOREDPROCEDURE_NAME, retCode);
+
+            // Return the result
+            return records;
+        }
+
+         
+        //--------------------Added By Indusnet Technologies-----------------------------------------------
+        public static List<Object> CallStoredProcedure(
+          SqlCommand command,
+          long callerUserInfoId,
+          string callerUserName,
+          b_UserDetails obj 
+      )
+        {
+            List<Object> records = new List<Object>();
+            SqlDataReader reader = null;
+            SqlParameter RETURN_CODE_parameter = null;
+            int retCode = 0;
+
+            // Setup command.
+            command.SetProcName(STOREDPROCEDURE_NAME);
+            RETURN_CODE_parameter = command.GetReturnCodeParameter();
+            command.SetInputParameter(SqlDbType.BigInt, "CallerUserInfoId", callerUserInfoId);
+            command.SetStringInputParameter(SqlDbType.NVarChar, "CallerUserName", callerUserName, 256);
+            command.SetInputParameter(SqlDbType.BigInt, "ClientId", obj.ClientId);
+            command.SetInputParameter(SqlDbType.BigInt, "UserInfoId", obj.UserInfoId);
+            command.SetInputParameter(SqlDbType.BigInt, "DefaultSiteId", obj.DefaultSiteId);
+
+            try
+            {
+                // Execute stored procedure.
+                reader = command.ExecuteReader();
+
+                Object tempRecord = null;
+
+                // Loop through dataset.
+                while (reader.Read())
+                {
+                    // Add the record to the list.
+                    tempRecord = b_Personnel.ProcessRowForSiteName(reader);
+                }
+
+                records.Add(tempRecord);
+
+                // 
+                reader.NextResult();
+
+                while (reader.Read())
+                {
+                    // Add the record to the list.
+                    records.Add(reader.GetString(0));
+                }
+            }
+            finally
+            {
+                if (null != reader)
+                {
+                    if (false == reader.IsClosed)
+                    {
+                        reader.Close();
+                    }
+                    reader = null;
+                }
+            }
+
+            // Process the RETURN_CODE parameter value
+            retCode = (int)RETURN_CODE_parameter.Value;
+            AbstractTransactionManager.CheckReturnCodeStatus(STOREDPROCEDURE_NAME, retCode);
+
+            // Return the result
+            return records;
+        }
+        //-------------------End Added By Indusnet Technologies---------------------------------------------
+
+
+    }
+}

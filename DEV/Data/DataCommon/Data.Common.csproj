@@ -1,0 +1,170 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{6BC3FFD2-4DDF-42CD-BED1-4E1C3BED16A5}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Common</RootNamespace>
+    <AssemblyName>Common</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>full</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DebugSymbols>true</DebugSymbols>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="DevExpress.Data.v24.1, Version=24.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\DevExpress.Data.24.1.5\lib\net452\DevExpress.Data.v24.1.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Constants\AccessControlTypes.cs" />
+    <Compile Include="Constants\ApiConstants.cs" />
+    <Compile Include="Constants\ApprovalGroupRequestTypes.cs" />
+    <Compile Include="Constants\AssetAvailabilityStatusConstant.cs" />
+    <Compile Include="Constants\AssetStatusConstant.cs" />
+    <Compile Include="Constants\AutoGenerateKey.cs" />
+    <Compile Include="Constants\BBUKPIStatus.cs" />
+    <Compile Include="Constants\GlobalConstants.cs" />
+    <Compile Include="Constants\DataDictionaryViewNameConstant.cs" />
+    <Compile Include="Constants\DataDictionaryModuleConstant.cs" />
+    <Compile Include="Constants\DataDictionaryViewTypeConstant.cs" />
+    <Compile Include="Constants\DomainTypeConstants.cs" />
+    <Compile Include="Constants\InvoiceMatchingTypeConstants.cs" />
+    <Compile Include="Constants\LanguageConstant.cs" />
+    <Compile Include="Constants\LocalizedListConstant.cs" />
+    <Compile Include="Constants\MasterSanitationJobGenerationMethodConstants.cs" />
+    <Compile Include="Constants\MaterialRequestConstant.cs" />
+    <Compile Include="Constants\MaterialRequestLineStatus.cs" />
+    <Compile Include="Constants\MaterialRequestStatusConstants.cs" />
+    <Compile Include="Constants\PartTransferStatusConstants.cs" />
+    <Compile Include="Constants\PMWOGenerationMethodConstants.cs" />
+    <Compile Include="Constants\ProjectTaskType.cs" />
+    <Compile Include="Constants\ProjectStatusConstants.cs" />
+    <Compile Include="Constants\RemoveFromServiceReasonCodeConstant.cs" />
+    <Compile Include="Constants\ReportsEventLogConstants.cs" />
+    <Compile Include="Constants\FleetReadingSourceType.cs" />
+    <Compile Include="Constants\FleetMeterUnits.cs" />
+    <Compile Include="Constants\FleetMeterType.cs" />
+    <Compile Include="Constants\FleetFuelUnits.cs" />
+    <Compile Include="Constants\EventTypeConstants.cs" />
+    <Compile Include="Constants\FailureReasonConstant.cs" />
+    <Compile Include="Constants\AssetCategoryConstant.cs" />
+    <Compile Include="Constants\IssueStatusConstants.cs" />
+    <Compile Include="Constants\ReportTypeConstants.cs" />
+    <Compile Include="Constants\KBCategoryConstant.cs" />
+    <Compile Include="Constants\SanitationJobSourceTypeConstant.cs" />
+    <Compile Include="Constants\SearchTipsType.cs" />
+    <Compile Include="Constants\SensorUnit.cs" />
+    <Compile Include="Constants\SensorType.cs" />
+    <Compile Include="Constants\IoTDeviceCategory.cs" />
+    <Compile Include="Constants\ChargeType.cs" />
+    <Compile Include="Constants\ErrorMessageConstants.cs" />
+    <Compile Include="Constants\EventDispositionConstants.cs" />
+    <Compile Include="Constants\EventStatusConstants.cs" />
+    <Compile Include="Constants\GridNameConstants.cs" />
+    <Compile Include="Constants\InvoiceMatchingConstants.cs" />
+    <Compile Include="Constants\LocalizeResourceSetConstants.cs" />
+    <Compile Include="Constants\LookupListConstants.cs" />
+    <Compile Include="Constants\PartHistoryTranTypesConstants.cs" />
+    <Compile Include="Constants\PartMasterRequestStatusConstants.cs" />
+    <Compile Include="Constants\PartMasterRequestTypeConstants.cs" />
+    <Compile Include="Constants\PartTransferEvents.cs" />
+    <Compile Include="Constants\PartTransferStatus.cs" />
+    <Compile Include="Constants\AttachmentTableConstant.cs" />
+    <Compile Include="Constants\PurchaseOrderReceiptConstant.cs" />
+    <Compile Include="Constants\PurchaseOrderStatusConstants.cs" />
+    <Compile Include="Constants\PurchaseRequestStatusConstants.cs" />
+    <Compile Include="Constants\PurchasingEventLogFunction.cs" />
+    <Compile Include="Constants\PurchasingEvents.cs" />
+    <Compile Include="Constants\ReviewLogConstants.cs" />
+    <Compile Include="Constants\SanitationEventLogFunction.cs" />
+    <Compile Include="Constants\SanitationEvents.cs" />
+    <Compile Include="Constants\SanitationJobConstant.cs" />
+    <Compile Include="Constants\ScheduleTypeConstants.cs" />
+    <Compile Include="Constants\SearchCategoryConstants.cs" />
+    <Compile Include="Constants\SecurityConstants.cs" />
+    <Compile Include="Constants\SecurityProfileConstants.cs" />
+    <Compile Include="Constants\ServiceOrderStatusConstant.cs" />
+    <Compile Include="Constants\SessionConstants.cs" />
+    <Compile Include="Constants\SiteUIVersionConstants.cs" />
+    <Compile Include="Constants\STNotesTypesConstants.cs" />
+    <Compile Include="Constants\StoreroomAuthType.cs" />
+    <Compile Include="Constants\STStatusConstants.cs" />
+    <Compile Include="Constants\STTypeConstants.cs" />
+    <Compile Include="Constants\TimeTypeConstants.cs" />
+    <Compile Include="Constants\UiConfigResourceSetConstants.cs" />
+    <Compile Include="Constants\DataDictionaryColumnTypeConstant.cs" />
+    <Compile Include="Constants\DataDictionaryLookupTypeConstant.cs" />
+    <Compile Include="Constants\UserInfoUIVersionConstants.cs" />
+    <Compile Include="Constants\UserTypeConstants.cs" />
+    <Compile Include="Constants\VendorRequestConstant.cs" />
+    <Compile Include="Constants\WebConfigConstants.cs" />
+    <Compile Include="Constants\SensorConstant.cs" />
+    <Compile Include="Constants\WorkOrderBarCodeConstant.cs" />
+    <Compile Include="Constants\WorkOrderEventLogFunction.cs" />
+    <Compile Include="Constants\WorkOrderEvents.cs" />
+    <Compile Include="Constants\WorkOrderPlanStatusConstants.cs" />
+    <Compile Include="Constants\WorkOrderSourceTypeConstants.cs" />
+    <Compile Include="Constants\ProjectCategoryConstants.cs" />
+    <Compile Include="Constants\WorkOrderStatusConstants.cs" />
+    <Compile Include="Enumerations\AlertTypeEnum.cs" />
+    <Compile Include="Enumerations\DatabaseTypeEnum.cs" />
+    <Compile Include="Enumerations\WebSiteEnum.cs" />
+    <Compile Include="Extensions\DateTimeExtensions.cs" />
+    <Compile Include="Extensions\IntExtensions.cs" />
+    <Compile Include="Extensions\StringExtensions.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Structures\CustomExceptions.cs" />
+    <Compile Include="Structures\PartMultipleDataStructure.cs" />
+    <Compile Include="Structures\ReportDataStructure.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="AbstractClasses\" />
+    <Folder Include="Interfaces\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

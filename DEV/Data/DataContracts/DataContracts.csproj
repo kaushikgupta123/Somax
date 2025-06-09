@@ -1,0 +1,592 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{AD21DA6F-0E58-4A46-8C4E-4729BF74DE71}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>DataContracts</RootNamespace>
+    <AssemblyName>DataContracts</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>full</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DebugSymbols>true</DebugSymbols>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="DevExpress.Data.v24.1, Version=24.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\DevExpress.Data.24.1.5\lib\net452\DevExpress.Data.v24.1.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.DataAccess.v24.1, Version=24.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
+    <Reference Include="DevExpress.Xpo.v24.1, Version=24.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
+    <Reference Include="Microsoft.AspNet.SignalR.Core, Version=2.4.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microsoft.AspNet.SignalR.Core.2.4.2\lib\net45\Microsoft.AspNet.SignalR.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.SignalR.SystemWeb, Version=2.4.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microsoft.AspNet.SignalR.SystemWeb.2.4.2\lib\net45\Microsoft.AspNet.SignalR.SystemWeb.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin, Version=4.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microsoft.Owin.4.2.0\lib\net45\Microsoft.Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Host.SystemWeb, Version=4.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microsoft.Owin.Host.SystemWeb.4.2.0\lib\net45\Microsoft.Owin.Host.SystemWeb.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security, Version=4.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microsoft.Owin.Security.4.2.0\lib\net45\Microsoft.Owin.Security.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Newtonsoft.Json.13.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="Owin, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f0ebd12fd5e55cc5, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Admin\Custom\Client.cs" />
+    <Compile Include="Admin\Custom\ClientEventLog.cs" />
+    <Compile Include="Admin\Custom\ClientMessage.cs" />
+    <Compile Include="Admin\Custom\KBTopics.cs" />
+    <Compile Include="Admin\Custom\LoginAuditing.cs" />
+    <Compile Include="Admin\Custom\LoginDataSet.cs" />
+    <Compile Include="Admin\Custom\LoginInfo.cs" />
+    <Compile Include="Admin\Custom\SiteBilling.cs" />
+    <Compile Include="Admin\Custom\SiteMaintenance.cs" />
+    <Compile Include="Admin\Custom\STEventLog.cs" />
+    <Compile Include="Admin\Custom\STNotes.cs" />
+    <Compile Include="Admin\Custom\SupportTicket.cs" />
+    <Compile Include="Admin\Custom\UserDataSet.cs" />
+    <Compile Include="Admin\Custom\UserDetails.cs" />
+    <Compile Include="Admin\Custom\UserInfo.cs" />
+    <Compile Include="Admin\Custom\UserSearch.cs" />
+    <Compile Include="Admin\Generated\Client.cs" />
+    <Compile Include="Admin\Generated\ClientEventLog.cs" />
+    <Compile Include="Admin\Generated\ClientMessage.cs" />
+    <Compile Include="Admin\Generated\KBCategory.cs" />
+    <Compile Include="Admin\Generated\KBTopics.cs" />
+    <Compile Include="Admin\Generated\LoginAuditing.cs" />
+    <Compile Include="Admin\Generated\LoginInfo.cs" />
+    <Compile Include="Admin\Generated\SiteBilling.cs" />
+    <Compile Include="Admin\Generated\SiteMaintenance.cs" />
+    <Compile Include="Admin\Generated\STEventLog.cs" />
+    <Compile Include="Admin\Generated\STNotes.cs" />
+    <Compile Include="Admin\Generated\SupportTicket.cs" />
+    <Compile Include="Admin\Generated\UserInfo.cs" />
+    <Compile Include="AuditColumn.cs" />
+    <Compile Include="AuditHistory.cs" />
+    <Compile Include="Client\Custom\AppGroupRequestors.cs" />
+    <Compile Include="Client\Custom\AccessControl.cs" />
+    <Compile Include="Client\Custom\Account.cs" />
+    <Compile Include="Client\Custom\AlertComposite.cs" />
+    <Compile Include="Client\Custom\AlertDefine.cs" />
+    <Compile Include="Client\Custom\AlertFollow.cs" />
+    <Compile Include="Client\Custom\AlertForward.cs" />
+    <Compile Include="Client\Custom\AlertLocal.cs" />
+    <Compile Include="Client\Custom\Alerts.cs" />
+    <Compile Include="Client\Custom\AlertSetup.cs" />
+    <Compile Include="Client\Custom\AlertTarget..cs" />
+    <Compile Include="Client\Custom\AlertUser.cs" />
+    <Compile Include="Client\Custom\AppGroupApprovers.cs" />
+    <Compile Include="Client\Custom\ApprovalGroup.cs" />
+    <Compile Include="Client\Custom\ApprovalGroupSettings.cs" />
+    <Compile Include="Client\Custom\ApprovalRoute.cs" />
+    <Compile Include="Client\Custom\Area.cs" />
+    <Compile Include="Client\Custom\AssetAvailabilityLog.cs" />
+    <Compile Include="Client\Custom\AssetGroup1.cs" />
+    <Compile Include="Client\Custom\AssetGroup2.cs" />
+    <Compile Include="Client\Custom\AssetGroup3.cs" />
+    <Compile Include="Client\Custom\Attachment.cs" />
+    <Compile Include="Client\Custom\BBUKPI.cs" />
+    <Compile Include="Client\Custom\BBUKPIEventLog.cs" />
+    <Compile Include="Client\Custom\ChangeLog.cs" />
+    <Compile Include="Client\Custom\ClientUserInfoList.cs" />
+    <Compile Include="Client\Custom\Contact.cs" />
+    <Compile Include="Client\Custom\Craft.cs" />
+    <Compile Include="Client\Custom\CustomQueryDisplay.cs" />
+    <Compile Include="Client\Custom\CustomSequentialId.cs" />
+    <Compile Include="Client\Custom\DashboardContent.cs" />
+    <Compile Include="Client\Custom\DashboardListing.cs" />
+    <Compile Include="Client\Custom\DashboardReports.cs" />
+    <Compile Include="Client\Custom\DashboardUserSettings.cs" />
+    <Compile Include="Client\Custom\DataConstant.cs" />
+    <Compile Include="Client\Custom\DataDictionary.cs" />
+    <Compile Include="Client\Custom\Department.cs" />
+    <Compile Include="Client\Custom\Downtime.cs" />
+    <Compile Include="Client\Custom\EPMInvImpHdr.cs" />
+    <Compile Include="Client\Custom\EPMInvImpLine.cs" />
+    <Compile Include="Client\Custom\EQMaster_PMLibrary.cs" />
+    <Compile Include="Client\Custom\EquipmentUDF.cs" />
+    <Compile Include="Client\Custom\ExportLog.cs" />
+    <Compile Include="Client\Custom\FleetIssues.cs" />
+    <Compile Include="Client\Custom\FormSettings.cs" />
+    <Compile Include="Client\Custom\HierarchicalList.cs" />
+    <Compile Include="Client\Custom\Instructions.cs" />
+    <Compile Include="Client\Custom\IoTEvent.cs" />
+    <Compile Include="Client\Custom\IoTReadingImport.cs" />
+    <Compile Include="Client\Custom\LoginSSO.cs" />
+    <Compile Include="Client\Custom\MaterialRequest.cs" />
+    <Compile Include="Client\Custom\Metrics.cs" />
+    <Compile Include="Client\Custom\OracleReceiptExtract.cs" />
+    <Compile Include="Client\Custom\PartCategoryMasterImport.cs" />
+    <Compile Include="Client\Custom\PartMasterImport.cs" />
+    <Compile Include="Client\Custom\PartMasterResponse.cs" />
+    <Compile Include="Client\Custom\PartUDF.cs" />
+    <Compile Include="Client\Custom\PasswordSettings.cs" />
+    <Compile Include="Client\Custom\PersonnelAttendance.cs" />
+    <Compile Include="Client\Custom\PMSchedAssign.cs" />
+    <Compile Include="Client\Custom\POHeaderUDF.cs" />
+    <Compile Include="Client\Custom\POImport2.cs" />
+    <Compile Include="Client\Custom\POLineUDF.cs" />
+    <Compile Include="Client\Custom\POReceiptImport2.cs" />
+    <Compile Include="Client\Custom\PRHeaderUDF.cs" />
+    <Compile Include="Client\Custom\PRLineUDF.cs" />
+    <Compile Include="Client\Custom\Project.cs" />
+    <Compile Include="Client\Custom\ProjectEventLog.cs" />
+    <Compile Include="Client\Custom\ProjectTask.cs" />
+    <Compile Include="Client\Custom\RepairableSpareLog.cs" />
+    <Compile Include="Client\Custom\SanMasterBatchEntry.cs" />
+    <Compile Include="Client\Custom\ServiceOrder.cs" />
+    <Compile Include="Client\Custom\ServiceOrderEventLog.cs" />
+    <Compile Include="Client\Custom\ServiceOrderLineItem.cs" />
+    <Compile Include="Client\Custom\ServiceOrderSchedule.cs" />
+    <Compile Include="Client\Custom\ShipTo.cs" />
+    <Compile Include="Client\Custom\ShoppingCart.cs" />
+    <Compile Include="Client\Custom\ShoppingCartLineItem.cs" />
+    <Compile Include="Client\Custom\StoreroomAuth.cs" />
+    <Compile Include="Client\Custom\StoreroomTransfer.cs" />
+    <Compile Include="Client\Custom\UIConfiguration.cs" />
+    <Compile Include="Client\Custom\UIView.cs" />
+    <Compile Include="Client\Custom\UserEventLog.cs" />
+    <Compile Include="Client\Custom\UserReportGridDefintion.cs" />
+    <Compile Include="Client\Custom\UserReports.cs" />
+    <Compile Include="Client\Custom\VendorAssetMgt.cs" />
+    <Compile Include="Client\Custom\VendorCatalogImport.cs" />
+    <Compile Include="Client\Custom\VendorCatalogItem.cs" />
+    <Compile Include="Client\Custom\VendorRequest.cs" />
+    <Compile Include="Client\Custom\VendorInsurance.cs" />
+    <Compile Include="Client\Custom\ProjectUDF.cs" />
+    <Compile Include="Client\Custom\VendorUDF.cs" />
+    <Compile Include="Client\Custom\WOCompletionSettings.cs" />
+    <Compile Include="Client\Custom\WOPlanLineItem.cs" />
+    <Compile Include="Client\Custom\WorkOrderLineItem.cs" />
+    <Compile Include="Client\Custom\WorkOrderPlan.cs" />
+    <Compile Include="Client\Custom\WorkOrderPlanEventLog.cs" />
+    <Compile Include="Client\Custom\PMSchedUDF.cs" />
+    <Compile Include="Client\Custom\WorkOrderUDF.cs" />
+    <Compile Include="Client\Generated\ApprovalGroupSettings.cs" />
+    <Compile Include="Client\Generated\ApprovalGroup.cs" />
+    <Compile Include="Client\Generated\AppGroupRequestors.cs" />
+    <Compile Include="Client\Generated\AppGroupApprovers.cs" />
+    <Compile Include="Client\Generated\ApprovalRoute.cs" />
+    <Compile Include="Client\Generated\AssetAvailabilityLog.cs" />
+    <Compile Include="Client\Generated\BBUKPI.cs" />
+    <Compile Include="Client\Generated\BBUKPIEventLog.cs" />
+    <Compile Include="Client\Generated\ClientUserInfoList.cs" />
+    <Compile Include="Client\Generated\CustomId.cs" />
+    <Compile Include="Client\Generated\DashboardContent.cs" />
+    <Compile Include="Client\Generated\DashboardListing.cs" />
+    <Compile Include="Client\Generated\DashboardUserSettings.cs" />
+    <Compile Include="Client\Generated\DataDictionary.cs" />
+    <Compile Include="Client\Generated\EPMInvImpHdr.cs" />
+    <Compile Include="Client\Generated\EPMInvImpHdrHist.cs" />
+    <Compile Include="Client\Generated\EPMInvImpLine.cs" />
+    <Compile Include="Client\Generated\EPMInvImpLineHist.cs" />
+    <Compile Include="Client\Generated\EquipmentUDF.cs" />
+    <Compile Include="Client\Generated\Events.cs" />
+    <Compile Include="Client\Generated\ExportLog.cs" />
+    <Compile Include="Client\Generated\FleetIssues.cs" />
+    <Compile Include="Client\Custom\InterfaceProp.cs" />
+    <Compile Include="Client\Custom\Equipment.cs" />
+    <Compile Include="Client\Custom\EquipmentMaster.cs" />
+    <Compile Include="Client\Custom\Equipment_Parts_Xref.cs" />
+    <Compile Include="Client\Custom\Equipment_Sensor_Xref.cs" />
+    <Compile Include="Client\Custom\Equipment_TechSpecs.cs" />
+    <Compile Include="Client\Custom\EstimatedCosts.cs" />
+    <Compile Include="Client\Custom\EventInfo.cs" />
+    <Compile Include="Client\Custom\FileInfo.cs" />
+    <Compile Include="Client\Custom\GridLayout.cs" />
+    <Compile Include="Client\Custom\InvoiceMatchHeader.cs" />
+    <Compile Include="Client\Custom\InvoiceMatchItem.cs" />
+    <Compile Include="Client\Custom\IoTDevice.cs" />
+    <Compile Include="Client\Custom\Line.cs" />
+    <Compile Include="Client\Custom\Localizations.cs" />
+    <Compile Include="Client\Custom\LocalizedList.cs" />
+    <Compile Include="Client\Custom\Location.cs" />
+    <Compile Include="Client\Custom\LookupList.cs" />
+    <Compile Include="Client\Custom\MaintOnDemandMaster.cs" />
+    <Compile Include="Client\Custom\MaintOnDemandMasterTask.cs" />
+    <Compile Include="Client\Custom\ManufacturerMaster.cs" />
+    <Compile Include="Client\Custom\MasterSanLibrary.cs" />
+    <Compile Include="Client\Custom\MasterSanLibraryTask.cs" />
+    <Compile Include="Client\Custom\MemorizeSearch.cs" />
+    <Compile Include="Client\Custom\Menu.cs" />
+    <Compile Include="Client\Custom\Meter.cs" />
+    <Compile Include="Client\Custom\MeterReading.cs" />
+    <Compile Include="Client\Custom\Notes.cs" />
+    <Compile Include="Client\Custom\OtherCosts.cs" />
+    <Compile Include="Client\Custom\Part.cs" />
+    <Compile Include="Client\Custom\PartCategoryMaster.cs" />
+    <Compile Include="Client\Custom\PartHistory.cs" />
+    <Compile Include="Client\Custom\PartHistoryReview.cs" />
+    <Compile Include="Client\Custom\AccountImport.cs" />
+    <Compile Include="Client\Custom\ReceiptImpLine.cs" />
+    <Compile Include="Client\Custom\ReportFavorites.cs" />
+    <Compile Include="Client\Custom\ReportGridDefintion.cs" />
+    <Compile Include="Client\Custom\ReportListing.cs" />
+    <Compile Include="Client\Custom\ServiceTasks.cs" />
+    <Compile Include="Client\Custom\ScheduledService.cs" />
+    <Compile Include="Client\Custom\UIConfig.cs" />
+    <Compile Include="Client\Custom\VendorMasterImport.cs" />
+    <Compile Include="Client\Custom\ReceiptImpHdr.cs" />
+    <Compile Include="Client\Custom\POImpLine.cs" />
+    <Compile Include="Client\Custom\POImpHdr.cs" />
+    <Compile Include="Client\Custom\PartMaster.cs" />
+    <Compile Include="Client\Custom\PartMasterRequest.cs" />
+    <Compile Include="Client\Custom\PartStoreroom.cs" />
+    <Compile Include="Client\Custom\PartTransfer.cs" />
+    <Compile Include="Client\Custom\PartTransferEventLog.cs" />
+    <Compile Include="Client\Custom\Part_Vendor_Xref.cs" />
+    <Compile Include="Client\Custom\PermissionLists.cs" />
+    <Compile Include="Client\Custom\PermissionSet.cs" />
+    <Compile Include="Client\Custom\Personnel.cs" />
+    <Compile Include="Client\Custom\PlantLocation.cs" />
+    <Compile Include="Client\Custom\POReceipt.cs" />
+    <Compile Include="Client\Custom\POReceiptHeader.cs" />
+    <Compile Include="Client\Custom\PrevMaintBatchEntry.cs" />
+    <Compile Include="Client\Custom\PrevMaintLibrary.cs" />
+    <Compile Include="Client\Custom\PrevMaintLibraryTask.cs" />
+    <Compile Include="Client\Custom\PrevMaintMaster.cs" />
+    <Compile Include="Client\Custom\PrevMaintSched.cs" />
+    <Compile Include="Client\Custom\PrevMaintTask.cs" />
+    <Compile Include="Client\Custom\ProcessSystem.cs" />
+    <Compile Include="Client\Custom\PurchaseOrder.cs" />
+    <Compile Include="Client\Custom\PurchaseOrderLineItem.cs" />
+    <Compile Include="Client\Custom\PurchaseRequest.cs" />
+    <Compile Include="Client\Custom\PurchaseRequestLineItem.cs" />
+    <Compile Include="Client\Custom\PurchasingEventLog.cs" />
+    <Compile Include="Client\Custom\ReviewLog.cs" />
+    <Compile Include="Client\Custom\SanitationEventLog.cs" />
+    <Compile Include="Client\Custom\SanitationJob.cs" />
+    <Compile Include="Client\Custom\SanitationJobSchedule.cs" />
+    <Compile Include="Client\Custom\SanitationJobTask.cs" />
+    <Compile Include="Client\Custom\SanitationMaster.cs" />
+    <Compile Include="Client\Custom\SanitationMasterTask.cs" />
+    <Compile Include="Client\Custom\SanitationPlanning.cs" />
+    <Compile Include="Client\Custom\SanitationRequest.cs" />
+    <Compile Include="Client\Custom\SanOnDemandMaster.cs" />
+    <Compile Include="Client\Custom\SanOnDemandMasterTask.cs" />
+    <Compile Include="Client\Custom\SecurityGroupPermission.cs" />
+    <Compile Include="Client\Custom\SecurityItem.cs" />
+    <Compile Include="Client\Custom\SecurityProfile.cs" />
+    <Compile Include="Client\Custom\SensorAlertProcedure.cs" />
+    <Compile Include="Client\Custom\SensorAlertProcedureTask.cs" />
+    <Compile Include="Client\Custom\SensorReading.cs" />
+    <Compile Include="Client\Custom\Site.cs" />
+    <Compile Include="Client\Custom\StoredProcValidationError.cs" />
+    <Compile Include="Client\Custom\Storeroom.cs" />
+    <Compile Include="Client\Custom\SystemInfo.cs" />
+    <Compile Include="Client\Custom\TechSpecs.cs" />
+    <Compile Include="Client\Custom\Timecard.cs" />
+    <Compile Include="Client\Custom\UserPermission.cs" />
+    <Compile Include="Client\Custom\UserSecurityGroup.cs" />
+    <Compile Include="Client\Custom\Vendor.cs" />
+    <Compile Include="Client\Custom\VendorMaster.cs" />
+    <Compile Include="Client\Custom\WorkFlowInstance.cs" />
+    <Compile Include="Client\Custom\WorkFlowLog.cs" />
+    <Compile Include="Client\Custom\WorkOrder.cs" />
+    <Compile Include="Client\Custom\WorkOrderEventLog.cs" />
+    <Compile Include="Client\Custom\WorkOrderSchedule.cs" />
+    <Compile Include="Client\Custom\WorkOrderTask.cs" />
+    <Compile Include="Client\Generated\Account.cs" />
+    <Compile Include="Client\Generated\AccountEventLog.cs" />
+    <Compile Include="Client\Generated\AccountImport.cs" />
+    <Compile Include="Client\Generated\AccountImportHist.cs" />
+    <Compile Include="Client\Generated\AlertDefine.cs" />
+    <Compile Include="Client\Generated\AlertFollow.cs" />
+    <Compile Include="Client\Generated\AlertLocal.cs" />
+    <Compile Include="Client\Generated\Alerts.cs" />
+    <Compile Include="Client\Generated\AlertSetup.cs" />
+    <Compile Include="Client\Generated\AlertTarget.cs" />
+    <Compile Include="Client\Generated\AlertUser.cs" />
+    <Compile Include="Client\Generated\Area.cs" />
+    <Compile Include="Client\Generated\AssetEventLog.cs" />
+    <Compile Include="Client\Generated\AssetGroup1.cs" />
+    <Compile Include="Client\Generated\AssetGroup2.cs" />
+    <Compile Include="Client\Generated\AssetGroup3.cs" />
+    <Compile Include="Client\Generated\Attachment.cs" />
+    <Compile Include="Client\Generated\ChangeLog.cs" />
+    <Compile Include="Client\Generated\Contact.cs" />
+    <Compile Include="Client\Generated\Craft.cs" />
+    <Compile Include="Client\Generated\DataConstant.cs" />
+    <Compile Include="Client\Generated\DataImportLog.cs" />
+    <Compile Include="Client\Generated\Department.cs" />
+    <Compile Include="Client\Generated\Downtime.cs" />
+    <Compile Include="Client\Generated\EQMaster_PMLibrary.cs" />
+    <Compile Include="Client\Generated\Equipment.cs" />
+    <Compile Include="Client\Generated\EquipmentImportLog.cs" />
+    <Compile Include="Client\Generated\EquipmentMaster.cs" />
+    <Compile Include="Client\Generated\Equipment_Parts_Xref.cs" />
+    <Compile Include="Client\Generated\Equipment_Sensor_Xref.cs" />
+    <Compile Include="Client\Generated\Equipment_TechSpecs.cs" />
+    <Compile Include="Client\Generated\EstimatedCosts.cs" />
+    <Compile Include="Client\Generated\EventInfo.cs" />
+    <Compile Include="Client\Generated\FileAttachment.cs" />
+    <Compile Include="Client\Generated\FileInfo.cs" />
+    <Compile Include="Client\Generated\FleetDimensions.cs" />
+    <Compile Include="Client\Generated\FleetEngine.cs" />
+    <Compile Include="Client\Generated\FleetFluids.cs" />
+    <Compile Include="Client\Generated\FleetMeterReading.cs" />
+    <Compile Include="Client\Generated\FleetWheel.cs" />
+    <Compile Include="Client\Generated\FormSettings.cs" />
+    <Compile Include="Client\Generated\FuelTracking.cs" />
+    <Compile Include="Client\Generated\GridDataLayout.cs" />
+    <Compile Include="Client\Generated\HierarchicalList.cs" />
+    <Compile Include="Client\Generated\ImportLog.cs" />
+    <Compile Include="Client\Generated\Instructions.cs" />
+    <Compile Include="Client\Generated\InterfaceProp.cs" />
+    <Compile Include="Client\Generated\InvoiceMatchEventLog.cs" />
+    <Compile Include="Client\Generated\InvoiceMatchHeader.cs" />
+    <Compile Include="Client\Generated\InvoiceMatchItem.cs" />
+    <Compile Include="Client\Generated\IoTDevice.cs" />
+    <Compile Include="Client\Generated\IoTDeviceEventLog.cs" />
+    <Compile Include="Client\Generated\IoTEvent.cs" />
+    <Compile Include="Client\Generated\IoTReading.cs" />
+    <Compile Include="Client\Generated\IoTReadingImport.cs" />
+    <Compile Include="Client\Generated\Line.cs" />
+    <Compile Include="Client\Generated\Localizations.cs" />
+    <Compile Include="Client\Generated\LocalizedList.cs" />
+    <Compile Include="Client\Generated\Location.cs" />
+    <Compile Include="Client\Generated\LoginSSO.cs" />
+    <Compile Include="Client\Generated\LookupList.cs" />
+    <Compile Include="Client\Generated\MaintOnDemandMaster.cs" />
+    <Compile Include="Client\Generated\MaintOnDemandMasterTask.cs" />
+    <Compile Include="Client\Generated\ManufacturerMaster.cs" />
+    <Compile Include="Client\Generated\MasterSanLibrary.cs" />
+    <Compile Include="Client\Generated\MasterSanLibraryTask.cs" />
+    <Compile Include="Client\Generated\MaterialRequest.cs" />
+    <Compile Include="Client\Generated\MemorizeSearch.cs" />
+    <Compile Include="Client\Generated\Menu.cs" />
+    <Compile Include="Client\Generated\Meter.cs" />
+    <Compile Include="Client\Generated\MeterReading.cs" />
+    <Compile Include="Client\Generated\Metrics.cs" />
+    <Compile Include="Client\Generated\Notes.cs" />
+    <Compile Include="Client\Generated\OtherCosts.cs" />
+    <Compile Include="Client\Generated\Part.cs" />
+    <Compile Include="Client\Generated\PartCategoryMaster.cs" />
+    <Compile Include="Client\Generated\PartCategoryMasterImport.cs" />
+    <Compile Include="Client\Generated\PartEventLog.cs" />
+    <Compile Include="Client\Generated\PartHistory.cs" />
+    <Compile Include="Client\Generated\PartImportLog.cs" />
+    <Compile Include="Client\Generated\PartMaster.cs" />
+    <Compile Include="Client\Generated\PartMasterImport.cs" />
+    <Compile Include="Client\Generated\PartMasterRequest.cs" />
+    <Compile Include="Client\Generated\PartMasterResponse.cs" />
+    <Compile Include="Client\Generated\PartStoreroom.cs" />
+    <Compile Include="Client\Generated\PartTransfer.cs" />
+    <Compile Include="Client\Generated\PartTransferEventLog.cs" />
+    <Compile Include="Client\Generated\PartUDF.cs" />
+    <Compile Include="Client\Generated\Part_Vendor_Xref.cs" />
+    <Compile Include="Client\Generated\PasswordSettings.cs" />
+    <Compile Include="Client\Generated\Personnel.cs" />
+    <Compile Include="Client\Generated\PersonnelAttendance.cs" />
+    <Compile Include="Client\Generated\PersonnelAvailability.cs" />
+    <Compile Include="Client\Generated\PlantLocation.cs" />
+    <Compile Include="Client\Generated\PMSchedAssign.cs" />
+    <Compile Include="Client\Generated\ProjectUDF.cs" />
+    <Compile Include="Client\Generated\PMSchedUDF.cs" />
+    <Compile Include="Client\Generated\POHeaderUDF.cs" />
+    <Compile Include="Client\Generated\POImpHdr.cs" />
+    <Compile Include="Client\Generated\POImpHdrHist.cs" />
+    <Compile Include="Client\Generated\POImpLine.cs" />
+    <Compile Include="Client\Generated\POImpLineHist.cs" />
+    <Compile Include="Client\Generated\POImport2.cs" />
+    <Compile Include="Client\Generated\POLineUDF.cs" />
+    <Compile Include="Client\Generated\POReceiptHeader.cs" />
+    <Compile Include="Client\Generated\POReceiptImport2.cs" />
+    <Compile Include="Client\Generated\POReceiptItem.cs" />
+    <Compile Include="Client\Generated\PrevMaintBatchEntry.cs" />
+    <Compile Include="Client\Generated\PrevMaintBatchHeader.cs" />
+    <Compile Include="Client\Generated\PrevMaintLibrary.cs" />
+    <Compile Include="Client\Generated\PrevMaintLibraryTask.cs" />
+    <Compile Include="Client\Generated\PrevMaintMaster.cs" />
+    <Compile Include="Client\Generated\PrevMaintSched.cs" />
+    <Compile Include="Client\Generated\PrevMaintTask.cs" />
+    <Compile Include="Client\Generated\PRHeaderUDF.cs" />
+    <Compile Include="Client\Generated\PRLineUDF.cs" />
+    <Compile Include="Client\Generated\ProcessLog.cs" />
+    <Compile Include="Client\Generated\ProcessSystem.cs" />
+    <Compile Include="Client\Generated\Project.cs" />
+    <Compile Include="Client\Generated\ProjectEventLog.cs" />
+    <Compile Include="Client\Generated\ProjectTask.cs" />
+    <Compile Include="Client\Generated\PurchaseOrder.cs" />
+    <Compile Include="Client\Generated\PurchaseOrderLineItem.cs" />
+    <Compile Include="Client\Generated\PurchaseRequest.cs" />
+    <Compile Include="Client\Generated\PurchaseRequestLineItem.cs" />
+    <Compile Include="Client\Generated\PurchasingEventLog.cs" />
+    <Compile Include="Client\Generated\ReceiptImpHdr.cs" />
+    <Compile Include="Client\Generated\ReceiptImpHdrHist.cs" />
+    <Compile Include="Client\Generated\ReceiptImpLine.cs" />
+    <Compile Include="Client\Generated\ReceiptImpLineHist.cs" />
+    <Compile Include="Client\Generated\RepairableSpareLog.cs" />
+    <Compile Include="Client\Generated\ReportEventLog.cs" />
+    <Compile Include="Client\Generated\ReportFavorites.cs" />
+    <Compile Include="Client\Generated\ReportGridDefintion.cs" />
+    <Compile Include="Client\Generated\ReportListing.cs" />
+    <Compile Include="Client\Generated\ReviewLog.cs" />
+    <Compile Include="Client\Generated\SanitationEventLog.cs" />
+    <Compile Include="Client\Generated\SanitationJob.cs" />
+    <Compile Include="Client\Generated\SanitationJobSchedule.cs" />
+    <Compile Include="Client\Generated\SanitationJobTask.cs" />
+    <Compile Include="Client\Generated\SanitationMaster.cs" />
+    <Compile Include="Client\Generated\SanitationMasterTask.cs" />
+    <Compile Include="Client\Generated\SanMasterBatchEntry.cs" />
+    <Compile Include="Client\Generated\SanMasterBatchHeader.cs" />
+    <Compile Include="Client\Generated\SanOnDemandMaster.cs" />
+    <Compile Include="Client\Generated\SanitationPlanning.cs" />
+    <Compile Include="Client\Generated\SanOnDemandMasterTask.cs" />
+    <Compile Include="Client\Generated\ScheduledService.cs" />
+    <Compile Include="Client\Generated\SecurityGroupPermission.cs" />
+    <Compile Include="Client\Generated\SecurityItem.cs" />
+    <Compile Include="Client\Generated\SecurityItemApply.cs" />
+    <Compile Include="Client\Generated\SecurityProfile.cs" />
+    <Compile Include="Client\Generated\SensorAlertProcedure.cs" />
+    <Compile Include="Client\Generated\SensorAlertProcedureTask.cs" />
+    <Compile Include="Client\Generated\SensorReading.cs" />
+    <Compile Include="Client\Generated\ServiceOrder.cs" />
+    <Compile Include="Client\Generated\ServiceOrderEventLog.cs" />
+    <Compile Include="Client\Generated\ServiceOrderLineItem.cs" />
+    <Compile Include="Client\Generated\ServiceOrderSchedule.cs" />
+    <Compile Include="Client\Generated\ServiceTasks.cs" />
+    <Compile Include="Client\Generated\ShipTo.cs" />
+    <Compile Include="Client\Generated\ShoppingCart.cs" />
+    <Compile Include="Client\Generated\ShoppingCartLineItem.cs" />
+    <Compile Include="Client\Generated\Site.cs" />
+    <Compile Include="Client\Generated\Storeroom.cs" />
+    <Compile Include="Client\Generated\StoreroomAuth.cs" />
+    <Compile Include="Client\Generated\StoreroomTransfer.cs" />
+    <Compile Include="Client\Generated\SystemInfo.cs" />
+    <Compile Include="Client\Generated\TechSpecs.cs" />
+    <Compile Include="Client\Generated\Timecard.cs" />
+    <Compile Include="Client\Generated\UIConfig.cs" />
+    <Compile Include="Client\Generated\UIConfiguration.cs" />
+    <Compile Include="Client\Generated\UIView.cs" />
+    <Compile Include="Client\Generated\UserEventLog.cs" />
+    <Compile Include="Client\Generated\UserPermission.cs" />
+    <Compile Include="Client\Generated\UserReportGridDefintion.cs" />
+    <Compile Include="Client\Generated\UserReports.cs" />
+    <Compile Include="Client\Generated\UserSecurityGroup.cs" />
+    <Compile Include="Client\Generated\Vendor.cs" />
+    <Compile Include="Client\Generated\VendorAssetMgt.cs" />
+    <Compile Include="Client\Generated\VendorCatalog.cs" />
+    <Compile Include="Client\Generated\VendorCatalogImport.cs" />
+    <Compile Include="Client\Generated\VendorCatalogItem.cs" />
+    <Compile Include="Client\Generated\VendorEventLog.cs" />
+    <Compile Include="Client\Generated\VendorInsurance.cs" />
+    <Compile Include="Client\Generated\VendorMaster.cs" />
+    <Compile Include="Client\Generated\VendorMasterImport.cs" />
+    <Compile Include="Client\Generated\VendorMasterImportHist.cs" />
+    <Compile Include="Client\Generated\VendorRequest.cs" />
+    <Compile Include="Client\Generated\VendorUDF.cs" />
+    <Compile Include="Client\Generated\WidgetListing.cs" />
+    <Compile Include="Client\Generated\WOCompletionSettings.cs" />
+    <Compile Include="Client\Generated\WOPlanLineItem.cs" />
+    <Compile Include="Client\Generated\WorkFlowInstance.cs" />
+    <Compile Include="Client\Generated\WorkFlowLog.cs" />
+    <Compile Include="Client\Generated\WorkOrder.cs" />
+    <Compile Include="Client\Generated\WorkOrderEventLog.cs" />
+    <Compile Include="Client\Generated\WorkOrderPlan.cs" />
+    <Compile Include="Client\Generated\WorkOrderPlanEventLog.cs" />
+    <Compile Include="Client\Generated\WorkOrderSchedule.cs" />
+    <Compile Include="Client\Generated\WorkOrderTask.cs" />
+    <Compile Include="Client\Generated\WorkOrderUDF.cs" />
+    <Compile Include="DatabaseKey.cs" />
+    <Compile Include="DataBusinessBase.cs" />
+    <Compile Include="DataContractBase.cs" />
+    <Compile Include="IPermission.cs" />
+    <Compile Include="IStoredProcedureValidation.cs" />
+    <Compile Include="LookupListResultSet\LocationLookupListResultSet.cs" />
+    <Compile Include="LookupListResultSet\ManufactureLookupListResultSet.cs" />
+    <Compile Include="LookupListResultSet\PartLookupListResultSet.cs" />
+    <Compile Include="ProcessAlert.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Security.cs" />
+    <Compile Include="UserData.cs" />
+    <Compile Include="UtilityAdd.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\NotificationHub\NotificationHub.csproj">
+      <Project>{e22babcd-e9c3-4c03-b4ab-e9f88525623e}</Project>
+      <Name>NotificationHub</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Notify\Notify.csproj">
+      <Project>{ca9eaa75-46d7-4aaf-9223-ad0aba5cccae}</Project>
+      <Name>Notify</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Presentation.Common\Presentation.Common.csproj">
+      <Project>{292348f0-5608-4ff3-8556-377a0c3457e3}</Project>
+      <Name>Presentation.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Database\Database.csproj">
+      <Project>{00f6f4d1-92de-4af4-b138-86ecd5fe03a6}</Project>
+      <Name>Database</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DataCommon\Data.Common.csproj">
+      <Project>{6BC3FFD2-4DDF-42CD-BED1-4E1C3BED16A5}</Project>
+      <Name>Data.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\INTDataLayer\INTDataLayer.csproj">
+      <Project>{276421c2-e514-46bb-bc1b-6aae9cbe3839}</Project>
+      <Name>INTDataLayer</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Connected Services\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
