@@ -1,0 +1,107 @@
+﻿@model Client.Models.PurchaseRequest.PurchaseRequestVM
+
+@{
+    var fieldLabel = "";
+    var fieldName = "";
+    object Value = null;
+    const string constVendor = "Vendor";
+}
+@foreach (var data in Model.UIConfigurationDetails)
+{
+    if (data.Section == true)
+    {
+        <li>
+            <span class="label"><strong>@data.SectionName</strong></span>
+        </li>
+        continue;
+    }
+    if (string.IsNullOrEmpty(data.ColumnName))
+    {
+        continue;
+    }
+    else if (!string.IsNullOrEmpty(data.ColumnName))
+    {
+        string colName = UtilityFunction.ReturnPropertyNameWithoutCaseComparison(data.ColumnName, Model.ViewPurchaseRequest);
+        if (string.IsNullOrEmpty(colName))
+        {
+            continue;
+        }
+        data.ColumnName = colName;
+    }
+
+    fieldLabel = data.ColumnLabel;
+
+    #region Column Name
+    fieldName = data.ColumnName;
+
+
+    if (data.ColumnName.ToLower() == "Select1".ToLower())
+    {
+        fieldName = "Select1Name";
+    }
+    else if (data.ColumnName.ToLower() == "Select2".ToLower())
+    {
+        fieldName = "Select2Name";
+    }
+    else if (data.ColumnName.ToLower() == "Select3".ToLower())
+    {
+        fieldName = "Select3Name";
+    }
+    else if (data.ColumnName.ToLower() == "Select4".ToLower())
+    {
+        fieldName = "Select4Name";
+    }
+
+    #endregion
+
+
+    Value = Model.ViewPurchaseRequest.GetType().GetProperty(fieldName).GetValue(Model.ViewPurchaseRequest);
+    if (data.ColumnName.ToLower() == "ApprovedBy_PersonnelId".ToLower())
+    {
+        Value = Model.ViewPurchaseRequest.GetType().GetProperty("Approved_PersonnelName").GetValue(Model.ViewPurchaseRequest);
+    }
+    if (data.ColumnName.ToLower() == "ProcessBy_PersonnelId".ToLower())
+    {
+        Value = Model.ViewPurchaseRequest.GetType().GetProperty("Processed_PersonnelName").GetValue(Model.ViewPurchaseRequest);
+    }
+    if (data.ColumnName.ToLower() == "CreatedBy_PersonnelId".ToLower())
+    {
+        Value = Model.ViewPurchaseRequest.GetType().GetProperty("Creator_PersonnelName").GetValue(Model.ViewPurchaseRequest);
+    }
+    if (data.ColumnName.ToLower() == "PurchaseOrderId".ToLower())
+    {
+        Value = Model.ViewPurchaseRequest.GetType().GetProperty("PurchaseOrderClientLookupId").GetValue(Model.ViewPurchaseRequest);
+    }
+    if (data.ColumnName.ToLower() == "StoreroomId".ToLower() && Model.udata.DatabaseKey.Client.UseMultiStoreroom == true)
+    {
+        Value = Model.ViewPurchaseRequest.GetType().GetProperty("StoreroomName").GetValue(Model.ViewPurchaseRequest);
+    }
+    if (data.ColumnName.ToLower() == "StoreroomId".ToLower() && Model.udata.DatabaseKey.Client.UseMultiStoreroom == false)
+    {
+        continue;
+    }
+    if (Value == null)
+    {
+        Value = "";
+    }
+
+    if (data.LookupType == DataDictionaryLookupTypeConstant.Table && data.LookupName.ToLower() == constVendor.ToLower())
+    {
+        string vendorClientLookupId = "", vendorNameVal = "", vendorNameLbl;
+        vendorClientLookupId = Model.ViewPurchaseRequest.GetType().GetProperty("VendorClientLookupId").GetValue(Model.ViewPurchaseRequest).ToString();
+        vendorNameLbl = @Model.Loc.Where(a => a.ResourceId == "spnWrVendorName").FirstOrDefault().Value.ToString();
+        vendorNameVal = Model.ViewPurchaseRequest.GetType().GetProperty("VendorName").GetValue(Model.ViewPurchaseRequest).ToString();
+
+        <li style="height:auto;" class="dscrbtn">
+            @CustomHelperDynamic.ViewLabelAndDisplayValue(fieldLabel, vendorClientLookupId, data.ColumnType)
+        </li>
+        <li style="height:auto;" class="dscrbtn">
+            @CustomHelperDynamic.ViewLabelAndDisplayValue(vendorNameLbl, vendorNameVal, data.ColumnType)
+        </li>
+        continue;
+    }
+    <li style="height:auto;" class="dscrbtn">
+        @CustomHelperDynamic.ViewLabelAndDisplayValue(fieldLabel, Value.ToString(), data.ColumnType)
+    </li>
+}
+

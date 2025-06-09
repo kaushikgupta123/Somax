@@ -1,0 +1,26 @@
+﻿@model Client.Models.Dashboard.DashboardVM
+<div class="sparklineArea">
+    <div class="thirdBox">
+        <div class="lds-ellipsis lds-adjust spline-loader" id="overduepmspchartloader">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+        @if (Model.WoSecurity)
+        {
+            <h2 id="overDuePmCount" class="hoverClass"></h2>
+            <h3 class="hoverClass" id="overDuePmCountCountText">@Model.Loc.Where(a => a.ResourceId == "spnOverduePMs").FirstOrDefault().Value.ToString()</h3>
+        }
+        else
+        {
+            <h2 id="overDuePmCount"></h2>
+            <h3>@Model.Loc.Where(a => a.ResourceId == "spnOverduePMs").FirstOrDefault().Value.ToString()</h3>
+        }
+        <div class="sparklineGraph">
+            <canvas id="myChart_OverDuePm" class="sparklinecanvas"></canvas>
+            <div class="clear"></div>
+        </div>
+    </div>
+</div>
+

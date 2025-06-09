@@ -1,0 +1,130 @@
+﻿@model Client.Models.BBUKPISite.BBUKPISiteVM
+
+<div class="m-subheader fixedDiv1">
+    <div class="new-m-subheader">
+        <div class="PageTitle" style="min-width:auto;">
+            <div class="align-items-center separator">
+                <h3 class="m-subheader__title">
+                    @Model.Loc.Where(a => a.ResourceId == "spnBBUKPISite").FirstOrDefault().Value.ToString()
+                </h3>
+            </div>
+        </div>
+        <div class="NewBreadcrumbArea">
+            <div class="newBreadcrumb">
+                <ul>
+                    <li><a href="/Dashboard/Dashboard">&nbsp;</a></li>
+                    <li><a href="/BBUKPISIte/Index?page=BBU-KPI_Site" id="anchPagename">BBU KPI Site Search</a></li>
+                    <li id="ReturnToDetail" data-val="@Model.BBUKPISiteEditModel.BBUKPIId"><a href="javascript:void(0)">@Model.BBUKPISiteEditModel.Week</a></li>
+                    <li class="active">@Model.Loc.Where(a => a.ResourceId == "globalEdit").FirstOrDefault().Value.ToString()</li>
+                </ul>
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+        <div style="clear:both;"></div>
+    </div>
+</div>
+<div class="pushDiv1"></div>
+
+<div class="row fixedDiv2">
+
+</div>
+@*<div class="pushDiv2"></div>*@
+@Html.Partial("_ErrorDiv")
+@using (Ajax.BeginForm("BBUKPISiteEditInfo", "BBUKPISite", new AjaxOptions { HttpMethod = "Post", OnSuccess = "BBUKPISiteEditOnSuccess", OnBegin = "AjaxBeginFormBegin", OnComplete = "AjaxBeginFormComplete", OnFailure = "AjaxBeginFormFaillure" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="row">
+        <div class="col-xl-12">
+            <div class="row">
+                <div class="col-xl-12" id="btnnblock">
+                    <div class="m-portlet" id="m_portlet" style="padding:15px;">
+                        <div class="bottomBlock">
+                            <div class="tabsArea nobg" style="display:block;">
+                                <ul class="listView nobrd">
+                                    <li>
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnYear").FirstOrDefault().Value.ToString()</span>
+                                        <span class="inputText">
+                                            @Html.TextBoxFor(m => m.BBUKPISiteEditModel.Year, new { @class = "form-control m-input search", @style = "color:black", @readonly = "readonly", autocomplete = "off" })
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnWeekNumber").FirstOrDefault().Value.ToString()</span>
+                                        <span class="inputText">
+                                            @Html.TextBoxFor(m => m.BBUKPISiteEditModel.Week, new { @class = "form-control m-input search", @style = "color:black", @readonly = "readonly", autocomplete = "off" })
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnStatus").FirstOrDefault().Value.ToString()</span>
+                                        <span class="inputText">
+                                            @Html.TextBoxFor(m => m.BBUKPISiteEditModel.Status, new { @class = "form-control m-input search", @style = "color:black", @readonly = "readonly", autocomplete = "off" })
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnDownDaySchedule").FirstOrDefault().Value.ToString()</span>
+                                        <span class="inputText">
+                                            @Html.CheckBoxFor(m => m.BBUKPISiteEditModel.DownDaySched, new { @class = "form-control m-input", @style = "color:black; width: auto; margin-top: 4px;" })
+                                        </span>
+                                    </li>
+
+                                    <li>
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnOptimizedPMPlansCompleted").FirstOrDefault().Value.ToString()</span>
+                                        <span class="inputText">
+                                            @Html.ValidationMessageFor(m => m.BBUKPISiteEditModel.OptPMPlansCompleted, "", new { style = "display:none" })
+                                            @Html.TextBoxFor(m => m.BBUKPISiteEditModel.OptPMPlansCompleted, new { @class = "form-control m-input search integerinput", @style = "color:black", autocomplete = "off" })
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnOptimizedPMPlansAdopted").FirstOrDefault().Value.ToString()</span>
+                                        <span class="inputText">
+                                            @Html.ValidationMessageFor(m => m.BBUKPISiteEditModel.OptPMPlansAdopted, "", new { style = "display:none" })
+                                            @Html.TextBoxFor(m => m.BBUKPISiteEditModel.OptPMPlansAdopted, new { @class = "form-control m-input search integerinput", @style = "color:black", autocomplete = "off" })
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnMechanicalLostTime(MLT)").FirstOrDefault().Value.ToString()</span>
+                                        <span class="inputText">
+                                            @Html.ValidationMessageFor(m => m.BBUKPISiteEditModel.MLT, "", new { style = "display:none" })
+                                            @Html.TextBoxFor(m => m.BBUKPISiteEditModel.MLT, new { @class = "form-control m-input search decimalinput", @style = "color:black", autocomplete = "off" })
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnTrainingPlanImplementation").FirstOrDefault().Value.ToString()</span>
+                                        <span class="inputText">
+                                            @Html.CheckBoxFor(m => m.BBUKPISiteEditModel.TrainingPlanImp, new { @class = "form-control m-input", @style = "color:black; width: auto; margin-top: 4px;" })
+                                        </span>
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <div style="clear:both;"></div>
+
+                            <div class="idBttns">
+                                <div class="bttn_pagin">
+                                    <div class="bttns2">
+                                        <button type="submit" class="btn btn-blue mobBttn"><i class="fa fa-save faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+                                    </div>
+                                    <div class="bttns"><button type="button" id="btnCancelEdit" class="btn btn-blue mobBttn"><i class="fa fa-close faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button></div>
+
+                                    <div style="clear:both;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @Html.HiddenFor(m => m.BBUKPISiteEditModel.BBUKPIId)
+    @Html.HiddenFor(m => m.BBUKPISiteEditModel.ClientId)
+    @Html.HiddenFor(m => m.BBUKPISiteEditModel.SiteId)
+}
+
+<style type="text/css">
+        /*.ui-tooltip {
+            z-index: 98 !important;
+        }*/
+
+        .select2-container--default .select2-selection--single .select2-selection__rendered {
+            padding-right: 30px;
+        }
+    </style>

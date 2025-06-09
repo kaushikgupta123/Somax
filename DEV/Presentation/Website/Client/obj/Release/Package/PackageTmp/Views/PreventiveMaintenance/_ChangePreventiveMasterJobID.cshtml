@@ -1,0 +1,51 @@
+﻿@model Client.Models.PreventiveMaintenance.PrevMaintVM
+<!-- New Implement Modal Start -->
+<div id="changePreventiveIDModalDetailsPage" class="modal fade" role="dialog" style="padding-right:0px !important;">
+    <div class="modal-dialog modal-info">
+        @using (Ajax.BeginForm("ChangePrevMaintMasterID", "PreventiveMaintenance", new AjaxOptions { HttpMethod = "Post", OnSuccess = "PrevMaintOnSuccess", OnBegin = "AjaxBeginFormBegin", OnComplete = "AjaxBeginFormComplete", OnFailure = "AjaxBeginFormFaillure" }))
+        {
+            @Html.AntiForgeryToken()
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">@Model.Loc.Where(a => a.ResourceId == "spnChangePreventiveMaintenenceId").FirstOrDefault().Value.ToString()</h4>
+                </div>
+                <div class="modal-body">
+                    <ul class="listView">
+                        <li style="border-bottom:0 !important; height:auto !important;">
+                            <span class="label">@Html.LabelFor(m => m._ChangePreventiveIDModel.ClientLookupId) : <small></small></span>
+                            <span class="inputText">
+                                @Html.ValidationMessageFor(m => m._ChangePreventiveIDModel.ClientLookupId, "", new { style = "display:none" })
+                                @Html.TextBoxFor(m => m._ChangePreventiveIDModel.ClientLookupId, new { @class = "form-control search", autocomplete = "off", id = "txtPreventiveId", maxlength = "31" })
+                            </span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-blue mobBttn" style="float:left; margin:0 !important;" data-dismiss="modal"><i class="fa fa-close faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button>
+                    <button type="submit" class="btn btn-blue mobBttn" style="float:right; margin:0 !important;"><i class="fa fa-save faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+                    <div style="clear:both;"></div>
+                </div>
+            </div>
+            @Html.HiddenFor(m => m._ChangePreventiveIDModel.ClientLookupId, new { id = "hiddenclientlookupid" })
+            @Html.HiddenFor(m => m._ChangePreventiveIDModel.PrevMaintMasterId, new { id = "hiddenprevmaintid" })
+        }
+    </div>
+</div>
+<!-- New Implement Modal End -->
+
+<style type="text/css">
+    .ui-tooltip { z-index: 1151 !important; }
+    .errormessage { margin-bottom: 1px !important; }
+    .modal-header, .modal .modal-content .modal-body {
+        display: block;
+        padding: 15px !important;
+    }
+    .modal .modal-content .modal-footer {
+        display: block;
+        padding: 15px !important;
+    }
+</style>
+
+

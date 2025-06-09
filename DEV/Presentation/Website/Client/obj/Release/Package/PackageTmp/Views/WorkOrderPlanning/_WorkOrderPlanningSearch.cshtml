@@ -1,0 +1,209 @@
+﻿@model Client.Models.WorkOrderPlanning.WorkOrderPlanningVM
+<link href="~/Scripts/Metronic/assets/demo/default/base/style_newCustom.css" rel="stylesheet" />
+@if (Convert.ToString(Session["MenuState"]) == "" || Convert.ToString(Session["MenuState"]) == "open")
+{
+    <div class="m-subheader fixedDiv1">
+        <div class="new-m-subheader">
+            <div class="PageTitle">
+                <div class="align-items-center">
+                    <h3 class="m-subheader__title" style="padding:0;">
+                        <span class="dropToggle" id="spnDropToggle">
+                            <img src="~/Images/toggleMenu.png" />
+                        </span>
+                        <span style="line-height:35px;" id="WoPlanningsearchtitle">
+
+                        </span>
+                    </h3>
+                </div>
+            </div>
+
+            <div class="ActionBttnArea">
+
+                <button type="button" class="btn newBtn-add AddWoPlanning pull-left" id="AddWoPlanning" title="@Model.Loc.Where(a => a.ResourceId == "spnAddWorkOrderPlan").FirstOrDefault().Value.ToString()">@Model.Loc.Where(a => a.ResourceId == "btnNewWorkOrderPlan").FirstOrDefault().Value.ToString()</button>
+
+                <div style="clear:both;"></div>
+            </div>
+            <div style="clear:both;"></div>
+        </div>
+    </div>
+}
+else
+{
+    <div class="m-subheader fixedDiv1 fixupperpannel2">
+        <div class="new-m-subheader">
+            <div class="PageTitle">
+                <div class="align-items-center">
+                    <h3 class="m-subheader__title" style="padding:0;">
+                        <span class="dropToggle" id="spnDropToggle">
+                            <img src="~/Images/toggleMenu.png" />
+                        </span>
+                        <span style="line-height:35px;" id="WoPlanningsearchtitle">
+                        </span>
+                    </h3>
+                </div>
+            </div>
+
+            <div class="ActionBttnArea">
+
+                <button type="button" class="btn newBtn-add AddWoPlanning pull-left" id="AddWoPlanning" title="@Model.Loc.Where(a => a.ResourceId == "spnAddWorkOrderPlan").FirstOrDefault().Value.ToString()">@Model.Loc.Where(a => a.ResourceId == "btnNewWorkOrderPlan").FirstOrDefault().Value.ToString()</button>
+
+                <div style="clear:both;"></div>
+            </div>
+            <div style="clear:both;"></div>
+        </div>
+    </div>
+}
+<div class="pushDiv1"></div>
+<div class="row">
+    <div class="col-xl-12">
+        <div class="m-portlet" id="m_portlet" style="padding:15px;">
+            <div class="actionBar" style="display:block" id="WoPlanningGridAction">
+
+                <div class="pull-right">
+                    <button type="button" class="btn btn-white import-export" id="btnWoPlanningExport"  style="margin-right:0px !important;" onclick="funcShowExportbtn()">
+                        @Model.Loc.Where(a => a.ResourceId == "spnExport").FirstOrDefault().Value.ToString()
+                    </button>
+
+
+                    <div style="clear:both;"></div>
+                </div>
+                <div style="clear:both;"></div>
+                <div id="dvFilterSearchSelect2"></div>
+                <div style="clear:both;"></div>
+            </div>
+
+            <div style="clear:both;"></div>
+
+            <div id="Active" class="tabcontent" style="display:block;">
+                <div class="table-responsive">
+                    <table id="WoPlanningSearch" class="eqpDtlTbl row-border custom-sort tblMain hover haschild tblDefaultSort" style="width:100%;">
+                        <thead>
+                            <tr>
+                                <th style="width:20px;"></th>
+                                @*<th>
+                                        <input name="select_all" value="1" id="WoPlanning-select-all" type="checkbox" />
+                                    </th>*@
+                            <th id="thPurchaseRequest" data-col="1" class="th-WoPlanning PlanID" data-th-index="0" data-th-prop="PlanID">@Model.Loc.Where(a => a.ResourceId == "spnPlanId").FirstOrDefault().Value.ToString()</th>
+                            <th data-th-index="1" data-col="2" class="Description" data-th-prop="Description">@Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString()</th>
+                            <th id="thStartDate" data-col="3" class="StartDate" data-th-index="2" data-th-prop="StartDateString">@Model.Loc.Where(a => a.ResourceId == "globalStartDate").FirstOrDefault().Value.ToString()</th>
+                            <th data-th-index="3" data-col="4" class="EndDate" data-th-prop="EndDateString">@Model.Loc.Where(a => a.ResourceId == "spnEndDate").FirstOrDefault().Value.ToString()</th>
+                            <th id="thStatus" data-col="5" class="Status" data-th-index="4" data-th-prop="Status">@Model.Loc.Where(a => a.ResourceId == "spnStatus").FirstOrDefault().Value.ToString()</th>
+                            <th id="thCreated" data-col="6" class="Created" data-th-index="5" data-th-prop="CreatedDateString">@Model.Loc.Where(a => a.ResourceId == "spnCreated").FirstOrDefault().Value.ToString()</th>
+                            <th class="Completed" data-col="7" data-th-index="6" data-th-prop="CompletedDateString">@Model.Loc.Where(a => a.ResourceId == "spnGlobalCompleted").FirstOrDefault().Value.ToString()</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@if (Convert.ToString(Session["MenuState"]) == "" || Convert.ToString(Session["MenuState"]) == "open")
+{
+    <div id="searcharea" class="slideToggleBar" style="display:none">
+        <div class="searchBoxArea">
+            <div class="form-group" style="margin-bottom:0; position:relative;">
+                <i class="fa fa-search" style="font-size: 1.1rem;position: absolute;top: 8px;left: 0px;"></i>
+                <input type="text" class="form-control searched" placeholder="Search for a view" id="WoPlanningsearctxtbox">
+            </div>
+        </div>
+
+        <div class="searchList">
+            <ul id="WorkOrderPlansearchListul">
+                @foreach (var item in Model.WorkOrderPlanViewList)
+                {
+                    <li id="@item.Value" class="WoPlanningsearchdrpbox"><a href="javascript:void(0)">@item.Text</a></li>
+                }
+            </ul>
+        </div>
+    </div>
+}
+else
+{
+    <div id="searcharea" class="slideToggleBar" style="display:none;left:81px !important;">
+        <div class="searchBoxArea">
+            <div class="form-group" style="margin-bottom:0; position:relative;">
+                <i class="fa fa-search" style="font-size: 1.1rem;position: absolute;top: 8px;left: 0px;"></i>
+                <input type="text" class="form-control searched" placeholder="Search for a view" id="WoPlanningsearctxtbox">
+            </div>
+        </div>
+
+        <div class="searchList">
+            <ul id="WorkOrderPlansearchListul">
+                @foreach (var item in Model.WorkOrderPlanViewList)
+                {
+                    <li id="@item.Value" class="WoPlanningsearchdrpbox"><a href="javascript:void(0)">@item.Text</a></li>
+                }
+            </ul>
+        </div>
+    </div>
+}
+<!--Add custom export for WOP search grid-->
+<div id="popupExport">
+    <button type="button" class="btn btn-blue" id="liWOPPdf">PDF</button>
+    <button type="button" class="btn btn-blue" id="liWOPCsv">CSV</button>
+    <button type="button" class="btn btn-blue" id="liWOPExcel">Excel</button>
+    <button type="button" class="btn btn-blue" id="liWOPPrint">Print</button>
+</div>
+<div id="mask" onclick="funcCloseExportbtn()"></div>
+<!--Add custom export for WOP search grid-->
+<style type="text/css">
+    #popupExport {
+        right: 31px !important;
+        top: 158px !important;
+    }
+    .m-badge.m-badge--red, .m-badge.m-badge--green {
+        min-width: 94px;
+    }
+    .table-responsive {
+        overflow-y: hidden !important;
+    }
+    @@media only screen and (max-width: 639px) and (min-width: 568px) {
+        .actionBar div.pull-right {
+            float: right;
+            margin-top: 0;
+        }
+    }
+    @@media only screen and (max-width: 767px) and (min-width: 640px) {
+        .actionBar div.pull-left {
+            width: auto;
+        }
+        .actionBar div.pull-right {
+            width: auto;
+            float: right;
+            margin-top: 0;
+        }
+    }
+    @@media screen and (max-width: 567px) {
+        #shortDrop {
+            margin-top: 0;
+            margin-right: 10px !important;
+        }
+    }
+    @@media screen and (max-width: 410px) {
+        #shortDrop {
+            margin-top: 10px !important;
+            margin-right: 0px !important;
+        }
+    }
+    @@media only screen and (max-width: 359px) and (min-width: 320px) {
+        #liCustomize {
+            margin-top: 0px !important;
+            margin-left: 0px !important;
+        }
+    }
+    @@media screen and (max-width:1599px) {
+        .openMenu #popupExport {
+            left: auto !important;
+            right: 31px !important;
+            top: 158px !important;
+        }
+    }
+    @@media screen and (max-width:1199px) {
+        .actionBar div.pull-right {
+            float: right !important;
+            margin-top: 0px !important;
+            width: auto;
+        }
+    }
+</style>

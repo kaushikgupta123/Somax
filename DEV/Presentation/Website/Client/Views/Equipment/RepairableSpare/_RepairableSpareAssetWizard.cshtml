@@ -1,0 +1,191 @@
+﻿@model Client.Models.EquipmentCombined
+@{
+    var SequenceCount = 1;
+}
+
+<div id="RepairableSpareAssetWizardModal" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-info step-modal-box">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close btnWorkorderCompletionWizardCancel" data-dismiss="modal">&times;</button>
+                @*<h4 class="modal-title">Repairable Spare Asset</h4>*@
+            <h4 class="modal-title">@Model.Loc.Where(a => a.ResourceId == "spnRepairableSpareAsset").FirstOrDefault().Value.ToString()</h4>
+            </div>
+            <div class="modal-body">
+                <div class="m-portlet">
+
+                    <div class="m-wizard m-wizard--5 m-wizard--success m-wizard--step-first" id="m_wizard">
+                        <!--begin: Message container -->
+                        <div class="m-portlet__padding-x">
+                            <!-- Here you can put a message or alert -->
+                        </div>
+                        <!--end: Message container -->
+
+                        <div class="wizard-wrap-box">
+                            <!--begin: Form Wizard Head -->
+                            <div class="m-wizard__head m-portlet__padding-x">
+
+                                <!--begin: Form Wizard Nav -->
+                                <div class="m-wizard__nav">
+                                    <div class="m-wizard__steps">
+                                        <div class="m-wizard__step m-wizard__step--current" style="pointer-events:none;" data-wizard-target="#AssetInformationStep">
+                                            <div class="m-wizard__step-info">
+                                                <a class="m-wizard__step-number">
+                                                    <span class="m-wizard__step-seq">
+                                                        @SequenceCount
+                                                        @{
+                                                            SequenceCount = SequenceCount + 1;
+                                                        }
+                                                    </span>
+                                                    <span class="m-wizard__step-label">
+                                                        @*Asset Information*@
+                                                        @Model.Loc.Where(a => a.ResourceId == "spnAssetInformation").FirstOrDefault().Value.ToString()
+                                                    </span>
+                                                    <span class="m-wizard__step-icon">
+                                                        <i class="la la-check"></i>
+                                                    </span>
+                                                </a>
+                                            </div>
+                                        </div>
+
+                                        <div class="m-wizard__step" style="pointer-events:none;" data-wizard-target="#AssignmentStep">
+                                            <div class="m-wizard__step-info">
+                                                <a class="m-wizard__step-number">
+                                                    <span class="m-wizard__step-seq">
+                                                        @SequenceCount
+                                                        @{
+                                                            SequenceCount = SequenceCount + 1;
+                                                        }
+                                                    </span>
+                                                    <span class="m-wizard__step-label">
+                                                        @*Assignment*@
+                                                        @Model.Loc.Where(a => a.ResourceId == "spnAssignment").FirstOrDefault().Value.ToString()
+                                                    </span>
+                                                    <span class="m-wizard__step-icon">
+                                                        <i class="la la-check"></i>
+                                                    </span>
+                                                </a>
+                                            </div>
+                                        </div>
+                                        <div class="m-wizard__step" style="pointer-events:none;" data-wizard-target="#FinalStep">
+                                            <div class="m-wizard__step-info">
+                                                <a class="m-wizard__step-number">
+                                                    <span class="m-wizard__step-seq">
+                                                        @SequenceCount
+                                                        @{
+                                                            SequenceCount = SequenceCount + 1;
+                                                        }
+                                                    </span>
+                                                    <span class="m-wizard__step-label">
+                                                        @Model.Loc.Where(a => a.ResourceId == "spnConfirmation").FirstOrDefault().Value.ToString()
+                                                    </span>
+                                                    <span class="m-wizard__step-icon">
+                                                        <i class="la la-check"></i>
+                                                    </span>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--end: Form Wizard Nav -->
+
+                            </div>
+                            <!--end: Form Wizard Head -->
+                            <!--begin: Form Wizard Form-->
+                            <div class="m-wizard__form">
+                                <!--
+                                    1) Use m-form--label-align-left class to alight the form input lables to the right
+                                    2) Use m-form--state class to highlight input control borders on form validation
+                                -->
+                                @Html.Partial("_ErrorDiv")
+                                @using (Ajax.BeginForm("AddRepairableSpareAsset", "Equipment", new AjaxOptions { HttpMethod = "Post", OnSuccess = "RepairableSpareAssetOnSuccess", OnBegin = "AjaxBeginFormBegin", OnComplete = "AjaxBeginFormComplete", OnFailure = "AjaxBeginFormFaillure" }, new { id = "formRepairableSpareAsset" }))
+                                {
+                                    @Html.AntiForgeryToken()
+                                    @Html.HiddenFor(m => m.RepairableSpareModel.EquipmentId)
+                                    @Html.HiddenFor(m => m.RepairableSpareModel.DetailsEquipmentId)
+                                    @Html.HiddenFor(m => m.RepairableSpareModel.ValidationMode, new { @id = "ValidationMode" })
+                                    @*<form class="m-form m-form--label-align-left- m-form--state-" id="m_form" novalidate="novalidate">*@
+                                    <!--begin: Form Body -->
+                                    <div class="m-portlet__body">
+
+                                        <div class="m-wizard__form-step m-wizard__form-step--current" id="AssetInformationStep">
+                                            @Html.Partial("~/Views/Equipment/RepairableSpare/_AssetInformation.cshtml", Model)
+                                        </div>
+                                        <div class="m-wizard__form-step" id="AssignmentStep">
+                                            @Html.Partial("~/Views/Equipment/RepairableSpare/_Assignment.cshtml", Model)
+                                        </div>
+                                        <!--begin: Form Wizard Step 4-->
+                                        <div class="m-wizard__form-step" id="FinalStep">
+                                            <div class="row">
+                                                <div class="col-xl-10 offset-xl-1">
+                                                    <div class="m-separator m-separator--dashed m-separator--lg"></div>
+                                                    <div class="form-group m-form__group m-form__group--sm row">
+                                                        <div class="col-xl-12">
+                                                            @*Do you want to save Repairable Spare Asset?*@
+                                                            @Model.Loc.Where(a => a.ResourceId == "spnDoyouWantToSaveRepairableSpareAsset").FirstOrDefault().Value.ToString()
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!--end: Form Wizard Step 4-->
+                                    </div>
+                                    <!--end: Form Body -->
+                                    <!--begin: Form Actions -->
+                                    <div class="m-portlet__foot m-portlet__foot--fit m--margin-top-40">
+                                        <div class="m-form__actions m-form__actions">
+                                            <div class="row">
+                                                <div class="col-lg-1"></div>
+                                                <div class="col-lg-4 m--align-left">
+                                                    <a href="" class="btn btn-blue btn-secondary" data-wizard-action="prev">
+                                                        <span>
+                                                            <i class="la la-arrow-left"></i>
+                                                            &nbsp;&nbsp;
+                                                            <span>
+                                                                @Model.Loc.Where(a => a.ResourceId == "spnBack").FirstOrDefault().Value.ToString()
+                                                            </span>
+                                                        </span>
+                                                    </a>
+                                                </div>
+                                                <div class="col-lg-6 m--align-right">
+                                                    
+                                                    <button type="submit" class="btn succes btn-blue btn-primary" data-wizard-action="submit">
+                                                        <span>
+                                                            <i class="fa fa-plus faIcon"></i>
+                                                            &nbsp;&nbsp;
+                                                            <span>
+                                                                @Model.Loc.Where(a => a.ResourceId == "globalAdd").FirstOrDefault().Value.ToString()
+                                                            </span>
+                                                        </span>
+                                                    </button>
+                                                   
+                                                    <a href="" class="btn btn-blue btn-warning" data-wizard-action="next">
+                                                        <span>
+                                                            <span>
+                                                                @Model.Loc.Where(a => a.ResourceId == "spnNext").FirstOrDefault().Value.ToString()
+                                                            </span>
+                                                            &nbsp;&nbsp;
+                                                            <i class="la la-arrow-right"></i>
+                                                        </span>
+                                                    </a>
+                                                </div>
+                                                <div class="col-lg-1"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!--end: Form Actions -->
+                                    @*</form>*@
+                                }
+                            </div>
+                            <!--end: Form Wizard Form-->
+                        </div>
+                    </div>
+                    <!--end: Form Wizard-->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@Html.Partial("~/Views/Shared/LookupTypeTablePopup/_VendorPopup.cshtml")
+@Html.Partial("~/Views/Shared/LookupTypeTablePopup/_AccountPopupLookup.cshtml")

@@ -1,0 +1,15 @@
+﻿@model Client.Models.InventoryReceipt.ReceiptVM
+@{
+    ViewBag.Title = "Somax | Part Receipt";
+}
+
+@Styles.Render("~/Content/datatable")
+<link href="~/Scripts/Metronic/assets/demo/default/base/GlobalSearchGrid.css" rel="stylesheet" />
+@section scripts {
+    @Scripts.Render("~/bundles/datatable")
+    @Scripts.Render("~/bundles/InventoryReceipt")
+
+}
+<div id="renderworkorder">
+    @Html.Partial("_ReceiptIndex")
+</div>

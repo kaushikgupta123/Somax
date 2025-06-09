@@ -1,0 +1,191 @@
+﻿@model Client.Models.Project.ProjectVM
+<div class="m-subheader">
+    <div class="new-m-subheader">
+        <div class="PageTitle">
+            <div class="align-items-center separator">
+                <h3 class="m-subheader__title ">
+                    @Model.Loc.Where(a => a.ResourceId == "spnProject").FirstOrDefault().Value.ToString()
+                </h3>
+            </div>
+        </div>
+
+        <div class="NewBreadcrumbArea">
+            <div class="newBreadcrumb">
+                <ul>
+                    <li><a href="/Dashboard/Dashboard">&nbsp;</a></li>
+                    @if (Model.projectAddorEdirModel.ProjectId == 0)
+                    {
+                        <li><a href="/Project/Index?page=Projects">@Model.Loc.Where(a => a.ResourceId == "spnProjectSearch").FirstOrDefault().Value.ToString()</a></li>
+                        <li class="active">@Model.Loc.Where(a => a.ResourceId == "spnAddNewProject").FirstOrDefault().Value.ToString()</li>
+                    }
+                    else
+                    {
+                        <li><a href="/Project/Index?page=Projects">@Model.Loc.Where(a => a.ResourceId == "spnProjectSearch").FirstOrDefault().Value.ToString()</a></li>
+                        <li><a href="javascript:void(0)" id="brdProject" data-val="@Model.projectAddorEdirModel.ProjectId">@Model.projectAddorEdirModel.ClientLookupId</a></li>
+                        <li class="active">@Model.Loc.Where(a => a.ResourceId == "spnEditProject").FirstOrDefault().Value.ToString()</li>
+                    }
+                </ul>
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+        <div style="clear:both;"></div>
+    </div>
+</div>
+
+@Html.Partial("_ErrorDiv")
+
+@using (Ajax.BeginForm("AddorEditProject", "Project", new AjaxOptions { HttpMethod = "Post", OnSuccess = "ProjectAddOnSuccess", OnBegin = "AjaxBeginFormBegin", OnComplete = "AjaxBeginFormComplete", OnFailure = "AjaxBeginFormFaillure" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="row">
+        <div class="col-xl-12">
+            <div class="m-portlet newPort" id="m_portlet" style="padding:15px;">
+                <div class="bottomBlock">
+                    <div>
+                        <div class="tabsArea nobg" id="ProjectCharge" style="display:block;">
+                            <ul class="listView nobrd">
+                                <li>
+                                    <span class="label" id="spnDescription">@Model.Loc.Where(a => a.ResourceId == "spnProjectId").FirstOrDefault().Value.ToString()<small>*</small></span>
+                                    <span class="inputText">
+                                        @if (Model.projectAddorEdirModel.PageType == "Add")
+                                        {
+                                            @Html.ValidationMessageFor(m => m.projectAddorEdirModel.ClientLookupId, "", new { style = "display:none" })
+                                            @Html.TextBoxFor(m => m.projectAddorEdirModel.ClientLookupId, new { @class = "form-control search m-input", maxlength = "15", @style = "color:black", autocomplete = "off" })
+                                        }
+                                        else
+                                        {
+                                            @Html.TextBoxFor(m => m.projectAddorEdirModel.ClientLookupId, new { @class = "form-control search m-input", @disabled = "disabled", @style = "color:black", autocomplete = "off" })
+                                        }
+                                    </span>
+                                </li>
+                                <li>
+                                    <span class="label" id="spnDescription">@Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString()<small>*</small></span>
+                                    <span class="inputText">
+                                        @Html.ValidationMessageFor(m => m.projectAddorEdirModel.Description, "", new { style = "display:none" })
+                                        @Html.TextAreaFor(m => m.projectAddorEdirModel.Description, new { @class = "form-control large search m-input", @style = "color:black", autocomplete = "off" })
+                                    </span>
+                                </li>
+                                <li>
+                                    <span class="label" id="spnScheduleStart">@Model.Loc.Where(a => a.ResourceId == "globalScheduledStart").FirstOrDefault().Value.ToString()</span>
+                                    <span class="inputText">
+                                        @Html.ValidationMessageFor(m => m.projectAddorEdirModel.ScheduleStart, "", new { style = "display:none" })
+                                        @Html.TextBoxFor(m => m.projectAddorEdirModel.ScheduleStart, "{0:MM/dd/yyyy}", new { @class = "form-control search m-input dtpicker", @style = "color:black", autocomplete = "off", id = "ScheduleStart" })
+                                    </span>
+                                </li>
+                                <li>
+                                    <span class="label" id="spnScheduleFinish">@Model.Loc.Where(a => a.ResourceId == "spnScheduledFinish").FirstOrDefault().Value.ToString()</span>
+                                    <span class="inputText">
+                                        @Html.ValidationMessageFor(m => m.projectAddorEdirModel.ScheduleFinish, "", new { style = "display:none" })
+                                        @Html.TextBoxFor(m => m.projectAddorEdirModel.ScheduleFinish, "{0:MM/dd/yyyy}", new { @class = "form-control search m-input dtpicker", @style = "color:black", autocomplete = "off", id = "ScheduleFinish" })
+                                    </span>
+                                </li>
+                                <li>
+                                    <span class="label" id="spnOwner">@Model.Loc.Where(a => a.ResourceId == "globalOwner").FirstOrDefault().Value.ToString()</span>
+                                    <span class="inputText">
+                                        @Html.DropDownListFor(m => m.projectAddorEdirModel.Owner_PersonnelId, Model.projectAddorEdirModel.OwnerPersonnelList, "--Select--", new { @class = "form-control search select2picker", style = "width:100%;" })
+                                    </span>
+                                </li>
+                                <li>
+                                    <span class="label" id="spnCoordinator">@Model.Loc.Where(a => a.ResourceId == "spnCoordinator").FirstOrDefault().Value.ToString()</span>
+                                    <span class="inputText">
+                                        @Html.DropDownListFor(m => m.projectAddorEdirModel.Coordinator_PersonnelId, Model.projectAddorEdirModel.CoorPersonnelList, "--Select--", new { @class = "form-control search select2picker", style = "width:100%;" })
+                                    </span>
+                                </li>
+                                <li>
+                                    <span class="label" id="spnFiscalYear">@Model.Loc.Where(a => a.ResourceId == "spnFiscalYear").FirstOrDefault().Value.ToString()</span>
+                                    <span class="inputText">
+                                        @Html.TextBoxFor(m => m.projectAddorEdirModel.FiscalYear, new { @class = "form-control search m-input longinput", @style = "color:black", autocomplete = "off", maxlength = "4" })
+                                    </span>
+                                </li>
+                                <li>
+                                    <span class="label" id="spnBudget">@Model.Loc.Where(a => a.ResourceId == "spnBudget").FirstOrDefault().Value.ToString()</span>
+                                    <span class="inputText">
+                                        @Html.ValidationMessageFor(m => m.projectAddorEdirModel.Budget, "", new { style = "display:none" })
+                                        @Html.TextBoxFor(m => m.projectAddorEdirModel.Budget, new { @class = "form-control search m-input decimalinput", @style = "color:black", autocomplete = "off" })
+                                    </span>
+                                </li>
+                                <li>
+                                    <span class="label" id="spnType">@Model.Loc.Where(a => a.ResourceId == "GlobalType").FirstOrDefault().Value.ToString()</span>
+                                    <span class="inputText">
+                                        @*@Html.TextBoxFor(m => m.projectAddorEdirModel.Type, new { @class = "form-control search m-input", @style = "color:black", autocomplete = "off" })*@
+                                        @Html.DropDownListFor(m => m.projectAddorEdirModel.Type, Model.projectAddorEdirModel.TypeList, "--Select--", new { @class = "form-control search select2picker", style = "width:100%;" })
+                                    </span>
+                                </li>
+                                @if (Model.projectAddorEdirModel.PageType == "Edit")
+                                {
+                                    <li>
+                                        <span class="label" id="spnActualStart">@Model.Loc.Where(a => a.ResourceId == "spnActualStart").FirstOrDefault().Value.ToString()</span>
+                                        <span class="inputText">
+                                            @Html.ValidationMessageFor(m => m.projectAddorEdirModel.ActualStart, "", new { style = "display:none" })
+                                            @Html.TextBoxFor(m => m.projectAddorEdirModel.ActualStart, "{0:MM/dd/yyyy}", new { @class = "form-control search m-input dtpicker", @style = "color:black", autocomplete = "off", id = "ActualStart" })
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label" id="spnActualFinish">@Model.Loc.Where(a => a.ResourceId == "spnActualFinish").FirstOrDefault().Value.ToString()</span>
+                                        <span class="inputText">
+                                            @Html.ValidationMessageFor(m => m.projectAddorEdirModel.ActualFinish, "", new { style = "display:none" })
+                                            @Html.TextBoxFor(m => m.projectAddorEdirModel.ActualFinish, "{0:MM/dd/yyyy}", new { @class = "form-control search m-input dtpicker", maxlength = "31", @style = "color:black", autocomplete = "off", id = "ActualFinish" })
+                                        </span>
+                                    </li>
+                                }
+                            </ul>
+                        </div>
+                    </div>
+                    <div style="clear:both;"></div>
+                    <div class="idBttns">
+                        <div class="bttn_pagin">
+                            @if (Model.projectAddorEdirModel.PageType == "Add")
+                            {
+                                <div class="bttns2">
+                                    <button class="btn btn-white mobBttn" name="Command" value="saveAdd" id="btnSaveAnotherProject"><i class="fa fa-save faIcon"></i> &nbsp;  @Model.Loc.Where(a => a.ResourceId == "globalSaveAndAdd").FirstOrDefault().Value.ToString()</button>
+                                    <button type="submit" class="btn btn-blue mobBttn" name="Command" value="save" id="btnSaveProject"><i class="fa fa-save faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+                                </div>
+                                <div class="bttns"><button type="button" class="btn btn-blue mobBttn" id="btnCancelAddProject"><i class="fa fa-close faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button></div>
+
+                            }
+                            else
+                            {
+                                <div class="bttns2">
+
+                                    <button type="submit" class="btn btn-blue mobBttn" name="Command" value="edit" id="btnSaveProject"><i class="fa fa-save faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+                                </div>
+                                <div class="bttns"><button type="button" class="btn btn-blue mobBttn" id="btnCancelEditProject"><i class="fa fa-close faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button></div>
+
+                            }
+
+                            <div style="clear:both;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @Html.HiddenFor(m => m.projectAddorEdirModel.ProjectId)
+    @Html.HiddenFor(m => m.projectAddorEdirModel.PageType)
+    @Html.HiddenFor(m => m.projectAddorEdirModel.ClientLookupId)
+
+}
+
+
+<style type="text/css">
+
+     ul.listView.nobrd li:nth-child(2) {
+            padding-bottom:15px;
+            overflow:hidden;
+            height:auto!important;
+        }
+
+    @@media screen and (max-width: 480px) {
+        ul.listView.nobrd li:nth-child(2) {
+            padding-bottom: 0px;
+            height: auto !important;
+        }
+
+        ul.listView.nobrd li span.label, ul.listView.nobrd li span.inputText, ul .listView.nobrd li:nth-child(2) span.inputText {
+            height: auto !important;
+        }
+    }
+
+</style>
+
+

@@ -1,0 +1,87 @@
+﻿@model Client.Models.Parts.PartsVM
+<div id="menuPartIdChange" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-info">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close clearChangePartId" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">@Model.Loc.Where(a => a.ResourceId == "spnChangePartId").FirstOrDefault().Value.ToString()</h4>
+            </div>
+            @Html.Partial("_ErrorDiv")
+            @using (Ajax.BeginForm("ChangePartID", "Parts", new AjaxOptions { HttpMethod = "Post", OnSuccess = "ChangePartIDOnSuccess", OnBegin = "AjaxBeginFormBegin", OnFailure = "AjaxBeginFormFaillure" }))
+            {
+                <div class="modal-body">
+
+                    <div class="form-group">
+                        <label for="Line" id="lblLine">@Model.Loc.Where(a => a.ResourceId == "spnPartID").FirstOrDefault().Value.ToString() : <small>*</small></label>
+                        <span class="inputText">
+                            @{
+                                var data = Model.UIConfigurationDetails.Where(a => a.ColumnName == "ClientLookupId").FirstOrDefault();
+                                var maxlimit = data.MaxLength;
+                            }
+                            @Html.TextBoxFor(m => m.changePartIdModel.ClientLookupId, new { maxlength = maxlimit, @class = "form-control search textcountmsg", style = "resize:none;", autocomplete = "off", data_val_length_max = maxlimit })
+                            @CustomHelperDynamic.GetCountMessageLabel(maxlimit, false, "")
+                            @Html.ValidationMessageFor(m => m.changePartIdModel.ClientLookupId, "", new { style = "display:none" })
+                        </span>
+                    </div>
+                </div>
+                <div class="modal-footer" style="padding:15px 25px !important;">
+                    <button type="button" class="btn btn-default clearChangePartId" data-dismiss="modal"><i class="fa fa-close faIcon"></i> &nbsp;@Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button>
+                    <button type="submit" class="btn btn-blue" style="float:right;" name="strPartId" value='@Model.PartModel.PartId'><i class="fa fa-save faIcon"></i> &nbsp;@Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+                    <div style="clear:both;"></div>
+                </div>
+                @Html.HiddenFor(m => m.changePartIdModel.ClientLookupId, new { id = "OldClientLookupId" })
+            }
+
+        </div>
+    </div>
+</div>
+
+<style type="text/css">
+    .ui-tooltip {
+        z-index: 1151 !important;
+    }
+
+    .errormessage {
+        margin-bottom: 1px !important;
+    }
+</style>
+<script>
+    $(document).ready(function () {
+        $(document).find('.select2picker').select2({});
+        $.validator.setDefaults({ ignore: null });
+        $.validator.unobtrusive.parse(document);
+        $('input, form').blur(function () {
+            if ($(this).closest('form').length > 0) {
+                $(this).valid();
+            }
+        });
+        $(".modal").on("hidden.bs.modal", function () {
+            ResetErrorDiv();
+            $("#menuPartIdChange").find("select").each(function () {
+                $(this).val('').trigger('change');
+                if ($(this).hasClass('input-validation-error')) {
+                    $(this).removeClass('input-validation-error');
+                }
+            });
+            $("#menuPartIdChange").find("input[type=text]").each(function () {
+                $(this).val('');
+                if ($(this).hasClass('input-validation-error')) {
+                    $(this).removeClass('input-validation-error');
+                }
+            });
+
+        });
+    });
+    //#region RKL-Mail
+    $(document).on('click', '.clearChangePartId', function () {
+        var maxlimit = $("#changePartIdModel_ClientLookupId").data('val-length-max');
+        if (maxlimit) {
+            $("#changePartIdModel_ClientLookupId").parent().find('.textcountlabel').text("Total characters count: 0 Characters left: " + maxlimit);
+        }
+    });
+    //#endregion
+</script>
+
+
+
+

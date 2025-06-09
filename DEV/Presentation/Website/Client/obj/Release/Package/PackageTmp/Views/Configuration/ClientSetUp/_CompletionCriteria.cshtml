@@ -1,0 +1,111 @@
+﻿@model Client.Models.Configuration.ClientSetUp.ClientSetUpVM
+
+<div class="row">
+        <div id="m_portlet" style="padding:15px;">
+            <div class="bottomBlock">
+                @using (Ajax.BeginForm("UpdateWOCompletionCriteria", "ClientSetUp", new AjaxOptions { HttpMethod = "Post", OnSuccess = "CompletionCriteriaSaveOnSuccess", OnBegin = "AjaxBeginFormBegin", OnComplete = "AjaxBeginFormComplete", OnFailure = "AjaxBeginFormFaillure" }, new { id = "FormWOCompletionCriteria" }))
+                {@Html.AntiForgeryToken()
+                <div id="CompletionCriteriaPopup" class="modal fade dropdown-modal" role="dialog" style="display:none;height:100%"  data-backdrop="static" data-keyboard="false">
+                    <div class="modal-dialog partPopup">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="hideCompletionCriteria close">&times;</button>                                
+                            <h4 class="modal-title" id="CompletionCriteria">@Model.Loc.Where(a => a.ResourceId == "CompletionCriteria").FirstOrDefault().Value.ToString()</h4>
+                            </div>
+                                <div class="row" style="margin-top:10px">
+                                    <div class="col-2 text-left" style="margin-top:20px">
+                                        <div  style="display:block;">
+                                            <ul class="listView nobrd" style="border-bottom:0;">
+                                                <li style="margin-bottom:3px;">
+
+                                                    <span class="label" style="width:100%;text-align:right">@Model.Loc.Where(a => a.ResourceId == "spnTitle").FirstOrDefault().Value.ToString() : <small>*</small> </span>
+
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <div  style="display: block; margin-top: 20px">
+                                            <ul class="listView nobrd" style="border-bottom:0;">
+                                                <li style="margin-bottom:3px;">
+                                                    <span class="label" style="width:100%;text-align:right">@Model.Loc.Where(a => a.ResourceId == "spnCriteria").FirstOrDefault().Value.ToString() : <small>*</small> </span>
+                                                </li>
+                                            </ul>
+                                        </div>
+
+                                    </div>
+                                    <div class="row col-10 inputText" style="margin-top:20px">                                
+                                        @Html.ValidationMessageFor(m => m.woCompletionCriteriaSetupModel.WOCompCriteriaTitle, "", new { style = "display:none" })
+                                        @Html.TextBoxFor(m => m.woCompletionCriteriaSetupModel.WOCompCriteriaTitle, new { @class = "form-control search", style = "width:94%", autocomplete = "off", maxlength = "55" })
+                                      
+                                        @******ckeditor start*****@
+                                        <span class="inputText" style="height: auto; margin-top: 20px">
+                                            <main>
+                                                <div class="mydocument-editor myckeditorfield" style="padding-right:0px !important;">
+                                                    <div class="mytoolbar-container"></div>
+                                                    <div class="mycontent-container form-control">
+                                                        <div id="CompletionCriteriaEditor"></div>
+                                                    </div>
+                                                </div>
+                                            </main>
+                                        </span>
+                                        <div style="clear:both;"></div>
+                                        @******ckeditor End*****@
+                                    </div>
+                                </div>
+
+
+
+                                <div style="clear:both;"></div>
+                          
+                            <div class="modal-footer" style="padding:15px 25px !important;">
+                                <div class="idBttns">
+                                    <div class="bttn_pagin">
+                                        <div class="bttns2" style="margin:0;">
+                                            <button type="submit" id="btnCompletionCriteriaSave" class="btn btn-blue mobBttn" style="cursor:pointer" value="save"><i class="fa fa-save faIcon"></i> &nbsp;@Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+                                        </div>
+                                        <div class="bttns hideCompletionCriteria" style="margin:0;"><button type="button" class="btn btn-blue mobBttn"><i class="fa fa-close faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button></div>
+
+                                        <div style="clear:both;"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div style="clear:both;"></div>
+                        </div>
+                    </div>
+                </div>
+                @Html.HiddenFor(m => m.woCompletionCriteriaSetupModel.WOCompCriteria)
+                @Html.HiddenFor(m => m.woCompletionCriteriaSetupModel.WOCompCriteriaTab)
+            }
+
+            </div>
+        </div>
+</div>
+
+
+@******style for ckeditor start*****@
+<style>
+
+    .ck.ck-editor__editable_inline[dir=ltr] {
+        min-height: 250px;
+        max-height: 250px;
+    }
+
+    .ck-body-wrapper {
+        z-index: 9999 !important;
+    }
+
+    .ck.ck-button .ck-button__label {
+        font-size: 16px !important
+    }
+
+    div.ck-font-size-dropdown > .ck-dropdown__panel-visible,
+    div.ck-font-family-dropdown > .ck-dropdown__panel-visible {
+        height: 200px;
+        overflow-y: auto;
+    }
+
+    .ck.ck-list__item {
+        min-width: 5em;
+    }
+</style>
+@******style for ckeditor end*****@

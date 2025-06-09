@@ -1,0 +1,62 @@
+﻿@model Client.Models.PartTransfer.PartTransferVM
+<nav id="sidebar">
+    <div id="dismiss">
+        <i class="fa fa-close"></i>
+    </div>
+    <div class="sidebar-header">
+        <h3><i class="fa fa-filter" style="position: relative; top: -2px;"></i>&nbsp;@Model.Loc.Where(a => a.ResourceId == "spnFilters").FirstOrDefault().Value.ToString() <span class="filteritemcount">0</span></h3>
+        <button type="button" class="btn btn-blue filterSearch" id="btnPTDataAdvSrch">
+            <i class="fa fa-search" style="margin-top:-3px;"></i> &nbsp;@Model.Loc.Where(a => a.ResourceId == "globalSearch").FirstOrDefault().Value.ToString()
+        </button>
+    </div>
+    <div class="sidebar-content" id="advsearchsidebar">
+        <form action="#" method="post">
+            <div class="form-group">
+                <label for="advtransferid">@Model.Loc.Where(a => a.ResourceId == "spnTransferID").FirstOrDefault().Value.ToString():</label>
+                <input type="text" class="form-control search adv-item longinput" id="advtransferid" autocomplete="off">
+            </div>
+            <div class="form-group">
+                <label for="advrequestsite">@Model.Loc.Where(a => a.ResourceId == "spnRequestSite").FirstOrDefault().Value.ToString():</label>
+                <input type="text" class="form-control search adv-item" id="advrequestsite" autocomplete="off">
+            </div>
+            <div class="form-group">
+                <label for="advrequestpartid">@Model.Loc.Where(a => a.ResourceId == "spnRequestPartID").FirstOrDefault().Value.ToString():</label>
+                <input type="text" class="form-control search adv-item" id="advrequestpartid" autocomplete="off">
+            </div>
+            <div class="form-group">
+                <label for="advquantity">@Model.Loc.Where(a => a.ResourceId == "spnQuantity").FirstOrDefault().Value.ToString() :</label>
+                <input type="text" class="form-control search adv-item decimalinput" id="advquantity" autocomplete="off">
+            </div>
+            <div class="form-group">
+                <label for="advstatus">@Model.Loc.Where(a => a.ResourceId == "spnStatus").FirstOrDefault().Value.ToString() :</label>
+                <select id="advstatus" style="width:100%;" class="form-control search adv-item select2picker"></select>
+            </div>
+            <div class="form-group">
+                <label for="advrequestdescription">@Model.Loc.Where(a => a.ResourceId == "spnRequestDescription").FirstOrDefault().Value.ToString():</label>
+                <input type="text" class="form-control search adv-item" id="advrequestdescription" autocomplete="off">
+            </div>
+            <div class="form-group">
+                <label for="advissuesitename">@Model.Loc.Where(a => a.ResourceId == "spnIssueSite").FirstOrDefault().Value.ToString():</label>
+                <input type="text" class="form-control search adv-item " id="advissuesitename" autocomplete="off">
+            </div>
+            <div class="form-group">
+                <label for="advissuepartid">@Model.Loc.Where(a => a.ResourceId == "spnIssuePartID").FirstOrDefault().Value.ToString():</label>
+                <input type="text" class="form-control search adv-item" id="advissuepartid" autocomplete="off">
+            </div>
+            <div class="form-group">
+                <label for="advreason">@Model.Loc.Where(a => a.ResourceId == "GlobalReason").FirstOrDefault().Value.ToString():</label>
+                <input type="text" class="form-control search adv-item" id="advreason" autocomplete="off">
+            </div>
+            <div class="form-group">
+                <label for="advlastevent">@Model.Loc.Where(a => a.ResourceId == "spnLastEvent").FirstOrDefault().Value.ToString():</label>
+                <input type="text" class="form-control search adv-item" id="advlastevent" autocomplete="off">
+            </div>
+            <div class="form-group">
+                <label for="advlasteventdate">@Model.Loc.Where(a => a.ResourceId == "spnLastEventDate").FirstOrDefault().Value.ToString():</label>
+                <input type="text" class="form-control search adv-item dtpicker" id="advlasteventdate" autocomplete="off">
+            </div>
+        </form>
+    </div>
+</nav>
+
+

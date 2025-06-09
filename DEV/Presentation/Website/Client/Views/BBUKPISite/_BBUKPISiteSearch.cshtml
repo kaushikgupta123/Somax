@@ -1,0 +1,272 @@
+﻿@model Client.Models.BBUKPISite.BBUKPISiteVM
+
+<link href="~/Scripts/Metronic/assets/demo/default/base/style_newCustom.css" rel="stylesheet" />
+
+
+<style>
+    /*#BBUKPISiteSearch tr th,.eqpDtlTbl.DTFC_Cloned th:last-child,.eqpDtlTbl.DTFC_Cloned th,.eqpDtlTbl.dataTable thead th{
+        text-align: center !important;
+    }*/
+
+    #BBUKPISiteSearch tr td {
+        display: none;
+    }
+    #BBUKPISiteSearch tr td:nth-child(1), #BBUKPISiteSearch tr td:nth-child(2), #BBUKPISiteSearch tr td:nth-child(3), #BBUKPISiteSearch tr td:nth-child(4), #BBUKPISiteSearch tr td:nth-child(5), #BBUKPISiteSearch tr td:nth-child(6), #BBUKPISiteSearch tr td:nth-child(7), #BBUKPISiteSearch tr td:nth-child(8) {
+        display: table-cell !important;
+        /*text-align:center !important;*/
+    }
+</style>
+
+@if (Convert.ToString(Session["MenuState"]) == "" || Convert.ToString(Session["MenuState"]) == "open")
+{
+    <div class="m-subheader fixedDiv1">
+        <div class="new-m-subheader">
+            <div class="PageTitle">
+                <div class="align-items-center">
+                    <h3 class="m-subheader__title" style="padding:0;">
+                        <span class="dropToggle" id="spnDropToggle">
+                            <img src="~/Images/toggleMenu.png" />
+                        </span>
+                        <span style="line-height:35px;" id="sitesearchtitle">
+
+                        </span>
+                    </h3>
+                </div>
+            </div>
+
+            <div class="ActionBttnArea">
+
+                <div style="clear:both;"></div>
+            </div>
+            <div style="clear:both;"></div>
+        </div>
+    </div>
+}
+else
+{
+    <div class="m-subheader fixedDiv1 fixupperpannel2">
+        <div class="new-m-subheader">
+            <div class="PageTitle">
+                <div class="align-items-center">
+                    <h3 class="m-subheader__title" style="padding:0;">
+                        <span class="dropToggle" id="spnDropToggle">
+                            <img src="~/Images/toggleMenu.png" />
+                        </span>
+                        <span style="line-height:35px;" id="sitesearchtitle">
+                        </span>
+                    </h3>
+                </div>
+            </div>
+
+            <div class="ActionBttnArea">
+
+                <div style="clear:both;"></div>
+            </div>
+            <div style="clear:both;"></div>
+        </div>
+    </div>
+}
+<div class="pushDiv1"></div>
+<div class="row">
+    <div class="col-xl-12">
+        <div class="m-portlet" id="m_portlet" style="padding:15px;">
+            <div class="actionBar" style="display:block" id="SiteGridAction">
+                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnYearAndWeek").FirstOrDefault().Value.ToString() :</span>
+                <div class="drpdown-box-sec-wrap">
+                    <div class="drpdown-box-sec">
+                        @Html.DropDownListFor(m => m.BBUKPISiteModel.SiteId, Model.YearWeekList, new { @class = "form-control search adv-item select2picker", style = "width:100%;", @id = "ddlYearWeeks", multiple = "multiple" })
+                        <button type="button" style="display:none;" class="btn btn-white navbar-btn" title="Search" id="SrchBttnNew"><i class="fa fa-search" style="font-size: 1.1rem;position: relative;top: -2px;left: -2px;"></i> @Model.Loc.Where(a => a.ResourceId == "globalSearch").FirstOrDefault().Value.ToString()</button>
+                        <button type="button" style="display:none;" class="btn btn-white navbar-btn" id="sidebarCollapse" title="Advance Search"><i class="fa fa-filter" style="font-size: 1.3rem;"></i></button>
+                        <div style="clear:both;"></div>
+                        <div class="searchBttnDrop desktop" id="searchBttnNewDrop" style="display:none;">
+                            <div class="form-group" style="position:relative;">
+                                <i class="fa fa-search txtSearchClick" style="font-size: 1.1rem;position: absolute;top: 9px;left: 15px;"></i>
+                                <a href="javascript:void(0)" id="cancelText"><i class="fa fa-close" style="font-size: 1.1rem;position: absolute;top: 9px;right: 15px;"></i></a>
+                                <input type="text" id="txtColumnSearch" class="form-control search" placeholder="Search..." style="padding: 0.65rem 2.75rem;" autocomplete="off">
+                            </div>
+                            <div class="searchTips">
+                                <div class="titleText">Search Tips</div>
+                                @if (Model.Loc.Any(a => a.ResourceId == SearchTipsType.EquipmentSearchTips))
+                                {
+                                    <div class="infoText">Search for Assets by Asset ID, Name, Location, and Type.</div>
+                                }
+                                else
+                                {
+                                    <div class="infoText">Search for Assets by Asset ID, Name, Location, and Type.</div>
+                                }
+
+                                <div style="clear:both;"></div>
+                            </div>
+
+                            <div class="searchInfo">
+                                <span class="recent">@Model.Loc.Where(a => a.ResourceId == "GlobalRecentlySearched").FirstOrDefault().Value.ToString()</span>
+                                <div class="searchList" id="wosearchList">
+                                    <ul id="UlSearchList"></ul>
+                                </div>
+                                <span class="clear"><a href="javascript:void(0)" id="clearText">@Model.Loc.Where(a => a.ResourceId == "globalClear").FirstOrDefault().Value.ToString()</a></span>
+                                <div style="clear:both;"></div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="right-box-panel">
+                        <button type="button" class="btn btn-white import-export" id="btnExport" disabled onclick="funcShowExportbtn()">@Model.Loc.Where(a => a.ResourceId == "spnExport").FirstOrDefault().Value.ToString()</button>
+
+                        <button type="button" class="btn btn-white" id="liCustomize" title="Customize" data-toggle="modal" data-target="#gridcolumncustomizemodal"><i class="fa fa-cog" style="font-size: 1.3rem;"></i></button>
+                        <div style="clear:both;"></div>
+                    </div>
+                </div>
+                <div id="dvFilterSearchSelect2"></div>
+                <div style="clear:both;"></div>
+            </div>
+
+            
+            <div style="clear:both;"></div>
+
+            <div id="Active" class="tabcontent" style="display:block;">
+                <div class="table-responsive">
+                    <table id="BBUKPISiteSearch" class="eqpDtlTbl row-border custom-sort tblMain tblDefaultSort" style="width:100%;">
+                        <thead>
+                            <tr>
+                                <th data-col="0" data-th-index="0">@Model.Loc.Where(a => a.ResourceId == "spnYear").FirstOrDefault().Value.ToString()</th>
+                                <th data-col="1" data-th-index="1">@Model.Loc.Where(a => a.ResourceId == "spnWeekNumber").FirstOrDefault().Value.ToString()</th>
+                                <th data-col="2" data-th-index="2">@Model.Loc.Where(a => a.ResourceId == "spnWeekStart").FirstOrDefault().Value.ToString()</th>
+                                <th data-col="3" data-th-index="3">@Model.Loc.Where(a => a.ResourceId == "spnWeekEnd").FirstOrDefault().Value.ToString()</th>
+                                <th data-col="4" data-th-index="4">@Model.Loc.Where(a => a.ResourceId == "spnCreated").FirstOrDefault().Value.ToString()</th>
+                                <th data-col="5" data-th-index="5" style="text-align:right !important;">@Model.Loc.Where(a => a.ResourceId == "spnOntimePMpercentageCompletion").FirstOrDefault().Value.ToString()</th>
+                                <th data-col="6" data-th-index="6" style="text-align:right !important;">@Model.Loc.Where(a => a.ResourceId == "spnWOBacklogCount").FirstOrDefault().Value.ToString()</th>
+                                <th data-col="7" data-th-index="7" style="text-align:right !important;">@Model.Loc.Where(a => a.ResourceId == "spnCycleCountAccuracyPercentage").FirstOrDefault().Value.ToString()</th>
+
+                                <th data-col="8" data-th-index="8" style="display:none;">@Model.Loc.Where(a => a.ResourceId == "spnCountPMfollowUp").FirstOrDefault().Value.ToString()</th>
+                                <th data-col="9" data-th-index="9" style="display:none;"># @Model.Loc.Where(a => a.ResourceId == "spnActiveMechanicUsers").FirstOrDefault().Value.ToString()</th>
+                                <th data-col="10" data-th-index="10" style="display:none;">@Model.Loc.Where(a => a.ResourceId == "spnRCPS_EventsOnEquipBreakdown").FirstOrDefault().Value.ToString()</th>
+                                <th data-col="11" data-th-index="11" style="display:none;">@Model.Loc.Where(a => a.ResourceId == "spnTTR_Events").FirstOrDefault().Value.ToString()</th>
+                                <th data-col="12" data-th-index="12" style="display:none;">@Model.Loc.Where(a => a.ResourceId == "spnInventoryDollarValueOverMax").FirstOrDefault().Value.ToString()</th>
+                                <th data-col="13" data-th-index="13" style="display:none;">@Model.Loc.Where(a => a.ResourceId == "spnCycleCountProgressPercentage").FirstOrDefault().Value.ToString()</th>
+                                <th data-col="14" data-th-index="14" style="display:none;">@Model.Loc.Where(a => a.ResourceId == "spnWeeklyHoursOfEVTraining").FirstOrDefault().Value.ToString()</th>
+                                <th data-col="15" data-th-index="15" style="display:none;">@Model.Loc.Where(a => a.ResourceId == "spnSiteGlobal").FirstOrDefault().Value.ToString()</th>
+
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+            <div style="display:none;">
+                
+                    <table id="BBUKPISiteSearchForExport">
+                        <thead>
+                            <tr>
+                                <th data-col="0" data-th-index="0">@Model.Loc.Where(a => a.ResourceId == "spnYear").FirstOrDefault().Value.ToString()</th>
+                                <th data-col="1" data-th-index="1">@Model.Loc.Where(a => a.ResourceId == "spnWeekNumber").FirstOrDefault().Value.ToString()</th>
+                                <th data-col="2" data-th-index="2">@Model.Loc.Where(a => a.ResourceId == "spnSiteGlobal").FirstOrDefault().Value.ToString()</th>
+                                <th data-col="3" data-th-index="3">@Model.Loc.Where(a => a.ResourceId == "spnCreated").FirstOrDefault().Value.ToString()</th>
+                                <th data-col="4" data-th-index="4">@Model.Loc.Where(a => a.ResourceId == "spnOntimePMpercentageCompletion").FirstOrDefault().Value.ToString()</th>
+                                <th data-col="5" data-th-index="5">@Model.Loc.Where(a => a.ResourceId == "spnCountPMfollowUp").FirstOrDefault().Value.ToString()</th>
+                                <th data-col="6" data-th-index="6"># @Model.Loc.Where(a => a.ResourceId == "spnActiveMechanicUsers").FirstOrDefault().Value.ToString()</th>
+                                <th data-col="7" data-th-index="7">@Model.Loc.Where(a => a.ResourceId == "spnWOBacklogCount").FirstOrDefault().Value.ToString()</th>
+                                <th data-col="8" data-th-index="8">@Model.Loc.Where(a => a.ResourceId == "spnRCPS_EventsOnEquipBreakdown").FirstOrDefault().Value.ToString()</th>
+                                <th data-col="9" data-th-index="9">@Model.Loc.Where(a => a.ResourceId == "spnTTR_Events").FirstOrDefault().Value.ToString()</th>
+                                <th data-col="10" data-th-index="10">@Model.Loc.Where(a => a.ResourceId == "spnInventoryDollarValueOverMax").FirstOrDefault().Value.ToString()</th>
+                                <th data-col="11" data-th-index="11">@Model.Loc.Where(a => a.ResourceId == "spnCycleCountAccuracyPercentage").FirstOrDefault().Value.ToString()</th>
+                                <th data-col="12" data-th-index="12">@Model.Loc.Where(a => a.ResourceId == "spnCycleCountProgressPercentage").FirstOrDefault().Value.ToString()</th>
+                                <th data-col="13" data-th-index="13">@Model.Loc.Where(a => a.ResourceId == "spnWeeklyHoursOfEVTraining").FirstOrDefault().Value.ToString()</th>
+                                <th data-col="14" data-th-index="14">@Model.Loc.Where(a => a.ResourceId == "spnWeekStart").FirstOrDefault().Value.ToString()</th>
+                                <th data-col="15" data-th-index="15">@Model.Loc.Where(a => a.ResourceId == "spnWeekEnd").FirstOrDefault().Value.ToString()</th>
+                            </tr>
+                        </thead>
+                    </table>
+               
+            </div>
+        </div>
+    </div>
+</div>
+@if (Convert.ToString(Session["MenuState"]) == "" || Convert.ToString(Session["MenuState"]) == "open")
+{
+    <div id="searcharea" class="slideToggleBar" style="display:none">
+        <div class="searchBoxArea">
+            <div class="form-group" style="margin-bottom:0; position:relative;">
+                <i class="fa fa-search" style="font-size: 1.1rem;position: absolute;top: 8px;left: 0px;"></i>
+                <input type="text" class="form-control searched" placeholder="Search for a view" id="BBUKPISitesearctxtbox">
+            </div>
+        </div>
+
+        <div class="searchList">
+            <ul id="BBUKPISitesearchListul">
+                @if (Model.CustomQueryDisplayList != null)
+                {
+                    foreach (var item in Model.CustomQueryDisplayList)
+                    {
+                        <li id="@item.Value" class="BBUKPISitesearchdrpbox"><a href="javascript:void(0)">@item.Text</a></li>
+                    }
+                }
+            </ul>
+        </div>
+    </div>
+}
+else
+{
+    <div id="searcharea" class="slideToggleBar" style="display:none;left:81px !important;">
+        <div class="searchBoxArea">
+            <div class="form-group" style="margin-bottom:0; position:relative;">
+                <i class="fa fa-search" style="font-size: 1.1rem;position: absolute;top: 8px;left: 0px;"></i>
+                <input type="text" class="form-control searched" placeholder="Search for a view" id="BBUKPISitesearctxtbox">
+            </div>
+        </div>
+
+        <div class="searchList">
+            <ul id="BBUKPISitesearchListul">
+                @if (Model.CustomQueryDisplayList != null)
+                {
+                    foreach (var item in Model.CustomQueryDisplayList)
+                    {
+                        <li id="@item.Value" class="BBUKPISitesearchdrpbox"><a href="javascript:void(0)">@item.Text</a></li>
+                    }
+                }
+            </ul>
+        </div>
+    </div>
+}
+@Html.Partial("_DateRangeModalForSiteCreateDate")
+@Html.Partial("_DateRangeModalForSiteSubmitDate")
+
+@Html.Partial("_CustomizeGridSetup")
+@Html.Partial("_Export")
+
+<style>
+    .drpdown-box-sec {
+        width: calc(100% - 130px);
+        margin-right: 10px;
+    }
+    .drpdown-box-sec-wrap {
+        display:flex;
+    }
+
+    .right-box-panel {
+        width: 122px;  
+    }
+    @@media(max-width:650px){
+        .select2-container {
+            min-width: 100%;
+        }
+        .drpdown-box-sec {
+            width:100%;
+        }
+        .right-box-panel {
+            width: 100%;
+            padding: 10px 0 0 0;
+        }
+        .right-box-panel {
+            width: 100%;
+            display: flex;
+        }
+        .right-box-panel .btn.btn-white.import-export {
+            width: calc(100% - 50px);
+        }
+        .drpdown-box-sec-wrap {
+            display: block;
+        }
+    }
+</style>
+
+@Html.Partial("_BBUKPISiteAdvancedSearch")

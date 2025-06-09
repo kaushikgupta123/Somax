@@ -1,0 +1,171 @@
+﻿@model Client.Models.PartLookup.PartAddItemToCartModel
+@{
+    ViewBag.Title = "_AddToCartSideBar";
+    var userdata = Session["userData"];
+    DataContracts.UserData userData = new DataContracts.UserData();
+    userData = (DataContracts.UserData)userdata;
+}
+@{
+
+    if (userData.Site.ShoppingCart)
+    {
+        if (Model.InVendorCatalog)
+        {
+            <div class="sidebarCartList clsSBarList_@Model.PartId clsIndex_@Model.indexid" id="@Model.PartId">
+                <div class="productDetailsArea">
+                    <div class="dtlsBox">
+                        <h2>@Model.ClientLookUpId</h2>
+                        <p>@Model.Description</p>
+                    </div>
+                    <div class="sidebarSymbol"> <img src="@Model.ImageUrl"> </div>
+                    <div style="clear:both;"></div>
+                </div>
+                <div class="sidebarAction">
+
+                    <div class="qtyBox">
+                        <div class="input-groups">
+                            <input type="text" class="form-control search input-number qtyothertext allownumericWithdecimal Partqtyvalue decimalinputupto2places " maskedFormat='8,2' placeholder="Qty" data-Qty-Id="sidebarpartQtyCard" value="@Model.PartQty" maxlength="11" style="margin-right:0px" />
+                            <input type="hidden" id="hidClientLookupId" value="@Model.ClientLookUpId" />
+                            <input type="hidden" class="hidsidepartPriceRate" value="@Model.UnitPrice">
+                            <input type="text" id="PartPrice" style="display:none" data-Price-Id="partsidebarPriceCard" class="form-control search pricetext allownumericWithdecimal input-number " placeholder="@Model.Loc.Where(a => a.ResourceId == "spnPLPrice").FirstOrDefault().Value.ToString()" value="@Model.UnitPrice" maxlength="10">
+                            <input type="hidden" id="TotalPartPrice" value="@Model.TotalUnitPrice" />
+                            <input type="hidden" id="PartUOM" value="@Model.PurchaseUnitofMeasure" />
+                            <input type="hidden" id="MyPartImage" value="@Model.ImageUrl" />
+                            <input type="hidden" class="MyVendorCatalog" value="true" />
+                            <!-- V2-553 -->
+                            <input type="hidden" class="PurchaseUOM" value="@Model.PurchaseUOM" />
+                            <input type="hidden" class="UOMConvRequired" value="@Model.UOMConvRequired.ToString()" />
+                            <input type="hidden" class="IssueOrder" value="@Model.IssueOrder" />
+                            <input type="hidden" class="VendorCatalogItemId" value="@Model.VendorCatalogItemId" />
+                            <!-- V2-553 -->
+                            <!-- V2-690 -->
+                            <input type="hidden" class="hidVendorId" value="@Model.VendorId" />
+                            <input type="hidden" class="hidPartCategoryMasterId" value="@Model.PartCategoryMasterId" />
+                            <input type="hidden" class="hidindexid" value="@Model.indexid" />
+                            <input type="hidden" class="hiddescription" value="@Model.Description" />
+                            <input type="hidden" class="hidstoreroomid" value="@Model.StoreroomId" />@*V2-732*@
+                            <input type="hidden" class="hidpartstoreroomid" value="@Model.PartStoreroomId" />@*V2-732*@
+                            @*V2-1068*@
+                            <input type="hidden" class="hidAccountId" value="@Model.AccountId" />@*V2-1068*@
+                            <input type="hidden" class="hidUnitOfMeasure" value="@Model.UnitOfMeasure" />  @*V2-1068 IssueUOM as UnitOfMeasure *@
+                            <!-- V2-690 -->
+                            <button type="button" onclick="DeleteFromCart(this)" data-partid="@Model.PartId" data-indexid="@Model.indexid" class="btn btn-danger" style="float:left;" title="@Model.Loc.Where(a => a.ResourceId == "globalDelete").FirstOrDefault().Value.ToString()">@Model.Loc.Where(a => a.ResourceId == "globalDelete").FirstOrDefault().Value.ToString()</button>
+                            <div style="clear:both;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="sidebarCartList clsSBarList_@Model.PartId  clsIndex_@Model.indexid" id="@Model.PartId">
+                <div class="productDetailsArea">
+                    <div class="dtlsBox">
+                        <h2>@Model.ClientLookUpId</h2>
+                        <p>@Model.Description</p>
+                    </div>
+                    <div class="sidebarSymbol"> <img src="@Model.ImageUrl"> </div>
+                    <div style="clear:both;"></div>
+                </div>
+                <div class="sidebarAction">
+                    <div class="qtyBox">
+                        <div class="input-groups">
+                            <input type="text" class="form-control search input-number qtyothertext allownumericWithdecimal Partqtyvalue decimalinputupto2places " maskedFormat='8,2' placeholder="Qty" data-Qty-Id="sidebarpartQtyCard" value="@Model.PartQty" maxlength="11" style="margin-right:0px" />
+                            <input type="hidden" id="hidClientLookupId" value="@Model.ClientLookUpId" />
+                            <input type="hidden" class="hidsidepartPriceRate" value="@Model.UnitPrice">
+                            @if (Model.UOMConvRequired)
+                            {
+                                <input type="text" id="PartPrice" style="display:none" data-Price-Id="partsidebarPriceCard" class="form-control search pricetext allownumericWithdecimal input-number " placeholder="@Model.Loc.Where(a => a.ResourceId == "spnPLPrice").FirstOrDefault().Value.ToString()" value="@Model.UnitPrice" maxlength="10">
+                            }
+                            else
+                            {
+                                <input type="text" id="PartPrice" style="display:none" data-Price-Id="partsidebarPriceCard" class="form-control search pricetext allownumericWithdecimal input-number " placeholder="@Model.Loc.Where(a => a.ResourceId == "spnPLPrice").FirstOrDefault().Value.ToString()" value="@Model.UnitPrice" maxlength="10">
+                            }
+
+                            <input type="hidden" id="TotalPartPrice" value="@Model.TotalUnitPrice" />
+                            <input type="hidden" id="PartUOM" value="@Model.PurchaseUnitofMeasure" />
+                            <input type="hidden" id="MyPartImage" value="@Model.ImageUrl" />
+                            <input type="hidden" class="MyVendorCatalog" value="false" />
+                            <!-- V2-553 -->
+                            <input type="hidden" class="PurchaseUOM" value="@Model.PurchaseUOM" />
+                            <input type="hidden" class="UOMConvRequired" value="@Model.UOMConvRequired.ToString()" />
+                            <input type="hidden" class="IssueOrder" value="@Model.IssueOrder" />
+                            <input type="hidden" class="VendorCatalogItemId" value="@Model.VendorCatalogItemId" />
+                            <!-- V2-553 -->
+                            <!-- V2-690 -->
+                            <input type="hidden" class="hidVendorId" value="@Model.VendorId" />
+                            <input type="hidden" class="hidPartCategoryMasterId" value="@Model.PartCategoryMasterId" />
+                            <input type="hidden" class="hidindexid" value="@Model.indexid" />
+                            <input type="hidden" class="hiddescription" value="@Model.Description" />
+                            <input type="hidden" class="hidstoreroomid" value="@Model.StoreroomId" />@*V2-732*@
+                            <input type="hidden" class="hidpartstoreroomid" value="@Model.PartStoreroomId" />@*V2-732*@
+                            <input type="hidden" class="hidAccountId" value="@Model.AccountId" />@*V2-1068*@
+                            <input type="hidden" class="hidUnitOfMeasure" value="@Model.UnitOfMeasure" />  @*V2-1068 IssueUOM as UnitOfMeasure *@
+                            <!-- V2-690 -->
+                            <button type="button" onclick="DeleteFromCart(this)" data-partid="@Model.PartId" data-indexid="@Model.indexid" class="btn btn-danger" style="float:left;" title="@Model.Loc.Where(a => a.ResourceId == "globalDelete").FirstOrDefault().Value.ToString()">@Model.Loc.Where(a => a.ResourceId == "globalDelete").FirstOrDefault().Value.ToString()</button>
+                            <div style="clear:both;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        <div class="sidebarCartList clsSBarList_@Model.PartId clsIndex_@Model.indexid" id="@Model.PartId">
+            <div class="productDetailsArea">
+                <div class="dtlsBox">
+                    <h2>@Model.ClientLookUpId</h2>
+                    <p>@Model.Description</p>
+                </div>
+                <div class="sidebarSymbol"> <img src="@Model.ImageUrl"> </div>
+                <div style="clear:both;"></div>
+            </div>
+            <div class="sidebarAction">
+
+                <div class="qtyBox">
+                    <div class="input-groups">
+                        <input type="text" class="form-control search input-number qtyothertext allownumericWithdecimal Partqtyvalue decimalinputupto2places " maskedFormat='8,2' placeholder="Qty" data-Qty-Id="sidebarpartQtyCard" value="@Model.PartQty" maxlength="11" style="margin-right:0px" />
+                        <input type="hidden" id="hidClientLookupId" value="@Model.ClientLookUpId" />
+                        <input type="hidden" class="hidsidepartPriceRate" value="@Model.UnitPrice">
+                        @if (Model.UOMConvRequired)
+                        {
+                            <input type="text" id="PartPrice" style="display:none" data-Price-Id="partsidebarPriceCard" class="form-control search pricetext allownumericWithdecimal input-number " placeholder="@Model.Loc.Where(a => a.ResourceId == "spnPLPrice").FirstOrDefault().Value.ToString()" value="@Model.UnitPrice" maxlength="10">
+                        }
+                        else
+                        {
+                            <input type="text" id="PartPrice" style="display:none" data-Price-Id="partsidebarPriceCard" class="form-control search pricetext allownumericWithdecimal input-number " placeholder="@Model.Loc.Where(a => a.ResourceId == "spnPLPrice").FirstOrDefault().Value.ToString()" value="@Model.UnitPrice" maxlength="10">
+                        }
+
+                        <input type="hidden" id="TotalPartPrice" value="@Model.TotalUnitPrice" />
+                        <input type="hidden" id="PartUOM" value="@Model.PurchaseUnitofMeasure" />
+                        <input type="hidden" id="MyPartImage" value="@Model.ImageUrl" />
+                        <input type="hidden" class="MyVendorCatalog" value="false" />
+                        <!-- V2-553 -->
+                        <input type="hidden" class="PurchaseUOM" value="@Model.PurchaseUOM" />
+                        <input type="hidden" class="UOMConvRequired" value="@Model.UOMConvRequired.ToString()" />
+                        <input type="hidden" class="IssueOrder" value="@Model.IssueOrder" />
+                        <input type="hidden" class="VendorCatalogItemId" value="@Model.VendorCatalogItemId" />
+                        <!-- V2-553 -->
+                        <!-- V2-690 -->
+                        <input type="hidden" class="hidVendorId" value="@Model.VendorId" />
+                        <input type="hidden" class="hidPartCategoryMasterId" value="@Model.PartCategoryMasterId" />
+                        <input type="hidden" class="hidindexid" value="@Model.indexid" />
+                        <input type="hidden" class="hiddescription" value="@Model.Description" />
+                        <input type="hidden" class="hidstoreroomid" value="@Model.StoreroomId" />@*V2-732*@
+                        <input type="hidden" class="hidpartstoreroomid" value="@Model.PartStoreroomId" />@*V2-732*@
+                        <input type="hidden" class="hidAccountId" value="@Model.AccountId" />@*V2-1068*@
+                        <input type="hidden" class="hidUnitOfMeasure" value="@Model.UnitOfMeasure" />  @*V2-1068 IssueUOM as UnitOfMeasure *@
+                        <!-- V2-690 -->
+                        <button type="button" onclick="DeleteFromCart(this)" data-partid="@Model.PartId"
+                                data-indexid="@Model.indexid" class="btn btn-danger" style="float:left;" title="@Model.Loc.Where(a => a.ResourceId == "globalDelete").FirstOrDefault().Value.ToString()">
+                            @Model.Loc.Where(a => a.ResourceId == "globalDelete").FirstOrDefault().Value.ToString()
+                        </button>
+                        <div style="clear:both;"></div>
+                    </div>
+                    </div>
+                </div>
+            </div>
+        }
+}
+

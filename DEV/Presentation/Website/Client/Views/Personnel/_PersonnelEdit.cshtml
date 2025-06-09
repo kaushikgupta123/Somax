@@ -1,0 +1,165 @@
+﻿@model Client.Models.PersonnelVM
+@*V2-831 start*@
+@using Client.Models.Common
+@{
+    bool OraclePurchaseRequestExportInUse = false;
+    bool PurchaseRequestExportInUse = false;   
+    var InterfacePropData = (List<InterfacePropModel>)Session["InterfacePropData"];
+    if (InterfacePropData != null && InterfacePropData.Count > 0)
+    {
+        OraclePurchaseRequestExportInUse = InterfacePropData.Where(x => x.InterfaceType == ApiConstants.OraclePurchaseRequestExport).Select(x => x.InUse).FirstOrDefault();
+        PurchaseRequestExportInUse = InterfacePropData.Where(x => x.InterfaceType == ApiConstants.PurchaseRequestExport).Select(x => x.InUse).FirstOrDefault();       
+    }
+}
+@*V2-831 end*@
+<div class="m-subheader">
+    <div class="new-m-subheader">
+        <div class="PageTitle">
+            <div class="align-items-center separator">
+                <h3 class="m-subheader__title ">
+                    @Model.Loc.Where(a => a.ResourceId == "spnPersonnel").FirstOrDefault().Value.ToString()
+                </h3>
+            </div>
+        </div>
+
+        <div class="NewBreadcrumbArea">
+            <div class="newBreadcrumb">
+                <ul>
+                    <li><a href="/Dashboard/Dashboard">&nbsp;</a></li>
+                    <li><a href="/Personnel/Index?page=Personnel">@Model.Loc.Where(a => a.ResourceId == "spnPersonnel").FirstOrDefault().Value.ToString()</a></li>
+                    <li class="brdPersonnel" data-val="@Model.personnelModel.PersonnelId"><a href="javascript:void(0)">@Model.personnelModel.ClientLookupId</a></li>
+                    <li class="active">@Model.Loc.Where(a => a.ResourceId == "globalEdit").FirstOrDefault().Value.ToString() </li>
+                </ul>
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+        <div style="clear:both;"></div>
+    </div>
+</div>
+@Html.Partial("_ErrorDiv")
+@using (Ajax.BeginForm("UpdatePersonnel", "Personnel", new AjaxOptions { HttpMethod = "Post", OnSuccess = "OnPersonnelEditOnSuccess", OnBegin = "AjaxBeginFormBegin", OnComplete = "AjaxBeginFormComplete", OnFailure = "AjaxBeginFormFaillure" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="row">
+        <div class="col-xl-12">
+            <div class="m-portlet newPort" id="m_portlet" style="padding:15px;">
+                <div class="bottomBlock">
+                    <div class="tabsArea nobg">
+                        <ul class="listView nobrd">
+                            <li>
+                                <span class="label">
+                                    <label for="notesFirstName">@Model.Loc.Where(a => a.ResourceId == "spnFirstName").FirstOrDefault().Value.ToString()  : <small>*</small></label>
+                                </span>
+                                <span class="inputText">
+                                    @Html.TextBoxFor(m => m.personnelModel.FirstName, new { @class = "form-control search", autocomplete = "off" })
+                                    @Html.ValidationMessageFor(m => m.personnelModel.FirstName, "", new { style = "display:none" })
+                                </span>
+                            </li>
+
+                            <li>
+                                <span class="label">
+                                    <label for="notesMiddleName">@Model.Loc.Where(a => a.ResourceId == "spnmiddlename").FirstOrDefault().Value.ToString()  : </label>
+                                </span>
+                                <span class="inputText">
+                                    @Html.TextBoxFor(m => m.personnelModel.MiddleName, new { @class = "form-control search", autocomplete = "off", maxlength = "31" })
+                                </span>
+                            </li>
+                            <li>
+                                <span class="label">
+                                    <label for="notesLastName">@Model.Loc.Where(a => a.ResourceId == "spnLastName").FirstOrDefault().Value.ToString()  :</label>
+                                </span>
+                                <span class="inputText">
+                                    @Html.TextBoxFor(m => m.personnelModel.LastName, new { @class = "form-control search", autocomplete = "off", maxlength = "63" })
+                                </span>
+                            </li>
+                            <li>
+                                <span class="label">
+                                    <label for="notesCraft">@Model.Loc.Where(a => a.ResourceId == "spnCraft").FirstOrDefault().Value.ToString() :</label>
+                                </span>
+                                <span class="inputText">
+                                    @Html.DropDownListFor(m => m.personnelModel.CraftId, Model.personnelModel.CraftList, "--Select--", new { @class = "form-control select2picker", style = "width:100%;" })
+                                </span>
+                            </li>
+                            <li>
+                                <span class="label">
+                                    <label for="notesShift">@Model.Loc.Where(a => a.ResourceId == "spnShift").FirstOrDefault().Value.ToString() :</label>
+                                </span>
+                                <span class="inputText">
+                                    @Html.DropDownListFor(m => m.personnelModel.Shift, Model.personnelModel.ShiftList, "--Select--", new { @class = "form-control select2picker", style = "width:100%;" })
+                                </span>
+                            </li>                          
+                            @if (Model.udata.DatabaseKey.Client.UseMultiStoreroom == true)
+                            {
+                                <li>
+                                    <span class="label">
+                                        <label for="notesShift">@Model.Loc.Where(a => a.ResourceId == "spnDefaultStoreroom").FirstOrDefault().Value.ToString() :</label>
+                                    </span>
+                                    <span class="inputText">
+                                        @Html.DropDownListFor(m => m.personnelModel.Default_StoreroomId, Model.personnelModel.StoreroomList, "--Select--", new { @class = "form-control select2picker", style = "width:100%;" })
+                                    </span>
+                                </li>
+                            }
+                                <li>
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnGlobalScheduleEmployeeWO").FirstOrDefault().Value.ToString():</span>
+                                    <span class="inputText">
+                                        @Html.CheckBoxFor(m => m.personnelModel.ScheduleEmployee, new { @class = "form-control m-input", @style = "color:black; width: auto; margin-top: 12px;" })
+                                    </span>
+                                </li>
+                                <li>
+                                    <span class="label">
+                                        <label for="notesPlanner">@Model.Loc.Where(a => a.ResourceId == "spnPlanner").FirstOrDefault().Value.ToString() :</label>
+                                    </span>
+                                    <span class="inputText">
+                                        @Html.CheckBoxFor(m => m.personnelModel.Planner, new { @class = "form-control m-input", @style = "color:black; width: auto; margin-top: 12px;" })
+                                    </span>
+                                </li>
+                                @*V2-1108 start*@
+                                <li>
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnAssigned").FirstOrDefault().Value.ToString() @Model.AssetGroup1Label</span>
+                                    <span class="inputText">
+                                        @Html.DropDownListFor(m => m.personnelModel.AssignedAssetGroup1, Model.AssetGroup1List, "--Select--", new { @class = "form-control select2picker", style = "width:100%;" })
+                                    </span>
+                                </li>
+                                <li>
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnAssigned").FirstOrDefault().Value.ToString() @Model.AssetGroup2Label</span>
+                                    <span class="inputText">
+                                        @Html.DropDownListFor(m => m.personnelModel.AssignedAssetGroup2, Model.AssetGroup2List, "--Select--", new { @class = "form-control select2picker", style = "width:100%;" })
+                                    </span>
+                                </li>
+                                <li>
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnAssigned").FirstOrDefault().Value.ToString() @Model.AssetGroup3Label</span>
+                                    <span class="inputText">
+                                        @Html.DropDownListFor(m => m.personnelModel.AssignedAssetGroup3, Model.AssetGroup3List, "--Select--", new { @class = "form-control select2picker", style = "width:100%;" })
+                                    </span>
+                                </li>
+                                @*V2-1108 end*@
+                                @*V2-831 start*@
+                                @if (OraclePurchaseRequestExportInUse || PurchaseRequestExportInUse)
+                                {
+                                    <li>
+                                        <span class="label">
+                                            <label for="ExternalId">@Model.Loc.Where(a => a.ResourceId == "spnExternalId").FirstOrDefault().Value.ToString()  :</label>
+                                        </span>
+                                        <span class="inputText">
+                                            @Html.TextBoxFor(m => m.personnelModel.ExternalId, new { @class = "form-control search", autocomplete = "off", maxlength = "63" })
+                                        </span>
+                                    </li>
+                                }
+                            </ul>
+                    </div>
+                    <div style="clear:both;"></div>
+                    <div class="bttn_pagin">
+                        <div class="bttns2">
+                            <button type="submit" class="btn btn-blue mobBttn" name="Command" value="save"><i class="fa fa-save faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+                        </div>
+                        <div class="bttns"><button type="button" class="btn btn-blue mobBttn" id="btnCancelPersonnel"><i class="fa fa-close faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button></div>
+                        <div style="clear:both;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @Html.HiddenFor(m => m.personnelModel.PersonnelId)
+    @Html.HiddenFor(m => m.personnelModel.UpdateIndex)
+
+}

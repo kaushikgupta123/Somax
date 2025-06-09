@@ -1,0 +1,13 @@
+﻿@{
+    ViewBag.Title = "Somax-Config | Manufacturer Master";
+}
+@section scripts {
+    @Scripts.Render("~/bundles/datatable")
+    @Styles.Render("~/Content/dropzone")
+    @Scripts.Render("~/bundles/ManufacturerMaster")
+}
+@Styles.Render("~/Content/datatable")
+<link href="~/Scripts/dropzone/basic.min.css" rel="stylesheet" />
+<div id="renderManmaster">
+    @Html.Partial("~/Views/Configuration/ManufacturerMaster/_ManufacturerMasterSearch.cshtml")
+</div>

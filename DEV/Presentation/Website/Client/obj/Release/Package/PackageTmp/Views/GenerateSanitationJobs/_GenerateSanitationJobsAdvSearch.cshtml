@@ -1,0 +1,35 @@
+﻿@model Client.Models.GenerateSanitationJobs.GenerateSanitationJobsVM
+<nav class="sidebar">
+    <div class="dismiss">
+        <i class="fa fa-close"></i>
+    </div>
+    <div class="sidebar-header">
+        <h3><i class="fa fa-filter" style="position: relative; top: -2px;"></i> @Model.Loc.Where(a => a.ResourceId == "globalFilter").FirstOrDefault().Value.ToString()<span class="filteritemcount">0</span></h3>
+        <button type="button" class="btn btn-blue filterSearch" id="btnSanGeneratedDataAdvSrch"><i class="fa fa-search" style="margin-top:-3px;"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "GlobalApply").FirstOrDefault().Value.ToString()</button>
+    </div>
+    <div class="sidebar-content" id="advsearchsidebarSanGenerated">
+        <div class="form-group">
+            <label for="SanGenDueDate">@Model.Loc.Where(a => a.ResourceId == "spnDueDate").FirstOrDefault().Value.ToString():</label>
+            <input type="text" class="form-control search dtpicker adv-item" id="SanGenDueDate">
+        </div>
+        <div class="form-group">
+            <label for="SanGEquipmentClientLookupId">@Model.Loc.Where(a => a.ResourceId == "spnAssetID").FirstOrDefault().Value.ToString() :</label>
+            <input type="text" class="form-control search adv-item" id="SanGEquipmentClientLookupId">
+        </div>
+        <div class="form-group">
+            <label for="SanGEquipmentName">@Model.Loc.Where(a => a.ResourceId == "spnAssetName").FirstOrDefault().Value.ToString() :</label>
+            <input type="text" class="form-control search  adv-item" id="SanGEquipmentName">
+        </div>
+
+        <div class="form-group">
+            <label for="SanGenDesc">@Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString() :</label>
+            <input type="text" class="form-control search adv-item" id="SanGenDesc">
+        </div>
+        <div class="form-group">
+            <label for="SanGenShift">@Model.Loc.Where(a => a.ResourceId == "spnShift").FirstOrDefault().Value.ToString() :</label>
+            <input type="text" class="form-control search adv-item" id="SanGenShift">
+        </div>
+    </div>
+</nav>
+
+

@@ -1,0 +1,288 @@
+﻿@model Client.Models.PreventiveMaintenance.PrevMaintVM
+@{
+    ViewBag.Title = "Somax | PM Generate Work Orders";
+    bool Preview = true;
+    if (Model.userData.DatabaseKey.Client.PMWOGenerateMethod != null && Model.userData.DatabaseKey.Client.PMWOGenerateMethod == PMWOGenerationMethodConstants.NoPreview)
+    {
+        Preview = false;
+    }
+}
+@Styles.Render("~/Content/datatable")
+<style>
+    .errormessage {
+        margin-top: 10px !important;
+    }
+
+    .ui-tooltip.ui-corner-all {
+        left:470px !important;
+    }
+
+    .select2-container--default .select2-selection--multiple {
+        height: auto !important;
+        min-height: 34px;
+    }
+
+    #popupExport {
+        position: absolute !important;
+        top: 50vh !important;
+    }
+
+
+    @@media (max-width: 1370px) {
+
+        #popupExport {
+            position: absolute !important;
+            top: 73vh !important;
+        }
+        .ui-tooltip.ui-corner-all {
+            left: 400px !important;
+        }
+    }
+
+    @@media (max-width: 1020px) {
+        .ui-tooltip.ui-corner-all {
+            left: 150px !important;
+        }
+    }
+
+        @@media (max-width: 1025px) {
+
+            .m-page #popupExport {
+                position: fixed !important;
+                right: 35% !important;
+            }
+        }
+
+        @@media (max-width: 480px) {
+
+            #popupExport {
+                position: fixed !important;
+                top: 52vh !important;
+            }
+
+          
+
+        }
+    .ghover {
+        position: relative;
+    }
+
+    .tooltipgrid {
+        background: #d0e8fa;
+        padding: 5px;
+        border-radius: 5px;
+        position: absolute;
+        width: 200px;
+        height: auto;
+        left: 10px;
+        top: 41px;
+        color: #000;
+        font-size: 13px;
+        font-weight: 500;
+        z-index: 9;
+        display: none !important;
+        cursor: pointer;
+    }
+</style>
+<link href="~/Content/sweetalert.css" rel="stylesheet" />
+<link href="~/Content/themes/base/jquery-ui.min.css" rel="stylesheet" />
+<link href="~/Content/tootltipcustom.css" rel="stylesheet" />
+<link href="~/Content/sidebar_custom.css" rel="stylesheet" />
+<link href="~/Scripts/Metronic/assets/demo/default/base/GlobalSearchGrid.css" rel="stylesheet" />
+@section scripts {
+    @Scripts.Render("~/bundles/datatable")
+    <script src="~/Scripts/Pages/Preventive/PMGenerateWorkOrders.js"></script>
+}
+<div id="renderPMGenWO">
+    @Html.Partial("_ErrorDiv")
+    <div class="m-subheader">
+        <div class="new-m-subheader">
+            <div class="PageTitle">
+                <div class="align-items-center separator">
+                    <h3 class="m-subheader__title ">
+                        @Model.Loc.Where(a => a.ResourceId == "spnTitle").FirstOrDefault().Value.ToString()
+                    </h3>
+                </div>
+            </div>
+
+            <div class="NewBreadcrumbArea">
+                <div class="newBreadcrumb">
+                    <ul>
+                        <li><a href="/Dashboard/Dashboard">&nbsp;</a></li>
+                        <li class="active">@Model.Loc.Where(a => a.ResourceId == "spnGenerateWorkOrders").FirstOrDefault().Value.ToString()</li>
+                    </ul>
+                    <div style="clear:both;"></div>
+                </div>
+            </div>
+            <div style="clear:both;"></div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-xl-12">
+            <div class="newPort" id="m_portlet">
+
+                <div class="bottomBlock">
+                    <div class="tabsArea nobg">
+                        @using (Ajax.BeginForm("GenerateWorkOrder", "PMGenerateWorkOrders", new AjaxOptions { HttpMethod = "Post", OnSuccess = "CreatePMWorkOrderOnSuccess", OnBegin = "AjaxBeginFormBegin", OnFailure = "AjaxBeginFormFaillure"},new {id="PMGenWOForm"}))
+                        {
+                            @Html.AntiForgeryToken()
+                            <div class="modal-body-wrap">
+                                <div class="modal-col-wrap">
+                                    <strong style="padding:0 0 15px 0; display:block; font-size: 14px;"> @Model.Loc.Where(a => a.ResourceId == "spnScheduling").FirstOrDefault().Value.ToString()</strong>
+                                    <div class="form-group">
+
+                                        <label id="lblSchdType">@Model.Loc.Where(a => a.ResourceId == "spnSchdType").FirstOrDefault().Value.ToString():<small>*</small></label>
+                                        @Html.ValidationMessageFor(m => m.pMGenerateWorkOrdersModel.ScheduleType, "", new { style = "display:none;" })
+                                        @Html.DropDownListFor(m => m.pMGenerateWorkOrdersModel.ScheduleType, Model.pMGenerateWorkOrdersModel.ScheduleTypeList, "--Select--", new { @class = "form-control search select2picker adv-item", id = "ddlscheduletype", style = "width:100%;" })
+                                    </div>
+                                    <div class="form-group">
+                                        <label id="lblGenerateThrough">@Model.Loc.Where(a => a.ResourceId == "spnGenerateThrough").FirstOrDefault().Value.ToString():<small>*</small></label>
+                                        @Html.ValidationMessageFor(m => m.pMGenerateWorkOrdersModel.GenerateThrough, "", new { style = "display:none" })
+                                        @Html.TextBoxFor(m => m.pMGenerateWorkOrdersModel.GenerateThrough, "{0:MM/dd/yyyy}", new { @class = "form-control search dtpicker1 adv-item genwo", autocomplete = "off", id = "dtgeneratedthrough" })
+
+                                    </div>
+                                    <div class="form-group" id="divOnDemand" style="display:none;">
+                                        <label id="lblOnDemand">@Model.Loc.Where(a => a.ResourceId == "spnOn-DemandGroup").FirstOrDefault().Value.ToString():</label>
+                                        @Html.DropDownListFor(m => m.pMGenerateWorkOrdersModel.OnDemand, Model.pMGenerateWorkOrdersModel.OnDemandList, "--Select--", new { @class = "form-control search select2picker adv-item", id = "ondemandgroup", style = "width:100%;" })
+                                    </div>
+
+                                    @if (!Preview)
+                                    {
+                                        <div class="form-group">
+
+                                            <table style="width:100%">
+                                                <tr>
+                                                  <td width="80%">@Html.CheckBoxFor(m => m.pMGenerateWorkOrdersModel.chkPrintWorkOrder, new { @class = "prnChk", id = "prnChkId" }) @Model.Loc.Where(a => a.ResourceId == "spnPrintGeneratedWorkOrders").FirstOrDefault().Value.ToString() </td>
+
+                                                    <td><button type="submit" class="btn btn-blue" style="float:right;" id="btnCreatePmWorkOrders"><i class="fa fa-plus faIcon"></i> &nbsp;@Model.Loc.Where(a => a.ResourceId == "spnCreateWorkOrders").FirstOrDefault().Value.ToString()</button></td>
+                                                </tr>
+                                            </table>
+
+                                        </div>
+                                    }
+
+                                    @if (Preview)
+                                    {
+                                        <div class="form-group">
+
+                                            <table style="width:100%">
+                                                <tr>
+
+
+
+                                                    <td><button type="submit" class="btn btn-blue" style="float:right;" id="btnCreatePmWorkOrders"><i class="fa fa-plus faIcon"></i> &nbsp;@Model.Loc.Where(a => a.ResourceId == "spnProcess").FirstOrDefault().Value.ToString()</button></td>
+                                                </tr>
+                                            </table>
+
+                                        </div>
+                                    }
+
+                                </div>
+
+                                <div class="modal-col-wrap mulselectclass">
+                                    <strong style="padding:0 0 15px 0; display:block; font-size: 14px;"> @Model.Loc.Where(a => a.ResourceId == "globalFilter").FirstOrDefault().Value.ToString()</strong>
+
+                                    <div class="form-group">
+                                        <label id="lblAssetGroup1">@Model.pMGenerateWorkOrdersModel.AssetGroup1Name:<small></small></label>
+                                        @Html.DropDownListFor(m => m.pMGenerateWorkOrdersModel.AssetGroup1Ids, Model.pMGenerateWorkOrdersModel.AssetGroup1List, new { @class = "form-control search select2picker adv-item", id = "ddlAssetGroup1", multiple = "multiple", style = "width:100%;display:none;" })
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label id="lblAssetGroup2">@Model.pMGenerateWorkOrdersModel.AssetGroup2Name:<small></small></label>
+                                        @Html.DropDownListFor(m => m.pMGenerateWorkOrdersModel.AssetGroup2Ids, Model.pMGenerateWorkOrdersModel.AssetGroup2List, new { @class = "form-control search select2picker adv-item", id = "ddlAssetGroup2", multiple = "multiple", style = "width:100%;display:none;" })
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label id="lblAssetGroup3">@Model.pMGenerateWorkOrdersModel.AssetGroup3Name:<small></small></label>
+                                        @Html.DropDownListFor(m => m.pMGenerateWorkOrdersModel.AssetGroup3Ids, Model.pMGenerateWorkOrdersModel.AssetGroup3List, new { @class = "form-control search select2picker adv-item", id = "ddlAssetGroup3", multiple = "multiple", style = "width:100%;display:none;" })
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label id="lblWOType">@Model.Loc.Where(a => a.ResourceId == "globalWOType").FirstOrDefault().Value.ToString():<small></small></label>
+                                        @Html.DropDownListFor(m => m.pMGenerateWorkOrdersModel.PrevMaintSchedType, Model.pMGenerateWorkOrdersModel.PrevMaintSchedTypeList, new { @class = "form-control search select2picker adv-item", id = "ddlWOType", multiple = "multiple", style = "width:100%;display:none;" })
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label id="lblPMType">@Model.Loc.Where(a => a.ResourceId == "spnPMType").FirstOrDefault().Value.ToString():<small></small></label>
+                                        @Html.DropDownListFor(m => m.pMGenerateWorkOrdersModel.PrevMaintMasterType, Model.pMGenerateWorkOrdersModel.PrevMaintMasterTypeList, new { @class = "form-control search select2picker adv-item", id = "ddlPMType", multiple = "multiple", style = "width:100%;display:none;" })
+                                    </div>
+                                </div>
+
+                            </div>
+                        }
+                        <div class="m-portlet newPort" style="padding:15px; margin-top:5px;display:none" id="GenWOcontainer">
+                            @*<div id="GenWOcontainer" style="display:none">*@
+                            <div style="clear:both;"></div>
+                            <div class="actionBar">
+                                <div class="pull-left">
+                                    <button type="button" class="btn btn-white navbar-btn" id="PMGsidebarCollapse" title="Advance Search"><i class="fa fa-filter" style="font-size: 1.3rem;"></i></button>
+
+
+                                    <ul class="filter_apply">
+                                        <li class="textFilter"><span class="filteritemcount">0</span> @Model.Loc.Where(a => a.ResourceId == "globalFiltersAppiled").FirstOrDefault().Value.ToString()</li>
+                                        <li class="textClear" id="liClearAdvSearchFilterAVPMG"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "globalClear").FirstOrDefault().Value.ToString()</a></li>
+                                    </ul>
+                                    <div style="clear:both;"></div>
+                                </div>
+
+                                <div class="pull-right ">
+                                    <button type="button" class="btn btn-white import-export" id="btnPMGenerateWOExport" disabled onclick="funcShowExportbtn()">@Model.Loc.Where(a => a.ResourceId == "spnExport").FirstOrDefault().Value.ToString()</button>
+                                    <button type="button" class="btn btn-white" id="liCustomize" title="Customize" data-toggle="modal" data-target="#gridcolumncustomizemodal"><i class="fa fa-cog" style="font-size: 1.3rem;"></i></button>
+                                    <div style="clear:both;"></div>
+                                </div>
+                                <div style="clear:both;"></div>
+                                <div id="advsearchfilteritems"></div>
+                                <div style="clear:both;"></div>
+                            </div>
+
+                            <div class="table-responsive">
+                                <table id="tblPMGenerateWorkOrdersGrid" class="eqpDtlTbl row-border custom-sort" style="width:100%;">
+                                    <thead>
+                                        <tr>
+                                            <th style="text-align:center;">
+                                                <input name="select_all" value="1" id="GenWO-select-all" type="checkbox" />
+                                            </th>
+                                            <th data-th-index="0">@Model.Loc.Where(a => a.ResourceId == "spnDueDate").FirstOrDefault().Value.ToString()</th>
+                                            <th data-th-index="1">@Model.Loc.Where(a => a.ResourceId == "spnAssetID").FirstOrDefault().Value.ToString()</th>
+                                            <th data-th-index="2">@Model.Loc.Where(a => a.ResourceId == "spnAssetName").FirstOrDefault().Value.ToString()</th>
+                                            <th data-th-index="3">@Model.Loc.Where(a => a.ResourceId == "spnPrevMstrId").FirstOrDefault().Value.ToString()</th>
+                                            <th data-th-index="4">@Model.Loc.Where(a => a.ResourceId == "spnPMDescription").FirstOrDefault().Value.ToString()</th>
+                                            <th data-th-index="5">@Model.Loc.Where(a => a.ResourceId == "spnRequiredDate").FirstOrDefault().Value.ToString()</th>
+                                            <th data-th-index="6">@Model.Loc.Where(a => a.ResourceId == "spnAssignedTo").FirstOrDefault().Value.ToString()</th>
+                                            <th data-th-index="7" width="5%">@Model.Loc.Where(a => a.ResourceId == "spnDownRequired").FirstOrDefault().Value.ToString()</th>
+                                            <th data-th-index="8">@Model.Loc.Where(a => a.ResourceId == "spnShift").FirstOrDefault().Value.ToString()</th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
+
+                            <div class="modal-footer" style="padding:15px 25px !important;">
+                                <table style="width:100%">
+                                    <tr>
+                                        <td style="text-align:right; padding-right:30px;">@Html.CheckBoxFor(m => m.pMGenerateWorkOrdersModel.chkPrintWorkOrder, new { @class = "prnChk", id = "prnChkBEId" }) @Model.Loc.Where(a => a.ResourceId == "spnPrintGeneratedWorkOrders").FirstOrDefault().Value.ToString() </td>
+
+                                    </tr>
+                                </table>
+
+                                <button type="submit" class="btn btn-blue" style="float:right;" id="btnCreatePmWorkOrdersPreview"><i class="fa fa-plus faIcon"></i> &nbsp;@Model.Loc.Where(a => a.ResourceId == "spnCreateWorkOrders").FirstOrDefault().Value.ToString()</button>
+                                <div style="clear:both;"></div>
+                            </div>
+                            @*</div>*@
+                        </div>
+                    </div>
+                    <div style="clear:both;"></div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+@Html.Partial("~/Views/Shared/PrintingProgressBar/_PrintingProgressBarModal.cshtml")
+@Html.Partial("_CustomizeGridSetup")
+@Html.Partial("_Export")
+<div id="PMGeneratedadvsearchcontainer">
+    @Html.Partial("_PMGeneratedWorkOrdersAdvSearch")
+</div>
+
+

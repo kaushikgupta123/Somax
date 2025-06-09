@@ -1,0 +1,73 @@
+﻿@model Client.Models.VendorsVM
+
+@using (Ajax.BeginForm("EmailConfigurationSetUp", "Vendor", new AjaxOptions { HttpMethod = "POST", OnBegin = "AjaxBeginFormBegin", OnSuccess = "EmailConfigurationSetupSuccess", OnFailure = "AjaxBeginFormFaillure", OnComplete = "AjaxBeginFormComplete" }))
+{
+    @Html.AntiForgeryToken()
+    <div id="vendoremailconfigurationsetupmodal" class="modal fade" role="dialog" style="padding-right:0px !important;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">@Model.Loc.Where(a => a.ResourceId == "spnEmailConfigurationSetUp").FirstOrDefault().Value.ToString() @*Email Configuration Setup*@</h4>
+                </div>
+                <div class="modal-body">
+                    <ul class="listView nobrd" style="border-bottom:0;">
+                        <li>
+                            <span class="label"><label>@Model.Loc.Where(a => a.ResourceId == "spnEmailAddress").FirstOrDefault().Value.ToString() @*Email Address*@: </label><small>*</small></span>
+                            <span class="inputText">
+                                @Html.ValidationMessageFor(m => m.VendorEmailConfigurationSetupModel.Email, "", new { style = "display:none" })
+                                @Html.TextBoxFor(m => m.VendorEmailConfigurationSetupModel.Email, new { @class = "form-control search m-input ", @style = "color:black", autocomplete = "off", maxlength = "63", id = "NewEmail" })
+                            </span>
+                        </li>
+                        <li>
+                            <span class="label"><label>@Model.Loc.Where(a => a.ResourceId == "spnAutoEmailPO").FirstOrDefault().Value.ToString() @*AutoEmailPO*@: </label></span>
+                            <span class="inputText">
+                                @Html.CheckBoxFor(m => m.VendorEmailConfigurationSetupModel.AutoEmailPO, new { @class = "form-control m-input", @style = "color:black; width: auto;", id = "NewAutoEmailPO" })
+                            </span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="modal-footer" style="padding:15px 25px !important;">
+                    <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-close faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button>
+                    <button class="btn btn-blue" style="float:right;"><i class="fa fa-save faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+                    <div style="clear:both;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @Html.HiddenFor(m => m.VendorEmailConfigurationSetupModel.VendorId)
+    @Html.HiddenFor(m => m.VendorEmailConfigurationSetupModel.Email, new { id = "OldEmail" })
+    @Html.HiddenFor(m => m.VendorEmailConfigurationSetupModel.AutoEmailPO, new { id = "OldAutoEmailPO" })
+}
+
+@*<style type="text/css">
+        .ui-tooltip { z-index: 1151 !important; }
+        .errormessage { margin-bottom: 1px !important; }
+        ul.listView.nobrd li.sendEmail { margin-bottom: 0; }
+        ul.listView.nobrd li.sendEmail span.label { width: 60%; }
+        ul.listView.nobrd li.sendEmail span.inputText { width: 40%; }
+
+        @@media screen and (max-width:1023px) {
+            ul.listView.nobrd li.sendEmail span.label { width:65%; }
+            ul.listView.nobrd li.sendEmail span.inputText { width: auto; }
+        }
+        @@media screen and (max-width:767px) {
+            ul.listView.nobrd li.sendEmail span.label { width:78%; }
+            ul.listView.nobrd li.sendEmail span.inputText { width: auto; }
+        }
+        @@media screen and (max-width:639px) {
+            ul.listView.nobrd li.sendEmail span.label { width:90%; }
+            ul.listView.nobrd li.sendEmail span.inputText { width: auto; }
+            ul.listView li#AutoEmailPO span.label { height: 40px !important;}
+            ul.listView li#AutoEmailPO span.inputText { height: 40px !important;}
+        }
+        @@media screen and (max-width:567px) {
+            ul.listView.nobrd li.sendEmail span.label { width:90%; height:auto; line-height:normal; }
+            ul.listView.nobrd li.sendEmail span.inputText { width: auto; height:auto; line-height:normal; }
+        }
+        @@media screen and (max-width:479px) {
+            ul.listView.nobrd li.sendEmail { margin-top:10px; }
+        }
+    </style>*@

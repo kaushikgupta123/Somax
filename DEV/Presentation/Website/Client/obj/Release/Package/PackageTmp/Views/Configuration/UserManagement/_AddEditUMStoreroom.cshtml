@@ -1,0 +1,148 @@
+﻿@model Client.Models.Configuration.UserManagement.UserManagementVM
+
+<div class="m-subheader">
+    <div class="new-m-subheader">
+        <div class="PageTitle">
+            <div class="align-items-center separator">
+                <h3 class="m-subheader__title ">
+                    @*@Model.Loc.Where(a => a.ResourceId == "Storerooms").FirstOrDefault().Value.ToString()*@ Storerooms
+                </h3>
+            </div>
+        </div>
+        <div class="NewBreadcrumbArea">
+            <div class="newBreadcrumb">
+                <ul>
+                    <li><a href="/Configuration/Dashboard">&nbsp;</a></li>
+                    <li><a href="/UserManagement/Index?page=User_Management">@Model.Loc.Where(a => a.ResourceId == "UserManagementSearch").FirstOrDefault().Value.ToString()</a></li>
+                    <li><a href="javascript:void(0)" id="brdumStoreroom" data-val="@Model.userStoreroomModel.UserInfoId">@Model.userStoreroomModel.ClientLookupId</a></li>
+                    @if (Model.userStoreroomModel.StoreroomAuthId != 0)
+                    {
+                        <li class="active">@Model.Loc.Where(a => a.ResourceId == "UserUpdateStoreroom").FirstOrDefault().Value.ToString()</li>
+                    }
+                    else
+                    {
+                        <li class="active">@Model.Loc.Where(a => a.ResourceId == "UserAddStoreroom").FirstOrDefault().Value.ToString()</li>
+                    }
+                </ul>
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+        <div style="clear:both;"></div>
+    </div>
+</div>
+@Html.Partial("_ErrorDiv")
+@using (Ajax.BeginForm("SaveUmStorerooms", "UserManagement", new AjaxOptions { HttpMethod = "Post", OnSuccess = "UmStoreroomAddOnSuccess", OnBegin = "AjaxBeginFormBegin", OnComplete = "AjaxBeginFormComplete", OnFailure = "AjaxBeginFormFaillure" }, new { id = "frmuserstoreroomAdd" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="row">
+        <div class="col-xl-12">
+            <div class="m-portlet newPort" id="m_portlet" style="padding:15px;">
+                <div class="bottomBlock">
+                    <div class="tabsArea nobg">
+                        <ul class="listView nobrd">
+                            <li>
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnSiteGlobal").FirstOrDefault().Value.ToString() : <small>*</small></span>
+                                <span class="inputText">
+                                    @Html.ValidationMessageFor(m => m.userStoreroomModel.SiteId, "", new { style = "display:none" })
+                                    @if (Model.userStoreroomModel.StoreroomAuthId != 0)
+                                    {
+                                        @Html.TextBoxFor(m => m.userStoreroomModel.SiteName, new { @class = "form-control", @disabled = "disabled" })
+                                    }
+                                    else
+                                    {
+                                        if (Model.userStoreroomModel.SiteList != null && Model.userStoreroomModel.SiteList.Count() > 0)
+                                        {
+                                            @Html.DropDownListFor(m => m.userStoreroomModel.SiteId, Model.userStoreroomModel.SiteList, "--Select--", new { @class = "form-control search select2picker", style = "width:100%;", id = "UserSiteId" })
+                                        }
+                                        else
+                                        {
+                                            <input type="text" disabled class="form-control" />
+                                        }
+                                    }
+                                </span>
+                            </li>
+
+                            <li id="liStoreroom">
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnStoreroom").FirstOrDefault().Value.ToString() : <small>*</small></span>
+                                <span class="inputText">
+                                    @Html.ValidationMessageFor(m => m.userStoreroomModel.StoreroomId, "", new { style = "display:none" })
+                                    @if (Model.userStoreroomModel.StoreroomAuthId != 0)
+                                    {
+                                        @Html.TextBoxFor(m => m.userStoreroomModel.StoreroomName, new { @class = "form-control", @disabled = "disabled" })
+                                    }
+                                    else
+                                    {
+                                        var EmptyLookupList = new List<SelectListItem> { new SelectListItem { } };
+                                        @Html.DropDownListFor(m => m.userStoreroomModel.StoreroomId, EmptyLookupList, "--Select--", new { @class = "form-control search select2picker ", @disabled="disabled", style = "width:100%;", id = "StoreroomId" })
+                                    }
+                                </span>
+                            </li>
+
+                            <li id="liMaintain">
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnStoreroomMaintain").FirstOrDefault().Value.ToString() :</span>
+                                <span class="inputText">
+                                    @Html.CheckBoxFor(m => m.userStoreroomModel.Maintain, new { onclick = "return true;", @class = "form-control m-input", @style = "color:black; width: auto; margin-top: 12px;" })
+                                </span>
+                            </li>
+
+                            <li id="liIssue">
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnStoreroomIssue").FirstOrDefault().Value.ToString() :</span>
+                                <span class="inputText">
+                                    @Html.CheckBoxFor(m => m.userStoreroomModel.Issue, new { onclick = "return true;", @class = "form-control m-input", @style = "color:black; width: auto; margin-top: 12px;" })
+                                </span>
+                            </li>
+
+                            <li id="liIssueTransfer">
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnStoreroomIssueTransfer").FirstOrDefault().Value.ToString() :</span>
+                                <span class="inputText">
+                                    @Html.CheckBoxFor(m => m.userStoreroomModel.IssueTransfer, new { onclick = "return true;", @class = "form-control m-input", @style = "color:black; width: auto; margin-top: 12px;" })
+                                </span>
+                            </li>
+
+                            <li id="liReceiveTransfer">
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnStoreroomReceiveTransfer").FirstOrDefault().Value.ToString() :</span>
+                                <span class="inputText">
+                                    @Html.CheckBoxFor(m => m.userStoreroomModel.ReceiveTransfer, new { onclick = "return true;", @class = "form-control m-input", @style = "color:black; width: auto; margin-top: 12px;" })
+                                </span>
+                            </li>
+
+                            <li id="liPhysicalInventory">
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnStoreroomPhysicalInventory").FirstOrDefault().Value.ToString() :</span>
+                                <span class="inputText">
+                                    @Html.CheckBoxFor(m => m.userStoreroomModel.PhysicalInventory, new { onclick = "return true;", @class = "form-control m-input", @style = "color:black; width: auto; margin-top: 12px;" })
+                                </span>
+                            </li>
+
+                            <li id="liPurchase">
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnStoreroomPurchase").FirstOrDefault().Value.ToString() :</span>
+                                <span class="inputText">
+                                    @Html.CheckBoxFor(m => m.userStoreroomModel.Purchase, new { onclick = "return true;", @class = "form-control m-input", @style = "color:black; width: auto; margin-top: 12px;" })
+                                </span>
+                            </li>
+
+                            <li id="liReceivePurchase">
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnStoreroomReceivePurchase").FirstOrDefault().Value.ToString() :</span>
+                                <span class="inputText">
+                                    @Html.CheckBoxFor(m => m.userStoreroomModel.ReceivePurchase, new { onclick = "return true;", @class = "form-control m-input", @style = "color:black; width: auto; margin-top: 12px;" })
+                                </span>
+                            </li>
+
+                        </ul>
+                    </div>
+                    <div style="clear:both;"></div>
+                    <div class="bttn_pagin">
+                        <div class="bttns2">
+                            <button type="submit" class="btn btn-blue mobBttn"><i class="fa fa-save faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button> @*id="btnStoreroomUserSubmit"*@
+                        </div>
+                        <div class="bttns"><button type="button" class="btn btn-blue mobBttn" id="btnStoreroomUserCancel"><i class="fa fa-close faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button></div>
+                        <div style="clear:both;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @Html.HiddenFor(m => m.userStoreroomModel.UserInfoId)
+    @Html.HiddenFor(m => m.userStoreroomModel.StoreroomId)
+    @Html.HiddenFor(m => m.userStoreroomModel.StoreroomAuthId)
+}
+

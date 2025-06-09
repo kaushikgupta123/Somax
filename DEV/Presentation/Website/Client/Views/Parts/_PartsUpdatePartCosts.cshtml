@@ -1,0 +1,51 @@
+﻿@model Client.Models.Parts.PartsVM
+<div id="partsUpdatePartCostsPopUp" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" id="btnUpdatePartCostClose">&times;</button>
+                <h4 class="modal-title">@Model.Loc.Where(a => a.ResourceId == "spnUpdatePartCosts").FirstOrDefault().Value.ToString()</h4>
+            </div>
+            @Html.Partial("_ErrorDiv")
+            @using (Ajax.BeginForm("UpdatePartCosts", "Parts", new AjaxOptions { HttpMethod = "Post", OnSuccess = "ValidateUpdatePartCostsOnSuccess", OnBegin = "AjaxBeginFormBegin", OnFailure = "AjaxBeginFormFaillure" }))
+            {
+                @Html.AntiForgeryToken()
+                <div class="modal-body">
+                    <div class="form-group" style="margin-bottom:0;">
+                        <div class="bottomBlock">
+                            <div>
+                                <ul class="listView listViewPart nobrd" style="border-bottom:0;">
+                                    @Html.HiddenFor(m => m.UpdatePartCostsModel.PartId)
+                                    <li class="txtSrchArea txtSrch" style="margin-bottom:0;">
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnAppliedCost").FirstOrDefault().Value.ToString():</span>
+                                        <span class="inputText">
+                                            @Html.ValidationMessageFor(m => m.UpdatePartCostsModel.AppliedCost, "", new { style = "display:none" })
+                                            @Html.TextBoxFor(m => m.UpdatePartCostsModel.AppliedCost, new { @class = "form-control search decimalinput", autocomplete = "off", placeholder = "0.00000" })
+                                        </span>
+                                        <div style="clear:both;"></div>
+                                    </li>
+                                    <li class="txtSrchArea txtSrch" style="margin-bottom:0;">
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnAverageCost").FirstOrDefault().Value.ToString():</span>
+                                        <span class="inputText">
+                                            @Html.ValidationMessageFor(m => m.UpdatePartCostsModel.AverageCost, "", new { style = "display:none" })
+                                            @Html.TextBoxFor(m => m.UpdatePartCostsModel.AverageCost, new { @class = "form-control search decimalinput", autocomplete = "off", placeholder = "0.00000" })
+                                        </span>
+                                        <div style="clear:both;"></div>
+                                    </li>
+                                </ul>
+                                <div style="clear:both;"></div>
+                            </div>
+                            <div style="clear:both;"></div>
+                          
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer" style="padding:15px 25px !important;">
+                    <button type="button" class="btn btn-default" id="btnUpdatePartCostCancel" data-dismiss="modal"><i class="fa fa-close faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button>
+                    <button class="btn btn-blue mobBttn" style="float:right;"> <i class="fa fa-save faIcon"></i> &nbsp;@Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+                    <div style="clear:both;"></div>
+                </div>
+            }
+        </div>
+    </div>
+</div>

@@ -1,0 +1,364 @@
+﻿@model Client.Models.Configuration.CustomSecurityProfile.CustomSecurityProfileVM
+@{
+    var secItemList = Model.customsecurityItemList;
+}
+<link href="~/Content/customhtmltable.css" rel="stylesheet" />
+<div class="m-subheader  fixedDiv1">
+    <div class="new-m-subheader">
+        <div class="PageTitle">
+            <div class="align-items-center separator">
+                <h3 class="m-subheader__title ">
+                    @Model.Loc.Where(a => a.ResourceId == "spnCustomSecurityProfile").FirstOrDefault().Value.ToString()
+                </h3>
+            </div>
+        </div>
+        <div class="NewBreadcrumbArea">
+            <div class="newBreadcrumb">
+                <ul>
+                    <li><a href="/Configuration/Dashboard"> &nbsp;</a></li>
+                    <li><a href="/CustomSecurityProfile/index?page=Custom_Security_Profiles">  @Model.Loc.Where(a => a.ResourceId == "spnCustomSecurityProfileMaintenance").FirstOrDefault().Value.ToString()</a></li>
+                    <li class="active">@Model.customSecurityProfileModel.Name</li>
+                </ul>
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+        <div style="clear:both;"></div>
+    </div>
+</div>
+<div class="pushDiv1"></div>
+
+<div class="row fixedDiv2">
+    <div class="col-xl-12">
+        <div class="m-portlet padAdjst" id="m_portlet" style="min-height:70px;">
+            <div class="m-portlet__body m-portlet__body--no-padding">
+                <div class="row">
+                    <div class="col-md-7" style=" border-right: 0px solid !important;">
+                        <div class="systemInfo">
+                            <h2>@Model.Loc.Where(a => a.ResourceId == "spnName").FirstOrDefault().Value.ToString() :  @Model.customSecurityProfileModel.Name</h2>
+                            @if (@Model.customSecurityProfileModel.Description.Length > 80)
+                            {
+                                <p style="margin-bottom:0px !important">
+                                    <strong>@Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString()  :</strong>
+                                    @Model.customSecurityProfileModel.Description.Substring(0, 80).ToString()
+                                    <span data-des="@Model.customSecurityProfileModel.Description" style="color:#315a98;cursor:pointer" id="customSecurityProfiledesc">... More</span>
+                                </p>
+                            }
+                            else
+                            {
+                                <p style="margin-bottom:0px !important"><strong>@Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString()  :</strong>  @Model.customSecurityProfileModel.Description</p>
+                            }
+                        </div>
+                    </div>
+                    <div class="col-md-5" style=" border-right: 0px solid !important;">
+                        <button type="button" class="btn newAdd AddCustomSecurityProfile" title="Add Custom Security Profile" data-profileid="0" id="AddCustomSecurityProfile"><i class="fa fa-plus buttonIcon"></i> &nbsp;@Model.Loc.Where(a => a.ResourceId == "spnNewSecurityProfile").FirstOrDefault().Value.ToString()</button>
+                        <button type="button" class="btn btn-white newBtn-update AddCustomSecurityProfile" id="UpdateCustomSecurityProfile" data-profileid="@Model.customSecurityProfileModel.SecurityProfileId" title="Update Custom Security Profile"><i class="fa fa-pencil" style="margin-top:-3px;"></i> &nbsp;@Model.Loc.Where(a => a.ResourceId == "spnUpdateSeccurityProfile").FirstOrDefault().Value.ToString()</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="pushDiv2 customSecurityProfile"></div>
+<div class="row">
+    <div class="col-xl-3">
+        <div class="m-portlet">
+            <div class="sideMenuArea">
+                <ul class="vtabs" id="detmaintab">
+                    <li class="active" id="liModulesTab" onclick="openCity(event, 'ModulesTab')"><a href="#ModulesTab">@Model.Loc.Where(a => a.ResourceId == "spnModules").FirstOrDefault().Value.ToString()</a></li>
+                    <li id="liFunctionsTab" onclick="openCity(event, 'FunctionsTab')"><a href="#FunctionsTab">@Model.Loc.Where(a => a.ResourceId == "spnFunctions").FirstOrDefault().Value.ToString()</a></li>
+                    <li id="liReportsTab" onclick="openCity(event, 'ReportsTab')"><a href="#ReportsTab">@Model.Loc.Where(a => a.ResourceId == "spnReports").FirstOrDefault().Value.ToString()</a></li>
+                </ul>
+            </div>
+            <div class="selectTabs" id="selectTabs">
+                <select class="form-control" id="colorselector">
+                    <option value="ModulesTab">@Model.Loc.Where(a => a.ResourceId == "spnModules").FirstOrDefault().Value.ToString()</option>
+                    <option value="FunctionsTab">@Model.Loc.Where(a => a.ResourceId == "spnFunctions").FirstOrDefault().Value.ToString()</option>
+                    <option value="ReportsTab">@Model.Loc.Where(a => a.ResourceId == "spnReports").FirstOrDefault().Value.ToString()</option>
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-9">
+        <div class="row">
+            <div class="col-xl-12" id="btnnblock">
+                <div class="m-portlet" id="m_portlet" style="padding:15px;">
+                    <div class="tabsArea nobg" id="ModulesTab" style="display:block;">
+                        <div class="table-responsive">
+                            <table id="tasksModuleTable" class="table m-table eqpDtlTbl" style="width:100%;">
+                                <thead>
+                                    <tr>
+                                        <th width="40%">@Model.Loc.Where(a => a.ResourceId == "spnName").FirstOrDefault().Value.ToString()</th>
+                                        <th width="15%">@Model.Loc.Where(a => a.ResourceId == "spnAccess").FirstOrDefault().Value.ToString()</th>
+                                        <th width="15%">@Model.Loc.Where(a => a.ResourceId == "spnCreate").FirstOrDefault().Value.ToString()</th>
+                                        <th width="15%">@Model.Loc.Where(a => a.ResourceId == "globalEdit").FirstOrDefault().Value.ToString()</th>
+                                        <th width="15%">@Model.Loc.Where(a => a.ResourceId == "globalDelete").FirstOrDefault().Value.ToString()</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if (secItemList.Count > 0)
+                                    {
+                                        foreach (var item in secItemList)
+                                        {
+                                            <tr>
+                                                <td class="ItemName" style="display:none">@item.ItemName</td>
+                                                <td class="SecurityItemId" style="display:none">@item.SecurityItemId</td>
+                                                <td class="SortOrder" style="display:none">@item.SortOrder</td>
+                                                <td class="UpdateIndex" style="display:none">@item.UpdateIndex</td>
+                                                <td class="Protected" style="display:none">@item.Protected</td>
+                                                <td style="width:40%">@item.ItemName</td>
+                                                <td style="text-align:center;width:15%;">
+                                                    <label class="m-checkbox m-checkbox--state-success">
+                                                        @if (item.ItemAccess)
+                                                        {
+
+                                                            <input type="checkbox" class="chkaccess" checked="checked"><span></span>
+
+                                                        }
+                                                        else
+                                                        {
+                                                            <input type="checkbox" class="chkaccess"><span></span>
+                                                        }
+                                                    </label>
+                                                </td>
+                                                <td style="text-align:center;width:15%;">
+                                                    <label class="m-checkbox">
+                                                        @if (item.ItemCreate)
+                                                        {
+
+                                                            <input type="checkbox" class="chkcreate" checked="checked"><span></span>
+
+                                                        }
+                                                        else
+                                                        {
+
+                                                            <input type="checkbox" class="chkcreate"><span></span>
+
+                                                        }
+                                                    </label>
+                                                </td>
+                                                <td style="text-align:center;width:15%;">
+                                                    <label class="m-checkbox m-checkbox--accent">
+                                                        @if (item.ItemEdit)
+                                                        {
+
+                                                            <input type="checkbox" class="chkedit" checked="checked"><span></span>
+                                                        }
+
+                                                        else
+                                                        {
+                                                            <input type="checkbox" class="chkedit"><span></span>
+
+
+                                                        }
+                                                    </label>
+                                                </td>
+                                                <td style="text-align:center;width:15%;">
+                                                    <label class="m-checkbox m-checkbox--state-danger">
+                                                        @if (item.ItemDelete)
+                                                        {
+
+                                                            <input type="checkbox" class="chkdel" checked="checked"><span></span>
+
+                                                        }
+                                                        else
+                                                        {
+
+                                                            <input type="checkbox" class="chkdel"><span></span>
+
+                                                        }
+                                                    </label>
+                                                </td>
+                                                <td class="single" style="display:none">@item.SingleItem</td>
+                                                <td class="report" style="display:none">@item.ReportItem</td>
+                                            </tr>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <tr><td style="text-align:center;width: 100%;">@Model.Loc.Where(a => a.ResourceId == "globalNoRecordDesplay").FirstOrDefault().Value.ToString()</td></tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="idBttns" style="border-top: 1px solid #ccc;">
+                            <div class="bttn_pagin">
+                                <div class="bttns2">
+                                    @if (secItemList.Count > 0)
+                                    {   
+                                        <button type="button" class="btn btn-white mobBttn" data-toggle="" data-target="" id="btnRefreshModule"><i class="fa fa-refresh faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "spnRefresh").FirstOrDefault().Value.ToString()</button>
+                                        <button type="button" class="btn btn-blue mobBttn" data-toggle="" data-target="" id="btnSaveModule"><i class="fa fa-save faIcon"></i> &nbsp;@Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString() </button>
+                                    }
+                                    <div style="clear:both;"></div>
+                                </div>
+                            </div>
+                            <div style="clear:both;"></div>
+                        </div>
+                    </div>
+                    <div class="tabsArea nobg" id="FunctionsTab" style="display:none;">
+                        <div class="table-responsive">
+                            <table id="tasksFunctionsTable" class="table m-table eqpDtlTbl" style="width:100%;">
+                                <thead>
+                                    <tr>
+                                        <th width="60%">@Model.Loc.Where(a => a.ResourceId == "spnName").FirstOrDefault().Value.ToString()</th>
+                                        <th width="40%">@Model.Loc.Where(a => a.ResourceId == "spnAccess").FirstOrDefault().Value.ToString()</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if (secItemList.Count > 0)
+                                    {
+                                        foreach (var item in secItemList)
+                                        {
+                                  <tr>
+                                    <td class="ItemName" style="display:none">@item.ItemName</td>
+                                    <td class="SecurityItemId" style="display:none">@item.SecurityItemId</td>
+                                    <td class="SortOrder" style="display:none">@item.SortOrder</td>
+                                    <td class="UpdateIndex" style="display:none">@item.UpdateIndex</td>
+                                    <td class="Protected" style="display:none">@item.Protected</td>
+                                    <td style="width:60%">@item.ItemName</td>
+                                    <td class="single" style="display:none">@item.SingleItem</td>
+                                    @*<td class="access" style="display:none">@item.ItemAccess</td>*@
+                                    <td class="create" style="display:none">@item.ItemCreate</td>
+                                    <td class="edit" style="display:none">@item.ItemEdit</td>
+                                    <td class="del" style="display:none">@item.ItemDelete</td>
+                                    <td style="text-align:center;width:40%;">
+                                      <label class="m-checkbox m-checkbox--state-success">
+                                        @*@if (item.SingleItem)*@
+                                        @if (item.ItemAccess)
+                                        {
+                                          <input type="checkbox" class="chkaccess" checked="checked"><span></span>
+                                        }
+                                        else
+                                        {
+                                          <input type="checkbox" class="chkaccess"><span></span>
+                                        }
+                                      </label>
+                                    </td>
+                                    <td class="report" style="display:none">@item.ReportItem</td>
+                                  </tr>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <tr><td style="text-align:center;width: 100%;">@Model.Loc.Where(a => a.ResourceId == "globalNoRecordDesplay").FirstOrDefault().Value.ToString()</td></tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="idBttns" style="border-top: 1px solid #ccc;">
+                            <div class="bttn_pagin">
+                                <div class="bttns2">
+                                    @if (secItemList.Count > 0)
+                                    {
+                                        <button type="button" class="btn btn-white mobBttn" data-toggle="" data-target="" id="btnRefreshFunctions"><i class="fa fa-refresh faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "spnRefresh").FirstOrDefault().Value.ToString()</button>
+                                        <button type="button" class="btn btn-blue mobBttn" data-toggle="" data-target="" id="btnSaveFunctions"><i class="fa fa-save faIcon"></i> &nbsp;@Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString() </button>
+                                    }
+                                    <div style="clear:both;"></div>
+                                </div>
+                            </div>
+                            <div style="clear:both;"></div>
+                        </div>
+                    </div>
+                    <div class="tabsArea nobg" id="ReportsTab" style="display:none;">
+                        <div class="table-responsive">
+                            <table id="tasksReportsTable" class="table m-table eqpDtlTbl" style="width:100%;">
+                                <thead>
+                                    <tr>
+                                        <th width="60%">@Model.Loc.Where(a => a.ResourceId == "spnName").FirstOrDefault().Value.ToString()</th>
+                                        <th width="40%">@Model.Loc.Where(a => a.ResourceId == "spnAccess").FirstOrDefault().Value.ToString()</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if (secItemList.Count > 0)
+                                    {
+                                        foreach (var item in secItemList)
+                                        {
+                                  <tr>
+                                    <td class="ItemName" style="display:none">@item.ItemName</td>
+                                    <td class="SecurityItemId" style="display:none">@item.SecurityItemId</td>
+                                    <td class="SortOrder" style="display:none">@item.SortOrder</td>
+                                    <td class="UpdateIndex" style="display:none">@item.UpdateIndex</td>
+                                    <td class="Protected" style="display:none">@item.Protected</td>
+                                    <td style="width:60%">@item.ItemName</td>
+                                    @*<td class="access" style="display:none">@item.ItemAccess</td>*@
+                                    <td class="create" style="display:none">@item.ItemCreate</td>
+                                    <td class="edit" style="display:none">@item.ItemEdit</td>
+                                    <td class="del" style="display:none">@item.ItemDelete</td>
+                                    <td class="single" style="display:none">@item.SingleItem</td>
+                                    <td style="text-align:center;width:40%;">
+                                      <label class="m-checkbox m-checkbox--state-success">
+                                        @*                                                    @if (item.ReportItem)*@
+                                        @if (item.ItemAccess)
+                                        {
+                                          <input type="checkbox" class="chkaccess" checked="checked"><span></span>
+                                        }
+                                        else
+                                        {
+                                          <input type="checkbox" class="chkaccess"><span></span>
+                                        }
+                                      </label>
+                                    </td>
+                                  </tr>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <tr><td style="text-align:center;width: 100%;">@Model.Loc.Where(a => a.ResourceId == "globalNoRecordDesplay").FirstOrDefault().Value.ToString()</td></tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="idBttns" style="border-top: 1px solid #ccc;">
+                            <div class="bttn_pagin">
+                                <div class="bttns2">
+                                    @if (secItemList.Count > 0)
+                                    {  
+                                        <button type="button" class="btn btn-white mobBttn" data-toggle="" data-target="" id="btnRefreshReports"><i class="fa fa-refresh faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "spnRefresh").FirstOrDefault().Value.ToString()</button>
+                                        <button type="button" class="btn btn-blue mobBttn" data-toggle="" data-target="" id="btnSaveReports"><i class="fa fa-save faIcon"></i> &nbsp;@Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString() </button>
+                                    }
+                                    <div style="clear:both;"></div>
+                                </div>
+                            </div>
+                            <div style="clear:both;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<input type="hidden" id="currentsecprofileid" />
+<input type="hidden" id="currentsecprofiledes" />
+<input type="hidden" id="currentsecprofilename" />
+
+@if (@Model.customSecurityProfileModel.Description.Length > 80)
+{
+    @Html.Partial("~/Views/Configuration/CustomSecurityProfile/_CustomSecurityProfileDescription.cshtml")
+}
+
+<style type="text/css">
+    .systemInfo { }
+    .systemInfo h2 { font-size: 1.1rem; font-weight: 500; font-family: Roboto; line-height: normal; }
+    .pushDiv2.customSecurityProfile { height: 90px !important; }
+    button.newAdd { float: right; background: #34bfa3; color: #fff; border: 1px solid #34bfa3; }
+    button.newAdd:hover, button.newAdd:active, button.newAdd:focus { background: #1f917a; color: #fff; border: 1px solid #1f917a; }
+    .newBtn-update { float: right; margin-right: 10px !important; }
+    tbody { overflow-y: auto; display: block; }
+
+    @@media only screen and (min-width: 1024px) and (max-width: 1199px) {
+        .padAdjst { padding: 10px; }
+        .openMenu button.newAdd { min-width: 178px; }
+        .openMenu .newBtn-update { min-width: 178px; margin: 10px 0 0 0 !important; }
+        .openMenu .pushDiv2.customSecurityProfile { height: 120px !important; }
+    }
+    @@media screen and (max-width: 1023px) {
+        .padAdjst { padding: 10px; }
+        button.newAdd { min-width: 178px; }
+        .newBtn-update { min-width: 178px; margin: 10px 0 0 0 !important; }
+        .pushDiv2.customSecurityProfile { height: 120px !important; }
+    }
+    @@media screen and (max-width: 767px) {
+        .padAdjst { padding: 10px; }
+        button.newAdd { margin: 10px 0 0 0 !important; }
+        .newBtn-update { margin: 10px 10px 0 0 !important; }
+    }
+</style>

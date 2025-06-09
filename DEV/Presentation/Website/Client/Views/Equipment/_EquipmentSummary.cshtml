@@ -1,0 +1,154 @@
+﻿@model Client.Models.EquipmentCombined
+@{
+    string imageUrl = Model._EquipmentSummaryModel.ImageUrl;
+    if (Model._EquipmentSummaryModel.ClientOnPremise)
+    {
+        imageUrl = UtilityFunction.PhotoBase64ImgSrc(Model._EquipmentSummaryModel.ImageUrl);
+    }
+
+}
+<div class="col-xl-12">
+    <div class="m-portlet padAdjst" id="m_portlet">
+        <div class="m-portlet__body  m-portlet__body--no-padding">
+            <div class="row m-row--col-separator-xl">
+                <div class="col-md-12 col-lg-6 col-xl-6">
+                    <div class="m-widget24 imageBox macHeights">
+                        <div class="imgThumbs equipImg">
+                            @if (!string.IsNullOrEmpty(imageUrl))
+                            {
+                                <img src="@imageUrl" id="EquipZoom" alt="Image" data-zoom-image="@imageUrl" />
+                            }
+                            else
+                            {
+                                <img src="~/Scripts/ImageZoom/images/NoImage.jpg" id="EquipZoom" alt="Image" data-zoom-image="/Scripts/ImageZoom/images/NoImage.jpg" />
+                            }
+                        </div>
+                        <div class="imgInfo" style="position:relative;">
+                            @if (Model._EquipmentSummaryModel.RemoveFromService == true)
+                            {
+                                <span class="outserv ">@Model.Loc.Where(a => a.ResourceId == "spnOutofService").FirstOrDefault().Value.ToString()</span>
+                            }
+                            else
+                            {
+                                <span class="inserv ">@Model.Loc.Where(a => a.ResourceId == "spnInService").FirstOrDefault().Value.ToString()</span>
+                            }
+                            @if (Model.EquipData.AssetCategory == AssetCategoryConstant.RepairableSpare)
+                            {
+                                <span class="m-badge m-badge--purple m-badge--wide">@Model.Loc.Where(a => a.ResourceId == "spnRepairableSpareGlobal").FirstOrDefault().Value.ToString()</span>
+                            }
+                            <h2 class="bigtext" style="line-height:normal;" data-toggle="tooltip" title="@(Model._EquipmentSummaryModel.EquipmentName)">@(String.IsNullOrEmpty(Model._EquipmentSummaryModel.EquipmentName) ? "" : (Model._EquipmentSummaryModel.EquipmentName))</h2>
+                            <div class="panelbox">
+                                <span class="bigtext text-col" title="@Model._EquipmentSummaryModel.Equipment_ClientLookupId">@Model.Loc.Where(a => a.ResourceId == "spnID").FirstOrDefault().Value.ToString() : @(String.IsNullOrEmpty(Model._EquipmentSummaryModel.Equipment_ClientLookupId) ? "" : (Model._EquipmentSummaryModel.Equipment_ClientLookupId.Length > 12 ? (Model._EquipmentSummaryModel.Equipment_ClientLookupId.Substring(0, 12) + "...") : (Model._EquipmentSummaryModel.Equipment_ClientLookupId)))</span>
+                                @if ((Model.EquipData.InactiveFlag == true))
+                                {
+                                    <span class="introTags2 bigtext text-col">@Model.Loc.Where(a => a.ResourceId == "globalInActive").FirstOrDefault().Value.ToString()</span>
+                                }
+                            </div>
+                            <span class="bigtext status" title="@Model._EquipmentSummaryModel.Status">@Model.Loc.Where(a => a.ResourceId == "GlobalStatus").FirstOrDefault().Value.ToString() : @Model._EquipmentSummaryModel.Status</span>
+                        </div>
+                        <div style="clear:both;"></div>
+                    </div>
+                </div>
+                @if ((Model._userdata.Site.CMMS == true))
+                {
+                    <div class="col-md-12 col-lg-6 col-xl-2">
+                        <div class="m-widget24">
+                            <div class="bgBox boxColor1 box-details">
+                                <h2 class="iconTitle" id="hdrOpenWorkOrder">@Model.Loc.Where(a => a.ResourceId == "hdrOpenWorkOrder").FirstOrDefault().Value.ToString()</h2>
+                                <span class="newCount">@Model._EquipmentSummaryModel.OpenWorkOrders</span>
+                                <div style="clear:both;"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12 col-lg-6 col-xl-2">
+                        <div class="m-widget24">
+                            <div class="bgBox boxColor2 box-details">
+                                <h2 class="iconTitle" id="hdrWorkRequests">@Model.Loc.Where(a => a.ResourceId == "spnWorkRequest").FirstOrDefault().Value.ToString()</h2>
+                                <span class="newCount">@Model._EquipmentSummaryModel.WorkRequests</span>
+                                <div style="clear:both;"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12 col-lg-6 col-xl-2">
+                        <div class="m-widget24">
+                            <div class="bgBox boxColor3 box-details">
+                                <h2 class="iconTitle" id="hdrOverduePM">@Model.Loc.Where(a => a.ResourceId == "hdrOverduePM").FirstOrDefault().Value.ToString()</h2>
+                                <span class="newCount">@Model._EquipmentSummaryModel.OverduePms</span>
+                                <div style="clear:both;"></div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .outserv {        
+        background-color: #f4516c;
+        color: white;
+        border-radius: 7px;
+        font-weight: 500;
+        padding: 0px 5px 1px 5px;
+        width: 175px;
+    }
+
+    .inserv {        
+        background-color: #34bfa3;
+        color: white;
+        border-radius: 7px;
+        font-weight: 500;
+        padding: 0px 5px 1px 5px;
+        width: 125px;
+    }
+
+    .bigtext {
+        text-overflow: inherit !important;
+        white-space: break-spaces !important;
+        overflow: auto !important;
+        word-break: break-all !important;
+        display: block !important;
+    }
+
+    .wrap-two .status {
+        width: calc(100% - 115px);
+        text-align: left;
+        text-transform: none;
+    }
+
+    .box-details {
+        display: flex;
+        flex-wrap: wrap;
+        flex-direction: column-reverse;
+    }
+
+        .box-details h2.iconTitle {
+            line-height: 25px;
+            text-align: left;
+        }
+
+
+        .box-details .newCount {
+            position: inherit;
+            text-align: left;
+        }
+
+    .panelbox {
+        display: flex;
+    }
+
+        .panelbox .introTags2 {
+            margin-left: 5px;
+        }
+
+    .text-col {
+        display: inline-block !important;
+        position: relative;
+    }
+
+    .introTags2.text-col {
+        top: -1px;
+        left: 0;
+    }
+</style>

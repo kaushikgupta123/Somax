@@ -1,0 +1,54 @@
+﻿@model Client.Models.FleetAsset.FleetAssetVM
+
+<ul class="listView nobrd">
+    <li>
+        <span class="label" id="spnFleetFuelQuality">@Model.Loc.Where(a => a.ResourceId == "spnFleetFuelQuality").FirstOrDefault().Value.ToString()</span>
+        <span class="inputText">
+            @Html.TextBoxFor(m => m.FleetAssetModel.FleetFuelQuality, new { @class = "form-control search m-input flt_fue", @style = "color:black", autocomplete = "off", maxlength = "15" })
+        </span>
+    </li>
+    <li>
+        <span class="label" id="spnFuelType">@Model.Loc.Where(a => a.ResourceId == "spnFuelType").FirstOrDefault().Value.ToString()</span>
+        <span class="inputText">
+            @Html.DropDownListFor(m => m.FleetAssetModel.FuelType, Model.LookupFuelTypeList, "--Select--", new { @class = "form-control search select2picker", style = "width:100%;" })
+        </span>
+    </li>
+    <li>
+        <span class="label" id="spnFuelTank1Capacity"> @Model.Loc.Where(a => a.ResourceId == "spnFuelTank1Capacity").FirstOrDefault().Value.ToString()</span>
+        <span class="inputText">
+            @Html.ValidationMessageFor(m => m.FleetAssetModel.FuelTankCapacity1, "", new { style = "display:none" })
+            @Html.TextBoxFor(m => m.FleetAssetModel.FuelTankCapacity1, new { @class = "form-control search decimalinput flt_fuedec", @style = "color:black", autocomplete = "off" })
+        </span>
+    </li>
+    <li>
+        <span class="label" id="spnFuelTank2Capacity"> @Model.Loc.Where(a => a.ResourceId == "spnFuelTank2Capacity").FirstOrDefault().Value.ToString()</span>
+        <span class="inputText">
+            @Html.ValidationMessageFor(m => m.FleetAssetModel.FuelTankCapacity2, "", new { style = "display:none" })
+            @Html.TextBoxFor(m => m.FleetAssetModel.FuelTankCapacity2, new { @class = "form-control search decimalinput flt_fuedec", @style = "color:black", autocomplete = "off" })
+        </span>
+    </li>
+    <li>
+        <span class="label" id="spnEPACity">@Model.Loc.Where(a => a.ResourceId == "spnEPACity").FirstOrDefault().Value.ToString()</span>
+        <span class="inputText">
+            @Html.ValidationMessageFor(m => m.FleetAssetModel.EPACity, "", new { style = "display:none" })
+            @Html.TextBoxFor(m => m.FleetAssetModel.EPACity, new { @class = "form-control search decimalinput flt_fuedec", @style = "color:black", autocomplete = "off" })
+        </span>
+    </li>
+    <li>
+        <span class="label" id="spnEPAHighway">@Model.Loc.Where(a => a.ResourceId == "spnEPAHighway").FirstOrDefault().Value.ToString()</span>
+        <span class="inputText">
+            @Html.ValidationMessageFor(m => m.FleetAssetModel.EPAHighway, "", new { style = "display:none" })
+            @Html.TextBoxFor(m => m.FleetAssetModel.EPAHighway, new { @class = "form-control search decimalinput flt_fuedec", @style = "color:black", autocomplete = "off" })
+        </span>
+    </li>
+    <li>
+        <span class="label" id="spnEPACombined">@Model.Loc.Where(a => a.ResourceId == "spnEPACombined").FirstOrDefault().Value.ToString()</span>
+        <span class="inputText">
+            @Html.ValidationMessageFor(m => m.FleetAssetModel.EPACombined, "", new { style = "display:none" })
+            @Html.TextBoxFor(m => m.FleetAssetModel.EPACombined, new { @class = "form-control search decimalinput flt_fuedec", @style = "color:black", autocomplete = "off" })
+        </span>
+    </li>
+
+</ul>
+
+

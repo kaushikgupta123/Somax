@@ -1,0 +1,78 @@
+﻿@model Client.Models.Configuration.VendorMaster.VendorMasterVM
+<div class="m-subheader">
+    <div class="new-m-subheader">
+        <div class="PageTitle">
+            <div class="align-items-center separator">
+                <h3 class="m-subheader__title ">
+                   @Model.Loc.Where(a => a.ResourceId == "spnVendorMaster").FirstOrDefault().Value.ToString()
+                </h3>
+            </div>
+        </div>
+
+        <div class="NewBreadcrumbArea">
+            <div class="newBreadcrumb">
+                <ul>
+                    <li><a href="/Configuration/Dashboard">&nbsp;</a></li>
+                    <li><a href="/VendorMaster/Index?page=Masters_Vendor_Vendor_Master">@Model.Loc.Where(a => a.ResourceId == "spnVendorMasterSearch").FirstOrDefault().Value.ToString()</a></li>
+                    <li class="active"> @Model.Loc.Where(a => a.ResourceId == "spnAddVendorMaster").FirstOrDefault().Value.ToString()</li>
+                </ul>
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+        <div style="clear:both;"></div>
+    </div>
+</div>
+
+<div class="row">
+
+    <div class="col-xl-12">
+        @Html.Partial("_ErrorDiv")
+        @using (Ajax.BeginForm("SaveVendorMaster", "VendorMaster", new AjaxOptions { HttpMethod = "Post", OnSuccess = "OnVendorMasterAddOnSuccess", OnBegin = "AjaxBeginFormBegin", OnComplete = "AjaxBeginFormComplete", OnFailure = "AjaxBeginFormFaillure" }))
+        {
+            @Html.AntiForgeryToken()
+            <div class="row">
+                <div class="col-xl-12" id="btnnblock">
+                    <div class="m-portlet" id="m_portlet" style="padding:15px;">
+                        <div class="bottomBlock">
+                            <div class="tabsArea nobg" id="RequestCharge" style="display:block;">
+                                <ul class="listView nobrd">
+                                    <li>
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnVendorID").FirstOrDefault().Value.ToString() : <small>*</small></span>
+                                        <span class="inputText">
+                                            @Html.ValidationMessageFor(m => m.vendorMasterModel.ClientLookupId, "", new { style = "display:none" })
+                                            @Html.TextBoxFor(m => m.vendorMasterModel.ClientLookupId, new { @class = "form-control search", autocomplete = "off", maxlength = "31" })
+                                        </span>
+                                    </li>
+                                    <li style="height:auto;">
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnName").FirstOrDefault().Value.ToString() : <small>*</small></span>
+                                        <span class="inputText" style="height:auto;">
+                                            @Html.ValidationMessageFor(m => m.vendorMasterModel.Name, "", new { style = "display:none" })
+                                            @Html.TextAreaFor(m => m.vendorMasterModel.Name, new { @class = "form-control search", style = "resize:none;", autocomplete = "off", maxlength = "255" })
+                                        </span>
+                                        <div style="clear:both;"></div>
+                                    </li>
+                                </ul>
+                            </div>
+
+
+                            <div style="clear:both;"></div>
+                            <div class="idBttns">
+                                <div class="bttn_pagin">
+                                    <div class="bttns2">
+                                        <button type="submit" class="btn btn-white mobBttn" name="Command" value="saveAdd" id="btnSaveAnother"><i class="fa fa-save faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalSaveAndAdd").FirstOrDefault().Value.ToString()</button>
+                                        <button type="submit" class="btn btn-blue mobBttn" name="Command" value="save" id="btnSaveWO"><i class="fa fa-save faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+                                    </div>
+                                    <div class="bttns">
+                                        <button type="button" class="btn btn-blue mobBttn" id="btnCancelAddVendor"><i class="fa fa-close faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button>
+                                    </div>
+                                    <div style="clear:both;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        }
+    </div>
+</div>

@@ -1,0 +1,147 @@
+﻿.timeline__item {
+    width: 110px;
+    height: auto;
+}
+.timeline--horizontal .timeline-divider {
+    top: 45px !important;
+    background: #315a98;
+    left: 5px;
+    right: 5px;
+    height: 2px;
+}
+.timeline__wrap {
+    padding-top: 5px;
+    height: 90px;
+}
+.timeline--horizontal .timeline__item--bottom:after {
+    top: 26px;
+    border: 2px solid #1a3967;
+    width: 15px;
+    height: 15px;
+}
+.timeline--horizontal .timeline__item--top:after {
+    top: 40px;
+    border: 2px solid #1a3967;
+    width: 15px;
+    height: 15px;
+}
+.timeline--horizontal .timeline__item--bottom {
+    top: -6px;
+}
+.timeline__content {
+    background-color: #fff;
+    border: 1px solid #fff;
+    padding: 10px !important;
+    text-align: center;
+    font-size: 13px;
+    height: 35px;
+}
+.timeline--horizontal .timeline__item--top .timeline__content:after {
+    border-top: 10px solid #f7f7f7;
+}
+.timeline--horizontal .timeline__item--bottom .timeline__content:after {
+    border-bottom: 10px solid #f7f7f7;
+}
+.timeline-nav-button--prev, .timeline-nav-button--next {
+    top: 45px !important;
+    outline: none !important;
+}
+.timeline__content h2 {
+    font-weight: 400 !important;
+    font-family: Roboto;
+    font-size: 15px;
+}
+timeline__item timeline__item--top {
+    max-width: 280px !important;
+    width: 280px !important;
+}
+.timeline-nav-button {
+    border: 2px solid #315a98;
+    width: 30px;
+    height: 30px;
+}
+.timeline--horizontal {
+    padding: 0 30px;
+}
+.timeline--horizontal .timeline__items {
+    transform: translate3d(0px, 0px, 0px);
+}
+.timeline__content p {
+    font-family: Roboto;
+    font-size: 13px;
+    line-height: 1;
+}
+.timeline--horizontal .timeline__item .timeline__content:before, 
+.timeline--horizontal .timeline__item--top .timeline__content:after, 
+.timeline--horizontal .timeline__item--bottom .timeline__content:after {
+    display: none;
+}
+.timeline-nav-button:disabled {
+    opacity: 1 !important;
+}
+/******************** Timeline Responsive ********************/
+/*@media only screen and (min-width: 1366px) and (max-width: 1599px)
+{
+}*/
+/*@media only screen and (min-width: 1200px) and (max-width: 1365px)
+{
+}*/
+/*@media only screen and (min-width: 1024px) and (max-width: 1199px)
+{
+}*/
+/*@media only screen and (min-width: 768px) and (max-width: 1023px)
+{
+}*/
+@media only screen and (min-width: 640px) and (max-width: 767px)
+{
+    /* Galaxy Note3 */
+    .timeline--mobile .timeline__item .timeline__content:after, .timeline--mobile .timeline__item .timeline__content:before { display:none; }
+    .timeline__content { text-align:left; }
+    .timeline:not(.timeline--horizontal):before { width: 2px; background: #315a98; }
+    .timeline__item:after { border: 2px solid #1a3967; width: 15px; height: 15px; }
+    .timeline--mobile .timeline__item:after { left:4px; }
+    .timeline--mobile .timeline__item { padding:0; padding-left:19px; }
+    .timeline__wrap { height:105px; padding-top:0; overflow-y: auto; }
+}
+@media only screen and (min-width: 568px) and (max-width: 639px)
+{
+    /* For Iphone5 */
+    .timeline--mobile .timeline__item .timeline__content:after, .timeline--mobile .timeline__item .timeline__content:before { display:none; }
+    .timeline__content { text-align:left; }
+    .timeline:not(.timeline--horizontal):before { width: 2px; background: #315a98; }
+    .timeline__item:after { border: 2px solid #1a3967; width: 15px; height: 15px; }
+    .timeline--mobile .timeline__item:after { left:4px; }
+    .timeline--mobile .timeline__item { padding:0; padding-left:19px; }
+    .timeline__wrap { height:105px; padding-top:0; overflow-y: auto; }
+}
+@media only screen and (min-width: 480px) and (max-width: 567px)
+{
+    .timeline--mobile .timeline__item .timeline__content:after, .timeline--mobile .timeline__item .timeline__content:before { display:none; }
+    .timeline__content { text-align:left; }
+    .timeline:not(.timeline--horizontal):before { width: 2px; background: #315a98; }
+    .timeline__item:after { border: 2px solid #1a3967; width: 15px; height: 15px; }
+    .timeline--mobile .timeline__item:after { left:4px; }
+    .timeline--mobile .timeline__item { padding:0; padding-left:19px; }
+    .timeline__wrap { height:105px; padding-top:0; overflow-y: auto; }
+}
+@media only screen and (min-width: 360px) and (max-width: 479px)
+{
+    /* Galaxy S5 */
+    .timeline--mobile .timeline__item .timeline__content:after, .timeline--mobile .timeline__item .timeline__content:before { display:none; }
+    .timeline__content { text-align:left; }
+    .timeline:not(.timeline--horizontal):before { width: 2px; background: #315a98; }
+    .timeline__item:after { border: 2px solid #1a3967; width: 15px; height: 15px; }
+    .timeline--mobile .timeline__item:after { left:4px; }
+    .timeline--mobile .timeline__item { padding:0; padding-left:19px; }
+    .timeline__wrap { height:105px; padding-top:0; overflow-y: auto; }
+}
+@media only screen and (min-width: 320px) and (max-width: 359px)
+{
+    .timeline--mobile .timeline__item .timeline__content:after, .timeline--mobile .timeline__item .timeline__content:before { display:none; }
+    .timeline__content { text-align:left; }
+    .timeline:not(.timeline--horizontal):before { width: 2px; background: #315a98; }
+    .timeline__item:after { border: 2px solid #1a3967; width: 15px; height: 15px; }
+    .timeline--mobile .timeline__item:after { left:4px; }
+    .timeline--mobile .timeline__item { padding:0; padding-left:19px; }
+    .timeline__wrap { height:105px; padding-top:0; overflow-y: auto; }
+}

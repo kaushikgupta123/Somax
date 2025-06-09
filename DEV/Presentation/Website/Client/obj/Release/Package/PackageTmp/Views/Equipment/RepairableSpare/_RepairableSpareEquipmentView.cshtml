@@ -1,0 +1,121 @@
+﻿@model Client.Models.EquipmentCombined
+
+
+<div>
+    <ul class="listView lebel-design">
+        <li>
+            <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnGlobalEquipmentId").FirstOrDefault().Value.ToString()</span>
+            <span class="inputText" title="@Model.EquipData.ClientLookupId">@(String.IsNullOrEmpty(Model.EquipData.ClientLookupId) ? "" : (Model.EquipData.ClientLookupId.Length > 12 ? (Model.EquipData.ClientLookupId.Substring(0, 12) + "...") : (Model.EquipData.ClientLookupId)))</span>
+        </li>
+        <li style="height:auto;">
+            <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnName").FirstOrDefault().Value.ToString()</span>
+            <span class="inputText description-span" style="line-height:26px;">@Model.EquipData.Name</span>
+            <div style="clear:both;"></div>
+        </li>
+        <li style="height:auto;">
+            <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnSerialNo").FirstOrDefault().Value.ToString()</span>
+            <span class="inputText description-span" style="line-height:26px;">@Model.EquipData.SerialNumber</span>
+            <div style="clear:both;"></div>
+        </li>
+        <li>
+            <span class="label">@Model.Loc.Where(a => a.ResourceId == "GlobalType").FirstOrDefault().Value.ToString()</span>
+            <span class="inputText">@Model.EquipData.Type</span>
+        </li>
+        <li>
+            <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnMake").FirstOrDefault().Value.ToString()</span>
+            <span class="inputText">@Model.EquipData.Make</span>
+        </li>
+        <li style="height:auto;">
+            <span class="label">Model</span>
+            <span class="inputText description-span" style="line-height:26px;">@Model.EquipData.Model</span>
+            <div style="clear:both;"></div>
+        </li>
+        <li>
+            <span class="label">Account</span>
+            <span class="inputText">@Model.EquipData.MaterialAccountClientLookupId</span>
+        </li>
+        <li>
+            <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnAssetNo").FirstOrDefault().Value.ToString()</span>
+            <span class="inputText">@Model.EquipData.AssetNumber</span>
+        </li>
+        <li>
+            @{
+                string label = Model.Loc.Where(a => a.ResourceId == "spnMaintenanceWarrantyExpirationDate").FirstOrDefault().Value.ToString();
+                if (label.Length > 30)
+                {
+                    label = label.Substring(0, 30)+"...";
+                }
+            }
+            <span class="label" title="@Model.Loc.Where(a => a.ResourceId == "spnMaintenanceWarrantyExpirationDate").FirstOrDefault().Value.ToString()">
+                @label
+            </span>
+            @if (Model.EquipData.Maint_WarrantyExpire.HasValue && Model.EquipData.Maint_WarrantyExpire.Value != default(DateTime))
+            {
+                <span class="inputText">@Model.EquipData.Maint_WarrantyExpire.Value.ToString("MM/dd/yyyy", CultureInfo.InvariantCulture)</span>
+            }
+            else
+            {
+                <span class="inputText"></span>
+            }
+        </li>
+        <li>
+           
+            <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnMaintenanceVendor").FirstOrDefault().Value.ToString()</span>
+            <span class="inputText">@Model.EquipData.MaintVendorIdClientLookupId-@Model.EquipData.MaintVendorName</span>
+        </li>
+        <li style="height:auto;" class="dscrbtn">
+           
+            <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnMaintenanceWarrantyDescription").FirstOrDefault().Value.ToString()</span>
+            <span class="inputText description-span">@Model.EquipData.Maint_WarrantyDesc</span>
+            <div style="clear:both;"></div>
+        </li>
+        <li>
+        
+            <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnAcquiredCost").FirstOrDefault().Value.ToString()</span>
+            <span class="inputText">@Model.EquipData.AcquiredCost</span>
+        </li>
+
+        <li>
+           
+            <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnAcquiredDate").FirstOrDefault().Value.ToString()</span>
+            @if (Model.EquipData.AcquiredDate.HasValue && Model.EquipData.AcquiredDate.Value != default(DateTime))
+            {
+                <span class="inputText">@Model.EquipData.AcquiredDate.Value.ToString("MM/dd/yyyy", CultureInfo.InvariantCulture)</span>
+            }
+            else
+            {
+                <span class="inputText"></span>
+            }
+        </li>
+        <li style="height:auto;">
+            <span class="label">@Model.Loc.Where(a => a.ResourceId == "GlobalCatalogNumber").FirstOrDefault().Value.ToString()</span>
+            <span class="inputText description-span" style="line-height:26px;">@Model.EquipData.CatalogNumber</span>
+            <div style="clear:both;"></div>
+        </li>
+        <li>
+         
+            <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnCostCenter").FirstOrDefault().Value.ToString()</span>
+            <span class="inputText description-span">@Model.EquipData.CostCenter</span>
+            <div style="clear:both;"></div>
+        </li>
+        <li>
+            <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnCritical").FirstOrDefault().Value.ToString()</span>
+            <span class="inputText">
+                @Html.CheckBoxFor(m => m.EquipData.CriticalFlag, new { onclick = "return false;" })
+            </span>
+        </li>
+        <li>
+       
+            <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnInstallDate").FirstOrDefault().Value.ToString()</span>
+            @if (Model.EquipData.InstallDate.HasValue && Model.EquipData.InstallDate.Value != default(DateTime))
+            {
+                <span class="inputText">@Model.EquipData.InstallDate.Value.ToString("MM/dd/yyyy", CultureInfo.InvariantCulture)</span>
+            }
+            else
+            {
+                <span class="inputText"></span>
+            }
+        </li>
+      
+    </ul>
+</div>

@@ -1,0 +1,36 @@
+﻿@model Client.Models.PartTransfer.PartTransferVM
+<div id="forceCompleteModal" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-info">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">@Model.Loc.Where(a => a.ResourceId == "spnForceCompletePartTransfer").FirstOrDefault().Value.ToString()</h4>
+            </div>
+@Html.Partial("_ErrorDiv")
+@using (Ajax.BeginForm("ForceTransfer", "PartTransfer", new AjaxOptions { HttpMethod = "Post", OnSuccess = "PartsTransferForceCompleteOnSuccess", OnBegin = "AjaxBeginFormBegin", OnComplete = "AjaxBeginFormComplete", OnFailure = "AjaxBeginFormFaillure" }))
+{
+    @Html.AntiForgeryToken()
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>@Model.Loc.Where(a => a.ResourceId == "spnForceCompleteReason").FirstOrDefault().Value.ToString():<small>*</small></label>
+                    <span class="inputText">
+                        @Html.ValidationMessageFor(m => m.partTransferForceCompleteModel.ForceCompleteReasonId, "", new { style = "display:none" })
+                        @Html.DropDownListFor(m => m.partTransferForceCompleteModel.ForceCompleteReasonId, Model.partTransferForceCompleteModel.ForceCompleteReasonList, "--Select--", new { @class = "form-control search select2picker", style = "width:100%;" })
+                    </span>
+                </div>
+                <div class="form-group">
+                    <label>@Model.Loc.Where(a => a.ResourceId == "spnLogComment").FirstOrDefault().Value.ToString() :<small>*</small></label>
+                    @Html.ValidationMessageFor(m => m.partTransferForceCompleteModel.Comment, "", new { style = "display:none" })
+                    @Html.TextAreaFor(m => m.partTransferForceCompleteModel.Comment, new { @class = "form-control search ", autocomplete = "off" })
+                </div>
+            </div>
+            <div class="modal-footer" style="padding:15px 25px !important;">
+                <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-close buttonIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button>
+                <button type="submit" class="btn btn-blue" style="float:right;"><i class="fa fa-save buttonIcon"></i> &nbsp;@Model.Loc.Where(a => a.ResourceId == "spnForceComplete").FirstOrDefault().Value.ToString()</button>
+                <div style="clear:both;"></div>
+            </div>
+            @Html.HiddenFor(m => m.partTransferForceCompleteModel.PartTransferId)
+}
+        </div>
+    </div>
+</div>

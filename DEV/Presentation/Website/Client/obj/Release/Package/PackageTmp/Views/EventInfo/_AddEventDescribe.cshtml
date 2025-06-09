@@ -1,0 +1,120 @@
+﻿@model Client.Models.EventInfo.EventInfoVM
+
+<div class="m-subheader fixedDiv1">
+    <div class="new-m-subheader">
+        <div class="PageTitle">
+            <div class="align-items-center separator">
+                <h3 class="m-subheader__title ">
+                    @Model.Loc.Where(a => a.ResourceId == "spnAddEventBasedWO").FirstOrDefault().Value.ToString()
+                </h3>
+            </div>
+        </div>
+
+        <div class="NewBreadcrumbArea">
+            <div class="newBreadcrumb">
+                <ul>
+                    <li><a href="/Dashboard/Dashboard">&nbsp;</a></li>
+                    <li><a href="/EventInfo/Index?page=Sensors_Events">@Model.Loc.Where(a => a.ResourceId == "spnEventInfoSearch").FirstOrDefault().Value.ToString()</a></li>
+                    <li><a href="javascript:void(0)" id="brdevntinfo" data-val="@Model.eventDescribeModel.EventInfoId">@Model.eventDescribeModel.EventInfoId</a></li>
+                    <li>@Model.Loc.Where(a => a.ResourceId == "spnDescribeWhatYouNeed").FirstOrDefault().Value.ToString()</li>
+                </ul>
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+        <div style="clear:both;"></div>
+    </div>
+</div>
+<div class="pushDiv1"></div>
+
+@Html.Partial("_ErrorDiv")
+<div class="row">
+    <div class="col-xl-12">
+        <div class="m-portlet newPort" id="m_portlet" style="padding:15px;">
+            <div class="bottomBlock" style="margin-bottom:15px;">
+                @using (Ajax.BeginForm("AddEventDescribe", "EventInfo", new AjaxOptions { HttpMethod = "Post", OnSuccess = "EventDescribeAddOnSuccess", OnBegin = "AjaxBeginFormBegin", OnComplete = "AjaxBeginFormComplete", OnFailure = "AjaxBeginFormFaillure" }))
+                {
+                    @Html.AntiForgeryToken()
+                    <div class="tabsArea nobg">
+                        <ul class="listView nobrd rt-part">
+                            <li class="txtSrchArea txtSrch">
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "GlobalType").FirstOrDefault().Value.ToString():<small>*</small></span>
+                                <span class="inputText wthAdjst">
+                                    @Html.ValidationMessageFor(m => m.eventDescribeModel.Type, "", new { style = "display:none" })
+                                    @Html.DropDownListFor(m => m.eventDescribeModel.Type, Model.eventDescribeModel.TypeList, "--Select--", new { @class = "form-control search select2picker", style = "width:100%;" })
+                                </span>
+                            </li>
+                            <li class="txtSrchArea txtSrch">
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "GlobalChargeTo").FirstOrDefault().Value.ToString():<small>*</small></span>
+                                <span class="inputText wthAdjst">
+                                    @Html.ValidationMessageFor(m => m.eventDescribeModel.ChargeToClientLookupId, "", new { style = "display:none" })
+                                    @Html.DropDownListFor(m => m.eventDescribeModel.ChargeToClientLookupId, Model.eventDescribeModel.ChargeToList, "--Select--", new { @class = "form-control search select2picker", style = "width:100%;" })
+                                    <i class="fa fa-angle-down" style="position: absolute;right: 14px;top: 8px;font-size: 17px;color: #bbbfc3;cursor:pointer;" id="pldArray"></i>
+                                </span>
+                            </li>
+                            <li style="height:auto;">
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString(): <small>*</small></span>
+                                <span class="inputText wthAdjst" style="height:auto;">
+                                    @Html.ValidationMessageFor(m => m.eventDescribeModel.Description, "", new { style = "display:none" })
+                                    @Html.TextAreaFor(m => m.eventDescribeModel.Description, new { @class = "form-control search", style = "resize:none;", autocomplete = "off" })
+                                </span>
+                                <div style="clear:both;"></div>
+                            </li>
+                            <li class="txtSrchArea txtSrch">
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnPersonnelID").FirstOrDefault().Value.ToString(): <small>*</small></span>
+                                <span class="inputText wthAdjst">
+                                    @Html.ValidationMessageFor(m => m.eventDescribeModel.PersonnelId, "", new { style = "display:none" })
+                                    @Html.DropDownListFor(m => m.eventDescribeModel.PersonnelId, Model.eventDescribeModel.PersonnelIdList, "--Select--", new { @class = "form-control search select2picker", style = "width:100%;" })
+                                </span>
+                            </li>
+                            <li>
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnDate").FirstOrDefault().Value.ToString(): <small>*</small></span>
+                                <span class="inputText wthAdjst">
+                                    @Html.ValidationMessageFor(m => m.eventDescribeModel.Date, "", new { style = "display:none" })
+                                    @Html.TextBoxFor(m => m.eventDescribeModel.Date, "{0:MM/dd/yyyy}", new { @class = "form-control search dtpicker tdDate", autocomplete = "off" })
+                                </span>
+                            </li>
+                            <li>
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnHours").FirstOrDefault().Value.ToString(): <small>*</small></span>
+                                <span class="inputText wthAdjst">
+                                    @Html.ValidationMessageFor(m => m.eventDescribeModel.Hours, "", new { style = "display:none" })
+                                    @Html.TextBoxFor(m => m.eventDescribeModel.Hours, new { @class = "form-control search decimalinput", @Value = "1", autocomplete = "off" })
+                                </span>
+                            </li>
+
+                        </ul>
+                    </div>
+                    <div style="clear:both;"></div>
+                    <div class="idBttns">
+                        <div class="bttn_pagin">
+                            <div class="bttns2">
+                                <button type="submit" class="btn btn-blue mobBttn" name="SaveType" value="Event_Describe"><i class="fa fa-save faIcon"></i> &nbsp;@Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+                            </div>
+                            <div class="bttns"><button type="button" class="btn btn-blue mobBttn btnCancelDataval" data-val="@Model.eventDescribeModel.EventInfoId"><i class="fa fa-close faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button></div>
+                            <div style="clear:both;"></div>
+                        </div>
+                    </div>
+                    @Html.HiddenFor(m => m.eventDescribeModel.ChargeToClientLookupId)
+                    @Html.HiddenFor(m => m.eventDescribeModel.EventInfoId)
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="myModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title" id="hdrPlantLocation">@Model.Loc.Where(a => a.ResourceId == "spnGlobalEquipmentTreeLookup").FirstOrDefault().Value.ToString()</h4>
+            </div>
+            <div class="modal-body">
+                <div class="cntTree">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<style type="text/css">
+    .ui-tooltip { z-index: 1151 !important; }
+</style>

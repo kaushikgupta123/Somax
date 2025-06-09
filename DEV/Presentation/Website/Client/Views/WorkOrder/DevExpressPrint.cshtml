@@ -1,0 +1,39 @@
+﻿@using DevExpress.XtraReports.Web.WebDocumentViewer
+@model IEnumerable<Client.Models.Work_Order.WorkOrderDevExpressPrintModel>
+@{
+    ViewBag.Title = "Somax | Work Order Print";
+    Layout = "~/Views/Shared/_ReportLayout.cshtml";
+}
+@section scripts{
+    
+}
+@{
+    //var PrintTemplate = new Client.DevExpressReport.WorkOrderPrintTemplate();
+    var PrintTemplate = new Client.DevExpressReport.WorkOrderNewPrintTemplate();
+    PrintTemplate.DataSource = Model;
+    #region  set the name of the exported PDF file when exporting the Work Order
+  
+        if (Session["PrintWOList"] != null && Model != null)
+        {
+            var WorkOrderIds = (List<long>)Session["PrintWOList"];
+            if (WorkOrderIds.Count > 0 )
+            {
+                if (WorkOrderIds.Count == 1 && Model.ToList().Count > 0)
+                {
+                    PrintTemplate.ExportOptions.PrintPreview.DefaultFileName = "Work Order - " + @Model.ToList()[0].ClientlookupId;
+                }
+            }
+        }
+    
+    #endregion
+    var xtraReports = new DevExpress.XtraReports.Web.CachedReportSourceWeb(PrintTemplate);
+}
+@Html.DevExpress().WebDocumentViewer(settings =>
+{
+    settings.Name = "WebDocumentViewer";
+    settings.SettingsProgressBar.Position = ProgressBarPosition.TopRight;
+    settings.SettingsProgressBar.KeepOnVisibleArea = true;
+    settings.ClientSideEvents.CustomizeExportOptions = "onCustomizeExportOptions";
+    settings.ClientSideEvents.CustomizeMenuActions = "onCustomizeMenuActions";
+    settings.ClientSideEvents.BeforeRender = "onCustomizeBeforeRender";
+}).Bind(xtraReports).GetHtml()

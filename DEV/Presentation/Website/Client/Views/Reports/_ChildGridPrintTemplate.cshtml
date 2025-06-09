@@ -1,0 +1,106 @@
+﻿@model Client.Models.BusinessIntelligence.ChildGridtPrintModel
+
+
+@using System.Data;
+
+@{
+    Layout = null;
+    var dataTable = Model.ReportData;
+    int tblColCount = Model.gridColumnsProps.Count;
+    int dtcolumnCount = Model.ReportData.Columns.Count;
+    bool hasGrandTotal = Model.gridColumnsProps.Any(x => x.IsGrandTotal == true);
+    decimal[] grantTotalCounts = new decimal[dtcolumnCount];
+}
+<style type="text/css">
+    table thead.childTableHead tr th:last-child {
+        border-right: 0 !important;
+    }
+
+    table tbody.childTableBody tr td:last-child {
+        border-right: 0 !important;
+    }
+
+    table tbody.childTableBody tr td:first-child {
+        border-left: 0 !important;
+    }
+</style>
+<tr>
+    <td colspan="100" style="padding:5px; border:1px solid #d8d8d8;">
+        <table border="0" cellspacing="0" cellpadding="0" align="center" style="width:100%">
+            <tr>
+                <td align="left" valign="top" height="10"><img src="../Content/images/space.png" alt="" /></td>
+            </tr>
+            <tr>
+                <td align="left" valign="top" style="border-bottom:2px solid #83cad0;">
+                    <table border="0" cellspacing="0" cellpadding="0" style="width:100%">
+                        <tr>
+                            <td align="left" valign="top">
+                                <table border="0" cellspacing="0" cellpadding="0" style="width:100%">
+                                    <thead class="childTableHead">
+                                        <tr style="background:#ebe8f2;">
+                                            @for (int i = 0; i < tblColCount; i++)
+                                            {
+                                                if (i == tblColCount - 1)
+                                                {
+                                                    <th class="@Model.gridColumnsProps[i].className" valign="middle" height="40" scope="col" style="border-right:1px solid #ebe8f2; color:#222; line-height:40px; font-weight:400;">@Model.gridColumnsProps[i].title</th>
+                                                }
+                                                else
+                                                {
+                                                    <th class="@Model.gridColumnsProps[i].className" valign="middle" height="40" scope="col" style="border-right:1px solid #fff;color:#222; line-height:40px; font-weight:400;">@Model.gridColumnsProps[i].title</th>
+                                                }
+                                            }
+                                        </tr>
+                                    </thead>
+                                    <tbody class="childTableBody">
+                                        @foreach (DataRow row in Model.ReportData.Rows)
+                                        {
+                                            <tr>
+                                                @for (int i = 0; i < row.ItemArray.Count(); i++)
+                                                {
+                                                    if (@Model.gridColumnsProps[i].IsGrandTotal)
+                                                    {
+                                                        grantTotalCounts[i] = grantTotalCounts[i] + Convert.ToDecimal(row.ItemArray[i]);
+                                                    }
+                                                    if (i == row.ItemArray.Count())
+                                                    {
+                                                        <td class="@Model.gridColumnsProps[i].className" valign="middle" height="40" style="border-right:1px solid #fff;color:#737272; line-height:40px; font-weight:normal;">@UtilityFunction.GetFormattedData(@row.ItemArray[i], @Model.gridColumnsProps[i])</td>
+                                                    }
+                                                    else
+                                                    {
+                                                        <td class="@Model.gridColumnsProps[i].className" valign="middle" height="40" style="border-right:1px solid #ececec;color:#737272; line-height:40px; font-weight:normal;">@UtilityFunction.GetFormattedData(@row.ItemArray[i], @Model.gridColumnsProps[i])</td>
+                                                    }
+                                                }
+                                            </tr>
+                                        }
+                                    </tbody>
+                                    @if (hasGrandTotal)
+                                    {
+                                        <tfoot>
+                                            <tr style="background:#ebe8f2;">
+                                                @{int count = 0;}
+                                                @for (int item = 0; item < dtcolumnCount; item++)
+                                                {
+                                                    if (Model.gridColumnsProps[item].IsGrandTotal)
+                                                    {
+                                                        <td class="text-right" valign="middle" height="30" scope="col" style="border-right:1px solid #ebe8f2;color:#222; line-height:40px; font-weight:400;">@UtilityFunction.GetFormattedData(grantTotalCounts[count], @Model.gridColumnsProps[item])</td>
+                                                    }
+                                                    else
+                                                    {
+                                                        <td class="text-right" valign="middle" height="30" scope="col" style="border-right:1px solid #ebe8f2;color:#222; line-height:40px; font-weight:400;"></td>
+                                                    }
+                                                    count++;
+                                                }
+                                            </tr>
+                                        </tfoot>
+                                    }
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+    </td>
+</tr>
+
+

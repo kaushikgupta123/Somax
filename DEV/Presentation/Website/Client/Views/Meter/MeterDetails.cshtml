@@ -1,0 +1,251 @@
+﻿@model Client.Models.Meters.MetersVM
+
+<div class="m-subheader">
+    <div class="new-m-subheader">
+        <div class="PageTitle">
+            <div class="align-items-center separator">
+                <h3 class="m-subheader__title ">
+                    @Model.Loc.Where(a => a.ResourceId == "Meter").FirstOrDefault().Value.ToString()
+                </h3>
+            </div>
+        </div>
+        <div class="NewBreadcrumbArea">
+            <div class="newBreadcrumb">
+                <ul>
+                    <li><a href="/Dashboard/Dashboard">&nbsp;</a></li>
+                    <li><a href="/Meter/Index?page=Maintenance_Preventive_Maintenance_Meter">@Model.Loc.Where(a => a.ResourceId == "spnMeterSearch").FirstOrDefault().Value.ToString()</a></li>
+                    <li class="active CLientLookId">@Model.Meters.MeterClientLookUpId</li>
+                </ul>
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+        <div class="ActionBttnArea">
+
+            @if (Model.security.Meters.Edit || Model.security.Meters.RecordReading)
+            {
+                if (Model.security.Meters.Create)
+                {
+                    <div class="actionDiv pull-left">
+                        <div class="btn-group bootstrap-select m-datatable__pager-size dropup show selectDrop actionNewDrop" style="margin-right:0;">
+                            <div class="btn-group bootstrap-select m-datatable__pager-size" style="width: 100%;">
+                                <button type="button" class="btn dropdown-toggle bs-placeholder btn-default" data-toggle="dropdown" role="button" title=""><span class="filter-option pull-left">@Model.Loc.Where(a => a.ResourceId == "globalAction").FirstOrDefault().Value.ToString()</span>&nbsp;<span class="bs-caret"><span class="caret"></span></span></button>
+                                <div class="dropdown-menu open" role="combobox">
+                                    <ul class="dropdown-menu inner" role="listbox" aria-expanded="false">
+                                        @if (Model.security.Meters.Edit)
+                                        {
+                                            <li data-toggle="modal" id="resetmeter"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnReset").FirstOrDefault().Value.ToString()</a></li>
+                                        }
+                                        @if (Model.security.Meters.RecordReading)
+                                        {
+                                            <li data-toggle="modal" id="readingMeter"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnRecordReading").FirstOrDefault().Value.ToString()</a></li>
+                                        }
+                                        @if (Model.security.Meters.Edit && Model.Meters.InActive == true)
+                                        {
+                                            <li id="actinctivatemeter"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnActivate").FirstOrDefault().Value.ToString()</a></li>
+                                        }
+                                        @if (Model.security.Meters.Edit && Model.Meters.InActive == false)
+                                        {
+                                            <li id="actinctivatemeter"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnInactivate").FirstOrDefault().Value.ToString() </a></li>
+                                        }
+                                        <li id="printDetailsMeterQrcode"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "globalPrint").FirstOrDefault().Value.ToString()</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <div class="actionDiv pull-left" style="margin-right:0;">
+                        <div class="btn-group bootstrap-select m-datatable__pager-size dropup show selectDrop actionNewDrop" style="margin-right:0;">
+                            <div class="btn-group bootstrap-select m-datatable__pager-size" style="width: 100%;">
+                                <button type="button" class="btn dropdown-toggle bs-placeholder btn-default" data-toggle="dropdown" role="button" title=""><span class="filter-option pull-left">@Model.Loc.Where(a => a.ResourceId == "globalAction").FirstOrDefault().Value.ToString()</span>&nbsp;<span class="bs-caret"><span class="caret"></span></span></button>
+                                <div class="dropdown-menu open" role="combobox">
+                                    <ul class="dropdown-menu inner" role="listbox" aria-expanded="false">
+                                        @if (Model.security.Meters.Edit)
+                                        {
+                                            <li data-toggle="modal" id="resetmeter"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnReset").FirstOrDefault().Value.ToString()</a></li>
+                                        }
+                                        @if (Model.security.Meters.RecordReading)
+                                        {
+                                            <li data-toggle="modal" id="readingMeter"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnRecordReading").FirstOrDefault().Value.ToString()</a></li>
+                                        }
+                                        @if (Model.security.Meters.Edit && Model.Meters.InActive == true)
+                                        {
+                                            <li id="actinctivatemeter"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnActivate").FirstOrDefault().Value.ToString()</a></li>
+                                        }
+                                        @if (Model.security.Meters.Edit && Model.Meters.InActive == false)
+                                        {
+                                            <li id="actinctivatemeter"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnInactivate").FirstOrDefault().Value.ToString() </a></li>
+                                        }
+                                        <li id="printDetailsMeterQrcode"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "globalPrint").FirstOrDefault().Value.ToString()</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+
+            }
+            @if (Model.security.Meters.Create)
+            {
+                <button type="button" class="btn newBtn-add AddMeter innerBtn pull-left" id="AddMeter" title="Add Meter"><i class="fa fa-plus"></i></button>
+            }
+            <div style="clear:both;"></div>
+        </div>
+        <div style="clear:both;"></div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xl-3">
+        <div class="m-portlet">
+            <div class="sideMenuArea nobg">
+                <ul class="vtabs" id="detmaintab">
+                    <li class="active" id="limeter"><a href="#MeterContainer">@Model.Loc.Where(a => a.ResourceId == "spnOverview").FirstOrDefault().Value.ToString()</a></li>
+                    <li id="liReadings"><a href="#ReadingsContainer" onclick="openCity(event, 'ReadingsContainer')">@Model.Loc.Where(a => a.ResourceId == "spnReadings").FirstOrDefault().Value.ToString()</a></li>
+                </ul>
+            </div>
+
+            <div class="selectTabs" id="selectTabs">
+                <select class="form-control" id="colorselector">
+                    <option value="MeterContainer">@Model.Loc.Where(a => a.ResourceId == "spnOverview").FirstOrDefault().Value.ToString()</option>
+                    <option value="ReadingsContainer">@Model.Loc.Where(a => a.ResourceId == "spnReadings").FirstOrDefault().Value.ToString()</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-9">
+        <div class="row">
+            <div class="col-xl-12">
+                <div class="m-portlet" id="m_portlet" style="padding:15px;">
+                    <div class="bottomBlock">
+                        <div class="tabsArea nobg" id="MeterContainer" style="display:block;">
+                            <div class="tab">
+                                <button class="tablinks active" onclick="openCity(event, 'Identification')" id="btnidentification">@Model.Loc.Where(a => a.ResourceId == "spnIdentification").FirstOrDefault().Value.ToString()</button>
+                                <button class="tablinks" onclick="openCity(event, 'Readings')">@Model.Loc.Where(a => a.ResourceId == "spnReadings").FirstOrDefault().Value.ToString()</button>
+                            </div>
+                            <div class="selectTab">
+                                <select class="form-control search" id="tabselector">
+                                    <option value="Identification">@Model.Loc.Where(a => a.ResourceId == "spnIdentification").FirstOrDefault().Value.ToString()</option>
+                                    <option value="Readings">@Model.Loc.Where(a => a.ResourceId == "spnReadings").FirstOrDefault().Value.ToString()Readings</option>
+                                </select>
+                            </div>
+                            <div id="Identification" class="tabcontent" style="display:block;">
+                                <ul class="listView">
+                                    <li>
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnMeterID").FirstOrDefault().Value.ToString() :</span>
+                                        <span class="inputText">@Model.Meters.MeterClientLookUpId</span>
+                                    </li>
+                                    <li style="height:auto;">
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnName").FirstOrDefault().Value.ToString() :</span>
+                                        <span class="inputText ">@Model.Meters.MeterName</span>
+                                        <div style="clear:both;"></div>
+                                    </li>
+                                    <li>
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnReadingUnits").FirstOrDefault().Value.ToString() :</span>
+                                        <span class="inputText">@Model.Meters.ReadingUnits</span>
+                                    </li>
+                                    <li>
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnMaximumReading").FirstOrDefault().Value.ToString() :</span>
+                                        <span class="inputText">@Model.Meters.MaxReading</span>
+                                    </li>
+                                    <li>
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "globalInActive").FirstOrDefault().Value.ToString() :</span>
+                                        <span class="inputText">
+                                            @Html.CheckBoxFor(m => m.Meters.InActive, new { @class = "form-control m-input", @disabled = "disabled", @style = "color:black; width: auto; margin-top: 12px;" })
+                                        </span>
+                                    </li>
+
+                                </ul>
+                            </div>
+
+                            <div id="Readings" class="tabcontent">
+                                <ul class="listView">
+                                    <li>
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnCurrentReading").FirstOrDefault().Value.ToString() :</span>
+                                        <span class="inputText">@Model.Meters.ReadingCurrent</span>
+                                    </li>
+                                    <li>
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnLifetimeReading").FirstOrDefault().Value.ToString() :</span>
+                                        <span class="inputText">@Model.Meters.ReadingLife</span>
+                                    </li>
+                                    <li>
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnReadingDate").FirstOrDefault().Value.ToString() :</span>
+                                        @if (Model.Meters.ReadingDate.HasValue && Model.Meters.ReadingDate.Value != default(DateTime))
+                                        {
+                                            <span class="inputText">@Model.Meters.ReadingDate.Value.ToString("MM/dd/yyyy", CultureInfo.InvariantCulture)</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="inputText"></span>
+                                        }
+                                    </li>
+
+                                </ul>
+                            </div>
+
+
+                            <div class="editBttn">
+                                @if (Model.security.Meters.Edit)
+                                {
+                                    <a href="javascipt:void(0)" id="editmeter"><button type="button" class="btn btn-blue"><i class="fa fa-pencil" style="margin-top:-3px;"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalEdit").FirstOrDefault().Value.ToString()</button></a>
+                                }
+                            </div>
+                        </div>
+                        <div class="tabsArea nobg" id="ReadingsContainer" style="display:none;">
+                            <div class="actionBar">
+                                <div class="pull-left">
+                                    <button type="button" class="btn btn-white navbar-btn" id="readingsidebarCollapse" title="Advance Search"><i class="fa fa-filter" style="font-size: 1.3rem;"></i></button>
+                                    <ul class="filter_apply globalFilterAdjusted">
+                                        <li class="textFilter"><span class="recordfilteritemcount">0</span>&nbsp;@Model.Loc.Where(a => a.ResourceId == "globalFiltersAppiled").FirstOrDefault().Value.ToString()</li>
+                                        <li class="textClear" id="recordClearAdvSearchFilter"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "globalClear").FirstOrDefault().Value.ToString()</a></li>
+                                    </ul>
+                                    <div style="clear:both;"></div>
+                                </div>
+                                <div style="clear:both;"></div>
+                                <div id="readingadvsearchfilteritems"></div>
+                                <div style="clear:both;"></div>
+                            </div>
+                            <div class="table-responsive">
+                                <table id="readingsTable" class="eqpDtlTbl row-border custom-sort" style="width:100%;">
+                                    <thead>
+                                        <tr>
+                                            <th>@Model.Loc.Where(a => a.ResourceId == "spnReading").FirstOrDefault().Value.ToString()</th>
+                                            <th>@Model.Loc.Where(a => a.ResourceId == "spnReadBy").FirstOrDefault().Value.ToString()</th>
+                                            <th>@Model.Loc.Where(a => a.ResourceId == "spnReadingDate").FirstOrDefault().Value.ToString()</th>
+                                            <th>@Model.Loc.Where(a => a.ResourceId == "spnReset").FirstOrDefault().Value.ToString()</th>
+                                        </tr>
+                                    </thead>
+
+                                </table>
+                            </div>
+                            <div class="bttn_pagin">
+                                <div class="bttns"><button type="button" class="btn btn-blue" data-toggle="" data-target="" id="btnAddReadings" style="display:none"><i class="fa fa-plus faIcon"></i> &nbsp;@Model.Loc.Where(a => a.ResourceId == "spnAddReadings").FirstOrDefault().Value.ToString()</button></div>
+                                <div style="clear:both;"></div>
+                            </div>
+                            <div style="clear:both;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="readingadvsearchcontainer">
+    @Html.Partial("_MeterReadingAdvanceSearch")
+</div>
+<div id="printMeterDetailsqrcodemodalcontainer"></div>
+@Html.HiddenFor(m => m.Meters.MeterId)
+@Html.HiddenFor(m => m.Meters.InActive, new { id = "hiddenmeterstatus" })
+@Html.HiddenFor(m => m.Meters.MeterClientLookUpId)
+@Html.HiddenFor(m => m.Meters.MeterName)
+@if (Model.security.Meters.Edit)
+{
+    @Html.Partial("_ResetMeter")
+}
+@if (Model.security.Meters.RecordReading)
+{
+    @Html.Partial("_ReadingMeter")
+}

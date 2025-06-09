@@ -1,0 +1,272 @@
+﻿@model Client.Models.WorkOrderPlanning.WorkOrderPlanningVM
+@{
+    Layout = null;
+    string prevGroup =Model.resourceListPdfPrintModel.Select(x => x.PersonnelName).FirstOrDefault().ToString();
+    string currentGroup = prevGroup;
+    long PerIDNextValue = Model.resourceListPdfPrintModel.Select(x => x.PerIDNextValue).FirstOrDefault();
+    long PersonnelId = 0;
+    int printCount = 0;
+    int thisRow = 0;
+    decimal GrandTotal = Model.resourceListPdfPrintModel.Select(x => x.GrandTotalHour).FirstOrDefault();
+    string SDNextValue = Model.resourceListPdfPrintModel.Select(x => x.SDNextValue).FirstOrDefault().ToString();
+    string GroupType = Model.resourceListPdfPrintModel.Select(x => x.GroupType).FirstOrDefault();
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Somax | Labor Scheduling</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css" />
+    <link rel="shortcut icon" href="~/Scripts/Metronic/assets/login/demo/default/media/img/logo/favicon.png" />
+    <style type="text/css">
+        thead, tfoot {
+            display: table-row-group;
+        }
+
+        .my-table {
+            width: 100%;
+        }
+
+        table, tr, td, th, tbody, thead, tfoot {
+            page-break-inside: avoid !important;
+        }
+
+            table thead.mainTableHead tr th:last-child, table thead.childTableHead tr th:last-child {
+                border-right: 0 !important;
+            }
+
+            table tbody.childTableBody tr td:last-child {
+                border-right: 0 !important;
+            }
+
+            table tbody.mainTableBody tr td:first-child {
+                border-left: 1px solid #d8d8d8 !important;
+            }
+
+            table tbody.childTableBody tr td:first-child {
+                border-left: 0 !important;
+            }
+    </style>
+</head>
+<body style="padding:0; margin:0; font-family: 'Roboto', sans-serif; font-size:12px; color:#737272;">
+    <table border="0" cellspacing="0" cellpadding="0" align="center" style="width:100%;">
+        <tr>
+            <td align="left" valign="top" style="border-bottom: 2px solid #264a7c;">
+                <div style="min-height:.01%; overflow-x: auto;">
+                    <table border="0" cellspacing="0" cellpadding="0" style="width:100%;" class="my-table">
+                        <thead class="mainTableHead">
+                            <tr style="background:#264a7c;">
+                                @foreach (var hed in Model.tableHaederProps)
+                                {
+                                    if (!string.IsNullOrEmpty(@hed.title))
+                                    {
+                                        <th align="center" valign="middle" height="40" scope="col" style="border-right:1px solid #fff; font-size:12px; color:#fff; line-height:40px; font-weight:normal">@hed.title</th>
+                                    }
+
+                                }
+                            </tr>
+                        </thead>
+
+                        <tbody class="mainTableBody">
+
+                            @foreach (var item in Model.resourceListPdfPrintModel)
+                            {
+                                PerIDNextValue = item.PerIDNextValue;
+                                PersonnelId = item.PersonnelId;
+                                if (GroupType == "0")
+                                {
+                                    prevGroup = item.PersonnelName;
+                                }
+                                else
+                                {
+                                    prevGroup = item.ScheduledStartDateString;
+                                }
+
+
+                                if (printCount == 0)
+                                {
+                                    printCount = 1;
+
+                                    <tr>
+                                        <td align="center" valign="middle" height="30" colspan="9" style="background-color: #83cad0; color: #fff; font-weight: 400; font-size: 14px; padding: 0 10px;">@prevGroup</td>
+                                    </tr>
+                                    //PerIDNextValue = PersonnelId;
+                                }
+
+
+
+                                if (thisRow % 2 == 0)
+                                {
+                                    <tr style="background:#ececec;">
+
+                                        @foreach (var hed in Model.tableHaederProps)
+                                        {
+                                            if (!string.IsNullOrEmpty(@hed.title))
+                                            {
+                                                <td align="center" valign="middle" height="40" style="border-right:1px solid #d8d8d8; font-size:12px; line-height:40px; font-weight:normal;">@item.GetType().GetProperty(hed.property).GetValue(item, null)</td>
+                                            }
+                                        }
+                                    </tr>
+                                }
+                                else
+                                {
+                                    <tr>
+
+                                        @foreach (var hed in Model.tableHaederProps)
+                                        {
+                                            if (!string.IsNullOrEmpty(@hed.title))
+                                            {
+                                                <td align="center" valign="middle" height="40" style="border-right:1px solid #d8d8d8; font-size:12px; line-height:40px; font-weight:normal;">@item.GetType().GetProperty(hed.property).GetValue(item, null)</td>
+                                            }
+                                        }
+                                    </tr>
+                                }
+
+                                if (GroupType == "0")
+                                {
+                                    if (PerIDNextValue != PersonnelId && (!String.IsNullOrEmpty(item.PerNextValue)))
+                                    {
+                                        printCount = 1;
+                                        prevGroup = item.PerNextValue;
+
+                                        <!--Print Total Hour count-->
+                                        <tr style="background:#fff;">
+                                            @foreach (var hed in Model.tableHaederProps)
+                                            {
+                                                if (!string.IsNullOrEmpty(@hed.title))
+                                                {
+                                                    if (@hed.title == "Hours")
+                                                    {
+                                                        <td align="center" class="text-right" valign="middle" height="30" scope="col" style="border-right:1px solid #ebe8f2;color:#222; line-height:40px; font-weight:400;">@item.SumPersonnelHour</td>
+
+                                                    }
+                                                    else
+                                                    {
+                                                        <td></td>
+                                                    }
+                                                }
+
+                                            }
+                                        </tr>
+                                        <!--Print Groupname on the next row-->
+                                        <tr>
+                                            <td align="center" valign="middle" height="30" colspan="9" style="background-color: #83cad0; color: #fff; font-weight: 400; font-size: 14px; padding: 0 10px;">@prevGroup</td>
+                                        </tr>
+                                    }
+
+                                    <!--Print Total Hour count on the last-->
+                                    if ((String.IsNullOrEmpty(item.PerNextValue)))
+                                    {
+                                        <tr style="background:#fff;">
+                                            @foreach (var hed in Model.tableHaederProps)
+                                            {
+                                                if (!string.IsNullOrEmpty(@hed.title))
+                                                {
+                                                    if (@hed.title == "Hours")
+                                                    {
+
+                                                        <td align="center" class="text-right" valign="middle" height="30" scope="col" style="border-right:1px solid #ebe8f2;color:#222; line-height:40px; font-weight:400;">@item.SumPersonnelHour</td>
+
+                                                    }
+                                                    else
+                                                    {
+                                                        <td></td>
+                                                    }
+
+                                                }
+                                            }
+                                        </tr>
+
+                                    }
+                                }
+                                else
+                                {
+                                    SDNextValue = item.SDNextValue.ToString("MM/dd/yyyy", CultureInfo.InvariantCulture);
+                                    if (SDNextValue != item.ScheduledStartDateString && (item.SDNextValue != DateTime.MinValue))
+                                    {
+                                        printCount = 1;
+                                        prevGroup = SDNextValue;
+                                        <!--Print Total Hour count-->
+                                        <tr style="background:#fff;">
+                                            @foreach (var hed in Model.tableHaederProps)
+                                            {
+                                                if (!string.IsNullOrEmpty(@hed.title))
+                                                {
+                                                    if (@hed.title == "Hours")
+                                                    {
+                                                        <td align="center" class="text-right" valign="middle" height="30" scope="col" style="border-right:1px solid #ebe8f2;color:#222; line-height:40px; font-weight:400;">@item.SumScheduledateHour</td>
+
+                                                    }
+                                                    else
+                                                    {
+                                                        <td></td>
+                                                    }
+                                                }
+
+                                            }
+                                        </tr>
+                                        <!--Print Groupname on the next row-->
+                                        <tr>
+                                            <td align="center" valign="middle" height="30" colspan="9" style="background-color: #83cad0; color: #fff; font-weight: 400; font-size: 14px; padding: 0 10px;">@prevGroup</td>
+                                        </tr>
+                                    }
+
+                                    <!--Print Total Hour count on the last-->
+                                    if ((item.SDNextValue == DateTime.MinValue))
+                                    {
+                                        <tr style="background:#fff;">
+                                            @foreach (var hed in Model.tableHaederProps)
+                                            {
+                                                if (!string.IsNullOrEmpty(@hed.title))
+                                                {
+                                                    if (@hed.title == "Hours")
+                                                    {
+                                                        <td align="center" class="text-right" valign="middle" height="30" scope="col" style="border-right:1px solid #ebe8f2;color:#222; line-height:40px; font-weight:400;">@item.SumScheduledateHour</td>
+                                                    }
+                                                    else
+                                                    {
+                                                        <td></td>
+                                                    }
+
+                                                }
+                                            }
+                                        </tr>
+
+                                    }
+                                }
+
+                                thisRow++;
+                            }
+                        </tbody>
+                        <!--Print GrandTotal Hour-->
+                        <tfoot>
+                            <tr style="background:#ebe8f2;">
+                                @foreach (var hed in Model.tableHaederProps)
+                                {
+                                    if (!string.IsNullOrEmpty(@hed.title))
+                                    {
+                                        if (@hed.title == "Hours")
+                                        {
+                                            <td align="center" class="text-right" valign="middle" height="30" scope="col" style="border-right:1px solid #ebe8f2;color:#222; line-height:40px; font-weight:400;">Grand Total : @GrandTotal</td>
+                                        }
+                                        else
+                                        {
+                                            <td></td>
+                                        }
+                                    }
+
+                                }
+                            </tr>
+
+                        </tfoot>
+
+                    </table>
+                </div>
+            </td>
+        </tr>
+    </table>
+</body>
+
+</html>

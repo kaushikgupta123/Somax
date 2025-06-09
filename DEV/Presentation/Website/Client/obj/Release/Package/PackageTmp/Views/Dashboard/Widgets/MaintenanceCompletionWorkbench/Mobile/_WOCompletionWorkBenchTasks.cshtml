@@ -1,0 +1,34 @@
+﻿@model Client.Models.Dashboard.DashboardVM
+<div class="m-portlet" id="m_portlet" style="padding:10px;">
+    <div class="table-responsive">
+        <table id="woTaskTable" class="eqpDtlTbl row-border custom-sort" style="width:100%;">
+            <thead>
+                <tr>
+                    <th style="text-align:center !important;">
+                        <input name="select_all" value="1" id="select-all-wotask" type="checkbox" />
+                    </th>
+                    <th>@Model.Loc.Where(a => a.ResourceId == "spnOrder").FirstOrDefault().Value.ToString()</th>
+                    <th>@Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString()</th>
+                    <th>@Model.Loc.Where(a => a.ResourceId == "spnStatus").FirstOrDefault().Value.ToString()</th>
+                    <th>@Model.Loc.Where(a => a.ResourceId == "GlobalChargeTo").FirstOrDefault().Value.ToString()</th>
+                </tr>
+            </thead>
+
+        </table>
+    </div>
+    @*<div class="bttn_pagin">
+            <div class="bttns"><button type="button" class="btn btn-blue" data-toggle="" data-target="" id="btnwoAddtask" style="display:none"><i class="fa fa-plus faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "spnAddTasks").FirstOrDefault().Value.ToString()</button></div>
+            <div style="clear:both;"></div>
+        </div>*@
+    <div id="tskBttns">
+        <div class="bttns">
+            <button type="button" class="btn btn-blue" data-toggle="" data-target="" style="margin-right:10px;display:none" id="btnwoCompletetask"><i class="fa fa-check faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "GlobalComplete").FirstOrDefault().Value.ToString()</button>
+        </div>
+        <div class="bttns">
+            <button type="button" class="btn btn-blue" data-toggle="modal" data-target="" style="margin-right:10px;display:none" id="btnwoCanceltask"><i class="fa fa-close faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button>
+        </div>
+
+    </div>
+    <div style="clear:both;"></div>
+</div>
+@Html.Partial("~/Views/Dashboard/Widgets/MaintenanceCompletionWorkbench/Mobile/_CancelWOTaskModal.cshtml", Model)

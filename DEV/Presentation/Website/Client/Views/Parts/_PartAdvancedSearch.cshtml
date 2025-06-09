@@ -1,0 +1,53 @@
+﻿@model Client.Models.Parts.PartsVM
+<nav id="sidebar">
+    <div id="dismiss">
+        <i class="fa fa-close"></i>
+    </div>
+    <div class="sidebar-header">
+        <h3><i class="fa fa-filter" style="position: relative; top: -2px;"></i> @Model.Loc.Where(a => a.ResourceId == "spnFilters").FirstOrDefault().Value.ToString()<span class="filteritemcount">0</span></h3>
+        <button type="button" class="btn btn-blue filterSearch" id="btnPartsDataAdvSrch"><i class="fa fa-search" style="margin-top:-3px;"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalSearch").FirstOrDefault().Value.ToString()</button>
+    </div>
+    <div class="sidebar-content" id="advsearchsidebar">
+        <div class="form-group">
+            <label for="PartID">@Model.Loc.Where(a => a.ResourceId == "spnPartID").FirstOrDefault().Value.ToString() :</label>
+            <input type="text" class="form-control search adv-item" id="PartID" autocomplete="off">
+        </div>
+        <div class="form-group">
+            <label for="Description">@Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString() :</label>
+            <input type="text" class="form-control search adv-item" id="Description" autocomplete="off">
+        </div>
+        <div class="form-group">
+            <label for="Manufacturer">@Model.Loc.Where(a => a.ResourceId == "spnManufacturer").FirstOrDefault().Value.ToString() :</label>
+            <input type="text" class="form-control search adv-item" id="Manufacturer" autocomplete="off">
+        </div>
+        <div class="form-group">
+            <label for="ManufacturerID">@Model.Loc.Where(a => a.ResourceId == "spnManufacturerID").FirstOrDefault().Value.ToString() :</label>
+            <input type="text" class="form-control search adv-item" id="ManufacturerID" autocomplete="off">
+        </div>
+        <div class="form-group">
+            <label for="Section">@Model.Loc.Where(a => a.ResourceId == "spnSection").FirstOrDefault().Value.ToString() :</label>
+            <input type="text" class="form-control search adv-item" id="Section" autocomplete="off">
+        </div>
+        <div class="form-group">
+            <label for="Row">@Model.Loc.Where(a => a.ResourceId == "spnRow").FirstOrDefault().Value.ToString() :</label>
+            <input type="text" class="form-control search adv-item" id="Row" autocomplete="off">
+        </div>
+        <div class="form-group">
+            <label for="Shelf">@Model.Loc.Where(a => a.ResourceId == "spnShelf").FirstOrDefault().Value.ToString() :</label>
+            <input type="text" class="form-control search adv-item" id="Shelf" autocomplete="off">
+        </div>
+        <div class="form-group">
+            <label for="Bin">@Model.Loc.Where(a => a.ResourceId == "spnBin").FirstOrDefault().Value.ToString() :</label>
+            <input type="text" class="form-control search adv-item" id="Bin" autocomplete="off">
+        </div>
+        <div class="form-group">
+            <label for="PlaceArea">@Model.Loc.Where(a => a.ResourceId == "spnPlaceArea").FirstOrDefault().Value.ToString() :</label>
+            <input type="text" class="form-control search adv-item" id="PlaceArea" autocomplete="off">
+        </div>
+        <div class="form-group">
+            <label for="StockType">@Model.Loc.Where(a => a.ResourceId == "spnStockType").FirstOrDefault().Value.ToString() :</label>
+            @*<select id="StockType" style="width:100%;" class="form-control search adv-item select2picker"></select>*@
+            @Html.DropDownListFor(m=>m.PartModel.StockType,Model.PartModel.LookupStokeTypeList,"--Select--",new {@class="form-control search adv-item select2picker",@id="StockType" })
+        </div>
+    </div>
+</nav>

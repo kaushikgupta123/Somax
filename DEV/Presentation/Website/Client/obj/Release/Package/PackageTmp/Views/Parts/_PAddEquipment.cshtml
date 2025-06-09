@@ -1,0 +1,109 @@
+﻿@model Client.Models.Parts.PartsVM
+
+<div class="m-subheader fixedDiv1">
+    <div class="new-m-subheader">
+        <div class="PageTitle">
+            <div class="align-items-center separator">
+                <h3 class="m-subheader__title ">
+                    @Model.Loc.Where(a => a.ResourceId == "btnAddEquipment").FirstOrDefault().Value.ToString()
+                </h3>
+            </div>
+        </div>
+
+        <div class="NewBreadcrumbArea">
+            <div class="newBreadcrumb">
+                <ul>
+                    <li><a href="/Dashboard/Dashboard">&nbsp;</a></li>
+                    <li><a href="/Parts/Index?page=Inventory_Parts">@Model.Loc.Where(a => a.ResourceId == "spnPartSearch").FirstOrDefault().Value.ToString()</a></li>
+                    <li><a href="javascript:void(0)" id="brdpart" data-val="@Model.PartModel.PartId">@Model.PartModel.ClientLookupId</a></li>
+
+                    @if (Model.equipmentPartXrefModel.Equipment_Parts_XrefId != 0)
+                    {
+                        <li class="active">@Model.Loc.Where(a => a.ResourceId == "spnEquipmentEdit").FirstOrDefault().Value.ToString()</li>
+                    }
+                    else
+                    {
+                        <li class="active">@Model.Loc.Where(a => a.ResourceId == "spnEquipmentAdd").FirstOrDefault().Value.ToString()</li>
+                    }
+                </ul>
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+        <div style="clear:both;"></div>
+    </div>
+</div>
+<div class="pushDiv1"></div>
+
+@Html.Partial("_ErrorDiv")
+<div class="row fixedDiv2">
+    @Html.Partial("_PartSummary", Model)
+</div>
+<div class="pushDiv2 partsAdjust"></div>
+@using (Ajax.BeginForm("PartsEquipmentAdd", "Parts", new AjaxOptions { HttpMethod = "Post", OnSuccess = "PartsEquipmentAddOnSuccess", OnBegin = "AjaxBeginFormBegin", OnComplete = "AjaxBeginFormComplete", OnFailure = "AjaxBeginFormFaillure" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="row">
+        <div class="col-xl-12">
+            <div class="m-portlet newPort" id="m_portlet" style="padding:15px;">
+                <div class="bottomBlock">
+                    <div class="tabsArea nobg">
+                        <ul class="listView nobrd">
+                            <li>
+                                <span class="label">@Html.LabelFor(m => m.equipmentPartXrefModel.Equipment_ClientLookupId) : <small>*</small></span>
+                                <span class="inputText">
+                                   
+                                    <div class="dropdown dropTableOuter">
+                                        <div class="input-group">
+                                            @Html.ValidationMessageFor(m => m.equipmentPartXrefModel.Equipment_ClientLookupId, "", new { style = "display:none" })
+                                            @Html.TextBoxFor(m => m.equipmentPartXrefModel.Equipment_ClientLookupId, new { @class = "form-control search dropbtn readonly", autocomplete = "off", @readonly = "readonly" })
+                                            <div class="input-group-btn">
+                                                <button class="btn btn-white btntxtInputGroup" type="button" id="opengrid">
+                                                    <i id="srcicon" class="fa fa-search"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </span>
+                            </li>
+                          
+                            <li>
+                                <span class="label">@Html.LabelFor(m => m.equipmentPartXrefModel.QuantityNeeded) : </span>
+                                <span class="inputText">
+                                    @Html.TextBoxFor(m => m.equipmentPartXrefModel.QuantityNeeded, new { @class = "form-control search decimalinput", autocomplete = "off" })
+                                </span>
+                            </li>
+                            <li>
+                                <span class="label">@Html.LabelFor(m => m.equipmentPartXrefModel.QuantityUsed) : </span>
+                                <span class="inputText">
+                                    @Html.TextBoxFor(m => m.equipmentPartXrefModel.QuantityUsed, new { @class = "form-control search decimalinput", autocomplete = "off" })
+                                </span>
+                            </li>
+                            <li>
+                                <span class="label">@Html.LabelFor(m => m.equipmentPartXrefModel.Comment) : </span>
+                                <span class="inputText">
+                                    @Html.TextBoxFor(m => m.equipmentPartXrefModel.Comment, new { @class = "form-control search ", autocomplete = "off" })
+                                </span>
+                            </li>                          
+                        </ul>
+                    </div>
+                    <div style="clear:both;"></div>
+
+                    <div class="idBttns">
+                        <div class="bttn_pagin">
+                            <div class="bttns2">
+                                <button type="submit" class="btn btn-blue mobBttn"><i class="fa fa-save faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+                            </div>
+                            <div class="bttns"><button type="button" class="btn btn-blue mobBttn" id="btnpequipmentcancel"><i class="fa fa-close faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button></div>
+
+                            <div style="clear:both;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @Html.Partial("~/Views/Parts/_PartEquipmentPopup.cshtml")
+    @Html.HiddenFor(m => m.equipmentPartXrefModel.PartId)
+    @Html.HiddenFor(m => m.equipmentPartXrefModel.Equipment_Parts_XrefId)
+}
+<script src="~/Scripts/Pages/part/equipment-grid-dropdown.js"></script>

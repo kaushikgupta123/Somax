@@ -1,0 +1,30 @@
+﻿@model Client.Models.Dashboard.DashboardVM
+
+<div class="m-portlet m-portlet--full-height m-portlet--fit">
+    <div class="m-portlet__head">
+        <div class="m-portlet__head-caption">
+            <div class="m-portlet__head-title">
+                <h3 class="m-portlet__head-text">
+                    @Model.Loc.Where(a => a.ResourceId == "spnInventory").FirstOrDefault().Value.ToString()
+                </h3>
+            </div>
+        </div>
+    </div>
+
+    <div class="m-portlet__body">
+        <div class="tab-content">
+
+            <div class="table-responsive">
+                <table id="InventoryTable" class="eqpDtlTbl row-border custom-sort tblMain" style="width:100%;">
+                    <thead>
+                        <tr>
+                            <th>@Model.Loc.Where(a => a.ResourceId == "spnSiteGlobal").FirstOrDefault().Value.ToString()</th>
+                            <th>@Model.Loc.Where(a => a.ResourceId == "spnValuation").FirstOrDefault().Value.ToString()</th>
+                            <th>@Model.Loc.Where(a => a.ResourceId == "globalLowParts").FirstOrDefault().Value.ToString()</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

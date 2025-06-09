@@ -1,0 +1,44 @@
+﻿@model Client.Models.Parts.PartsVM
+
+<div class="slide-modal" id="CreatedLastUpdatedModalPart">
+    <div class="slide-modal-head ">
+        <a class="slide-back-btn closeCreatedLastUpdatedModalPart"> <i class="fa fa-angle-left"></i> Back</a>
+        <div class="slide-back-title">
+            @Model.Loc.Where(a => a.ResourceId == "spnCreateLastUpdate").FirstOrDefault().Value.ToString()
+        </div>
+    </div>
+    <div class="slide-modal-body">
+        <div class="row">
+            <div class="col-xl-12">
+                <div class="m-portlet" id="m_portlet" style="padding:15px;height:70vh;">
+                    <ul class="listView">
+                        <li style="height:auto;" class="dscrbtn respons-box">
+                            <strong style="margin: 20px 0px 10px;">@Model.Loc.Where(a => a.ResourceId == "spnCreated").FirstOrDefault().Value.ToString():</strong>
+                        </li>
+                        <li style="height:auto;" class="dscrbtn respons-box">
+                            <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnUser").FirstOrDefault().Value.ToString() :</span>
+                            <span class="inputText description-span" style="line-height:26px;">@Model.createdLastUpdatedPartModel.CreatedUserValue</span>
+                        </li>
+                        <li style="height:auto;" class="dscrbtn respons-box">
+                            <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnDate").FirstOrDefault().Value.ToString() :</span>
+                            <span class="inputText description-span" style="line-height:26px;">@Model.createdLastUpdatedPartModel.CreatedDateValue</span>
+                        </li>
+                        <li style="height:auto;" class="dscrbtn respons-box">
+                            <strong style="margin: 20px 0px 10px;">@Model.Loc.Where(a => a.ResourceId == "spnLastUpdate").FirstOrDefault().Value.ToString():</strong>
+                        </li>
+                        <li style="height:auto;" class="dscrbtn respons-box">
+                            <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnUser").FirstOrDefault().Value.ToString() :</span>
+                            <span class="inputText description-span" style="line-height:26px;">@Model.createdLastUpdatedPartModel.ModifyUserValue</span>
+                        </li>
+                        <li style="height:auto;" class="dscrbtn respons-box">
+                            <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnDate").FirstOrDefault().Value.ToString() :</span>
+                            <span class="inputText description-span" style="line-height:26px;">@Model.createdLastUpdatedPartModel.ModifyDatevalue</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="slide-modal-footer"></div>
+</div>
+

@@ -1,0 +1,48 @@
+﻿@model Client.Models.PartsManagement.PartsManagementRequest.PartsManagementRequestVM
+
+<nav id="sidebar">
+  <div id="dismiss">
+    <i class="fa fa-close"></i>
+  </div>
+  <div class="sidebar-header">
+    <h3><i class="fa fa-filter" style="position: relative; top: -2px;"></i>&nbsp;@Model.Loc.Where(a => a.ResourceId == "spnFilters").FirstOrDefault().Value.ToString()  <span class="filteritemcount">0</span></h3>
+    <button type="button" class="btn btn-blue filterSearch" id="btnPMRDataAdvSrch">
+      @Model.Loc.Where(a => a.ResourceId == "GlobalApply").FirstOrDefault().Value.ToString()
+    </button>
+  </div>
+  <div class="sidebar-content" id="advsearchsidebar">
+    <form action="#" method="post">
+      <div class="form-group">
+        <label for="PMRPartId">@Model.Loc.Where(a => a.ResourceId == "spnRequestId").FirstOrDefault().Value.ToString():</label>
+        <input type="text" class="form-control search adv-item longinput" id="PMRPartId" autocomplete="off">
+      </div>
+      <div class="form-group">
+          <label for="PMRRequester">@Model.Loc.Where(a => a.ResourceId == "spnRequester").FirstOrDefault().Value.ToString() :</label>
+          @*<select id="PMRRequester" style="width:100%;" class="form-control search adv-item select2picker"></select>*@
+          @Html.DropDownListFor(m => m.partsManagementRequestModel.CreatedByPersonnelId, Model.partsManagementRequestModel.CreatedByPersonnelList, new { @class = "form-control search adv-item select2picker", style = "width:100%;", @id = "PMRRequester" })
+      </div>
+      <div class="form-group">
+        <label for="PMRJustification">@Model.Loc.Where(a => a.ResourceId == "spnJustification").FirstOrDefault().Value.ToString() :</label>
+        <input type="text" class="form-control search adv-item" id="PMRJustification" autocomplete="off">
+      </div>
+      <div class="form-group">
+          <label for="PMRRequestType">@Model.Loc.Where(a => a.ResourceId == "spnRequestType").FirstOrDefault().Value.ToString():</label>
+          @*<select id="PMRRequestType" style="width:100%;" class="form-control search adv-item select2picker"></select>*@
+          @Html.DropDownListFor(m => m.partsManagementRequestModel.RequestType, Model.partsManagementRequestModel.RequestTypeList, new { @class = "form-control search adv-item select2picker", style = "width:100%;", @id = "PMRRequestType" })
+      </div>
+      <div class="form-group">
+          <label for="PMRStatusDrop">@Model.Loc.Where(a => a.ResourceId == "spnStatus").FirstOrDefault().Value.ToString() :</label>
+          @*<select id="PMRStatusDrop" style="width:100%;" class="form-control search adv-item select2picker"></select>*@
+          @Html.DropDownListFor(m => m.partsManagementRequestModel.Status, Model.partsManagementRequestModel.StatusList, new { @class = "form-control search adv-item select2picker", style = "width:100%;", @id = "PMRStatusDrop" })
+      </div>
+      <div class="form-group">
+        <label for="PMRManufacturer">@Model.Loc.Where(a => a.ResourceId == "spnManufacturer").FirstOrDefault().Value.ToString() :</label>
+        <input type="text" class="form-control search adv-item" id="PMRManufacturer" autocomplete="off">
+      </div>
+      <div class="form-group">
+        <label for="PMRManufacturerPartNumber">@Model.Loc.Where(a => a.ResourceId == "spnManufacturerPartNumber").FirstOrDefault().Value.ToString():</label>
+        <input type="text" class="form-control search adv-item" id="PMRManufacturerPartNumber" autocomplete="off">
+      </div>
+    </form>
+  </div>
+</nav>

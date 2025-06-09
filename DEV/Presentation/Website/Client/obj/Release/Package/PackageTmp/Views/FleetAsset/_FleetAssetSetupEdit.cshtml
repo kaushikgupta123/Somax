@@ -1,0 +1,38 @@
+﻿@model Client.Models.FleetAsset.FleetAssetVM
+
+<ul class="listView nobrd">
+    <li>
+        <span class="label" id="spnFuelUnits">@Model.Loc.Where(a => a.ResourceId == "spnFuelUnits").FirstOrDefault().Value.ToString()</span>
+        <span class="inputText">
+            @Html.DropDownListFor(m => m.FleetAssetModel.FuelUnits, Model.LookupFleetFuelUnits, "--Select--", new { @class = "form-control search select2picker flt_set", style = "width:100%;" })
+        </span>
+    </li>
+    <li>
+        <span class="label" id="spnMeter1Type">@Model.Loc.Where(a => a.ResourceId == "spnMeter1Type").FirstOrDefault().Value.ToString()</span>
+        <span class="inputText">
+            @Html.DropDownListFor(m => m.FleetAssetModel.Meter1Type, Model.LookupFleetMeter1Types, "--Select--", new { @class = "form-control search select2picker flt_set", style = "width:100%;" })
+        </span>
+    </li>
+    <li>
+        <span class="label" id="spnMeter1Units">@Model.Loc.Where(a => a.ResourceId == "spnMeter1Units").FirstOrDefault().Value.ToString()</span>
+        <span class="inputText">
+            @Html.ValidationMessageFor(m => m.FleetAssetModel.Meter1Units, "", new { style = "display:none" })
+            @Html.DropDownListFor(m => m.FleetAssetModel.Meter1Units, Model.LookupFleetMeter1Units, "--Select--", new { @class = "form-control search select2picker flt_set", style = "width:100%;", disabled = "disabled" })
+        </span>
+    </li>
+    <li>
+        <span class="label" id="spnMeter2Type">@Model.Loc.Where(a => a.ResourceId == "spnMeter2Type").FirstOrDefault().Value.ToString()</span>
+        <span class="inputText">
+            @Html.DropDownListFor(m => m.FleetAssetModel.Meter2Type, Model.LookupFleetMeter2Types, "--Select--", new { @class = "form-control search select2picker flt_set", style = "width:100%;", disabled = "disabled" })
+        </span>
+    </li>
+    <li>
+        <span class="label" id="spnMeter2Units">@Model.Loc.Where(a => a.ResourceId == "spnMeter2Units").FirstOrDefault().Value.ToString()</span>
+        <span class="inputText">
+            @Html.ValidationMessageFor(m => m.FleetAssetModel.Meter2Units, "", new { style = "display:none" })
+            @Html.DropDownListFor(m => m.FleetAssetModel.Meter2Units, Model.LookupFleetMeter2Units, "--Select--", new { @class = "form-control search select2picker flt_set", style = "width:100%;", disabled = "disabled" })
+        </span>
+    </li>
+   
+
+</ul>

@@ -1,0 +1,67 @@
+﻿@model Client.Models.PreventiveMaintenance.PrevMaintVM
+@{
+    Layout = null;
+}
+<table id="PrevMaintinnerDataTable" dt-options="dtOptions" class="PrevMaintinnerDataTable childtable cell-border" style="width:100%">
+    <thead>
+        <tr>
+            <th>@Model.Loc.Where(a => a.ResourceId == "globalPersonnelId").FirstOrDefault().Value.ToString()</th>
+            <th>@Model.Loc.Where(a => a.ResourceId == "spnName").FirstOrDefault().Value.ToString()</th>
+            <th>@Model.Loc.Where(a => a.ResourceId == "spnGlobalEstimateHrs").FirstOrDefault().Value.ToString()</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model.innerGridPMSchedAssignModel.Count > 0)
+        {
+            foreach (var item in Model.innerGridPMSchedAssignModel)
+            {
+                <tr>
+                    <td>@item.ClientLookupId</td>
+                    <td>@item.PersonnelFullName </td>
+                    <td>@item.ScheduledHours</td>
+                </tr>
+            }
+        }
+    </tbody>
+    <tfoot>
+        <tr>
+            <th></th>
+            <th></th>
+            <th></th>
+        </tr>
+    </tfoot>
+</table>
+<style type="text/css">
+    .childtable tr th {
+        background: #4da5fe;
+        color: #fff !important;
+        white-space: nowrap !important;
+        text-align: center !important;
+        font-weight: 400 !important;
+    }
+
+    .link {
+        color: #235ddd;
+    }
+
+        .link:hover {
+            color: #32bf0e;
+        }
+
+    .nolink {
+        pointer-events: none;
+        color: #91a0a0;
+    }
+
+    table.dataTable thead .sorting {
+        padding-right: 15px;
+    }
+
+    table.dataTable thead .sorting_asc {
+        padding-right: 15px;
+    }
+
+    table.dataTable.display tbody tr:first-child td {
+        width: 1%;
+    }
+</style>

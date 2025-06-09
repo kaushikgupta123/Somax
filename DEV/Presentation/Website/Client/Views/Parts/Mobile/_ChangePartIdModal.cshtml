@@ -1,0 +1,56 @@
+﻿@model Client.Models.Parts.PartsVM
+
+@using (Ajax.BeginForm("ChangePartID", "Parts", new AjaxOptions { HttpMethod = "Post", OnSuccess = "ChangePartIDOnSuccess", OnBegin = "AjaxBeginFormBegin", OnFailure = "AjaxBeginFormFaillure" }))
+{ 
+    <div class="slide-modal" id="menuPartIdChange">
+        <div class="slide-modal-head ">
+            <a class="slide-back-btn closemenuPartIdChange"> <i class="fa fa-angle-left"></i> Back</a>
+            <div class="slide-back-title">
+                @Model.Loc.Where(a => a.ResourceId == "spnChangePartId").FirstOrDefault().Value.ToString()
+            </div>
+        </div>
+        @Html.Partial("_ErrorDiv")
+        <div class="slide-modal-body">
+            <div mbsc-page class="demo-responsive">
+                <div style="height:100%">
+                    <div mbsc-form class="mbsc-form-grid">
+                        <div class="mbsc-grid">
+                            <div class="mbsc-row">
+                                <div class="mbsc-col-12 mbsc-col-md-12 mbsc-col-lg-12">
+                                    <label>
+                                        @{
+                                            var data = Model.UIConfigurationDetails.Where(a => a.ColumnName == "ClientLookupId").FirstOrDefault();
+                                            var maxlimit = data.MaxLength;
+                                        }
+                                        @Model.Loc.Where(a => a.ResourceId == "spnPartID").FirstOrDefault().Value.ToString()
+                                        @Html.TextBoxFor(m => m.changePartIdModel.ClientLookupId, new { maxlength = maxlimit, @class = "form-control search textcountmsg_mobile", @mbsc_input = "true", @data_label_style = "floating", @placeholder = Model.Loc.Where(a => a.ResourceId == "spnPartID").FirstOrDefault().Value.ToString(), @data_input_style = "box", autocomplete = "off", @data_val_length_max = maxlimit })
+                                    </label>
+                                    @CustomHelperDynamic.GetCountMessageLabelMobile(maxlimit, false, "")
+                                    @Html.ValidationMessageFor(m => m.changePartIdModel.ClientLookupId, "", new { })
+                                </div>
+                            </div>
+                            <div class="mbsc-row">
+                                <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                    <div class="design-box">
+                                        <div class="mbsc-button-group-block">
+                                            <button mbsc-button data-color="success" type="button" class="btn btn-blue mobBttn closemenuPartIdChange"><i class="fa fa-close faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                    <div class="design-box">
+                                        <div class="mbsc-button-group-block">
+                                            <button data-color="success" type="submit" class="btn btn-blue mobBttn" style="cursor:pointer" name="strPartId" value='@Model.PartModel.PartId'><i class="fa fa-save faIcon"></i> &nbsp;@Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="slide-modal-footer"></div>
+    </div>
+}
+

@@ -1,0 +1,475 @@
+﻿@model Client.Models.Parts.PartsVM
+@{
+    var SequenceCount = 1;
+}
+@{
+
+    var AttachedModelName = "AddPart";
+    var fieldName = "";
+    var fieldId = "";
+    object Value = null;
+    var EmptyLookupList = new List<SelectListItem> { new SelectListItem { } };
+}
+<link href="~/Content/Wizard/Wizard.css" rel="stylesheet" />
+<div id="PartModelWizardModal" class="modal fade" role="dialog" tabindex="-1">
+    <div class="modal-dialog modal-info step-modal-box">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close btnAddPartModelCancel" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">@Model.Loc.Where(a => a.ResourceId == "spnPartModel").FirstOrDefault().Value.ToString()</h4>
+            </div>
+            <div class="modal-body">
+                <div class="m-portlet">
+
+                    <div class="m-wizard m-wizard--5 m-wizard--success m-wizard--step-first" id="m_wizard">
+                        <!--begin: Message container -->
+                        <div class="m-portlet__padding-x">
+                            <!-- Here you can put a message or alert -->
+                        </div>
+                        <!--end: Message container -->
+
+                        <div class="wizard-wrap-box">
+                            <!--begin: Form Wizard Head -->
+                            <div class="m-wizard__head m-portlet__padding-x">
+
+                                <!--begin: Form Wizard Nav -->
+                                <div class="m-wizard__nav">
+                                    <div class="m-wizard__steps">
+                                        <div class="m-wizard__step m-wizard__step--current" style="pointer-events:none;" data-wizard-target="#PartInformationStep">
+                                            <div class="m-wizard__step-info">
+                                                <a class="m-wizard__step-number">
+                                                    <span class="m-wizard__step-seq">
+                                                        @SequenceCount
+                                                        @{
+                                                            SequenceCount = SequenceCount + 1;
+                                                        }
+                                                    </span>
+                                                    <span class="m-wizard__step-label">
+                                                        @Model.Loc.Where(a => a.ResourceId == "spnPartInformation").FirstOrDefault().Value.ToString()
+                                                    </span>
+                                                    <span class="m-wizard__step-icon">
+                                                        <i class="la la-check"></i>
+                                                    </span>
+                                                </a>
+                                            </div>
+                                        </div>
+
+                                        <div class="m-wizard__step" style="pointer-events:none;" data-wizard-target="#AdditionalOptionsStep">
+                                            <div class="m-wizard__step-info">
+                                                <a class="m-wizard__step-number">
+                                                    <span class="m-wizard__step-seq">
+                                                        @SequenceCount
+                                                        @{
+                                                            SequenceCount = SequenceCount + 1;
+                                                        }
+                                                    </span>
+                                                    <span class="m-wizard__step-label">
+                                                        @Model.Loc.Where(a => a.ResourceId == "spnAdditionalOptions").FirstOrDefault().Value.ToString()
+                                                    </span>
+                                                    <span class="m-wizard__step-icon">
+                                                        <i class="la la-check"></i>
+                                                    </span>
+                                                </a>
+                                            </div>
+                                        </div>
+                                        <div class="m-wizard__step" style="pointer-events:none;" data-wizard-target="#FinalStep">
+                                            <div class="m-wizard__step-info">
+                                                <a class="m-wizard__step-number">
+                                                    <span class="m-wizard__step-seq">
+                                                        @SequenceCount
+                                                        @{
+                                                            SequenceCount = SequenceCount + 1;
+                                                        }
+                                                    </span>
+                                                    <span class="m-wizard__step-label">
+                                                        @Model.Loc.Where(a => a.ResourceId == "spnConfirmation").FirstOrDefault().Value.ToString()
+                                                    </span>
+                                                    <span class="m-wizard__step-icon">
+                                                        <i class="la la-check"></i>
+                                                    </span>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--end: Form Wizard Nav -->
+
+                            </div>
+                            <!--end: Form Wizard Head -->
+                            <!--begin: Form Wizard Form-->
+                            <div class="m-wizard__form">
+                                <!--
+        1) Use m-form--label-align-left class to alight the form input lables to the right
+        2) Use m-form--state class to highlight input control borders on form validation
+    -->
+
+                                @using (Ajax.BeginForm("AddPartModel", "Parts", new AjaxOptions { HttpMethod = "Post", OnSuccess = "AddPartModelOnSuccess", OnBegin = "AjaxBeginFormBegin", OnComplete = "AjaxBeginFormComplete", OnFailure = "AjaxBeginFormFaillure" }, new { id = "formPartModel" }))
+                                {
+                                    @Html.Partial("_ErrorDiv")
+                                    @Html.AntiForgeryToken()
+                                    @Html.HiddenFor(m => m.CurrentPartId)
+                                    <!--begin: Form Body -->
+                                    <div class="m-portlet__body">
+
+                                        <div class="m-wizard__form-step m-wizard__form-step--current" id="PartInformationStep">
+                                            <div class="row">
+                                                <div class="col-xl-12">
+                                                    <div class="row">
+                                                        <div class="col-xl-12">
+                                                            <div class="m-portlet" id="m_portlet" style="padding:15px;">
+                                                                <div class="bottomBlock">
+                                                                    <div class="tabsArea nobg" style="display:block;">
+                                                                        <ul class="listView nobrd">
+                                                                            @foreach (var data in Model.UIConfigurationDetails)
+                                                                            {
+                                                                                if (data.Section == true)
+                                                                                {
+                                                                                    <li>
+                                                                                        <span class="label"><strong>@data.SectionName</strong></span>
+                                                                                    </li>
+                                                                                    continue;
+                                                                                }
+                                                                                if (string.IsNullOrEmpty(data.ColumnName))
+                                                                                {
+                                                                                    continue;
+                                                                                }
+                                                                                else if (!string.IsNullOrEmpty(data.ColumnName))
+                                                                                {
+                                                                                    if (Model.AddPart.GetType().GetProperty(data.ColumnName) == null)
+                                                                                    {
+                                                                                        continue;
+                                                                                    }
+                                                                                }
+
+                                                                                fieldName = AttachedModelName + "." + data.ColumnName;
+                                                                                fieldId = data.ColumnName;
+                                                                                Value = Model.AddPart.GetType().GetProperty(data.ColumnName).GetValue(Model.AddPart);
+
+                                                                                if (data.SystemRequired == true)
+                                                                                {
+                                                                                    data.Required = true;
+                                                                                }
+                                                                                if (data.ColumnName.ToLower() == "AccountId".ToLower())
+                                                                                {
+                                                                                    <li>
+                                                                                        @CustomHelperDynamic.GetLabel(data.ColumnLabel, data.Required)
+                                                                                        <span class="inputText">
+                                                                                            @Html.ValidationMessage(fieldName, new { style = "display:none" })
+                                                                                            @if (data.ViewOnly == true)
+                                                                                            {
+                                                                                                string TextBoxValue = "", TextBoxId = "";
+                                                                                                if (Model.AccountList.Any(x => x.Value == Value.ToString()))
+                                                                                                {
+                                                                                                    TextBoxValue = Model.AccountList
+                                                                                                                .Where(x => x.Value == Value.ToString())
+                                                                                                                .FirstOrDefault()
+                                                                                                                .Text;
+                                                                                                }
+                                                                                                TextBoxId = fieldId + "TextBox";
+                                                                                                @Html.TextBox(TextBoxId, TextBoxValue, new
+                                                                                                {
+                                                                                                    @class = "form-control search dropbtn readonly",
+                                                                                                    @readonly = "readonly",
+                                                                                                    @autocomplete = "off"
+                                                                                                })
+                                                                                                @Html.Hidden(fieldName, Value, new { @id = fieldId })
+                                                                                            }
+                                                                                            else
+                                                                                            {
+                                                                                                @Html.DropDownList(fieldName, Model.AccountList, "--Select--", new
+                                                                                                {
+                                                                                                    id = fieldId,
+                                                                                                    @class = "form-control search select2picker",
+                                                                                                    style = "width:100%;"
+                                                                                                })
+                                                                                            }
+
+                                                                                        </span>
+                                                                                    </li>
+                                                                                }
+                                                                                else if (data.LookupType.ToLower() == DataDictionaryLookupTypeConstant.LookupList.ToLower() &&
+                                                                                !string.IsNullOrEmpty(data.LookupName))
+                                                                                {
+                                                                                    var LookUpList = Model.AllRequiredLookUplist
+                                                                                                    .Where(x => x.lookupname == data.LookupName)
+                                                                                                    .Select(x => new SelectListItem { Text = x.text, Value = x.value })
+                                                                                                    .ToList();
+                                                                                    <li>
+                                                                                        @CustomHelperDynamic.GetLabel(data.ColumnLabel, data.Required)
+                                                                                        <span class="inputText">
+                                                                                            @Html.ValidationMessage(fieldName, new { style = "display:none" })
+                                                                                            @if (LookUpList != null && LookUpList.Count() > 0)
+                                                                                            {
+                                                                                                if (data.ViewOnly == true)
+                                                                                                {
+                                                                                                    string TextBoxValue = "", TextBoxId = "";
+                                                                                                    if (Model.AllRequiredLookUplist.Any(x => x.lookupname == data.LookupName && x.value == Value.ToString()))
+                                                                                                    {
+                                                                                                        TextBoxValue = Model.AllRequiredLookUplist
+                                                                                                                    .Where(x => x.lookupname == data.LookupName && x.value == Value.ToString())
+                                                                                                                    .FirstOrDefault()
+                                                                                                                    .text;
+                                                                                                    }
+                                                                                                    TextBoxId = fieldId + "TextBox";
+                                                                                                    @Html.TextBox(TextBoxId, TextBoxValue, new
+                                                                                                    {
+                                                                                                        @class = "form-control search dropbtn readonly",
+                                                                                                        @readonly = "readonly",
+                                                                                                        @autocomplete = "off"
+                                                                                                    })
+                                                                                                    @Html.Hidden(fieldName, Value, new { @id = fieldId })
+                                                                                                }
+                                                                                                else
+                                                                                                {
+                                                                                                    @Html.DropDownList(fieldName, LookUpList, "--Select--", new
+                                                                                                    {
+                                                                                                        id = fieldId,
+                                                                                                        @class = "form-control search select2picker",
+                                                                                                        style = "width:100%;"
+                                                                                                    })
+                                                                                                }
+
+                                                                                            }
+                                                                                            else
+                                                                                            {
+                                                                                                @Html.DropDownList(fieldName, EmptyLookupList, "--Select--", new
+                                                                                                {
+                                                                                                    id = fieldId,
+                                                                                                    @class = "form-control search select2picker",
+                                                                                                    style = "width:100%;"
+                                                                                                })
+                                                                                            }
+                                                                                        </span>
+                                                                                    </li>
+                                                                                }
+
+                                                                                else if (data.ColumnName == "Description")
+                                                                                {
+                                                                                    string TextFieldName = "", TextFieldId = "", TextFieldValue = "";
+                                                                                    TextFieldId = fieldId;
+                                                                                    TextFieldName = fieldName;
+                                                                                    TextFieldValue = Model.AddPart.GetType().GetProperty(TextFieldId).GetValue(Model.AddPart).ToString();
+                                                                                    int TextLength = 0;
+                                                                                    <li>
+                                                                                        @CustomHelperDynamic.GetLabel(data.ColumnLabel, data.Required)
+                                                                                        <span class="inputText">
+                                                                                            @Html.ValidationMessage(fieldName, new { style = "display:none" })
+                                                                                            @Html.TextArea(fieldName, Value.ToString(), new
+                                                                                                               {
+                                                                                                                  id = fieldId,
+                                                                                                                  @class = "form-control search multilineedit textcountmsg",
+                                                                                                                  autocomplete = "off"
+                                                                                                               })
+                                                                                            @if (!string.IsNullOrEmpty(TextFieldValue))
+                                                                                            {
+                                                                                                TextLength = TextFieldValue.Length;
+                                                                                            }
+                                                                                            <p class="label textcountlabel">Total characters count: @TextLength</p>
+                                                                                        </span>
+                                                                                    </li>
+                                                                                    continue;
+                                                                                }
+                                                                                else
+                                                                                {
+                                                                                    <li>
+                                                                                        @CustomHelperDynamic.GetLabel(data.ColumnLabel, data.Required)
+                                                                                        <span class="inputText">
+                                                                                            @Html.ValidationMessage(fieldName, new { style = "display:none" })
+                                                                                            @Html.UIConfigControl(fieldName, fieldId, data.ColumnType.ToLower(), data.MaxLength, data.ViewOnly)
+                                                                                            @CustomHelperDynamic.GetCountMessageLabel(data.MaxLength, data.ViewOnly, Convert.ToString(Value))
+                                                                                        </span>
+                                                                                    </li>
+                                                                                }
+                                                                            }
+                                                                        </ul>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="m-wizard__form-step" id="AdditionalOptionsStep">
+                                            <div class="row">
+                                                <div class="col-xl-12">
+                                                    <div class="m-portlet" style="padding:15px;">
+                                                        <div class="bottomBlock">
+                                                            <div class="tabsArea nobg">
+                                                                <ul class="listView nobrd">
+                                                                    <li>
+                                                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnCopyAssociatedEquipmentPart").FirstOrDefault().Value.ToString()</span>
+                                                                        <span class="inputText">
+                                                                            @Html.CheckBoxFor(m => m.AddPart.Copy_Equipment_Xref, new { @class = "form-control m-input", @style = "color:black; width: auto; margin-top: 12px;" })
+                                                                        </span>
+                                                                    </li>
+                                                                    <li>
+                                                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnCopyAssociatedVendorPart").FirstOrDefault().Value.ToString()</span>
+                                                                        <span class="inputText">
+                                                                            @Html.CheckBoxFor(m => m.AddPart.Copy_Vendor_Xref, new { @class = "form-control m-input", @style = "color:black; width: auto; margin-top: 12px;" })
+                                                                        </span>
+                                                                    </li>
+                                                                    <li>
+                                                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnCopyAssociatedNotes").FirstOrDefault().Value.ToString()</span>
+                                                                        <span class="inputText">
+                                                                            @Html.CheckBoxFor(m => m.AddPart.Copy_Notes, new { @class = "form-control m-input", @style = "color:black; width: auto; margin-top: 12px;" })
+                                                                        </span>
+                                                                    </li>
+                                                                </ul>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!--begin: Form Wizard Step 4-->
+                                        <div class="m-wizard__form-step" id="FinalStep">
+                                            <div class="row">
+                                                <div class="col-xl-10 offset-xl-1">
+                                                    <div class="m-separator m-separator--dashed m-separator--lg"></div>
+                                                    <div class="form-group m-form__group m-form__group--sm row">
+                                                        <div class="col-xl-12">
+                                                            @Model.Loc.Where(a => a.ResourceId == "spnPartModelSave").FirstOrDefault().Value.ToString()
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!--end: Form Wizard Step 4-->
+                                    </div>
+                                    <!--end: Form Body -->
+                                    <!--begin: Form Actions -->
+                                    <div class="m-portlet__foot m-portlet__foot--fit m--margin-top-40">
+                                        <div class="m-form__actions m-form__actions">
+                                            <div class="row">
+                                                <div class="col-lg-1"></div>
+                                                <div class="col-lg-4 m--align-left">
+                                                    <a href="" class="btn btn-blue btn-secondary" data-wizard-action="prev">
+                                                        <span>
+                                                            <i class="la la-arrow-left"></i>
+                                                            &nbsp;&nbsp;
+                                                            <span>
+                                                                @Model.Loc.Where(a => a.ResourceId == "spnBack").FirstOrDefault().Value.ToString()
+                                                            </span>
+                                                        </span>
+                                                    </a>
+                                                </div>
+                                                <div class="col-lg-6 m--align-right">
+
+                                                    <button type="submit" class="btn succes btn-blue btn-primary" data-wizard-action="submit">
+                                                        <span>
+                                                            <i class="fa fa-plus faIcon"></i>
+                                                            &nbsp;&nbsp;
+                                                            <span>
+                                                                @Model.Loc.Where(a => a.ResourceId == "globalAdd").FirstOrDefault().Value.ToString()
+                                                            </span>
+                                                        </span>
+                                                    </button>
+
+                                                    <a href="" class="btn btn-blue btn-warning" data-wizard-action="next">
+                                                        <span>
+                                                            <span>
+                                                                @Model.Loc.Where(a => a.ResourceId == "spnNext").FirstOrDefault().Value.ToString()
+                                                            </span>
+                                                            &nbsp;&nbsp;
+                                                            <i class="la la-arrow-right"></i>
+                                                        </span>
+                                                    </a>
+                                                </div>
+                                                <div class="col-lg-1"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!--end: Form Actions -->
+                                }
+                            </div>
+                            <!--end: Form Wizard Form-->
+                        </div>
+                    </div>
+                    <!--end: Form Wizard-->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<style>
+
+    @@media (max-width: 1200px) {
+        .m-wizard.m-wizard--5 .m-wizard__head {
+            width: 300px !important;
+        }
+    }
+
+    @@media (max-width: 1000px) {
+
+        .m-wizard.m-wizard--5 .m-wizard__head .m-wizard__nav .m-wizard__steps .m-wizard__step .m-wizard__step-info .m-wizard__step-number .m-wizard__step-label {
+            font-size: 12px;
+        }
+
+        .m-wizard.m-wizard--5 .m-wizard__head {
+            width: 240px !important;
+        }
+
+        .m-wizard__form {
+            width: calc(100% - 260px);
+        }
+
+        .wizard-wrap-box .m-wizard__step-label {
+            padding: 0px !important;
+        }
+    }
+
+
+    @@media screen and (max-width: 650px) {
+        ul .listView.nobrd li {
+            height: auto !important;
+        }
+
+        .step-modal-box {
+            width: auto !important;
+            max-width: auto !important;
+        }
+
+        .modal-header, .modal .modal-content .modal-body {
+            padding: 15px !important;
+        }
+
+        .wizard-wrap-box {
+            padding: 5px !important;
+        }
+
+
+        .m-wizard.m-wizard--5 .m-wizard__head {
+            width: 100% !important;
+            margin-bottom: 10px !important;
+        }
+
+        .m-wizard__form {
+            width: 100% !important;
+            margin: 0px !important;
+        }
+
+        .m-wizard.m-wizard--5 .m-wizard__head .m-wizard__nav .m-wizard__steps {
+            margin: 0px !important;
+        }
+
+            .m-wizard.m-wizard--5 .m-wizard__head .m-wizard__nav .m-wizard__steps .m-wizard__step .m-wizard__step-info .m-wizard__step-number .m-wizard__step-label {
+                font-size: 14px;
+            }
+
+        .modal-info .m-wizard__form-step .inputText {
+            width: calc(100% - 0px) !important;
+            margin: 0 auto 0px;
+        }
+
+        ul.listView.nobrd li span.inputText {
+            height: 40px;
+        }
+    }
+
+    @@media screen and (max-width: 479px) {
+        ul.listView.nobrd li {
+            height: auto !important;
+        }
+    }
+</style>

@@ -1,0 +1,72 @@
+﻿@model Client.Models.PurchaseRequest.PurchaseRequestVM
+<div id="ReviewSendForApprovalModalDetailsPage" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-info">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close clearstate1" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title"> @Model.Loc.Where(a => a.ResourceId == "globalPurchaseRequestSendForApproval").FirstOrDefault().Value.ToString()</h4>
+            </div>
+            @using (Ajax.BeginForm("ReviewAndSendPRApprovalSave", "PurchaseRequest", new AjaxOptions { HttpMethod = "Post", OnSuccess = "ReviewAndSendPRApprovalOnSuccess", OnBegin = "AjaxBeginFormBegin", OnComplete = "AjaxBeginFormComplete", OnFailure = "AjaxBeginFormFaillure" }))
+            {
+                @Html.Partial("_ErrorDiv")
+                <div class="modal-body">
+                    <div class="form-group" style="margin-bottom:0;">
+                        <div class="bottomBlock">
+                            <div class="tabsArea1 nobg">
+                                <ul class="listView nobrd" style="border-bottom:0;">
+                                    <li style="margin-bottom:3px;">
+                                        <span class="label"> @Model.Loc.Where(a => a.ResourceId == "spnComment").FirstOrDefault().Value.ToString(): </span>
+                                        <span class="inputText">
+                                            @Html.ValidationMessageFor(m => m.reviewPRSendForApprovalModel.Comments, "", new { style = "display:none" })
+                                            @Html.TextBoxFor(m => m.reviewPRSendForApprovalModel.Comments, new { @class = "form-control search", autocomplete = "off", maxlength = "200" })
+                                        </span>
+                                    </li>
+                                    @if (Model.reviewPRSendForApprovalModel.ApproverCount == 1)
+                                    {
+                                        <li style="margin-bottom:4px;">
+                                            <span class="label"> @Model.Loc.Where(a => a.ResourceId == "globalApprover").FirstOrDefault().Value.ToString() : <small>*</small></span>
+                                            <span class="inputText">
+                                                @Html.ValidationMessageFor(m => m.reviewPRSendForApprovalModel.ApproverId, "", new { style = "display:none" })
+                                                @Html.DropDownListFor(m => m.reviewPRSendForApprovalModel.ApproverId, Model.reviewPRSendForApprovalModel.ApproverList, new { @class = "form-control search select2picker", @id = "ddlApproverforReviewer", style = "width:100%;" })
+                                            </span>
+                                        </li>
+                                    }
+                                    else
+                                    {
+                                        <li style="margin-bottom:4px;">
+                                            <span class="label"> @Model.Loc.Where(a => a.ResourceId == "globalApprover").FirstOrDefault().Value.ToString() : <small>*</small></span>
+                                            <span class="inputText">
+                                                @Html.ValidationMessageFor(m => m.reviewPRSendForApprovalModel.ApproverId, "", new { style = "display:none" })
+                                                @Html.DropDownListFor(m => m.reviewPRSendForApprovalModel.ApproverId, Model.reviewPRSendForApprovalModel.ApproverList, "--Select--", new { @class = "form-control search select2picker", style = "width:100%;", @id = "ddlApproverforReviewer" })
+                                            </span>
+                                        </li>
+                                    }
+
+
+                                </ul>
+                            </div>
+                            <div style="clear:both;"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer" style="padding:15px 25px !important;">
+                    <div class="idBttns">
+                        <div class="bttn_pagin">
+                            <div class="bttns2" style="margin:0;">
+                                <button type="submit" class="btn btn-blue mobBttn" style="cursor:pointer" value="save" id="btnsendPRForApprovalReview"><i class="fa fa-save faIcon"></i> &nbsp;@Model.Loc.Where(a => a.ResourceId == "globalSubmit").FirstOrDefault().Value.ToString()</button>
+                            </div>
+                            <div class="bttns" style="margin:0;"><button type="button" data-dismiss="modal" class="btn btn-blue mobBttn clearstate1" id="btncancelsendPRForApprovalReview"><i class="fa fa-close faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button></div>
+
+                            <div style="clear:both;"></div>
+                        </div>
+                    </div>
+                </div>
+
+                @Html.HiddenFor(m => m.reviewPRSendForApprovalModel.ObjectId)
+
+                @Html.HiddenFor(m => m.reviewPRSendForApprovalModel.ApproverCount)
+            }
+        </div>
+    </div>
+</div>

@@ -1,0 +1,194 @@
+﻿@model Client.Models.Configuration.FleetServiceTask.ServiceTaskVM
+<link href="~/Scripts/Metronic/assets/demo/default/base/style_newCustom.css" rel="stylesheet" />
+
+@if (Convert.ToString(Session["MenuState"]) == "" || Convert.ToString(Session["MenuState"]) == "open")
+{
+    <div class="m-subheader fixedDiv1">
+        <div class="new-m-subheader">
+            <div class="PageTitle">
+                <div class="align-items-center">
+                    <h3 class="m-subheader__title">@Model.Loc.Where(a => a.ResourceId == "spnServiceTask").FirstOrDefault().Value.ToString()</h3>
+                </div>
+            </div>
+
+            <div class="ActionBttnArea">
+                @if (Model.security.Fleet_ServiceTask.Access)
+                {
+                    <button type="button" class="btn newBtn-add AddServiceTask pull-left" id="AddServiceTask" title="Add Service Task">@Model.Loc.Where(a => a.ResourceId == "spnNewServiceTask").FirstOrDefault().Value.ToString()</button>
+                }
+                <div style="clear:both;"></div>
+                </div>
+            <div style="clear:both;"></div>
+        </div>
+    </div>
+}
+else
+{
+    <div class="m-subheader fixedDiv1 fixupperpannel2">
+        <div class="new-m-subheader">
+            <div class="PageTitle">
+                <div class="align-items-center">
+                    <h3 class="m-subheader__title">@Model.Loc.Where(a => a.ResourceId == "spnServiceTask").FirstOrDefault().Value.ToString()</h3>
+                </div>
+            </div>
+
+            <div class="ActionBttnArea">
+                @if (Model.security.Fleet_ServiceTask.Access)
+                {
+                    <button type="button" class="btn newBtn-add AddServiceTask pull-left" id="AddServiceTask" title="Add Service Task">@Model.Loc.Where(a => a.ResourceId == "spnNewServiceTask").FirstOrDefault().Value.ToString()</button>
+                }
+                    <div style="clear:both;"></div>
+                </div>
+            <div style="clear:both;"></div>
+        </div>
+    </div>
+}
+
+<div class="pushDiv1"></div>
+<div class="row">
+    <div class="col-xl-12">
+        <div class="m-portlet" id="m_portlet" style="padding:15px;">
+            <div class="actionBar" style="display:block" id="fleetservicetaskGridAction">
+                <div class="pull-left" style="position:relative;">
+                    <button type="button" class="btn btn-white navbar-btn" title="Search" id="SrchBttnNew"><i class="fa fa-search" style="font-size: 1.1rem;position: relative;top: -2px;left: -2px;"></i> @Model.Loc.Where(a => a.ResourceId == "globalSearch").FirstOrDefault().Value.ToString()</button>
+                    <div style="clear:both;"></div>
+                    <div class="searchBttnDrop desktop" id="searchBttnNewDrop" style="display:none;">
+                        <div class="form-group" style="position:relative;">
+                            <i class="fa fa-search txtSearchClick" style="font-size: 1.1rem;position: absolute;top: 9px;left: 15px;"></i>
+                            <a href="javascript:void(0)" id="cancelText"><i class="fa fa-close" style="font-size: 1.1rem;position: absolute;top: 9px;right: 15px;"></i></a>
+                            <input type="text" id="txtColumnSearch" class="form-control search" placeholder="Search..." style="padding: 0.65rem 2.75rem;" autocomplete="off">
+                        </div>
+                        <div class="searchTips">
+                            <div class="titleText">@Model.Loc.Where(a => a.ResourceId == "spnSearchTips").FirstOrDefault().Value.ToString()</div>
+                            <div class="infoText">@Model.Loc.Where(a => a.ResourceId == "ServiceTaskSearchTips").FirstOrDefault().Value.ToString()</div>
+                            <div style="clear:both;"></div>
+                        </div>
+                        <div class="searchInfo">
+                            <span class="recent">
+                                @Model.Loc.Where(a => a.ResourceId == "GlobalRecentlySearched").FirstOrDefault().Value.ToString()
+                            </span>
+                            <div class="searchList" id="wosearchList">
+                                <ul id="UlSearchList"></ul>
+                            </div>
+                            <span class="clear">
+                                <a href="javascript:void(0)" id="clearText">
+                                    @Model.Loc.Where(a => a.ResourceId == "globalClear").FirstOrDefault().Value.ToString()
+                                </a>
+                            </span>
+                            <div style="clear:both;"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="pull-right">
+                    <button type="button" class="btn btn-white import-export" id="btnServiceTaskExport" onclick="funcShowExportbtn()">
+                        @Model.Loc.Where(a => a.ResourceId == "spnExport").FirstOrDefault().Value.ToString()
+                    </button>
+                    <div class="dropdown btn-sort" id="shortDrop" style="margin-right: 3px !important">
+                        <button class="btn btn-blue dropdown-toggle" type="button" id="btnsortmenu" data-toggle="dropdown">
+                            @Model.Loc.Where(a => a.ResourceId == "GlobalSorting").FirstOrDefault().Value.ToString()
+                        </button>
+                        <ul class="dropdown-menu" role="menu" aria-labelledby="btnsortmenu">
+                            <li role="presentation" class="srtfleetservicetaskcolumn" data-col="0">
+                                <a role="menuitem" tabindex="-1" href="javascript:void(0)">
+                                    @Model.Loc.Where(a => a.ResourceId == "spnServiceTaskId").FirstOrDefault().Value.ToString()
+                                </a>
+                            </li>
+                            <li role="presentation" class="srtfleetservicetaskcolumn" data-col="1">
+                                <a role="menuitem" tabindex="-1" href="javascript:void(0)">
+                                    @Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString()
+                                </a>
+                            </li>
+                            <li style="border-top:1px solid #ccc; margin: 0 10px;"></li>
+                            <li role="presentation" data-mode="asc" class="srtfleetservicetaskcolumnorder">
+                                <a href="javascript:void(0)">
+                                    @Model.Loc.Where(a => a.ResourceId == "globalAscending").FirstOrDefault().Value.ToString()
+                                </a>
+                            </li>
+                            <li role="presentation" data-mode="desc" class="srtfleetservicetaskcolumnorder">
+                                <a href="javascript:void(0)">
+                                    @Model.Loc.Where(a => a.ResourceId == "globalDescending").FirstOrDefault().Value.ToString()
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div style="clear:both;"></div>
+                </div>
+                <div style="clear:both;"></div>
+                <div id="dvFilterSearchSelect2"></div>
+                <div style="clear:both;"></div>
+            </div>
+            <div style="clear:both;"></div>
+            <div id="Active" class="tabcontent" style="display:block;">
+                <div class="table-responsive">
+                    <table id="fleetServiceTaskSearch" class="eqpDtlTbl row-border custom-sort tblMain" style="width:100%;">
+                        <thead>
+                            <tr>
+                                <th class="forExport" data-th-index="0"> @Model.Loc.Where(a => a.ResourceId == "spnServiceTaskId").FirstOrDefault().Value.ToString()</th>
+                                <th class="forExport" data-th-index="1"> @Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString()</th>
+                                @if (Model.security.Fleet_ServiceTask.Access)
+                                {
+                                    <th>@Model.Loc.Where(a => a.ResourceId == "globalAction").FirstOrDefault().Value.ToString()</th>
+                                }
+                                </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@Html.Partial("~/Views/Configuration/FleetServiceTask/_AddServiceTask.cshtml")
+
+@if (Convert.ToString(Session["MenuState"]) == "" || Convert.ToString(Session["MenuState"]) == "open")
+{
+    <div id="searcharea" class="slideToggleBar" style="display:none">
+        <div class="searchBoxArea">
+            <div class="form-group" style="margin-bottom:0; position:relative;">
+                <i class="fa fa-search" style="font-size: 1.1rem;position: absolute;top: 8px;left: 0px;"></i>
+                <input type="text" class="form-control searched" placeholder="Search for a view" id="ServiceTasksearctxtbox">
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <div id="searcharea" class="slideToggleBar" style="display:none;left:81px !important;">
+        <div class="searchBoxArea">
+            <div class="form-group" style="margin-bottom:0; position:relative;">
+                <i class="fa fa-search" style="font-size: 1.1rem;position: absolute;top: 8px;left: 0px;"></i>
+                <input type="text" class="form-control searched" placeholder="Search for a view" id="ServiceTasksearctxtbox">
+            </div>
+        </div>
+    </div>
+}
+@Html.Partial("_Export")
+
+<style type="text/css">
+    #popupExport { right: 233px !important; }
+    .modal-open { overflow: hidden !important; }
+    /*.ui-tooltip { z-index: 99 !important; }*/
+    @@media only screen and (max-width: 1365px) and (min-width: 1200px) {
+        #popupExport { right: 123px !important; }
+    }
+    @@media only screen and (max-width: 1023px) and (min-width: 768px){
+        #popupExport { right: 138px !important; }
+        .modal-dialog { max-width: 730px; }
+    }
+    @@media screen and (max-width: 767px) {
+        .actionBar div.pull-left { width: auto; }
+        .actionBar div.pull-right { float: right; margin-top: 0; }
+        .modal-dialog { max-width: 610px; }
+    }
+    @@media only screen and (max-width: 567px) and (min-width: 480px) {
+        #shortDrop { margin-top: 0; margin-right: 0 !important; }
+    }
+    @@media screen and (max-width: 479px) {
+        .actionBar div.pull-right { width:100%; }
+        .import-export { margin-top: 10px !important; }
+    }
+    @@media only screen and (max-width: 359px) and (min-width: 320px) {
+        #btnsortmenu { width: 170px; }
+    }
+</style>
+

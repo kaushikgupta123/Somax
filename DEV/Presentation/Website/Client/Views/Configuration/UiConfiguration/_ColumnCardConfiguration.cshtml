@@ -1,0 +1,109 @@
+﻿@model Client.Models.Configuration.UIConfiguration.UiConfigurationVM
+<link href="~/Scripts/Metronic/assets/demo/default/base/GlobalSearchGrid.css" rel="stylesheet" />
+<div id="ColumnConfigurationModal" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-info">
+        <div class="modal-content">
+            @using (Ajax.BeginForm("UpdateColumnSettingDetails", "UiConfiguration", new AjaxOptions { HttpMethod = "Post", OnSuccess = "UpdateConfigurationOnSuccess", OnBegin = "AjaxBeginFormBegin", OnComplete = "AjaxBeginFormComplete", OnFailure = "AjaxBeginFormFaillure" }, new { enctype = "multipart/form-data", id = "addConfigform" }))
+            {
+                @Html.AntiForgeryToken()
+                <div class="modal-body">
+                    <div class="form-group">
+                        <input id="hdncolumnSettingRequired" type="hidden" />
+                        <ul class="listView nobrd" style="border-bottom:0;">
+                            <li>
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnColumnName").FirstOrDefault().Value.ToString() : </span>
+                                <span class="inputText">
+                                    <span id="spn_ColumnSettingDetails_ColumnName">@Model.columnSettingConfigModel.ColumnName</span>
+                                    @Html.HiddenFor(m => m.columnSettingConfigModel.ColumnName)
+                                </span>
+
+                            </li>
+                            <li>
+
+                                @if (Model.columnSettingConfigModel.UDF)
+                                {
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString() : <small>*</small></span>
+                                    <span class="inputText">
+                                        @Html.ValidationMessageFor(m => m.columnSettingConfigModel.ColumnLabel, "", new { style = "display:none" })
+                                        @Html.TextBoxFor(m => m.columnSettingConfigModel.ColumnLabel, new { @class = "form-control search m-input txtColumnLabel", @style = "color:black", autocomplete = "off", maxlength = "67" })
+                                    </span>
+
+                                }
+                                else
+                                {
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString() : </span>
+                                    <span class="inputText">
+                                        <span class="txtColumnLabel" style="white-space: nowrap;" id="spn_ColumnSettingDetails_Description">@Model.columnSettingConfigModel.ColumnLabel</span>
+                                        @Html.HiddenFor(m => m.columnSettingConfigModel.ColumnLabel)
+                                    </span>
+
+                                }
+
+                            </li>
+                            <li>
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnRequired").FirstOrDefault().Value.ToString() : </span>
+                                <span class="inputText">
+                                    @Html.CheckBoxFor(m => m.columnSettingConfigModel.Required, new { id = "chk_ColumnSettingDetails_IsRequired" })
+                                </span>
+
+                            </li>
+                            @if (Model.columnSettingConfigModel.UDF)
+                            {
+                                <li>
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnDisplayonForm").FirstOrDefault().Value.ToString() : </span>
+                                    <span class="inputText">
+                                        @Html.CheckBoxFor(m => m.columnSettingConfigModel.DisplayonForm, new { id = "chk_ColumnSettingDetails_DisplayonForm" })
+                                    </span>
+
+                                </li>
+                            }
+                        </ul>
+
+
+
+
+                        @Html.HiddenFor(m => m.columnSettingConfigModel.UIConfigurationId)
+                        @Html.HiddenFor(m => m.columnSettingConfigModel.DataDictionaryId)
+                        <div>
+                            @if (Model.columnSettingConfigModel.ColumnType == "Select")
+                            {
+                                <div style="padding: 15px 0px 0px 0px;margin-bottom:10px">
+                                    <span class="label"><strong>@Model.Loc.Where(a => a.ResourceId == "spnLookupList").FirstOrDefault().Value.ToString()</strong></span>
+                                </div>
+                                @*<table id="tblUdfLookUpListGrid" class="eqpDtlTbl row-border custom-sort" style="width:100%;">
+                                    <thead>
+                                        <tr>
+                                            <th>Value</th>
+                                            <th>Description</th>
+                                            <th width="17%" style="text-align:center !important;"></th>
+                                        </tr>
+                                    </thead>
+                                </table>*@
+                                
+                                <div id="UdflookupTableContainner">
+
+                                </div>
+                               
+                                <a href="javascript:void(0)" id="linkAdditem" class="AddEditLookup" data-LookupId="0" data-Description="" data-updateIndex="0" data-ListName="@Model.columnSettingConfigModel.ListName"><i class="fa fa-plus"></i> Add an item</a>
+                            }
+
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer" style="padding:15px 25px !important;">
+                    <button type="button" data-dismiss="modal" class="btn btn-white" style="float:left">
+                        <i class="fa fa-close faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()
+                    </button>
+                    <button type="submit" class="btn btn-white SavecolumnSetting" style="float:right">
+                        <i class="fa fa-save"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()
+                    </button>
+                    <div style="clear:both;"></div>
+                </div>
+            }
+
+        </div>
+    </div>
+</div>
+<div id="AddEditUDFMainContainer">
+
+</div>

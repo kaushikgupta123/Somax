@@ -1,0 +1,19 @@
+﻿@Html.DevExpress().Captcha(settings =>
+{
+    settings.Name = "captcha";
+    settings.CallbackRouteValues = new { Controller = "GuestWorkRequest", Action = "LoadCaptcha" };
+    settings.PreRender = (sender, e) =>
+    {
+        MVCxCaptcha captcha = sender as MVCxCaptcha;
+        captcha.ChallengeImage.BackgroundImage.ImageUrl = "";
+        captcha.ChallengeImage.BackgroundColor = System.Drawing.Color.Orange;
+
+    };
+    settings.TextBox.Position = DevExpress.Web.Captcha.ControlPosition.Bottom;
+    settings.Styles.TextBox.CssClass = "form-control search";
+    settings.CharacterSet = "0123456789abcdefghijklmnopqrstuvwxyz";
+    settings.CodeLength = 5;
+    settings.ValidationSettings.SetFocusOnError = true;
+    settings.RefreshButton.ShowImage = true;
+    settings.RefreshButton.Image.Url = "~/Scripts/ckeditor/skins/moono-lisa/images/refresh.png";
+}).GetHtml()

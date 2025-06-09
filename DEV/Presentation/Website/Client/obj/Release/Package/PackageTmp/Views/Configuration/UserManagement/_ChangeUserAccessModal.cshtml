@@ -1,0 +1,84 @@
+﻿@model Client.Models.Configuration.UserManagement.UserManagementVM
+
+<div id="UMchangeUserAccessModal" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-info">
+        @using (Ajax.BeginForm("ChangeUserAccess", "UserManagement", null, new AjaxOptions { HttpMethod = "Post", OnSuccess = "UserAccessOnSuccess", OnBegin = "AjaxBeginFormBegin", OnComplete = "AjaxBeginFormComplete", OnFailure = "AjaxBeginFormFaillure" }, new { id = "frmchangeuseraccess" }))
+        {
+            @Html.AntiForgeryToken()
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">@Model.Loc.Where(a => a.ResourceId == "globalChangeUserAcces").FirstOrDefault().Value.ToString()</h4>
+                </div>
+                @Html.Partial("_ErrorDiv")
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="UserAccess" id="spnUserAccess">@Model.Loc.Where(a => a.ResourceId == "GlobalUserAccess").FirstOrDefault().Value.ToString() <small>*</small></label>
+                        <span class="inputText">
+                            <div class="dropdown dropTableOuter">
+                                <div class="input-group">
+                                    @Html.ValidationMessageFor(m => m.userChangeAccessModel.SecurityProfileName, "", new { style = "display:none" })
+                                    @Html.TextBoxFor(m => m.userChangeAccessModel.SecurityProfileName, new { @class = "form-control search dropbtn securityprofileid readonly", @readonly = "readonly", autocomplete = "off" })
+
+                                    <div class="input-group-btn">
+                                        <button class="btn btn-white btntxtInputGroup" type="button" id="openuserchangeaccessgrid">
+                                            <i id="srcicon" class="fa fa-search"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </span>
+                    </div>
+
+                </div>
+                <div class="modal-footer" style="padding:15px 25px !important;">
+                    <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-close faIcon"></i> &nbsp;@Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString() </button>
+                    <button type="submit" class="btn btn-blue" style="float:right;" id="btnchangeUserAccess"><i class="fa fa-save faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString() </button>
+                    <div style="clear:both;"></div>
+                </div>
+            </div>
+            @Html.HiddenFor(m => m.userChangeAccessModel.SecurityProfileId)
+            @Html.HiddenFor(m => m.userChangeAccessModel.UserInfoId)
+            @Html.HiddenFor(m => m.userChangeAccessModel.ProductGrouping)
+            @Html.HiddenFor(m => m.userChangeAccessModel.PackageLevel)
+            @Html.HiddenFor(m => m.userChangeAccessModel.UserType)
+            @Html.HiddenFor(m => m.userChangeAccessModel.UserUpdateIndex)
+            @Html.HiddenFor(m => m.userChangeAccessModel.DefaultSiteId)
+
+            @Html.HiddenFor(m => m.userChangeAccessModel.APM)
+            @Html.HiddenFor(m => m.userChangeAccessModel.CMMS)
+            @Html.HiddenFor(m => m.userChangeAccessModel.Sanitation)
+            @Html.HiddenFor(m => m.userChangeAccessModel.Fleet)
+            @Html.HiddenFor(m => m.userChangeAccessModel.Production)
+            @Html.HiddenFor(m => m.userChangeAccessModel.OldUserType)
+        }
+    </div>
+</div>
+
+@Html.Partial("~/Views/Configuration/UserManagement/_UserAccessPopup.cshtml")
+
+<script>
+    $(document).ready(function () {
+
+        $.validator.setDefaults({ ignore: null });
+        $.validator.unobtrusive.parse(document);
+        $('input, form').blur(function () {
+            $(this).valid();
+        });
+        $('.select2picker, form').change(function () {
+            var areaddescribedby = $(this).attr('aria-describedby');
+            if ($(this).valid()) {
+                if (typeof areaddescribedby != 'undefined') {
+                    $('#' + areaddescribedby).hide();
+                }
+            }
+            else {
+                if (typeof areaddescribedby != 'undefined') {
+                    $('#' + areaddescribedby).show();
+                }
+            }
+        });
+        $(document).find('.select2picker').select2({});
+    });
+</script>
+

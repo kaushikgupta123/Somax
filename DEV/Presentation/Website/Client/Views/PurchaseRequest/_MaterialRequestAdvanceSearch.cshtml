@@ -1,0 +1,65 @@
+﻿@model Client.Models.PurchaseRequest.PurchaseRequestVM
+<nav class="sidebar" style="height: 100%;" id="sidebar2">
+    <div class="dismiss" id="dismissPRMR">
+        <i class="fa fa-close"></i>
+    </div>
+
+    <div class="sidebar-header">
+        <h3><i class="fa fa-filter" style="position: relative; top: -2px;"></i> @Model.Loc.Where(a => a.ResourceId == "spnFilters").FirstOrDefault().Value.ToString() <span class="MaterialRequestfilteritemcount">0</span></h3>
+        <button type="button" id="btnMaterialRequestDataAdvSrch" class="btn btn-blue filterSearch">@Model.Loc.Where(a => a.ResourceId == "GlobalApply").FirstOrDefault().Value.ToString() </button>
+    </div>
+
+    <div class="sidebar-content" id="advsearchsidebarMaterialRequest">
+        <form action="#" method="post">
+            <div class="form-group">
+                <label for="prGridadvsearchPartId">@Model.Loc.Where(a => a.ResourceId == "spnPartID").FirstOrDefault().Value.ToString() :</label>
+                <input type="text" class="form-control search adv-item" autocomplete="off" id="prGridadvsearchPartId">
+            </div>
+            <div class="form-group">
+                <label for="prGridadvsearchDescription">@Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString() :</label>
+                <input type="text" class="form-control search adv-item" autocomplete="off" id="prGridadvsearchDescription">
+            </div>
+            <div class="form-group">
+                <label for="prGridadvsearchWorkOrderId">@Model.Loc.Where(a => a.ResourceId == "spnGlobalWorkOrderID").FirstOrDefault().Value.ToString() :</label>
+                <input type="text" class="form-control search adv-item " autocomplete="off" id="prGridadvsearchWorkOrderId">
+            </div>
+        </form>
+    </div>
+</nav>
+
+
+<style type="text/css">
+
+    .sidebar {
+        padding-bottom: 30px;
+    }
+
+    .overlay2 {
+        height: 100% !important;
+        position: fixed;
+        width: 100vw;
+        background: rgba(0,0,0,.6);
+        z-index: 104;
+        display: none;
+        left: 0;
+        top: 0
+    }
+
+    .mCSB_scrollTools .mCSB_draggerRail {
+        width: 5px;
+    }
+
+    .mCS-minimal.mCSB_scrollTools_vertical .mCSB_dragger, .mCS-minimal-dark.mCSB_scrollTools_vertical .mCSB_dragger {
+        min-height: 50px !important;
+        height: 20% !important;
+        max-height: 20% !important;
+    }
+
+    .mCS-minimal.mCSB_scrollTools .mCSB_draggerRail, .mCS-minimal-dark.mCSB_scrollTools .mCSB_draggerRail {
+        background-color: #aeb8c8 !important;
+    }
+
+    .mCS-minimal.mCSB_scrollTools .mCSB_dragger .mCSB_dragger_bar {
+        background-color: #315a98 !important;
+    }
+</style>

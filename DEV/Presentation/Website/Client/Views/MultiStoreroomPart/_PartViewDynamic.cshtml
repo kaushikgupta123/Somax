@@ -1,0 +1,118 @@
+﻿@model Client.Models.MultiStoreroomPart.MultiStoreroomPartVM
+@{
+    var fieldLabel = "";
+    var fieldName = "";
+    object Value = null;
+}
+@foreach (var data in Model.UIConfigurationDetails)
+{
+    if (data.Section == true)
+    {
+        <li>
+            <span class="label"><strong>@data.SectionName</strong></span>
+        </li>
+        continue;
+    }
+    if (string.IsNullOrEmpty(data.ColumnName))
+    {
+        continue;
+    }
+    else if (!string.IsNullOrEmpty(data.ColumnName))
+    {
+        if (Model.ViewPart.GetType().GetProperty(data.ColumnName) == null)
+        {
+            continue;
+        }
+    }
+
+    #region Column Name
+    fieldName = data.ColumnName;
+    if (data.ColumnName.ToLower() == "AccountId".ToLower())
+    {
+        fieldName = "AccountClientLookupId";
+    }
+    else if (data.ColumnName.ToLower() == "Select1".ToLower())
+    {
+        fieldName = "Select1Name";
+    }
+    else if (data.ColumnName.ToLower() == "Select2".ToLower())
+    {
+        fieldName = "Select2Name";
+    }
+    else if (data.ColumnName.ToLower() == "Select3".ToLower())
+    {
+        fieldName = "Select3Name";
+    }
+    else if (data.ColumnName.ToLower() == "Select4".ToLower())
+    {
+        fieldName = "Select4Name";
+    }
+    else if (data.ColumnName.ToLower() == "PartVendorId".ToLower())
+    {
+        break;
+    }
+    else if (data.ColumnName.ToLower() == "AutoPurchase".ToLower())
+    {
+        break;
+    }
+    #endregion
+
+    #region Value
+    Value = Model.ViewPart.GetType().GetProperty(fieldName).GetValue(Model.ViewPart);
+    if (Value == null)
+    {
+        Value = "";
+    }
+
+    if (data.ColumnName.ToLower() == "ClientLookupId".ToLower())
+    {
+        if (Value.ToString().Length > 30)
+        {
+            Value = Value.ToString().Substring(0, 30) + "...";
+        }
+    }
+
+    if (data.ColumnName.ToLower() == "AverageCost".ToLower())
+    {
+        Value = string.Format("{0:N2}", Value);
+    }
+    else if (data.ColumnName.ToLower() == "AppliedCost".ToLower())
+    {
+        Value = string.Format("{0:N2}", Value);
+    }
+    else if (data.ColumnName.ToLower() == "LastPurchaseCost".ToLower())
+    {
+        Value = string.Format("{0:N2}", Value);
+    }
+    else if (data.ColumnName.ToLower() == "QtyOnHand".ToLower())
+    {
+        Value = string.Format("{0:N2}", Value);
+    }
+    else if (data.ColumnName.ToLower() == "QtyOnOrder".ToLower())
+    {
+        Value = string.Format("{0:N2}", Value);
+    }
+    else if (data.ColumnName.ToLower() == "QtyOnRequest".ToLower())
+    {
+        Value = string.Format("{0:N2}", Value);
+    }
+    else if (data.ColumnName.ToLower() == "QtyMaximum".ToLower())
+    {
+        Value = string.Format("{0:N1}", Value);
+    }
+    else if (data.ColumnName.ToLower() == "QtyReorderLevel".ToLower())
+    {
+        Value = string.Format("{0:N1}", Value);
+    }
+
+    #endregion
+
+    #region Label
+    fieldLabel = data.ColumnLabel;
+
+    #endregion
+
+    <li style="height:auto;" class="dscrbtn">
+        @CustomHelperDynamic.ViewLabelAndDisplayValue(fieldLabel, Value.ToString(), data.ColumnType)
+    </li>
+}

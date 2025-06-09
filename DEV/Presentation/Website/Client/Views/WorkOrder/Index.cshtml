@@ -1,0 +1,106 @@
+﻿@model Client.Models.Work_Order.WorkOrderVM
+@{
+    ViewBag.Title = "Somax | Work Order";
+}
+
+@Styles.Render("~/Content/datatable")
+<link href="~/Scripts/dropzone/basic.min.css" rel="stylesheet" />
+<link href="~/Scripts/dropzone/dropzone.min.css" rel="stylesheet" />
+<link href="~/Content/sidebar_custom.css" rel="stylesheet" />
+<link href="~/Scripts/Metronic/assets/demo/default/base/GlobalSearchGrid.css" rel="stylesheet" />
+@Styles.Render("~/Content/daterangepickercustom")
+@Styles.Render("~/Content/somaxcommentsection")
+<link href="~/Content/Wizard/Wizard.css" rel="stylesheet" />
+<link href="~/Scripts/Metronic/assets/demo/default/base/style_custom_tree.css" rel="stylesheet" />
+@section scripts{
+    @Scripts.Render("~/bundles/datatable")
+    @Scripts.Render("~/bundles/imagezoom")
+    @Scripts.Render("~/bundles/QRPrint")
+    @Scripts.Render("~/bundles/WorkorderNew")
+    @Scripts.Render("~/bundles/SomaxCkEditor")
+    @Scripts.Render("~/bundles/QRScanner")
+    @Scripts.Render("~/bundles/ImageCompressor")
+    <script src="~/Scripts/treeTable.js"></script>
+    <script src="~/Scripts/Common/LookupTypeTablePopup/TableAccountPoopup.js"></script>
+    <script src="~/Scripts/Common/LookupTypeTablePopup/TableAssetPopupLookup.js"></script>
+    <script src="~/Scripts/Common/LookupTypeTablePopup/EquipmentAssetTree.js"></script>
+
+    <script type="text/javascript">
+        com_github_culmat_jsTreeTable.register(this);
+        Dropzone.autoDiscover = false;
+        $(document).ready(function () {
+            $.validator.unobtrusive.parse(document);
+            $('.select2picker, form').not("#txtCancelReasonSelect").change(function () {
+                var areaddescribedby = $(this).attr('aria-describedby');
+                if ($(this).parents().find('.sidebar-content').attr('id') != "advsearchsidebarWorkorder") {
+                    if ($(this).valid()) {
+                        if (typeof areaddescribedby !== 'undefined') {
+                            $('#' + areaddescribedby).hide();
+                        }
+                    }
+                    else {
+                        if (typeof areaddescribedby !== 'undefined') {
+                            $('#' + areaddescribedby).show();
+                        }
+                    }
+                }
+            });
+            $(document).find('.select2picker').select2({});
+        })
+    </script>
+}
+<div id="renderworkorder">
+    @if (Model.IsAddRequest)
+    {
+        @Html.Partial("_AddWoRequest")
+    }
+    else if (Model.IsAddWorkOrderFromDashBoard && Model.IsOnDemandAdd)
+    {
+        @Html.Partial("_AddWorkOrderOnDemand")
+        @Html.HiddenFor(m => m.IsOnDemandAdd)
+    }
+    else if (Model.IsAddWorkOrderFromDashBoard && Model.IsDescribeAdd && Model.IsWoDescDynamic == false)
+    {
+        @Html.Partial("_AddWorkOrderDescribe")
+        @Html.HiddenFor(m => m.IsDescribeAdd)
+    }
+    else if (Model.IsAddWorkOrderFromDashBoard && Model.IsDescribeAdd && Model.IsWoDescDynamic == true)
+    {
+        @Html.Partial("_AddWorkOrderDescribeDynamic")
+        @Html.HiddenFor(m => m.IsDescribeAdd)
+    }
+    else if (Model.IsAddWorkOrderFromDashBoard && Model.IsAddWorkOrderDynamic == false) //V2-611
+    {
+        @Html.Partial("_WorkOrderAdd")
+    }
+    else if (Model.IsAddWorkOrderFromEquipment)
+    {
+        @Html.Partial("_WorkOrderDetails")
+    }
+    else if (Model.IsSanitationDescribeAdd)
+    {
+        @Html.Partial("_SanitationWoDescribeModal")
+    }
+    else if (Model.IsAddWorkOrderFromDashBoard && Model.IsAddWorkOrderDynamic == true) //V2-611 for Dynamic Ui view
+    {
+        @Html.Partial("_WorkOrderAddDynamic");
+    }
+    else if (Model.IsAddWoRequestDynamic) // 611
+    {
+        @Html.Partial("AddWoRequestDynamic", Model)
+    }
+    else if (Model.IsDetailWorkOrderFromDashBoard || Model.IsDetailFromNotification)
+    {
+        @Html.Partial("_WorkOrderDetails")
+    }
+    else
+    {
+        @Html.Partial("_WorkorderSearch")
+    }
+</div>
+
+<style>
+    .gridImgBox img {
+        max-height: 121px !important;
+    }
+</style>

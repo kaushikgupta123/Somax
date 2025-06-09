@@ -1,0 +1,172 @@
+﻿@model Client.Models.EventInfo.EventInfoVM
+
+<div class="m-subheader">
+    <div class="new-m-subheader">
+        <div class="PageTitle">
+            <div class="align-items-center separator">
+                <h3 class="m-subheader__title">
+                    @Model.Loc.Where(a => a.ResourceId == "spnEventInformation").FirstOrDefault().Value.ToString()
+                </h3>
+            </div>
+        </div>
+
+        <div class="NewBreadcrumbArea">
+            <div class="newBreadcrumb">
+                <ul>
+                    <li><a href="/Dashboard/Dashboard">&nbsp;</a></li>
+                    <li><a href="/EventInfo/Index?page=Sensors_Events">@Model.Loc.Where(a => a.ResourceId == "spnEventInfoSearch").FirstOrDefault().Value.ToString()</a></li>
+                    <li class="active"><a href="javascript:void(0)">@Model.eventInfoModel.EventInfoId</a></li>
+                </ul>
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+
+        <div class="ActionBttnArea">
+            <div class="actionDiv pull-left" style="margin-right:0;">
+                <div class="btn-group bootstrap-select m-datatable__pager-size dropup show selectDrop actionNewDrop">
+                    <div class="btn-group bootstrap-select m-datatable__pager-size" style="width: 100%;">
+                        <button type="button" class="btn dropdown-toggle bs-placeholder btn-default" data-toggle="dropdown" role="button" title=""><span class="filter-option pull-left">@Model.Loc.Where(a => a.ResourceId == "globalAction").FirstOrDefault().Value.ToString()</span>&nbsp;<span class="bs-caret"><span class="caret"></span></span></button>
+                        <div class="dropdown-menu open" role="combobox">
+                            <ul class="dropdown-menu inner" role="listbox" aria-expanded="false">
+                                <li id="lnkCreateWo"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnCreateWorkOrders").FirstOrDefault().Value.ToString()</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div style="clear:both;"></div>
+        </div>
+        <div style="clear:both;"></div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xl-12">
+        <div class="row">
+            <div class="col-xl-12" id="btnnblock">
+                <div class="m-portlet" id="m_portlet" style="padding:15px;">
+                    <div class="bottomBlock">
+                        <div class="tabsArea nobg" id="RequestCharge" style="display:block;">
+                            <div class="m-portlet__head" style="padding:0; height:2.5rem;">
+                                <div class="m-portlet__head-caption">
+                                    <div class="m-portlet__head-title">
+                                        <h3 class="m-portlet__head-text" style="vertical-align:top;">
+                                            @Model.Loc.Where(a => a.ResourceId == "spnRequest").FirstOrDefault().Value.ToString()
+                                            &amp;
+                                            @Model.Loc.Where(a => a.ResourceId == "GlobalChargeTo").FirstOrDefault().Value.ToString()
+                                        </h3>
+                                    </div>
+                                </div>
+                            </div>
+                            <ul class="listView">
+                                <li>
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnEventID").FirstOrDefault().Value.ToString() :</span>
+                                    <span class="inputText">@Model.eventInfoModel.EventInfoId</span>
+                                </li>
+                                <li>
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnStatus").FirstOrDefault().Value.ToString() :</span>
+                                    <span class="inputText">@Model.eventInfoModel.Status</span>
+                                </li>
+                                <li>
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "GlobalSourceType").FirstOrDefault().Value.ToString() :</span>
+                                    <span class="inputText">@Model.eventInfoModel.SourceType</span>
+                                </li>
+                                <li>
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnEventType").FirstOrDefault().Value.ToString() :</span>
+                                    <span class="inputText">@Model.eventInfoModel.EventType</span>
+                                </li>
+                                <li>
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnSensorID").FirstOrDefault().Value.ToString() :</span>
+                                    <span class="inputText">@Model.eventInfoModel.SensorId</span>
+                                </li>
+                                <li>
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnGlobalEquipmentId").FirstOrDefault().Value.ToString() :</span>
+                                    <span class="inputText">@Model.eventInfoModel.EquipClientLookupId</span>
+                                </li>
+                                <li>
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnCreatedBy").FirstOrDefault().Value.ToString() :</span>
+                                    <span class="inputText">@Model.eventInfoModel.CreatedBy</span>
+                                </li>
+                                <li>
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnCreated").FirstOrDefault().Value.ToString() :</span>
+                                    @if (Model.eventInfoModel.CreateDate.HasValue && Model.eventInfoModel.CreateDate.Value != default(DateTime))
+                                    {
+                                        <span class="inputText">@Model.eventInfoModel.CreateDate.Value.ToString("MM/dd/yyyy", CultureInfo.InvariantCulture)</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="inputText"></span>
+                                    }
+                                </li>
+                                <li style="height:auto;">
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString() :</span>
+                                    <span class="inputText" style="height:auto;">@Model.eventInfoModel.Description</span>
+                                    <div style="clear:both;"></div>
+                                </li>
+
+                                <li>
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnProcessedBy").FirstOrDefault().Value.ToString() :</span>
+                                    <span class="inputText">@Model.eventInfoModel.ProcessBy_Personnel</span>
+                                </li>
+                                <li>
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnProcessedDate").FirstOrDefault().Value.ToString() :</span>
+                                    @if (Model.eventInfoModel.ProcessDate.HasValue && Model.eventInfoModel.ProcessDate.Value != default(DateTime))
+                                    {
+                                        <span class="inputText">@Model.eventInfoModel.ProcessDate.Value.ToString("MM/dd/yyyy", CultureInfo.InvariantCulture)</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="inputText"></span>
+                                    }
+                                </li>
+                                <li>
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnDisposition").FirstOrDefault().Value.ToString() :</span>
+                                    <span class="inputText" id="eventInfoModel_Disposition">@Model.eventInfoModel.Disposition</span>
+                                </li>
+                                <li>
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnFaultCode").FirstOrDefault().Value.ToString() :</span>
+                                    <span class="inputText" id="eventInfoModel_FaultCode">@Model.eventInfoModel.FaultCode</span>
+                                </li>
+                                <li>
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "GlobalWorkOrder").FirstOrDefault().Value.ToString() :</span>
+                                    <span class="inputText">@Model.eventInfoModel.WOClientLookupId</span>
+                                </li>
+                                <li style="height:auto;">
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnLogComment").FirstOrDefault().Value.ToString() :</span>
+                                    <span class="inputText" style="height:auto;" id="eventInfoModel_Comments">@Model.eventInfoModel.Comments</span>
+                                    <div style="clear:both;"></div>
+                                </li>
+                            </ul>
+                            <div class="idBttns">
+                                <div class="bttn_pagin">
+                                    <div class="bttns2">
+                                        @if (Model.security.EventInfo.EventsProcess && Model.eventInfoModel.Status != "Processed")
+                                        {
+                                            <button class="btn btn-blue mobBttn" value="acknowledge" data-toggle="modal" data-target="#modalAcknowledge"><i class="fa fa-check faIcon"></i> &nbsp;@Model.Loc.Where(a => a.ResourceId == "spnAcknowledge").FirstOrDefault().Value.ToString()</button>
+                                        }
+                                    </div>
+                                    <div class="bttns">
+                                        @if (Model.eventInfoModel.Status == "Open")
+                                        {
+                                            <button type="button" class="btn btn-blue mobBttn" value="dismiss" data-toggle="modal" data-target="#modalDismiss"><i class="fa fa-close faIcon"></i> &nbsp;@Model.Loc.Where(a => a.ResourceId == "spnDismiss").FirstOrDefault().Value.ToString()</button>
+                                        }
+                                    </div>
+                                    <div style="clear:both;"></div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@Html.HiddenFor(m => m.eventInfoModel.EventInfoId)
+@Html.Partial("_DismissModal")
+@Html.Partial("_AcknowledgeModal")
+@Html.Partial("_CreateWorkOrderModal")
+<style type="text/css">
+    #modalDismiss .modal-footer, #modalAcknowledge .modal-footer { padding: 15px 25px !important; }
+    h4.modal-title { line-height: 34px; }
+</style>

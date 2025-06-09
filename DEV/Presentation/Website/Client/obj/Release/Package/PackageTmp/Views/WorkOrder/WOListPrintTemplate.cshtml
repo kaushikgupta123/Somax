@@ -1,0 +1,634 @@
+﻿@model IEnumerable<WorkOrderVM>
+@using Client.Models.Work_Order
+@using Client.Controllers
+@using DataContracts
+@{
+    var data = Session["userData"];
+    var userData = (UserData)data;
+    WorkOrderVM singleLocalizeModel = new WorkOrderVM();
+    BaseController baseController = new BaseController();
+    baseController.LocalizeControls2(singleLocalizeModel, LocalizeResourceSetConstants.WorkOrderDetails, userData);
+
+}
+@{ Layout = null;}
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css" />
+    <link rel="shortcut icon" href="~/Scripts/Metronic/assets/login/demo/default/media/img/logo/favicon.png" />
+</head>
+
+@foreach (var item in Model)
+{
+    <body style="padding:0; margin:0; font-family: 'Roboto', sans-serif; font-size:14px; color:#737272;">
+        <table width="1000" border="0" cellspacing="0" cellpadding="0" align="center">
+            <tr>
+                <td align="left" valign="top" height="10"><img src="../Content/images/space.png" alt="" /></td>
+            </tr>
+
+            <tr>
+                <td align="left" valign="top" style="background:#efefef; border-bottom:2px solid #77c2a4;">
+                    <table width="1000" border="0" cellspacing="0" cellpadding="0">
+                        <tr>
+                            <th width="1000" align="center" valign="middle" scope="col" style="background:#77c2a4; height:45px; line-height:45px; font-size:25px; color:#fff; font-weight:normal;">@singleLocalizeModel.Loc.Where(a => a.ResourceId == "spnDetails").FirstOrDefault().Value.ToString()</th>
+                        </tr>
+                        <tr>
+                            <td align="left" valign="top" style="border-bottom:1px solid #b6b6b6; padding:10px 0;">
+                                <table width="1000" border="0" cellspacing="0" cellpadding="0">
+                                    <tr>
+                                        <td width="332" align="center" valign="top" style="border-right:1px solid #b6b6b6; padding:10px 0;">
+                                            <h3 style="padding:0; margin:0 0 5px 0; font-size:18px; color:#000; font-weight:normal;">@singleLocalizeModel.Loc.Where(a => a.ResourceId == "GlobalChargeTo").FirstOrDefault().Value.ToString() </h3>
+                                            <p style="padding:0; margin:0; font-size:18px; color:#8f8f8f; font-weight:normal;">@item.workOrderModel.ChargeToClientLookupId </p>
+                                        </td>
+                                        <td width="332" align="center" valign="top" style="border-right:1px solid #b6b6b6; padding:10px 0;">
+                                            <h3 style="padding:0; margin:0 0 5px 0; font-size:18px; color:#000; font-weight:normal;">@singleLocalizeModel.Loc.Where(a => a.ResourceId == "GlobalType").FirstOrDefault().Value.ToString() </h3>
+                                            <p style="padding:0; margin:0; font-size:18px; color:#8f8f8f; font-weight:normal;">@item.workOrderModel.Type</p>
+                                        </td>
+                                        <td width="334" align="center" valign="top" style="padding:10px 0;">
+                                            <h3 style="padding:0; margin:0 0 5px 0; font-size:18px; color:#000; font-weight:normal;">@singleLocalizeModel.Loc.Where(a => a.ResourceId == "spnDownRequired").FirstOrDefault().Value.ToString() </h3>
+                                            @if (item.workOrderModel.DownRequired)
+                                            {
+                                                <p style="padding:0; margin:0; font-size:18px; color:#8f8f8f; font-weight:normal;">Yes</p>
+                                            }
+                                            else
+                                            {
+                                                <p style="padding:0; margin:0; font-size:18px; color:#8f8f8f; font-weight:normal;">No</p>
+                                            }
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="left" valign="top" style="padding:10px 0;">
+                                <table width="1000" border="0" cellspacing="0" cellpadding="0">
+                                    <tr>
+                                        <td width="249" align="center" valign="top" style="border-right:1px solid #b6b6b6; padding:10px 0;">
+                                            <h3 style="padding:0; margin:0 0 5px 0; font-size:18px; color:#000; font-weight:normal;">@singleLocalizeModel.Loc.Where(a => a.ResourceId == "spnScheduledDate").FirstOrDefault().Value.ToString() </h3>
+                                            @if (item.workOrderModel.ScheduledStartDate.HasValue && item.workOrderModel.ScheduledStartDate.Value != default(DateTime))
+
+                                            {
+                                                <p style="padding:0; margin:0; font-size:18px; color:#8f8f8f; font-weight:normal;">
+                                                    @item.workOrderModel.ScheduledStartDate.Value.ToString("dd-MM-yyyy", CultureInfo.InvariantCulture)
+                                                </p>
+                                            }
+                                            else
+                                            {
+                                                <p style="padding:0; margin:0; font-size:18px; color:#8f8f8f; font-weight:normal;"></p>
+                                            }
+                                        </td>
+                                        <td width="249" align="center" valign="top" style="border-right:1px solid #b6b6b6; padding:10px 0;">
+                                            <h3 style="padding:0; margin:0 0 5px 0; font-size:18px; color:#000; font-weight:normal;">@singleLocalizeModel.Loc.Where(a => a.ResourceId == "spnScheduledDuration").FirstOrDefault().Value.ToString() </h3>
+                                            <p style="padding:0; margin:0; font-size:18px; color:#8f8f8f; font-weight:normal;">@item.workOrderModel.ScheduledDuration</p>
+                                        </td>
+                                        <td width="249" align="center" valign="top" style="border-right:1px solid #b6b6b6; padding:10px 0;">
+                                            <h3 style="padding:0; margin:0 0 5px 0; font-size:18px; color:#000; font-weight:normal;">@singleLocalizeModel.Loc.Where(a => a.ResourceId == "spnCreateBy").FirstOrDefault().Value.ToString() </h3>
+                                            <p style="padding:0; margin:0; font-size:18px; color:#8f8f8f; font-weight:normal;">@item.workOrderModel.Createby <br />(@item.workOrderModel.CreateBy_PersonnelName)</p>
+                                        </td>
+                                        <td width="250" align="center" valign="top" style="padding:10px 0;">
+                                            <h3 style="padding:0; margin:0 0 5px 0; font-size:18px; color:#000; font-weight:normal;">@singleLocalizeModel.Loc.Where(a => a.ResourceId == "spnWorkAssigned").FirstOrDefault().Value.ToString() </h3>
+                                            <p style="padding:0; margin:0; font-size:18px; color:#8f8f8f; font-weight:normal;">@item.workOrderModel.WorkAssigned_PersonnelClientLookupId <br /> (@item.workOrderModel.Assigned)</p>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+
+            <tr>
+                <td align="left" valign="top" height="10"><img src="../Content/images/space.png" alt="" /></td>
+            </tr>
+
+            <tr>
+                <td align="left" valign="top" style="background:#efefef; border-bottom:2px solid #f9b664;">
+                    <table width="1000" border="0" cellspacing="0" cellpadding="0">
+                        <tr>
+                            <th width="1000" align="center" valign="middle" scope="col" style="background:#f9b664; height:45px; line-height:45px; font-size:25px; color:#fff; font-weight:normal;">@singleLocalizeModel.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString()</th>
+                        </tr>
+                        <tr>
+                            <td align="left" valign="top">
+                                <p style="padding:10px; margin:0; font-size:14px; color:#5a5a5a; font-weight:normal; line-height:22px;">
+                                    @item.workOrderModel.Description
+                                </p>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td align="left" valign="top" style="background:#efefef; border-bottom:2px solid #f9b664;">
+                    <table width="1000" border="0" cellspacing="0" cellpadding="0">
+                        <tr>
+                            <td align="left" valign="top">
+                                <p style="padding:10px; margin:0; font-size:14px; color:#5a5a5a; font-weight:normal; line-height:22px;">
+                                    @if (item.workOrderModel.SiteInformation != null)
+                                    {
+                                        @Html.Raw(HttpUtility.HtmlDecode(item.workOrderModel.SiteInformation.Replace("\n", " <br> ")))
+                                    }
+
+                                </p>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td align="left" valign="top" style="border-bottom:2px solid #264a7c;">
+                    <table width="1000" border="0" cellspacing="0" cellpadding="0">
+
+                        <tr>
+                            <td align="left" valign="top" height="10"><img src="../Content/images/space.png" alt="" /></td>
+                        </tr>
+                        <tr>
+                            <td align="left" valign="top">
+                                <table width="1000" border="0" cellspacing="0" cellpadding="0">
+                                    <tr style="background:#264a7c;">
+                                        <th width="130" align="center" valign="middle" height="40" scope="col" style="border-right:1px solid #fff; font-size:16px; color:#fff; line-height:40px; font-weight:normal;"> @singleLocalizeModel.Loc.Where(a => a.ResourceId == "spnDate").FirstOrDefault().Value.ToString()</th>
+                                        <th width="130" align="center" valign="middle" height="40" scope="col" style="border-right:1px solid #fff; font-size:16px; color:#fff; line-height:40px; font-weight:normal;"> @singleLocalizeModel.Loc.Where(a => a.ResourceId == "spnHours").FirstOrDefault().Value.ToString()</th>
+                                        <th width="550" align="left" valign="middle" height="40" scope="col" style="border-right:1px solid #fff; font-size:16px; color:#fff; line-height:40px; font-weight:normal; padding-left:15px;"> @singleLocalizeModel.Loc.Where(a => a.ResourceId == "spnWoEmployeeName").FirstOrDefault().Value.ToString()</th>
+                                    </tr>
+                                    @{ decimal count1 = 1;}
+                                    @for (int i = 0; i < 3; i++)
+                                    {
+                                        count1 = count1 + 1;
+                                        if (count1 % 2 == 0)
+                                        {
+                                            <tr style="background:#e4e4e4; page-break-inside: avoid !important;">
+                                                <td align="center" valign="middle" height="40" style="border-bottom:1px solid #cccccc;border-left:1px solid #cccccc;"></td>
+                                                <td align="center" valign="middle" height="40" style="border-bottom:1px solid #cccccc;border-right:1px solid #cccccc;border-left:1px solid #cccccc;"></td>
+                                                <td align="left" valign="middle" height="40" style="border-bottom:1px solid #cccccc;border-right:1px solid #cccccc; font-size:14px; line-height:22px;"></td>
+                                            </tr>
+                                        }
+                                        else
+                                        {
+                                            <tr style="">
+                                                <td align="center" valign="middle" height="40" style="border-bottom:1px solid #cccccc;border-left:1px solid #cccccc;"></td>
+                                                <td align="center" valign="middle" height="40" style="border-bottom:1px solid #cccccc;border-right:1px solid #cccccc;border-left:1px solid #cccccc;"></td>
+                                                <td align="left" valign="middle" height="40" style="border-bottom:1px solid #cccccc;border-right:1px solid #cccccc; font-size:14px; line-height:22px;"></td>
+                                            </tr>
+                                        }
+                                    }
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+
+
+
+
+
+            <tr>
+                <td align="left" valign="top" height="10"><img src="../Content/images/space.png" alt="" /></td>
+            </tr>
+            <tr>
+                <td align="left" valign="top" style="border-bottom:2px solid #264a7c;">
+                    <table width="1000" border="0" cellspacing="0" cellpadding="0">
+                        <tr>
+                            <th width="988" align="left" valign="middle" scope="col" style=" border-left:2px solid #00d8ff; height:34px; line-height:34px; font-size:20px; color:#222; font-weight:500; padding-left:10px;">@singleLocalizeModel.Loc.Where(a => a.ResourceId == "spnTasks").FirstOrDefault().Value.ToString()</th>
+                        </tr>
+                        <tr>
+                            <td align="left" valign="top" height="10"><img src="../Content/images/space.png" alt="" /></td>
+                        </tr>
+                        <tr>
+                            <td align="left" valign="top">
+                                <table width="1000" border="0" cellspacing="0" cellpadding="0">
+                                    <tr style="background:#264a7c;">
+                                        <th width="90" align="center" valign="middle" height="40" scope="col" style="border-right:1px solid #fff; font-size:16px; color:#fff; line-height:40px; font-weight:normal;">@singleLocalizeModel.Loc.Where(a => a.ResourceId == "spnOrder").FirstOrDefault().Value.ToString()</th>
+                                        <th width="602" align="left" valign="middle" height="40" scope="col" style="border-right:1px solid #fff; font-size:16px; color:#fff; line-height:40px; font-weight:normal; padding-left:15px;">@singleLocalizeModel.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString()</th>
+                                        <th width="160" align="center" valign="middle" height="40" scope="col" style="border-right:1px solid #fff; font-size:16px; color:#fff; line-height:40px; font-weight:normal;">@singleLocalizeModel.Loc.Where(a => a.ResourceId == "spnSchedDuration").FirstOrDefault().Value.ToString()</th>
+                                        <th width="130" align="center" valign="middle" height="40" scope="col" style="font-size:16px; color:#fff; line-height:40px; font-weight:normal;">@singleLocalizeModel.Loc.Where(a => a.ResourceId == "spnGlobalCompleted").FirstOrDefault().Value.ToString()</th>
+                                    </tr>
+                                    @{ decimal count2 = 1;}
+                                    @foreach (var woList in item.WoTaskList)
+                                    {
+                                        count2 = count2 + 1;
+                                        if (count2 % 2 == 0)
+                                        {
+                                            <tr style="background:#e4e4e4; page-break-inside: avoid !important;">
+                                                <td align="center" valign="middle" height="40" style="border-right:1px solid #cccccc; font-size:14px; color:#737272; line-height:40px; font-weight:normal;">@woList.TaskNumber</td>
+                                                <td align="left" valign="middle" height="40" style="border-right:1px solid #cccccc; font-size:14px; color:#737272; line-height:22px; font-weight:normal; padding:5px 0 5px 15px;">@woList.Description</td>
+                                                <td align="center" valign="middle" height="40" style="border-right:1px solid #cccccc; font-size:14px; color:#737272; line-height:40px; font-weight:normal;">@woList.ScheduledDuration</td>
+                                                @if (woList.Status == WorkOrderStatusConstants.Complete)
+                                                {
+                                                    <td align="center" valign="middle" height="40" style="font-size:20px; color:#589600; line-height:40px;"><i class="fa fa-check"></i></td>
+                                                }
+                                                else if (woList.Status == WorkOrderStatusConstants.Canceled)
+                                                {
+                                                    <td align="center" valign="middle" height="40" style="font-size:20px; color:#FF3349; line-height:40px;"><i class="fa fa-times" style="color:red;"></i></td>
+                                                }
+                                                else
+                                                {
+                                                    <td align="center" valign="middle" height="40" style="font-size:20px; color:#589600; line-height:40px;"></td>
+                                                }
+                                            </tr>
+                                        }
+                                        else
+                                        {
+                                            <tr style="page-break-inside: avoid !important;">
+                                                <td align="center" valign="middle" height="40" style="border-right:1px solid #cccccc; font-size:14px; color:#737272; line-height:40px; font-weight:normal;">@woList.TaskNumber</td>
+                                                <td align="left" valign="middle" height="40" style="border-right:1px solid #cccccc; font-size:14px; color:#737272; line-height:22px; font-weight:normal; padding:5px 0 5px 15px;">@woList.Description</td>
+                                                <td align="center" valign="middle" height="40" style="border-right:1px solid #cccccc; font-size:14px; color:#737272; line-height:40px; font-weight:normal;">@woList.ScheduledDuration</td>
+                                                @if (woList.Status == WorkOrderStatusConstants.Complete)
+                                                {
+                                                    <td align="center" valign="middle" height="40" style="font-size:20px; color:#589600; line-height:40px;"><i class="fa fa-check"></i></td>
+                                                }
+                                                else if (woList.Status == WorkOrderStatusConstants.Canceled)
+                                                {
+                                                    <td align="center" valign="middle" height="40" style="font-size:20px; color:#589600; line-height:40px;"><i class="fa fa-times" style="color:red;"></i></td>
+                                                }
+                                                else
+                                                {
+                                                    <td align="center" valign="middle" height="40" style="font-size:20px; color:#589600; line-height:40px;"></td>
+                                                }
+                                            </tr>
+                                        }
+                                    }
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td align="left" valign="top" height="10"><img src="../Content/images/space.png" alt="" /></td>
+            </tr>
+
+            <tr>
+                <td align="left" valign="top" style="border-bottom:2px solid #264a7c;">
+                    <table width="1000" border="0" cellspacing="0" cellpadding="0">
+                        <tr>
+                            <th width="988" align="left" valign="middle" scope="col" style=" border-left:2px solid #00d8ff; height:34px; line-height:34px; font-size:20px; color:#222; font-weight:500; padding-left:10px;">@singleLocalizeModel.Loc.Where(a => a.ResourceId == "spnLabor").FirstOrDefault().Value.ToString()</th>
+                        </tr>
+                        <tr>
+                            <td align="left" valign="top" height="10"><img src="../Content/images/space.png" alt="" /></td>
+                        </tr>
+                        <tr>
+                            <td align="left" valign="top">
+                                <table width="1000" border="0" cellspacing="0" cellpadding="0">
+
+                                    <tr style="background:#264a7c;">
+                                        <th width="235" align="center" valign="middle" height="40" scope="col" style="border-right:1px solid #fff; font-size:16px; color:#fff; line-height:40px; font-weight:normal;">@singleLocalizeModel.Loc.Where(a => a.ResourceId == "spnPersonnelID").FirstOrDefault().Value.ToString()</th>
+                                        <th width="435" align="center" valign="middle" height="40" scope="col" style="border-right:1px solid #fff; font-size:16px; color:#fff; line-height:40px; font-weight:normal;">@singleLocalizeModel.Loc.Where(a => a.ResourceId == "spnName").FirstOrDefault().Value.ToString()</th>
+                                        <th width="328" align="center" valign="middle" height="40" scope="col" style="font-size:16px; color:#fff; line-height:40px; font-weight:normal;">@singleLocalizeModel.Loc.Where(a => a.ResourceId == "spnDate").FirstOrDefault().Value.ToString()</th>
+                                        <th width="228" align="center" valign="middle" height="40" scope="col" style="font-size:16px; color:#fff; line-height:40px; font-weight:normal;">@singleLocalizeModel.Loc.Where(a => a.ResourceId == "spnHours").FirstOrDefault().Value.ToString()</th>
+                                        <th width="228" align="center" valign="middle" height="40" scope="col" style="font-size:16px; color:#fff; line-height:40px; font-weight:normal;">@singleLocalizeModel.Loc.Where(a => a.ResourceId == "spnUnitCost").FirstOrDefault().Value.ToString()</th>
+                                    </tr>
+                                    @{ decimal count3 = 1;}
+                                    @foreach (var woActualLabourlist in item.WoActualLabor)
+                                    {
+
+                                        count3 = count3 + 1;
+                                        if (count3 % 2 == 0)
+                                        {
+                                            <tr style="background:#e4e4e4; page-break-inside: avoid !important;">
+                                                <td align="center" valign="middle" height="40" style="border-right:1px solid #cccccc; font-size:14px; color:#737272; line-height:40px; font-weight:normal;">@woActualLabourlist.PersonnelClientLookupId</td>
+                                                <td align="center" valign="middle" height="40" style="padding-right:3px; border-right:1px solid #cccccc; font-size:14px; color:#737272; line-height:40px; font-weight:normal;">@woActualLabourlist.NameFull</td>
+
+                                                @if (woActualLabourlist.StartDate.HasValue && woActualLabourlist.StartDate.Value != default(DateTime))
+                                                {
+                                                    <td align="center" valign="middle" height="40" style=" border-right:1px solid #cccccc;font-size:14px; color:#737272; line-height:40px; font-weight:normal;">
+                                                        @woActualLabourlist.StartDate.Value.ToString("dd-MM-yyyy", CultureInfo.InvariantCulture)
+                                                    </td>
+                                                }
+                                                else
+                                                {
+                                                    <td align="center" valign="middle" height="40" style="text-align:right; border-right:1px solid #cccccc;font-size:14px; color:#737272; line-height:40px; font-weight:normal;"></td>
+                                                }
+
+                                                <td align="center" valign="middle" height="40" style=" border-right:1px solid #cccccc;font-size:14px; color:#737272; line-height:40px; font-weight:normal;">@woActualLabourlist.Hours</td>
+                                                <td align="center" valign="middle" height="40" style="font-size:14px; color:#737272; line-height:40px; font-weight:normal;">@string.Format("{0:c2}", woActualLabourlist.TCValue)</td>
+                                            </tr>
+                                        }
+                                        else
+                                        {
+                                            <tr style="page-break-inside: avoid !important;">
+                                                <td align="center" valign="middle" height="40" style="border-right:1px solid #cccccc; font-size:14px; color:#737272; line-height:40px; font-weight:normal;">@woActualLabourlist.PersonnelClientLookupId</td>
+                                                <td align="center" valign="middle" height="40" style="padding-right:3px; border-right:1px solid #cccccc; font-size:14px; color:#737272; line-height:40px; font-weight:normal;">@woActualLabourlist.NameFull</td>
+
+                                                @if (woActualLabourlist.StartDate.HasValue && woActualLabourlist.StartDate.Value != default(DateTime))
+                                                {
+                                                    <td align="center" valign="middle" height="40" style=" border-right:1px solid #cccccc;font-size:14px; color:#737272; line-height:40px; font-weight:normal;">
+                                                        @woActualLabourlist.StartDate.Value.ToString("dd-MM-yyyy", CultureInfo.InvariantCulture)
+                                                    </td>
+                                                }
+                                                else
+                                                {
+                                                    <td align="center" valign="middle" height="40" style="text-align:right; border-right:1px solid #cccccc;font-size:14px; color:#737272; line-height:40px; font-weight:normal;"></td>
+                                                }
+
+                                                <td align="center" valign="middle" height="40" style=" border-right:1px solid #cccccc;font-size:14px; color:#737272; line-height:40px; font-weight:normal;">@woActualLabourlist.Hours</td>
+                                                <td align="center" valign="middle" height="40" style="font-size:14px; color:#737272; line-height:40px; font-weight:normal;">@string.Format("{0:c2}", woActualLabourlist.TCValue)</td>
+                                            </tr>
+
+                                        }
+
+                                    }
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+
+            <tr>
+                <td align="left" valign="top" height="10"><img src="../Content/images/space.png" alt="" /></td>
+            </tr>
+
+            <tr>
+                <td align="left" valign="top" style="border-bottom:2px solid #264a7c;">
+                    <table width="1000" border="0" cellspacing="0" cellpadding="0">
+                        <tr>
+                            <th width="988" align="left" valign="middle" scope="col" style=" border-left:2px solid #00d8ff; height:34px; line-height:34px; font-size:20px; color:#222; font-weight:500; padding-left:10px;">@singleLocalizeModel.Loc.Where(a => a.ResourceId == "spnPart").FirstOrDefault().Value.ToString()</th>
+                        </tr>
+                        <tr>
+                            <td align="left" valign="top" height="10"><img src="../Content/images/space.png" alt="" /></td>
+                        </tr>
+                        <tr>
+                            <td align="left" valign="top">
+                                <table width="1000" border="0" cellspacing="0" cellpadding="0">
+                                    <tr style="background:#264a7c;page-break-inside: avoid !important;">
+                                        <th width="90" align="center" valign="middle" height="40" scope="col" style="border-right:1px solid #fff; font-size:16px; color:#fff; line-height:40px; font-weight:normal;">@singleLocalizeModel.Loc.Where(a => a.ResourceId == "spnPart").FirstOrDefault().Value.ToString()</th>
+                                        <th width="370" align="left" valign="middle" height="40" scope="col" style="border-right:1px solid #fff; font-size:16px; color:#fff; line-height:40px; font-weight:normal; padding-left:15px;">@singleLocalizeModel.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString()</th>
+                                        <th width="130" align="center" valign="middle" height="40" scope="col" style="border-right:1px solid #fff; font-size:16px; color:#fff; line-height:40px; font-weight:normal;">@singleLocalizeModel.Loc.Where(a => a.ResourceId == "spnUnitCost").FirstOrDefault().Value.ToString()</th>
+                                        <th width="130" align="center" valign="middle" height="40" scope="col" style="border-right:1px solid #fff; font-size:16px; color:#fff; line-height:40px; font-weight:normal;">@singleLocalizeModel.Loc.Where(a => a.ResourceId == "spnUOM").FirstOrDefault().Value.ToString()</th>
+                                        <th width="130" align="center" valign="middle" height="40" scope="col" style="border-right:1px solid #fff; font-size:16px; color:#fff; line-height:40px; font-weight:normal;">@singleLocalizeModel.Loc.Where(a => a.ResourceId == "spnQuantity").FirstOrDefault().Value.ToString()</th>
+                                        <th width="130" align="center" valign="middle" height="40" scope="col" style="font-size:16px; color:#fff; line-height:40px; font-weight:normal;">@singleLocalizeModel.Loc.Where(a => a.ResourceId == "spnTotalCost").FirstOrDefault().Value.ToString()</th>
+                                    </tr>
+                                    @{ decimal count4 = 1;}
+                                    @foreach (var WoPartlist in item.WoPart)
+                                    {
+                                        count4 = count4 + 1;
+                                        if (count4 % 2 == 0)
+                                        {
+                                            <tr style="background:#e4e4e4;page-break-inside: avoid !important;">
+                                                <td align="center" valign="middle" height="40" style="border-right:1px solid #cccccc; font-size:14px; color:#737272; line-height:40px; font-weight:normal;">@WoPartlist.PartClientLookupId</td>
+                                                <td align="left" valign="middle" height="40" style="border-right:1px solid #cccccc; font-size:14px; color:#737272; line-height:22px; font-weight:normal; padding:5px 0 5px 15px;">@WoPartlist.Description</td>
+                                                <td align="center" valign="middle" height="40" style="border-right:1px solid #cccccc; font-size:14px; color:#737272; line-height:40px; font-weight:normal;">@string.Format("{0:c2}", WoPartlist.Cost)</td>
+                                                <td align="center" valign="middle" height="40" style="border-right:1px solid #cccccc; font-size:14px; color:#737272; line-height:40px; font-weight:normal;">@WoPartlist.UnitofMeasure</td>
+                                                <td align="center" valign="middle" height="40" style="border-right:1px solid #cccccc; font-size:14px; color:#737272; line-height:40px; font-weight:normal;">@WoPartlist.TransactionQuantity</td>
+                                                <td align="center" valign="middle" height="40" style="font-size:14px; color:#737272; line-height:40px;">@string.Format("{0:c2}", WoPartlist.TotalCost)</td>
+                                            </tr>
+                                        }
+                                        else
+                                        {
+                                            <tr style="page-break-inside: avoid !important;">
+                                                <td align="center" valign="middle" height="40" style="border-right:1px solid #cccccc; font-size:14px; color:#737272; line-height:40px; font-weight:normal;">@WoPartlist.PartClientLookupId</td>
+                                                <td align="left" valign="middle" height="40" style="border-right:1px solid #cccccc; font-size:14px; color:#737272; line-height:22px; font-weight:normal; padding:5px 0 5px 15px;">@WoPartlist.Description</td>
+                                                <td align="center" valign="middle" height="40" style="border-right:1px solid #cccccc; font-size:14px; color:#737272; line-height:40px; font-weight:normal;">@string.Format("{0:c2}", WoPartlist.Cost)</td>
+                                                <td align="center" valign="middle" height="40" style="border-right:1px solid #cccccc; font-size:14px; color:#737272; line-height:40px; font-weight:normal;">@WoPartlist.UnitofMeasure</td>
+                                                <td align="center" valign="middle" height="40" style="border-right:1px solid #cccccc; font-size:14px; color:#737272; line-height:40px; font-weight:normal;">@WoPartlist.TransactionQuantity</td>
+                                                <td align="center" valign="middle" height="40" style="font-size:14px; color:#737272; line-height:40px;">@string.Format("{0:c2}", WoPartlist.TotalCost)</td>
+                                            </tr>
+
+                                        }
+
+                                    }
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+
+            <tr>
+                <td align="left" valign="top" height="10"><img src="../Content/images/space.png" alt="" /></td>
+            </tr>
+
+            <tr>
+                <td align="left" valign="top" style="border-bottom:2px solid #264a7c;">
+                    <table width="1000" border="0" cellspacing="0" cellpadding="0">
+                        <tr>
+                            <th width="988" align="left" valign="middle" scope="col" style=" border-left:2px solid #00d8ff; height:34px; line-height:34px; font-size:20px; color:#222; font-weight:500; padding-left:10px;">@singleLocalizeModel.Loc.Where(a => a.ResourceId == "spnOthers").FirstOrDefault().Value.ToString()</th>
+                        </tr>
+                        <tr>
+                            <td align="left" valign="top" height="10"><img src="../Content/images/space.png" alt="" /></td>
+                        </tr>
+                        <tr>
+                            <td align="left" valign="top">
+                                <table width="1000" border="0" cellspacing="0" cellpadding="0">
+                                    <tr style="background:#264a7c;">
+                                        <th width="90" align="center" valign="middle" height="40" scope="col" style="border-right:1px solid #fff; font-size:16px; color:#fff; line-height:40px; font-weight:normal;">@singleLocalizeModel.Loc.Where(a => a.ResourceId == "spnSource").FirstOrDefault().Value.ToString()</th>
+                                        <th width="370" align="left" valign="middle" height="40" scope="col" style="border-right:1px solid #fff; font-size:16px; color:#fff; line-height:40px; font-weight:normal; padding-left:15px;">@singleLocalizeModel.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString()</th>
+                                        <th width="130" align="center" valign="middle" height="40" scope="col" style="border-right:1px solid #fff; font-size:16px; color:#fff; line-height:40px; font-weight:normal;">@singleLocalizeModel.Loc.Where(a => a.ResourceId == "spnVendor").FirstOrDefault().Value.ToString()</th>
+                                        <th width="130" align="center" valign="middle" height="40" scope="col" style="border-right:1px solid #fff; font-size:16px; color:#fff; line-height:40px; font-weight:normal;">@singleLocalizeModel.Loc.Where(a => a.ResourceId == "spnUnitCost").FirstOrDefault().Value.ToString()</th>
+                                        <th width="130" align="center" valign="middle" height="40" scope="col" style="border-right:1px solid #fff; font-size:16px; color:#fff; line-height:40px; font-weight:normal;">@singleLocalizeModel.Loc.Where(a => a.ResourceId == "spnQuantity").FirstOrDefault().Value.ToString()</th>
+                                        <th width="130" align="center" valign="middle" height="40" scope="col" style="font-size:16px; color:#fff; line-height:40px; font-weight:normal;">@singleLocalizeModel.Loc.Where(a => a.ResourceId == "spnTotalCost").FirstOrDefault().Value.ToString()</th>
+                                    </tr>
+                                    @{ decimal count5 = 1;}
+                                    @foreach (var WOOtherslist in item.WOOthers)
+                                    {
+                                        count4 = count5 + 1;
+                                        if (count5 % 2 == 0)
+                                        {
+                                            <tr style="background:#e4e4e4;page-break-inside: avoid !important;">
+                                                <td align="center" valign="middle" height="40" style="border-right:1px solid #cccccc; font-size:14px; color:#737272; line-height:40px; font-weight:normal;">@WOOtherslist.Source</td>
+                                                <td align="left" valign="middle" height="40" style="border-right:1px solid #cccccc; font-size:14px; color:#737272; line-height:22px; font-weight:normal; padding:5px 0 5px 15px;">@WOOtherslist.Description</td>
+                                                <td align="center" valign="middle" height="40" style="border-right:1px solid #cccccc; font-size:14px; color:#737272; line-height:40px; font-weight:normal;">@WOOtherslist.VendorClientLookupId</td>
+                                                <td align="center" valign="middle" height="40" style="border-right:1px solid #cccccc; font-size:14px; color:#737272; line-height:40px; font-weight:normal;">@string.Format("{0:c2}", WOOtherslist.UnitCost)</td>
+                                                <td align="center" valign="middle" height="40" style="border-right:1px solid #cccccc; font-size:14px; color:#737272; line-height:40px; font-weight:normal;">@WOOtherslist.Quantity</td>
+                                                <td align="center" valign="middle" height="40" style="font-size:14px; color:#737272; line-height:40px;">@string.Format("{0:c2}", WOOtherslist.TotalCost)</td>
+                                            </tr>
+                                        }
+                                        else
+                                        {
+                                            <tr style="page-break-inside: avoid !important;">
+                                                <td align="center" valign="middle" height="40" style="border-right:1px solid #cccccc; font-size:14px; color:#737272; line-height:40px; font-weight:normal;">@WOOtherslist.Source</td>
+                                                <td align="left" valign="middle" height="40" style="border-right:1px solid #cccccc; font-size:14px; color:#737272; line-height:22px; font-weight:normal; padding:5px 0 5px 15px;">@WOOtherslist.Description</td>
+                                                <td align="center" valign="middle" height="40" style="border-right:1px solid #cccccc; font-size:14px; color:#737272; line-height:40px; font-weight:normal;">@WOOtherslist.VendorClientLookupId</td>
+                                                <td align="center" valign="middle" height="40" style="border-right:1px solid #cccccc; font-size:14px; color:#737272; line-height:40px; font-weight:normal;">@string.Format("{0:c2}", WOOtherslist.UnitCost)</td>
+                                                <td align="center" valign="middle" height="40" style="border-right:1px solid #cccccc; font-size:14px; color:#737272; line-height:40px; font-weight:normal;">@WOOtherslist.Quantity</td>
+                                                <td align="center" valign="middle" height="40" style="font-size:14px; color:#737272; line-height:40px;">@string.Format("{0:c2}", WOOtherslist.TotalCost)</td>
+                                            </tr>
+
+                                        }
+
+                                    }
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+
+            <tr>
+                <td align="left" valign="top" height="10"><img src="../Content/images/space.png" alt="" /></td>
+            </tr>
+
+            <tr>
+                <td align="left" valign="top" style="border-bottom:2px solid #264a7c;">
+                    <table width="1000" border="0" cellspacing="0" cellpadding="0">
+                        <tr>
+                            <th width="988" align="left" valign="middle" scope="col" style=" border-left:2px solid #00d8ff; height:34px; line-height:34px; font-size:20px; color:#222; font-weight:500; padding-left:10px;">@singleLocalizeModel.Loc.Where(a => a.ResourceId == "spnSummary").FirstOrDefault().Value.ToString()</th>
+                        </tr>
+                        <tr>
+                            <td align="left" valign="top" height="10"><img src="../Content/images/space.png" alt="" /></td>
+                        </tr>
+                        <tr>
+                            <td align="left" valign="top">
+                                <table width="1000" border="0" cellspacing="0" cellpadding="0">
+                                    <tr style="background:#264a7c;">
+                                        <th width="90" align="center" valign="middle" height="40" scope="col" style="border-right:1px solid #fff; font-size:16px; color:#fff; line-height:40px; font-weight:normal;">@singleLocalizeModel.Loc.Where(a => a.ResourceId == "spnPartsCosts").FirstOrDefault().Value.ToString()</th>
+                                        <th width="130" align="center" valign="middle" height="40" scope="col" style="border-right:1px solid #fff; font-size:16px; color:#fff; line-height:40px; font-weight:normal;">@singleLocalizeModel.Loc.Where(a => a.ResourceId == "spnCraftCosts").FirstOrDefault().Value.ToString()</th>
+                                        <th width="130" align="center" valign="middle" height="40" scope="col" style="border-right:1px solid #fff; font-size:16px; color:#fff; line-height:40px; font-weight:normal;">@singleLocalizeModel.Loc.Where(a => a.ResourceId == "spnOtherExternalCosts").FirstOrDefault().Value.ToString()</th>
+                                        <th width="130" align="center" valign="middle" height="40" scope="col" style="border-right:1px solid #fff; font-size:16px; color:#fff; line-height:40px; font-weight:normal;">@singleLocalizeModel.Loc.Where(a => a.ResourceId == "spnOtherInternalCosts").FirstOrDefault().Value.ToString()</th>
+                                        <th width="130" align="center" valign="middle" height="40" scope="col" style="font-size:16px; color:#fff; line-height:40px; font-weight:normal;">@singleLocalizeModel.Loc.Where(a => a.ResourceId == "spnTotalCost").FirstOrDefault().Value.ToString()</th>
+                                    </tr>
+                                    @{ decimal count6 = 1;}
+                                    @foreach (var WOSummarylist in item.WOSummary)
+                                    {
+                                        count6 = count6 + 1;
+                                        if (count6 % 2 == 0)
+                                        {
+                                            <tr style="background:#e4e4e4;page-break-inside: avoid !important;">
+                                                <td align="center" valign="middle" height="40" style="border-right:1px solid #cccccc; font-size:14px; color:#737272; line-height:40px; font-weight:normal;">@string.Format("{0:c2}", @WOSummarylist.TotalPartCost)</td>
+                                                <td align="center" valign="middle" height="40" style="border-right:1px solid #cccccc; font-size:14px; color:#737272; line-height:40px; font-weight:normal;">@string.Format("{0:c2}", @WOSummarylist.TotalCraftCost)</td>
+                                                <td align="center" valign="middle" height="40" style="border-right:1px solid #cccccc; font-size:14px; color:#737272; line-height:40px; font-weight:normal;">@string.Format("{0:c2}", @WOSummarylist.TotalExternalCost)</td>
+                                                <td align="center" valign="middle" height="40" style="border-right:1px solid #cccccc; font-size:14px; color:#737272; line-height:40px; font-weight:normal;">@string.Format("{0:c2}", @WOSummarylist.TotalInternalCost)</td>
+                                                <td align="center" valign="middle" height="40" style="font-size:14px; color:#737272; line-height:40px;">@string.Format("{0:c2}", @WOSummarylist.TotalSummeryCost)</td>
+                                            </tr>
+                                        }
+                                        else
+                                        {
+                                            <tr style="page-break-inside: avoid !important;">
+                                                <td align="center" valign="middle" height="40" style="border-right:1px solid #cccccc; font-size:14px; color:#737272; line-height:40px; font-weight:normal;">@string.Format("{0:c2}", @WOSummarylist.TotalPartCost)</td>
+                                                <td align="center" valign="middle" height="40" style="border-right:1px solid #cccccc; font-size:14px; color:#737272; line-height:40px; font-weight:normal;">@string.Format("{0:c2}", @WOSummarylist.TotalCraftCost)</td>
+                                                <td align="center" valign="middle" height="40" style="border-right:1px solid #cccccc; font-size:14px; color:#737272; line-height:40px; font-weight:normal;">@string.Format("{0:c2}", @WOSummarylist.TotalExternalCost)</td>
+                                                <td align="center" valign="middle" height="40" style="border-right:1px solid #cccccc; font-size:14px; color:#737272; line-height:40px; font-weight:normal;">@string.Format("{0:c2}", @WOSummarylist.TotalInternalCost)</td>
+                                                <td align="center" valign="middle" height="40" style="font-size:14px; color:#737272; line-height:40px;">@string.Format("{0:c2}", @WOSummarylist.TotalSummeryCost)</td>
+                                            </tr>
+                                        }
+                                    }
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            @if (!string.IsNullOrEmpty(item.workOrderModel.CompleteComments.ToString()) && item.workOrderModel.Status == WorkOrderStatusConstants.Complete)
+            {
+                <tr>
+                    <td align="left" valign="top" height="10"><img src="../Content/images/space.png" alt="" /></td>
+                </tr>
+
+                <tr>
+                    <td align="left" valign="top" style="">
+                        <table width="1000" border="0" cellspacing="0" cellpadding="0">
+
+                            <tr>
+                                <td align="left" valign="top">
+                                    <table width="1000" border="0" cellspacing="0" cellpadding="0">
+                                        <tr>
+                                            <td align="left" valign="middle" height="40" style="background:#e4e4e4; border:1px solid #264a7c;">
+                                                <a style="padding:0; margin-left:5px; font-size:15px; color:#222222; font-weight:500;">
+                                                    @singleLocalizeModel.Loc.Where(a => a.ResourceId == "spnCompleteComments").FirstOrDefault().Value.ToString() :
+                                                </a>
+                                                @item.workOrderModel.CompleteComments
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            }
+            @if (item.workOrderModel.IsFoodSafetyShow)
+            {
+                <tr>
+                    <td align="left" valign="top" height="10"><img src="../Content/images/space.png" alt="" /></td>
+                </tr>
+
+                <tr>
+                    <td align="left" valign="top" style="">
+                        <table width="1000" border="0" cellspacing="0" cellpadding="0">
+
+                            <tr>
+                                <td align="left" valign="top">
+                                    <table width="1000" border="0" cellspacing="0" cellpadding="5">
+
+                                        <tr>
+
+                                            <td align="left" valign="middle" height="40" style="background:#e4e4e4; border:1px solid #264a7c;">
+                                                <a style="padding:0; margin-left:5px; margin-top:10px; font-size:15px; color:#222222; font-weight:500;">
+
+                                                    @singleLocalizeModel.Loc.Where(a => a.ResourceId == "spnFoodSafety_1").FirstOrDefault().Value.ToString()<br />
+                                                    @singleLocalizeModel.Loc.Where(a => a.ResourceId == "spnFoodSafety_2").FirstOrDefault().Value.ToString()<br />
+                                                    @singleLocalizeModel.Loc.Where(a => a.ResourceId == "spnFoodSafety_3").FirstOrDefault().Value.ToString()<br />
+                                                    @singleLocalizeModel.Loc.Where(a => a.ResourceId == "spnFoodSafety_4").FirstOrDefault().Value.ToString()<br />
+                                                    @singleLocalizeModel.Loc.Where(a => a.ResourceId == "spnFoodSafety_5").FirstOrDefault().Value.ToString()<br />
+
+                                                </a>
+                                                <br />
+                                                <a style="padding:0; margin-left:5px; font-size:15px; color:#222222; font-weight:500;">
+                                                    @singleLocalizeModel.Loc.Where(a => a.ResourceId == "spnSignoffBy").FirstOrDefault().Value.ToString() -
+                                                </a>
+                                                @item.workOrderModel.SignoffBy_PersonnelClientLookupId (@item.workOrderModel.SignoffBy_PersonnelClientLookupIdSecond)
+                                                <a style="padding:0; margin-left:5px; font-size:15px; color:#222222; font-weight:500;">
+                                                    @singleLocalizeModel.Loc.Where(a => a.ResourceId == "spnOn").FirstOrDefault().Value.ToString() -
+                                                </a>
+                                                @item.workOrderModel.CompleteDate.Value.ToString("dd-MM-yyyy", CultureInfo.InvariantCulture)
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            }
+
+            @if (item.workOrderModel.CompleteBy_PersonnelId > 0)
+            {
+                <tr>
+                    <td align="left" valign="top" height="10"><img src="../Content/images/space.png" alt="" /></td>
+                </tr>
+                <tr>
+                    <td align="left" valign="top" style="">
+                        <table width="1000" border="0" cellspacing="0" cellpadding="0">
+
+                            <tr>
+                                <td align="left" valign="top">
+                                    <table width="1000" border="0" cellspacing="0" cellpadding="0">
+                                        <tr>
+                                            <td width="130" align="left" valign="middle" height="40" style="background:#e4e4e4; border-left:1px solid #264a7c;border-top:1px solid #264a7c;border-bottom:1px solid #264a7c;">
+                                                <a style="padding:0; margin-left:5px; font-size:15px; color:#222222; font-weight:500;">
+                                                    @singleLocalizeModel.Loc.Where(a => a.ResourceId == "spnGlobalCompleted").FirstOrDefault().Value.ToString() :
+
+                                                </a>
+                                                @item.workOrderModel.CompleteDate.Value.ToString("dd-MM-yyyy", CultureInfo.InvariantCulture)
+                                            </td>
+                                            <td width="130" align="left" valign="middle" height="40" style="background:#e4e4e4; border-left:1px solid #264a7c; border-right:1px solid #264a7c;border-top:1px solid #264a7c;border-bottom:1px solid #264a7c;">
+                                                <a style="padding:0; margin-left:5px; font-size:15px; color:#222222; font-weight:500;">
+                                                    @singleLocalizeModel.Loc.Where(a => a.ResourceId == "spnSignature").FirstOrDefault().Value.ToString() :
+                                                </a>
+                                                @item.workOrderModel.CompleteBy_PersonnelClientLookupId (@item.workOrderModel.CompleteBy)
+
+                                            </td>
+                                        </tr>
+
+                                    </table>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            }
+        </table>
+    </body>
+}
+</html>
+<style type="text/css">
+    thead { display: table-header-group }
+    tfoot { display: table-footer-group }
+    .test { page-break-after: always !important; background-color: red !important; }
+</style>

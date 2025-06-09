@@ -1,0 +1,407 @@
+﻿@model Client.Models.Sanitation.SanitationVM
+@{
+    var AttachedModelName = "AddWorkRequest";
+    var fieldName = "";
+    var fieldId = "";
+    var EmptyLookupList = new List<SelectListItem> { new SelectListItem { } };
+    const string constAsset = "Asset";
+    const string constAccount = "Account";
+    const string constPlanner = "Planner";
+}
+
+<div id="AddWorkRequestModalDialog" class="dropdown-modal modal fade" role="dialog">
+    <div class="modal-dialog modal-info">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                @Model.Loc.Where(a => a.ResourceId == "spnWorkRequest").FirstOrDefault().Value.ToString()
+            </div>
+            @Html.Partial("_ErrorDiv")
+            <div class="modal-body">
+                <div class="form-group" style="margin-bottom:0;">
+                    <div class="bottomBlock">
+                        <div class="tabsArea nobg">
+                            @using (Ajax.BeginForm("SaveWorkRequestDynamic", "SanitationJob", new AjaxOptions { HttpMethod = "Post", OnSuccess = "WorkRequestDynamicAddOnSuccess", OnBegin = "AjaxBeginFormBegin", OnComplete = "AjaxBeginFormComplete", OnFailure = "AjaxBeginFormFaillure" }))
+                            {
+                                @Html.HiddenFor(m => m.SanitationJobId)
+                                @Html.AntiForgeryToken()
+                                <div class="tabsArea nobg" id="RequestCharge" style="display:block;">
+                                    <ul class="listView nobrd list-module">
+                                        @foreach (var data in Model.UIConfigurationDetails)
+                                        {
+                                            if (data.Section == true)
+                                            {
+                                                <li>
+                                                    <span class="label"><strong>@data.SectionName</strong></span>
+                                                </li>
+                                                continue;
+                                            }
+                                            if (string.IsNullOrEmpty(data.ColumnName))
+                                            {
+                                                continue;
+                                            }
+                                            else if (!string.IsNullOrEmpty(data.ColumnName))
+                                            {
+                                                string colName = UtilityFunction.ReturnPropertyNameWithoutCaseComparison(data.ColumnName, Model.AddWorkRequest);
+                                                if (string.IsNullOrEmpty(colName))
+                                                {
+                                                    continue;
+                                                }
+                                                data.ColumnName = colName;
+                                            }
+                                            fieldName = AttachedModelName + "." + data.ColumnName;
+                                            fieldId = data.ColumnName;
+
+                                            if (data.SystemRequired == true)
+                                            {
+                                                data.Required = true;
+                                            }
+                                            if (data.LookupType.ToLower() == DataDictionaryLookupTypeConstant.LookupList.ToLower() &&
+!string.IsNullOrEmpty(data.LookupName))
+                                            {
+                                                var LookUpList = Model.AllRequiredLookUplist
+                         .Where(x => x.lookupname == data.LookupName)
+                         .Select(x => new SelectListItem { Text = x.text, Value = x.value })
+                         .ToList();
+                                    <li>
+                                        @CustomHelperDynamic.GetLabel(data.ColumnLabel, data.Required)
+                                        <span class="inputText">
+                                            @Html.ValidationMessage(fieldName, new { style = "display:none" })
+                                            @if (LookUpList != null && LookUpList.Count() > 0)
+                                            {
+                                                @Html.DropDownList(fieldName, LookUpList, "--Select--", new
+                                           {
+                                               id = fieldId,
+                                               @class = "form-control search select2picker",
+                                               style = "width:100%;"
+                                           })
+                                            }
+                                            else
+                                            {
+                                                @Html.DropDownList(fieldName, EmptyLookupList, "--Select--", new
+                                           {
+                                               id = fieldId,
+                                               @class = "form-control search select2picker",
+                                               style = "width:100%;"
+                                           })
+                                            }
+                                        </span>
+                                    </li>
+
+                                }
+
+                                else if (data.LookupType == DataDictionaryLookupTypeConstant.Table && data.LookupName.ToLower() == constAsset.ToLower() &&
+                                            (data.ColumnName == "ChargeToId"))
+                                {
+                                    <li class="tree-option">
+                                        @CustomHelperDynamic.GetLabel(data.ColumnLabel, data.Required)
+                                        @{
+                                            string TextFieldName = "", TextFieldId = "";
+                                            TextFieldId = "ChargeToClientLookupId";
+                                            TextFieldName = AttachedModelName + "." + TextFieldId;
+
+                                        }
+                                        <span class="inputText">
+                                            <div class="dropdown dropTableOuter">
+                                                @Html.ValidationMessage(fieldName, new { style = "display:none" })
+
+                                                @Html.TextBox(TextFieldName, Model.AddWorkRequest.ChargeToClientLookupId, new
+                                                {
+                                                    id = TextFieldId,
+                                                    @class = "form-control search dropbtn readonly",
+                                                    @readonly = "readonly",
+                                                    @autocomplete = "off",
+                                                    @style = "display:block;"
+                                                })
+                                                @Html.TextBox(fieldName, Model.AddWorkRequest.ChargeToId, new
+                                                {
+                                                    id = fieldId,
+                                                    @class = "form-control search dropbtn readonly",
+                                                    @readonly = "readonly",
+                                                    @autocomplete = "off",
+                                                    @style = "display:none;"
+                                                })
+                                            </div>
+                                        </span>
+                                        <div style="clear:both;"></div>
+                                    </li>
+                                }
+                                else if (data.LookupType == DataDictionaryLookupTypeConstant.Table && data.LookupName.ToLower() == constPlanner.ToLower() &&
+(data.ColumnName == "Planner_PersonnelId"))
+                                {
+
+                                    <li>
+                                        @CustomHelperDynamic.GetLabel(data.ColumnLabel, data.Required)
+                                        @{
+                                            string TextFieldName = "", TextFieldId = "";
+                                            TextFieldId = "PlannerClientLookupId";
+                                            TextFieldName = AttachedModelName + "." + TextFieldId;
+
+                                        }
+                                        <span class="inputText">
+                                            <div class="dropdown dropTableOuter">
+                                                <div class="input-group">
+                                                    @Html.ValidationMessage(fieldName, new { style = "display:none" })
+
+                                                    @Html.TextBox(fieldName, "", new
+                                               {
+                                                   id = fieldId,
+                                                   @class = "form-control search dropbtn readonly",
+                                                   @readonly = "readonly",
+                                                   autocomplete = "off"
+                                               })
+
+                                                    @Html.TextBox(TextFieldName, "", new
+                                               {
+                                                   id = TextFieldId,
+                                                   @class = "form-control search dropbtn readonly",
+                                                   @readonly = "readonly",
+                                                   autocomplete = "off",
+                                                   @style = "display:none"
+                                               })
+
+                                                    <div class="input-group-btn">
+                                                        <button class="btn btn-white btntxtInputGroup ClearPlannerPersonnelModalPopupGridData" type="button" data-textfield="@TextFieldId"
+                                                                data-valuefield="@fieldId" style="display:none">
+                                                            <i id="srcicon" class="fa fa-close"></i>
+                                                        </button>
+                                                    </div>
+                                                    <div class="input-group-btn">
+                                                        <button class="btn btn-white btntxtInputGroup OpenPlannerPersonnelModalPopupGrid" type="button" data-textfield="@TextFieldId"
+                                                                data-valuefield="@fieldId">
+                                                            <i id="srcicon" class="fa fa-search"></i>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </span>
+                                    </li>
+                                }
+                                else if (data.LookupType == DataDictionaryLookupTypeConstant.Table && data.LookupName.ToLower() == constAccount.ToLower())
+                                {
+
+                                    <li>
+                                        @CustomHelperDynamic.GetLabel(data.ColumnLabel, data.Required)
+
+                                        @{
+                                            string TextFieldName = "", TextFieldId = "";
+                                            TextFieldId = "AccountClientLookupId";
+                                            TextFieldName = AttachedModelName + "." + TextFieldId;
+
+                                        }
+                                        <span class="inputText">
+                                            <div class="dropdown dropTableOuter">
+                                                <div class="input-group">
+                                                    @Html.ValidationMessage(fieldName, new { style = "display:none" })
+
+                                                    @Html.TextBox(fieldName, "", new
+                                                      {
+                                                         id = fieldId,
+                                                         @class = "form-control search dropbtn readonly",
+                                                         @readonly = "readonly",
+                                                         autocomplete = "off"
+                                                      })
+
+                                                    @Html.TextBox(TextFieldName, "", new
+                                                       {
+                                                          id = TextFieldId,
+                                                          @class = "form-control search dropbtn readonly",
+                                                          @readonly = "readonly",
+                                                          autocomplete = "off",
+                                                          @style = "display:none"
+                                                       })
+                                                    <div class="input-group-btn">
+                                                        <button class="btn btn-white btntxtInputGroup ClearAccountModalPopupGridData" type="button" data-textfield="@TextFieldId"
+                                                                data-valuefield="@fieldId" style="display:none">
+                                                            <i id="srcicon" class="fa fa-close"></i>
+                                                        </button>
+                                                    </div>
+                                                    <div class="input-group-btn">
+                                                        <button class="btn btn-white btntxtInputGroup OpenAccountModalPopupGrid" type="button" data-textfield="@TextFieldId"
+                                                                data-valuefield="@fieldId">
+                                                            <i id="srcicon" class="fa fa-search"></i>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </span>
+
+                                    </li>
+                                }
+                                else
+                                {
+                                    <li>
+                                        @CustomHelperDynamic.GetLabel(data.ColumnLabel, data.Required)
+                                        <span class="inputText">
+                                            @Html.ValidationMessage(fieldName, new { style = "display:none" })
+                                            @Html.UIConfigControl(fieldName, fieldId, data.ColumnType.ToLower(), data.MaxLength, data.ViewOnly)
+                                            @CustomHelperDynamic.GetCountMessageLabel(data.MaxLength, data.ViewOnly, "")
+                                        </span>
+                                    </li>
+                                }
+
+                            }
+                                    </ul>
+                                </div>
+
+                                <div class="idBttns">
+                                    <div class="bttn_pagin">
+                                        <div class="bttns2">
+                                            <button type="submit" class="btn btn-blue mobBttn" name="Command" value="save"><i class="fa fa-save faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+                                        </div>
+
+                                        <div class="bttns"><button type="button" class="btn btn-blue mobBttn" id="btnCancelAddWorkRequest"><i class="fa fa-close faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button></div>
+                                        <div style="clear:both;"></div>
+                                    </div>
+                                </div>
+                            }
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@Html.Partial("~/Views/Shared/QR/_QrCodeReaderModal.cshtml")
+@Html.Partial("~/Views/Shared/LookupTypeTablePopup/_AssetPoopupLookup.cshtml")
+@Html.Partial("~/Views/Shared/LookupTypeTablePopup/_AccountPopupLookup.cshtml")
+@Html.Partial("~/Views/Shared/LookupTypeTablePopup/_PersonnelPopupLookup.cshtml")
+@if (Model._userdata.DatabaseKey.Client.AssetTree == true)
+{
+    <div id="wrEquipTreeModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title" id="hdrPlantLocation">@Model.Loc.Where(a => a.ResourceId == "spnGlobalEquipmentTreeLookup").FirstOrDefault().Value.ToString()</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="cntTreeWR">
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+}
+@Html.HiddenFor(m => m._userdata.Site.SourceAssetAccount, new { id = "SourceAssetAccount" })
+
+
+<link href="~/Scripts/Metronic/assets/demo/default/base/style_newCustom.css" rel="stylesheet" />
+<style type="text/css">
+    .filterDescription {
+        width: auto;
+        float: left;
+        font-size: 1.2rem;
+        color: #000;
+        font-weight: 500;
+        line-height: 33px;
+    }
+
+        .filterDescription a {
+            color: #36a3f7;
+            text-decoration: none !important;
+        }
+
+    .list-module li {
+        width: 100% !important;
+    }
+
+        .list-module li .mobBttn {
+            margin-top: 0px !important;
+            margin-bottom: 0 !important;
+            width: 40px;
+        }
+
+        .list-module li span.wthAdjst {
+            width: calc(100% - 225px) !important;
+        }
+
+    .list-module .input-group {
+        align-items: center !important;
+    }
+
+        .list-module .input-group.work-order-tree {
+            width: 100% !important;
+            margin: 0px !important;
+        }
+
+    .list-module .chargeTree {
+        position: relative !important;
+        left: auto !important;
+        top: 7px !important;
+        right: auto !important;
+    }
+
+    .list-module .treebox {
+        width: 37px;
+        height: 33px;
+        text-align: center;
+    }
+
+    .openMenu .chargeTree.TreeAdjustNew {
+        right: auto !important;
+    }
+
+    ul.listView.list-module li span.label {
+        width: 225px !important;
+    }
+
+    #AddWorkRequestModalDialog1 .modal-body {
+        overflow-x: hidden;
+        overflow-y: auto;
+    }
+
+    @@media only screen and (min-width: 1024px) and (max-width: 1199px) {
+        #AddWorkRequestModalDialog1 ul.listView li span.inputText {
+            width: calc(100% - 200px);
+        }
+    }
+
+    .modal-content {
+        max-width: auto !important;
+    }
+
+    .modal-dialog {
+        max-width: 850px !important;
+    }
+
+        .modal-dialog.modal-info {
+            max-width: 550px !important;
+        }
+
+    @@media(max-width: 767px) {
+        .tree-option .treebox {
+            border: 0px;
+            margin-bottom: 5px;
+            margin-top: 5px;
+        }
+
+        .tree-option .btntxtInputGroup {
+            margin-top: -1px !important;
+            position: relative !important;
+        }
+
+        .qr-mr-btn {
+            margin-top: 16px;
+        }
+
+        .cross-adj {
+            padding-top: 1px;
+        }
+    }
+
+    .modal-body {
+        max-height: 600px;
+        overflow-y: auto !important;
+    }
+
+    .modal {
+        overflow-x: hidden !important;
+        overflow-Y: auto !important;
+    }
+</style>

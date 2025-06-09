@@ -1,0 +1,166 @@
+﻿@model Client.Models.MultiStoreroomPart.MultiStoreroomPartVM
+@{
+    /**/
+
+    var AttachedModelName = "AddPart";
+    var fieldName = "";
+    var fieldId = "";
+    var EmptyLookupList = new List<SelectListItem> { new SelectListItem { } };
+
+    //string[] AccountColumns = { "material_accountid", "labor_accountid" };
+    //string[] VendorColumns = { "maint_vendorid", "purch_vendorid" };
+}
+<div class="m-subheader">
+    <div class="new-m-subheader">
+        <div class="PageTitle">
+            <div class="align-items-center separator">
+                <h3 class="m-subheader__title ">
+                    @Model.Loc.Where(a => a.ResourceId == "spnParts").FirstOrDefault().Value.ToString()
+                </h3>
+            </div>
+        </div>
+
+        <div class="NewBreadcrumbArea">
+            <div class="newBreadcrumb">
+                <ul>
+                    <li><a href="/Dashboard/Dashboard">&nbsp;</a></li>
+                    <li><a href="/MultiStoreroomPart/Index?page=Inventory_MultiStoreroom_Part">@Model.Loc.Where(a => a.ResourceId == "spnPartSearch").FirstOrDefault().Value.ToString()</a></li>
+                    <li class="active">@Model.Loc.Where(a => a.ResourceId == "spnAddPart").FirstOrDefault().Value.ToString()</li>
+                </ul>
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+        <div style="clear:both;"></div>
+    </div>
+</div>
+@Html.Partial("_ErrorDiv")
+
+@using (Ajax.BeginForm("AddPartsDynamic", "MultiStoreroomPart", new AjaxOptions { HttpMethod = "Post", OnSuccess = "PartsAddOnSuccess", OnBegin = "AjaxBeginFormBegin", OnComplete = "AjaxBeginFormComplete", OnFailure = "AjaxBeginFormFaillure" }))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="row">
+
+        <div class="col-xl-12">
+            <div class="row">
+                <div class="col-xl-12" id="btnnblock">
+                    <div class="m-portlet" id="m_portlet" style="padding:15px;">
+                        <div class="bottomBlock">
+                            <div class="tabsArea nobg" id="Identifications" style="display:block;">
+                                <ul class="listView nobrd">
+                                    @foreach (var data in Model.UIConfigurationDetails)
+                                    {
+                                        if (data.Section == true)
+                                        {
+                                            <li>
+                                                <span class="label"><strong>@data.SectionName</strong></span>
+                                            </li>
+                                            continue;
+                                        }
+                                        if (string.IsNullOrEmpty(data.ColumnName))
+                                        {
+                                            continue;
+                                        }
+                                        else if (!string.IsNullOrEmpty(data.ColumnName))
+                                        {
+                                            if (Model.AddPart.GetType().GetProperty(data.ColumnName) == null)
+                                            {
+                                                continue;
+                                            }
+                                        }
+
+                                        fieldName = AttachedModelName + "." + data.ColumnName;
+                                        fieldId = data.ColumnName;
+
+                                        if (data.SystemRequired == true)
+                                        {
+                                            data.Required = true;
+                                        }
+
+
+                                        if (data.LookupType.ToLower() == DataDictionaryLookupTypeConstant.LookupList.ToLower() &&
+                                                !string.IsNullOrEmpty(data.LookupName))
+                                        {
+                                            var LookUpList = Model.AllRequiredLookUplist
+                                                            .Where(x => x.lookupname == data.LookupName)
+                                                            .Select(x => new SelectListItem { Text = x.text, Value = x.value })
+                                                            .ToList();
+                                            <li>
+                                                @CustomHelperDynamic.GetLabel(data.ColumnLabel, data.Required)
+                                                <span class="inputText">
+                                                    @Html.ValidationMessage(fieldName, new { style = "display:none" })
+                                                    @if (LookUpList != null && LookUpList.Count() > 0)
+                                                    {
+                                                        @Html.DropDownList(fieldName, LookUpList, "--Select--", new
+                                                            {
+                                                                id = fieldId,
+                                                                @class = "form-control search select2picker",
+                                                                style = "width:100%;"
+                                                            })
+                                                    }
+                                                    else
+                                                    {
+                                                        @Html.DropDownList(fieldName, EmptyLookupList, "--Select--", new
+                                                            {
+                                                                id = fieldId,
+                                                                @class = "form-control search select2picker",
+                                                                style = "width:100%;"
+                                                            })
+                                                    }
+                                                </span>
+                                            </li>
+                                        }
+                                        else if (data.ColumnName.ToLower() == "AccountId".ToLower())
+                                        {
+                                            <li>
+                                                @CustomHelperDynamic.GetLabel(data.ColumnLabel, data.Required)
+                                                <span class="inputText">
+                                                    @Html.ValidationMessage(fieldName, new { style = "display:none" })
+                                                    @Html.DropDownList(fieldName, Model.AccountList, "--Select--", new
+                                                    {
+                                                        id = fieldId,
+                                                        @class = "form-control search select2picker",
+                                                        style = "width:100%;"
+                                                    })
+                                                </span>
+                                            </li>
+                                        }
+
+
+                                        else
+                                        {
+                                            <li>
+                                                @CustomHelperDynamic.GetLabel(data.ColumnLabel, data.Required)
+                                                <span class="inputText">
+                                                    @Html.ValidationMessage(fieldName, new { style = "display:none" })
+                                                    @Html.UIConfigControl(fieldName, fieldId, data.ColumnType.ToLower(), data.MaxLength, data.ViewOnly)
+                                                    @CustomHelperDynamic.GetCountMessageLabel(data.MaxLength, data.ViewOnly, "")
+                                                </span>
+                                            </li>
+                                        }
+
+                                    }
+                                </ul>
+                            </div>
+
+
+                            <div style="clear:both;"></div>
+
+                            <div class="idBttns">
+                                <div class="bttn_pagin">
+                                    <div class="bttns2">
+                                        <button type="submit" class="btn btn-white mobBttn" name="Command" id="btnSaveAnotherOpen" style="cursor:pointer" value="saveAdd"><i class="fa fa-save faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalSaveAndAdd").FirstOrDefault().Value.ToString()</button>
+                                        <button type="submit" class="btn btn-blue mobBttn" name="Command" id="btnSave" style="cursor:pointer" value="save"><i class="fa fa-save faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+                                    </div>
+                                    <div class="bttns"><button type="button" class="btn btn-blue mobBttn" id="btnCancelAddPart" style="cursor:pointer"><i class="fa fa-close faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button></div>
+
+                                    <div style="clear:both;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}

@@ -1,0 +1,45 @@
+﻿@model Client.Models.PreventiveMaintenance.PrevMaintVM
+<div id="PMScheduleAssignModal" class="modal fade dropdown-modal" role="dialog" style="display:none;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close closepmsagrid" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">@Model.Loc.Where(a => a.ResourceId == "spnGlobalAssignUser").FirstOrDefault().Value.ToString()</h4>
+            </div>
+            <div class="modal-body">
+                <div id="tbldropdown" class="dropdown-content tbl-dropdown" style="display:block;">
+                    <div class="table-responsive">
+                        <table id="tblPMScheduleAssign" class="eqpDtlTbl row-border custom-sort" style="width:100%;">
+                            <thead>
+                                <tr>
+                                    <th>@Model.Loc.Where(a => a.ResourceId == "spnPersonnelID").FirstOrDefault().Value.ToString()</th>
+                                    <th>@Model.Loc.Where(a => a.ResourceId == "spnName").FirstOrDefault().Value.ToString()</th>
+                                    <th>@Model.Loc.Where(a => a.ResourceId == "spnGlobalEstimateHrs").FirstOrDefault().Value.ToString()</th>
+                                    <th width="17%" style="text-align:center !important;">@Model.Loc.Where(a => a.ResourceId == "globalAction").FirstOrDefault().Value.ToString()</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+            <div class="modal-footer" style="padding:15px 25px !important;">
+                <div style="clear:both;"></div>
+                <div class="bttn_pagin">
+                    <button type="button" class="btn btn-default closepmsagrid" id="btnCancel" data-dismiss="modal"><i class="fa fa-close faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button>
+                    <button type="button" class="btn btn-blue addpmscheduleassignBttn" data-toggle="" data-target="" id="AddPMSAssignmentbtn" style="float:right;"><i class="fa fa-plus faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalAddAssignment").FirstOrDefault().Value.ToString()</button>
+                    <div style="clear:both;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@Html.HiddenFor(x=>x.pMSchedAssignModel.PrevMaintSchedId)
+<div id="AddPMScheduleAssign"> </div>
+<style>
+    .dropdown-modal .modal-footer {
+        display: block !important;
+    }
+</style>
+
+

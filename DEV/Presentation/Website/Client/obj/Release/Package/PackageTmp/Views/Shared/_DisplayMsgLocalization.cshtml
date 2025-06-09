@@ -1,0 +1,34 @@
+﻿@using DataContracts
+@using Client.Controllers
+@{
+    BaseController baseController = new BaseController();
+    var _dict = new Dictionary<string, string>();
+    var data = Session["userData"];
+    var userData = (UserData)data;
+
+        var MessageList = baseController.MsgLocalizeDetailsBase(userData);//new Utility.LoginCacheSet().MsgLocalizeDetails();
+        foreach (var item in MessageList)
+        {
+            if (_dict.ContainsKey(item.ResourceId) == false)
+            {
+                _dict.Add(item.ResourceId, item.Value);
+            }
+        }  
+}
+
+<script type="text/javascript">
+    var _msgcollection = @Html.Raw(Json.Encode(_dict));
+
+    function getResourceValue(val)
+    {
+        var returnval;
+        $.each(_msgcollection, function (key, value)
+        {
+            if (key == val)
+            {
+                returnval = value;
+            }
+        });
+        return returnval;
+    }
+</script>

@@ -1,0 +1,17 @@
+﻿@model Client.Models.Sanitation.SanitationVM
+<div id="AddSanitationJob" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-info">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">@Model.Loc.Where(a => a.ResourceId == "spnAddSanitationJob").FirstOrDefault().Value.ToString()</h4>
+            </div>
+
+            <div class="modal-body" style="text-align:center;">
+                <button type="button" class="btn btn-blue btnRqst" id="AddOJobDemand"><i class="fa fa-hand-pointer-o faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "spnUseOn_DemandProcedure").FirstOrDefault().Value.ToString()</button>
+                <button type="button" class="btn btn-blue btnRqst" id="AddOJobDescribe"><i class="fa fa-file-text-o faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "spnDescribeWhatYouNeed").FirstOrDefault().Value.ToString()</button>
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+    </div>
+</div>

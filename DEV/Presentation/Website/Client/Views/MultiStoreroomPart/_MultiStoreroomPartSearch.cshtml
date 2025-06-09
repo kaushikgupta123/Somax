@@ -1,0 +1,226 @@
+﻿@model Client.Models.MultiStoreroomPart.MultiStoreroomPartVM
+
+<link href="~/Scripts/Metronic/assets/demo/default/base/style_newCustom.css" rel="stylesheet" />
+
+@if (Convert.ToString(Session["MenuState"]) == "" || Convert.ToString(Session["MenuState"]) == "open")
+{
+    <div class="m-subheader fixedDiv1">
+        <div class="new-m-subheader">
+            <div class="PageTitle">
+                <div class="align-items-center">
+                    <h3 class="m-subheader__title" style="padding:0;">
+                        <span class="dropToggle" id="spnDropToggle">
+                            <img src="~/Images/toggleMenu.png" />
+                        </span>
+                        <span style="line-height:35px;" id="partsearchtitle">
+                            @Model.Loc.Where(a => a.ResourceId == "spnPartSearch").FirstOrDefault().Value.ToString()
+                        </span>
+                    </h3>
+                </div>
+            </div>
+            <div class="ActionBttnArea">
+                @if (Model.security.Parts.Create)
+                {
+                    <button type="button" class="btn newBtn-add addparts pull-left" id="AddPart" title="New Part">@Model.Loc.Where(a => a.ResourceId == "spnNewPart").FirstOrDefault().Value.ToString()</button>
+                }
+                <div style="clear:both;"></div>
+            </div>
+            <div style="clear:both;"></div>
+        </div>
+    </div>
+}
+else
+{
+    <div class="m-subheader fixedDiv1 fixupperpannel2">
+        <div class="new-m-subheader">
+            <div class="PageTitle">
+                <div class="align-items-center">
+                    <h3 class="m-subheader__title" style="padding:0;">
+                        <span class="dropToggle" id="spnDropToggle">
+                            <img src="~/Images/toggleMenu.png" />
+                        </span>
+                        <span style="line-height:35px;" id="partsearchtitle">
+                            @Model.Loc.Where(a => a.ResourceId == "spnPartSearch").FirstOrDefault().Value.ToString()
+                        </span>
+                    </h3>
+                </div>
+            </div>
+            <div class="ActionBttnArea">
+                @if (Model.security.Parts.Create)
+                {
+                    <button type="button" class="btn newBtn-add addparts pull-left" id="AddPart" title="New Part">@Model.Loc.Where(a => a.ResourceId == "spnNewPart").FirstOrDefault().Value.ToString()</button>
+                }
+                <div style="clear:both;"></div>
+            </div>
+            <div style="clear:both;"></div>
+        </div>
+    </div>
+}
+<div class="pushDiv1"></div>
+<div class="row">
+    <div class="col-xl-12">
+        <div class="m-portlet" id="m_portlet" style="padding:15px; margin-bottom:0;">
+            <div class="actionBar" style="display:none" id="MultiStoreroomPartGridAction">
+                <div class="pull-left" style="position:relative;">
+                    <button type="button" class="btn btn-white navbar-btn" title="Search" id="SrchBttnNew"><i class="fa fa-search" style="font-size: 1.1rem;position: relative;top: -2px;left: -2px;"></i>@Model.Loc.Where(a => a.ResourceId == "globalSearch").FirstOrDefault().Value.ToString()</button>
+                    <button type="button" class="btn btn-white navbar-btn" id="sidebarCollapse" title="Advance Search"><i class="fa fa-filter" style="font-size: 1.3rem;"></i></button>
+                    <div style="clear:both;"></div>
+                    <div class="searchBttnDrop desktop" id="searchBttnNewDrop" style="display:none;">
+                        <div class="form-group" style="position:relative;">
+                            <i class="fa fa-search txtSearchClick" style="font-size: 1.1rem;position: absolute;top: 9px;left: 15px;"></i>
+                            @*V2-764*@
+                            <a href="javascript:void(0)" onclick="QrScannerSearch('txtColumnSearch')" id="cancelText"><i class="fa fa-qrcode" style="font-size: 1.1rem;position: absolute;top: 9px;right: 45px;"></i></a>
+                            <a href="javascript:void(0)" id="cancelText"><i class="fa fa-close" style="font-size: 1.1rem;position: absolute;top: 9px;right: 15px;"></i></a>
+                            <input type="text" id="txtColumnSearch" class="form-control search" placeholder="Search..." style="padding: 0.65rem 2.75rem;" autocomplete="off">
+                        </div>
+
+                        <div class="searchTips">
+                            <div class="titleText">@Model.Loc.Where(a => a.ResourceId == "GlobalSearchTips").FirstOrDefault().Value.ToString()</div>
+                            <div class="infoText">@Model.Loc.Where(a => a.ResourceId == SearchTipsType.PartSearchTips).FirstOrDefault().Value.ToString()</div>
+
+                            <div style="clear:both;"></div>
+                        </div>
+
+                        <div class="searchInfo">
+                            <span class="recent">@Model.Loc.Where(a => a.ResourceId == "GlobalRecentlySearched").FirstOrDefault().Value.ToString()</span>
+                            <div class="searchList" id="wosearchList">
+                                <ul id="UlSearchList"></ul>
+                            </div>
+                            <span class="clear"><a href="javascript:void(0)" id="clearText">@Model.Loc.Where(a => a.ResourceId == "globalClear").FirstOrDefault().Value.ToString()</a></span>
+                            <div style="clear:both;"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pull-right marAdjst">
+                    <button type="button" class="btn btn-white import-export" disabled onclick="funcShowExportbtn()">@Model.Loc.Where(a => a.ResourceId == "spnExport").FirstOrDefault().Value.ToString()</button>
+                    <button type="button" class="btn btn-white" id="liCustomize" title="Customize" data-toggle="modal" data-target="#gridcolumncustomizemodal"><i class="fa fa-cog" style="font-size: 1.3rem;"></i></button>
+
+                    <div style="clear:both;"></div>
+                </div>
+                <div style="clear:both;"></div>
+                <div id="advsearchfilteritems"></div>
+                <div style="clear:both;"></div>
+            </div>
+
+            <div class="updateArea" style="display:none;">
+                <div class="pull-left">
+                    <ul class="filter_apply2">
+                        <li><span class="itemcount">0</span>&nbsp;@Model.Loc.Where(a => a.ResourceId == "globalItemsSelected").FirstOrDefault().Value.ToString()</li>
+                    </ul>
+                    <button type="button" class="btn btn-blue" title="Print Labels" id="PrintPRCheckList" disabled="disabled" style="float:left;"><i class="fa fa-print" style="margin-top:-3px;"></i></button>
+                </div>
+                <div style="clear:both;"></div>
+            </div>
+            <div style="clear:both;"></div>
+
+            <div id="Active" class="tabcontent" style="display:block;">
+                <div class="table-responsive">
+                    <table id="multistorepartSearch" class="eqpDtlTbl row-border custom-sort tblMain hover haschild tblDefaultSort" style="width:100%;">
+                        <thead>
+                            <tr>
+                                <th style="width:20px;"></th>
+                                <th id="thPurchaseRequest" data-col="1" class="th-PurchaseRequest ClientLookupId" data-th-index="0" data-th-prop="ClientLookupId">@Model.Loc.Where(a => a.ResourceId == "spnPartID").FirstOrDefault().Value.ToString()</th>
+                                <th data-th-index="1" data-col="2" class="Reason" data-th-prop="Description">@Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString()</th>
+                                <th data-th-index="2" data-col="3" class="Reason" data-th-prop="DefStoreroom">@Model.Loc.Where(a => a.ResourceId == "spnDefStoreroom").FirstOrDefault().Value.ToString()</th>
+                                <th data-th-index="3" data-col="4" class="Reason" data-th-prop="StockType">@Model.Loc.Where(a => a.ResourceId == "spnStockType").FirstOrDefault().Value.ToString()</th>
+                                <th data-th-index="4" data-col="5" class="Reason" data-th-prop="AppliedCost" style="text-align:right !important">@Model.Loc.Where(a => a.ResourceId == "spnCost").FirstOrDefault().Value.ToString()</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@if (Convert.ToString(Session["MenuState"]) == "" || Convert.ToString(Session["MenuState"]) == "open")
+{
+    <div id="searcharea" class="slideToggleBar" style="display:none;">
+        <div class="searchBoxArea">
+            <div class="form-group" style="margin-bottom:0; position:relative;">
+                <i class="fa fa-search" style="font-size: 1.1rem;position: absolute;top: 8px;left: 0px;"></i>
+                <input type="text" class="form-control searched" placeholder="Search for a view" id="mspsearctxtbox">
+            </div>
+        </div>
+
+        <div class="searchList">
+            <ul id="mspsearchListul">
+                @foreach (var item in Model.MultiStoreroomPartModel.PartViewSearchList)
+                {
+                    if (item.Text == "Active" || item.Text == "Inactive")
+                    {
+                        <li id="@item.Value" class="mspsearchdrpbox"><a href="javascript:void(0)">@item.Text</a></li>
+                    }
+                }
+            </ul>
+        </div>
+    </div>
+}
+else
+{
+    <div id="searcharea" class="slideToggleBar" style="display:none;left:81px !important;">
+        <div class="searchBoxArea">
+            <div class="form-group" style="margin-bottom:0; position:relative;">
+                <i class="fa fa-search" style="font-size: 1.1rem;position: absolute;top: 8px;left: 0px;"></i>
+                <input type="text" class="form-control searched" placeholder="Search for a view" id="mspsearctxtbox">
+            </div>
+        </div>
+        <div class="searchList">
+            <ul id="mspsearchListul">
+                @foreach (var item in Model.MultiStoreroomPartModel.PartViewSearchList)
+                {
+                    if (item.Text == "Active" || item.Text == "Inactive")
+                    {
+                        <li id="@item.Value" class="mspsearchdrpbox"><a href="javascript:void(0)">@item.Text</a></li>
+                    }
+                }
+            </ul>
+        </div>
+    </div>
+}
+
+@Html.Partial("_CustomizeGridSetup")
+@Html.Partial("_Export")
+@Html.Partial("_MultiStoreroomPartAdvanceSearch")
+@*V2-764*@
+@Html.Partial("~/Views/Shared/QR/_QrCodeReaderModal.cshtml")
+<style>
+    .paginate_input {
+        width: 35px;
+        text-align: right;
+        background-color: #ebe8f2;
+        border: #d0ced5 2px solid !important;
+        outline: 0;
+        height: 27px;
+        padding: 5px;
+        border-radius: 5px;
+        font-size: 12px;
+    }
+
+    .dataTables_paginate.paging_input {
+        font-size: 12px;
+    }
+
+    .dataTables_wrapper .dataTables_paginate {
+        padding-top: 18px !important;
+    }
+
+    .dataTables_wrapper .dataTables_length {
+        margin-top: 10px !important;
+    }
+
+    .dataTables_wrapper .dataTables_info {
+        padding: 28px 0 0 0 !important;
+    }
+
+
+    @@media(max-width:650px) {
+        .dataTables_wrapper .dataTables_paginate {
+            float: right !important;
+            width: 100%;
+            text-align: right;
+            padding-top: 10px !important;
+        }
+    }
+</style>

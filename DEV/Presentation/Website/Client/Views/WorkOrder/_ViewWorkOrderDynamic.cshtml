@@ -1,0 +1,100 @@
+﻿@model Client.Models.Work_Order.WorkOrderVM
+
+@{
+    var fieldLabel = "";
+    var fieldName = "";
+    object Value = null;
+}
+@foreach (var data in Model.UIConfigurationDetails)
+{
+    if (data.Section == true)
+    {
+        <li>
+            <span class="label"><strong>@data.SectionName</strong></span>
+        </li>
+        continue;
+    }
+    if (string.IsNullOrEmpty(data.ColumnName))
+    {
+        continue;
+    }
+    else if (!string.IsNullOrEmpty(data.ColumnName))
+    {
+        string colName = UtilityFunction.ReturnPropertyNameWithoutCaseComparison(data.ColumnName, Model.ViewWorkOrderModel);
+        if (string.IsNullOrEmpty(colName))
+        {
+            continue;
+        }
+        data.ColumnName = colName;
+    }
+
+    fieldLabel = data.ColumnLabel;
+
+    #region Column Name
+    fieldName = data.ColumnName;
+    if (data.ColumnName.ToLower() == "ChargeToId".ToLower())
+    {
+        fieldName = "ChargeToClientLookupId";
+    }
+    else if (data.ColumnName.ToLower() == "Labor_AccountId".ToLower())
+    {
+        fieldName = "Labor_AccountClientLookupId";
+    }
+    else if (data.ColumnName.ToLower() == "Planner_PersonnelId".ToLower())
+    {
+        fieldName = "PlannerClientLookupId";
+    }
+    else if (data.ColumnName.ToLower() == "CreateBy".ToLower())
+    {
+        fieldName = "CreateBy_PersonnelName";
+    }
+    else if (data.ColumnName.ToLower() == "CompleteBy_PersonnelId".ToLower())
+    {
+        fieldName = "CompleteBy_PersonnelName";
+    }
+    else if (data.ColumnName.ToLower() == "ProjectId".ToLower())
+    {
+        fieldName = "ProjectClientLookupId";
+    }
+    else if (data.ColumnName.ToLower() == "Select1".ToLower())
+    {
+        fieldName = "Select1ClientLookupId";
+    }
+    else if (data.ColumnName.ToLower() == "Select2".ToLower())
+    {
+        fieldName = "Select2ClientLookupId";
+    }
+    else if (data.ColumnName.ToLower() == "Select3".ToLower())
+    {
+        fieldName = "Select3ClientLookupId";
+    }
+    else if (data.ColumnName.ToLower() == "Select4".ToLower())
+    {
+        fieldName = "Select4ClientLookupId";
+    }
+    else if (data.ColumnName.ToLower() == "SourceId".ToLower())
+    {
+        fieldName = "SourceIdClientLookupId";
+    }
+    #endregion
+
+    #region Value
+    Value = Model.ViewWorkOrderModel.GetType().GetProperty(fieldName).GetValue(Model.ViewWorkOrderModel);
+    if (Value == null)
+    {
+        Value = "";
+    }
+    if (data.ColumnName.ToLower() == "Status".ToLower())
+    {
+        if (Value.ToString() != "")
+        {
+            Value = UtilityFunction.GetMessageFromResource(Value.ToString() , LocalizeResourceSetConstants.StatusDetails);
+        }
+    }
+    #endregion
+
+    <li style="height:auto;" class="dscrbtn">
+        @CustomHelperDynamic.ViewLabelAndDisplayValue(fieldLabel, Value.ToString(), data.ColumnType)
+    </li>
+}
+

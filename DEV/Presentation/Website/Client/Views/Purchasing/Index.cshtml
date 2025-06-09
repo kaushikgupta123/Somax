@@ -1,0 +1,143 @@
+﻿@model Client.Models.PurchaseOrder.PurchaseOrderVM
+@{
+    ViewBag.Title = "Somax | Procurement Orders";
+
+    string hColumnList = "";
+    string reqColumnList = "";
+    string disablColumnList = "";
+    if (Model.PurchaseOrderModel.hiddenColumnList != null && Model.PurchaseOrderModel.hiddenColumnList.Count > 0)
+    {
+        foreach (var item in Model.PurchaseOrderModel.hiddenColumnList)
+        {
+            hColumnList = hColumnList + item + ",";
+        }
+    }
+    if (Model.PurchaseOrderModel.requiredColumnList != null && Model.PurchaseOrderModel.requiredColumnList.Count > 0)
+    {
+        foreach (var item in Model.PurchaseOrderModel.requiredColumnList)
+        {
+            reqColumnList = reqColumnList + item + ",";
+        }
+    }
+    if (Model.PurchaseOrderModel.disabledColumnList != null && Model.PurchaseOrderModel.disabledColumnList.Count > 0)
+    {
+        foreach (var item in Model.PurchaseOrderModel.disabledColumnList)
+        {
+            disablColumnList = disablColumnList + item + ",";
+        }
+    }
+}
+@Styles.Render("~/Content/datatable")
+<link href="~/Content/sidebar_custom.css" rel="stylesheet" />
+<link href="~/Scripts/Metronic/assets/demo/default/base/GlobalSearchGrid.css" rel="stylesheet" />
+<link href="~/Scripts/Metronic/assets/demo/default/base/style_custom_tree.css" rel="stylesheet" />
+@Styles.Render("~/Content/daterangepickercustom")
+@section scripts {
+    @Scripts.Render("~/bundles/datatable")
+    @Scripts.Render("~/bundles/PurchaseOrder")
+    @Scripts.Render("~/bundles/POEditPopUp")
+    <script type="text/javascript">
+        com_github_culmat_jsTreeTable.register(this);
+     $(function () {
+        var v = "@hColumnList";
+        var str = v.split(",");
+        if (str != null && str != "") {
+        $.each(str, function (i, jvalue) {
+        var elementId = '#li' + jvalue;
+        $(document).find(elementId).hide();
+        });
+        }
+        var rq = "@reqColumnList";
+        var arr = rq.split(",");
+        if (arr!=null && arr!="")
+        {
+        $.each(arr, function (i, jvalue) {
+        var reqElementId = '#r' + jvalue;
+        if ($(reqElementId).length)
+        {
+        $(document).find(reqElementId).css('visibility', 'visible');
+        }
+        });
+        }
+        var dq = "@disablColumnList";
+        var amr = dq.split(",");
+        if (amr != null && amr != "") {
+        $.each(amr, function (i, jvalue) {
+        var reqElementId = '#' +'PurchaseOrderModel_'+ jvalue;
+        if ($(reqElementId).length) {
+        $(document).find(reqElementId).attr('disabled', 'disabled');
+        }
+        });
+        }
+    });
+    </script>
+
+}
+
+<div id="renderpurchasing">
+   
+    @if (!ViewBag.IsPurchasingDetailsFromNotification && !Model.PurchaseOrderModel.IsRedirectFromPart)
+    {
+   
+        if (Model.PurchaseOrderModel.IsPurchaseOrderAdd)
+        {
+            @Html.Partial("_POAdd", Model)
+        }
+        else if (Model.IsPurchaseOrderDynamic)
+        {
+            @Html.Partial("_PurchaseOrderAddDynamic", Model)
+        }
+        else
+        {
+            @Html.Partial("_PurchasingSearch")
+        }
+    }
+    @Html.HiddenFor(m => m.PurchaseOrderModel.IsRedirectFromPart, new { id = "IsRedirectFromPart" })
+    @Html.HiddenFor(m => m.PurchaseOrderModel.PurchaseOrderId, new { id = "POId" })
+    @Html.HiddenFor(m => m.PurchaseOrderModel.Status, new { id = "POStatus" })
+    @Html.Hidden("IsDetailFromNotification", (bool)ViewBag.IsPurchasingDetailsFromNotification)
+
+</div>
+<style type="text/css">
+    .bttnArea {
+        float: left;
+        position: relative;
+    }
+
+        .bttnArea a.btn1 {
+            background: #444648;
+            display: block;
+            padding: 10px 30px 10px 10px;
+            float: left;
+            color: #fff;
+            font-size: 15px;
+            text-decoration: none;
+        }
+
+        .bttnArea a.btn2 {
+            background: #4da5fe;
+            display: block;
+            padding: 10px 10px 10px 30px;
+            float: left;
+            color: #fff;
+            font-size: 15px;
+            text-decoration: none;
+        }
+
+    .or {
+        background: #6c7072;
+        width: 34px;
+        height: 34px;
+        display: block;
+        position: absolute;
+        left: 130px;
+        top: 4px;
+        border-radius: 50%;
+        font-size: 15px;
+        color: #fff;
+        font-weight: 400;
+        text-align: center;
+        line-height: 30px;
+        border: 2px solid #444648;
+    }
+</style>

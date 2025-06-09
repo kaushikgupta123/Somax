@@ -1,0 +1,100 @@
+﻿@model Client.Models.Dashboard.DashboardVM
+
+
+@using (Ajax.BeginForm("AddSanitationRequestWODashboard_Mobile", "Dashboard", new AjaxOptions { HttpMethod = "Post", OnSuccess = "AddSanitationRequestWODashboardOnSuccess", OnBegin = "AjaxBeginFormBegin", OnFailure = "AjaxBeginFormFaillure" }))
+{
+
+    @Html.AntiForgeryToken()
+    <div class="slide-modal-head">
+        <a class="slide-back-btn btnCancelAddSanitationRequestWODashboard"> <i class="fa fa-angle-left"></i> Back</a>
+        <div class="slide-back-title">
+            @Model.Loc.Where(a => a.ResourceId == "spnAddSanitationRequest").FirstOrDefault().Value.ToString()
+        </div>
+    </div>
+    @Html.Partial("_ErrorDiv")
+    <div class="slide-modal-body" style="overflow-y: auto; height: 90vh;">
+        <div mbsc-page class="demo-responsive">
+            <div>
+                <div mbsc-form class="mbsc-form-grid">
+                    <div class="mbsc-grid">
+                        <div class="mbsc-row">
+                           <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                <label>
+                                    @Model.Loc.Where(a => a.ResourceId == "GlobalChargeTo").FirstOrDefault().Value.ToString() :
+
+                                    @Html.TextBoxFor(x => x.dashboardAddSanitationRequestModel.ChargeToClientLookupId, new { @class = "form-control search dropbtn readonly", id = "txtChargeTo", autocomplete = "off", @readonly = "readonly", @mbsc_input = "true", @data_input_style = "box", @data_label_style = "floating", @placeholder = Model.Loc.Where(a => a.ResourceId == "GlobalChargeTo").FirstOrDefault().Value.ToString() })
+                                    @Html.HiddenFor(m => m.dashboardAddSanitationRequestModel.ChargeTo, new { id = "hdnChargeTo" })
+                                </label>
+                                @Html.ValidationMessageFor(x => x.dashboardAddSanitationRequestModel.ChargeToClientLookupId, "", new { })
+                            </div>
+                         
+                            <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                <label>
+                                    @Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString()
+
+                                    @Html.TextAreaFor(m => m.dashboardAddSanitationRequestModel.Description, new { @class = "form-control search", style = "resize:none;", autocomplete = "off", @mbsc_textarea = "true", @data_label_style = "floating", @placeholder = Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString(), @data_input_style = "box" })
+                                </label>
+                                @Html.ValidationMessageFor(m => m.dashboardAddSanitationRequestModel.Description, "", new { })
+                            </div>
+                        </div>
+                        <div class="mbsc-row">
+                            <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                <div class=" design-box">
+                                    <div class="mbsc-button-group-block">
+                                        <button mbsc-button data-color="success" type="button" class="btnCancelAddSanitationRequestWODashboard btn btn-blue mobBttn"><i class="fa fa-close faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                <div class=" design-box">
+                                    <div class="mbsc-button-group-block">
+                                        <button data-color="success" type="submit" class="btn btn-blue mobBttn" style="cursor:pointer" value="save"><i class="fa fa-save faIcon"></i> &nbsp;@Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="slide-modal-footer"></div>
+    @Html.HiddenFor(m => m.dashboardAddSanitationRequestModel.WorkOrderId)
+    @Html.HiddenFor(m => m.dashboardAddSanitationRequestModel.ChargeType)
+}
+<style>
+    .btn-addimg {
+        width: 100% !important;
+        float: none !important;
+    }
+
+    .takePic {
+        text-align: center;
+        width: 100%;
+        max-width: 400px;
+        margin: 0 auto;
+        float: none;
+    }
+
+        .takePic img {
+            width: auto;
+            height: 100px;
+        }
+
+    .lbl-addphoto {
+        width: 100% !important;
+        max-width: 100% !important;
+        text-align: center !important;
+        padding-left: 0px !important;
+    }
+
+    .btn-addimg input[type=text] {
+        display: none;
+    }
+
+    .mbsc-input-ic.mbsc-right-ic.mbsc-ic.mbsc-ic-upload {
+        top: 15px !important;
+    }
+</style>
+}
+

@@ -1,0 +1,347 @@
+﻿@model Client.Models.MasterSanitationSchedule.MasterScheduleVM
+
+@{ Layout = null;}
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Sanitation_@Model.JobDetailsModel.ClientLookupId</title>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css" />
+</head>
+
+<body style="padding:0; margin:0; font-family: 'Roboto', sans-serif; font-size:14px; color:#737272;">
+    <table width="1000" border="0" cellspacing="0" cellpadding="0" align="center">
+
+        <tr>
+            <td align="left" valign="top" height="10"><img src="../Content/images/space.png" alt="" /></td>
+        </tr>
+
+        <tr>
+            <td align="left" valign="top" style="border-bottom:2px solid #77c2a4;">
+                <table width="1000" border="0" cellspacing="0" cellpadding="0">
+                    <tr>
+                        <th width="1000" align="center" valign="middle" scope="col" style="background:#77c2a4; height:45px; line-height:45px; font-size:25px; color:#fff; font-weight:normal;">Details</th>
+                    </tr>
+                    <tr>
+                        <td align="left" valign="top" style="border-bottom:1px solid #b6b6b6; padding:10px 0;">
+                            <table width="1000" border="0" cellspacing="0" cellpadding="0">
+                                <tr>
+                                    <td width="332" align="center" valign="top" style="border-right:1px solid #b6b6b6; padding:10px 0;">
+                                        <h3 style="padding:0; margin:0 0 5px 0; font-size:18px; color:#000; font-weight:normal;">@Model.Loc.Where(a => a.ResourceId == "spnChargeToName").FirstOrDefault().Value.ToString()</h3>
+                                        <p style="padding:0; margin:0; font-size:18px; color:#8f8f8f; font-weight:normal;">@Model.JobDetailsModel.ChargeTo_ClientLookupId (@Model.JobDetailsModel.ChargeTo_Name)</p>
+                                    </td>
+                                    <td width="332" align="center" valign="top" style="border-right:1px solid #b6b6b6; padding:10px 0;">
+                                        <h3 style="padding:0; margin:0 0 5px 0; font-size:18px; color:#000; font-weight:normal;">@Model.Loc.Where(a => a.ResourceId == "spnShift").FirstOrDefault().Value.ToString()</h3>
+                                        <p style="padding:0; margin:0; font-size:18px; color:#8f8f8f; font-weight:normal;">@Model.JobDetailsModel.Shift</p>
+                                    </td>
+                                    <td width="334" align="center" valign="top" style="padding:10px 0;">
+                                        <h3 style="padding:0; margin:0 0 5px 0; font-size:18px; color:#000; font-weight:normal;">@Model.Loc.Where(a => a.ResourceId == "spnStatus").FirstOrDefault().Value.ToString()</h3>
+                                        <p style="padding:0; margin:0; font-size:18px; color:#8f8f8f; font-weight:normal;">@Model.JobDetailsModel.Status</p>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="left" valign="top" style="padding:10px 0;">
+                            <table width="1000" border="0" cellspacing="0" cellpadding="0">
+                                <tr>
+                                    <td width="249" align="center" valign="top" style="border-right:1px solid #b6b6b6; padding:10px 0;">
+                                        <h3 style="padding:0; margin:0 0 5px 0; font-size:18px; color:#000; font-weight:normal;">@Model.Loc.Where(a => a.ResourceId == "spnScheduledDate").FirstOrDefault().Value.ToString()</h3>
+                                        <p style="padding:0; margin:0; font-size:18px; color:#8f8f8f; font-weight:normal;">@Model.JobDetailsModel.ScheduledDate.Value.ToString("MM/dd/yyyy", CultureInfo.InvariantCulture)</p>
+                                    </td>
+                                    <td width="249" align="center" valign="top" style="border-right:1px solid #b6b6b6; padding:10px 0;">
+                                        <h3 style="padding:0; margin:0 0 5px 0; font-size:18px; color:#000; font-weight:normal;">@Model.Loc.Where(a => a.ResourceId == "spnScheduledDuration").FirstOrDefault().Value.ToString()</h3>
+                                        <p style="padding:0; margin:0; font-size:18px; color:#8f8f8f; font-weight:normal;">@Model.JobDetailsModel.ScheduledDuration</p>
+                                    </td>
+                                    <td width="249" align="center" valign="top" style="border-right:1px solid #b6b6b6; padding:10px 0;">
+                                        <h3 style="padding:0; margin:0 0 5px 0; font-size:18px; color:#000; font-weight:normal;">@Model.Loc.Where(a => a.ResourceId == "spnSanitationCreateBy").FirstOrDefault().Value.ToString()</h3>
+                                        <p style="padding:0; margin:0; font-size:18px; color:#8f8f8f; font-weight:normal;">@Model.JobDetailsModel.CreateBy</p>
+                                    </td>
+                                    <td width="250" align="center" valign="top" style="padding:10px 0;">
+                                        <h3 style="padding:0; margin:0 0 5px 0; font-size:18px; color:#000; font-weight:normal;">@Model.Loc.Where(a => a.ResourceId == "spnAssigned").FirstOrDefault().Value.ToString()</h3>
+                                        <p style="padding:0; margin:0; font-size:18px; color:#8f8f8f; font-weight:normal;">@Model.JobDetailsModel.Assigned</p>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+
+        <tr>
+            <td align="left" valign="top" height="10"><img src="../Content/images/space.png" alt="" /></td>
+        </tr>
+
+        <tr>
+            <td align="left" valign="top" style="border-bottom:2px solid #f9b664;">
+                <table width="1000" border="0" cellspacing="0" cellpadding="0">
+                    <tr>
+                        <th width="1000" align="center" valign="middle" scope="col" style="background:#f9b664; height:45px; line-height:45px; font-size:25px; color:#fff; font-weight:normal;">@Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString()</th>
+                    </tr>
+                    <tr>
+                        <td align="left" valign="top">
+                            <p style="padding:10px; margin:0; font-size:14px; color:#5a5a5a; font-weight:normal; line-height:22px;">
+                                @Model.JobDetailsModel.Description
+                            </p>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+
+        <tr>
+            <td align="left" valign="top" height="10"><img src="../Content/images/space.png" alt="" /></td>
+        </tr>
+
+        <tr>
+            <td align="left" valign="top" style="border-bottom:2px solid #264a7c;">
+                <table width="1000" border="0" cellspacing="0" cellpadding="0">
+                    <tr>
+                        <th width="988" align="left" valign="middle" scope="col" style=" border-left:2px solid #00d8ff; height:34px; line-height:34px; font-size:20px; color:#222; font-weight:500; padding-left:10px;">@Model.Loc.Where(a => a.ResourceId == "spnTools").FirstOrDefault().Value.ToString()</th>
+                    </tr>
+                    <tr>
+                        <td align="left" valign="top" height="10"><img src="../Content/images/space.png" alt="" /></td>
+                    </tr>
+                    <tr>
+                        <td align="left" valign="top">
+                            <table width="1000" border="0" cellspacing="0" cellpadding="0">
+                                <tr style="background:#264a7c;">
+                                    <th width="150" align="center" valign="middle" height="40" scope="col" style="border-right:1px solid #fff; font-size:16px; color:#fff; line-height:40px; font-weight:normal;">@Model.Loc.Where(a => a.ResourceId == "spnQuantity").FirstOrDefault().Value.ToString()</th>
+                                    <th width="150" align="center" valign="middle" height="40" scope="col" style="border-right:1px solid #fff; font-size:16px; color:#fff; line-height:40px; font-weight:normal;">@Model.Loc.Where(a => a.ResourceId == "spnTool").FirstOrDefault().Value.ToString()</th>
+                                    <th width="532" align="left" valign="middle" height="40" scope="col" style="border-right:1px solid #fff; font-size:16px; color:#fff; line-height:40px; font-weight:normal; padding-left:15px;">@Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString()</th>
+                                    <th width="150" align="center" valign="middle" height="40" scope="col" style="font-size:16px; color:#fff; line-height:40px; font-weight:normal;">@Model.Loc.Where(a => a.ResourceId == "spnInstructions").FirstOrDefault().Value.ToString()</th>
+                                </tr>
+                                @if (Model.SanitationToolPrint.Count > 0)
+                                {
+                                    foreach (var item in Model.SanitationToolPrint)
+                                    {
+                                        <tr>
+                                            <td align="center" valign="middle" height="40" style="border-right:1px solid #cccccc; border-bottom:1px solid #cccccc; font-size:14px; color:#737272; line-height:40px; font-weight:normal;">@item.Quantity</td>
+                                            <td align="center" valign="middle" height="40" style="border-right:1px solid #cccccc; border-bottom:1px solid #cccccc; font-size:14px; color:#737272; line-height:40px; font-weight:normal;">@item.CategoryValue</td>
+                                            <td align="left" valign="middle" height="40" style="border-right:1px solid #cccccc; border-bottom:1px solid #cccccc; font-size:14px; color:#737272; line-height:22px; font-weight:normal; padding:5px 0 5px 15px;">
+                                                @item.Description
+                                            </td>
+                                            <td align="center" valign="middle" height="40" style="border-bottom:1px solid #cccccc; font-size:14px; color:#737272; line-height:40px; font-weight:normal;">@item.Instructions</td>
+                                        </tr>
+                                    }
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td align="center" valign="middle" height="40" style="border-bottom:1px solid #cccccc; border-right:1px solid #cccccc; font-size:14px; color:#737272; line-height:40px; font-weight:normal;"></td>
+                                        <td align="center" valign="middle" height="40" style="border-bottom:1px solid #cccccc; border-right:1px solid #cccccc; font-size:14px; color:#737272; line-height:40px; font-weight:normal;"></td>
+                                        <td align="left" valign="middle" height="40" style="border-bottom:1px solid #cccccc; border-right:1px solid #cccccc; font-size:14px; color:#737272; line-height:22px; font-weight:normal; padding:5px 0 5px 15px;"></td>
+                                        <td align="center" valign="middle" height="40" style="border-bottom:1px solid #cccccc; font-size:14px; color:#737272; line-height:40px; font-weight:normal;"></td>
+                                    </tr>
+                                }
+
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+
+        <tr>
+            <td align="left" valign="top" height="10"><img src="../Content/images/space.png" alt="" /></td>
+        </tr>
+
+        <tr>
+            <td align="left" valign="top" style="border-bottom:2px solid #264a7c;">
+                <table width="1000" border="0" cellspacing="0" cellpadding="0">
+                    <tr>
+                        <th width="988" align="left" valign="middle" scope="col" style=" border-left:2px solid #00d8ff; height:34px; line-height:34px; font-size:20px; color:#222; font-weight:500; padding-left:10px;">Chemicals</th>
+                    </tr>
+                    <tr>
+                        <td align="left" valign="top" height="10"><img src="../Content/images/space.png" alt="" /></td>
+                    </tr>
+                    <tr>
+                        <td align="left" valign="top">
+                            <table width="1000" border="0" cellspacing="0" cellpadding="0">
+                                <tr style="background:#264a7c;">
+                                    <th width="150" align="center" valign="middle" height="40" scope="col" style="border-right:1px solid #fff; font-size:16px; color:#fff; line-height:40px; font-weight:normal;">@Model.Loc.Where(a => a.ResourceId == "spnQuantity").FirstOrDefault().Value.ToString()</th>
+                                    <th width="150" align="center" valign="middle" height="40" scope="col" style="border-right:1px solid #fff; font-size:16px; color:#fff; line-height:40px; font-weight:normal;">@Model.Loc.Where(a => a.ResourceId == "spnChemical").FirstOrDefault().Value.ToString()</th>
+                                    <th width="381" align="left" valign="middle" height="40" scope="col" style="border-right:1px solid #fff; font-size:16px; color:#fff; line-height:40px; font-weight:normal; padding-left:15px;">@Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString()</th>
+                                    <th width="150" align="center" valign="middle" height="40" scope="col" style="border-right:1px solid #fff; font-size:16px; color:#fff; line-height:40px; font-weight:normal; ">@Model.Loc.Where(a => a.ResourceId == "spnInstructions").FirstOrDefault().Value.ToString()</th>
+                                    <th width="150" align="center" valign="middle" height="40" scope="col" style="font-size:16px; color:#fff; line-height:40px; font-weight:normal;">@Model.Loc.Where(a => a.ResourceId == "spnDilution").FirstOrDefault().Value.ToString()</th>
+                                </tr>
+                                @if (Model.PopulateChemicalsPrint.Count > 0)
+                                {
+                                    foreach (var item in Model.PopulateChemicalsPrint)
+                                    {
+                                        <tr>
+                                            <td align="center" valign="middle" height="40" style="border-bottom:1px solid #cccccc; border-right:1px solid #cccccc; font-size:14px; color:#737272; line-height:40px; font-weight:normal;">@item.Quantity</td>
+                                            <td align="center" valign="middle" height="40" style="border-bottom:1px solid #cccccc; border-right:1px solid #cccccc; font-size:14px; color:#737272; line-height:40px; font-weight:normal;">@item.CategoryValue</td>
+                                            <td align="left" valign="middle" height="40" style="border-bottom:1px solid #cccccc; border-right:1px solid #cccccc; font-size:14px; color:#737272; line-height:22px; font-weight:normal; padding:5px 0 5px 15px;">
+                                                @item.Description
+                                            </td>
+                                            <td align="center" valign="middle" height="40" style="border-bottom:1px solid #cccccc; border-right:1px solid #cccccc; font-size:14px; color:#737272; line-height:40px; font-weight:normal;">@item.Instructions</td>
+                                            <td align="center" valign="middle" height="40" style="border-bottom:1px solid #cccccc; font-size:14px; color:#737272; line-height:40px; font-weight:normal;">@item.Dilution</td>
+                                        </tr>
+                                    }
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td align="center" valign="middle" height="40" style="border-bottom:1px solid #cccccc; border-right:1px solid #cccccc; font-size:14px; color:#737272; line-height:40px; font-weight:normal;"></td>
+                                        <td align="center" valign="middle" height="40" style="border-bottom:1px solid #cccccc; border-right:1px solid #cccccc; font-size:14px; color:#737272; line-height:40px; font-weight:normal;"></td>
+                                        <td align="left" valign="middle" height="40" style="border-bottom:1px solid #cccccc; border-right:1px solid #cccccc; font-size:14px; color:#737272; line-height:22px; font-weight:normal; padding:5px 0 5px 15px;"></td>
+                                        <td align="center" valign="middle" height="40" style="border-bottom:1px solid #cccccc; border-right:1px solid #cccccc; font-size:14px; color:#737272; line-height:40px; font-weight:normal;"></td>
+                                        <td align="center" valign="middle" height="40" style="border-bottom:1px solid #cccccc; font-size:14px; color:#737272; line-height:40px; font-weight:normal;"></td>
+                                    </tr>
+                                }
+
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+
+        <tr>
+            <td align="left" valign="top" height="10"><img src="../Content/images/space.png" alt="" /></td>
+        </tr>
+
+        <tr>
+            <td align="left" valign="top" style="border-bottom:2px solid #264a7c;">
+                <table width="1000" border="0" cellspacing="0" cellpadding="0">
+                    <tr>
+                        <th width="988" align="left" valign="middle" scope="col" style=" border-left:2px solid #00d8ff; height:34px; line-height:34px; font-size:20px; color:#222; font-weight:500; padding-left:10px;">@Model.Loc.Where(a => a.ResourceId == "spnTasks").FirstOrDefault().Value.ToString()</th>
+                    </tr>
+                    <tr>
+                        <td align="left" valign="top" height="10"><img src="../Content/images/space.png" alt="" /></td>
+                    </tr>
+                    <tr>
+                        <td align="left" valign="top">
+                            <table width="1000" border="0" cellspacing="0" cellpadding="0">
+                                <tr style="background:#264a7c;">
+                                    <th width="90" align="center" valign="middle" height="40" scope="col" style="border-right:1px solid #fff; font-size:16px; color:#fff; line-height:40px; font-weight:normal;">@Model.Loc.Where(a => a.ResourceId == "spnOrder").FirstOrDefault().Value.ToString()</th>
+                                    <th width="602" align="left" valign="middle" height="40" scope="col" style="border-right:1px solid #fff; font-size:16px; color:#fff; line-height:40px; font-weight:normal; padding-left:15px;">@Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString()</th>
+                                    <th width="130" align="center" valign="middle" height="40" scope="col" style="border-right:1px solid #fff; font-size:16px; color:#fff; line-height:40px; font-weight:normal;">@Model.Loc.Where(a => a.ResourceId == "spnGlobalCompleted").FirstOrDefault().Value.ToString()</th>
+                                    <th width="160" align="center" valign="middle" height="40" scope="col" style="font-size:16px; color:#fff; line-height:40px; font-weight:normal;">@Model.Loc.Where(a => a.ResourceId == "spnValue").FirstOrDefault().Value.ToString()</th>
+                                </tr>
+                                @if (Model.SanitationTaskPrint.Count > 0)
+                                {
+                                    foreach (var item in Model.SanitationTaskPrint)
+                                    {
+
+                                        <tr>
+                                            <td align="center" valign="middle" height="40" style="border-bottom:1px solid #cccccc; border-right:1px solid #cccccc; font-size:14px; color:#737272; line-height:40px; font-weight:normal;">@item.TaskId</td>
+                                            <td align="left" valign="middle" height="40" style="border-bottom:1px solid #cccccc; border-right:1px solid #cccccc; font-size:14px; color:#737272; line-height:22px; font-weight:normal; padding:5px 0 5px 15px;">@item.Description</td>
+                                            @if (item.CompleteDate.HasValue && item.CompleteDate.Value != DateTime.MinValue)
+                                            {
+                                                <td align="center" valign="middle" height="40" style="border-bottom:1px solid #cccccc; border-right:1px solid #cccccc; font-size:20px;  line-height:40px;">X</td>
+                                            }
+                                            else
+                                            {
+                                                <td align="center" valign="middle" height="40" style="border-bottom:1px solid #cccccc; border-right:1px solid #cccccc; font-size:20px; line-height:40px;"></td>
+                                            }
+                                            <td align="center" valign="middle" height="40" style="border-bottom:1px solid #cccccc; font-size:14px; color:#737272; line-height:40px; font-weight:normal;">@item.RecordedValue</td>
+
+                                        </tr>
+                                    }
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td align="center" valign="middle" height="40" style="border-bottom:1px solid #cccccc; border-right:1px solid #cccccc; font-size:14px; color:#737272; line-height:40px; font-weight:normal;"></td>
+                                        <td align="left" valign="middle" height="40" style="border-bottom:1px solid #cccccc; border-right:1px solid #cccccc; font-size:14px; color:#737272; line-height:22px; font-weight:normal; padding:5px 0 5px 15px;"></td>
+                                        <td align="center" valign="middle" height="40" style="border-bottom:1px solid #cccccc; border-right:1px solid #cccccc;font-size:20px; line-height:40px;"></td>
+                                        <td align="center" valign="middle" height="40" style="border-bottom:1px solid #cccccc;  font-size:14px; color:#737272; line-height:40px; font-weight:normal;"></td>
+                                    </tr>
+                                }
+
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td align="left" valign="top" height="10"><img src="../Content/images/space.png" alt="" /></td>
+        </tr>
+        <tr>
+            <td align="left" valign="top" style="border-bottom:2px solid #264a7c;">
+                <table width="1000" border="0" cellspacing="0" cellpadding="0">
+                    <tr>
+                        <th width="988" align="left" valign="middle" scope="col" style=" border-left:2px solid #00d8ff; height:34px; line-height:34px; font-size:20px; color:#222; font-weight:500; padding-left:10px;">@Model.Loc.Where(a => a.ResourceId == "spnLabour").FirstOrDefault().Value.ToString()</th>
+                    </tr>
+                    <tr>
+                        <td align="left" valign="top" height="10"><img src="../Content/images/space.png" alt="" /></td>
+                    </tr>
+                    <tr>
+                        <td align="left" valign="top">
+                            <table width="1000" border="0" cellspacing="0" cellpadding="0">
+                                <tr style="background:#264a7c;">
+                                    <th width="150" align="center" valign="middle" height="40" scope="col" style="border-right:1px solid #fff; font-size:16px; color:#fff; line-height:40px; font-weight:normal;">@Model.Loc.Where(a => a.ResourceId == "spnStartDate").FirstOrDefault().Value.ToString()</th>
+                                    <th width="683" align="left" valign="middle" height="40" scope="col" style="border-right:1px solid #fff; font-size:16px; color:#fff; line-height:40px; font-weight:normal; padding-left:15px;">@Model.Loc.Where(a => a.ResourceId == "spnPersonnel").FirstOrDefault().Value.ToString()</th>
+                                    <th width="150" align="center" valign="middle" height="40" scope="col" style="font-size:16px; color:#fff; line-height:40px; font-weight:normal;">@Model.Loc.Where(a => a.ResourceId == "spnHours").FirstOrDefault().Value.ToString()</th>
+                                </tr>
+                                @if (Model.laborList.Count > 0)
+                                {
+                                    foreach (var item in Model.laborList)
+                                    {
+                                        <tr>
+                                            <td align="center" valign="middle" height="40" style="border-right:1px solid #cccccc; border-bottom:1px solid #cccccc; font-size:14px; color:#737272; line-height:40px; font-weight:normal;">@item.StartDate.Value.ToString("MM/dd/yyyy", CultureInfo.InvariantCulture)</td>
+                                            <td align="left" valign="middle" height="40" style="border-right:1px solid #cccccc; border-bottom:1px solid #cccccc; font-size:14px; color:#737272; line-height:22px; font-weight:normal; padding:5px 0 5px 15px;">@item.NameFull</td>
+                                            <td align="center" valign="middle" height="40" style=" border-bottom:1px solid #cccccc;font-size:14px; color:#737272; line-height:40px;">@item.Hours</td>
+                                        </tr>
+                                    }
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td align="center" valign="middle" height="40" style="border-right:1px solid #cccccc; border-bottom:1px solid #cccccc; font-size:14px; color:#737272; line-height:40px; font-weight:normal;"></td>
+                                        <td align="left" valign="middle" height="40" style="border-right:1px solid #cccccc; border-bottom:1px solid #cccccc; font-size:14px; color:#737272; line-height:22px; font-weight:normal; padding:5px 0 5px 15px;"></td>
+                                        <td align="center" valign="middle" height="40" style=" border-bottom:1px solid #cccccc;font-size:14px; color:#737272; line-height:40px;"></td>
+                                    </tr>
+                                }
+
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td align="left" valign="top" height="10"><img src="../Content/images/space.png" alt="" /></td>
+        </tr>
+        <tr>
+            <td align="left" valign="top" style="border-bottom:2px solid #264a7c;">
+                <table width="1000" border="0" cellspacing="0" cellpadding="0">
+                    <tr>
+                        <th width="988" align="left" valign="middle" scope="col" style=" border-left:2px solid #00d8ff; height:34px; line-height:34px; font-size:20px; color:#222; font-weight:500; padding-left:10px;">@Model.Loc.Where(a => a.ResourceId == "spnCompletion").FirstOrDefault().Value.ToString()</th>
+                    </tr>
+                    <tr>
+                        <td align="left" valign="top" height="10"><img src="../Content/images/space.png" alt="" /></td>
+                    </tr>
+                    <tr>
+                        <td align="left" valign="top">
+                            <table width="1000" border="0" cellspacing="0" cellpadding="0">
+                                <tr style="background:#264a7c;">
+                                    <th width="150" align="center" valign="middle" height="40" scope="col" style="border-right:1px solid #fff; font-size:16px; color:#fff; line-height:40px; font-weight:normal;">@Model.Loc.Where(a => a.ResourceId == "spnGlobalCompleted").FirstOrDefault().Value.ToString()</th>
+                                    <th width="550" align="left" valign="middle" height="40" scope="col" style="border-right:1px solid #fff; font-size:16px; color:#fff; line-height:40px; font-weight:normal; padding-left:15px;">@Model.Loc.Where(a => a.ResourceId == "spnBy").FirstOrDefault().Value.ToString()</th>
+                                    <th width="283" align="center" valign="middle" height="40" scope="col" style="font-size:16px; color:#fff; line-height:40px; font-weight:normal;">@Model.Loc.Where(a => a.ResourceId == "spnCompleteComments").FirstOrDefault().Value.ToString()</th>
+                                </tr>
+                                <tr>
+                                    @if (Model.JobDetailsModel.CompleteDate.HasValue && Model.JobDetailsModel.CompleteDate.Value != DateTime.MinValue)
+                                    {
+                                        <td align="center" valign="middle" height="40" style="border-right:1px solid #cccccc; font-size:14px; color:#737272; line-height:40px; font-weight:normal;">@Model.JobDetailsModel.CompleteDate.Value.ToString("MM/dd/yyyy", CultureInfo.InvariantCulture)</td>
+                                    }
+                                    <td align="left" valign="middle" height="40" style="border-right:1px solid #cccccc; font-size:14px; color:#737272; line-height:22px; font-weight:normal; padding:5px 0 5px 15px;">@Model.JobDetailsModel.CompleteBy</td>
+                                    <td align="center" valign="middle" height="40" style="font-size:14px; color:#737272; line-height:40px;">@Model.JobDetailsModel.CompleteComments</td>
+                                </tr>
+
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+
+</body>
+</html>

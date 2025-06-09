@@ -1,0 +1,1038 @@
+﻿@using DataContracts
+@using Client.Models.Common
+@{
+    bool PurchaseOrderImportInUse = false;
+    bool OraclePurchaseOrderImportInUse = false;
+    bool OracleVendorMasterImportInUse = false;
+    bool PurchaseOrderImportSwitch1 = false;
+    var menulist = (List<ViewModels.MenuVM>)Session["MenuDetails"];
+    var userdata = Session["userData"];
+    UserData userData = new UserData();
+    userData = (UserData)userdata;
+    var InterfacePropData = (List<InterfacePropModel>)Session["InterfacePropData"];
+    if (InterfacePropData != null && InterfacePropData.Count > 0)
+    {
+        PurchaseOrderImportInUse = InterfacePropData.Where(x => x.InterfaceType == InterfacePropConstants.PurchaseOrderImport).Select(x => x.InUse).FirstOrDefault();
+        PurchaseOrderImportSwitch1 = InterfacePropData.Where(x => x.InterfaceType == InterfacePropConstants.PurchaseOrderImport).Select(x => x.Switch1).FirstOrDefault();
+        OraclePurchaseOrderImportInUse = InterfacePropData.Where(x => x.InterfaceType == ApiConstants.OraclePOImport).Select(x => x.InUse).FirstOrDefault();
+        OracleVendorMasterImportInUse = InterfacePropData.Where(x => x.InterfaceType == ApiConstants.OracleVendorMasterImport).Select(x => x.InUse).FirstOrDefault();
+    }
+
+    var encKeyV = System.Configuration.ConfigurationManager.AppSettings["encKeyV"].ToString();
+    string userNameIntials = ((userData.DatabaseKey.User.FirstName != null && userData.DatabaseKey.User.FirstName.Length > 0) ? userData.DatabaseKey.User.FirstName.Trim()[0].ToString() : "")
+                              + ((userData.DatabaseKey.User.LastName != null && userData.DatabaseKey.User.LastName.Length > 0) ? userData.DatabaseKey.User.LastName.Trim()[0].ToString() : "");
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>
+        @ViewBag.Title
+    </title>
+    <meta name="description" content="Latest updates and statistic charts">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/webfont/1.6.16/webfont.js"></script>
+    <script>
+        WebFont.load({
+            google: { "families": ["Poppins:300,400,500,600,700", "Roboto:300,400,500,600,700"] },
+            active: function () {
+                sessionStorage.fonts = true;
+            }
+        });
+    </script>
+    <link href="~/Content/dialog-mobile.css" rel="stylesheet" />
+    <link href="~/Scripts/Metronic/assets/vendors/base/vendors.bundle.css" rel="stylesheet" />
+    <link href="~/Scripts/Metronic/assets/demo/default/base/style.bundle.css" rel="stylesheet" />
+    <link href="~/Scripts/Metronic/assets/demo/default/base/jquery.mCustomScrollbar.css" rel="stylesheet" />
+    <link href="~/Scripts/Metronic/assets/demo/default/base/style_custom.css" rel="stylesheet" />
+    <link href="~/Scripts/Metronic/assets/demo/default/base/responsive.css" rel="stylesheet" />
+    <link href="~/Content/user-notification.css" rel="stylesheet" />
+    <link rel="shortcut icon" href="~/Scripts/Metronic/assets/login/demo/default/media/img/logo/favicon.png" />
+    @Styles.Render("~/Content/Common")
+</head>
+
+<body class="m-page--fluid m--skin- m-content--skin-light2 m-header--fixed m-header--fixed-mobile m-aside-left--enabled m-aside-left--skin-dark m-aside-left--offcanvas m-footer--push m-aside--offcanvas-default m-brand--minimize m-aside-left--minimize">
+    @Html.Partial("_DisplayMsgLocalization")
+    @Html.Hidden("encKeyV", encKeyV)
+    <div class="overlay"></div>
+    <div class="m-grid m-grid--hor m-grid--root m-page">
+        <header class="m-grid__item m-header" data-minimize-offset="200" data-minimize-mobile-offset="200">
+            <div class="m-container m-container--fluid m-container--full-height">
+                <div class="m-stack m-stack--ver m-stack--desktop">
+                    <div class="m-stack__item m-brand  m-brand--skin-dark ">
+                        <div class="m-stack m-stack--ver m-stack--general">
+                            <div class="m-stack__item m-stack__item--middle m-brand__logo newLogo">
+                                <a href="/Dashboard/Dashboard" class="m-brand__logo-wrapper">
+                                    <img src="~/Scripts/Metronic/assets/app/media/img/logos/somaxLogo.png" style="width:130px; height:auto;">
+                                </a>
+                            </div>
+                            <div class="m-stack__item m-stack__item--middle m-brand__tools toggleMenu">
+                                <a href="javascript:;" id="m_aside_left_minimize_toggle" class="m-brand__icon m-brand__toggler m-brand__toggler--left m--visible-desktop-inline-block">
+                                    <span></span>
+                                </a>
+                                <a href="javascript:;" id="m_aside_left_offcanvas_toggle" class="m-brand__icon m-brand__toggler m-brand__toggler--left m--visible-tablet-and-mobile-inline-block">
+                                    <span></span>
+                                </a>
+                                <a id="m_aside_header_menu_mobile_toggle" href="javascript:;" class="m-brand__icon m-brand__toggler m--visible-tablet-and-mobile-inline-block">
+                                    <span></span>
+                                </a>
+                                <a id="m_aside_header_topbar_mobile_toggle" href="javascript:;" class="m-brand__icon m--visible-tablet-and-mobile-inline-block">
+                                    <i class="flaticon-more"></i>
+                                </a>
+                            </div>
+                            <div class="SmallLogo" style="display:block;">
+                                <a href="/Dashboard/Dashboard" class="m-brand__logo-wrapper">
+                                    <img src="~/Scripts/Metronic/assets/app/media/img/logos/smallLogo.png" style="width:auto;height:45px;" />
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="m-stack__item m-stack__item--fluid m-header-head" id="m_header_nav">
+                        <button class="m-aside-header-menu-mobile-close  m-aside-header-menu-mobile-close--skin-dark " id="m_aside_header_menu_mobile_close_btn">
+                            <i class="la la-close"></i>
+                        </button>
+                        <div id="m_header_topbar" class="m-topbar  m-stack m-stack--ver m-stack--general">
+                            <div class="m-stack__item m-topbar__nav-wrapper">
+                                <ul class="m-topbar__nav m-nav m-nav--inline">
+                                    <li class="m-nav__item m-topbar__notifications m-topbar__notifications--img m-dropdown m-dropdown--large m-dropdown--header-bg-fill m-dropdown--arrow m-dropdown--align-center 	m-dropdown--mobile-full-width" data-dropdown-toggle="click" data-dropdown-persistent="true">
+                                        <a href="#" class="m-nav__link m-dropdown__toggle" id="m_topbar_notification_icon">
+                                            <span class="" id="notification-dot"></span>
+                                            <span class="m-nav__link-icon">
+                                                <i class="flaticon-music-2"></i>
+                                            </span>
+                                        </a>
+                                        <div class="m-dropdown__wrapper">
+                                            <span class="m-dropdown__arrow m-dropdown__arrow--right"></span>
+                                            <div class="m-dropdown__inner">
+                                                <div class="m-dropdown__header m--align-center" style="background: url(../Scripts/Metronic/assets/app/media/img/misc/notification_bg.jpg); background-size: cover;">
+                                                    <span class="m-dropdown__header-title" id="notificationCount"></span>
+                                                    <span class="m-dropdown__header-subtitle">
+                                                        @UtilityFunction.GetMessageFromResource("spnUserNotifications", LocalizeResourceSetConstants.Menu)
+                                                    </span>
+                                                </div>
+                                                <div class="m-dropdown__body">
+                                                    <div class="m-dropdown__content">
+                                                        <span class="clear">
+                                                            <a href="javascript:void(0)" id="ClearAllNotificationSelectedTab">
+                                                                @UtilityFunction.GetMessageFromResource("spnClearAll", LocalizeResourceSetConstants.PurchaseOrder)
+                                                            </a>
+                                                        </span>
+                                                        <ul class="nav nav-tabs m-tabs m-tabs-line m-tabs-line--brand notification-tab-nav-b" role="tablist">
+                                                            <li class="nav-item m-tabs__item" id="NotificationMaintenancetab">
+                                                                <a class="nav-link m-tabs__link active" data-toggle="tab" href="#topbar_maintenence_notifications" role="tab" type="Maintenance">
+                                                                    @UtilityFunction.GetMessageFromResource("Maintenance", LocalizeResourceSetConstants.Menu)
+                                                                </a>
+                                                                <span class="" id="notificationMaintenance-dot"></span>
+                                                            </li>
+                                                            <li class="nav-item m-tabs__item" id="NotificationInventorytab">
+                                                                <a class="nav-link m-tabs__link" data-toggle="tab" href="#topbar_inventory_notifications" role="tab" type="Inventory">
+                                                                    @UtilityFunction.GetMessageFromResource("Inventory", LocalizeResourceSetConstants.Menu)
+                                                                </a>
+                                                                <span class="" id="notificationInventory-dot"></span>
+                                                            </li>
+                                                            <li class="nav-item m-tabs__item" id="NotificationProcurementtab">
+                                                                <a class="nav-link m-tabs__link" data-toggle="tab" href="#topbar_procurement_notifications" role="tab" type="Procurement">
+                                                                    @UtilityFunction.GetMessageFromResource("Procurement", LocalizeResourceSetConstants.Menu)
+                                                                </a>
+                                                                <span class="" id="notificationProcurement-dot"></span>
+                                                            </li>
+                                                            <li class="nav-item m-tabs__item" id="NotificationSystemtab">
+                                                                <a class="nav-link m-tabs__link" data-toggle="tab" href="#topbar_system_notifications" role="tab" type="System">
+                                                                    @UtilityFunction.GetMessageFromResource("globalSystem", LocalizeResourceSetConstants.Global)
+                                                                </a>
+                                                                <span class="" id="notificationSystem-dot"></span>
+                                                            </li>
+                                                            @if (userData.Site.APM)
+                                                            {
+                                                                <li class="nav-item m-tabs__item" id="NotificationAPMtab">
+                                                                    <a class="nav-link m-tabs__link" data-toggle="tab" href="#topbar_apm_notifications" role="tab" type="APM">
+                                                                        @UtilityFunction.GetMessageFromResource("GlobalAPM", LocalizeResourceSetConstants.Global)
+                                                                    </a>
+                                                                    <span class="" id="notificationapm-dot"></span>
+                                                                </li>
+                                                            }
+                                                            </ul>
+                                                        <div class="tab-content" id="notificationtabcontent">
+                                                            <div class="lds-ellipsis" id="notificationloader">
+                                                                <div></div>
+                                                                <div></div>
+                                                                <div></div>
+                                                                <div></div>
+                                                                <div></div>
+                                                            </div>
+                                                            <div class="tab-pane active" id="topbar_maintenence_notifications" role="tabpanel"></div>
+                                                            <div class="tab-pane" id="topbar_inventory_notifications" role="tabpanel"></div>
+                                                            <div class="tab-pane" id="topbar_procurement_notifications" role="tabpanel"></div>
+                                                            <div class="tab-pane" id="topbar_system_notifications" role="tabpanel"></div>
+                                                            <div class="tab-pane" id="topbar_apm_notifications" role="tabpanel"></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+
+                                    <li class="m-nav__item m-topbar__user-profile m-topbar__user-profile--img  m-dropdown m-dropdown--medium m-dropdown--arrow m-dropdown--header-bg-fill m-dropdown--align-right m-dropdown--mobile-full-width m-dropdown--skin-light" data-dropdown-toggle="click">
+                                        <a href="#" class="m-nav__link m-dropdown__toggle">
+                                            <span class="m-topbar__userpic profileName">
+                                                <span class="m--img-rounded m--marginless m--img-centered nameinitials">@userNameIntials</span>
+                                            </span>
+                                        </a>
+                                        <div class="m-dropdown__wrapper">
+                                            <span class="m-dropdown__arrow m-dropdown__arrow--right m-dropdown__arrow--adjust"></span>
+                                            <div class="m-dropdown__inner">
+                                                <div class="m-dropdown__header m--align-center" style="background: url(../Scripts/Metronic/assets/app/media/img/misc/user_profile_bg.jpg); background-size: cover;">
+                                                    <div class="m-card-user m-card-user--skin-dark">
+                                                        <div class="m-card-user__pic profileName2">
+                                                            <span class="m--img-rounded m--marginless nameinitials">@userNameIntials</span>
+                                                        </div>
+                                                        <div class="m-card-user__details">
+                                                            <span class="m-card-user__name m--font-weight-500" id="layoutusercompletename">
+                                                                @userData.DatabaseKey.User.FirstName @userData.DatabaseKey.User.LastName
+                                                            </span>
+                                                            <span class="m-card-user__name layout-siteName">
+                                                                @UtilityFunction.GetMessageFromResource("GlobalActiveSite", LocalizeResourceSetConstants.Global): @userData.Site.Name
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="m-dropdown__body">
+                                                    <div class="m-dropdown__content">
+                                                        <ul class="m-nav m-nav--skin-light">
+                                                            <li class="m-nav__section m--hide">
+                                                                <span class="m-nav__section-text">
+                                                                    @UtilityFunction.GetMessageFromResource("spnSection", LocalizeResourceSetConstants.PartDetails)
+                                                                </span>
+                                                            </li>
+                                                            <li class="m-nav__item">
+                                                                <a href="javascript:void(0)" class="m-nav__link" id="showUserProfile">
+                                                                    <i class="m-nav__link-icon flaticon-profile-1"></i>
+                                                                    <span class="m-nav__link-title">
+                                                                        <span class="m-nav__link-wrap">
+                                                                            <span class="m-nav__link-text">
+                                                                                @UtilityFunction.GetMessageFromResource("spnMyProfile", LocalizeResourceSetConstants.Menu)
+                                                                            </span>
+                                                                        </span>
+                                                                    </span>
+                                                                </a>
+                                                            </li>
+                                                            <li class="m-nav__item">
+                                                                <a href="javascript:void(0)" class="m-nav__link" id="showchangeactivesite">
+                                                                    <i class="m-nav__link-icon flaticon-share"></i>
+                                                                    <span class="m-nav__link-text">
+                                                                        @UtilityFunction.GetMessageFromResource("spnChangeActiveSite", LocalizeResourceSetConstants.Menu)
+                                                                    </span>
+                                                                </a>
+                                                            </li>
+                                                            @if (!string.IsNullOrEmpty(userData.Site.UIVersion) && userData.Site.UIVersion.ToLower() == "both")
+                                                            {
+                                                                <li class="m-nav__item">
+                                                                    <a href="javascript:void(0)" class="m-nav__link" id="showchangeversion">
+                                                                        <i class="m-nav__link-icon la la-angle-left"></i>
+                                                                        <span class="m-nav__link-text">
+                                                                            @UtilityFunction.GetMessageFromResource("spnUseVersion1", LocalizeResourceSetConstants.Menu)
+                                                                        </span>
+                                                                    </a>
+                                                                </li>
+                                                            }
+                                                            <li class="m-nav__item">
+                                                                <a href="https://help.somax.com/" target="_blank" class="m-nav__link">
+                                                                    <i class="m-nav__link-icon flaticon-lifebuoy"></i>
+                                                                    <span class="m-nav__link-text">
+                                                                        @UtilityFunction.GetMessageFromResource("spnSupport", LocalizeResourceSetConstants.Menu)
+                                                                    </span>
+                                                                </a>
+                                                            </li>
+                                                            <li class="m-nav__separator m-nav__separator--fit"></li>
+                                                            <li class="m-nav__item">
+                                                                <a href="~/LogIn/LogOut?returnUrl=+@Request.Url.PathAndQuery" class="btn m-btn--pill btn-secondary m-btn m-btn--custom m-btn--label-brand m-btn--bolder proflogoutBttn">
+                                                                    @UtilityFunction.GetMessageFromResource("spnLogout", LocalizeResourceSetConstants.Menu)
+                                                                </a>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div id="m_header_menu" class="m-header-menu m-aside-header-menu-mobile m-aside-header-menu-mobile--offcanvas  m-header-menu--skin-light m-header-menu--submenu-skin-light m-aside-header-menu-mobile--skin-dark m-aside-header-menu-mobile--submenu-skin-dark ">
+                            <ul class="m-menu__nav  m-menu__nav--submenu-arrow ">
+                                <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel" data-menu-submenu-toggle="click" data-redirect="true" aria-haspopup="true">
+                                    @if (userData.DatabaseKey.User.UserType.ToLower() == UserTypeConstants.WorkRequest.ToLower())
+                                    {
+                                        if (userData.Site.Sanitation == false && userData.Site.CMMS == true && userData.Security.WorkOrders.CreateRequest)
+                                        {
+                                            <a href="@Url.Action("AddWoRequest", "Dashboard")" title="New Work Request" class="btn newBtn-add">New Work Request</a>
+                                        }
+                                        else if (userData.Site.Sanitation == true && userData.Site.CMMS == false)
+                                        {
+                                            <a href="@Url.Action("AddSanitationRequest", "Dashboard")" title="New Sanitation Request" class="btn newBtn-add">New Sanitation Request</a>
+                                            @*<a href="#" class="btn newBtn-add" data-toggle="modal" data-target="#AddSanitationJobDashboard">New Sanitation Request</a>*@
+                                        }
+                                        else if (userData.Site.Sanitation == true && userData.Site.CMMS == true)
+                                        {
+                                            if (!(userData.Site.Sanitation == true && userData.Site.CMMS == false && userData.Site.APM == true) || (userData.Site.Sanitation == true && userData.Site.CMMS == false && userData.Site.APM == false) || (userData.Site.Sanitation == false && userData.Site.CMMS == false && userData.Site.APM == true) || (userData.DatabaseKey.User.UserType.ToLower() == UserTypeConstants.Enterprise.ToLower()))
+                                            {
+
+                                            }
+                                            else
+                                            {
+                                                <a href="#" class="m-menu__link m-menu__toggle">
+                                                    <i class="m-menu__link-icon flaticon-add"></i>
+                                                    <span class="m-menu__link-text">
+                                                        @UtilityFunction.GetMessageFromResource("spnAddNew", LocalizeResourceSetConstants.Menu)
+                                                    </span>
+                                                    <i class="m-menu__hor-arrow la la-angle-down"></i>
+                                                    <i class="m-menu__ver-arrow la la-angle-right"></i>
+                                                </a>
+                                            }
+                                            <div class="m-menu__submenu m-menu__submenu--classic m-menu__submenu--right">
+                                                <span class="m-menu__arrow m-menu__arrow--adjust"></span>
+                                                <ul class="m-menu__subnav">
+
+                                                    <li class="m-menu__item " aria-haspopup="true">
+                                                        <a href="@Url.Action("AddWoRequest", "Dashboard")" class="m-menu__link ">
+                                                            <i class="m-menu__link-bullet m-menu__link-bullet--dot">
+                                                                <span></span>
+                                                            </i>
+                                                            <span class="m-menu__link-text">
+                                                                @UtilityFunction.GetMessageFromResource("spnWorkRequest", LocalizeResourceSetConstants.Global)
+                                                            </span>
+                                                        </a>
+                                                    </li>
+
+                                                    <li class="m-menu__item " aria-haspopup="true">
+                                                        <a href="@Url.Action("AddSanitationRequest", "Dashboard")" class="m-menu__link ">
+                                                            <i class="m-menu__link-bullet m-menu__link-bullet--dot">
+                                                                <span></span>
+                                                            </i>
+                                                            <span class="m-menu__link-text">
+                                                                @UtilityFunction.GetMessageFromResource("spnSanitationRequest", LocalizeResourceSetConstants.SanitationDetails)
+                                                            </span>
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        if ((userData.Site.Sanitation == true && userData.Site.CMMS == false && userData.Site.APM == true) || (userData.Site.Sanitation == true && userData.Site.CMMS == false && userData.Site.APM == false) || (userData.Site.Sanitation == false && userData.Site.CMMS == false && userData.Site.APM == true) || (userData.DatabaseKey.User.UserType.ToLower() == UserTypeConstants.Enterprise.ToLower()))
+                                        {
+
+                                        }
+                                        else
+                                        {
+                                            <a href="#" class="m-menu__link m-menu__toggle">
+                                                <i class="m-menu__link-icon flaticon-add"></i>
+                                                <span class="m-menu__link-text">
+                                                    @UtilityFunction.GetMessageFromResource("spnAddNew", LocalizeResourceSetConstants.Menu)
+                                                </span>
+                                                <i class="m-menu__hor-arrow la la-angle-down"></i>
+                                                <i class="m-menu__ver-arrow la la-angle-right"></i>
+                                            </a>
+                                        }
+                                        <div class="m-menu__submenu m-menu__submenu--classic m-menu__submenu--right">
+                                            <span class="m-menu__arrow m-menu__arrow--adjust"></span>
+                                            <ul class="m-menu__subnav">
+                                                @if (userData.Security.Equipment.Create)
+                                                {
+                                                    <li class="m-menu__item " aria-haspopup="true">
+                                                        <a href="@Url.Action("Add", "Equipment")" class="m-menu__link ">
+                                                            <i class="m-menu__link-bullet m-menu__link-bullet--dot">
+                                                                <span></span>
+                                                            </i>
+                                                            <span class="m-menu__link-text">
+                                                                @UtilityFunction.GetMessageFromResource("Equipment", LocalizeResourceSetConstants.Menu)
+                                                            </span>
+                                                        </a>
+                                                    </li>
+                                                }
+                                                @if (userData.Security.WorkOrders.Create && userData.Site.MaintOnDemand)
+                                                {
+                                                    <li class="m-menu__item " aria-haspopup="true">
+                                                        <a href="#" class="m-menu__link " data-toggle="modal" data-target="#AddWorkOrderModalPopup">
+                                                            <i class="m-menu__link-bullet m-menu__link-bullet--dot">
+                                                                <span></span>
+                                                            </i>
+                                                            <span class="m-menu__link-text">
+                                                                @UtilityFunction.GetMessageFromResource("WorkOrder", LocalizeResourceSetConstants.Menu)
+                                                            </span>
+                                                        </a>
+                                                    </li>
+
+                                                }
+                                                else
+                                                {
+                                                    <li class="m-menu__item " aria-haspopup="true">
+                                                        <a href="@Url.Action("Add", "WorkOrder")" class="m-menu__link ">
+                                                            <i class="m-menu__link-bullet m-menu__link-bullet--dot">
+                                                                <span></span>
+                                                            </i>
+                                                            <span class="m-menu__link-text">
+                                                                @UtilityFunction.GetMessageFromResource("WorkOrder", LocalizeResourceSetConstants.Menu)
+                                                            </span>
+                                                        </a>
+                                                    </li>
+                                                }
+                                                @if (userData.Security.Locations.Create && userData.DatabaseKey.Client.BusinessType.ToUpper() == BusinessTypeConstants.Facilities)
+                                                {
+                                                    <li class="m-menu__item " aria-haspopup="true">
+                                                        <a href="#" class="m-menu__link m-menu__toggle">
+                                                            <i class="m-menu__link-bullet m-menu__link-bullet--dot">
+                                                                <span></span>
+                                                            </i>
+                                                            <span class="m-menu__link-text">
+                                                                @UtilityFunction.GetMessageFromResource("spnLocation", LocalizeResourceSetConstants.Global)
+                                                            </span>
+                                                        </a>
+                                                    </li>
+                                                }
+                                                @*------V2-375------*@
+                                                @*@if (userData.Security.Vendors.Create && !userData.Site.UseVendorMaster)
+                                                    {
+                                                        <li class="m-menu__item " aria-haspopup="true">
+                                                            <a href="@Url.Action("Add", "Vendor")" class="m-menu__link ">
+                                                                <i class="m-menu__link-bullet m-menu__link-bullet--dot">
+                                                                    <span></span>
+                                                                </i>
+                                                                <span class="m-menu__link-text">
+                                                                    @UtilityFunction.GetMessageFromResource("Vendor", LocalizeResourceSetConstants.Menu)
+                                                                </span>
+                                                            </a>
+                                                        </li>
+                                                    }*@
+                                                @if (!OracleVendorMasterImportInUse)
+                                                {
+                                                    if (userData.Security.Vendors.Create)
+                                                    {
+                                                        if (!userData.Site.UseVendorMaster)
+                                                        {
+                                                            <li class="m-menu__item " aria-haspopup="true">
+                                                                <a href="@Url.Action("Add", "Vendor")" class="m-menu__link ">
+                                                                    <i class="m-menu__link-bullet m-menu__link-bullet--dot">
+                                                                        <span></span>
+                                                                    </i>
+                                                                    <span class="m-menu__link-text">
+                                                                        @UtilityFunction.GetMessageFromResource("Vendor", LocalizeResourceSetConstants.Menu)
+                                                                    </span>
+                                                                </a>
+                                                            </li>
+                                                        }
+                                                        else if (userData.Site.UseVendorMaster && !userData.Site.VendorMaster_AllowLocal && userData.DatabaseKey.Client.ClientId != 4)
+                                                        {
+                                                            <li class="m-menu__item " aria-haspopup="true">
+                                                                <a href="javascript:void(0)" class="m-menu__link ">
+                                                                    <i class="m-menu__link-bullet m-menu__link-bullet--dot">
+                                                                        <span></span>
+                                                                    </i>
+                                                                    <span class="m-menu__link-text" id="spnvendormasteradd">
+                                                                        @*@UtilityFunction.GetMessageFromResource("VendorAddButton", LocalizeResourceSetConstants.VendorDetails)*@
+                                                                        @UtilityFunction.GetMessageFromResource("Vendor", LocalizeResourceSetConstants.Menu)
+                                                                    </span>
+                                                                </a>
+                                                            </li>
+                                                        }
+
+                                                        else if (userData.Site.UseVendorMaster && userData.Site.VendorMaster_AllowLocal)
+                                                        {
+                                                            <li class="m-menu__item " aria-haspopup="true">
+                                                                <a href="#" class="m-menu__link " data-toggle="modal" data-target="#AddVendorPopupModal">
+                                                                    <i class="m-menu__link-bullet m-menu__link-bullet--dot">
+                                                                        <span></span>
+                                                                    </i>
+                                                                    <span class="m-menu__link-text">
+                                                                        @UtilityFunction.GetMessageFromResource("Vendor", LocalizeResourceSetConstants.Menu)
+                                                                    </span>
+                                                                </a>
+                                                            </li>
+                                                        }
+                                                    }
+                                                }
+                                                @if (userData.Security.Parts.Create)
+                                                {
+                                                    <li class="m-menu__item " aria-haspopup="true">
+                                                        <a href="@Url.Action("Add", "Parts")" class="m-menu__link ">
+                                                            <i class="m-menu__link-bullet m-menu__link-bullet--dot">
+                                                                <span></span>
+                                                            </i>
+                                                            <span class="m-menu__link-text">
+                                                                @UtilityFunction.GetMessageFromResource("Parts", LocalizeResourceSetConstants.Menu)
+                                                            </span>
+                                                        </a>
+                                                    </li>
+                                                }
+                                                @if (userData.Security.WorkOrders.CreateRequest)
+                                                {
+                                                    <li class="m-menu__item " aria-haspopup="true">
+                                                        <a href="@Url.Action("AddWoRequestDynamic", "WorkOrder")" class="m-menu__link ">
+                                                            <i class="m-menu__link-bullet m-menu__link-bullet--dot">
+                                                                <span></span>
+                                                            </i>
+                                                            <span class="m-menu__link-text">
+                                                                @UtilityFunction.GetMessageFromResource("spnWorkRequest", LocalizeResourceSetConstants.Global)
+                                                            </span>
+                                                        </a>
+                                                    </li>
+                                                }
+                                                @if (!OraclePurchaseOrderImportInUse)
+                                                {
+                                                    if (PurchaseOrderImportInUse)
+                                                    {
+                                                        if (userData.Security.Purchasing.Create && (userData.DatabaseKey.Client.PackageLevel.ToUpper() == PackageLevelConstant.Professional || userData.DatabaseKey.Client.PackageLevel.ToUpper() == PackageLevelConstant.Enterprise) && PurchaseOrderImportSwitch1)
+                                                        {
+                                                            <li class="m-menu__item " aria-haspopup="true">
+                                                                <a href="@Url.Action("Add", "Purchasing")" class="m-menu__link ">
+                                                                    <i class="m-menu__link-bullet m-menu__link-bullet--dot">
+                                                                        <span></span>
+                                                                    </i>
+                                                                    <span class="m-menu__link-text">
+                                                                        @UtilityFunction.GetMessageFromResource("spnPoPurchaseOrder", LocalizeResourceSetConstants.PurchaseOrder)
+                                                                    </span>
+                                                                </a>
+                                                            </li>
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+                                                        if (userData.Security.Purchasing.Create && (userData.DatabaseKey.Client.PackageLevel.ToUpper() == PackageLevelConstant.Professional || userData.DatabaseKey.Client.PackageLevel.ToUpper() == PackageLevelConstant.Enterprise))
+                                                        {
+                                                            <li class="m-menu__item " aria-haspopup="true">
+                                                                <a href="@Url.Action("Add", "Purchasing")" class="m-menu__link ">
+                                                                    <i class="m-menu__link-bullet m-menu__link-bullet--dot">
+                                                                        <span></span>
+                                                                    </i>
+                                                                    <span class="m-menu__link-text">
+                                                                        @UtilityFunction.GetMessageFromResource("spnPoPurchaseOrder", LocalizeResourceSetConstants.PurchaseOrder)
+                                                                    </span>
+                                                                </a>
+                                                            </li>
+                                                        }
+                                                    }
+                                                }
+                                                @if (userData.Security.PurchaseRequest.Create && (userData.DatabaseKey.Client.PackageLevel.ToUpper() == PackageLevelConstant.Professional || userData.DatabaseKey.Client.PackageLevel.ToUpper() == PackageLevelConstant.Enterprise))
+                                                {
+                                                    if (userData.Site.UsePunchOut && userData.Security.PurchaseRequest.UsePunchout)
+                                                    {
+                                                        <li class="m-menu__item " aria-haspopup="true">
+                                                            <a href="javascript:void(0)" class="m-menu__link AddPrequestPlus">
+                                                                <i class="m-menu__link-bullet m-menu__link-bullet--dot">
+                                                                    <span></span>
+                                                                </i>
+                                                                <span class="m-menu__link-text">
+                                                                    @UtilityFunction.GetMessageFromResource("spnPurchaseRequest", LocalizeResourceSetConstants.Global)
+                                                                </span>
+                                                            </a>
+                                                        </li>
+                                                    }
+                                                    else
+                                                    {
+                                                        <li class="m-menu__item " aria-haspopup="true">
+                                                            <a href="@Url.Action("Add", "PurchaseRequest")" class="m-menu__link ">
+                                                                <i class="m-menu__link-bullet m-menu__link-bullet--dot">
+                                                                    <span></span>
+                                                                </i>
+                                                                <span class="m-menu__link-text">
+                                                                    @UtilityFunction.GetMessageFromResource("spnPurchaseRequest", LocalizeResourceSetConstants.Global)
+                                                                </span>
+                                                            </a>
+                                                        </li>
+                                                    }
+                                                }
+                                                @if (userData.Security.InvoiceMatching.Create && (userData.DatabaseKey.Client.PackageLevel.ToUpper() == PackageLevelConstant.Professional || userData.DatabaseKey.Client.PackageLevel.ToUpper() == PackageLevelConstant.Enterprise))
+                                                {
+                                                    <li class="m-menu__item " aria-haspopup="true">
+                                                        <a href="@Url.Action("Add", "Invoice")" class="m-menu__link ">
+                                                            <i class="m-menu__link-bullet m-menu__link-bullet--dot">
+                                                                <span></span>
+                                                            </i>
+                                                            <span class="m-menu__link-text">
+                                                                @UtilityFunction.GetMessageFromResource("spnIdInvoiceMatch", LocalizeResourceSetConstants.InvoiceDetails)
+                                                            </span>
+                                                        </a>
+                                                    </li>
+                                                }
+                                                @if (userData.Security.SanitationJob.CreateRequest && (userData.DatabaseKey.Client.PackageLevel.ToUpper() == PackageLevelConstant.Professional || userData.DatabaseKey.Client.PackageLevel.ToUpper() == PackageLevelConstant.Enterprise) && userData.DatabaseKey.Client.BusinessType.ToUpper() == BusinessTypeConstants.FoodServices)
+                                                {
+                                                    <li class="m-menu__item " aria-haspopup="true">
+                                                        <a href="#" class="m-menu__link " data-toggle="modal" data-target="#AddSanitationJobDashboard">
+                                                            <i class="m-menu__link-bullet m-menu__link-bullet--dot">
+                                                                <span></span>
+                                                            </i>
+                                                            <span class="m-menu__link-text">
+                                                                @UtilityFunction.GetMessageFromResource("spnSanitationJob", LocalizeResourceSetConstants.SanitationDetails)
+                                                            </span>
+                                                        </a>
+                                                    </li>
+                                                }
+                                                @if (userData.Security.SanitationJob.CreateRequest && (userData.DatabaseKey.Client.PackageLevel.ToUpper() == PackageLevelConstant.Professional || userData.DatabaseKey.Client.PackageLevel.ToUpper() == PackageLevelConstant.Enterprise) && userData.DatabaseKey.Client.BusinessType.ToUpper() == BusinessTypeConstants.FoodServices)
+                                                {
+                                                    <li class="m-menu__item " aria-haspopup="true">
+                                                        <a href="@Url.Action("Add", "SanitationJob", new { addfor = "Request", addtype = "Demand" })" class="m-menu__link ">
+                                                            <i class="m-menu__link-bullet m-menu__link-bullet--dot">
+                                                                <span></span>
+                                                            </i>
+                                                            <span class="m-menu__link-text">
+                                                                @UtilityFunction.GetMessageFromResource("spnSanitationRequest", LocalizeResourceSetConstants.SanitationDetails)
+                                                            </span>
+                                                        </a>
+                                                    </li>
+                                                }
+                                                @*@if (userData.Security.Vendors.Create && userData.Site.UseVendorMaster && userData.DatabaseKey.Client.ClientId != 4)
+                                                    {
+                                                        <li class="m-menu__item " aria-haspopup="true">
+                                                            <a href="javascript:void(0)" class="m-menu__link ">
+                                                                <i class="m-menu__link-bullet m-menu__link-bullet--dot">
+                                                                    <span></span>
+                                                                </i>
+                                                                <span class="m-menu__link-text" id="spnvendormasteradd">
+                                                                    @UtilityFunction.GetMessageFromResource("VendorAddButton", LocalizeResourceSetConstants.VendorDetails)
+                                                                </span>
+                                                            </a>
+                                                        </li>
+                                                    }*@
+                                            </ul>
+                                        </div>
+                                    }
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+        <div class="m-grid__item m-grid__item--fluid m-grid m-grid--ver-desktop m-grid--desktop m-body">
+            <button class="m-aside-left-close  m-aside-left-close--skin-dark " id="m_aside_left_close_btn">
+                <i class="la la-close"></i>
+            </button>
+            <div id="m_aside_left" class="m-grid__item	m-aside-left  m-aside-left--skin-dark mCustomScrollbar light" data-mcs-theme="minimal-dark">
+                <div id="m_ver_menu"
+                     class="m-aside-menu  m-aside-menu--skin-dark m-aside-menu--submenu-skin-dark "
+                     data-menu-vertical="true"
+                     data-menu-scrollable="false" data-menu-dropdown-timeout="500">
+                    <ul class="m-menu__nav  m-menu__nav--dropdown-submenu-arrow ">
+                        @if (menulist[0].MenuName.ToLower() == "dashboard")
+                        {
+                            <li class="m-menu__item" aria-haspopup="true">
+                                <a href="~/Dashboard/Dashboard" class="m-menu__link ">
+                                    <i class="m-menu__link-icon flaticon-line-graph"></i>
+                                    <span class="m-menu__link-title">
+                                        <span class="m-menu__link-wrap">
+                                            <span class="m-menu__link-text">
+                                                @menulist[0].LocalizedName
+                                            </span>
+                                        </span>
+                                    </span>
+                                </a>
+                            </li>
+                        }
+                        @foreach (var m in menulist)
+                        {
+                            if (m.ParentMenuId == 0 && m.MenuName.ToLower().Trim() != "dashboard")
+                            {
+                                <li id="@m.LocalizedName.Replace(" ","_").Replace("(","_").Replace(")","_")" class="m-menu__item  m-menu__item--submenu rootli" aria-haspopup="true" data-menu-submenu-toggle="hover">
+                                    @if (m.Childlist.Count == 0)
+                                    {
+                                        @*if (m.MenuName.ToLower() != "reports")
+                                            {
+                                                <a href="@string.Concat(m.MenuUrl,"?page=",m.LocalizedName.Replace(" ","_").Replace("(","_").Replace(")","_"))" class="m-menu__link">
+                                                    <span class="m-menu__item-here"></span>
+                                                    <i class="m-menu__link-icon @m.CssClass"></i>
+                                                    <span class="m-menu__link-text">
+                                                        @m.LocalizedName
+                                                    </span>
+                                                </a>
+                                            }*@
+                                        if (m.MenuName.ToLower() == "events")
+                                        {
+                                            <a href="@string.Concat(m.MenuUrl,"?page=",m.LocalizedName.Replace(" ","_").Replace("(","_").Replace(")","_"))" class="m-menu__link">
+                                                <span class="m-menu__item-here"></span>
+                                                <i class="m-menu__link-icon @m.CssClass"></i>
+                                                <span class="m-menu__link-text">
+                                                    @m.LocalizedName
+                                                </span>
+                                                @if ((userData.Site.Sanitation == false && userData.Site.CMMS == false && userData.Site.APM == true))
+                                                {
+
+                                                    <span class="m-menu__link-badge apmBadgesmenu" style="display:none" id="spnopeneventcontainer">
+                                                        <span class="m-badge m-badge--danger" id="spnopenevent"></span>
+                                                    </span>
+                                                }
+                                                else
+                                                { <span class="m-menu__link-badge newBadges" style="display:none" id="spnopeneventcontainer">
+                                                        <span class="m-badge m-badge--danger" id="spnopenevent"></span>
+                                                    </span>}
+                                            </a>
+                                        }
+                                        else
+                                        {
+                                            <a href="@string.Concat(m.MenuUrl,"?page=",m.LocalizedName.Replace(" ","_").Replace("(","_").Replace(")","_"))" class="m-menu__link">
+                                                <span class="m-menu__item-here"></span>
+                                                <i class="m-menu__link-icon @m.CssClass"></i>
+                                                <span class="m-menu__link-text">
+                                                    @m.LocalizedName
+                                                </span>
+                                            </a>
+                                        }
+
+                                    }
+                                    else
+                                    {
+                                        <a href="@string.Concat(m.MenuUrl,"?page=",m.LocalizedName.Replace(" ","_").Replace("(","_").Replace(")","_"))" class="m-menu__link m-menu__toggle">
+                                            <span class="m-menu__item-here"></span>
+                                            <i class="m-menu__link-icon @m.CssClass"></i>
+                                            <span class="m-menu__link-text">
+                                                @m.LocalizedName
+                                            </span>
+                                            <i class="m-menu__ver-arrow la la-angle-right"></i>
+                                        </a>
+
+                                        <div class="m-menu__submenu m-menu__submenu--down">
+                                            <span class="m-menu__arrow"></span>
+                                            <ul class="m-menu__subnav">
+                                                @foreach (var c in m.Childlist)
+                                                {
+                                                    if (c.Childlist.Count == 0)
+                                                    {
+                                                        var ItemId = $"{m.LocalizedName.Replace(" ", "_")}_{c.LocalizedName.Replace(" ", "_")}";
+                                                        <li id="@ItemId" class="m-menu__item " aria-haspopup="true">
+                                                            @if (c.MenuName.ToLower() == "workorderstatus")
+                                                            {
+                                                                <a href="@string.Concat(c.MenuUrl, "?page=", ItemId)" class="m-menu__link" target="_blank">
+                                                                    <i class="m-menu__link-bullet @c.CssClass">
+                                                                        <span></span>
+                                                                    </i>
+                                                                    <span class="m-menu__link-text">
+                                                                        @c.LocalizedName
+                                                                    </span>
+                                                                </a>
+                                                            }
+                                                            else
+                                                            {
+                                                                <a href="@string.Concat(c.MenuUrl,"?page=", ItemId)" class="m-menu__link ">
+                                                                    <i class="m-menu__link-bullet @c.CssClass">
+                                                                        <span></span>
+                                                                    </i>
+                                                                    @if (c.MenuName.ToLower() == "events")
+                                                                    {
+                                                                        <span class="m-menu__link-text">
+                                                                            @c.LocalizedName
+                                                                        </span>
+                                                                        <span class="m-menu__link-badge newBadges" style="display:none" id="spnopeneventcontainer">
+                                                                            <span class="m-badge m-badge--danger" id="spnopenevent"></span>
+                                                                        </span>
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <span class="m-menu__link-text">
+                                                                            @c.LocalizedName
+                                                                        </span>
+                                                                    }
+                                                                </a>
+                                                            }
+                                                        </li>
+                                                    }
+                                                    else
+                                                    {
+                                                        var ItemId = $"{m.LocalizedName.Replace(" ", "_")}_{c.LocalizedName.Replace(" ", "_")}";
+                                                        <li id="@ItemId" class="m-menu__item  m-menu__item--submenu" aria-haspopup="true" data-menu-submenu-toggle="hover" data-redirect="true">
+                                                            <a href="@string.Concat(c.MenuUrl,"?page=",ItemId)" class="m-menu__link m-menu__toggle">
+                                                                <i class="m-menu__link-bullet @c.CssClass">
+                                                                    <span></span>
+                                                                </i>
+
+                                                                @if (c.MenuName.ToLower() == "workorder")
+                                                                {
+                                                                    <span class="m-menu__link-text">
+                                                                        @c.LocalizedName
+                                                                    </span>
+                                                                    <span class="m-menu__link-badge newBadges" style="display:none" id="spnopenwocontainer">
+                                                                        <span class="m-badge m-badge--danger" id="spnopenwo"></span>
+                                                                    </span>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <span class="m-menu__link-text">
+                                                                        @c.LocalizedName
+                                                                    </span>
+                                                                }
+                                                                @if (c.Childlist.Count != 0)
+                                                                {
+                                                                    <i class="m-menu__ver-arrow la la-angle-right"></i>
+                                                                }
+                                                            </a>
+                                                            @if (c.Childlist.Count != 0)
+                                                            {
+                                                                if (c.Childlist.Count > 1)
+                                                                {
+                                                                    <div class="m-menu__submenu">
+                                                                        <span class="m-menu__arrow"></span>
+                                                                        <ul class="m-menu__subnav">
+                                                                            @foreach (var s in c.Childlist)   //-----for subtosub menu---------
+                                                                            {
+                                                                                ItemId = $"{m.LocalizedName.Replace(" ", "_")}_{c.LocalizedName.Replace(" ", "_")}_{s.LocalizedName.Replace(" ", "_")}";
+
+                                                                                <li id="@ItemId" class="m-menu__item " aria-haspopup="true" data-redirect="true">
+                                                                                    <a href="@string.Concat(s.MenuUrl,"?page=",ItemId)" class="m-menu__link ">
+                                                                                        <i class="m-menu__link-bullet @s.CssClass">
+                                                                                            <span></span>
+                                                                                        </i>
+                                                                                        <span class="m-menu__link-title">
+                                                                                            <span class="m-menu__link-wrap">
+                                                                                                <span class="m-menu__link-text">
+                                                                                                    @s.LocalizedName
+                                                                                                </span>
+                                                                                            </span>
+                                                                                        </span>
+                                                                                    </a>
+                                                                                </li>
+
+                                                                            }
+                                                                        </ul>
+                                                                    </div>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <div class="m-menu__submenu m-menu__submenu--up">
+                                                                        <span class="m-menu__arrow"></span>
+                                                                        <ul class="m-menu__subnav">
+                                                                            @foreach (var s in c.Childlist)   //-----for subtosub menu---------
+                                                                            {
+                                                                                ItemId = $"{m.LocalizedName.Replace(" ", "_").Replace("(", "_").Replace(")", "_")}_{c.LocalizedName.Replace(" ", "_").Replace("(", "_").Replace(")", "_")}_{s.LocalizedName.Replace(" ", "_").Replace("(", "_").Replace(")", "_")}";
+
+                                                                                if (s.Childlist.Count > 1)
+                                                                                {
+
+                                                                                    <li id="@ItemId" class="m-menu__item  m-menu__item--submenu" aria-haspopup="true" data-menu-submenu-toggle="hover" data-redirect="true">
+                                                                                        <a href="@string.Concat(s.MenuUrl,"?page=",ItemId)" class="m-menu__link m-menu__toggle">
+                                                                                            <i class="m-menu__link-bullet @s.CssClass">
+                                                                                                <span></span>
+                                                                                            </i>
+                                                                                            <span class="m-menu__link-text">
+                                                                                                @s.LocalizedName
+                                                                                            </span>
+                                                                                            <i class="m-menu__ver-arrow la la-angle-right"></i>
+
+                                                                                        </a>
+                                                                                        <div class="m-menu__submenu">
+                                                                                            <span class="m-menu__arrow"></span>
+                                                                                            <ul class="m-menu__subnav">
+                                                                                                @foreach (var t in s.Childlist)   //-----for subsubtosub menu---------
+                                                                                                {
+                                                                                                    if (t.Childlist.Count == 0)
+                                                                                                    {
+                                                                                                        ItemId = $"{m.LocalizedName.Replace(" ", "_").Replace("(", "_").Replace(")", "_")}_{c.LocalizedName.Replace(" ", "_").Replace("(", "_").Replace(")", "_")}_{s.LocalizedName.Replace(" ", "_").Replace("(", "_").Replace(")", "_")}_{t.LocalizedName.Replace(" ", "_").Replace("(", "_").Replace(")", "_")}";
+                                                                                                        <li id="@ItemId" class="m-menu__item " aria-haspopup="true">
+                                                                                                            <a href="@string.Concat(t.MenuUrl,"?page=", ItemId)" class="m-menu__link ">
+                                                                                                                <i class="m-menu__link-bullet @t.CssClass">
+                                                                                                                    <span></span>
+                                                                                                                </i>
+                                                                                                                <span class="m-menu__link-text">
+                                                                                                                    @t.LocalizedName
+                                                                                                                </span>
+                                                                                                            </a>
+                                                                                                        </li>
+                                                                                                    }
+                                                                                                }
+                                                                                            </ul>
+                                                                                        </div>
+                                                                                    </li>
+                                                                                }
+                                                                                else
+                                                                                {
+                                                                                    <li id="@ItemId" class="m-menu__item " aria-haspopup="true" data-redirect="true">
+                                                                                        <a href="@string.Concat(s.MenuUrl,"?page=",ItemId)" class="m-menu__link ">
+                                                                                            <i class="m-menu__link-bullet @s.CssClass">
+                                                                                                <span></span>
+                                                                                            </i>
+                                                                                            <span class="m-menu__link-title">
+                                                                                                <span class="m-menu__link-wrap">
+                                                                                                    <span class="m-menu__link-text">
+                                                                                                        @s.LocalizedName
+                                                                                                    </span>
+                                                                                                </span>
+                                                                                            </span>
+                                                                                        </a>
+                                                                                    </li>
+                                                                                }
+                                                                            }
+                                                                        </ul>
+                                                                    </div>
+                                                                }
+                                                            }
+                                                        </li>
+                                                    }
+                                                }
+                                            </ul>
+                                        </div>
+                                    }
+                                </li>
+                            }
+                        }
+                    </ul>
+                </div>
+            </div>
+            <div class="m-grid__item m-grid__item--fluid m-wrapper">
+                <div class="m-content closeMenu">
+                    @RenderBody()
+                </div>
+            </div>
+        </div>
+        <footer class="m-grid__item		m-footer ">
+            <div class="m-container m-container--fluid m-container--full-height m-page__container">
+                <div class="m-stack m-stack--flex-tablet-and-mobile m-stack--ver m-stack--desktop">
+                    <div class="m-stack__item m-stack__item--left m-stack__item--middle m-stack__item--last">
+                        <span class="m-footer__copyright">
+                            @UtilityFunction.GetMessageFromResource("spnCopyRights", LocalizeResourceSetConstants.Global)
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+    <div class="m-scroll-top m-scroll-top--skin-top" data-toggle="m-scroll-top" data-scroll-offset="500" data-scroll-speed="300">
+        <i class="la la-arrow-up"></i>
+    </div>
+    @Html.Partial("_UserProfileUpdateModal")
+    @Html.Partial("_ChangeActiveSiteModal")
+    @Html.Partial("_VendorAddPopupUM")
+    @*V2-375*@
+    @*@if (userData.Security.Vendors.Create && userData.Site.UseVendorMaster && userData.DatabaseKey.Client.ClientId != 4)
+        {
+            @Html.Partial("~/Views/Configuration/VendorMaster/_VMAddGridPopup.cshtml")
+        }*@
+    @Html.Partial("~/Views/Configuration/VendorMaster/_VMAddGridPopup.cshtml")
+
+    @Scripts.Render("~/bundles/LayoutScript")
+    @Scripts.Render("~/bundles/jqueryval")
+    <script src="~/Scripts/jquery.signalR-2.4.2.min.js"></script>
+    <script src="~/signalr/hubs"></script>
+    <script type="text/javascript">
+        $.validator.setDefaults({ ignore: null });
+    </script>
+    @RenderSection("scripts", required: false)
+    <script type="text/javascript">
+        var dataTableLocalisationUrl = "@Url.Action("GetDataTableLanguageJson", "base")";
+        var getLookUpListByTypeUrl = "@Url.Action("GetLookUpListByType", "base")";
+        var getLookUpListByTypeLineItemUrl = "@Url.Action("GetLookUpListByTypeLineItem", "base")";
+        var gridStateSaveUrl = "@Url.Action("CreateUpdateState", "base")";
+        var gridStateLoadUrl = "@Url.Action("GetState", "base")";
+    </script>
+</body>
+</html>
+
+
+@Html.Partial("_AddSanitationJobHomeLayout")
+@Html.Partial("_AddSanitationRequestHomeLayout")
+@if (userData.Security.WorkOrders.Create && userData.Site.MaintOnDemand)
+{
+    @Html.Partial("_AddWorkOrderPopup")
+}
+
+@if (userData.Site.UsePunchOut && userData.Security.PurchaseRequest.UsePunchout)
+{
+    @Html.Partial("_PRVendorPopupforMenu")
+}
+<style type="text/css">
+    .dataTables_wrapper.no-footer .dataTables_scrollBody {
+        border-bottom: 1px solid #ddd !important;
+    }
+
+    .custom-sort thead .sorting {
+        background-image: none !important;
+    }
+
+    .dataTables_wrapper .dataTables_info {
+        clear: none;
+        padding-top: 1em;
+        margin-right: 10px;
+    }
+
+    .dataTables_wrapper .dataTables_paginate {
+        padding-top: 0.55em;
+        float: left;
+    }
+
+    .dataTables_wrapper .dataTables_length {
+        display: none;
+        padding-top: 0.55em !important;
+        float: right;
+    }
+
+    .dataTables_length span.select2 {
+        width: 60px !important;
+    }
+
+    .dataTables_wrapper .dataTables_length select {
+        color: #000;
+    }
+
+    table.dataTable.nowrap th, table.dataTable.nowrap td {
+        outline: 0 !important;
+    }
+
+    .dataTables_wrapper .dataTables_processing {
+        padding-top: 0px;
+    }
+
+    .card {
+        border: none;
+    }
+
+    .alert.m-alert--icon .m-alert__close .close {
+        padding: 12px 10px;
+    }
+
+    .alert.m-alert--icon .m-alert__text {
+        padding: 10px;
+    }
+
+    .alert.m-alert--icon.m-alert--outline.m-alert--icon-solid .m-alert__icon {
+        padding: 10px;
+    }
+
+    .alert.m-alert--icon .m-alert__icon [class^="flaticon-"], .alert.m-alert--icon .m-alert__icon [class*=" flaticon-"] {
+        font-size: 18px;
+    }
+
+    .m-topbar .m-topbar__nav.m-nav {
+        margin: 0 20px 0 10px;
+    }
+
+    .m-tabs-line .m-tabs__link {
+        font-size: 13px;
+    }
+
+    @@media only screen and (max-width: 1023px) {
+        .m-dropdown.m-dropdown--align-center.m-dropdown--large .m-dropdown__wrapper {
+            width: 381px !important;
+            margin-left: -368px !important;
+        }
+
+        .m-tabs-line .m-tabs__link {
+            font-size: 12px;
+        }
+    }
+
+    @@media only screen and (max-width: 550px) {
+        .m-dropdown.m-dropdown--align-center.m-dropdown--large .m-dropdown__wrapper {
+            width: 325px !important;
+            margin-left: -284px !important;
+        }
+
+        .notification-tab-nav-b li {
+            margin-right: 7px !important;
+        }
+
+        .m-tabs-line .m-tabs__link {
+            font-size: 11px;
+        }
+    }
+</style>

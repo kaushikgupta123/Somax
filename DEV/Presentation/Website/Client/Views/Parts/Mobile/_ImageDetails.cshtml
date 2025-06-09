@@ -1,0 +1,22 @@
+﻿@model Client.Models.Parts.PartsVM
+
+<div class="tabsArea nobg">
+    <div class="m-portlet" id="m_portlet" style="padding:10px;">
+        <div class="table-responsive">
+            @if (Model.security.MaintenanceCompletionWorkbenchWidget_Photos.Access)
+            {
+                <div id="ImageGrid" style="width:100%">
+                    <div class="lds-ellipsis lds-adjust" id="imagedataloader">
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                    </div>
+                    @Html.Partial("/Views/Parts/Mobile/_ImageGrid.cshtml")
+                    
+                </div>
+            }
+            </div>
+        <div style="clear:both;"></div>
+    </div>
+</div>

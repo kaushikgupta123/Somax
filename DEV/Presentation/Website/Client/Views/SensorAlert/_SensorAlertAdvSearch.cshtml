@@ -1,0 +1,32 @@
+﻿@model Client.Models.SensorAlert.SensorAlertVM
+<nav id="sidebar">
+    <div id="dismiss">
+        <i class="fa fa-close"></i>
+    </div>
+    <div class="sidebar-header">
+        <h3><i class="fa fa-filter" style="position: relative; top: -2px;"></i>&nbsp;@Model.Loc.Where(a => a.ResourceId == "globalFilter").FirstOrDefault().Value.ToString() <span class="filteritemcount">0</span></h3>
+        <button type="button" class="btn btn-blue filterSearch" id="btnSensorAlertAdvSrch">
+            <i class="fa fa-search" style="margin-top:-3px;"></i> &nbsp;@Model.Loc.Where(a => a.ResourceId == "globalSearch").FirstOrDefault().Value.ToString()
+        </button>
+    </div>
+    <div class="sidebar-content" id="advsearchsidebarSA">
+        <form action="#" method="post">
+            <div class="form-group">
+                <label for="txtSADemandId">@Model.Loc.Where(a => a.ResourceId == "spnOnDemandID").FirstOrDefault().Value.ToString():</label>
+                <input type="text" class="form-control search adv-item" id="txtSADemandId" autocomplete="off">
+            </div>
+            <div class="form-group">
+                <label for="txtSADescription">@Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString() :</label>
+                <textarea class="form-control search adv-item" rows="2" id="txtSADescription" autocomplete="off"></textarea>
+            </div>
+            <div class="form-group">
+                <label for="ddlSaType">@Model.Loc.Where(a => a.ResourceId == "GlobalType").FirstOrDefault().Value.ToString() :</label>
+                <select id="ddlSaType" style="width:100%;" class="form-control search adv-item select2picker"></select>
+            </div>
+            <div class="form-group">
+                <label for="txtSACreated">@Model.Loc.Where(a => a.ResourceId == "spnCreated").FirstOrDefault().Value.ToString() :</label>
+                <input type="text" class="form-control search dtpicker adv-item" id="txtSACreated" autocomplete="off">
+            </div>
+        </form>
+    </div>
+</nav>

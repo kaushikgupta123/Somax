@@ -1,0 +1,348 @@
+﻿@model Client.Models.PartTransfer.PartTransferVM
+
+<div class="m-subheader fixedDiv1">
+    <div class="new-m-subheader">
+        <div class="PageTitle">
+            <div class="align-items-center separator">
+                <h3 class="m-subheader__title ">
+                   @Model.Loc.Where(a => a.ResourceId == "spnPartTransferDetail").FirstOrDefault().Value.ToString()
+                </h3>
+            </div>
+        </div>
+
+        <div class="NewBreadcrumbArea">
+            <div class="newBreadcrumb">
+                <ul>
+                    <li><a href="/Dashboard/Dashboard">&nbsp;</a></li>
+                    <li><a href="/PartTransfer/Index?page=Inventory_Part_Transfer">@Model.Loc.Where(a => a.ResourceId == "spnPartTransferSearch").FirstOrDefault().Value.ToString()</a></li>
+                    <li class="active">@Model.parttransfermodel.PartTransferId</li>
+                </ul>
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+
+        <div class="ActionBttnArea">
+            <div class="actionDiv pull-left" style="margin-right:0;">
+                <div class="btn-group bootstrap-select m-datatable__pager-size dropup show selectDrop actionNewDrop" style="margin-right:0;">
+                    <div class="btn-group bootstrap-select m-datatable__pager-size" style="width: 100%;">
+                       @if (Model.showCancelMenu || Model.showDenyMenu || Model.showForceCompleteMenu || Model.showConfirmForceCompleteMenu)
+                       {
+                        <button type="button" class="btn dropdown-toggle bs-placeholder btn-default" data-toggle="dropdown" role="button" title=""><span class="filter-option pull-left">@Model.Loc.Where(a => a.ResourceId == "globalAction").FirstOrDefault().Value.ToString()</span>&nbsp;<span class="bs-caret"><span class="caret"></span></span></button>
+                            <div class="dropdown-menu open" role="combobox">
+                                <ul class="dropdown-menu inner" role="listbox" aria-expanded="false">
+                                    @if (Model.showCancelMenu)
+                                    {
+                                        <li id="liCancel" data-toggle="modal"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</a></li>
+                                    }
+                                    @if (Model.showDenyMenu)
+                                    {
+                                        <li id="liDeny" data-toggle="modal"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "globalDeny").FirstOrDefault().Value.ToString()</a></li>
+                                    }
+                                    @if (Model.showForceCompleteMenu)
+                                    {
+                                        <li id="liForceComplete" data-toggle="modal"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnForceComplete").FirstOrDefault().Value.ToString()</a></li>
+                                    }
+                                    @if (Model.showConfirmForceCompleteMenu)
+                                    {
+                                        <li id="liConfirmForceComplete" data-toggle="modal"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnConfirmForceComplete").FirstOrDefault().Value.ToString()</a></li>
+                                    }
+                                </ul>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+            <div style="clear:both;"></div>
+        </div>
+        <div style="clear:both;"></div>
+    </div>
+</div>
+<div class="pushDiv1"></div>
+
+@Html.Partial("ForceCompleteModal", Model)
+<div class="row">
+    <div class="col-xl-3">
+        <div class="m-portlet">
+            <div class="sideMenuArea nobg">
+                <ul class="vtabs" id="detmaintab">
+                    <li class="active" id="InvoiceOverViewSidebar"><a href="#InvoiceOverview">&nbsp; @Model.Loc.Where(a => a.ResourceId == "spnOverview").FirstOrDefault().Value.ToString()</a></li>
+                    <li id="InvoiceAttachment" onclick="openCity(event, 'tabEventLog')"><a href="#tabEventLog">&nbsp; @Model.Loc.Where(a => a.ResourceId == "spnStatusAndEventLog").FirstOrDefault().Value.ToString()</a></li>
+                </ul>
+            </div>
+            <div class="selectTabs" id="selectTabs">
+                <select class="form-control" id="colorselector">
+                    <option value="InvoiceOverview">@Model.Loc.Where(a => a.ResourceId == "spnOverview").FirstOrDefault().Value.ToString()</option>
+                    <option value="tabEventLog">@Model.Loc.Where(a => a.ResourceId == "spnStatusAndEventLog").FirstOrDefault().Value.ToString()</option>
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-9">
+        @Html.Partial("_ErrorDiv")
+        <div class="row">
+            <div class="col-xl-12" id="btnnblock">
+                <div class="m-portlet" id="m_portlet" style="padding:15px;">
+                    <div class="bottomBlock">
+                        @using (Ajax.BeginForm("SavePartTransfer", "PartTransfer", new AjaxOptions { HttpMethod = "Post", OnSuccess = "PartTansferSaveOnSuccess", OnBegin = "AjaxBeginFormBegin", OnComplete = "AjaxBeginFormComplete", OnFailure = "AjaxBeginFormFaillure" }))
+                        {
+                            @Html.AntiForgeryToken()
+                            <div class="tabsArea nobg" id="InvoiceOverview" style="display:block;">
+                                <div class="tab" style="margin-bottom:10px;">
+                                    <button class="tablinks active" onclick="openCity(event, 'PartTransferOverview')" id="btnidentification">&nbsp; @Model.Loc.Where(a => a.ResourceId == "spnPartTransferOverview").FirstOrDefault().Value.ToString()</button>
+                                    <button class="tablinks" onclick="openCity(event, 'RequestPartFrom')">&nbsp;@Model.Loc.Where(a => a.ResourceId == "spnRequestPartFrom").FirstOrDefault().Value.ToString()</button>
+                                </div>
+                                <div class="selectTab">
+                                    <select class="form-control search" id="tabselector">
+                                        <option value="PartTransferOverview">@Model.Loc.Where(a => a.ResourceId == "spnPartTransferOverview").FirstOrDefault().Value.ToString()</option>
+                                        <option value="RequestPartFrom">@Model.Loc.Where(a => a.ResourceId == "spnRequestPartFrom").FirstOrDefault().Value.ToString()</option>
+                                    </select>
+                                </div>
+                                <div id="PartTransferOverview" class="tabcontent" style="display:block;">
+                                    <ul class="listView nobrd">
+                                        <li>
+                                            <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnTransferID").FirstOrDefault().Value.ToString():</span>
+                                            <span class="inputText">@Html.TextBoxFor(m => m.parttransfermodel.PartTransferId, new { @class = "form-control search readonly", @readonly = "readonly" })</span>
+                                        </li>
+                                        <li>
+                                            <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnPartID").FirstOrDefault().Value.ToString():</span>
+                                            <span class="inputText">@Html.TextBoxFor(m => m.parttransfermodel.RequestPart_ClientLookupId, new { @class = "form-control search readonly", @readonly = "readonly" })</span>
+                                        </li>
+                                        <li>
+                                            <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnRequestSite").FirstOrDefault().Value.ToString():</span>
+                                            <span class="inputText">@Html.TextBoxFor(m => m.parttransfermodel.RequestSite_Name, new { @class = "form-control search readonly", @readonly = "readonly" })</span>
+                                        </li>
+                                        <li>
+                                            <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnLocation").FirstOrDefault().Value.ToString() :</span>
+                                            <span class="inputText">@Html.TextBoxFor(m => m.parttransfermodel.Request_Location, new { @class = "form-control search readonly", @readonly = "readonly" })</span>
+                                        </li>
+                                        <li style="height:auto;">
+                                            <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString() :</span>
+                                            <span class="inputText" style="height:auto;">@Html.TextAreaFor(m => m.parttransfermodel.RequestPart_Description, new { @class = "form-control search readonly", @readonly = "readonly", rows = "3" })</span>
+                                            <div style="clear:both;"></div>
+                                        </li>
+                                        @*@if (Model.parttransfermodel.RequestSiteId == Model.userdata.DatabaseKey.Personnel.SiteId)
+        {*@
+                                        @*if (Model.parttransfermodel.Status == "Open" || Model.parttransfermodel.Status == "Waiting")*@
+                                        @if (Model.showBtnSave == true)
+                                        {
+                                        <li style="height:auto;">
+                                            <span class="label">@Model.Loc.Where(a => a.ResourceId == "GlobalReason").FirstOrDefault().Value.ToString() : </span>
+                                            <span class="inputText" style="height:auto;">@Html.TextAreaFor(m => m.parttransfermodel.Reason, new { @class = "form-control search", rows = "3", autocomplete = "off" })</span>
+                                            <div style="clear:both;"></div>
+                                        </li>
+                                        <li>
+                                            <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnQuantity").FirstOrDefault().Value.ToString() :</span>
+                                            <span class="inputText">
+                                                @Html.ValidationMessageFor(m => m.parttransfermodel.Quantity, "", new { style = "display:none" })
+                                                @Html.TextBoxFor(m => m.parttransfermodel.Quantity, new { @class = "form-control search decimalinput", autocomplete = "off" })
+                                            </span>
+                                        </li>
+                                        <li>
+                                            <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnShippingAccount").FirstOrDefault().Value.ToString():<small>*</small></span>
+                                            <span class="inputText">
+                                                @Html.ValidationMessageFor(m => m.parttransfermodel.ShippingAccountId, "", new { style = "display:none" })
+                                                @Html.DropDownListFor(m => m.parttransfermodel.ShippingAccountId, Model.parttransfermodel.AccountList, "--Select--", new { @class = "form-control search select2picker", id = "txtDeniedReason", style = "width:100%;" })
+                                            </span>
+                                        </li>
+                                        <li>
+                                            <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnRequiredDate").FirstOrDefault().Value.ToString():</span>
+                                            <span class="inputText">@Html.TextBoxFor(m => m.parttransfermodel.RequiredDate, new { @class = "form-control search dtpicker", autocomplete = "off" })</span>
+                                        </li>
+                                        }
+                                        else
+                                        {
+                                        <li style="height:auto;">
+                                            <span class="label">@Model.Loc.Where(a => a.ResourceId == "GlobalReason").FirstOrDefault().Value.ToString() : </span>
+                                            <span class="inputText" style="height:auto;">@Html.TextAreaFor(m => m.parttransfermodel.Reason, new { @class = "form-control search readonly", rows = "3", autocomplete = "off", @readonly = "readonly" })</span>
+                                            <div style="clear:both;"></div>
+                                        </li>
+                                        <li>
+                                            <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnQuantity").FirstOrDefault().Value.ToString() :</span>
+                                            <span class="inputText">
+                                                @Html.ValidationMessageFor(m => m.parttransfermodel.Quantity, "", new { style = "display:none" })
+                                                @Html.TextBoxFor(m => m.parttransfermodel.Quantity, new { @class = "form-control search decimalinput readonly", autocomplete = "off", @readonly = "readonly" })
+                                            </span>
+                                        </li>
+                                        <li>
+                                            <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnShippingAccount").FirstOrDefault().Value.ToString():<small>*</small></span>
+                                            <span class="inputText">
+                                                @Html.ValidationMessageFor(m => m.parttransfermodel.ShippingAccountId, "", new { style = "display:none" })
+                                                @Html.DropDownListFor(m => m.parttransfermodel.ShippingAccountId, Model.parttransfermodel.AccountList, "--Select--", new { @class = "form-control search select2picker", id = "txtDeniedReason", style = "width:100%;", @disabled = "disabled" })
+                                            </span>
+                                        </li>
+                                        <li>
+                                            <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnRequiredDate").FirstOrDefault().Value.ToString():</span>
+                                            <span class="inputText">@Html.TextBoxFor(m => m.parttransfermodel.RequiredDate, new { @class = "form-control search dtpicker readonly", autocomplete = "off", @readonly = "readonly" })</span>
+                                        </li>
+                                        }
+                                        @*}
+        else
+        {
+            <li style="height:auto;">
+                <span class="label">@Model.Loc.Where(a => a.ResourceId == "GlobalReason").FirstOrDefault().Value.ToString() : </span>
+                <span class="inputText" style="height:auto;">@Html.TextAreaFor(m => m.parttransfermodel.Reason, new { @class = "form-control search readonly", rows = "3", autocomplete = "off", @readonly = "readonly" })</span>
+                <div style="clear:both;"></div>
+            </li>
+            <li>
+                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnQuantity").FirstOrDefault().Value.ToString() :</span>
+                <span class="inputText">
+                    @Html.ValidationMessageFor(m => m.parttransfermodel.Quantity, "", new { style = "display:none" })
+                    @Html.TextBoxFor(m => m.parttransfermodel.Quantity, new { @class = "form-control search decimalinput readonly", autocomplete = "off", @readonly = "readonly" })
+                </span>
+            </li>
+            <li>
+                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnShippingAccount").FirstOrDefault().Value.ToString():<small>*</small></span>
+                <span class="inputText">
+                    @Html.ValidationMessageFor(m => m.parttransfermodel.ShippingAccountId, "", new { style = "display:none" })
+                    @Html.DropDownListFor(m => m.parttransfermodel.ShippingAccountId, Model.parttransfermodel.AccountList, "--Select--", new { @class = "form-control search select2picker", id = "txtDeniedReason", style = "width:100%;", @disabled = "disabled" })
+                </span>
+            </li>
+            <li>
+                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnRequiredDate").FirstOrDefault().Value.ToString():</span>
+                <span class="inputText">@Html.TextBoxFor(m => m.parttransfermodel.RequiredDate, new { @class = "form-control search dtpicker readonly", autocomplete = "off", @readonly = "readonly" })</span>
+            </li>
+        }*@
+
+                                        <li>
+                                            <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnQtyInTransit").FirstOrDefault().Value.ToString() :</span>
+                                            <span class="inputText">@Html.TextBoxFor(m => m.parttransfermodel.QuantityInTransit, new { @class = "form-control search readonly", @readonly = "readonly" })</span>
+                                        </li>
+                                        <li>
+                                            <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnQtyIssued").FirstOrDefault().Value.ToString():</span>
+                                            <span class="inputText">@Html.TextBoxFor(m => m.parttransfermodel.QuantityIssued, new { @class = "form-control search readonly", @readonly = "readonly" })</span>
+                                        </li>
+                                        <li>
+                                            <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnQtyReceived").FirstOrDefault().Value.ToString():</span>
+                                            <span class="inputText">@Html.TextBoxFor(m => m.parttransfermodel.QuantityReceived, new { @class = "form-control search readonly", @readonly = "readonly" })</span>
+                                        </li>
+                                        <li>
+                                            <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnCreatedBy").FirstOrDefault().Value.ToString():</span>
+                                            <span class="inputText">@Html.TextBoxFor(m => m.parttransfermodel.CreatedBy, new { @class = "form-control search readonly", @readonly = "readonly" })</span>
+                                        </li>
+                                        <li>
+                                            <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnCreatedDate").FirstOrDefault().Value.ToString():</span>
+                                            <span class="inputText">@Html.TextBoxFor(m => m.parttransfermodel.CreateDate, "{0:MM/dd/yyyy}", new { @class = "form-control search dtpicker readonly", @readonly = "readonly" })</span>
+                                        </li>
+                                    </ul>
+                                    <div style="clear:both;"></div>
+                                </div>
+                                <div id="RequestPartFrom" class="tabcontent">
+                                    <ul class="listView nobrd">
+                                        <li>
+                                            <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnIssueSite").FirstOrDefault().Value.ToString():</span>
+                                            <span class="inputText">@Html.TextBoxFor(m => m.parttransfermodel.IssueSite_Name, new { @class = "form-control search readonly", @readonly = "readonly" })</span>
+                                        </li>
+                                        <li>
+                                            <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnPartID").FirstOrDefault().Value.ToString():</span>
+                                            <span class="inputText">@Html.TextBoxFor(m => m.parttransfermodel.IssuePart_ClientLookupId, new { @class = "form-control search readonly", @readonly = "readonly" })</span>
+                                        </li>
+                                        <li>
+                                            <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnQtyOnHand").FirstOrDefault().Value.ToString():</span>
+                                            <span class="inputText">@Html.TextBoxFor(m => m.parttransfermodel.IssuePart_QtyOnHand, new { @class = "form-control search readonly", @readonly = "readonly" })</span>
+                                        </li>
+                                        <li>
+                                            <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnLocation").FirstOrDefault().Value.ToString():</span>
+                                            <span class="inputText">@Html.TextBoxFor(m => m.parttransfermodel.Issue_Location, new { @class = "form-control search readonly", @readonly = "readonly" })</span>
+                                        </li>
+                                        <li style="height:auto;">
+                                            <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnPartDescription").FirstOrDefault().Value.ToString():</span>
+                                            <span class="inputText" style="height:auto;">@Html.TextAreaFor(m => m.parttransfermodel.IssuePart_Description, new { @class = "form-control search readonly", @readonly = "readonly", rows = "3" })</span>
+                                            <div style="clear:both;"></div>
+                                        </li>
+                                    </ul>
+                                    <div style="clear:both;"></div>
+                                </div>
+                                <div style="clear:both;"></div>
+                                <div class="idBttns">
+                                    <div class="bttn_pagin">
+                                        <div class="bttns2">
+                                            @if (Model.showBtnIssue)
+                                            {
+                                                <button type="button" class="btn btn-blue mobBttn" name="Command" id="btnIssue" style="cursor:pointer" value="saveIssue"><i class="fa fa-arrow-circle-up faIcon"></i> &nbsp;@Model.Loc.Where(a => a.ResourceId == "spnIssue").FirstOrDefault().Value.ToString()</button>
+                                            }
+                                            @if (Model.showBtnReceive)
+                                            {
+                                                <button type="button" class="btn btn-blue mobBttn" name="Command" id="btnReceive" style="cursor:pointer" value="saveReceive"><i class="fa fa-arrow-circle-down faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "spnReceive").FirstOrDefault().Value.ToString()</button>
+                                            }
+                                            @if (Model.showBtnSend)
+                                            {
+                                                <button type="button" class="btn btn-blue mobBttn" name="Command" id="btnSend" style="cursor:pointer" value="saveSend"><i class="fa fa-paper-plane-o"></i> &nbsp;@Model.Loc.Where(a => a.ResourceId == "globalSend").FirstOrDefault().Value.ToString() </button>
+                                            }
+                                            @if (Model.showBtnSave)
+                                            {
+                                                <button type="submit" class="btn btn-blue mobBttn" name="Command" id="btnSave" style="cursor:pointer" value="save"><i class="fa fa-save faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+                                            }
+                                        </div>
+                                        <div style="clear:both;"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="tabsArea nobg" id="tabEventLog" style="display:none;">
+                                <ul class="listView nobrd">
+                                    <li>
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnStatus").FirstOrDefault().Value.ToString() :</span>
+                                        <span class="inputText">@Html.TextBoxFor(m => m.parttransfermodel.Status, new { @class = "form-control search readonly", @readonly = "readonly" })</span>
+                                    </li>
+                                    <li>
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnLastEvent").FirstOrDefault().Value.ToString():</span>
+                                        <span class="inputText">@Html.TextBoxFor(m => m.parttransfermodel.LastEvent, new { @class = "form-control search readonly", @readonly = "readonly" })</span>
+                                    </li>
+                                    <li>
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnBy").FirstOrDefault().Value.ToString() :</span>
+                                        <span class="inputText">@Html.TextBoxFor(m => m.parttransfermodel.LastEventBy_PersonnelName, new { @class = "form-control search readonly", @readonly = "readonly" })</span>
+                                    </li>
+                                    <li>
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnDateTime").FirstOrDefault().Value.ToString():</span>
+                                        <span class="inputText">@Html.TextBoxFor(m => m.parttransfermodel.LastEventDate, new { @class = "form-control search readonly dtpicker1 disabled", @readonly = "readonly", @disabled = "disabled" })</span>
+                                    </li>
+                                </ul>
+                                <div style="clear:both;"></div>
+                                <br />
+
+                                <div class="actionBar">
+                                    <div class="pull-left">
+                                        <button type="button" class="btn btn-white navbar-btn" id="eventSidebarCollapse" title="Advance Search"><i class="fa fa-filter" style="font-size: 1.3rem;"></i></button>
+                                        <ul class="filter_apply filterAdjustWhenDropdown">
+                                            <li class="textFilter"><span class="filteritemcount">0 </span> @Model.Loc.Where(a => a.ResourceId == "globalFiltersAppiled").FirstOrDefault().Value.ToString()</li>
+                                            <li class="textClear" id="eventClearSearch"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "globalClear").FirstOrDefault().Value.ToString()</a></li>
+                                        </ul>
+                                        <div style="clear:both;"></div>
+                                    </div>
+                                    <div style="clear:both;"></div>
+                                    <div id="eventadvsearchfilteritems"></div>
+                                    <div style="clear:both;"></div>
+                                </div>
+
+                                <div class="table-responsive">
+                                    <table id="ptEventTable" class="eqpDtlTbl row-border custom-sort" style="width:100%;">
+                                        <thead>
+                                            <tr>
+                                                <th data-th-index="0">@Model.Loc.Where(a => a.ResourceId == "spnEvent").FirstOrDefault().Value.ToString()</th>
+                                                <th data-th-index="1">@Model.Loc.Where(a => a.ResourceId == "spnBy").FirstOrDefault().Value.ToString()</th>
+                                                <th data-th-index="2">@Model.Loc.Where(a => a.ResourceId == "spnDateTime").FirstOrDefault().Value.ToString()</th>
+                                                <th data-th-index="3">@Model.Loc.Where(a => a.ResourceId == "spnQuantity").FirstOrDefault().Value.ToString()</th>
+                                                <th data-th-index="4">@Model.Loc.Where(a => a.ResourceId == "spnLogComment").FirstOrDefault().Value.ToString()</th>
+                                                <th data-th-index="5" width="17%" style="text-align:center !important;">@Model.Loc.Where(a => a.ResourceId == "globalAction").FirstOrDefault().Value.ToString()</th>
+                                            </tr>
+                                        </thead>
+                                    </table>
+                                </div>
+                                <div style="clear:both;"></div>
+                            </div>
+
+                            @Html.HiddenFor(m => m.parttransfermodel.PartTransferId, new { id = "hiddenparttransid" })
+                        }
+                        @Html.Partial("_EventLogAdvancedSearch")
+                        @Html.Partial("_PartTransferIssueModal")
+                        @Html.Partial("_PartTransferReceiveModal")
+                        @Html.Partial("_PartTransferSendModal")
+                        @Html.Partial("_PartTransferDenyModal")
+                        @Html.Partial("_PartTransferCancelModal")
+                        @Html.Partial("_PartTransferConfirmForceCompleteModal")
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

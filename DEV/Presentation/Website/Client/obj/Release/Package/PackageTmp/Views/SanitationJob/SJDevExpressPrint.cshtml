@@ -1,0 +1,38 @@
+﻿@using DevExpress.XtraReports.Web.WebDocumentViewer
+@model IEnumerable<Client.Models.Sanitation.SanitationJobDevExpressPrintModel>
+@{
+    ViewBag.Title = "Somax | Sanitation Job Print";
+    Layout = "~/Views/Shared/_ReportLayout.cshtml";
+}
+@section scripts{
+
+}
+@{
+    var PrintTemplate = new Client.DevExpressReport.SanitationJobPrintTemplate();
+    PrintTemplate.DataSource = Model;
+    #region  set the name of the exported PDF file when exporting the Work Order
+
+    if (Session["PrintSJList"] != null && Model != null)
+    {
+        var SanitationJobIds = (List<long>)Session["PrintSJList"];
+        if (SanitationJobIds.Count > 0)
+        {
+            if (SanitationJobIds.Count == 1 && Model.ToList().Count > 0)
+            {
+                PrintTemplate.ExportOptions.PrintPreview.DefaultFileName = "Sanitition Job - " + @Model.ToList()[0].ClientLookupId;
+            }
+        }
+    }
+
+    #endregion
+    var xtraReports = new DevExpress.XtraReports.Web.CachedReportSourceWeb(PrintTemplate);
+}
+@Html.DevExpress().WebDocumentViewer(settings =>
+{
+    settings.Name = "WebDocumentViewer";
+    settings.SettingsProgressBar.Position = ProgressBarPosition.TopRight;
+    settings.SettingsProgressBar.KeepOnVisibleArea = true;
+    settings.ClientSideEvents.CustomizeExportOptions = "onCustomizeExportOptions";
+    settings.ClientSideEvents.CustomizeMenuActions = "onCustomizeMenuActions";
+    settings.ClientSideEvents.BeforeRender = "onCustomizeBeforeRender";
+}).Bind(xtraReports).GetHtml()

@@ -1,0 +1,11 @@
+﻿@{
+    ViewBag.Title = "Somax-Config | Vendor Catalog";
+}
+@Styles.Render("~/Content/datatable")
+@section scripts {
+    @Scripts.Render("~/bundles/datatable")
+    <script src="~/Scripts/Pages/Configuration/VendorCatalog/VendorCatalogSearch.js"></script>
+}
+<div id="rendervendorcatalog">
+    @Html.Partial("~/Views/Configuration/VendorCatalog/_VendorCatalogSearch.cshtml")
+</div>

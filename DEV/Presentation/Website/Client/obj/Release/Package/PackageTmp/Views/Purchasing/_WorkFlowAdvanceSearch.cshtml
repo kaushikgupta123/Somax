@@ -1,0 +1,33 @@
+﻿@model Client.Models.PurchaseOrder.PurchaseOrderVM    
+<nav class="" id="sidebar">
+    <div id="dismiss">
+        <i class="fa fa-close"></i>
+    </div>
+    <div class="sidebar-header">
+        <h3><i class="fa fa-filter" style="position: relative; top: -2px;"></i> @Model.Loc.Where(a => a.ResourceId == "spnPoFilters").FirstOrDefault().Value.ToString() <span class="lifilteritemcount">0</span></h3>
+        <button type="button" class="btn btn-blue filterSearch" id="btnRLogDataAdvSrch"><i class="fa fa-search" style="margin-top:-3px;"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalSearch").FirstOrDefault().Value.ToString()</button>
+    </div>
+    <div class="sidebar-content" id="advsearchsidebarRlog">
+        <form action="#" method="post">
+            <div class="form-group">
+                <label for="Process">@Model.Loc.Where(a => a.ResourceId == "spnPoProcess").FirstOrDefault().Value.ToString() :</label>
+                <input type="text" class="form-control search adv-item" id="Process" autocomplete="off">
+            </div>
+            <div class="form-group">
+                <label for="Reviewed">@Model.Loc.Where(a => a.ResourceId == "spnPoReviewedBy").FirstOrDefault().Value.ToString() :</label>
+                <input type="text" class="form-control search adv-item" id="Reviewed" autocomplete="off">
+            </div>
+            <div class="form-group">
+                <label for="Date">@Model.Loc.Where(a => a.ResourceId == "spnPoDate").FirstOrDefault().Value.ToString() :</label>
+                <input type="text" class="form-control search adv-item dtpicker" id="Date" autocomplete="off">
+            </div>
+            <div class="form-group">
+                <label for="Comments">@Model.Loc.Where(a => a.ResourceId == "spnPoComments").FirstOrDefault().Value.ToString() :</label>
+                <input type="text" class="form-control search adv-item" id="Comments" autocomplete="off">
+            </div>
+        </form>
+    </div>
+</nav>
+
+
+

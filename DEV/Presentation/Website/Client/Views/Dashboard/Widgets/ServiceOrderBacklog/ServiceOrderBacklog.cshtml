@@ -1,0 +1,26 @@
+﻿@model Client.Models.Dashboard.DashboardVM
+<div class="m-portlet m-portlet--full-height m-portlet--fit macHeight">
+    <div class="m-portlet__head">
+        <div class="m-portlet__head-caption">
+            <div class="m-portlet__head-title">
+                <h3 class="m-portlet__head-text">
+                    @Model.Loc.Where(a => a.ResourceId == "spnServiceOrderBacklog").FirstOrDefault().Value.ToString()
+                </h3>
+            </div>
+        </div>
+    </div>
+    <div class="chartBox row" id="worderbacklog" style="position:relative">
+        <div class="lds-ellipsis lds-adjust" id="serviceorderbacklogchartloader" style="margin-top:20px;">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+        <div class="chartcontainer">
+            <div class="cntNoData"><h5>@Model.Loc.Where(a => a.ResourceId == "globalDataNotFound").FirstOrDefault().Value.ToString()</h5></div>
+            <canvas id="m_chart_SO_BCK_LOG"></canvas>
+        </div>
+        <div id="m_chart_SO_BCK_LOG-legend" class="chart-legend"></div>
+        <div class="clear"></div>
+    </div>
+</div>

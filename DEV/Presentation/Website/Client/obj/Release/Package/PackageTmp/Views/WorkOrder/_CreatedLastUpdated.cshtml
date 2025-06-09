@@ -1,0 +1,47 @@
+﻿@model Client.Models.Work_Order.WorkOrderVM
+<div id="createdlastupdated" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-info">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">@Model.Loc.Where(a => a.ResourceId == "spnCreateLastUpdate").FirstOrDefault().Value.ToString()</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-lg-6 col-sm-6">
+                        <div class="form-group">
+                            <h5>@Model.Loc.Where(a => a.ResourceId == "spnCreatedDate").FirstOrDefault().Value.ToString()</h5>
+                            <div><label id="lblusercreated"><strong>User :</strong> @Model.workOrderModel.Createby</label></div>
+                            <div>
+                                <label id="lblcreateddate">
+                                    <strong>@Model.Loc.Where(a => a.ResourceId == "spnDate").FirstOrDefault().Value.ToString() :</strong>
+                                    @if (Model.workOrderModel.CreateDate.HasValue && Model.workOrderModel.CreateDate.Value != default(DateTime))
+                                    {
+                                        @Model.workOrderModel.CreateDate.Value.ToString()
+                                    }
+
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-sm-6">
+                        <div class="form-group">
+                            <h5>@Model.Loc.Where(a => a.ResourceId == "spnLastUpdate").FirstOrDefault().Value.ToString()</h5>
+                            <div><label id="lblusercreated"><strong>User :</strong> @Model.workOrderModel.ModifyBy</label></div>
+                            <div>
+                                <label id="lblcreateddate">
+                                    <strong>@Model.Loc.Where(a => a.ResourceId == "spnDate").FirstOrDefault().Value.ToString() :</strong>
+                                    @if (Model.workOrderModel.ModifyDate.HasValue && Model.workOrderModel.ModifyDate.Value != default(DateTime))
+                                    {
+                                        @Model.workOrderModel.ModifyDate.Value.ToString()
+                                    }
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="clear:both;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,40 @@
+﻿@model Client.Models.EquipmentCombined
+@using (Ajax.BeginForm("ChangeEquipmentId", "Equipment", new AjaxOptions { HttpMethod = "POST", OnBegin = "AjaxBeginFormBegin", OnSuccess = "ChangeEquipmentIdOnSuccess", OnFailure = "AjaxBeginFormFaillure", OnComplete = "AjaxBeginFormComplete" }))
+{
+    @Html.AntiForgeryToken()
+    <div id="changeEquipmentIDModalDetailsPage" class="modal fade" role="dialog" style="padding-right:0px !important;">
+        <div class="modal-dialog modal-info">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">@Model.Loc.Where(a => a.ResourceId == "spnChangeEquipmentId").FirstOrDefault().Value.ToString()</h4>
+                </div>
+
+                <div class="modal-body">
+
+                    <div class="form-group">
+                        <label for="Line" id="lblLine">@Model.Loc.Where(a => a.ResourceId == "spnGlobalEquipmentId").FirstOrDefault().Value.ToString():<small>*</small></label>
+                        @Html.ValidationMessageFor(m => m._ChangeEquipmentIDModel.ClientLookupId, "", new { style = "display:none" })
+                        @Html.TextBoxFor(m => m._ChangeEquipmentIDModel.ClientLookupId, new { @class = "form-control search", autocomplete = "off", id = "txtEquipmentId", maxlength = 31 })
+                    </div>
+                </div>
+                <div class="modal-footer" style="padding:15px 25px !important;">
+                    <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-close faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button>
+                    <button type="submit" class="btn btn-blue" style="float:right;" id="changeEquipment" data-eqid="@Model._ChangeEquipmentIDModel.EquipmentId"><i class="fa fa-save faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+                    <div style="clear:both;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @Html.HiddenFor(m => m._ChangeEquipmentIDModel.OldClientLookupId, new { id = "OldClientLookupId" })
+    @Html.HiddenFor(m => m._ChangeEquipmentIDModel.EquipmentId, new { id = "hdnEquipmentId" })
+}
+<style type="text/css">
+    .ui-tooltip {
+        z-index: 1151 !important;
+    }
+
+    .errormessage {
+        margin-bottom: 1px !important;
+    }
+</style>

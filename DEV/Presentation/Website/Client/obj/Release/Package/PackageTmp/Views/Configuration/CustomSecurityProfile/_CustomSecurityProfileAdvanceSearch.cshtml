@@ -1,0 +1,22 @@
+﻿@model Client.Models.Configuration.CustomSecurityProfile.CustomSecurityProfileVM
+<nav id="sidebar">
+    <div id="dismiss">
+        <i class="fa fa-close"></i>
+    </div>
+    <div class="sidebar-header">
+        <h3><i class="fa fa-filter" style="position: relative; top: -2px;"></i>&nbsp;@Model.Loc.Where(a => a.ResourceId == "spnFilters").FirstOrDefault().Value.ToString() <span class="filteritemcount">0</span></h3>
+        <button type="button" class="btn btn-blue filterSearch" id="btnCustomSecurityProfileAdvSrch">
+           @Model.Loc.Where(a => a.ResourceId == "GlobalApply").FirstOrDefault().Value.ToString()
+        </button>
+    </div>
+    <div class="sidebar-content" id="advsearchsidebar">
+        <div class="form-group">
+            <label for="txtName">@Model.Loc.Where(a => a.ResourceId == "spnName").FirstOrDefault().Value.ToString() :</label>
+            <input type="text" class="form-control search adv-item" id="txtName" autocomplete="off">
+        </div>
+        <div class="form-group">
+            <label for="txtDescription">@Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString() :</label>
+            <input type="text" class="form-control search adv-item" id="txtDescription" autocomplete="off">
+        </div>
+    </div>
+</nav>

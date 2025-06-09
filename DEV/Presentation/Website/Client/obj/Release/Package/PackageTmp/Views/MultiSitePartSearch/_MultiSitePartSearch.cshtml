@@ -1,0 +1,98 @@
+﻿@model Client.Models.MultiSitePartSearch.MultiSitePartSearchVM
+<div class="m-subheader">
+    <div class="new-m-subheader">
+        <div class="PageTitle">
+            <div class="align-items-center separator">
+                <h3 class="m-subheader__title ">
+                    @Model.Loc.Where(a => a.ResourceId == "spnMultiSitePartsSearch").FirstOrDefault().Value.ToString()
+                </h3>
+            </div>
+        </div>
+
+        <div class="NewBreadcrumbArea">
+            <div class="newBreadcrumb">
+                <ul>
+                    <li><a href="/Dashboard/Dashboard">&nbsp;</a></li>
+                    <li class="active">	@Model.Loc.Where(a => a.ResourceId == "spnMultiSitePartsSearch").FirstOrDefault().Value.ToString()</li>
+                </ul>
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+        <div style="clear:both;"></div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xl-12">
+        <div class="m-portlet" id="m_portlet" style="padding:15px; margin-bottom:0;">
+            <div class="actionBar">
+                <div class="pull-left">
+                    <div class="ActionSearchDrop multiSite">
+                        <input type="text" class="form-control search" id="txtSearch" autocomplete="off">
+                        <span class="fa fa-close closespan" id="clearSearch"></span>
+                    </div>
+                    <button type="button" class="btn btn-white navbar-btn" title="Search" id="btnTxtSearch"><i class="fa fa-search" style="font-size: 1.1rem;"></i></button>
+                    <button type="button" class="btn btn-white navbar-btn advnsrc" id="sidebarCollapse" title="Advance Search"><i class="fa fa-filter" style="font-size: 1.3rem;"></i></button>
+                    <ul class="filter_apply">
+                        <li class="textFilter"><span class="filteritemcount">0</span>&nbsp;@Model.Loc.Where(a => a.ResourceId == "globalFiltersAppiled").FirstOrDefault().Value.ToString()</li>
+                        <li class="textClear" id="liClearAdvSearchFilter"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "globalClear").FirstOrDefault().Value.ToString()</a></li>
+                    </ul>
+                    <div style="clear:both;"></div>
+                </div>
+
+                <div class="pull-right">
+                    <div class="dropdown btn-sort dropSort" id="shortDrop" style="margin-right:0px !important;">
+                        <button class="btn btn-blue dropdown-toggle" type="button" id="btnsortmenu" data-toggle="dropdown">@Model.Loc.Where(a => a.ResourceId == "GlobalSorting").FirstOrDefault().Value.ToString()</button>
+                        <ul class="dropdown-menu" role="menu" aria-labelledby="btnsortmenu">
+                            <li role="presentation" class="srtpartcolumn" data-col="0"><a role="menuitem" tabindex="-1" href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnPartID").FirstOrDefault().Value.ToString()</a></li>
+                            <li role="presentation" class="srtpartcolumn" data-col="1"><a role="menuitem" tabindex="-1" href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString()</a></li>
+                            <li role="presentation" class="srtpartcolumn" data-col="3"><a role="menuitem" tabindex="-1" href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnManufacturer").FirstOrDefault().Value.ToString()</a></li>
+                        </ul>
+                    </div>
+                    <div style="clear:both;"></div>
+                </div>
+                <div style="clear:both;"></div>
+
+
+                <div style="clear:both;"></div>
+                <div id="dvFilterSearchSelect2"></div>
+                <div id="advsearchfilteritems"></div>
+                <div style="clear:both;"></div>
+            </div>
+            <div style="clear:both;"></div>
+
+            <div id="Active" class="tabcontent" style="display:block;">
+                <div class="table-responsive">
+                    <table id="MultiSitePartSearch" class="eqpDtlTbl row-border custom-sort" style="width:100%;">
+                        <thead>
+                            <tr>
+                                <th id="thpartid" data-th-index="0" class="th-Partid">@Model.Loc.Where(a => a.ResourceId == "spnPartID").FirstOrDefault().Value.ToString()</th>
+                                <th id="thdescription" data-th-index="1">@Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString()</th>
+                                <th data-th-index="2">@Model.Loc.Where(a => a.ResourceId == "spnQuantity").FirstOrDefault().Value.ToString()</th>
+                                <th id="thmanufacturer" data-th-index="3">@Model.Loc.Where(a => a.ResourceId == "spnManufacturer").FirstOrDefault().Value.ToString()</th>
+                                <th data-th-index="4">@Model.Loc.Where(a => a.ResourceId == "spnManufacturerID").FirstOrDefault().Value.ToString()</th>
+                                <th data-th-index="5">@Model.Loc.Where(a => a.ResourceId == "GlobalCity").FirstOrDefault().Value.ToString()</th>
+                                <th data-th-index="6">@Model.Loc.Where(a => a.ResourceId == "GlobalState").FirstOrDefault().Value.ToString()</th>
+                                <th data-th-index="7">@Model.Loc.Where(a => a.ResourceId == "spnSiteGlobal").FirstOrDefault().Value.ToString()</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<style type="text/css">
+    .closespan {
+        float: right;
+        margin-right: 7px;
+        margin-top: -25px;
+        position: relative;
+        z-index: 2;
+        color: #315a98 !important;
+        cursor:pointer;
+    }
+</style>
+@Html.Partial("~/Views/MultiSitePartSearch/_MultiSitePartAdvSearch.cshtml")
+
+

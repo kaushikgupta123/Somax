@@ -1,0 +1,36 @@
+﻿@model Client.Models.Meters.MetersVM
+
+<nav id="sidebar">
+    <div id="dismiss">
+        <i class="fa fa-close"></i>
+    </div>
+    <div class="sidebar-header">
+        <h3><i class="fa fa-filter" style="position: relative; top: -2px;"></i>&nbsp;@Model.Loc.Where(a => a.ResourceId == "spnFilters").FirstOrDefault().Value.ToString()<span class="recordfilteritemcount">0</span></h3>
+        <button type="button" class="btn btn-blue filterSearch" id="btnReadingAdvSrch"><i class="fa fa-search" style="margin-top:-3px;"></i> &nbsp;@Model.Loc.Where(a => a.ResourceId == "globalSearch").FirstOrDefault().Value.ToString()</button>
+    </div>
+    <div class="sidebar-content" id="advreadingsearchsidebar">
+        <form action="#" method="post">
+            <div class="form-group">
+                <label for="reading">@Model.Loc.Where(a => a.ResourceId == "spnReading").FirstOrDefault().Value.ToString()</label>
+                <input type="text" class="form-control search adv-item longinput" id="reading" autocomplete="off" style="color:#333;">
+            </div>
+            <div class="form-group">
+                <label for="readByClientLookupId" id="lblreadByClientLookupId">@Model.Loc.Where(a => a.ResourceId == "spnReadBy").FirstOrDefault().Value.ToString()</label>
+                <input type="text" class="form-control search adv-item" id="readByClientLookupId" autocomplete="off" style="color:#333;">
+            </div>
+            <div class="form-group">
+                <label for="dateread" id="lbldateread">@Model.Loc.Where(a => a.ResourceId == "spnReadingDate").FirstOrDefault().Value.ToString()</label>
+                <input type="text" class="form-control search adv-item dtpicker" id="dateread" autocomplete="off" style="color:#333;">
+            </div>
+            <div class="form-group">
+                <label for="reset" id="lblreset">@Model.Loc.Where(a => a.ResourceId == "spnReset").FirstOrDefault().Value.ToString()</label>
+                <select id="reset" class="form-control search adv-item select2picker">
+                    <option value="">--Select--</option>
+                    <option value="true">Yes</option>
+                    <option value="false">No</option>
+                </select>
+                @*<input type="text" class="form-control search adv-item" id="reset" autocomplete="off" style="color:#333;">*@
+            </div>
+        </form>
+    </div>
+</nav>

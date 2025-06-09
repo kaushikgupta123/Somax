@@ -1,0 +1,337 @@
+﻿@model Client.Models.Dashboard.DashboardVM
+@{
+    var item = Model.woCompletionWorkbenchSummary;
+    string statusclass = "";
+    switch (Model.woCompletionWorkbenchSummary.Status)
+    {
+        case WorkOrderStatusConstants.Approved:
+            statusclass = "m-badge m-badge--yellow m-badge--wide";
+            break;
+        case WorkOrderStatusConstants.Canceled:
+            statusclass = "m-badge m-badge--orange m-badge--wide";
+            break;
+        case WorkOrderStatusConstants.Complete:
+            statusclass = "m-badge m-badge--green m-badge--wide";
+            break;
+        case WorkOrderStatusConstants.Denied:
+            statusclass = "m-badge m-badge--purple m-badge--wide";
+            break;
+        case WorkOrderStatusConstants.Scheduled:
+            statusclass = "m-badge m-badge--blue m-badge--wide";
+            break;
+        case WorkOrderStatusConstants.WorkRequest:
+            statusclass = "m-badge m-badge--red m-badge--wide";
+            break;
+        case WorkOrderStatusConstants.Planning:
+            statusclass = "m-badge  m-badge-grid-cell m-badge--wide";
+            break;
+    }
+    string imageUrl = item.ImageUrl;
+    if (Model._userdata.DatabaseKey.Client.OnPremise)
+    {
+        imageUrl = UtilityFunction.PhotoBase64ImgSrc(item.ImageUrl);
+    }
+}
+<div class="col-xl-12">
+    <div class="m-portlet padAdjst" id="m_portlet" style="padding:5px;">
+        <div class="m-portlet__body  m-portlet__body--no-padding">
+            <div class="row m-row--col-separator-xl">
+                <div class="col-md-12">
+                    <div class="m-portlet cardRow" style="margin-bottom:0; border:0;">
+                        <div class="m-portlet__body gridList" style="padding:0;">
+                            <div class="summaryview">
+                                <div class="col-box-1">
+                                    <div class="gridImgBox" style="width:100%;">
+                                        @if (!string.IsNullOrEmpty(imageUrl))
+                                        {
+                                            <img src="@imageUrl" id="EquipZoom" alt="Image" data-zoom-image="@imageUrl" style="width:100%; height:auto;" />
+                                        }
+                                        else
+                                        {
+                                            <img src="~/Scripts/ImageZoom/images/NoImage.jpg" id="EquipZoom" alt="Image" style="width:100%; height:auto;" />
+                                        }
+
+
+                                    </div>
+                                    <div style="clear:both;"></div>
+                                </div>
+                                <div class="col-box-2">
+                                    <div class="newDescription" style='line-height:17px;'>
+                                        <span class="orderId n-order-row">
+                                            <span class="n-order-level">@(String.IsNullOrEmpty(item.WorkOrder_ClientLookupId) ? "" : (item.WorkOrder_ClientLookupId.Length > 20 ? (item.WorkOrder_ClientLookupId.Substring(0, 20) + "...") : (item.WorkOrder_ClientLookupId)))</span>
+
+                                            <small class='@statusclass n-order-val'>@UtilityFunction.GetMessageFromResource(item.Status, LocalizeResourceSetConstants.StatusDetails) </small>
+
+                                        </span>
+                                        <div class="types n-type-row">
+                                            <span class="n-type-data" style="min-width: 60px;margin-right:8px;"><span class="n-type-level">@Model.Loc.Where(a => a.ResourceId == "GlobalType").FirstOrDefault().Value.ToString() : </span><strong class="n-type-val">@item.Type</strong></span>  <span class="n-type-data"><span class="n-type-level">@Model.Loc.Where(a => a.ResourceId == "spnPriority").FirstOrDefault().Value.ToString() : </span><strong class="n-type-val">@item.Priority</strong></span>
+                                        </div>
+                                        <p class="n-type-desc">
+                                            @* same description model used for detail and card view mobile *@
+                                            @*@if (item.Description.Length > 50)
+            {*@
+                                            @item.Description@*.Substring(0, 50) <span data-des="@item.Description" style="color:#315a98;cursor:pointer" id="wocreaddescription">... @Model.Loc.Where(a => a.ResourceId == "globalSpnMore").FirstOrDefault().Value.ToString()</span>*@
+                                            @*}
+            else
+            {
+                @item.Description
+            }*@
+                                        </p>
+                                        <p class="n-type-desc">
+                                            @Model.Loc.Where(a => a.ResourceId == "spnAsset").FirstOrDefault().Value.ToString() :
+                                            @item.ChargeToClientLookupId
+                                            <span data-toggle="tooltip" title="@(item.ChargeTo_Name)">@item.ChargeTo_Name</span>
+                                        </p>
+                                        <p class="n-type-desc">
+                                            <span class="n-type-data" style="min-width: 90px; margin-right:8px;"><span class="n-type-level"> @Model.Loc.Where(a => a.ResourceId == "spnGlobalAssetLocation").FirstOrDefault().Value.ToString() :</span> <strong class="n-type-val">@item.AssetLocation </strong></span>
+
+                                        </p>
+
+                                    </div>
+                                </div>
+                                <div class="col-box-3">
+                                    <div class="gridStatus">
+                                        <span class="n-type-data">
+                                            <span class="n-type-level">
+                                                @Model.Loc.Where(a => a.ResourceId == "spnGlobalScheduled").FirstOrDefault().Value.ToString() :
+                                            </span>
+                                            @if (item.ScheduledStartDate.HasValue && item.ScheduledStartDate.Value != default(DateTime))
+                                            {
+                                                <strong class="n-type-val">
+                                                    @item.ScheduledStartDate.Value.ToString("MM/dd/yyyy", CultureInfo.InvariantCulture)
+                                                </strong>
+                                            }
+
+                                        </span>
+                                        @{
+                                            var id = "assignedItem" + item.WorkOrderId;
+                                        }
+                                        <span class="assignedItem n-type-data @(item.WorkAssigned_PersonnelId == -1 ? "hasMultipleAssigned":"")" id=@id data-woid="@item.WorkOrderId"
+                                              waPersonnelId=@item.WorkAssigned_PersonnelId style="min-width: 113px;display: block !important;">
+                                            <span class="n-type-level">
+                                                @Model.Loc.Where(a => a.ResourceId == "spnGlobalAssigned").FirstOrDefault().Value.ToString() :
+                                            </span>
+                                            @if (item.Assigned != null && item.Assigned.Length > 0)
+                                            {
+                                                <strong class="assignedFName n-type-val">@item.Assigned</strong>
+                                            }
+                                            @if (item.WorkAssigned_PersonnelId == -1)
+                                            {
+                                                //var v = "spn" + item.WorkOrderId;
+                                                <strong class="assignedFName n-type-val">@Model.Loc.Where(a => a.ResourceId == "globalSpnMultiple").FirstOrDefault().Value.ToString()</strong>
+                                                @*<span id=@v class="tooltipcards"></span>*@
+                                                <span class="loadingImg" style="display:none;"><img src="~/Images/lineLoader.gif" style="width:55px; height:auto; position:absolute; left:0; top:40px;" /></span>
+                                            }
+
+                                        </span>
+                                        @if (item.WorkAssigned_PersonnelId == -1)
+                                        {
+                                            var v = "assigned" + item.WorkOrderId;
+                                            <div id="@v" data-woid="@item.WorkOrderId" class="multipleAssigned mbsc-cloak" style="display:none;">
+                                                <div class="mbsc-align-left mbsc-padding">
+                                                    <span></span>
+                                                </div>
+                                            </div>
+                                        }
+                                        <span class="newStatus n-type-data" style="position:relative;">
+                                            <span class="n-type-level" style="margin-top:10px;margin-bottom:0 !important;">
+                                                @Model.Loc.Where(a => a.ResourceId == "spnRequiredDate").FirstOrDefault().Value.ToString() :
+                                            </span>
+                                            @if (item.ScheduledStartDate.HasValue && item.RequiredDate.Value != default(DateTime))
+                                            {
+                                                <strong class="n-type-val">
+                                                    @item.RequiredDate.Value.ToString("MM/dd/yyyy", CultureInfo.InvariantCulture)
+                                                </strong>
+                                            }
+                                        </span>
+                                        <span class="newStatus n-type-data" style="position:relative;width:100%;">
+                                            <span class="n-type-level" style="margin-top:10px;margin-bottom:0 !important;">
+                                                @Model.Loc.Where(a => a.ResourceId == "spnGlobalCompleted").FirstOrDefault().Value.ToString() :
+                                            </span>
+                                            @if (item.CompleteDate.HasValue && item.CompleteDate.Value != default(DateTime))
+                                            {
+                                                <span class="n-type-val">
+                                                    @item.CompleteDate.Value.ToString("MM/dd/yyyy", CultureInfo.InvariantCulture)
+                                                </span>
+                                            }
+                                        </span>
+                                        <span class="n-type-desc">
+                                            <span class="n-type-data" style="min-width: 90px; margin-right: 8px; margin-top: 10px;"><span class="n-type-level"> @Model.Loc.Where(a => a.ResourceId == "spnProject").FirstOrDefault().Value.ToString() :</span> <strong class="n-type-val">@item.ProjectClientlookupId </strong></span>
+
+                                        </span>
+                                        <div class="gridStatus">
+                                            <span class="n-type-data" style="margin-top: 10px; width: 100%; display: flex ;margin-bottom: 0 !important;">
+                                                <span class="n-type-level" style="min-width: auto;">
+                                                    @item.AssetGroup1Name
+                                                </span>
+                                                : <strong class="assignedFName n-type-val"> @item.AssetGroup1ClientlookupId</strong>
+                                            </span>
+                                            <span class="n-type-data" style="margin-top: 10px; width: 100%; display: flex; margin-bottom: 0 !important;">
+                                                <span class="n-type-level" style="min-width: auto;">
+                                                    @item.AssetGroup2Name
+                                                </span>
+                                                : <strong class="assignedFName n-type-val"> @item.AssetGroup2ClientlookupId</strong>
+                                            </span>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="col-box-4 button-row">
+                                    @if (item.Status == WorkOrderStatusConstants.Scheduled || item.Status == WorkOrderStatusConstants.Approved)
+                                    {
+                                        if (Model.security.MaintenanceCompletionWorkbenchWidget_Cancel.Access)
+                                        {
+                                            <button type="button" class="btn btn-blue wobtngrdcancel" title="@Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()" style="padding: 0.65rem; float:right;"><i class="fa fa-times" style="margin-top:-3px;"></i> <span class="cancel_workorder" status=""> @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</span></button>
+                                        }
+                                        if (Model.security.MaintenanceCompletionWorkbenchWidget_Complete.Access)
+                                        {
+                                            if (Model.UseWOCompletionWizard == true) //V2-634
+                                            {
+
+                                                <button type="button" class="btn btn-blue complete" data-workbench_WorkOrder_ClientLookupId='@item.WorkOrder_ClientLookupId' data-workbench_wostatus='@item.Status' title="Complete" id="CompleteWoCheckListWizard_Workbench" @*disabled="disabled"*@ style="padding: 0.65rem; float:right; margin:5px 7px;"><i class="fa fa-check" style="margin-top:-3px;"></i> @Model.Loc.Where(a => a.ResourceId == "GlobalComplete").FirstOrDefault().Value.ToString()</button>
+                                            }
+                                            else
+                                            {
+                                                <button type="button" class="btn btn-blue complete wobtngrdcomplete" title="@Model.Loc.Where(a => a.ResourceId == "GlobalComplete").FirstOrDefault().Value.ToString()" style="padding: 0.65rem; float:right; margin:0 7px;"><i class="fa fa-check" style="margin-top:-3px;"></i> <span class="complete_workorder">@Model.Loc.Where(a => a.ResourceId == "GlobalComplete").FirstOrDefault().Value.ToString()</span></button>
+                                            }
+                                        }
+
+                                    }
+                                    @if (Model.security.MaintenanceCompletionWorkbenchWidget_Photos.Create)
+                                    {
+                                        <div class="img-radio bttns takePic">
+                                            <button class="btn btn-blue" title="Take Picture" style="padding: 0.65rem; float:right; width:100%">
+                                                @*<input id="webcam-switch" name="imageUploadRadio" style="visibility:hidden;" type="radio" value="true">
+                                                <label for="webcam-switch" class="radio-label" style="width: 100%; margin: -8px;"><i for="" class="fa fa-camera" style="margin-top:-3px;"></i></label>*@
+
+                                                <label for="add_photos" style="margin-bottom:0px !important"><i class="fa fa-camera"></i></label>
+                                                <input id="add_photos" @*accept=".jpeg,.jpg,.png,.JPEG,.JPG,.PNG"*@ style="display:none;" type="file" value="" accept="image/*" capture>
+                                            </button>
+</div>
+                                    }
+
+                                </div>
+                                @*@if (Model.security.MaintenanceCompletionWorkbenchWidget_Photos.Create)
+                                {
+                                    <div id="CameraPopup" class="modal fade" role="dialog">
+                                        <div class="modal-dialog modal-info">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                                    <h4 class="modal-title">@Model.Loc.Where(a => a.ResourceId == "spnImagePreview").FirstOrDefault().Value.ToString()</h4>
+                                                </div>
+
+                                                <div class="modal-body" style="text-align:center;">
+                                                    <div id="forWebcam" class="cam-container" style="display:none;">
+                                                        <!--Web cam-->
+                                                        <div class="webcam-start">
+                                                            <div class="md-modal md-effect-12">
+                                                                <div id="app-panel" class="app-panel md-content row p-0 m-0">
+                                                                    <div class="imgArea">
+                                                                        <div id="webcam-container" class="vd-webcam-container">
+                                                                            <video id="webcam" autoplay playsinline width="300" height="165" class="onCamera vd-webcam"></video>
+                                                                            <canvas id="canvas" class="d-none webcam-canvas"></canvas>
+                                                                            <div class="flash"></div>
+                                                                            <audio id="snapSound" src="~/Scripts/Webcam/camera-shutter-click.wav" preload="auto"></audio>
+                                                                            <img src="" id="imgDisply" style="width:auto;" class="offCamera d-none" />
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <div id="cameraControls" class="cameraControls buttonArea">
+                                                                        <button id="cameraFlip" type="button" class="btn btn-white navbar-btn onCamera cam-button" title="Flip Camera"><i class="fa fa-rotate-right on-cam-icon"></i></button>
+                                                                        <button id="take-photo" type="button" class="btn btn-white navbar-btn onCamera cam-button" title="Take Snap" style="border:2px solid;border-radius: 25px !important; width: 50px !important;;border-color: #ffff !important;"></button>
+                                                                        <!--<button id="download-photo" href="#" download="ImageFromWebCam.png" target="_blank" type="button" class="btn btn-white navbar-btn offCamera d-none cam-button" title="Download Image"><i class="fa fa-download on-cam-icon"></i></button>-->
+                                                                        <button id="resume-camera" type="button" class="btn btn-white navbar-btn offCamera d-none cam-button" title="Take Another Snap"><i class="fa fa-plus on-cam-icon"></i></button>
+                                                                        <button id="UploadWebCamImg" type="button" class="btn btn-white navbar-btn offCamera d-none cam-button" title="Upload Image"><i class="fa fa-upload on-cam-icon"></i></button>
+                                                                        <button id="exit-app" type="button" title="Close Camera" class="btn btn-white navbar-btn onCamera cam-button"><i class="fa fa-close on-cam-icon"></i></button>
+                                                                        <div style="clear:both;"></div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="md-overlay"></div>
+                                                            <div style="clear:both;"></div>
+                                                        </div>
+                                                    </div>
+                                                    <div style="clear:both;"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                }*@
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@Html.Hidden("WoChargeToID", item.ChargeToId, new { id = "WoChargeToID" })
+<style type="text/css">
+
+    .img-radio input[type=radio]:checked + .radio-label:before {
+        background-color: #0075ff;
+        border: 1px solid #0075ff;
+        box-shadow: inset 0 0 0 4px #f4f4f4;
+    }
+
+    .img-radio input[type=radio]:focus + .radio-label:before {
+        outline: none;
+        border-color: #3197EE;
+    }
+
+    .img-radio input[type=radio]:disabled + .radio-label:before {
+        box-shadow: inset 0 0 0 4px #f4f4f4;
+        border-color: #b4b4b4;
+        background: #b4b4b4;
+    }
+
+    .img-radio input[type=radio] + .radio-label:empty:before {
+        margin-right: 0;
+    }
+
+
+
+    /*--Dashbord - n-starctur--*/
+
+    .m-portlet .n-order-row {
+        display: flex !important;
+        align-items: center;
+        flex-wrap: wrap;
+    }
+
+        .m-portlet .n-order-row .n-order-level {
+            display: inline-block;
+            padding-right: 10px;
+        }
+
+    .m-portlet .n-type-data {
+        display: inline-block !important;
+        align-items: baseline;
+    }
+
+    .m-portlet .n-type-row {
+        display: flex !important;
+        align-items: center;
+        align-items: baseline;
+    }
+
+    .m-portlet .n-type-data .n-type-level, .m-portlet .n-type-data .n-type-val {
+        display: contents !important;
+    }
+    .assignedFName.n-type-val {
+        min-width:30px !important;
+    }
+    @@media(max-width:1023px) {
+        .takePic {
+            float: none;
+            margin-top:0;
+        }
+        .gridList button.btn-blue.wobtngrdcancel, .btn.btn-blue.complete {
+            width: 100% !important;
+        }
+
+
+    }
+</style>

@@ -1,0 +1,161 @@
+﻿@model Client.Models.PreventiveMaintenance.PrevMaintVM
+@{
+    int ReportTimeOut = Convert.ToInt32(System.Configuration.ConfigurationManager.AppSettings["ReportTimeOut"].ToString());
+    ViewBag.Title = "Somax | PM Forecast";
+}
+@Styles.Render("~/Content/datatable")
+<link href="~/Content/sweetalert.css" rel="stylesheet" />
+<link href="~/Content/themes/base/jquery-ui.min.css" rel="stylesheet" />
+<link href="~/Content/tootltipcustom.css" rel="stylesheet" />
+<link href="~/Content/sidebar_custom.css" rel="stylesheet" />
+<link href="~/Scripts/Metronic/assets/demo/default/base/GlobalSearchGrid.css" rel="stylesheet" />
+@section scripts {
+    @Scripts.Render("~/bundles/datatable")
+    <script src="~/Scripts/Pages/Preventive/PMForcast.js"></script>
+    <script>
+        var ReportTimeOut = "@ReportTimeOut";
+    </script>
+}
+<div id="renderPMFchedule">
+    @Html.Partial("_ErrorDiv")
+    <div class="m-subheader">
+        <div class="new-m-subheader">
+            <div class="PageTitle">
+                <div class="align-items-center separator">
+                    <h3 class="m-subheader__title ">
+                        @Model.Loc.Where(a => a.ResourceId == "spnTitle").FirstOrDefault().Value.ToString()
+                    </h3>
+                </div>
+            </div>
+
+            <div class="NewBreadcrumbArea">
+                <div class="newBreadcrumb">
+                    <ul>
+                        <li><a href="/Dashboard/Dashboard">&nbsp;</a></li>
+                        <li class="active">@Model.Loc.Where(a => a.ResourceId == "spnPMForecast").FirstOrDefault().Value.ToString()</li>
+                    </ul>
+                    <div style="clear:both;"></div>
+                </div>
+            </div>
+            <div style="clear:both;"></div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-xl-12">
+            <div class="m-portlet newPort" id="m_portlet" style="padding:15px;">
+                <div class="bottomBlock">
+                    <div class="tabsArea nobg">
+                        @using (Ajax.BeginForm("ProcessPMForecast", "PMForcast", new AjaxOptions { HttpMethod = "Post", OnSuccess = "ExecuteProcess", OnBegin = "AjaxBeginFormBegin", OnFailure = "AjaxBeginFormFaillure" }, new { id = "frmforecast" }))
+                        {
+                            <ul class="listView nobrd">
+                                <li>
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnSchdType").FirstOrDefault().Value.ToString(): </span>
+                                    <span class="inputText">
+                                        @Html.DropDownListFor(m => m.pMForcastModel.ScheduleType, Model.pMForcastModel.ScheduleTypeList, new { @class = "form-control search select2picker", style = "width:100%;", id = "ScheduleType" })
+                                    </span>
+                                </li>
+                                <li>
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnGenerateThrough").FirstOrDefault().Value.ToString():</span>
+                                    <span class="inputText">
+                                        @Html.ValidationMessageFor(m => m.pMForcastModel.ForecastDate, "", new { style = "display:none" })
+                                        @Html.TextBoxFor(m => m.pMForcastModel.ForecastDate, "{0:MM/dd/yyyy}", new { @class = "form-control search dtpicker tdDate", autocomplete = "off" })
+                                    </span>
+                                </li>
+                                <li id="OnDemandId" style="display:none">
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnOnDemandGroup").FirstOrDefault().Value.ToString():<small>*</small></span>
+                                    <span class="inputText">
+                                        @Html.ValidationMessageFor(m => m.pMForcastModel.OnDemandGroup, "", new { style = "display:none" })
+                                        @Html.DropDownListFor(m => m.pMForcastModel.OnDemandGroup, Model.pMForcastModel.OnDemandGroupList, "--Select--", new { @class = "form-control search select2picker", style = "width:100%;", disabled = "disabled" })
+                                    </span>
+                                </li>
+                            </ul>
+                            <div style="clear:both;"></div>
+                            <div class="idBttns">
+                                <div class="bttn_pagin">
+                                    <div class="bttns2"><button class="btn btn-blue mobBttn" id="btnProcess"><i class="fa fa-check faIcon"></i> &nbsp;@Model.Loc.Where(a => a.ResourceId == "spnProcess").FirstOrDefault().Value.ToString()</button></div>
+                                    <div style="clear:both;"></div>
+                                </div>
+                            </div>
+                        }
+                        <div id="finselectcontainer" style="display:none">
+                            <div style="clear:both;"></div>
+                            <div class="actionBar">
+                                <div class="pull-left">
+                                    <button type="button" class="btn btn-white navbar-btn" id="PMFsidebarCollapse" title="Advance Search"><i class="fa fa-filter" style="font-size: 1.3rem;"></i></button>
+                                    <button type="button" class="btn btn-white navbar-btn" id="downloadPMForcastdata" title="Export To Excel"><i class="fa fa-download" style="font-size: 1.3rem;"></i></button>
+                                    <ul class="filter_apply">
+                                        <li class="textFilter"><span class="filteritemcount">0</span> @Model.Loc.Where(a => a.ResourceId == "globalFiltersAppiled").FirstOrDefault().Value.ToString()</li>
+                                        <li class="textClear" id="liClearAdvSearchFilterAVPMF"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "globalClear").FirstOrDefault().Value.ToString()</a></li>
+                                    </ul>
+                                    <div style="clear:both;"></div>
+                                </div>
+                                <div style="clear:both;"></div>
+                                <div id="advsearchfilteritems"></div>
+                                <div style="clear:both;"></div>
+                            </div>
+
+                            <div class="table-responsive">
+                                <table id="tblPMForcastGrid" class="eqpDtlTbl row-border custom-sort tblMain hover haschild tblDefaultSort" style="width:100%;">
+                                    <thead>
+                                        <tr>
+                                            <td style="width:20px;"></td>
+                                            <th data-th-index="0">@Model.Loc.Where(a => a.ResourceId == "spnPMID").FirstOrDefault().Value.ToString()</th>
+                                            <th data-th-index="1">@Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString()</th>
+                                            <th data-th-index="2">@Model.Loc.Where(a => a.ResourceId == "spnScheduled").FirstOrDefault().Value.ToString()</th>
+                                            <th data-th-index="3">@Model.Loc.Where(a => a.ResourceId == "spnRequiredDate").FirstOrDefault().Value.ToString()</th>
+                                            <th data-th-index="4">@Model.Loc.Where(a => a.ResourceId == "spnAssignedTo").FirstOrDefault().Value.ToString()</th>
+                                            <th data-th-index="5">@Model.Loc.Where(a => a.ResourceId == "GlobalChargeTo").FirstOrDefault().Value.ToString()</th>
+                                            <th data-th-index="6">@Model.Loc.Where(a => a.ResourceId == "spnChargeToName").FirstOrDefault().Value.ToString()</th>
+                                            <th data-th-index="7">@Model.Loc.Where(a => a.ResourceId == "spnDuration").FirstOrDefault().Value.ToString()</th>
+                                            <th data-th-index="8">@Model.Loc.Where(a => a.ResourceId == "spnLaborHours").FirstOrDefault().Value.ToString()</th>
+                                            <th data-th-index="9">@Model.Loc.Where(a => a.ResourceId == "spnLaborCost").FirstOrDefault().Value.ToString()</th>
+                                            <th data-th-index="10">@Model.Loc.Where(a => a.ResourceId == "spnOtherCost").FirstOrDefault().Value.ToString()</th>
+                                            <th data-th-index="11">@Model.Loc.Where(a => a.ResourceId == "spnMaterialCost").FirstOrDefault().Value.ToString()</th>
+                                            <th data-th-index="12" width="5%">@Model.Loc.Where(a => a.ResourceId == "spnDownRequired").FirstOrDefault().Value.ToString()</th>
+                                            <th data-th-index="13">@Model.Loc.Where(a => a.ResourceId == "spnShift").FirstOrDefault().Value.ToString()</th>
+                                            <th data-th-index="14">@Model.Loc.Where(a => a.ResourceId == "GlobalType").FirstOrDefault().Value.ToString()</th> @*V2-1207*@
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="clear:both;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="PMForcastadvsearchcontainer">
+    @Html.Partial("_PMForcastAdvSearch")
+</div>
+
+<style>
+
+    .ghover {
+        position: relative;
+    }
+
+    .tooltipgrid {
+        background: #d0e8fa;
+        padding: 5px;
+        border-radius: 5px;
+        position: absolute;
+        width: 200px;
+        height: auto;
+        left: 10px;
+        top: 41px;
+        color: #000;
+        font-size: 13px;
+        font-weight: 500;
+        z-index: 9;
+        display: none !important;
+        cursor: pointer;
+    }
+
+    .select2-container--default .select2-selection--single, .select2-container--default .select2-selection--multiple {
+        min-height: 34px;
+        height: auto;
+    }
+</style>

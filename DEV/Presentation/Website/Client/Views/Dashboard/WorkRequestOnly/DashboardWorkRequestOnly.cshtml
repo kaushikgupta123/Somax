@@ -1,0 +1,203 @@
+﻿@model DashboardWROnlyVM
+@using Client.Models.Dashboard
+@using DataContracts
+@{
+
+    ViewBag.Title = "Somax | Dashboard";
+    var userdata = Session["userData"];
+    UserData userData = new UserData();
+    userData = (UserData)userdata;
+    var type = ViewBag.type;
+}
+
+@Styles.Render("~/Content/datatable")
+@Styles.Render("~/Content/dashboardStyle")
+<link href="~/Content/sidebar_custom.css" rel="stylesheet" />
+<link href="~/Scripts/Metronic/assets/demo/default/base/GlobalSearchGrid.css" rel="stylesheet" />
+@section scripts{
+    @Scripts.Render("~/bundles/datatable")
+
+    @if (userData.IsLoggedInFromMobile)
+    {
+        @*mobiscroll form*@
+        <link rel="stylesheet" href="~/Scripts/mobile/css/mobiscroll.jquery.min.css">
+        @*mobiscroll form*@
+        <link href="~/Scripts/mobile/css/mobile-style.css" rel="stylesheet" />
+        <link href="~/Scripts/mobile/css/mobile-dashboard-style.css" rel="stylesheet" />
+
+        @Scripts.Render("~/bundles/WorkRequestOnly/Mobile")
+        @Html.Partial("~/Views/Dashboard/WorkRequestOnly/Mobile/_QrCodeReaderModal.cshtml")
+        @Html.Partial("~/Views/Dashboard/WorkRequestOnly/Mobile/_EquipmentGridPopUp.cshtml")
+    }
+    else
+    {
+        <script src="~/Scripts/Pages/dashboard/DashboardWROnly.js"></script>
+        <script src="~/Scripts/Pages/dashboard/DashboardWRSanitation.js"></script>
+    }
+}
+
+<div class="m-subheader">
+    <div class="d-flex align-items-center">
+        <div class="mr-auto">
+            <h3 class="m-subheader__title ">@Model.Loc.Where(a => a.ResourceId == "spnDashboard").FirstOrDefault().Value.ToString()</h3>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xl-12">
+        <div class="m-portlet" id="m_portlet" style="padding:15px;">
+            <!-- Tab links -->
+            @if (userData.Site.Sanitation == true && userData.Site.CMMS == true)
+            {
+                <div class="tab">
+                    <button class="tablinks active" onclick="ChangeTab(event, 'Maintenance')" id="Maintenancetab">@Model.Loc.Where(a => a.ResourceId == "spnGlobalMaintenance").FirstOrDefault().Value.ToString()</button>
+                    <button class="tablinks" onclick="ChangeTab(event, 'Sanitation')" id="Sanitationtab">@Model.Loc.Where(a => a.ResourceId == "spnGlobalSanitation").FirstOrDefault().Value.ToString()</button>
+                </div>
+            }
+            <!-- Tab content -->
+
+
+            @if (userData.Site.CMMS == true)
+            {
+                <div id="Maintenance" class="tabcontent" style="display:block;">
+                    <div class="actionBar" style="display:block" id="woGridAction">
+                        <div class="pull-left">
+                            <div class="ActionSearchDrop LoaderDrop">
+                                @Html.DropDownListFor(m => m.ScheduleWorkList, new SelectList(Model.ScheduleWorkList, "Value", "Text"), null, new { @class = "form-control search select2picker LoaderDrop", style = "width:100%;" })
+                            </div>
+                            <button type="button" class="btn btn-white navbar-btn" id="wrsidebarCollapse" title="Advance Search"><i class="fa fa-filter" style="font-size: 1.3rem;"></i></button>
+                            <ul class="filter_apply filterAdjustWhenDropdown">
+                                <li class="textFilter"><span class="wrfilteritemcount">0</span>&nbsp; @Model.Loc.Where(a => a.ResourceId == "globalFiltersAppiled").FirstOrDefault().Value.ToString()</li>
+                                <li class="textClear" id="wrliClearAdvSearchFilterWorkOrder"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "globalClear").FirstOrDefault().Value.ToString()</a></li>
+                            </ul>
+                            <div style="clear:both;"></div>
+                        </div>
+
+                        <div class="pull-right">
+                            <button type="button" class="btn btn-white import-export" disabled onclick="funcShowExportbtn()">@Model.Loc.Where(a => a.ResourceId == "spnExport").FirstOrDefault().Value.ToString()</button>
+
+                            <button type="button" class="btn newBtn-add AddWorkRequest" style="display:none" id="AddWorkRequestMbl" href="javascript:void(0);" title="Add">@Model.Loc.Where(a => a.ResourceId == "globalNewWorkRequest").FirstOrDefault().Value.ToString()</button>
+
+                           @*V2-834*@
+                                <div style="clear:both;"></div>
+                            </div>
+                            <div style="clear:both;"></div>
+                            <div id="wradvsearchfilteritems"></div>
+                            <div style="clear:both;"></div>
+                        </div>
+
+                        <div class="table-responsive">
+                            <table id="tblworkorders" class="eqpDtlTbl row-border custom-sort tblMain hover haschild tblDefaultSort" style="width:100%;">
+                                <thead>
+                                    <tr>
+                                        <th data-col="0" id="thWoId" class="th-WoId" data-th-index="0">@Model.Loc.Where(a => a.ResourceId == "spnGlobalWorkOrderID").FirstOrDefault().Value.ToString()</th>
+                                        <th data-col="1" id="thWoDesc" data-th-index="1">@Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString()</th>
+                                        <th data-col="2" id="thWoCahrgeTo" data-th-index="2">@Model.Loc.Where(a => a.ResourceId == "GlobalChargeTo").FirstOrDefault().Value.ToString()</th>
+                                        <th data-col="3" data-th-index="3">@Model.Loc.Where(a => a.ResourceId == "spnGlobalChargeToName").FirstOrDefault().Value.ToString()</th>
+                                        <th data-col="4" id="thWoStatus" data-th-index="4">@Model.Loc.Where(a => a.ResourceId == "GlobalStatus").FirstOrDefault().Value.ToString()</th>
+                                        <th data-col="5" data-th-index="5">@Model.Loc.Where(a => a.ResourceId == "spnCreated").FirstOrDefault().Value.ToString()</th>
+                                        <th data-col="6" data-th-index="6">@Model.Loc.Where(a => a.ResourceId == "spnGlobalAssigned").FirstOrDefault().Value.ToString()</th>
+                                        <th data-col="7" data-th-index="7">@Model.Loc.Where(a => a.ResourceId == "spnGlobalScheduled").FirstOrDefault().Value.ToString()</th>
+                                        <th data-col="8" data-th-index="8">@Model.Loc.Where(a => a.ResourceId == "spnGlobalCompleted").FirstOrDefault().Value.ToString()</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                }
+            @if (userData.Site.Sanitation == true)
+            {
+                <div id="Sanitation" class="tabcontent">
+                    <div class="actionBar" style="display:block" id="SanitationGridAction">
+                        <div class="pull-left">
+                            <div class="ActionSearchDrop LoaderDrop">
+                                @Html.DropDownListFor(m => m.SanitationList, new SelectList(Model.SanitationList, "Value", "Text"), null, new { @class = "form-control search select2picker LoaderDrop", style = "width:100%;" })
+                            </div>
+                            <button type="button" class="btn btn-white navbar-btn" id="sansidebarCollapse" title="Advance Search"><i class="fa fa-filter" style="font-size: 1.3rem;"></i></button>
+                            <ul class="filter_apply filterAdjustWhenDropdown">
+                                <li class="textFilter"><span class="sanfilteritemcount">0</span>&nbsp; @Model.Loc.Where(a => a.ResourceId == "globalFiltersAppiled").FirstOrDefault().Value.ToString()</li>
+                                <li class="textClear" id="sanliClearAdvSearchFilter"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "globalClear").FirstOrDefault().Value.ToString()</a></li>
+                            </ul>
+                            <div style="clear:both;"></div>
+                        </div>
+
+                        <div class="pull-right">
+                            <button type="button" class="btn btn-white import-export" disabled onclick="funcShowExportbtn()">@Model.Loc.Where(a => a.ResourceId == "spnExport").FirstOrDefault().Value.ToString()</button>
+                            @*V2-834*@
+                            <button type="button" class="btn newBtn-add AddSanitationRequest" style="display:none" id="AddSanitationRequestMbl" href="javascript:void(0)" title="Add">@Model.Loc.Where(a => a.ResourceId == "globalNewSanitationRequest").FirstOrDefault().Value.ToString()</button>
+                            <div style="clear:both;"></div>
+                        </div>
+                        <div style="clear:both;"></div>
+                        <div id="sanadvsearchfilteritems"></div>
+                        <div style="clear:both;"></div>
+                    </div>
+                    <table id="sanitationJobSearchTable" class="eqpDtlTbl row-border custom-sort tblMain hover haschild tblDefaultSort" style="width:100%;">
+                        <thead>
+                            <tr>
+                                <th data-col="0" data-th-index="0" class="th-JobId" id="thJobId">@Model.Loc.Where(a => a.ResourceId == "spnGlobalJobID").FirstOrDefault().Value.ToString()</th>
+                                <th data-col="1" data-th-index="1" id="thJobDesc">@Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString()</th>
+                                <th data-col="2" data-th-index="2" id="thJobChargeTo">@Model.Loc.Where(a => a.ResourceId == "GlobalChargeTo").FirstOrDefault().Value.ToString()</th>
+                                <th data-col="3" data-th-index="3">@Model.Loc.Where(a => a.ResourceId == "spnGlobalChargeToName").FirstOrDefault().Value.ToString()</th>
+                                <th data-col="4" data-th-index="4" id="thJobStatus">@Model.Loc.Where(a => a.ResourceId == "GlobalStatus").FirstOrDefault().Value.ToString()</th>
+                                <th data-col="5" data-th-index="5">@Model.Loc.Where(a => a.ResourceId == "spnCreated").FirstOrDefault().Value.ToString()</th>
+                                <th data-col="6" data-th-index="6">@Model.Loc.Where(a => a.ResourceId == "spnGlobalAssigned").FirstOrDefault().Value.ToString()</th>
+                                <th data-col="7" data-th-index="7">@Model.Loc.Where(a => a.ResourceId == "spnGlobalCompleted").FirstOrDefault().Value.ToString()</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            }
+
+        </div>
+    </div>
+</div>
+@Html.Partial("_WorkOrderAdvancedSearch")
+@Html.Partial("_SanitationJobAdvancedSearch")
+@Html.Partial("_CustomizeGridSetup")
+@Html.Partial("_Export")
+@Html.Partial("_StatusDetailsLocalization")
+
+@if (userData.IsLoggedInFromMobile)
+{
+    <div id="AddWorkRequestDiv"></div>
+    <div id="AddSanitationModal"></div>
+}
+
+<style type="text/css">
+    .tab {
+        overflow: hidden;
+        border-bottom: 1px solid #d3d9db;
+    }
+
+        .tab button {
+            background-color: #fff;
+            font-family: Roboto;
+            float: left;
+            border: 1px solid #fff;
+            outline: none;
+            cursor: pointer;
+            padding: 5px 15px;
+            margin-bottom: 10px;
+            margin-right: 10px;
+            border-radius: 3px;
+            transition: 0.3s;
+            font-size: 15px;
+            color: #8c8c8c;
+        }
+            .tab button:hover,
+            .tab button.active {
+                background-color: #e9ebee;
+                border: 1px solid #315a98;
+                color: #264a7c;
+            }
+
+    .tabcontent {
+        font-family: Roboto;
+        display: none;
+        padding: 0;
+        border-top: none;
+        animation: fadeEffect 1s;
+        padding-top: 15px;
+    }
+</style>

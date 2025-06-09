@@ -1,0 +1,26 @@
+﻿@model Client.Models.BBUKPISite.BBUKPISiteVM
+@foreach (var item in Model.eventLogList)
+{
+    <div class="kt-notes__item">
+        <div class="kt-notes__media">
+            <h3 class="kt-notes__user kt-font-brand kt-font-boldest activity-header-item">
+                @item.PersonnelInitial
+            </h3>
+        </div>
+        <div class="kt-notes__content">
+            <div class="kt-notes__section">
+                <div class="kt-notes__info">
+                    <a href="javascipt:void(0)" class="kt-notes__title">
+                        @item.Event
+                    </a>
+                    <span class="kt-notes__desc">
+                        @item.TransactionDate.Value.ToString("MMMM dd, yyyy h:mm tt")
+                    </span>
+                </div>
+            </div>
+            <span class="kt-notes__body">
+                @item.Comments
+            </span>
+        </div>
+    </div>
+}

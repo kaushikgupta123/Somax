@@ -1,0 +1,87 @@
+﻿@model Client.Models.BusinessIntelligenceVM
+@using (Ajax.BeginForm("PublicReportAddOrEdit", "Reports", new AjaxOptions { HttpMethod = "Post", OnSuccess = "PublicReportAddEditOnSuccess", OnBegin = "AjaxBeginFormBegin", OnComplete = "AjaxBeginFormComplete", OnFailure = "AjaxBeginFormFaillure" }, new { enctype = "multipart/form-data", id = "PublicReportform" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close clearerrdiv" id="ClosePublicReportPopup" data-dismiss="modal">&times;</button>
+            @if (Model.userReportsModel.UserReportsId == 0)
+            {
+                <h4 class="modal-title">@Model.Loc.Where(a => a.ResourceId == "spnAddReport").FirstOrDefault().Value.ToString()</h4>
+            }
+            else
+            {
+                <h4 class="modal-title">@Model.Loc.Where(a => a.ResourceId == "spnEditReport").FirstOrDefault().Value.ToString()</h4>
+            }
+        </div>
+        @Html.Partial("_ErrorDiv")
+        <div class="modal-body">
+            <div class="form-group" style="margin-bottom:0;">
+                <div class="bottomBlock">
+                    <div class="tabsArea nobg">
+                        <ul class="listView nobrd" style="border-bottom:0;">
+                            <li>
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnName").FirstOrDefault().Value.ToString() : <small>*</small></span>
+                                <span class="inputText">
+
+                                    @Html.ValidationMessageFor(m => m.userReportsModel.ReportName, "", new { style = "display:none" })
+                                    @if (Model.userReportsModel.UserReportsId == 0)
+                                    {
+                                        @Html.TextBoxFor(m => m.userReportsModel.ReportName, new { @class = "form-control search m-input", maxlength = "250", autocomplete = "off" })
+                                    }
+                                    else
+                                    {
+                                        @Html.TextBoxFor(m => m.userReportsModel.ReportName, new { @class = "form-control search  m-input readonly cls-report-name", maxlength = "250", @style = "color:black", autocomplete = "off", @readonly = "readonly" })
+                                    }
+                                </span>
+                            </li>
+                            <li style="height:auto">
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString() : </span>
+                                <span class="inputText" style="height:auto">
+                                    @Html.TextAreaFor(m => m.userReportsModel.Description, new { @class = "form-control search", maxlength = "250", autocomplete = "off" })
+                                </span>
+                                <div style="clear:both;"></div>
+                            </li>
+                            <li>
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnVisibility").FirstOrDefault().Value.ToString() :</span>
+                                <span class="inputText">
+                                    @Html.RadioButtonFor(m => m.userReportsModel.SaveType, ReportTypeConstants.Private, new { id = "SaveTypePrivate" })
+                                    @Model.Loc.Where(a => a.ResourceId == "spnPrivate").FirstOrDefault().Value.ToString()
+                                    @Html.RadioButtonFor(m => m.userReportsModel.SaveType, ReportTypeConstants.Site, new { id = "SaveTypeSite" })
+                                    @Model.Loc.Where(a => a.ResourceId == "spnSiteGlobal").FirstOrDefault().Value.ToString()
+                                    @Html.RadioButtonFor(m => m.userReportsModel.SaveType, ReportTypeConstants.Public, new { id = "SaveTypePublic" })
+                                    @Model.Loc.Where(a => a.ResourceId == "spnPublic").FirstOrDefault().Value.ToString()
+                                </span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div style="clear:both;"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal-footer" style="padding:15px 25px !important;">
+            <div class="idBttns">
+                <div class="bttn_pagin">
+                    <div class="bttns2" style="margin:0;">
+                        <button type="submit" class="btn btn-blue mobBttn" name="Command" style="cursor:pointer" value="save"><i class="fa fa-save faIcon"></i> &nbsp;@Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+                    </div>
+                    <div class="bttns" style="margin:0;"><button type="button" class="btn btn-blue mobBttn" id="btnPublicReportcancel"><i class="fa fa-close faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button></div>
+
+                    <div style="clear:both;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @Html.HiddenFor(m => m.userReportsModel.UserReportsId)
+    @Html.HiddenFor(m => m.userReportsModel.SourceId)
+    @Html.HiddenFor(m => m.userReportsModel.IsUserReport)
+
+}
+
+
+
+
+
+
+

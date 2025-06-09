@@ -1,0 +1,537 @@
+﻿@model Client.Models.Devices.DeviceVM
+<div class="m-subheader fixedDiv1" id="DeviceDetails">
+    <div class="new-m-subheader">
+        <div class="filterDescription">
+            <a href="javascript:void(0)" id="linkToSearch"><span id="spnlinkToSearch"></span></a>
+            @if (Model.IsFromEquipment)
+            {
+                <b>-</b>
+                <a href="javascript:void(0)" id="linkToEquipment">
+                    <span id="spnlinkToEquipment"></span>
+                    @Model.EquipmentClientLookupId
+                </a>
+            }
+            - @Model.deviceModel.ClientLookupID
+        </div>
+        <div class="ActionBttnArea">
+            <div class="actionDiv pull-left" id="ad1">
+                <div class="btn-group bootstrap-select m-datatable__pager-size dropup show selectDrop actionNewDrop" style="margin-right:0;">
+                    <div class="btn-group bootstrap-select m-datatable__pager-size" style="width: 100%;">
+                        <button type="button" class="btn dropdown-toggle bs-placeholder btn-default" data-toggle="dropdown" role="button" title=""><span class="filter-option pull-left">@Model.Loc.Where(a => a.ResourceId == "globalAction").FirstOrDefault().Value.ToString()</span>&nbsp;<span class="bs-caret"><span class="caret"></span></span></button>
+                        <div class="dropdown-menu open" role="combobox">
+                            <ul class="dropdown-menu inner" role="listbox" aria-expanded="false">
+                                @if (Model.deviceModel.InactiveFlag)
+                                {
+                                    <li id="activeInactiveDevice"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnGlobalActivate").FirstOrDefault().Value.ToString()</a></li>
+                                }
+                                else
+                                {
+                                    <li id="activeInactiveDevice"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnGlobalInactivate").FirstOrDefault().Value.ToString()</a></li>
+                                }
+                            </ul>
+                            @if (Model.deviceModel.InactiveFlag != true)
+                            {
+                                <ul class="dropdown-menu inner" role="listbox" aria-expanded="false">
+                                    <li data-toggle="modal" id="optchangedeviceid"><a href="javascript:void(0)">Change Device ID</a></li>
+                                </ul>
+                            }
+                            @if ( Model.APMval == true && Model.security.Sensors.RecordReading && Model.security.Sensors.Search )
+                            {
+                                if ((Model.deviceModel.InactiveFlag != true) && (Model.deviceModel.IoTDeviceCategory == "Sensor"))
+                                {
+                                    <ul class="dropdown-menu inner" role="listbox" aria-expanded="false">
+                                        <li data-toggle="modal" id="optAddRecordReading"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "globalTitleRecordReading").FirstOrDefault().Value.ToString()</a></li>
+                                    </ul>
+                                }
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @if (Model.APMval)
+            {
+                <button type="button" class="btn newBtn-add AddDevice pull-left" id="AddDevice" title="Add Device "><i class="fa fa-plus"></i></button>
+            }
+            <div style="clear:both;"></div>
+        </div>
+        <div style="clear:both;"></div>
+    </div>
+</div>
+<div class="pushDiv1"></div>
+<div class="row">
+    <div class="col-xl-2">
+        <div class="m-portlet">
+            <div class="sideMenuArea nobg">
+                <ul class="vtabs" id="detmaintab">
+                    <li class="active" id="dvoverview" onclick="openCity(event, 'dvoverview')"><a href="#DVOverview">@Model.Loc.Where(a => a.ResourceId == "spnOverview").FirstOrDefault().Value.ToString()</a></li>
+                    <li id="dvevents" onclick="openCity(event, 'DVEvents')"><a href="#DVEvents">@Model.Loc.Where(a => a.ResourceId == "spnEvents").FirstOrDefault().Value.ToString()</a></li>
+                </ul>
+            </div>
+            <div class="selectTabs" id="selectTabs">
+                <select class="form-control" id="colorselector">
+                    <option value="DVOverview">@Model.Loc.Where(a => a.ResourceId == "spnOverview").FirstOrDefault().Value.ToString()</option>
+                    <option value="DVEvents">@Model.Loc.Where(a => a.ResourceId == "spnEvents").FirstOrDefault().Value.ToString()</option>
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-10">
+        <div class="row">
+            <div class="col-xl-12" id="btnnblock">
+                <div class="tabcontent tabsArea nobg" id="DVOverview" style="display:block;">
+                    <div class="row">
+                        <div class="col-xl-6">
+                            <div class="m-portlet" id="m_portlet" style="padding:10px; padding-top:0;">
+                                <div id="ChargeTo">
+
+                                    @if (Model.deviceModel.IoTDeviceCategory == "Meter" && Model.deviceModel.CMMSMeterId == 0) /*Meter(APM Only)*/
+                                    {
+                                        <div id="ChargeTo">
+                                            <ul class="listView clsoverview">
+                                                <li>
+                                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnDeviceID").FirstOrDefault().Value.ToString() :</span>
+                                                    <span class="inputText">@Model.deviceModel.ClientLookupID</span>
+                                                </li>
+                                                <li>
+                                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnName").FirstOrDefault().Value.ToString() :</span>
+                                                    <span class="inputText description">@Model.deviceModel.Name</span>
+                                                </li>
+                                                <li>
+                                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnCategory").FirstOrDefault().Value.ToString() :</span>
+                                                    <span class="inputText">
+                                                        @*@UtilityFunction.GetMessageFromResource(Model.deviceModel.IoTDeviceCategory, LocalizeResourceSetConstants.Global)*@
+                                                        @Model.deviceModel.IoTDeviceCategory
+                                                    </span>
+                                                </li>
+                                                <li>
+                                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "GlobalType").FirstOrDefault().Value.ToString() :</span>
+                                                    <span class="inputText">
+                                                        @*@UtilityFunction.GetMessageFromResource(Model.deviceModel.SensorType, LocalizeResourceSetConstants.DeviceDetails)*@
+                                                        @Model.deviceModel.SensorType
+                                                    </span>
+                                                </li>
+                                                <li>
+                                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnAsset").FirstOrDefault().Value.ToString() :</span>
+                                                    <span class="inputText">@Model.deviceModel.AssetID</span>
+                                                </li>
+                                                @*
+                                                    <li>
+                                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnAssetName").FirstOrDefault().Value.ToString() :</span>
+                                                        <span class="inputText">@Model.deviceModel.AssetName</span>
+                                                    </li>*@
+                                                <li>
+                                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "globalInActive").FirstOrDefault().Value.ToString() :</span>
+                                                    <span class="inputText">
+                                                        @Html.CheckBoxFor(m => m.deviceModel.InactiveFlag, new { @class = "form-control m-input", @disabled = "disabled", @style = "color:black; width: auto; margin-top: 12px;" })
+                                                    </span>
+                                                </li>
+                                                <li>
+                                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnLastReading").FirstOrDefault().Value.ToString() :</span>
+                                                    <span class="inputText">@Model.deviceModel.LastReading</span>
+                                                </li>
+                                                <li>
+                                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnLastReadingDate").FirstOrDefault().Value.ToString() :</span>
+                                                    <span class="inputText">
+                                                        @if (Model.deviceModel.LastReadingDate.HasValue && Model.deviceModel.LastReadingDate.Value != default(DateTime))
+                                                        {
+                                                            @Model.deviceModel.LastReadingDate.Value.ToString("MM/dd/yyyy", CultureInfo.InvariantCulture)
+                                                        }
+                                                    </span>
+                                                </li>
+                                                <li>
+                                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spanInterval").FirstOrDefault().Value.ToString() :</span>
+                                                    <span class="inputText">@Model.deviceModel.MeterInterval</span>
+                                                </li>
+                                                <li>
+                                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spanLifetimeReading").FirstOrDefault().Value.ToString() :</span>
+                                                    <span class="inputText">@Model.deviceModel.MeterReadingLife</span>
+                                                </li>
+                                                <li>
+                                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spanMaximumReading").FirstOrDefault().Value.ToString() :</span>
+                                                    <span class="inputText">@Model.deviceModel.MeterReadingMax</span>
+                                                </li>
+                                                <li>
+                                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spanWarningProcedure").FirstOrDefault().Value.ToString() :</span>
+                                                    <span class="inputText">@Model.deviceModel.SensorAlertProcedureClientLooukupId</span>
+                                                </li>
+                                                <li>
+                                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnUnit").FirstOrDefault().Value.ToString() :</span>
+                                                    <span class="inputText">
+                                                        @*@UtilityFunction.GetMessageFromResource(Model.deviceModel.SensorUnit, LocalizeResourceSetConstants.DeviceDetails)*@
+                                                        @Model.deviceModel.SensorUnit
+                                                    </span>
+                                                </li>
+                                                <li>
+                                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnCreatedBy").FirstOrDefault().Value.ToString() :</span>
+                                                    <span class="inputText">@Model.deviceModel.CreateBy</span>
+                                                </li>
+                                                <li>
+                                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnCreatedDate").FirstOrDefault().Value.ToString() :</span>
+                                                    <span class="inputText">@Model.deviceModel.CreateDate.Value.ToString("MM/dd/yyyy", CultureInfo.InvariantCulture)</span>
+                                                </li>
+                                                <li>
+                                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnModifyBy").FirstOrDefault().Value.ToString() :</span>
+                                                    <span class="inputText">@Model.deviceModel.ModifyBy</span>
+                                                </li>
+                                                <li>
+                                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnModifyDate").FirstOrDefault().Value.ToString() :</span>
+                                                    <span class="inputText">@Model.deviceModel.ModifyDate.Value.ToString("MM/dd/yyyy", CultureInfo.InvariantCulture)</span>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        if (Model.deviceModel.InactiveFlag != true)
+                                        {
+                                            <div class="editBttn">
+                                                <button type="button" id="btnEditDevice" class="btn btn-blue"><i class="fa fa-pencil" style="margin-top:-3px;"></i> &nbsp;@Model.Loc.Where(a => a.ResourceId == "globalEdit").FirstOrDefault().Value.ToString()</button>
+                                            </div>
+                                        }
+                                    }
+                                    else if (Model.deviceModel.IoTDeviceCategory == "Meter" && Model.deviceModel.CMMSMeterId != 0) /*Meter(APM and CMMS)*/
+                                    {
+                                        <div id="ChargeTo">
+                                            <ul class="listView clsoverview">
+                                                <li>
+                                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnDeviceID").FirstOrDefault().Value.ToString() :</span>
+                                                    <span class="inputText">@Model.deviceModel.ClientLookupID</span>
+                                                </li>
+                                                <li>
+                                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnName").FirstOrDefault().Value.ToString() :</span>
+                                                    <span class="inputText description">@Model.deviceModel.Name</span>
+                                                </li>
+                                                <li>
+                                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnCategory").FirstOrDefault().Value.ToString() :</span>
+                                                    <span class="inputText">
+                                                        @*@UtilityFunction.GetMessageFromResource(Model.deviceModel.IoTDeviceCategory, LocalizeResourceSetConstants.DeviceDetails)*@
+                                                        @Model.deviceModel.IoTDeviceCategory
+                                                    </span>
+                                                </li>
+                                                <li>
+                                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "GlobalType").FirstOrDefault().Value.ToString() :</span>
+                                                    <span class="inputText">
+                                                        @*@UtilityFunction.GetMessageFromResource(Model.deviceModel.SensorType, LocalizeResourceSetConstants.DeviceDetails)*@
+                                                        @Model.deviceModel.SensorType
+                                                    </span>
+                                                </li>
+                                                <li>
+                                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnAsset").FirstOrDefault().Value.ToString() :</span>
+                                                    <span class="inputText">@Model.deviceModel.AssetID</span>
+                                                </li>
+                                                @*
+                                                    <li>
+                                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnAssetName").FirstOrDefault().Value.ToString() :</span>
+                                                        <span class="inputText">@Model.deviceModel.AssetName</span>
+                                                    </li>*@
+                                                <li>
+                                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "globalInActive").FirstOrDefault().Value.ToString() :</span>
+                                                    <span class="inputText">
+                                                        @Html.CheckBoxFor(m => m.deviceModel.InactiveFlag, new { @class = "form-control m-input", @disabled = "disabled", @style = "color:black; width: auto; margin-top: 12px;" })
+                                                    </span>
+                                                </li>
+                                                <li>
+                                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnLastReading").FirstOrDefault().Value.ToString() :</span>
+                                                    <span class="inputText">@Model.deviceModel.LastReading</span>
+                                                </li>
+                                                <li>
+                                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnLastReadingDate").FirstOrDefault().Value.ToString() :</span>
+                                                    <span class="inputText">
+                                                        @if (Model.deviceModel.LastReadingDate.HasValue && Model.deviceModel.LastReadingDate.Value != default(DateTime))
+                                                        {
+                                                            @Model.deviceModel.LastReadingDate.Value.ToString("MM/dd/yyyy", CultureInfo.InvariantCulture)
+                                                        }
+                                                    </span>
+                                                </li>
+
+                                                <li>
+                                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spanLifetimeReading").FirstOrDefault().Value.ToString() :</span>
+                                                    <span class="inputText">@Model.deviceModel.MeterReadingLife</span>
+                                                </li>
+                                                <li>
+                                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spanMaximumReading").FirstOrDefault().Value.ToString() :</span>
+                                                    <span class="inputText">@Model.deviceModel.MeterReadingMax</span>
+                                                </li>
+
+                                                <li>
+                                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnUnit").FirstOrDefault().Value.ToString() :</span>
+                                                    <span class="inputText">
+                                                        @*@UtilityFunction.GetMessageFromResource(Model.deviceModel.SensorUnit, LocalizeResourceSetConstants.DeviceDetails)*@
+                                                        @Model.deviceModel.SensorUnit
+                                                    </span>
+                                                </li>
+                                                <li>
+                                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnCreatedBy").FirstOrDefault().Value.ToString() :</span>
+                                                    <span class="inputText">@Model.deviceModel.CreateBy</span>
+                                                </li>
+                                                <li>
+                                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnCreatedDate").FirstOrDefault().Value.ToString() :</span>
+                                                    <span class="inputText">@Model.deviceModel.CreateDate.Value.ToString("MM/dd/yyyy", CultureInfo.InvariantCulture)</span>
+                                                </li>
+                                                <li>
+                                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnModifyBy").FirstOrDefault().Value.ToString() :</span>
+                                                    <span class="inputText">@Model.deviceModel.ModifyBy</span>
+                                                </li>
+                                                <li>
+                                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnModifyDate").FirstOrDefault().Value.ToString() :</span>
+                                                    <span class="inputText">@Model.deviceModel.ModifyDate.Value.ToString("MM/dd/yyyy", CultureInfo.InvariantCulture)</span>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        if (Model.deviceModel.InactiveFlag != true)
+                                        {
+                                            <div class="editBttn">
+                                                <button type="button" id="btnEditDevice" class="btn btn-blue"><i class="fa fa-pencil" style="margin-top:-3px;"></i> &nbsp;@Model.Loc.Where(a => a.ResourceId == "globalEdit").FirstOrDefault().Value.ToString()</button>
+                                            </div>
+                                        }
+                                    }
+                                    else if (Model.deviceModel.IoTDeviceCategory == "MonnitSensor" || Model.deviceModel.IoTDeviceCategory == "Sensor") /*MonnitSensor*/ /*Sensor*/
+                                    {
+                                        <div id="ChargeTo">
+                                            <ul class="listView clsoverview">
+                                                <li>
+                                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnDeviceID").FirstOrDefault().Value.ToString() :</span>
+                                                    <span class="inputText">@Model.deviceModel.ClientLookupID</span>
+                                                </li>
+                                                <li>
+                                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnName").FirstOrDefault().Value.ToString() :</span>
+                                                    <span class="inputText description">@Model.deviceModel.Name</span>
+                                                </li>
+                                                <li>
+                                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnCategory").FirstOrDefault().Value.ToString() :</span>
+                                                    <span class="inputText">
+                                                        @*@UtilityFunction.GetMessageFromResource(Model.deviceModel.IoTDeviceCategory, LocalizeResourceSetConstants.DeviceDetails)*@
+                                                        @Model.deviceModel.IoTDeviceCategory
+                                                    </span>
+                                                </li>
+                                                <li>
+                                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "GlobalType").FirstOrDefault().Value.ToString() :</span>
+                                                    <span class="inputText">
+                                                        @*@UtilityFunction.GetMessageFromResource(Model.deviceModel.SensorType, LocalizeResourceSetConstants.DeviceDetails)*@
+                                                        @Model.deviceModel.SensorType
+                                                    </span>
+                                                </li>
+                                                <li>
+                                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnUnit").FirstOrDefault().Value.ToString() :</span>
+                                                    <span class="inputText">
+                                                        @*@UtilityFunction.GetMessageFromResource(Model.deviceModel.SensorUnit, LocalizeResourceSetConstants.DeviceDetails)*@
+                                                        @Model.deviceModel.SensorUnit
+                                                    </span>
+                                                </li>
+                                                <li>
+                                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnAsset").FirstOrDefault().Value.ToString() :</span>
+                                                    <span class="inputText">@Model.deviceModel.AssetID</span>
+                                                </li>
+                                                @*
+                                                    <li>
+                                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnAssetName").FirstOrDefault().Value.ToString() :</span>
+                                                        <span class="inputText">@Model.deviceModel.AssetName</span>
+                                                    </li>*@
+                                                <li>
+                                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "globalInActive").FirstOrDefault().Value.ToString() :</span>
+                                                    <span class="inputText">
+                                                        @Html.CheckBoxFor(m => m.deviceModel.InactiveFlag, new { @class = "form-control m-input", @disabled = "disabled", @style = "color:black; width: auto; margin-top: 12px;" })
+                                                    </span>
+                                                </li>
+                                                <li>
+                                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spanWarningTriggerHigh").FirstOrDefault().Value.ToString() :</span>
+                                                    <span class="inputText">@Model.deviceModel.TriggerHigh</span>
+                                                </li>
+
+                                                <li>
+                                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spanWarningTriggerLow").FirstOrDefault().Value.ToString() :</span>
+                                                    <span class="inputText">@Model.deviceModel.TriggerLow</span>
+                                                </li>
+                                                <li>
+                                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spanWarningProcedure").FirstOrDefault().Value.ToString() :</span>
+                                                    <span class="inputText">@Model.deviceModel.SensorAlertProcedureClientLooukupId</span>
+                                                </li>
+
+                                                <li>
+                                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spanCriticalTriggerHigh").FirstOrDefault().Value.ToString() :</span>
+                                                    <span class="inputText">@Model.deviceModel.TriggerHighCrit</span>
+                                                </li>
+                                                <li>
+                                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spanCriticalTriggerLow").FirstOrDefault().Value.ToString() :</span>
+                                                    <span class="inputText">@Model.deviceModel.TriggerLowCrit</span>
+                                                </li>
+                                                <li>
+                                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spanCriticalProcedure").FirstOrDefault().Value.ToString() :</span>
+                                                    <span class="inputText">@Model.deviceModel.CriticalProcedureClientLooukupId</span>
+                                                </li>
+                                                <li>
+                                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnCreatedBy").FirstOrDefault().Value.ToString() :</span>
+                                                    <span class="inputText">@Model.deviceModel.CreateBy</span>
+                                                </li>
+                                                <li>
+                                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnCreatedDate").FirstOrDefault().Value.ToString() :</span>
+                                                    <span class="inputText">@Model.deviceModel.CreateDate.Value.ToString("MM/dd/yyyy", CultureInfo.InvariantCulture)</span>
+                                                </li>
+                                                <li>
+                                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnModifyBy").FirstOrDefault().Value.ToString() :</span>
+                                                    <span class="inputText">@Model.deviceModel.ModifyBy</span>
+                                                </li>
+                                                <li>
+                                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnModifyDate").FirstOrDefault().Value.ToString() :</span>
+                                                    <span class="inputText">@Model.deviceModel.ModifyDate.Value.ToString("MM/dd/yyyy", CultureInfo.InvariantCulture)</span>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        if (Model.deviceModel.InactiveFlag != true)
+                                        {
+                                            <div class="editBttn">
+                                                <button type="button" id="btnEditDevice" class="btn btn-blue"><i class="fa fa-pencil" style="margin-top:-3px;"></i> &nbsp;@Model.Loc.Where(a => a.ResourceId == "globalEdit").FirstOrDefault().Value.ToString()</button>
+                                            </div>
+                                        }
+
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                        @if (Model.deviceModel.IoTDeviceCategory == "MonnitSensor" || Model.deviceModel.IoTDeviceCategory == "Sensor") /*MonnitSensor*/ /*Sensor*/
+                        {<div class="col-xl-6">
+                                <div class="m-portlet" id="m_portlet">
+                                    <div class="m-portlet__head">
+                                        <div class="m-portlet__head-caption">
+                                            <div class="m-portlet__head-title">
+                                                <h3 class="m-portlet__head-text">
+                                                    @Model.Loc.Where(a => a.ResourceId == "spnLastSensorReading").FirstOrDefault().Value.ToString()
+                                                </h3>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="m-portlet__body" style="position:relative; padding-bottom:0;">
+                                        <div class="lds-ellipsis lds-adjust spline-loader" id="gaugeloader" style="margin-top:-21px;">
+                                            <div></div>
+                                            <div></div>
+                                            <div></div>
+                                            <div></div>
+                                        </div>
+                                        <canvas id="cnvArc"></canvas>
+                                        <div id="spnTextVal"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+
+                    </div>
+                </div>
+
+                <div class="tabcontent tabsArea nobg" id="DVEvents" style="display:none;">
+                    <div class="m-portlet" id="m_portlet" style="padding:10px;">
+                        <div class="table-responsive">
+                            <table id="dvEventTable" class="eqpDtlTbl row-border custom-sort" style="width:100%;">
+                                <thead>
+                                    <tr>
+                                        <th>@Model.Loc.Where(a => a.ResourceId == "spnEventID").FirstOrDefault().Value.ToString()</th>
+                                        <th>@Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString()</th>
+                                        <th>@Model.Loc.Where(a => a.ResourceId == "GlobalStatus").FirstOrDefault().Value.ToString()</th>
+                                        <th>@Model.Loc.Where(a => a.ResourceId == "spnDisposition").FirstOrDefault().Value.ToString()</th>
+                                        <th>@Model.Loc.Where(a => a.ResourceId == "spnCreated").FirstOrDefault().Value.ToString()</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+
+                        <div style="clear:both;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@if (Model.deviceModel.IoTDeviceCategory == "MonnitSensor" || Model.deviceModel.IoTDeviceCategory == "Sensor") /*MonnitSensor*/ /*Sensor*/
+{
+    <div class="row">
+        <div class="col-xl-12">
+            <div class="m-portlet" id="m_portlet">
+                <div class="m-portlet__head">
+                    <div class="m-portlet__head-caption">
+                        <div class="m-portlet__head-title">
+                            <h3 class="m-portlet__head-text">
+                                Time Series Chart
+                            </h3>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="m-portlet__body" style="min-height:100px;">
+                    <div class="lds-ellipsis lds-adjust spline-loader" id="devtimeserieschartloader" style="margin-top:-21px;">
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                    </div>
+                    <div id="time-seriesNoData" style="text-align: center;display:none;"><h5>@Model.Loc.Where(a => a.ResourceId == "globalDataNotFound").FirstOrDefault().Value.ToString()</h5></div>
+                    <div id="chart-container">
+                        <div id="device-time-series"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+@Html.HiddenFor(m => m.deviceModel.IoTDeviceId)
+@Html.HiddenFor(m => m.deviceModel.ClientLookupID)
+@Html.HiddenFor(m => m.deviceModel.SensorId)
+@Html.HiddenFor(m => m.EquipmentId) @*V2-1105*@
+@Html.HiddenFor(m => m.IsFromEquipment) @*V2-1105*@
+@Html.HiddenFor(m => m.deviceModel.InactiveFlag, new { id = "InactiveFlagId" })
+@Html.Partial("_ChangeDeviceIDModal")
+@Html.Partial("_AddRecordReadingModal",Model)
+
+@*V2-536*@
+<div id="DeviceCatagoryListModalpopup" class="modal fade" role="dialog">
+    <div class="modal-dialog" id="DeviceCatagoryListPopUp">
+    </div>
+</div>
+@*V2-536 end*@
+<style type="text/css">
+    .filterDescription {
+        width: auto;
+        float: left;
+        font-size: 1.2rem;
+        color: #000;
+        font-weight: 500;
+        line-height: 33px;
+    }
+
+        .filterDescription a {
+            color: #36a3f7;
+            text-decoration: none !important;
+        }
+
+    .tabsArea.nobg .m-portlet__head {
+        padding: 0 1.2rem;
+        height: 3.5rem;
+    }
+
+    ul.listView li span.label {
+        width: 40%;
+    }
+
+    ul.listView li span.inputText {
+        width: 60%;
+    }
+
+    ul.listView.clsoverview {
+        height: 250px;
+        overflow: auto;
+    }
+
+        ul.listView.clsoverview li span.label {
+            line-height: 35px;
+        }
+
+        ul.listView.clsoverview li span.inputText.description-span {
+            padding-top: 6px;
+        }
+
+
+        ul.listView.clsoverview li span.inputText {
+            line-height: 23px;
+            height: 30px;
+        }
+
+    #spnTextVal {
+        margin-left: -102px !important;
+    }
+</style>

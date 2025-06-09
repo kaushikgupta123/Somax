@@ -1,0 +1,13 @@
+﻿@{
+    ViewBag.Title = "Somax-Config | Preventive Maintenance Library";
+}
+
+@Styles.Render("~/Content/datatable")
+
+@section scripts {
+    @Scripts.Render("~/bundles/datatable")
+    @Scripts.Render("~/bundles/PreventiveMaintenanceLibrary")
+}
+<div id="renderpreventiveLibrary">
+    @Html.Partial("~/Views/Configuration/PreventiveMaintenanceLibrary/_PMLibrarySearch.cshtml")
+</div>

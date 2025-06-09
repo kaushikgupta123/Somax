@@ -1,0 +1,366 @@
+﻿@model Client.Models.Parts.PartsVM
+<link href="~/Scripts/Metronic/assets/demo/default/base/style_newCustom.css" rel="stylesheet" />
+<link href="~/Content/Dashboard/MaintenanceCompletionWorkbench.css" rel="stylesheet" />
+
+<!-- Floating Action Button-->
+<link href="~/Scripts/mobile/css/floating-action-button.css" type="text/css" rel="stylesheet" />
+<!-- Floating Action Button-->
+<link rel="stylesheet" href="~/Scripts/mobile/css/mobiscroll.jquery.min.css">
+<link href="~/Scripts/mobile/css/mobile-style.css" rel="stylesheet" />
+
+@if (Convert.ToString(Session["MenuState"]) == "" || Convert.ToString(Session["MenuState"]) == "open")
+{
+    <div class="m-subheader fixedDiv1">
+        <div class="new-m-subheader">
+            <div class="PageTitle">
+                <div class="align-items-center">
+                    <h3 class="m-subheader__title" style="padding:0;">
+                        <span style="line-height:35px;" id="partsearchtitle">
+                            @Model.Loc.Where(a => a.ResourceId == "spnPartSearch").FirstOrDefault().Value.ToString()
+                        </span>
+                    </h3>
+                </div>
+            </div>
+            <div style="clear:both;"></div>
+        </div>
+    </div>
+}
+else
+{
+    <div class="m-subheader fixedDiv1 fixupperpannel2">
+        <div class="new-m-subheader">
+            <div class="PageTitle">
+                <div class="align-items-center">
+                    <h3 class="m-subheader__title" style="padding:0;">
+                        <span style="line-height:35px;" id="partsearchtitle">
+                            @Model.Loc.Where(a => a.ResourceId == "spnPartSearch").FirstOrDefault().Value.ToString()
+                        </span>
+                    </h3>
+                </div>
+            </div>
+            <div style="clear:both;"></div>
+        </div>
+    </div>
+}
+<div class="m-portlet m-portlet--full-height m-portlet--fit">
+    <div class="m-portlet__body">
+        <div class="tab-content">
+            <div class="actionBar" style="display:block" id="woGridAction">
+                <div class="dateRangeDrop pull-left" id="complitionView" style="display:flex;">
+                    <div class="demo-lists mbsc-comp mbsc-page mbsc-mobiscroll mbsc-ltr">
+                        <div class="mbsc-comp mbsc-form mbsc-no-touch mbsc-ios mbsc-ltr">
+                            <div class="mbsc-form-group">
+                                <div class="mbsc-btn-group-block">
+                                    <button class="btn btn-white navbar-btn" mbsc-button id="ShowCustomQueryDropdown">
+                                        @*showVertical*@
+                                        <img src="/Images/toggleMenu.png" />
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="CustomQueryDropdownDiv" class="mbsc-cloak">
+                            @* vertical*@
+                            <ul id="CustomQueryDropdown" class="mbsc-cloak">
+                                @* listview *@
+                                @{
+                                    foreach (var item in Model.PartModel.PartViewSearchList)
+                                    {
+                                        <li data-value="@item.Value">@item.Text</li>
+                                    }
+                                }
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="demo-lists mbsc-comp mbsc-page mbsc-mobiscroll mbsc-ltr">
+                        <div class="mbsc-comp mbsc-form mbsc-no-touch mbsc-ios mbsc-ltr">
+                            <div class="mbsc-form-group">
+                                <div class="mbsc-btn-group-block">
+                                    <button class="btn btn-white navbar-btn mbsc-control mbsc-btn mbsc-no-touch mbsc-ios mbsc-ltr" mbsc-button id="sidebarCollapse">
+                                        <i class="fa fa-filter" style="font-size: 1.3rem;"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-white navbar-btn mbsc-control mbsc-btn mbsc-no-touch mbsc-ios mbsc-ltr" title="@Model.Loc.Where(a => a.ResourceId == "globalSearch").FirstOrDefault().Value.ToString()" id="SrchBttnNew"><i class="fa fa-search" style="font-size: 1.1rem;position: relative;top: -2px;left: -2px;"></i></button>
+                    <div class="demo-lists mbsc-comp mbsc-page mbsc-ios mbsc-ltr">
+                        <div class="mbsc-comp mbsc-form mbsc-no-touch mbsc-ios mbsc-ltr">
+                            <div class="mbsc-form-group">
+                                <div class="mbsc-btn-group-block">
+                                    <button class="btn btn-white navbar-btn mbsc-control mbsc-btn mbsc-no-touch mbsc-mobiscroll mbsc-ltr" id="ShowSortByDropdown">
+                                        <i class="fa fa-sort" style="font-size: 1.3rem;"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="SortByDropdownDiv" class="mbsc-cloak">
+                            <ul id="SortByDropdown" class="mbsc-cloak">
+                                <li data-value="1">@Model.Loc.Where(a => a.ResourceId == "spnPartID").FirstOrDefault().Value.ToString()</li>
+                                <li data-value="2">@Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString()</li>
+                                <li data-value="5">@Model.Loc.Where(a => a.ResourceId == "spnManufacturer").FirstOrDefault().Value.ToString()</li>
+                                <li data-value="6"> @Model.Loc.Where(a => a.ResourceId == "spnManufacturerID").FirstOrDefault().Value.ToString()</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-white navbar-btn mbsc-control mbsc-btn mbsc-no-touch mbsc-ios mbsc-ltr" title="@Model.Loc.Where(a => a.ResourceId == "spnResetGrid").FirstOrDefault().Value.ToString()" id="ResetGridBtn"><i class="fa fa-refresh" style="font-size: 1.1rem;position: relative;top: -2px;"></i></button>
+                    <div style="clear:both;"></div>
+                    <div class="searchBttnDrop desktop" id="searchBttnNewDrop" style="display:none;">
+                        <div class="form-group" style="position:relative;">
+                            <i class="fa fa-search txtSearchClick" style="font-size: 1.1rem;position: absolute;top: 9px;left: 15px;"></i>
+                            @*V2-764*@
+                            <a href="javascript:void(0)" onclick="QrScannerSearch_Mobile('txtColumnSearch')" id="cancelText"><i class="fa fa-qrcode" style="font-size: 1.1rem;position: absolute;top: 9px;right: 45px;"></i></a>
+                            <a href="javascript:void(0)" id="cancelText"><i class="fa fa-close" style="font-size: 1.1rem;position: absolute;top: 9px;right: 15px;"></i></a>
+                            <input type="search" id="txtColumnSearch" class="form-control search" placeholder="Search..." style="padding: 0.65rem 2.75rem;" autocomplete="off">
+                        </div>
+
+                        <div class="searchTips">
+                            <div class="titleText">Search Tips</div>
+                            @if (Model.Loc.Any(a => a.ResourceId == SearchTipsType.PartSearchTips))
+                            {
+                                <div class="infoText">@Model.Loc.Where(a => a.ResourceId == SearchTipsType.PartSearchTips).FirstOrDefault().Value.ToString()</div>
+                            }
+                            else
+                            {
+                                <div class="infoText">Search for Parts by Part ID, Description, Manufacturer, and Manufacturer ID.</div>
+                            }
+
+                            <div style="clear:both;"></div>
+                        </div>
+
+                        <div class="searchInfo">
+                            <span class="recent">@Model.Loc.Where(a => a.ResourceId == "GlobalRecentlySearched").FirstOrDefault().Value.ToString()</span>
+                            <div class="searchList" id="wosearchList">
+                                <ul id="UlSearchList"></ul>
+                            </div>
+                            <span class="clear"><a href="javascript:void(0)" id="clearText">@Model.Loc.Where(a => a.ResourceId == "globalClear").FirstOrDefault().Value.ToString()</a></span>
+                            <div style="clear:both;"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="clear:both;"></div>
+                <div id="advsearchfilteritems"></div>
+                <div style="clear:both;"></div>
+            </div>
+
+            <div style="clear:both;"></div>
+            @Html.HiddenFor(m => m.PartStatusVal)
+            <div id="Active" class="tabcontent" style="display:block;">
+                <div id="ActiveCard" class="tabcontent" style="display:none;"></div>
+            </div>
+        </div>
+        @if (Model.security.Parts.Create)
+        {
+            <div class="menu pmd-floating-action" role="navigation" style="max-width: 50px;">
+                <a href="javascript:void(0);" id="AddPartBtn" style="float: right;" class="pmd-floating-action-btn btn pmd-btn-fab pmd-btn-raised pmd-ripple-effect btn-primary">
+                    <i class="fa fa-plus" style="font-size: 1.3rem;"></i>
+                </a>
+            </div>
+        }
+    </div>
+</div>
+@Html.Partial("~/Views/Parts/Mobile/_QrCodeReaderModal.cshtml")
+@Html.Partial("~/Views/Parts/Mobile/_PartSummaryDescription.cshtml")
+@Html.Partial("Mobile/_PartAdvancedSearch")
+@if (Model.security.Parts.Create)
+{
+    <div id="AddPartDiv"></div>
+}
+<style type="text/css">
+    .updateArea {
+        margin-top: 0;
+    }
+
+    ul.filter_apply li:first-child {
+        border-right: 1px solid #ccc;
+        padding: 0 10px 0 0;
+    }
+
+    ul.filter_apply li:last-child {
+        border-right: 0px solid #ccc;
+        padding: 0 10px 0 0;
+    }
+
+    #tblparts_wrapper .dt-buttons {
+        display: none;
+    }
+
+    #partImportTable_wrapper {
+        margin-bottom: 0;
+        margin-top: 10px;
+    }
+
+    @@media(min-width: 1024px) {
+        .actionBar {
+            padding-top: 42px;
+        }
+
+        .mbsc-mobiscroll.mbsc-btn, .mbsc-mobiscroll.mbsc-page {
+            background: #fff !important;
+        }
+    }
+
+    @@media only screen and (max-width: 767px) and (min-width: 640px) {
+        .actionBar div.pull-right {
+            float: right;
+            margin-top: 10px;
+            width: 100%;
+        }
+    }
+
+    @@media only screen and (max-width: 639px) and (min-width: 568px) {
+        .actionBar div.pull-right {
+            float: right;
+            margin-top: 10px;
+            width: 100%;
+        }
+    }
+
+    @@media only screen and (max-width: 567px) and (min-width: 480px) {
+        #shortDrop {
+            margin-top: 0px;
+            margin-right: 10px !important;
+        }
+
+        .updateArea .pull-right {
+            margin-top: 0;
+        }
+    }
+
+    @@media only screen and (max-width: 479px) and (min-width: 360px) {
+        .updateArea {
+            padding: 0;
+        }
+
+            .updateArea .pull-right {
+                margin-top: 0;
+                float: right !important;
+                width: auto;
+            }
+
+        .actionBar#woGridAction div.pull-right #liCustomize {
+            margin-top: 0 !important;
+            margin-left: 0 !important;
+        }
+    }
+
+    @@media only screen and (max-width: 359px) and (min-width: 320px) {
+        .BulkUpdate {
+            margin-left: 0 !important;
+        }
+
+        #liCustomize {
+            margin-top: 0 !important;
+            margin-left: 0 !important;
+        }
+    }
+
+    @@media only screen and (width:411px) {
+        #shortDrop {
+            margin-right: 10px !important;
+            margin-top: 0 !important;
+        }
+
+        .updateArea .pull-right {
+            margin-top: 0;
+            float: right !important;
+            width: auto;
+        }
+    }
+
+    @@media only screen and (width:414px) {
+        #shortDrop {
+            margin-top: 0;
+            margin-right: 10px !important;
+        }
+    }
+
+    @@media (max-width:900px) {
+        .mbsc-mobiscroll.mbsc-page {
+            background: #ffffff !important;
+        }
+
+        .mbsc-material.mbsc-btn {
+            background: #ffffff !important;
+        }
+
+        .mbsc-mobiscroll.mbsc-btn {
+            background: #ffffff !important;
+        }
+    }
+
+    .sorting_desc_mobile:before {
+        font-family: 'FontAwesome' !important;
+        font-weight: 400 !important;
+        content: '\f106' !important;
+        font-size: 18px !important;
+        color: #fff;
+        position: absolute !important;
+        right: 23px !important;
+        left: auto !important;
+        top: 14px !important;
+        display: block;
+        width: 10px;
+        border-top: 0 !important;
+        outline: 0;
+    }
+
+    .pmd-floating-action-btn:last-child:before {
+        display: none;
+    }
+
+
+    .sorting_asc_mobile:before {
+        font-family: 'FontAwesome' !important;
+        font-weight: 400 !important;
+        content: '\f107' !important;
+        font-size: 18px !important;
+        color: #fff;
+        position: absolute !important;
+        right: 23px !important;
+        left: auto !important;
+        top: 14px !important;
+        display: block;
+        width: 10px;
+        border-top: 0 !important;
+        outline: 0;
+    }
+
+    .paginate_input {
+        width: 35px;
+        text-align: right;
+        background-color: #ebe8f2;
+        border: #d0ced5 2px solid !important;
+        outline: 0;
+        height: 27px;
+        padding: 5px;
+        border-radius: 5px;
+        font-size: 12px;
+    }
+
+    .dataTables_paginate.paging_input {
+        font-size: 12px;
+    }
+
+    .dataTables_wrapper .dataTables_paginate {
+        padding-top: 18px !important;
+    }
+
+    .dataTables_wrapper .dataTables_length {
+        margin-top: 10px !important;
+    }
+
+    .dataTables_wrapper .dataTables_info {
+        padding: 28px 0 0 0 !important;
+    }
+
+
+    @@media(max-width:650px) {
+        .dataTables_wrapper .dataTables_paginate {
+            float: right !important;
+            width: 100%;
+            text-align: right;
+            padding-top: 10px !important;
+        }
+    }
+</style>

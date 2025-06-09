@@ -1,0 +1,354 @@
+﻿@model Client.Models.PartIssue.PartIssueVM
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>
+        SOMAX | Part Issue
+    </title>
+    <meta name="description" content="Latest updates and statistic charts">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/webfont/1.6.16/webfont.js"></script>
+    <script>
+        WebFont.load({
+            google: { "families": ["Poppins:300,400,500,600,700", "Roboto:300,400,500,600,700"] },
+            active: function () {
+                sessionStorage.fonts = true;
+            }
+        });
+    </script>
+    <link href="~/Content/dialog-mobile.css" rel="stylesheet" />
+    <link href="~/Scripts/Metronic/assets/vendors/base/vendors.bundle.css" rel="stylesheet" />
+    <link href="~/Scripts/Metronic/assets/demo/default/base/style.bundle.css" rel="stylesheet" />
+    <link href="~/Scripts/Metronic/assets/demo/default/base/style_custom.css" rel="stylesheet" />
+    <link href="~/Scripts/Metronic/assets/demo/default/base/responsive.css" rel="stylesheet" />
+    <link rel="shortcut icon" href="~/Scripts/Metronic/assets/login/demo/default/media/img/logo/favicon.png" />
+    <link href="~/Scripts/Metronic/assets/demo/default/base/GlobalSearchGrid.css" rel="stylesheet" />
+    <link href="~/Scripts/Metronic/assets/demo/default/base/style_custom_tree.css" rel="stylesheet" />
+    @Styles.Render("~/Content/Common")
+    @Styles.Render("~/Content/datatable")
+</head>
+<body class="m-page--fluid m--skin- m-content--skin-light2 m-header--fixed m-header--fixed-mobile m-aside-left--enabled m-aside-left--skin-dark m-aside-left--offcanvas m-footer--push m-aside--offcanvas-default">
+    @Html.Partial("_DisplayMsgLocalization")
+
+    <script src="~/Scripts/Metronic/assets/vendors/base/vendors.bundle.min.js"></script>
+    <script src="~/Scripts/Pages/Somax_main.js"></script>
+    <script src="~/Scripts/treeTable.js"></script>
+
+    @Scripts.Render("~/bundles/jqueryval")
+
+    @Scripts.Render("~/bundles/QRScanner")
+    @Scripts.Render("~/bundles/datatable")
+    <script src="~/Scripts/Pages/CommonNotification.js"></script>
+    <script src="~/Scripts/Pages/CommonDatatable.js"></script>
+    <script type="text/javascript">
+        com_github_culmat_jsTreeTable.register(this);
+    </script>
+    @if (Model.IsMobile)
+    {
+        <div class="m-grid m-grid--hor m-grid--root m-page">
+            <div class="m-grid__item m-grid__item--fluid m-grid m-grid--ver-desktop m-grid--desktop m-grid--tablet-and-mobile m-grid--hor-tablet-and-mobile m-login m-login--1 m-login--signin" style="background-color: #E8EAED !important">
+                <div class="m-grid__item m-grid__item--order-tablet-and-mobile-2 m-login__aside">
+                    <div class="m-stack m-stack--hor m-stack--desktop">
+                        <div class="m-stack__item m-stack__item--fluid">
+                            <div>
+                                <div class="m-login__logo">
+                                    <a href="javascript:void(0)">
+                                        <img src="~/Scripts/Metronic/assets/app/media/img/logos/SiteLogo.png" />
+                                    </a>
+                                </div>
+                                <div style="clear:both;"></div>
+                                <div class="">
+                                    <div class="m-portlet" id="m_portlet" style="padding:15px;">
+                                        <div class="row">
+                                            <div class="col-xl-12">
+
+                                                <div class="tab" style="margin-bottom: 8px;">
+                                                    <button class="tablinks IC-det-tab active" data-tab="IssueParts">@Model.Loc.Where(a => a.ResourceId == "spnGlobalIssueparts").FirstOrDefault().Value.ToString()</button>
+                                                    <button class="tablinks IC-det-tab" data-tab="ReturnParts">@Model.Loc.Where(a => a.ResourceId == "spnGlobalReturnParts").FirstOrDefault().Value.ToString()</button>
+                                                </div>
+
+                                            </div>
+                                            <div class="col-xl-12">
+                                                @Html.Partial("_ErrorDiv")
+                                            </div>
+                                            <div class="col-xl-12">
+                                                <div id="IssueParts" class="tabcontent" style="display:block;"></div>
+                                                <div id="ReturnParts" class="tabcontent"></div>
+                                            </div>
+                                        </div>
+
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="m-stack__item m-stack__item--center">
+                                <div class="m-login__account">
+                                    <span class="m-login__account-msg">
+                                        &copy; @DateTime.Now.Year SOMAX Inc. All rights reserved. SOMAX is a registered trademark of SOMAX, Inc.
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @Html.HiddenFor(m => m.partIssueModel.ClientLookupId)
+            @Html.Partial("~/Views/PartIssue/Mobile/_AddEquipmentPopUp.cshtml")
+            @Html.Partial("~/Views/PartIssue/Mobile/_AddWOPopUp.cshtml")            
+            @Html.Partial("~/Views/PartIssue/Mobile/_AddPartPopUp.cshtml")
+            @Html.Partial("~/Views/Shared/QR/_QrCodeReaderModal.cshtml")
+            @Html.Partial("~/Views/PartIssue/Mobile/_AddPartIdPopupSearchGrid.cshtml")
+            <div class="slide-modal" id="commonWOTreeModal">
+                <div class="slide-modal-head ">
+                    <a id="commonWOTreeModalHide" class="slide-back-btn"> <i class="fa fa-angle-left"></i> Back</a>
+                    <div class="slide-back-title">
+                        @Model.Loc.Where(a => a.ResourceId == "spnGlobalEquipmentTreeLookup").FirstOrDefault().Value.ToString()
+                    </div>
+                </div>
+                <div class="slide-modal-body">
+                    <div class="cntTree">
+                    </div>
+                </div>
+                <div class="slide-modal-footer"></div>
+            </div>
+            <div class="slide-modal" id="EquipmentTableModalPopup_Mobile">
+                <div class="slide-modal-head">
+                    <a class="slide-back-btn" id="EquipmentTableModalPopupHide_Mobile"> <i class="fa fa-angle-left"></i> Back</a>
+                    <div class="slide-back-title">
+                        @Model.Loc.Where(a => a.ResourceId == "spnSelectEquipment").FirstOrDefault().Value.ToString()
+                    </div>
+                </div>
+                <div class="slide-modal-body">
+                    <div class="form-group" style="position:relative;">
+                        <i class="fa fa-search txteqpSearchClick_Mobile" style="font-size: 1.1rem;position: absolute;top: 9px;left: 15px;"></i>
+                        <a href="javascript:void(0)"><i class="fa fa-close clearTextBoxValue" data-txtboxid="txtPEquipmentSearch_Mobile" style="font-size: 1.1rem;position: absolute;top: 9px;right: 15px;"></i></a>
+                        <input type="search" id="txtPEquipmentSearch_Mobile" class="form-control search unsortable" placeholder="Search..." style="padding: 0.65rem 2.75rem;" autocomplete="off">
+                    </div>
+                    <div id="DivEquipmentSearchScrollViewModal"></div>
+                </div>
+            </div>
+
+            @Scripts.Render("~/bundles/PartIssueMobile")
+
+
+        </div>
+    }
+    else
+    {
+        <div class="m-grid m-grid--hor m-grid--root m-page">
+            <div class="m-grid__item m-grid__item--fluid m-grid m-grid--ver-desktop m-grid--desktop m-grid--tablet-and-mobile m-grid--hor-tablet-and-mobile m-login m-login--1 m-login--signin" style="background-color: #E8EAED !important">
+                <div class="m-grid__item m-grid__item--order-tablet-and-mobile-2 m-login__aside">
+                    <div class="m-stack m-stack--hor m-stack--desktop">
+                        <div class="m-stack__item m-stack__item--fluid">
+                            <div>
+                                <div class="m-login__logo">
+                                    <a href="javascript:void(0)">
+                                        <img src="~/Scripts/Metronic/assets/app/media/img/logos/SiteLogo.png" />
+                                    </a>
+                                </div>
+                                <div style="clear:both;"></div>
+                                <div class="">
+                                    <div class="m-portlet" id="m_portlet" style="padding:15px;">
+                                        <div class="row">
+                                            <div class="col-xl-12">
+
+                                                <div class="tab" style="margin-bottom: 8px;">
+                                                    <button class="tablinks IC-det-tab active" data-tab="IssueParts">@Model.Loc.Where(a => a.ResourceId == "spnGlobalIssueparts").FirstOrDefault().Value.ToString()</button>
+                                                    <button class="tablinks IC-det-tab" data-tab="ReturnParts">@Model.Loc.Where(a => a.ResourceId == "spnGlobalReturnParts").FirstOrDefault().Value.ToString()</button>
+                                                </div>
+
+                                            </div>
+                                            <div class="col-xl-12">
+                                                @Html.Partial("_ErrorDiv")
+                                            </div>
+                                            <div class="col-xl-12">
+                                                <div id="IssueParts" class="tabcontent" style="display:block;"></div>
+                                                <div id="ReturnParts" class="tabcontent"></div>
+                                            </div>
+                                        </div>
+
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="m-stack__item m-stack__item--center">
+                                <div class="m-login__account">
+                                    <span class="m-login__account-msg">
+                                        &copy; @DateTime.Now.Year SOMAX Inc. All rights reserved. SOMAX is a registered trademark of SOMAX, Inc.
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @Html.HiddenFor(m => m.partIssueModel.ClientLookupId)
+            @Html.Partial("~/Views/PartIssue/_AddEquipmentPopUp.cshtml")
+            @Html.Partial("~/Views/PartIssue/_AddWOPopUp.cshtml")            
+            @Html.Partial("~/Views/PartIssue/_AddPartPopUp.cshtml")
+            @Html.Partial("~/Views/Shared/QR/_QrCodeReaderModal.cshtml")
+         
+            @Scripts.Render("~/bundles/PartIssue")
+        </div>
+    }
+
+</body>
+
+</html>
+<style type="text/css">
+    .dataTables_wrapper.no-footer .dataTables_scrollBody {
+        border-bottom: 1px solid #ddd !important;
+    }
+
+    .custom-sort thead .sorting {
+        background-image: none !important;
+    }
+
+    .dataTables_wrapper .dataTables_info {
+        clear: none;
+        padding-top: 1em;
+        margin-right: 10px;
+    }
+
+    .dataTables_wrapper .dataTables_paginate {
+        padding-top: 0.55em;
+        float: left;
+    }
+
+    .dataTables_wrapper .dataTables_length {
+        display: none;
+        padding-top: 0.55em !important;
+        float: right;
+    }
+
+    .dataTables_length span.select2 {
+        width: 60px !important;
+    }
+
+    .dataTables_wrapper .dataTables_length select {
+        color: #000;
+    }
+
+    table.dataTable.nowrap th, table.dataTable.nowrap td {
+        outline: 0 !important;
+    }
+
+    .dataTables_wrapper .dataTables_processing {
+        padding-top: 0px;
+    }
+
+    .card {
+        border: none;
+    }
+
+    .alert.m-alert--icon .m-alert__close .close {
+        padding: 12px 10px;
+    }
+
+    .alert.m-alert--icon .m-alert__text {
+        padding: 10px;
+    }
+
+    .alert.m-alert--icon.m-alert--outline.m-alert--icon-solid .m-alert__icon {
+        padding: 10px;
+    }
+
+    .alert.m-alert--icon .m-alert__icon [class^="flaticon-"], .alert.m-alert--icon .m-alert__icon [class*=" flaticon-"] {
+        font-size: 18px;
+    }
+
+    .m-topbar .m-topbar__nav.m-nav {
+        margin: 0 20px 0 10px;
+    }
+
+
+    .m-tabs-line .m-tabs__link {
+        font-size: 13px;
+    }
+
+    .chargeTree.adjust {
+        right: 14px !important;
+    }
+
+    .input-group-btn .btnQrScanner .btn.btn-blue.mobBttn, .btntxtInputGroup {
+        margin-top: 2px !important;
+    }
+
+    .input-group-btn.qr-scr-adj .btnQrScanner {
+        margin: 0px 0 0px 10px;
+    }
+    @@media only screen and (max-width: 1023px) {
+        .m-dropdown.m-dropdown--align-center.m-dropdown--large .m-dropdown__wrapper {
+            width: 381px !important;
+            margin-left: -368px !important;
+        }
+
+        .m-tabs-line .m-tabs__link {
+            font-size: 12px;
+        }
+    }
+
+    @@media only screen and (max-width: 550px) {
+        .m-dropdown.m-dropdown--align-center.m-dropdown--large .m-dropdown__wrapper {
+            width: 325px !important;
+            margin-left: -284px !important;
+        }
+
+        .notification-tab-nav-b li {
+            margin-right: 7px !important;
+        }
+
+        .m-tabs-line .m-tabs__link {
+            font-size: 11px;
+        }
+    } 
+
+    @@media only screen and (min-width: 480px) and (max-width: 567px) {
+
+        .input-group-btn .btnQrScanner .btn.btn-blue.mobBttn, .btntxtInputGroup {
+            margin-top: -2px !important;
+        }
+    }
+
+    @@media only screen and (min-width: 320px) and (max-width: 359px) {
+        .input-group-btn .btnQrScanner .btn.btn-blue.mobBttn, .btntxtInputGroup {
+            margin-top: -2px !important;
+        }
+    }
+
+    @@media(max-width: 767px) {
+        ul.listView.tree-rt-adj li span.inputText {
+            width: calc(100% - 0px) !important;
+        }
+
+            ul.listView.tree-rt-adj li span.inputText.wthAdjst2 {
+                width: calc(100% - 0px) !important;
+                margin-bottom: 10px;
+                left: 0px;
+            }
+
+        .chargeTree {
+            display: block;
+            position: static;
+            left: 0;
+            right: 0;
+            text-align: center;
+            border: #b9c1c4 1px solid;
+            border-radius: 0.25rem;
+            padding: 0.65rem 1rem;
+        }
+
+        .input-group-btn .btnQrScanner .btn.btn-blue.mobBttn, .btntxtInputGroup {
+            margin-top: -2px !important;
+        }
+
+
+    }
+</style>
+

@@ -1,0 +1,244 @@
+﻿@model Client.Models.Configuration.Account.AccountConfigVM
+@using Client.Models.Common
+@{
+  string hColumnList = "";
+  if (Model.hiddenColumnList != null && Model.hiddenColumnList.Count > 0)
+  {
+    foreach (var item in Model.hiddenColumnList)
+    {
+      hColumnList = hColumnList + item + ",";
+    }
+    hColumnList = hColumnList.Remove(hColumnList.Length - 1);
+  }
+
+  bool AccountImportSwitch1 = true;
+  var InterfacePropData = (List<InterfacePropModel>)Session["InterfacePropData"];
+  if (InterfacePropData != null && InterfacePropData.Count > 0)
+  {
+    //AccountImportSwitch1 = InterfacePropData.Where(x => x.InterfaceType == InterfacePropConstants.AccountImport).Select(x => x.Switch1).FirstOrDefault();
+    {
+      InterfacePropModel im = (InterfacePropModel)InterfacePropData.Where(x => (x.InterfaceType == InterfacePropConstants.AccountImport)
+                                                                              && (x.InUse == true)).FirstOrDefault();
+      if (im != null)
+      {
+        AccountImportSwitch1 = im.Switch1;
+      }
+      else
+      {
+        AccountImportSwitch1 = true;
+      }
+    }
+  }
+}
+
+<script type="text/javascript">
+    $(function () {
+        var v = "@hColumnList";
+        var str = v.split(",");
+        if (str != null && str != "") {
+            $.each(str, function (i, jvalue) {
+                var elementId = '#' + jvalue;
+                $(document).find(elementId).hide();
+            });
+        }
+    });
+</script>
+<div class="m-subheader">
+    <div class="new-m-subheader">
+        <div class="PageTitle">
+            <div class="align-items-center separator">
+                <h3 class="m-subheader__title ">
+                    @Model.Loc.Where(a => a.ResourceId == "spnAccount").FirstOrDefault().Value.ToString()
+                </h3>
+            </div>
+        </div>
+
+        <div class="NewBreadcrumbArea">
+            <div class="newBreadcrumb">
+                <ul>
+                    <li><a href="/Configuration/Dashboard">&nbsp;</a></li>
+                    <li><a href="/Account/Index?page=Account">@Model.Loc.Where(a => a.ResourceId == "spnAccountSearch").FirstOrDefault().Value.ToString()</a></li>
+                    <li class="active CLientLookId">@Model.accountDetails.ClientLookupId</li>
+                    @if (Model.accountDetails.InactiveFlag == true)
+                    {
+                        <li>
+                            <span style="background: red;padding: 3px 10px;border-radius: 10px;color: #fff;">@Model.Loc.Where(a => a.ResourceId == "globalInActive").FirstOrDefault().Value.ToString()</span>
+                        </li>
+                    }
+                </ul>
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+        @if (Model.accountDetails.IsExternal == false)
+        {
+            <div class="ActionBttnArea">
+                <div class="actionDiv pull-left" id="accsearchactiondiv">
+                    <div class="btn-group bootstrap-select m-datatable__pager-size dropup show selectDrop actionNewDrop" style="margin-right:1;">
+                        <div class="btn-group bootstrap-select m-datatable__pager-size" style="width: 100%;">
+                            <button type="button" class="btn dropdown-toggle bs-placeholder btn-default" data-toggle="dropdown" role="button" title=""><span class="filter-option pull-left">Action</span>&nbsp;<span class="bs-caret"><span class="caret"></span></span></button>
+                            <div class="dropdown-menu open" role="combobox">
+                                <ul class="dropdown-menu inner" role="listbox" aria-expanded="false">
+
+                                    <li data-toggle="modal" id="ChangeAccountId"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnChangeAccountID").FirstOrDefault().Value.ToString()</a></li>
+
+                                    @if (Model.security.Accounts.Delete)
+                                    {
+                                        if (Model.accountDetails.InactiveFlag)
+                                        {
+                                            <li data-toggle="modal" id="changeacoountactiveinactive"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnGlobalActivate").FirstOrDefault().Value.ToString()</a></li>
+                                        }
+                                        else
+                                        {
+                                            <li data-toggle="modal" id="changeacoountactiveinactive"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnGlobalInactivate").FirstOrDefault().Value.ToString()</a></li>
+                                        }
+                                    }
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                @if (Model.security.Accounts.Create && AccountImportSwitch1)
+                {
+                    <button type="button" id="addPlusbtnAccount" class="btn newBtn-add innerBtn pull-left" title="Add Account"><i class="fa fa-plus"></i></button>
+                }
+                <div style="clear:both;"></div>
+            </div>
+        }
+        <div style="clear:both;"></div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xl-3">
+        <div class="m-portlet">
+            <div class="sideMenuArea nobg">
+                <ul class="vtabs" id="detmaintab">
+                    <li class="active" id="livendor"><a href="#Overview">@Model.Loc.Where(a => a.ResourceId == "spnAccountOverview").FirstOrDefault().Value.ToString()</a></li>
+                    <li id="linote"><a href="#Notes" onclick="openCity(event, 'Notes')">@Model.Loc.Where(a => a.ResourceId == "spnGlobalNote").FirstOrDefault().Value.ToString()</a></li>
+                    <li id="liattachment"><a href="#Attachment" onclick="openCity(event, 'Attachment')">@Model.Loc.Where(a => a.ResourceId == "globalAttachment").FirstOrDefault().Value.ToString()</a></li>
+                </ul>
+            </div>
+
+            <div class="selectTabs" id="selectTabs">
+                <select class="form-control" id="colorselector">
+                    <option value="Overview">@Model.Loc.Where(a => a.ResourceId == "spnAccountOverview").FirstOrDefault().Value.ToString()</option>
+                    <option value="Notes">@Model.Loc.Where(a => a.ResourceId == "spnGlobalNote").FirstOrDefault().Value.ToString()</option>
+                    <option value="Attachment">@Model.Loc.Where(a => a.ResourceId == "globalAttachment").FirstOrDefault().Value.ToString()</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-9">
+        <div class="row">
+            <div class="col-xl-12">
+                <div class="m-portlet" id="m_portlet" style="padding:15px;">
+                    <div class="bottomBlock">
+                        <div class="tabsArea nobg" id="Overview" style="display:block;">
+                            <ul class="listView">
+                                @if (Model._userdata.DatabaseKey.Client.PackageLevel.ToUpper() == PackageLevelConstant.Enterprise.ToUpper() && Model._userdata.DatabaseKey.User.IsSuperUser == true)
+                                {
+                                    <li id="Sitename">
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnSiteGlobal").FirstOrDefault().Value.ToString() :</span>
+                                        <span class="inputText Sitename">@Model.accountDetails.SiteName</span>
+                                    </li>
+                                }
+                                <li id="ClientLookupId">
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnAccount").FirstOrDefault().Value.ToString() : </span>
+                                    <span class="inputText CLientLookId">@Model.accountDetails.ClientLookupId</span>
+                                </li>
+                                <li id="Name">
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnName").FirstOrDefault().Value.ToString() :</span>
+                                    <span class="inputText">@Model.accountDetails.Name</span>
+                                </li>
+                                @*V2-375*@
+                                <li id="InactiveFlag">
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "globalInActive").FirstOrDefault().Value.ToString() :</span>
+                                    <span class="inputText">
+                                        @Html.CheckBoxFor(m => m.accountDetails.InactiveFlag, new { @class = "form-control m-input", onclick="return false;", @style = "color:black; width: auto; margin-top: 12px;" })
+                                    </span>
+                                </li>
+
+                                <li id="IsExternal">
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnExternal").FirstOrDefault().Value.ToString() : </span>
+                                    <span class="inputText">
+                                        @Html.CheckBoxFor(m => m.accountDetails.IsExternal, new { @class = "form-control m-input", onclick = "return false;", @style = "color:black; width: auto; margin-top: 12px;" })
+                                    </span>
+                                </li>
+                                @*V2-375*@
+
+                                @* Commented For V2-302 *@
+                                @*<li>
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "globalInActive").FirstOrDefault().Value.ToString() :</span>
+                                        <span class="inputText">
+                                            @Html.CheckBoxFor(m => m.accountDetails.InactiveFlag, new { @class = "form-control m-input", @disabled = "disabled", @style = "color:black; width: auto; margin-top: 12px;" })
+                                        </span>
+                                    </li>*@
+                                @* Commented For V2-302 *@
+                            </ul>
+                            <div class="editBttn">
+                                @if (Model.security.Accounts.Edit)
+                                {
+                                    <button type="button" class="btn btn-blue" id="editaccount"><i class="fa fa-pencil" style="margin-top:-3px;"></i> &nbsp;@Model.Loc.Where(a => a.ResourceId == "globalEdit").FirstOrDefault().Value.ToString()</button>
+                                }
+                            </div>
+                            <div style="clear:both;"></div>
+                        </div>
+
+                        <div class="tabsArea nobg" id="Notes" style="display:none;">
+                            <div class="table-responsive">
+                                <table id="notesTable" class="eqpDtlTbl row-border custom-sort" style="width:100%;">
+                                    <thead>
+                                        <tr>
+                                            <th> @Model.Loc.Where(a => a.ResourceId == "globalSubject").FirstOrDefault().Value.ToString()</th>
+                                            <th> @Model.Loc.Where(a => a.ResourceId == "globalOwner").FirstOrDefault().Value.ToString()</th>
+                                            <th> @Model.Loc.Where(a => a.ResourceId == "spnModifyDate").FirstOrDefault().Value.ToString()</th>
+                                            <th width="17%" style="text-align:center !important;">@Model.Loc.Where(a => a.ResourceId == "globalAction").FirstOrDefault().Value.ToString()</th>
+                                        </tr>
+                                    </thead>
+
+                                </table>
+                            </div>
+                            <div class="bttn_pagin">
+                                <div class="bttns"><button type="button" class="btn btn-blue" data-toggle="" data-target="" id="btnAddNote" style="display:none"><i class="fa fa-plus faIcon"></i> &nbsp;Add Note</button></div>
+                                <div style="clear:both;"></div>
+                            </div>
+                            <div style="clear:both;"></div>
+                        </div>
+
+                        <div class="tabsArea nobg" id="Attachment" style="display:none;">
+                            <div class="table-responsive">
+                                <table id="attachTable" class="eqpDtlTbl row-border custom-sort" style="width:100%;">
+                                    <thead>
+                                        <tr>
+                                            <th>@Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString()</th>
+                                            <th>@Model.Loc.Where(a => a.ResourceId == "globalFileName").FirstOrDefault().Value.ToString()</th>
+                                            <th>@Model.Loc.Where(a => a.ResourceId == "globalFileSize").FirstOrDefault().Value.ToString()</th>
+                                            <th>@Model.Loc.Where(a => a.ResourceId == "spnUploadedBy").FirstOrDefault().Value.ToString()</th>
+                                            <th>@Model.Loc.Where(a => a.ResourceId == "globalCreateDate").FirstOrDefault().Value.ToString()</th>
+                                            <th width="17%" style="text-align:center !important;">@Model.Loc.Where(a => a.ResourceId == "globalAction").FirstOrDefault().Value.ToString()</th>
+                                        </tr>
+                                    </thead>
+
+                                </table>
+                            </div>
+                            <div class="bttn_pagin">
+                                <div class="bttns"><button type="button" class="btn btn-blue" data-toggle="" data-target="" id="btnAddAttachment"><i class="fa fa-plus faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalAddAttachment").FirstOrDefault().Value.ToString()</button></div>
+                                <div style="clear:both;"></div>
+                            </div>
+                            <div style="clear:both;"></div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@Html.HiddenFor(x => x.accountDetails.AccountId)
+@Html.HiddenFor(x => x.accountDetails.ClientLookupId)
+@Html.HiddenFor(m => m.accountDetails.InactiveFlag, new { id = "accounthiddeninactiveflag" })
+@Html.HiddenFor(x => x.accountDetails.UpdateIndex, new { id = "accounthiddenupdateindex" })
+
+@Html.Partial("~/Views/Configuration/Account/_ChangeAccountModal.cshtml")

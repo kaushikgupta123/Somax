@@ -1,0 +1,119 @@
+﻿@model Client.Models.Configuration.LookupLists.LookUpListsVM
+<div class="m-subheader">
+    <div class="new-m-subheader">
+        <div class="PageTitle">
+            <div class="align-items-center separator">
+                <h3 class="m-subheader__title ">
+                   @Model.Loc.Where(a => a.ResourceId == "spnLookupListsSetup").FirstOrDefault().Value.ToString()
+                </h3>
+            </div>
+        </div>
+        <div class="NewBreadcrumbArea">
+            <div class="newBreadcrumb">
+                <ul>
+                    <li><a href="/Configuration/Dashboard">&nbsp;</a></li>                    
+                    <li>
+                        <a style="cursor:pointer;" onclick="return SetLocalisationDescription();">
+                         @Model.Loc.Where(a => a.ResourceId == "spnLookupListsSetupSearch").FirstOrDefault().Value.ToString()
+                        </a>
+                    </li>
+                    <li>
+                        <a style="cursor:pointer;" onclick="return  SetLocalisationDescription();">
+                            @Model.lookUpListsModel.DescriptionLookUpText
+                        </a>
+                    </li>
+                    @if (Model.lookUpListsModel.LookupListId != 0)
+                    {
+
+                        <li class="active">@Model.Loc.Where(a => a.ResourceId == "spnUpdateLookupListsSetup").FirstOrDefault().Value.ToString() </li>
+                    }
+                    else
+                    {
+                        <li class="active">@Model.Loc.Where(a => a.ResourceId == "spnAddLookupListsSetup").FirstOrDefault().Value.ToString()</li>
+                    }
+                </ul>
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+        <div style="clear:both;"></div>
+    </div>
+</div>
+@Html.Partial("_ErrorDiv")
+
+@using (Ajax.BeginForm("AddEditLookUpLists", "LookUpLists", new AjaxOptions { HttpMethod = "Post", OnSuccess = "LookUpListsAddEditOnSuccess", OnBegin = "AjaxBeginFormBegin", OnComplete = "AjaxBeginFormComplete", OnFailure = "AjaxBeginFormFaillure" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="row">
+        <div class="col-xl-12">
+            <div class="m-portlet newPort" id="m_portlet" style="padding:15px;">
+                <div class="bottomBlock">
+                    <div class="tabsArea nobg">
+                        @if (Model.lookUpListsModel.LookupListId != 0)
+                        {
+                            @Html.HiddenFor(m => m.lookUpListsModel.LookupListId)
+                        }
+                        <ul class="listView nobrd">
+                            @if (Model.lookUpListsModel.LookupListId == 0)
+                            {
+                                <li>
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnValue").FirstOrDefault().Value.ToString(): <small>*</small></span>
+                                    <span class="inputText">
+                                        @Html.ValidationMessageFor(m => m.lookUpListsModel.ListValue, "", new { style = "display:none" })
+                                        @Html.TextBoxFor(m => m.lookUpListsModel.ListValue, new { @class = "form-control search", autocomplete = "off", maxlength = "15", id = "ListValue" })
+                                    </span>
+                                </li>
+                            }
+                            <li>
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString() : <small>*</small></span>
+                                <span class="inputText">
+                                    @Html.ValidationMessageFor(m => m.lookUpListsModel.Description, "", new { style = "display:none" })
+                                    @if (Model.lookUpListsModel.IsReadOnly)
+                                    {
+                                        @Html.TextBoxFor(m => m.lookUpListsModel.Description, new { @class = "form-control search readonly" , @readonly = "readonly", autocomplete = "off", maxlength = "63" })
+                                    }
+                                    else
+                                    {
+                                        @Html.TextBoxFor(m => m.lookUpListsModel.Description, new { @class = "form-control search", autocomplete = "off", maxlength = "63" })
+                                    }
+                                   
+                                </span>
+                            </li>
+                            <li>
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnInActive").FirstOrDefault().Value.ToString()? </span>
+                                <span class="inputText">                                   
+                                    @Html.DropDownListFor(m => m.lookUpListsModel.InactiveFlag, Model.lookUpListsModel.InactiveFlagList, new { @class = "form-control search select2picker", style = "width:100%;" })
+                                </span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div style="clear:both;"></div>
+                    <div class="idBttns">
+                        <div class="bttn_pagin">
+                            <div class="bttns2">
+                                <button type="submit" class="btn btn-blue mobBttn"><i class="fa fa-save faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+                            </div>
+                            <div class="bttns"><button type="button" class="btn btn-blue mobBttn" id="btnLookUpListcancel"><i class="fa fa-close faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button></div>
+
+                            <div style="clear:both;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @Html.HiddenFor(m => m.lookUpListsModel.LookupListId, new { id = "LookupListId" })
+    @Html.HiddenFor(m => m.lookUpListsModel.DescriptionLookUp)
+    @Html.HiddenFor(m => m.lookUpListsModel.DescriptionLookUpText)
+    @Html.HiddenFor(m => m.lookUpListsModel.UpdateIndex)
+    @Html.HiddenFor(m => m.lookUpListsModel.IsReadOnly)
+}
+
+
+
+
+
+
+
+
+
+

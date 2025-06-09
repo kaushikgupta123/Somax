@@ -1,0 +1,126 @@
+﻿@model Client.Models.Invoice.InvoiceVM
+<div class="m-subheader">
+    <div class="new-m-subheader">
+        <div class="PageTitle">
+            <div class="align-items-center separator">
+                <h3 class="m-subheader__title ">
+                    @Model.Loc.Where(a => a.ResourceId == "spnIdInvoiceMatching").FirstOrDefault().Value.ToString()
+                </h3>
+            </div>
+        </div>
+
+        <div class="NewBreadcrumbArea">
+            <div class="newBreadcrumb">
+                <ul>
+                    <li><a href="/Dashboard/Dashboard">&nbsp;</a></li>
+                    <li><a href="/Invoice/Index?page=Procurement_Invoice_Matching">@Model.Loc.Where(a => a.ResourceId == "spnIdInvoiceMatchSearch").FirstOrDefault().Value.ToString()</a></li>
+                    <li><a href="javascript:void(0)" id="brdprlineitem" data-val="@Model.InvoiceMatchHeaderModel.InvoiceMatchHeaderId">@Model.InvoiceMatchHeaderModel.ClientLookupId</a></li>
+                    <li class="active">@Model.Loc.Where(a => a.ResourceId == "spnIdInvoiceReceipts").FirstOrDefault().Value.ToString()</li>
+                </ul>
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+        <div style="clear:both;"></div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xl-12">
+        <div class="m-portlet newPort" id="m_portlet" style="padding:15px;">
+            <div class="bottomBlock">
+                <div class="tabsArea nobg">
+                    <div class="actionBar">
+                        <div class="pull-left">
+                            <button type="button" class="btn btn-white navbar-btn" id="pinIRsidebarCollapse" title="Advance Search"><i class="fa fa-filter" style="font-size: 1.3rem;"></i></button>
+                            <ul class="filter_apply filterAdjustWhenDropdown">
+                                <li class="textFilter"><span class="pinvgridfilteritemcount">0 </span> @Model.Loc.Where(a => a.ResourceId == "globalFiltersAppiled").FirstOrDefault().Value.ToString()</li>
+                                <li class="textClear" id="ReceiptClearSearch"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "globalClear").FirstOrDefault().Value.ToString()</a></li>
+                            </ul>
+                            <div style="clear:both;"></div>
+                        </div>
+                        <div style="clear:both;"></div>
+                        <div id="SPGadvsearchfilteritems"></div>
+                        <div style="clear:both;"></div>
+                    </div>
+                    <div class="table-responsive">
+                        <table id="tblSelectReceiptGrid" class="eqpDtlTbl row-border custom-sort" style="width:100%;">
+                            <thead>
+                                <tr>
+                                    <th><input type="checkbox" id="fgidselectall"></th>
+                                    <th>@Model.Loc.Where(a => a.ResourceId == "spnIdPurchaseOrder").FirstOrDefault().Value.ToString()</th>
+                                    <th>@Model.Loc.Where(a => a.ResourceId == "spnIdReceivedDate").FirstOrDefault().Value.ToString()</th>
+                                    <th>@Model.Loc.Where(a => a.ResourceId == "spnIdPartID").FirstOrDefault().Value.ToString()</th>
+                                    <th>@Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString()</th>
+                                    <th>@Model.Loc.Where(a => a.ResourceId == "spnIdQuantityReceived").FirstOrDefault().Value.ToString()</th>
+                                    <th>@Model.Loc.Where(a => a.ResourceId == "spnUnitofMeasure").FirstOrDefault().Value.ToString()</th>
+                                    <th>@Model.Loc.Where(a => a.ResourceId == "spnUnitCost").FirstOrDefault().Value.ToString()</th>
+                                    <th>@Model.Loc.Where(a => a.ResourceId == "spnIdTotalCost").FirstOrDefault().Value.ToString()</th>
+                                    <th>@Model.Loc.Where(a => a.ResourceId == "spnIdAccount").FirstOrDefault().Value.ToString()</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                    <div class="idBttns">
+                        <div class="bttn_pagin">
+                            <div class="bttns2">
+                                <button type="button" class="btn btn-blue mobBttn" id="btnprocessReceipt"><i class="fa fa-plus"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "spnIdAddReceipts").FirstOrDefault().Value.ToString()</button>
+                            </div>
+                            <div style="clear:both;"></div>
+                        </div>
+                    </div>
+                </div>
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+    </div>
+</div>
+@Html.HiddenFor(m => m.InvoiceMatchHeaderModel.VendorId)
+@Html.HiddenFor(m => m.InvoiceMatchHeaderModel.InvoiceMatchHeaderId)
+<nav class="sidebar">
+    <div class="dismiss">
+        <i class="fa fa-close"></i>
+    </div>
+    <div class="sidebar-header">
+        <h3><i class="fa fa-filter" style="position: relative; top: -2px;"></i>&nbsp;@Model.Loc.Where(a => a.ResourceId == "spnIdFilter").FirstOrDefault().Value.ToString()<span class="pinvgridfilteritemcount">0</span></h3>
+        <button type="button" class="btn btn-blue filterSearch" id="btnSPGAdvanceSearch"><i class="fa fa-search" style="margin-top:-3px;"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalSearch").FirstOrDefault().Value.ToString()</button>
+    </div>
+    <div class="sidebar-content" id="SPGadvsearchsidebar">
+        <form action="#" method="post">
+            <div class="form-group">
+                <label for="txtPurchaseOrder">@Model.Loc.Where(a => a.ResourceId == "spnIdPurchaseOrder").FirstOrDefault().Value.ToString():</label>
+                <input type="text" class="form-control search adv-item" id="txtPurchaseOrder" autocomplete="off">
+            </div>
+            <div class="form-group">
+                <label for="txtReceivedDate">@Model.Loc.Where(a => a.ResourceId == "spnIdReceivedDate").FirstOrDefault().Value.ToString():</label>
+                <input type="text" class="form-control search dtpicker adv-item" id="txtReceivedDate" autocomplete="off">
+            </div>
+            <div class="form-group">
+                <label for="txtPartID">@Model.Loc.Where(a => a.ResourceId == "spnIdPartID").FirstOrDefault().Value.ToString():</label>
+                <input type="text" class="form-control search adv-item" id="txtPartID" autocomplete="off">
+            </div>
+            <div class="form-group">
+                <label for="txtDescription">@Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString():</label>
+                <input type="text" class="form-control search adv-item" id="txtDescription" autocomplete="off">
+            </div>
+            <div class="form-group">
+                <label for="txtQuantityReceived">@Model.Loc.Where(a => a.ResourceId == "spnIdQuantityReceived").FirstOrDefault().Value.ToString():</label>
+                <input type="text" class="form-control search adv-item longinput" id="txtQuantityReceived" autocomplete="off">
+            </div>
+            <div class="form-group">
+                <label for="txtUnitofMeasure">@Model.Loc.Where(a => a.ResourceId == "spnUnitofMeasure").FirstOrDefault().Value.ToString():</label>
+                <input type="text" class="form-control search adv-item" id="txtUnitofMeasure" autocomplete="off">
+            </div>
+            <div class="form-group">
+                <label for="txtUnitCost">@Model.Loc.Where(a => a.ResourceId == "spnUnitCost").FirstOrDefault().Value.ToString():</label>
+                <input type="text" class="form-control search adv-item decimalinput" id="txtUnitCost" autocomplete="off">
+            </div>
+            <div class="form-group">
+                <label for="txtTotalCost">@Model.Loc.Where(a => a.ResourceId == "spnIdTotalCost").FirstOrDefault().Value.ToString():</label>
+                <input type="text" class="form-control search adv-item decimalinput" id="txtTotalCost" autocomplete="off">
+            </div>
+        </form>
+    </div>
+</nav>
+
+
+

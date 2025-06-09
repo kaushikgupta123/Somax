@@ -1,0 +1,103 @@
+﻿@model Client.Models.SensorAlert.SensorAlertVM
+<div class="m-subheader">
+    <div class="new-m-subheader">
+        <div class="PageTitle">
+            <div class="align-items-center separator">
+                <h3 class="m-subheader__title ">
+                   @Model.Loc.Where(a => a.ResourceId == "spnSensorAlertProcedures").FirstOrDefault().Value.ToString() 
+                </h3>
+            </div>
+        </div>
+
+        <div class="NewBreadcrumbArea">
+            <div class="newBreadcrumb">
+                <ul>
+                    <li><a href="/Dashboard/Dashboard">&nbsp;</a></li>
+                    <li><a href="/SensorAlert/Index?page=Sensors_Alert_Procedures">@Model.Loc.Where(a => a.ResourceId == "spnSensorAlertProceduresSearch").FirstOrDefault().Value.ToString()</a></li>
+                    @if (@Model.sensorAlertModel.SensorAlertProcedureId == 0)
+                    {
+                        <li class="active">@Model.Loc.Where(a => a.ResourceId == "spnAddSensorAlert").FirstOrDefault().Value.ToString()</li>
+                    }
+                    else
+                    {
+                        <li><a href="javascript:void(0)" id="brdsa" data-val="@Model.sensorAlertModel.SensorAlertProcedureId">@Model.sensorAlertModel.ClientLookUpId</a></li>
+                        <li class="active">@Model.Loc.Where(a => a.ResourceId == "spnEditSensorAlert").FirstOrDefault().Value.ToString()</li>
+                    }
+                </ul>
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+        <div style="clear:both;"></div>
+    </div>
+</div>
+@Html.Partial("_ErrorDiv")
+@using (Ajax.BeginForm("UpdateSensorAlert", "SensorAlert", new AjaxOptions { HttpMethod = "Post", OnSuccess = "AddEditSAOnSuccess", OnBegin = "AjaxBeginFormBegin", OnComplete = "AjaxBeginFormComplete", OnFailure = "AjaxBeginFormFaillure" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="row">
+        <div class="col-xl-12">
+            <div class="m-portlet newPort" id="m_portlet" style="padding:15px;">
+                <div class="bottomBlock">
+                    <div class="tabsArea nobg">
+                        <ul class="listView nobrd">
+                            <li>
+                                <span class="label">
+                                    <label for="notesAccount">@Model.Loc.Where(a => a.ResourceId == "spnOnDemandID").FirstOrDefault().Value.ToString()</label> : <small>*</small>
+                                </span>
+                                <span class="inputText">
+                                    @if (Model.sensorAlertModel.SensorAlertProcedureId == 0)
+                                    {
+                                        @Html.ValidationMessageFor(m => m.sensorAlertModel.ClientLookUpId, "", new { style = "display:none" })
+                                        @Html.TextBoxFor(m => m.sensorAlertModel.ClientLookUpId, new { @class = "form-control search", autocomplete = "off", maxlength = "31" })
+                                    }
+                                    else
+                                    {
+                                        @Html.TextBoxFor(m => m.sensorAlertModel.ClientLookUpId, new { @class = "form-control search readonly", @readonly = "readonly", autocomplete = "off", maxlength = "31" })
+                                    }
+                                </span>
+                            </li>
+                            <li style="height:auto;">
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString() :<small>*</small></span>
+                                <span class="inputText" style="height:auto;">
+                                    @Html.ValidationMessageFor(m => m.sensorAlertModel.Description, "", new { style = "display:none" })
+                                    @Html.TextAreaFor(m => m.sensorAlertModel.Description, new { @class = "form-control search", autocomplete = "off", maxlength = "255" })
+                                </span>
+                                <div style="clear:both;"></div>
+                            </li>
+                            <li>
+                                <span class="label">
+                                    <label for="notesAccount">@Model.Loc.Where(a => a.ResourceId == "GlobalType").FirstOrDefault().Value.ToString()</label> :
+                                </span>
+                                <span class="inputText">
+                                    @Html.DropDownListFor(m => m.sensorAlertModel.Type, Model.sensorAlertModel.TypeList, "--Select--", new { @class = "form-control search select2picker", style = "width:100%;" })
+                                </span>
+                            </li>
+                            <li>
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "globalInActive").FirstOrDefault().Value.ToString(): </span>
+                                <span class="inputText">
+                                    @Html.CheckBoxFor(m => m.sensorAlertModel.InactiveFlag)
+                                </span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div style="clear:both;"></div>
+
+                    <div class="bttn_pagin">
+                        <div class="bttns2">
+                            @if (Model.sensorAlertModel.SensorAlertProcedureId == 0)
+                            {
+                                <button class="btn btn-white mobBttn" name="Command" style="cursor:pointer" value="saveAdd"><i class="fa fa-save faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalSaveAndAdd").FirstOrDefault().Value.ToString()</button>
+                            }
+                            <button class="btn btn-blue mobBttn" name="Command" style="cursor:pointer" value="save"><i class="fa fa-save faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+                        </div>
+                        <div class="bttns"><button type="button" class="btn btn-blue mobBttn" id="btnsacancel"><i class="fa fa-close faIcon"></i> &nbsp;Cancel</button></div>
+                        <div style="clear:both;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @Html.HiddenFor(m => m.sensorAlertModel.SensorAlertProcedureId)
+    @Html.HiddenFor(m => m.sensorAlertModel.ClientLookUpId)
+    @Html.HiddenFor(m => m.sensorAlertModel.UpdateIndex)
+}

@@ -1,0 +1,36 @@
+﻿@model Client.Models.PreventiveMaintenance.PrevMaintVM
+<div id="pmpersonnelModal" class="modal fade dropdown-modal" role="dialog" style="display:none;">
+    <div class="modal-dialog partPopup">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title" id="hdrPopVendor">Select Personnel</h4>
+            </div>
+            <div class="modal-body">
+                <div id="tbldropdown" class="dropdown-content tbl-dropdown" style="display:block;">
+                    <div class="table-responsive dropTableOuter">
+                        <table id="PrevAssignPersonnelTable" class="stripe dropTable globalDropTable tableWOBtn" style="width:100%;">
+                            <thead>
+                                <tr>
+                                    <th>@UtilityFunction.GetMessageFromResource("globalPersonnelId", LocalizeResourceSetConstants.Global)</th>
+                                    <th>@UtilityFunction.GetMessageFromResource("spnFirstName", LocalizeResourceSetConstants.Global)</th>
+                                    <th>@UtilityFunction.GetMessageFromResource("spnLastName", LocalizeResourceSetConstants.Global)</th>
+                                </tr>
+                            </thead>
+                            <tfoot id="tblpmpersonnelfooter" style="display:none">
+                                <tr>
+                                    <th style="position:relative;">@UtilityFunction.GetMessageFromResource("globalPersonnelId", LocalizeResourceSetConstants.Global)</th>
+                                    <th style="position:relative;">@UtilityFunction.GetMessageFromResource("spnFirstName", LocalizeResourceSetConstants.Global)</th>
+                                    <th style="position:relative;">@UtilityFunction.GetMessageFromResource("spnLastName", LocalizeResourceSetConstants.Global)</th>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="padding:15px 25px !important;">
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+    </div>
+</div>

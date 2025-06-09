@@ -1,0 +1,81 @@
+﻿@model Client.Models.VendorsVM
+
+<div class="m-subheader">
+    <div class="new-m-subheader">
+        <div class="PageTitle">
+            <div class="align-items-center separator">
+                <h3 class="m-subheader__title ">
+                    @Model.Loc.Where(a => a.ResourceId == "Vendor").FirstOrDefault().Value.ToString()
+                </h3>
+            </div>
+        </div>
+
+        <div class="NewBreadcrumbArea">
+            <div class="newBreadcrumb">
+                <ul>
+                    <li><a href="/Dashboard/Dashboard">&nbsp;</a></li>
+                    <li><a href="/Vendor/Index?page=Inventory_Vendors">@Model.Loc.Where(a => a.ResourceId == "VendorSearch").FirstOrDefault().Value.ToString()</a></li>
+                    <li><a href="javascript:void(0)" id="brdvendor" data-val="@Model.notesModel.VendorId">@Model.notesModel.ClientLookupId</a></li>
+                    @if (Model.notesModel.NotesId != 0)
+                    {
+                        <li class="active">@Model.Loc.Where(a => a.ResourceId == "VendorUpdateNotes").FirstOrDefault().Value.ToString()</li>
+                    }
+                    else
+                    {
+                        <li class="active">@Model.Loc.Where(a => a.ResourceId == "globalAddNotes").FirstOrDefault().Value.ToString()</li>
+                    }
+                </ul>
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+        <div style="clear:both;"></div>
+    </div>
+</div>
+@Html.Partial("_ErrorDiv")
+@using (Ajax.BeginForm("AddNotes", "Vendor", new AjaxOptions { HttpMethod = "Post", OnSuccess = "NotesAddOnSuccess", OnBegin = "AjaxBeginFormBegin", OnComplete = "AjaxBeginFormComplete", OnFailure = "AjaxBeginFormFaillure" }, new { id = "frmnotesadd" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="row">
+        <div class="col-xl-12">
+            <div class="m-portlet newPort" id="m_portlet" style="padding:15px;">
+                <div class="bottomBlock">
+                    <div class="tabsArea nobg">
+                        <ul class="listView nobrd">
+                            <li>
+                                <span class="label">@Html.LabelFor(m=>m.notesModel.Subject) : </span>
+                                <span class="inputText">
+                                    @Html.TextBoxFor(m => m.notesModel.Subject, new { @class = "form-control search", autocomplete = "off" })
+                                </span>
+                            </li>
+                            <li>
+                                <span class="label">@Html.LabelFor(m => m.notesModel.Content) : <small>*</small></span>
+                                <span class="inputText">
+                                    @Html.ValidationMessageFor(m => m.notesModel.Content, "", new { style = "display:none" })
+                                    @Html.TextBoxFor(m => m.notesModel.Content, new { @class = "form-control search", autocomplete = "off" })
+                                </span>
+                            </li>
+              
+                        </ul>
+                    </div>
+                    <div style="clear:both;"></div>
+
+                    <div class="idBttns">
+                        <div class="bttn_pagin">
+                            <div class="bttns2">
+                                <button type="submit" class="btn btn-blue mobBttn"><i class="fa fa-save faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+                            </div>
+                            <div class="bttns"><button type="button" class="btn btn-blue mobBttn" id="btnnotescancel"><i class="fa fa-close faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button></div>
+
+                            <div style="clear:both;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @Html.HiddenFor(m => m.notesModel.VendorId)
+    @Html.HiddenFor(m => m.notesModel.NotesId)
+    @Html.HiddenFor(m => m.notesModel.updatedindex)
+    @Html.HiddenFor(m => m.notesModel.ClientLookupId)
+    @Html.HiddenFor(m => m.notesModel.ObjectId)
+}

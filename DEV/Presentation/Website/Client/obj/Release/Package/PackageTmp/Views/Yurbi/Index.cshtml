@@ -1,0 +1,272 @@
+﻿@model Client.Models.BusinessIntelligenceVM
+@{
+    Layout = null;
+}
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Somax | Somax Report</title>
+
+    <link rel="shortcut icon" href="~/Scripts/Metronic/assets/login/demo/default/media/img/logo/favicon.png" />
+    <link href="~/Content/dialog-mobile.css" rel="stylesheet" />
+    <link href="~/Scripts/Metronic/assets/vendors/base/vendors.bundle.css" rel="stylesheet" />
+    <link href="~/Scripts/Metronic/assets/demo/default/base/style.bundle.css" rel="stylesheet" />
+    <link href="~/Scripts/Metronic/assets/demo/default/base/style_custom.css" rel="stylesheet" />
+    <link href="~/Scripts/Metronic/assets/demo/default/base/responsive.css" rel="stylesheet" />
+    <link rel="shortcut icon" href="~/Scripts/Metronic/assets/login/demo/default/media/img/logo/favicon.png" />
+
+    <style type="text/css">
+        .rep-loader {
+            background: #fff url(../content/images/image_1197421.gif) center center no-repeat;
+        }
+
+        body.reportBodyBg {
+            display: block;
+            padding: 0;
+            margin: 0;
+            height: 100%;
+        }
+
+        header.reportHeader {
+            background: #315a98;
+            height: 60px;
+            border-bottom: 1px solid #fff;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 9;
+        }
+
+            header.reportHeader h3 {
+                padding: 0;
+                margin: 0;
+                font-family: Roboto;
+                font-size: 1.5rem;
+                font-weight: 500;
+                color: #fff;
+                float: left;
+                line-height: 60px;
+                padding: 0 0 0 15px;
+            }
+
+        footer.reportFooter {
+            height: 50px;
+            min-height: 50px;
+            background: #ffffff;
+            -webkit-box-shadow: -2px -8px 41px -14px rgba(189, 196, 206, 0.95);
+            -moz-box-shadow: -2px -8px 41px -14px rgba(189, 196, 206, 0.95);
+            box-shadow: -2px -8px 41px -14px rgba(189, 196, 206, 0.95);
+            font-family: 'Roboto', sans-serif;
+            font-size: 12px;
+            font-weight: 400;
+            text-align: center;
+            line-height: 50px;
+            color: #6d6b6b;
+        }
+
+        .reportPage {
+            background: #e9ebee;
+            padding: 20px;
+            margin: 0;
+            min-height: 100%;
+        }
+
+        .m-subheader {
+            padding: 6px 0 3px 0;
+        }
+
+        .reportLogo {
+            width: 255px;
+            height: 59px;
+            background: #1a3967;
+            border-right: 1px solid #fff;
+            text-align: center;
+            padding: 10px 0;
+            float: left;
+        }
+
+        .pushHead {
+            height: 60px;
+        }
+
+        .returnBttn {
+            float: right;
+            margin: 12px 18px 0 0;
+            color: #fff;
+            background-color: #dd6b49;
+            border-color: #b92a00;
+        }
+
+        /********** Responsive **********/
+        @@media only screen and (min-width: 768px) and (max-width: 1023px) {
+            .reportLogo {
+                border-right: 1px solid #fff;
+            }
+
+            .m-subheader {
+                padding: 6px 0 0 0;
+            }
+        }
+
+        @@media only screen and (min-width: 640px) and (max-width: 767px) {
+            .reportLogo {
+                border-right: 0px;
+                text-align: left;
+                padding: 10px 0 10px 20px;
+            }
+
+            .m-subheader {
+                padding: 6px 0 0 0;
+            }
+
+            header.reportHeader {
+                background: #1a3967;
+            }
+
+                header.reportHeader h3 {
+                    display: none;
+                }
+        }
+
+        @@media only screen and (min-width: 568px) and (max-width: 639px) {
+            .reportLogo {
+                border-right: 0px;
+                text-align: left;
+                padding: 10px 0 10px 20px;
+            }
+
+            .m-subheader {
+                padding: 6px 0 0 0;
+            }
+
+            header.reportHeader {
+                background: #1a3967;
+            }
+
+                header.reportHeader h3 {
+                    display: none;
+                }
+        }
+
+        @@media only screen and (min-width: 480px) and (max-width: 567px) {
+            .reportLogo {
+                border-right: 0px;
+                text-align: left;
+                padding: 10px 0 10px 20px;
+            }
+
+            .m-subheader {
+                padding: 6px 0 0 0;
+            }
+
+            header.reportHeader {
+                background: #1a3967;
+            }
+
+                header.reportHeader h3 {
+                    display: none;
+                }
+        }
+
+        @@media only screen and (min-width: 360px) and (max-width: 479px) {
+            .reportLogo {
+                border-right: 0px;
+                text-align: left;
+                padding: 10px 0 10px 20px;
+            }
+
+            .m-subheader {
+                padding: 6px 0 0 0;
+            }
+
+            footer.reportFooter {
+                padding: 2px 10px;
+                line-height: 22px;
+            }
+
+            header.reportHeader {
+                background: #1a3967;
+            }
+
+                header.reportHeader h3 {
+                    display: none;
+                }
+        }
+
+        @@media only screen and (min-width: 320px) and (max-width: 359px) {
+            .reportLogo {
+                border-right: 0px;
+                text-align: left;
+                padding: 10px 0 10px 20px;
+            }
+
+            .m-subheader {
+                padding: 6px 0 0 0;
+            }
+
+            footer.reportFooter {
+                padding: 2px 10px;
+                line-height: 22px;
+            }
+
+            header.reportHeader {
+                background: #1a3967;
+            }
+
+                header.reportHeader h3 {
+                    display: none;
+                }
+        }
+    </style>
+
+</head>
+@Styles.Render("~/Content/Common")
+<script type="text/javascript" src="~/Scripts/Pages/assets/js/require.js" data-main="../Scripts/Pages/assets/js/lib/customLogin"></script>
+
+<body class="reportBodyBg">
+    <header class="reportHeader">
+        <div class="reportLogo">
+            <a href="/Dashboard/Dashboard" class="m-brand__logo-wrapper">
+                <img src="~/Scripts/Metronic/assets/app/media/img/logos/somaxLogo.png" style="width:130px; height:auto;">
+            </a>
+        </div>
+        <a href="/DashBoard/DashBoard?page=Return_to_SOMAX" class="btn returnBttn" title="Return To Somax">
+            <span class="m-menu__item-here"></span>
+            <i class="m-menu__link-icon flaticon-logout"></i>
+        </a>
+        <h3>Somax Report</h3>
+    </header>
+    <div class="pushHead"></div>
+    <div class="reportPage">
+        <div class="row">
+            <div class="col-xl-12">
+                <div class="m-portlet rep-loader" id="m_portlet" style="padding:15px; border: 1px solid #c3c4c5;">
+                    <iframe id="myframe" name="myframe" height="720" style="width:100%; outline: 0; border: 1px solid #ccc;"></iframe>
+                </div>
+            </div>
+        </div>
+        <input type="hidden" id="ReportApiUrl" value="@Model._YurbiReportModel.ReportApiUrl" name="@Model._YurbiReportModel.ReportApiUrlText" />
+        <input type="hidden" id="ReportServerUrl" value="@Model._YurbiReportModel.ReportServerUrl" name="@Model._YurbiReportModel.ReportServerUrlText" />
+        <input type="hidden" id="ReportServerLibUrl" value="@Model._YurbiReportModel.ReportServerLibUrl" name="@Model._YurbiReportModel.ReportServerLibUrlText" />
+        <input type="hidden" id="ReportServerDashBoard" value="@Model._YurbiReportModel.ReportServerDashBoard" name="@Model._YurbiReportModel.ReportServerDashBoardText" />
+        <input type="hidden" id="AdminUserNameval" value="@Model._YurbiReportModel.AdminUserNameval" name="@Model._YurbiReportModel.AdminUserNamevalText" />
+        <input type="hidden" id="UserNameVal" value="@Model._YurbiReportModel.UserNameVal" name="@Model._YurbiReportModel.UserNameValText" />
+        <input type="hidden" id="AdminPassword" value="@Model._YurbiReportModel.AdminPassword" name="@Model._YurbiReportModel.AdminPasswordText" />
+        <input type="hidden" id="UserPassword" value="@Model._YurbiReportModel.UserPassword" name="@Model._YurbiReportModel.UserPasswordText" />
+        <input type="hidden" id="UserEmail" value="@Model._YurbiReportModel.UserEmail" name="@Model._YurbiReportModel.UserEmailText" />
+        <input type="hidden" id="FirstName" value="@Model._YurbiReportModel.FirstName" name="@Model._YurbiReportModel.FirstNameText" />
+        <input type="hidden" id="LastName" value="@Model._YurbiReportModel.LastName" name="@Model._YurbiReportModel.LastNameText" />
+        <input type="hidden" id="Company" value="@Model._YurbiReportModel.Company" name="@Model._YurbiReportModel.CompanyText" />
+        <input type="hidden" id="Description" value="@Model._YurbiReportModel.Description" name="@Model._YurbiReportModel.DescriptionText" />
+        <input type="hidden" id="UserInfoId" value="@Model._YurbiReportModel.UserInfoId" name="@Model._YurbiReportModel.UserInfoIdText" />
+        <input type="hidden" id="Standard" value="@Model._YurbiReportModel.Standard" name="@Model._YurbiReportModel.StandardText" />
+        <input type="hidden" id="FoodServices" value="@Model._YurbiReportModel.FoodServices" name="@Model._YurbiReportModel.FoodServicesText" />
+        <input type="hidden" id="Facilities" value="@Model._YurbiReportModel.Facilities" name="@Model._YurbiReportModel.FacilitiesText" />
+        <input type="hidden" id="UserType" value="@Model._YurbiReportModel.UserType" name="@Model._YurbiReportModel.UserTypeText" />
+        <input type="hidden" id="TimeZone" value="@Model._YurbiReportModel.TimeZone" name="@Model._YurbiReportModel.TimeZoneText" />
+        <input type="hidden" id="Group" value="@Model._YurbiReportModel.Group" name="@Model._YurbiReportModel.GroupText" />
+        <input type="hidden" id="Access" value="@Model._YurbiReportModel.Access" name="@Model._YurbiReportModel.AccessText" />
+    </div>
+    <footer class="reportFooter">&copy; SOMAX Inc. All rights reserved. SOMAX is a registered trademark of SOMAX, Inc.</footer>
+</body>

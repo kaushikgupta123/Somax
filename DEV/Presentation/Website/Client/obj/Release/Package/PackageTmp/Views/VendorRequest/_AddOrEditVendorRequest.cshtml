@@ -1,0 +1,247 @@
+﻿@model Client.Models.VendorRequest.VendorRequestVM
+<div class="m-subheader">
+    <div class="new-m-subheader">
+        <div class="PageTitle">
+            <div class="align-items-center separator">
+                <h3 class="m-subheader__title ">
+                    @Model.Loc.Where(a => a.ResourceId == "globalVendorRequest").FirstOrDefault().Value.ToString()
+                </h3>
+            </div>
+        </div>
+        <div class="NewBreadcrumbArea">
+            <div class="newBreadcrumb">
+                <ul>
+                    <li><a href="/Dashboard/Dashboard">&nbsp;</a></li>
+                    <li><a href="/VendorRequest/Index?page=Inventory_Vendor_Request">Vendor Request Search</a></li>
+                    @if (Model.vendorRequestModel.VendorRequestId == 0)
+                    {
+                <li class="active">@Model.Loc.Where(a => a.ResourceId == "globalAddVendorRequest").FirstOrDefault().Value.ToString()</li>
+                    }
+                    else
+                    {
+                <li class="active">@Model.Loc.Where(a => a.ResourceId == "globalEditVendorRequest").FirstOrDefault().Value.ToString()</li>
+                    }
+                </ul>
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+        <div style="clear:both;"></div>
+    </div>
+</div>
+
+@Html.Partial("_ErrorDiv")
+@using (Ajax.BeginForm("VendorRequestAddOrEdit", "VendorRequest", new AjaxOptions { HttpMethod = "Post", OnSuccess = "VendorRequestAddOrEditOnSuccess", OnBegin = "AjaxBeginFormBegin", OnComplete = "AjaxBeginFormComplete", OnFailure = "AjaxBeginFormFaillure" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="row">
+        <div class="col-xl-12">
+            <div id="btnnblock">
+                <div class="m-portlet" id="m_portlet" style="padding:15px;">
+                    <div class="bottomBlock">
+                        <div class="tabsArea nobg" id="RequestCharge" style="display:block;">
+                            <ul class="listView nobrd">
+
+                                <li>
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnName").FirstOrDefault().Value.ToString() : <small>*</small></span>
+                                    <span class="inputText">
+                                        @Html.ValidationMessageFor(m => m.vendorRequestModel.Name, "", new { style = "display:none" })
+                                        @Html.TextBoxFor(m => m.vendorRequestModel.Name, new { @class = "form-control search", autocomplete = "off", maxlength = "63" })
+                                    </span>
+                                </li>
+                                <li id="liType">
+                                    <span class="label">@Html.LabelFor(m => m.vendorRequestModel.Type) :<small id="rType" style="visibility:hidden;">*</small></span>
+                                    <span class="inputText">
+                                        @Html.ValidationMessageFor(m => m.vendorRequestModel.Type, "", new { style = "display:none" })
+                                        @Html.DropDownListFor(m => m.vendorRequestModel.Type, Model.vendorRequestModel.LookupTypeList, "--Select--", new { @class = "form-control search select2picker", style = "width:100%;"})
+                                    </span>
+                                </li>
+                                <li id="liTerms">
+                                    <span class="label">@Html.LabelFor(m => m.vendorRequestModel.Terms) : <small id="rTerms" style="visibility:hidden;">*</small></span>
+                                    <span class="inputText">
+                                        @Html.ValidationMessageFor(m => m.vendorRequestModel.Terms, "", new { style = "display:none" })
+                                        @Html.DropDownListFor(m => m.vendorRequestModel.Terms, Model.vendorRequestModel.LookupTermList, "--Select--", new { @class = "form-control search select2picker", style = "width:100%;" })
+                                    </span>
+                                </li>
+                                <li id="liFOBCode">
+                                    <span class="label">@Html.LabelFor(m => m.vendorRequestModel.FOBCode) : <small id="rFOBCode" style="visibility:hidden;">*</small> </span>
+                                    <span class="inputText">
+                                        @Html.ValidationMessageFor(m => m.vendorRequestModel.FOBCode, "", new { style = "display:none" })
+                                        @Html.DropDownListFor(m => m.vendorRequestModel.FOBCode, Model.vendorRequestModel.LookupFOBList, "--Select--", new { @class = "form-control search select2picker", style = "width:100%;"})
+                                    </span>
+                                </li>
+                                <li id="liCustomerAccount">
+                                    <span class="label">@Html.LabelFor(m => m.vendorRequestModel.CustomerAccount) : <small id="rCustomerAccount" style="visibility:hidden;">*</small></span>
+                                    <span class="inputText">
+                                        @Html.ValidationMessageFor(m => m.vendorRequestModel.CustomerAccount, "", new { style = "display:none" })
+                                        @Html.TextBoxFor(m => m.vendorRequestModel.CustomerAccount, new { @class = "form-control search m-input", @style = "color:black", autocomplete = "off" })
+                                    </span>
+                                </li>
+                                <li id="liEmail">
+                                    <span class="label">@Html.LabelFor(m => m.vendorRequestModel.EmailAddress) : <small id="rEmail" style="visibility:hidden;">*</small></span>
+                                    <span class="inputText">
+                                        @Html.ValidationMessageFor(m => m.vendorRequestModel.EmailAddress, "", new { style = "display:none" })
+                                        @Html.TextBoxFor(m => m.vendorRequestModel.EmailAddress, new { @class = "form-control search m-input", @style = "color:black", autocomplete = "off" })
+                                    </span>
+                                </li>
+                                <li id="liPhoneNumber">
+                                    <span class="label">@Html.LabelFor(m => m.vendorRequestModel.PhoneNumber) : <small id="rPhoneNumber" style="visibility:hidden;">*</small></span>
+                                    <span class="inputText">
+                                        @Html.ValidationMessageFor(m => m.vendorRequestModel.PhoneNumber, "", new { style = "display:none" })
+                                        @Html.TextBoxFor(m => m.vendorRequestModel.PhoneNumber, new { @class = "form-control search m-input", @style = "color:black", autocomplete = "off" })
+                                    </span>
+                                </li>
+                                <li id="liFax">
+                                    <span class="label">@Html.LabelFor(m => m.vendorRequestModel.FaxNumber) : <small id="rFax" style="visibility:hidden;">*</small></span>
+                                    <span class="inputText">
+                                        @Html.ValidationMessageFor(m => m.vendorRequestModel.FaxNumber, "", new { style = "display:none" })
+                                        @Html.TextBoxFor(m => m.vendorRequestModel.FaxNumber, new { @class = "form-control search m-input decimalinput", @style = "color:black", autocomplete = "off" })
+                                    </span>
+                                </li>
+                                <li id="liWebsite">
+                                    <span class="label">@Html.LabelFor(m => m.vendorRequestModel.Website) : <small id="rWebsite" style="visibility:hidden;">*</small></span>
+                                    <span class="inputText">
+                                        @Html.ValidationMessageFor(m => m.vendorRequestModel.Website, "", new { style = "display:none" })
+                                        @Html.TextBoxFor(m => m.vendorRequestModel.Website, new { @class = "form-control search m-input", @style = "color:black", autocomplete = "off" })
+                                    </span>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="tabsArea nobg" id="Address">
+                            <h3>@Model.Loc.Where(a => a.ResourceId == "globalBusinessAddress").FirstOrDefault().Value.ToString()</h3>
+                            <ul class="listView nobrd" style="padding-bottom:0; margin-bottom:10px;">
+                                <li id="liAddress1">
+                                    <span class="label">@Html.LabelFor(m => m.vendorRequestModel.Address1) :<small id="rAddress1" style="visibility:hidden;">*</small> </span>
+                                    <span class="inputText">
+                                        @Html.ValidationMessageFor(m => m.vendorRequestModel.Address1, "", new { style = "display:none" })
+                                        @Html.TextBoxFor(m => m.vendorRequestModel.Address1, new { @class = "form-control search", autocomplete = "off" })
+                                    </span>
+                                </li>
+                                <li id="liAddress2">
+                                    <span class="label"> <small id="rAddress2" style="visibility:hidden;">*</small></span>
+                                    <span class="inputText">
+                                        @Html.ValidationMessageFor(m => m.vendorRequestModel.Address2, "", new { style = "display:none" })
+                                        @Html.TextBoxFor(m => m.vendorRequestModel.Address2, new { @class = "form-control search", autocomplete = "off" })
+                                    </span>
+                                </li>
+                                <li id="liAddress3">
+                                    <span class="label"><small id="rAddress3" style="visibility:hidden;">*</small> </span>
+                                    <span class="inputText">
+                                        @Html.ValidationMessageFor(m => m.vendorRequestModel.Address3, "", new { style = "display:none" })
+                                        @Html.TextBoxFor(m => m.vendorRequestModel.Address3, new { @class = "form-control search", autocomplete = "off" })
+                                    </span>
+                                </li>
+
+                                <li id="liAddressCity">
+                                    <span class="label">@Html.LabelFor(m => m.vendorRequestModel.AddressCity) :<small id="rAddressCity" style="visibility:hidden;">*</small> </span>
+                                    <span class="inputText">
+                                        @Html.ValidationMessageFor(m => m.vendorRequestModel.AddressCity, "", new { style = "display:none" })
+                                        @Html.TextBoxFor(m => m.vendorRequestModel.AddressCity, new { @class = "form-control search", autocomplete = "off" })
+
+                                    </span>
+                                </li>
+                                <li id="liAddressState">
+                                    <span class="label">@Html.LabelFor(m => m.vendorRequestModel.AddressState) :<small id="rAddressState" style="visibility:hidden;">*</small> </span>
+                                    <span class="inputText">
+                                        @Html.ValidationMessageFor(m => m.vendorRequestModel.AddressState, "", new { style = "display:none" })
+                                        @Html.TextBoxFor(m => m.vendorRequestModel.AddressState, new { @class = "form-control search", autocomplete = "off" })
+                                    </span>
+                                </li>
+                                <li id="liPostalCode">
+                                    <span class="label">@Html.LabelFor(m => m.vendorRequestModel.AddressPostCode) :<small id="rPostalCode" style="visibility:hidden;">*</small>  </span>
+                                    <span class="inputText">
+                                        @Html.ValidationMessageFor(m => m.vendorRequestModel.AddressPostCode, "", new { style = "display:none" })
+                                        @Html.TextBoxFor(m => m.vendorRequestModel.AddressPostCode, new { @class = "form-control search", autocomplete = "off" })
+                                    </span>
+                                </li>
+                                <li id="liCountry">
+                                    <span class="label">@Html.LabelFor(m => m.vendorRequestModel.AddressCountry) :<small id="rCountry" style="visibility:hidden;">*</small> </span>
+                                    <span class="inputText">
+                                        @Html.ValidationMessageFor(m => m.vendorRequestModel.AddressCountry, "", new { style = "display:none" })
+                                        @Html.TextBoxFor(m => m.vendorRequestModel.AddressCountry, new { @class = "form-control search", autocomplete = "off" })
+                                    </span>
+                                </li>
+                            </ul>
+                            <h3>@Model.Loc.Where(a => a.ResourceId == "globalRemitToAddress").FirstOrDefault().Value.ToString()</h3>
+                        
+                            <ul class="listView nobrd">
+                                <li>
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "globalUseBusiness").FirstOrDefault().Value.ToString():</span>
+                                    <span class="inputText">
+                                        @Html.CheckBoxFor(m => m.vendorRequestModel.RemitUseBusiness, new { id = "chkIsBusiness", @class = "form-control m-input", @style = "color:black; width: auto; margin-top: 12px;" })
+
+                                    </span>
+                                </li>
+                                <li id="liRemitAddress1">
+                                    <span class="label">@Html.LabelFor(m => m.vendorRequestModel.RemitAddress1) :<small id="rRemitAddress1" style="visibility:hidden;">*</small> </span>
+                                    <span class="inputText">
+                                        @Html.ValidationMessageFor(m => m.vendorRequestModel.RemitAddress1, "", new { style = "display:none" })
+                                        @Html.TextBoxFor(m => m.vendorRequestModel.RemitAddress1, new { @class = "form-control search", autocomplete = "off" })
+                                    </span>
+                                </li>
+                                <li id="liRemitAddress2">
+                                    <span class="label"><small id="rRemitAddress2" style="visibility:hidden;">*</small> </span>
+                                    <span class="inputText">
+                                        @Html.ValidationMessageFor(m => m.vendorRequestModel.RemitAddress2, "", new { style = "display:none" })
+                                        @Html.TextBoxFor(m => m.vendorRequestModel.RemitAddress2, new { @class = "form-control search", autocomplete = "off" })
+                                    </span>
+                                </li>
+                                <li id="liRemitAddress3">
+                                    <span class="label"><small id="rRemitAddress3" style="visibility:hidden;">*</small>  </span>
+                                    <span class="inputText">
+                                        @Html.ValidationMessageFor(m => m.vendorRequestModel.RemitAddress3, "", new { style = "display:none" })
+                                        @Html.TextBoxFor(m => m.vendorRequestModel.RemitAddress3, new { @class = "form-control search", autocomplete = "off" })
+                                    </span>
+                                </li>
+                                <li id="liRemitAddressCity">
+                                    <span class="label">@Html.LabelFor(m => m.vendorRequestModel.RemitCity) : <small id="rRemitAddressCity" style="visibility:hidden;">*</small></span>
+                                    <span class="inputText">
+                                        @Html.ValidationMessageFor(m => m.vendorRequestModel.RemitCity, "", new { style = "display:none" })
+                                        @Html.TextBoxFor(m => m.vendorRequestModel.RemitCity, new { @class = "form-control search", autocomplete = "off" })
+                                    </span>
+                                </li>
+                                <li id="liRemitAddressState">
+                                    <span class="label">@Html.LabelFor(m => m.vendorRequestModel.RemitState) :<small id="rRemitAddressState" style="visibility:hidden;">*</small>  </span>
+                                    <span class="inputText">
+                                        @Html.ValidationMessageFor(m => m.vendorRequestModel.RemitState, "", new { style = "display:none" })
+                                        @Html.TextBoxFor(m => m.vendorRequestModel.RemitState, new { @class = "form-control search", autocomplete = "off" })
+                                    </span>
+                                </li>
+                                <li id="liRemitPostalCode">
+                                    <span class="label">@Html.LabelFor(m => m.vendorRequestModel.RemitPostCode) :<small id="rRemitPostalCode" style="visibility:hidden;">*</small> </span>
+                                    <span class="inputText">
+                                        @Html.ValidationMessageFor(m => m.vendorRequestModel.RemitPostCode, "", new { style = "display:none" })
+                                        @Html.TextBoxFor(m => m.vendorRequestModel.RemitPostCode, new { @class = "form-control search", autocomplete = "off" })
+                                    </span>
+                                </li>
+                                <li id="liRemitCountry">
+                                    <span class="label">@Html.LabelFor(m => m.vendorRequestModel.RemitCountry) :<small id="rRemitCountry" style="visibility:hidden;">*</small> </span>
+                                    <span class="inputText">
+                                        @Html.ValidationMessageFor(m => m.vendorRequestModel.RemitCountry, "", new { style = "display:none" })
+                                        @Html.TextBoxFor(m => m.vendorRequestModel.RemitCountry, new { @class = "form-control search", autocomplete = "off" })
+                                    </span>
+                                </li>
+                            </ul>
+                        </div>
+                        <div style="clear:both;"></div>
+                        <div class="idBttns">
+                            <div class="bttn_pagin">
+                                <div class="bttns2">
+                                    @if (Model.vendorRequestModel.VendorRequestId == 0)
+                                    {
+                                    <button class="btn btn-blue mobBttn" name="Command" value="saveAdd" id="btnSaveAddVR"><i class="fa fa-save faIcon"></i> &nbsp;@Model.Loc.Where(a => a.ResourceId == "globalSaveAndAdd").FirstOrDefault().Value.ToString()</button>
+                                    }
+                                    <button class="btn btn-blue mobBttn" name="Command" value="save" id="btnSaveVR"><i class="fa fa-save faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+                                </div>
+                                <div class="bttns">
+                                    <button type="button" class="btn btn-blue mobBttn" id="btnCancelAddVR"><i class="fa fa-close faIcon"></i> &nbsp;@Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button>
+                                </div>
+                                <div style="clear:both;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @Html.HiddenFor(m => m.vendorRequestModel.VendorRequestId)
+}

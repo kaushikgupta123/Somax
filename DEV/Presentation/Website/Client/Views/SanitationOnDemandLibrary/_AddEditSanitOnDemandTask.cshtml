@@ -1,0 +1,92 @@
+﻿@model Client.Models.Configuration.SanitationOnDemandLibrary.SanitationOnDemandLibVM
+<div class="m-subheader">
+    <div class="new-m-subheader">
+        <div class="PageTitle">
+            <div class="align-items-center separator">
+                <h3 class="m-subheader__title ">
+                    @Model.Loc.Where(a => a.ResourceId == "spnLibraries").FirstOrDefault().Value.ToString()
+                    
+                </h3>
+            </div>
+        </div>
+        <div class="NewBreadcrumbArea">
+            <div class="newBreadcrumb">
+                <ul>
+                    <li><a href="/Configuration/Dashboard">&nbsp;</a></li>
+                    <li>
+                        <a href="/SanitationOnDemandLibrary/Index?page=Sanitation_Jobs_Sanitation_-_On_Demand">@Model.Loc.Where(a => a.ResourceId == "spnSanitationOnDemandProcSrch").FirstOrDefault().Value.ToString()</a>
+                    </li>
+                    <li><a href="javascript:void(0)" id="brdondemand" data-val="@Model.sanitOnDemandLibTaskModel.SanOnDemandMasterId">@Model.sanitOnDemandLibTaskModel.ClientLookUpId</a></li>
+                    @if (Model.sanitOnDemandLibTaskModel.SanOnDemandMasterTaskId != 0)
+                    {
+
+                        <li class="active">@Model.Loc.Where(a => a.ResourceId == "spnUpdateTask").FirstOrDefault().Value.ToString()</li>
+                    }
+                    else
+                    {
+                        <li class="active">@Model.Loc.Where(a => a.ResourceId == "spnAddTask").FirstOrDefault().Value.ToString()</li>
+                    }
+                </ul>
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+        <div style="clear:both;"></div>
+    </div>
+</div>
+@Html.Partial("_ErrorDiv")
+@using (Ajax.BeginForm("SaveSanitTask", "SanitationOnDemandLibrary", new AjaxOptions { HttpMethod = "Post", OnSuccess = "TaskAddOnSuccess", OnBegin = "AjaxBeginFormBegin", OnComplete = "AjaxBeginFormComplete", OnFailure = "AjaxBeginFormFaillure" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="row">
+        <div class="col-xl-12">
+            <div class="m-portlet newPort" id="m_portlet" style="padding:15px;">
+                <div class="bottomBlock">
+                    <div class="tabsArea nobg">
+                        @if (Model.sanitOnDemandLibTaskModel.SanOnDemandMasterTaskId != 0)
+                        {
+                            @Html.HiddenFor(m => m.sanitOnDemandLibTaskModel.SanOnDemandMasterTaskId)
+                        }
+                        <ul class="listView nobrd">
+                            <li>
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnOrder").FirstOrDefault().Value.ToString()   : <small>*</small></span>
+                                <span class="inputText">
+                                    @Html.ValidationMessageFor(m => m.sanitOnDemandLibTaskModel.TaskId, "", new { style = "display:none" })
+                                    @Html.TextBoxFor(m => m.sanitOnDemandLibTaskModel.TaskId, new { @class = "form-control search", autocomplete = "off", maxlength = 3 })
+                                </span>
+                            </li>
+                            <li style="height:auto;">
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString() : <small>*</small></span>
+                                <span class="inputText" style="height:auto;">
+                                    @Html.ValidationMessageFor(m => m.sanitOnDemandLibTaskModel.Description, "", new { style = "display:none" })
+                                    @Html.TextAreaFor(m => m.sanitOnDemandLibTaskModel.Description, new { @class = "form-control search", style = "resize:none;", autocomplete = "off", maxlength = "255" })
+                                </span>
+                                <div style="clear:both;"></div>
+                            </li>
+                        </ul>
+                    </div>
+                    <div style="clear:both;"></div>
+                    <div class="idBttns" style="border-top: 1px solid #fff;">
+                        <div class="bttn_pagin">
+                            <div class="bttns2">
+                                <button type="submit" class="btn btn-blue mobBttn"><i class="fa fa-save faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+                            </div>
+                            <div class="bttns"><button type="button" class="btn btn-blue mobBttn" id="btnTaskcancel"><i class="fa fa-close faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button></div>
+                            <div style="clear:both;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @Html.HiddenFor(m => m.sanitOnDemandLibTaskModel.SanOnDemandMasterId)
+}
+
+
+
+
+
+
+
+
+
+

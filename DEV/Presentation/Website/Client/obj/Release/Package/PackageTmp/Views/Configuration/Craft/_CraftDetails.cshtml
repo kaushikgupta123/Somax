@@ -1,0 +1,98 @@
+﻿@model Client.Models.Configuration.ConfigCraft.CraftVM
+<div class="m-subheader">
+    <div class="new-m-subheader">
+        <div class="PageTitle">
+            <div class="align-items-center separator">
+                <h3 class="m-subheader__title ">
+                    @Model.Loc.Where(a => a.ResourceId == "spnCraft").FirstOrDefault().Value.ToString()
+
+                </h3>
+            </div>
+        </div>
+
+        <div class="NewBreadcrumbArea">
+            <div class="newBreadcrumb">
+                <ul>
+                    <li><a href="/Configuration/Dashboard">&nbsp;</a></li>
+                    <li><a href="/craft/index?page=Crafts">Craft Search</a></li>
+                    <li class="active CLientLookId">@Model.craftModel.ClientLookupId</li>
+                   
+                </ul>
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+
+        <div class="ActionBttnArea">          
+            <button type="button" class="btn newBtn-add addPlusbtnCraft innerBtn pull-left" title="Add Account" id="addPlusbtnCraft"><i class="fa fa-plus"></i></button>
+            <div style="clear:both;"></div>
+        </div>
+        <div style="clear:both;"></div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xl-3">
+        <div class="m-portlet">
+            <div class="sideMenuArea nobg">
+                <ul class="vtabs" id="detmaintab">
+                    <li class="active" id="livendor"><a href="#Overview">@Model.Loc.Where(a => a.ResourceId == "spnCraftOverview").FirstOrDefault().Value.ToString()</a></li>
+                </ul>
+            </div>
+
+            <div class="selectTabs" id="selectTabs">
+                <select class="form-control" id="colorselector">
+                    <option value="Overview">@Model.Loc.Where(a => a.ResourceId == "spnCraftOverview").FirstOrDefault().Value.ToString()</option>                   
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-9">
+        <div class="row">
+            <div class="col-xl-12">
+                <div class="m-portlet" id="m_portlet" style="padding:15px;">
+                    <div class="bottomBlock">
+
+                        <div class="tabsArea nobg" id="Overview" style="display:block;">
+                            <ul class="listView">
+                                <li>
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnCraft").FirstOrDefault().Value.ToString(): </span>
+                                    <span class="inputText CLientLookId">@Model.craftModel.ClientLookupId</span>
+
+                                </li>
+
+                                <li>
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString() : </span>
+                                    <span class="inputText">@Model.craftModel.Description</span>
+
+                                </li>
+
+                                <li>
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnRate").FirstOrDefault().Value.ToString() : </span>
+                                    <span class="inputText">@Model.craftModel.ChargeRate</span>
+                                </li>
+
+                                <li>
+                                    <span class="label"><label for="userModels_IsActive">@Model.Loc.Where(a => a.ResourceId == "globalAction").FirstOrDefault().Value.ToString()</label> : </span>
+                                    <span class="inputText">@Model.craftModel.InactiveFlag</span>
+                                </li>
+
+                            </ul>
+                            <div class="editBttn">
+                                <button type="button" class="btn btn-blue" id="editcraft"><i class="fa fa-pencil" style="margin-top:-3px;"></i> &nbsp;@Model.Loc.Where(a => a.ResourceId == "globalEdit").FirstOrDefault().Value.ToString()</button>
+                            </div>
+                            <div style="clear:both;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@Html.HiddenFor(x => x.craftModel.CraftId, new { id = "crafthiddenid" })
+@Html.HiddenFor(x => x.craftModel.ClientLookupId)
+@Html.HiddenFor(m => m.craftModel.InactiveFlag, new { id = "crafthiddeninactiveflag" })
+@Html.HiddenFor(x => x.craftModel.UpdateIndex, new { id = "crafthiddenupdateindex" })
+
+

@@ -1,0 +1,36 @@
+﻿@model Client.Models.AutoPRGenerationVM
+@{
+    ViewBag.Title = "Somax | Auto PR Generation";
+}
+@Styles.Render("~/Content/dashboardStyle")
+@Styles.Render("~/Content/datatable")
+<link href="~/Content/sidebar_custom.css" rel="stylesheet" />
+<link href="~/Scripts/Metronic/assets/demo/default/base/GlobalSearchGrid.css" rel="stylesheet" />
+<link href="~/Content/bootstrap-multiselect.css" rel="stylesheet" />
+<link href="~/Scripts/Metronic/assets/demo/default/base/style_newCustom.css" rel="stylesheet" />
+@section scripts {
+    <script src="~/Scripts/bootstrap-multiselect.js"></script>
+    @Scripts.Render("~/bundles/datatable")
+    <script src="~/Scripts/Pages/AutoPRGeneration/AutoPRGeneration.js"></script>
+}
+<div id="AutoPRGenerationmaincontainer">
+    @Html.HiddenFor(m => m.IsMultistoreroomAutoPRGeneration)
+    @Html.Hidden("autoPRGenerationStoreroomID")
+    @if (Model.IsMultistoreroomAutoPRGeneration)
+    {
+
+        @Html.Partial("~/Views/AutoPRGeneration/_StoreroomList.cshtml", Model)
+        <div id="AutoPRGeneration">
+           
+        </div>
+    }
+    else
+    {
+        @Html.Partial("~/Views/AutoPRGeneration/_AutoPRGeneration.cshtml", Model)
+    }
+
+    @Html.Partial("~/Views/AutoPRGeneration/_PRVendorPopup.cshtml", Model)
+    @Html.Partial("~/Views/AutoPRGeneration/_AutoPRGenerationSearch.cshtml", Model)
+    @Html.Partial("~/Views/AutoPRGeneration/_PurchaseRequestAutoGeneration.cshtml", Model)
+</div>
+

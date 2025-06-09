@@ -1,0 +1,109 @@
+﻿@model Client.Models.FleetService.FleetServiceVM
+<div class="m-subheader fixedDiv1">
+    <div class="new-m-subheader">
+        <div class="PageTitle">
+            <div class="align-items-center separator">
+                <h3 class="m-subheader__title ">
+                    @Model.Loc.Where(a => a.ResourceId == "spnFleetService").FirstOrDefault().Value.ToString()
+                </h3>
+            </div>
+        </div>
+
+        <div class="NewBreadcrumbArea">
+            <div class="newBreadcrumb">
+                <ul>
+                    <li><a href="/Dashboard/Dashboard">&nbsp;</a></li>
+                    <li><a href="javascript:void(0)"  id="linkToSearch"><span id="spnlinkToSearch"></span></a></li>
+                    <li class="lithisfleetService" data-val="@Model.attachmentModel.ServiceOrderId"><a href="javascript:void(0)">@Model._FleetServiceSummaryModel.ServiceOrder_ClientLookupId</a></li>
+                    <li class="active">@Model.Loc.Where(a => a.ResourceId == "globalAddAttachment").FirstOrDefault().Value.ToString()</li>
+                </ul>
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+        <div style="clear:both;"></div>
+    </div>
+</div>
+<div class="pushDiv1"></div>
+
+<div class="row fixedDiv2">
+    @Html.Partial("_FleetServiceSummary", Model)
+</div>
+<div class="pushDiv2 WOScheduleAdjust"></div>
+@Html.Partial("_ErrorDiv")
+
+<form id="frmeqpattachmentadd" name="frmeqpattachmentadd" method="post" enctype="multipart/form-data">
+    @Html.AntiForgeryToken()
+    <div class="row">
+        <div class="col-xl-12">
+            <div class="m-portlet newPort" id="m_portlet" style="padding:15px;">
+                <div class="bottomBlock">
+                    <div class="tabsArea nobg">
+                        <ul class="listView nobrd">
+                            <li>
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "globalSubject").FirstOrDefault().Value.ToString() : </span>
+                                <span class="inputText">
+                                    @Html.TextBoxFor(m => m.attachmentModel.Subject, new { @class = "form-control search", autocomplete = "off" })
+                                </span>
+                            </li>
+                            <li>
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "globalFileName").FirstOrDefault().Value.ToString() : <small>*</small></span>
+                                <span class="inputText fileT">
+                                    @Html.ValidationMessageFor(m => m.attachmentModel.FileContent, "", new { style = "display:none" })
+                                    @Html.SomaxAttachmentFileFor(m => m.attachmentModel.FileContent, new { autocomplete = "off", @class = "attfile" })
+                                </span>
+                            </li>
+
+                        </ul>
+                    </div>
+                    <div style="clear:both;"></div>
+
+                    <div class="idBttns">
+                        <div class="bttn_pagin">
+                            <div class="bttns2">
+                                <button type="submit" button class="btn btn-blue mobBttn"><i class="fa fa-save faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+                            </div>
+                            <div class="bttns"><button type="button" class="btn btn-blue mobBttn" id="btnattachmentcancel"><i class="fa fa-close faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button></div>
+
+                            <div style="clear:both;"></div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    @Html.HiddenFor(m => m.attachmentModel.EquipmentId)
+    @Html.HiddenFor(m => m.attachmentModel.AttachmentId)
+    @Html.HiddenFor(m => m.attachmentModel.ServiceOrderId)
+    @*@Html.HiddenFor(m => m.attachmentModel.ServiceOrderId, new { id = "FleetServiceModel_ServiceOrderId" })*@
+
+    @Html.HiddenFor(m => m._FleetServiceSummaryModel.Meter1Type, new { id = "FleetServiceModel_Meter1Type" })
+    @Html.HiddenFor(m => m._FleetServiceSummaryModel.Meter1CurrentReading, new { id = "FleetServiceModel_Meter1CurrentReading" })
+    @Html.HiddenFor(m => m._FleetServiceSummaryModel.Meter2Type, new { id = "FleetServiceModel_Meter2Type" })
+    @Html.HiddenFor(m => m._FleetServiceSummaryModel.Meter2CurrentReading, new { id = "FleetServiceModel_Meter2CurrentReading" })
+    @Html.HiddenFor(m => m._FleetServiceSummaryModel.Meter1Units, new { id = "FleetServiceModel_Meter1Units" })
+    @Html.HiddenFor(m => m._FleetServiceSummaryModel.Meter2Units, new { id = "FleetServiceModel_Meter2Units" })
+    @Html.HiddenFor(m => m._FleetServiceSummaryModel.Meter1DayDiff, new { id = "CompleteServiceOrderModel_Meter1DayDiff" })
+    @Html.HiddenFor(m => m._FleetServiceSummaryModel.Meter2DayDiff, new { id = "CompleteServiceOrderModel_Meter2DayDiff" })
+</form>
+<link href="~/Scripts/Metronic/assets/demo/default/base/style_newCustom.css" rel="stylesheet" />
+<style type="text/css">
+    .pushDiv2.WOScheduleAdjust {
+        height: 161px !important;
+    }
+    .tooltipcards {
+        background: #d0e8fa;
+        padding: 5px;
+        border-radius: 5px;
+        position: absolute;
+        width: 100%;
+        height: auto;
+        left: 0;
+        color: #000;
+        font-size: 13px;
+        font-weight: 500;
+        z-index: 9;
+        display: none !important;
+        cursor: pointer;
+    }
+</style>

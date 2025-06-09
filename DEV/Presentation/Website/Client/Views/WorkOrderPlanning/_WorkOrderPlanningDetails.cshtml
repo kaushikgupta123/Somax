@@ -1,0 +1,180 @@
+﻿@model Client.Models.WorkOrderPlanning.WorkOrderPlanningVM
+@Styles.Render("~/Content/somaxcommentsection")
+@*<h2>This is the details Page for Work Order Plan Id @Model.workorderPlanningModel.WorkOrderPlanId</h2>*@
+<link href="~/Scripts/Metronic/assets/demo/default/base/style_newCustom.css" rel="stylesheet" />
+<link href="~/Content/Ckeditor/Activity_Comments.css" rel="stylesheet" />
+<div class="m-subheader fixedDiv1">
+    <div class="new-m-subheader">
+        <div class="filterDescription">
+            <a href="javascript:void(0)" id="linkToSearch"><span id="spnlinkToSearch">@Model.Loc.Where(a => a.ResourceId == "spnWorkOrderPlanning").FirstOrDefault().Value.ToString()</span></a>
+            - @Model.workorderPlanningModel.WorkOrderPlanId
+        </div>
+        <div style="clear:both;"></div>
+    </div>
+</div>
+<div class="pushDiv1"></div>
+
+<div class="row">
+    <div class="col-xl-12">
+        <div class="m-portlet" id="m_portlet" style="padding:15px;">
+            <div class="tab">
+                <button class="tablinks wop-det-tab active" data-tab="Plan">@Model.Loc.Where(a => a.ResourceId == "spnPlan").FirstOrDefault().Value.ToString()</button>
+                <button class="tablinks wop-det-tab" data-tab="ResourceList">@Model.Loc.Where(a => a.ResourceId == "spnResourceList").FirstOrDefault().Value.ToString()</button>
+                <button class="tablinks wop-det-tab" data-tab="ResourceCalender">@Model.Loc.Where(a => a.ResourceId == "spnResourceCalender").FirstOrDefault().Value.ToString()</button>
+                <button class="tablinks wop-det-tab" data-tab="Dashboard" id="plandashboard">@Model.Loc.Where(a => a.ResourceId == "spnDashboard").FirstOrDefault().Value.ToString()</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-12">
+        <div id="Plan" class="tabcontent" style="display:block;">
+        </div>
+        <div id="ResourceList" class="tabcontent">
+
+        </div>
+        <div id="ResourceCalender" class="tabcontent">
+            <div class="m-portlet" id="ResourceCalenderDiv" style="padding:15px;">
+            </div>
+        </div>
+        <div id="Dashboard" class="tabcontent">
+
+        </div>
+    </div>
+
+    @Html.HiddenFor(m => m.workorderPlanningModel.WorkOrderPlanId)
+</div>
+
+<style type="text/css">
+    .filterDescription {
+        width: auto;
+        float: left;
+        font-size: 1.2rem;
+        color: #000;
+        font-weight: 500;
+        line-height: 33px;
+    }
+
+        .filterDescription a {
+            color: #36a3f7;
+            text-decoration: none !important;
+        }
+
+    .tab {
+        border-bottom: 0;
+    }
+
+        .tab button {
+            margin-bottom: 0;
+        }
+
+    .rightWidgetArea {
+        padding: 46px;
+    }
+
+    .planed {
+        margin-right: 62px;
+        margin-bottom: 23px;
+    }
+
+    .incomplete {
+        margin-left: 62px;
+        margin-bottom: 23px;
+    }
+
+    .complete {
+        margin-right: 62px;
+        margin-top: 23px;
+    }
+
+    .breakIn {
+        margin-left: 62px;
+        margin-top: 23px;
+    }
+
+    .estHrs {
+        margin-right: 62px;
+        margin-bottom: 23px;
+    }
+
+    .actHrs {
+        margin-right: 62px;
+        margin-top: 23px;
+    }
+
+    .gridList:hover {
+        background: #fff;
+    }
+
+    .padAdjstNew {
+        padding: 0 10px 10px 10px;
+    }
+
+    .rightWidgetArea .chartBox {
+        position: relative;
+        min-height: 80px;
+        margin-top: 0;
+        font-size: 28px;
+        font-weight: 500;
+        font-family: Roboto;
+    }
+
+    .rightWidgetArea .chartBox span {
+        font-size: 1.1rem;
+        font-weight: 500;
+        font-family: Roboto;
+        display: block;
+    }
+
+    .rightWidgetArea .chartBox span.chartCount {
+        font-size: 20px !important;
+        margin-bottom: 30px !important;
+    }
+
+    .rightWidgetArea .chartBox span.chartCountText {
+        font-size: 12px !important;
+    }
+
+    @@media screen and (max-width: 1899px) {
+        .planed, .complete, .estHrs, .actHrs {
+            margin-right: 38px;
+        }
+
+        .incomplete, .breakIn {
+            margin-left: 38px;
+        }
+    }
+
+    @@media screen and (max-width: 1599px) {
+        .planed, .complete, .estHrs, .actHrs {
+            margin-right: 38px;
+        }
+
+        .incomplete, .breakIn {
+            margin-left: 38px;
+        }
+    }
+
+    @@media screen and (max-width: 1359px) {
+        .planed, .complete, .estHrs, .actHrs {
+            margin-right: 32px;
+        }
+
+        .incomplete, .breakIn {
+            margin-left: 32px;
+        }
+    }
+
+    @@media screen and (max-width: 1199px) {
+        .rightWidgetArea {
+            padding: 0 10px;
+        }
+
+        .planed, .complete, .estHrs, .actHrs {
+            margin: 0;
+        }
+
+        .incomplete, .breakIn {
+            margin: 0;
+        }
+    }
+</style>

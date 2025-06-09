@@ -1,0 +1,159 @@
+﻿@model Client.Models.Configuration.Account.AccountConfigVM
+@using Client.Models.Common
+@{
+    bool AccountImportSwitch1 = true;
+    var InterfacePropData = (List<InterfacePropModel>)HttpContext.Current.Session["InterfacePropData"];
+    if (InterfacePropData != null && InterfacePropData.Count > 0)
+    {
+      InterfacePropModel im = (InterfacePropModel)InterfacePropData.Where(x => (x.InterfaceType == InterfacePropConstants.AccountImport)
+                                                                              && (x.InUse == true)).FirstOrDefault();
+      if (im != null)
+      {
+        AccountImportSwitch1 = im.Switch1;
+      }
+      else
+      {
+        AccountImportSwitch1 = true;
+      }
+    }
+}
+<div class="m-subheader fixedDiv1">
+    <div class="new-m-subheader">
+        <div class="PageTitle">
+            <div class="align-items-center separator">
+                <h3 class="m-subheader__title ">
+                    @Model.Loc.Where(a => a.ResourceId == "spnAccount").FirstOrDefault().Value.ToString()
+                </h3>
+            </div>
+        </div>
+
+        <div class="NewBreadcrumbArea">
+            <div class="newBreadcrumb">
+                <ul>
+                    <li><a href="/Configuration/Dashboard">&nbsp;</a></li>
+                    <li class="active">@Model.Loc.Where(a => a.ResourceId == "spnAccountSearch").FirstOrDefault().Value.ToString()</li>
+                </ul>
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+
+        <div class="ActionBttnArea">
+            @if (Model.security.Accounts.Create && AccountImportSwitch1)
+            {
+                <button type="button" id="addAccountFromIndex" class="btn newBtn-add pull-left" title="New Account">@Model.Loc.Where(a => a.ResourceId == "spnNewAccount").FirstOrDefault().Value.ToString()</button>
+            }
+            <div style="clear:both;"></div>
+        </div>
+        <div style="clear:both;"></div>
+    </div>
+</div>
+<div class="pushDiv1"></div>
+<div class="row">
+    <div class="col-xl-12">
+        <div class="m-portlet" id="m_portlet" style="padding:15px; margin-bottom:0;">
+            <div class="actionBar" style="display:none" id="AccountGridAction">
+                <div class="pull-left spaceAdjust">
+                    @if (Model._userdata.DatabaseKey.Client.PackageLevel.ToUpper() == PackageLevelConstant.Enterprise.ToUpper() && Model._userdata.DatabaseKey.User.IsSuperUser == true)
+            {
+                        <div class="ActionSearchDrop LoaderDrop">
+                            @Html.DropDownListFor(m => m.SiteId,Model.SiteList, "--Select All--", new { @class = "form-control search adv-item select2picker LoaderDrop", id = "ddlsitename", style = "width:100%;" })
+                        </div>
+                        @*<span class="inputText">
+                            <span class="inputText">
+                                @Html.DropDownListFor(m => m.SiteId, Model.SiteList, "--Select All--", new { @class = "form-control search select2picker", id = "ddlsitename" })
+                            </span>
+
+                        </span>*@
+                    }
+
+                    <button type="button" class="btn btn-white navbar-btn" id="sidebarCollapse" title="Advance Search"><i class="fa fa-filter" style="font-size: 1.3rem;"></i></button>
+                    <ul class="filter_apply globalFilterAdjusted">
+                        <li class="textFilter"><span class="filteritemcount">0</span>&nbsp;@Model.Loc.Where(a => a.ResourceId == "globalFiltersAppiled").FirstOrDefault().Value.ToString()</li>
+                        <li class="textClear" id="liClearAdvSearchFilter"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "globalClear").FirstOrDefault().Value.ToString()</a></li>
+                    </ul>
+                    <div style="clear:both;"></div>
+                </div>
+                <div class="pull-right singleBttn">
+                    <button type="button" class="btn btn-white import-export" style="margin-right:0 !important;" disabled onclick="funcShowExportbtn()">@Model.Loc.Where(a => a.ResourceId == "spnExport").FirstOrDefault().Value.ToString()</button>
+                    <div style="clear:both;"></div>
+                </div>
+                <div style="clear:both;"></div>
+                <div id="advsearchfilteritems"></div>
+                <div style="clear:both;"></div>
+            </div>
+            <div style="clear:both;"></div>
+
+            <div id="Active" class="tabcontent" style="display:block;">
+
+                <div class="table-responsive">
+                    <table id="accountSearchTBL" class="eqpDtlTbl row-border custom-sort" style="width:100%;">
+                        <thead>
+                            <tr>
+                                <th class="ClientLookupId" data-th-index="0">@Model.Loc.Where(a => a.ResourceId == "spnAccountNumber").FirstOrDefault().Value.ToString()</th>
+                                <th class="Name" data-th-index="1">@Model.Loc.Where(a => a.ResourceId == "spnName").FirstOrDefault().Value.ToString()</th>
+                                <th class="SiteName" data-th-index="2">@Model.Loc.Where(a => a.ResourceId == "spnSiteGlobal").FirstOrDefault().Value.ToString()</th>
+                                <th class="InactiveFlag" data-th-index="3" width="5%">@Model.Loc.Where(a => a.ResourceId == "globalInactiveFlag").FirstOrDefault().Value.ToString()</th>
+                                <th class="IsExternal" data-th-index="4" width="5%">@Model.Loc.Where(a => a.ResourceId == "globalIsExternal").FirstOrDefault().Value.ToString()</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@Html.Partial("_Export")
+
+<nav id="sidebar">
+    <div id="dismiss">
+        <i class="fa fa-close"></i>
+    </div>
+    <div class="sidebar-header">
+        <h3><i class="fa fa-filter" style="position: relative; top: -2px;"></i>&nbsp;@Model.Loc.Where(a => a.ResourceId == "globalFilter").FirstOrDefault().Value.ToString() &nbsp;<span class="filteritemcount">0</span></h3>
+
+        <button type="button" class="btn btn-blue filterSearch" id="btnAccountDataAdvSrch">
+            <i class="fa fa-search" style="margin-top:-3px;"></i> &nbsp;@Model.Loc.Where(a => a.ResourceId == "globalSearch").FirstOrDefault().Value.ToString()
+        </button>
+    </div>
+    <div class="sidebar-content" id="advsearchsidebar">
+        <form action="#" method="post">
+            <div class="form-group acc-ClientLookupId">
+                <label for="txtAccountNumber">@Model.Loc.Where(a => a.ResourceId == "spnAccountNumber").FirstOrDefault().Value.ToString():</label>
+                <input type="text" class="form-control search adv-item" id="txtAccountNumber" autocomplete="off">
+            </div>
+            <div class="form-group acc-Name">
+                <label for="txtName">@Model.Loc.Where(a => a.ResourceId == "spnName").FirstOrDefault().Value.ToString() :</label>
+                <input type="text" class="form-control search adv-item" id="txtName" autocomplete="off">
+            </div>
+            <div class="form-group acc-InactiveFlag">
+                <label for="isInactive">@Model.Loc.Where(a => a.ResourceId == "globalInactiveFlag").FirstOrDefault().Value.ToString():</label>
+                @Html.DropDownListFor(m => m.accountDetails.InactiveFlag, Model.accountDetails.AccountTypeList, "--Select--", new { @class = "form-control search adv-item select2picker", style = "width:100%;", id = "isInactive" })
+            </div>
+            <div class="form-group acc-IsExternal">
+                <label for="isExternal">@Model.Loc.Where(a => a.ResourceId == "globalIsExternal").FirstOrDefault().Value.ToString():</label>
+                @Html.DropDownListFor(m => m.accountDetails.IsExternal, Model.accountDetails.ExternalTypeList, "--Select--", new { @class = "form-control search adv-item select2picker", style = "width:100%;", id = "isExternal" })
+            </div>
+        </form>
+    </div>
+</nav>
+<style type="text/css">
+    #popupExport {
+        right: 30px !important;
+    }
+    /*.select2-container {
+        width: 200px !important;
+        float: left;
+        margin-right: 10px;
+    }
+    .select2-dropdown {
+        z-index:99;
+    }*/
+
+    @@media only screen and (width:1360px) {
+        #popupExport {
+            right: 46px !important;
+        }
+    }
+</style>
+@Html.Partial("_CustomizeGridSetup")

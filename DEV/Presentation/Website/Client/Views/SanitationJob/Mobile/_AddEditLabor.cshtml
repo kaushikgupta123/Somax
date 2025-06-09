@@ -1,0 +1,119 @@
+﻿@model Client.Models.Sanitation.SanitationVM
+
+
+@using (Ajax.BeginForm("Savelabor_Mobile", "SanitationJob", new AjaxOptions { HttpMethod = "Post", OnSuccess = "SJLaborAddOnSuccess", OnBegin = "AjaxBeginFormBegin", OnComplete = "AjaxBeginFormComplete", OnFailure = "AjaxBeginFormFaillure" }, new { id = "frmLabourAdd" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="slide-modal-head">
+        <a class="slide-back-btn SJLaborclearstate"> <i class="fa fa-angle-left"></i> Back</a>
+        @if (Model.laborModel.TimecardId == 0)
+        {
+            <div class="slide-back-title">
+                @Model.Loc.Where(a => a.ResourceId == "spnAddLabor").FirstOrDefault().Value.ToString()
+            </div>
+        }
+        else
+        {
+            <div class="slide-back-title">
+                @Model.Loc.Where(a => a.ResourceId == "spnUpdateLabor").FirstOrDefault().Value.ToString()
+            </div>
+        }
+    </div>
+    @Html.Partial("_ErrorDiv")
+    <div class="slide-modal-body">
+        <div mbsc-page class="demo-responsive">
+            <div style="height:100%">
+                <div mbsc-form class="mbsc-form-grid">
+                    <div class="mbsc-grid">
+                        <div class="mbsc-row">
+                            <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+
+                                <label>
+                                    @Model.Loc.Where(a => a.ResourceId == "spnPersonnelID").FirstOrDefault().Value.ToString()
+                                    @Html.DropDownListFor(m => m.laborModel.PersonnelId, Model.laborModel.PersonnelIdList, "--Select--", new
+                               {
+                                   @class = "form-control search mobiscrollselect",
+                                   @style = "width:100%;",
+                                   @mbsc_dropdown = "true",
+                                   @data_label = Model.Loc.Where(a => a.ResourceId == "spnPersonnelID").FirstOrDefault().Value.ToString(),
+                                   @data_input_style = "box",
+                                   @data_label_style = "floating",
+                                   @placeholder = Model.Loc.Where(a => a.ResourceId == "spnPersonnelID").FirstOrDefault().Value.ToString(),
+                               })
+                                    @*@if (ViewBag.Mode == "Add") {
+                                             @Html.DropDownListFor(m => m.laborModel.PersonnelId, Model.laborModel.PersonnelIdList, "--Select--", new {
+                                            @class = "form-control search mobiscrollselect",
+                                            @style = "width:100%;",
+                                            @mbsc_dropdown = "true",
+                                            @data_label = Model.Loc.Where(a => a.ResourceId == "spnPersonnelID").FirstOrDefault().Value.ToString(),
+                                            @data_input_style = "box",
+                                            @data_label_style = "floating",
+                                            @placeholder = Model.Loc.Where(a => a.ResourceId == "spnPersonnelID").FirstOrDefault().Value.ToString(),
+                                        })
+                                         } else {
+                                             @Html.HiddenFor(m => m.laborModel.PersonnelId)
+                                             @Html.DropDownList("Personnel", Model.PersonnelLaborList.Select(x => new SelectListItem { Text = x.Text, Value = x.Value, Selected = (x.Value == Model.LaborModel.PersonnelID.ToString()) }), "--Select--", new {
+                                            @class = "form-control search mobiscrollselect",
+                                            @style = "width:100%;",
+                                            @disabled = "disabled",
+                                            @mbsc_dropdown = "true",
+                                            @data_label = Model.Loc.Where(a => a.ResourceId == "spnPersonnel").FirstOrDefault().Value.ToString(),
+                                            @data_input_style = "box",
+                                            @data_label_style = "floating",
+                                            @placeholder = Model.Loc.Where(a => a.ResourceId == "spnPersonnel").FirstOrDefault().Value.ToString(),
+                                        })
+                                         }*@
+                                </label>
+                                @Html.ValidationMessageFor(m => m.laborModel.PersonnelId, "", new { })
+                            </div>
+                            <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                <label>
+                                    @Model.Loc.Where(a => a.ResourceId == "spnDate").FirstOrDefault().Value.ToString()
+                                    @Html.TextBoxFor(m => m.laborModel.StartDate, "{0:MM/dd/yyyy}", new { @class = "form-control search", @mbsc_input = "true", @data_label_style = "floating", @placeholder = Model.Loc.Where(a => a.ResourceId == "spnDate").FirstOrDefault().Value.ToString(), @data_input_style = "box", autocomplete = "off" })
+                                </label>
+                                @Html.ValidationMessageFor(m => m.laborModel.StartDate, "", new { })
+                            </div>
+                            <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                <label>
+                                    @Model.Loc.Where(a => a.ResourceId == "spnHours").FirstOrDefault().Value.ToString()
+                                    @Html.TextBoxFor(m => m.laborModel.Hours, "{0:n2}", new { @class = "form-control search decimalinput", @mbsc_input = "true", @data_label_style = "floating", @placeholder = Model.Loc.Where(a => a.ResourceId == "spnHours").FirstOrDefault().Value.ToString(), @data_input_style = "box", autocomplete = "off" })
+                                </label>
+                                @Html.ValidationMessageFor(m => m.laborModel.Hours, "", new { })
+                            </div>
+                        </div>
+                        <div class="mbsc-row">
+                            <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                <div class="design-box">
+                                    <div class="mbsc-button-group-block">
+                                        <button mbsc-button data-color="success" type="button" class="btn btn-blue mobBttn SJLaborclearstate" id="btnSJlaborcancel"><i class="fa fa-close faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                <div class="design-box">
+                                    <div class="mbsc-button-group-block">
+                                        <button data-color="success" type="submit" class="btn btn-blue mobBttn" style="cursor:pointer" value="save"><i class="fa fa-save faIcon"></i> &nbsp;@Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @Html.HiddenFor(m => m.laborModel.ChargeToId_Primary)
+    @Html.HiddenFor(m => m.laborModel.TimecardId)
+    @Html.HiddenFor(m => m.laborModel.UpdateIndex)
+    <div class="slide-modal-footer"></div>
+}
+
+
+<script>
+    $(function () {
+        $(document).find('form').find("#laborModel_PersonnelID").removeClass("input-validation-error");
+        $(document).find('form').find("#laborModel_StartDate").removeClass("input-validation-error");
+        $(document).find('form').find("#laborModel_Hours").removeClass("input-validation-error");
+    });
+</script>

@@ -1,0 +1,105 @@
+﻿@model Client.Models.Configuration.UserManagement.UserManagementVM
+
+<div class="m-subheader">
+    <div class="new-m-subheader">
+        <div class="PageTitle">
+            <div class="align-items-center separator">
+                <h3 class="m-subheader__title ">
+                    @Model.Loc.Where(a => a.ResourceId == "Sites").FirstOrDefault().Value.ToString()
+                </h3>
+            </div>
+        </div>
+        <div class="NewBreadcrumbArea">
+            <div class="newBreadcrumb">
+                <ul>
+                    <li><a href="/Configuration/Dashboard">&nbsp;</a></li>
+                    <li><a href="/UserManagement/Index?page=User_Management">@Model.Loc.Where(a => a.ResourceId == "UserManagementSearch").FirstOrDefault().Value.ToString()</a></li>
+                    <li><a href="javascript:void(0)" id="brdumSite" data-val="@Model.userSiteModel.UserInfoId">@Model.userSiteModel.ClientLookupId</a></li>
+                    @if (Model.userSiteModel.SiteId != 0)
+                    {
+                        <li class="active">@Model.Loc.Where(a => a.ResourceId == "UserUpdateSite").FirstOrDefault().Value.ToString()</li>
+                    }
+                    else
+                    {
+                        <li class="active">@Model.Loc.Where(a => a.ResourceId == "UserAddSite").FirstOrDefault().Value.ToString()</li>
+                    }
+                </ul>
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+        <div style="clear:both;"></div>
+    </div>
+</div>
+@Html.Partial("_ErrorDiv")
+@using (Ajax.BeginForm("SaveUmSites", "UserManagement", new AjaxOptions { HttpMethod = "Post", OnSuccess = "UmSiteAddOnSuccess", OnBegin = "AjaxBeginFormBegin", OnComplete = "AjaxBeginFormComplete", OnFailure = "AjaxBeginFormFaillure" }, new { id = "frmusersiteAdd" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="row">
+        <div class="col-xl-12">
+            <div class="m-portlet newPort" id="m_portlet" style="padding:15px;">
+                <div class="bottomBlock">
+                    <div class="tabsArea nobg">
+                        <ul class="listView nobrd">
+                            <li>
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnName").FirstOrDefault().Value.ToString() : <small>*</small></span>
+                                <span class="inputText">
+                                    @Html.ValidationMessageFor(m => m.userSiteModel.SiteId, "", new { style = "display:none" })
+                                    @if (Model.userSiteModel.SiteList.Count() > 0)
+                                    {
+                                        @Html.DropDownListFor(m => m.userSiteModel.SiteId, Model.userSiteModel.SiteList, "--Select--", new { @class = "form-control search select2picker", style = "width:100%;" })
+                                    }
+                                    else
+                                    {
+                                        @Html.DropDownListFor(m => m.userSiteModel.SiteId, Model.userSiteModel.SiteList, "--Select--", new { @class = "form-control search select2picker", style = "width:100%;",@disabled= "disabled" })
+
+                                   }
+                                </span>
+                            </li>
+                            @if (Model.userSiteModel.UserType != "WorkRequest")
+                            {
+                                <li id="liCraft">
+                                    <span class="label">@Html.LabelFor(m => m.userSiteModel.CraftId) : <small>*</small></span>
+                                    <span class="inputText">
+                                        @Html.ValidationMessageFor(m => m.userSiteModel.CraftId, "", new { style = "display:none" })
+                                        @if (Model.userSiteModel.SiteList.Count() > 0)
+                                        {
+                                            @Html.DropDownListFor(m => m.userSiteModel.CraftId, Model.userSiteModel.LookupCraftList, "--Select--", new { @class = "form-control search select2picker", style = "width:100%;" })
+                                        }
+                                        else
+                                        {
+                                            @Html.DropDownListFor(m => m.userSiteModel.CraftId, Model.userSiteModel.LookupCraftList, "--Select--", new { @class = "form-control search select2picker", style = "width:100%;", @disabled = "disabled" })
+                                        }
+                                    </span>
+                                </li>
+
+                                <li id="liBuyer">
+                                    <span class="label">@Html.LabelFor(m => m.userSiteModel.Buyer) :</span>
+                                    <span class="inputText">
+                                        @Html.CheckBoxFor(m => m.userSiteModel.Buyer, new { @class = "form-control m-input", @style = "color:black; width: auto; margin-top: 12px;" })
+                                    </span>
+                                </li>
+                            }
+                        </ul>
+                    </div>
+                    <div style="clear:both;"></div>
+                    <div class="bttn_pagin">
+                        <div class="bttns2">
+                            <button type="submit" class="btn btn-blue mobBttn" id="btnSiteUserSubmit"><i class="fa fa-save faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+                        </div>
+                        <div class="bttns"><button type="button" class="btn btn-blue mobBttn" id="btnusersitecancel"><i class="fa fa-close faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button></div>
+                        <div style="clear:both;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @Html.HiddenFor(m => m.userSiteModel.UserInfoId)
+    @Html.HiddenFor(m => m.userSiteModel.PersonnelId)
+    @Html.HiddenFor(m => m.userSiteModel.FirstName)
+    @Html.HiddenFor(m => m.userSiteModel.MiddleName)
+    @Html.HiddenFor(m => m.userSiteModel.LastName)
+    @Html.HiddenFor(m => m.userSiteModel.UserType)
+    @Html.HiddenFor(m => m.userSiteModel.IsSuperUser)
+    @Html.HiddenFor(m => m.userSiteModel.SiteControlled)
+    @Html.HiddenFor(m => m.userSiteModel.IsUserTypeWorkRequest, new { id = "IsUserTypeWorkRequest" })
+}

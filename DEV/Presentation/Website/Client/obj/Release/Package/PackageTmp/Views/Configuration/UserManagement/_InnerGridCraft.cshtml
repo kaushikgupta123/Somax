@@ -1,0 +1,56 @@
+﻿@model Client.Models.Configuration.UserManagement.UserManagementVM
+<table id="" dt-options="dtOptions" class="userManagementinnerDataTable childtable cell-border" style="width:100%">
+    <thead>
+        <tr>
+            <th>@Model.Loc.Where(a => a.ResourceId == "spnSiteNameGlobal").FirstOrDefault().Value.ToString()</th>
+            <th>@Model.Loc.Where(a => a.ResourceId == "Craft").FirstOrDefault().Value.ToString()</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model.CraftList.Count > 0)
+        {
+            foreach (var Craft in Model.CraftList)
+            {
+                <tr>
+                    <td>@Craft.SiteName</td>
+                    <td>@Craft.CraftDescription</td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+<style type="text/css">
+    .childtable tr th {
+        background: #4da5fe;
+        color: #fff !important;
+        white-space: nowrap !important;
+        text-align: center !important;
+        font-weight: 400 !important;
+    }
+
+    .link {
+        color: #235ddd;
+    }
+
+        .link:hover {
+            color: #32bf0e;
+        }
+
+    .nolink {
+        pointer-events: none;
+        color: #91a0a0;
+    }
+
+    table.dataTable thead .sorting {
+        padding-right: 15px;
+    }
+
+    table.dataTable thead .sorting_asc {
+        padding-right: 15px;
+    }
+
+    table.dataTable.display tbody tr:first-child td {
+        width: 1%;
+    }
+</style>
+

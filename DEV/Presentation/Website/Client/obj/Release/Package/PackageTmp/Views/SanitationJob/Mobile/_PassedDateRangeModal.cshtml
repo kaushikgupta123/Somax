@@ -1,0 +1,70 @@
+﻿@model Client.Models.Sanitation.SanitationVM
+<div id="PassedDateRangeModal" class="mbsc-cloak ">
+    <div class="mbsc-form-grid">
+        <div class="mbsc-form-group-inset">
+            <h4>@Model.Loc.Where(a => a.ResourceId == "spnSelect").FirstOrDefault().Value.ToString()</h4>
+            <hr />
+            <div class="mbsc-row">
+                <div class="form-group">
+                    <div class="mbsc-col-12 mbsc-col-md-12 mbsc-col-lg-12" style="padding:5px;">
+                        <label>@Model.Loc.Where(a => a.ResourceId == "GlobalPassed").FirstOrDefault().Value.ToString() :</label>
+                        <select style="width:100%;" class="form-control search" id="cmbpassedview">
+                            <option value="">--Select--</option>
+                            @foreach (var item in Model.sanitationJobModel.DateRangeDropListForPassedSJ)
+                            {
+                                <option value="@item.Value">@item.Text</option>
+                            }
+                        </select>
+                        </div>
+                        <div class="mbsc-col-12 mbsc-col-md-12 mbsc-col-lg-12" style="padding: 5px 0px; position: relative; display: none;" id="passedtimeperiodcontainer">
+                            <label for="">@Model.Loc.Where(a => a.ResourceId == "spnGlobalTimePeriod").FirstOrDefault().Value.ToString() :</label>
+                            <input id="passedaterange" class="form-control search demo-non-form rangepicker" autocomplete="off"/>
+                        </div>
+                    </div>
+
+                </div>
+
+        </div>
+    </div>
+
+</div>
+<style>
+    .modal-pop-adj .mbsc-fr-w {
+        width: 100%;
+        white-space: nowrap;
+        max-width: 400px;
+        left: 50%;
+        margin-left: -200px;
+    }
+
+    .modal-pop-adj .mbsc-fr-popup {
+        width: 100%;
+        left: 0px;
+    }
+
+    .modal-pop-adj .mbsc-row {
+        width: 100%;
+        max-width: 100%;
+        margin: 0px;
+    }
+
+    .modal-pop-adj .mbsc-fr-popup {
+        max-width: 100% !important;
+    }
+
+    .modal-pop-adj .form-group {
+        width: 100%;
+        margin: 0px;
+    }
+
+    .modal-pop-adj .mbsc-fr-popup.mbsc-ltr {
+        left: 0px !important;
+    }
+</style>
+
+
+
+
+
+
+

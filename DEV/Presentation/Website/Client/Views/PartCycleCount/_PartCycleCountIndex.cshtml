@@ -1,0 +1,276 @@
+﻿@model Client.Models.PartCycleCount.PartCycleCountVM
+<link href="~/Scripts/Metronic/assets/demo/default/base/style_newCustom.css" rel="stylesheet" />
+<div class="m-subheader">
+    <div class="new-m-subheader">
+        <div class="PageTitle">
+            <div class="align-items-center separator">
+                <h3 class="m-subheader__title ">
+                    @Model.Loc.Where(a => a.ResourceId == "spnPartCycleCount").FirstOrDefault().Value.ToString()
+                </h3>
+            </div>
+        </div>
+
+        <div class="NewBreadcrumbArea">
+            <div class="newBreadcrumb">
+                <ul>
+                    <li><a href="/Dashboard/Dashboard">&nbsp;</a></li>
+                    <li class="active"><a> @Model.Loc.Where(a => a.ResourceId == "spnPartCycleCount").FirstOrDefault().Value.ToString()</a></li>
+                </ul>
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+        <div style="clear:both;"></div>
+    </div>
+</div>
+@Html.Partial("_ErrorDiv")
+@using (Ajax.BeginForm("ValidateData", "PartCycleCount", new AjaxOptions { HttpMethod = "Post", OnSuccess = "ValidationOnSuccess", OnBegin = "AjaxBeginFormBegin", OnFailure = "AjaxBeginFormFaillure" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.TextBoxFor(m => m.partCycleCountModel.MultiStoreroom, new { id = "MultiStoreroom", style = "display:none" })
+    <div class="row">
+        <div class="col-xl-12">
+            <div class="newPort" id="m_portlet">
+                <div class="bottomBlock">
+                    <div class="tabsArea nobg two-column-layout">
+                        <div class="modal-body-wrap">
+                            <div class="modal-col-wrap">
+                                <strong style="padding:0 0 15px 0; display:block; font-size: 14px;"> @Model.Loc.Where(a => a.ResourceId == "spnGlobalSchedule").FirstOrDefault().Value.ToString()</strong>
+                                @if (Model.partCycleCountModel.MultiStoreroom)
+                                {
+                                    <div class="form-group">
+                                        <label>@Model.Loc.Where(a => a.ResourceId == "spnStoreroom").FirstOrDefault().Value.ToString():<small>*</small></label>
+                                        @Html.DropDownListFor(m => m.partCycleCountModel.StoreroomId, Model.partCycleCountModel.StoreroomList, "--Select--", new { @class = "form-control search select2picker ddlStoreroom", style = "width:100%;" })
+                                        @Html.ValidationMessageFor(m => m.partCycleCountModel.StoreroomId, "", new { style = "display:none" })
+
+                                    </div>
+                                }
+                                <div class="form-group">
+                                    <label>@Model.Loc.Where(a => a.ResourceId == "spnGenerateThrough").FirstOrDefault().Value.ToString():<small>*</small></label>
+                                    @Html.ValidationMessageFor(m => m.partCycleCountModel.GenerateThrough, "", new { style = "display:none" })
+                                    @Html.TextBoxFor(m => m.partCycleCountModel.GenerateThrough, "{0:MM/dd/yyyy}", new { @class = "form-control search dtpicker1 readonly", @readonly = "readonly", autocomplete = "off" })
+                                </div>
+                                <div class="form-group">
+                                    <table style="width:100%">
+                                        <tr>
+                                            <td>
+                                                <button type="submit" class="btn btn-blue mobBttn" id="btnprocess" style="float:right;">
+                                                    <i class="fa fa-check faIcon"></i> &nbsp;@Model.Loc.Where(a => a.ResourceId == "spnProcess").FirstOrDefault().Value.ToString()
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </table>
+
+                                </div>
+                            </div>
+
+                            <div class="modal-col-wrap mulselectclass">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <strong style="padding:0 0 15px 0; display:block; font-size: 14px;"> @Model.Loc.Where(a => a.ResourceId == "globalFilter").FirstOrDefault().Value.ToString()</strong>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>@Model.Loc.Where(a => a.ResourceId == "spnArea").FirstOrDefault().Value.ToString():<small></small></label>
+                                            @Html.TextBoxFor(m => m.partCycleCountModel.Area, new { @class = "form-control search", autocomplete = "off" })
+                                        </div>
+                                        <div class="form-group">
+                                            <label>@Model.Loc.Where(a => a.ResourceId == "spnSection").FirstOrDefault().Value.ToString():<small></small></label>
+                                            @Html.TextBoxFor(m => m.partCycleCountModel.Section, new { @class = "form-control search ", autocomplete = "off" })
+                                        </div>
+                                        <div class="form-group">
+                                            <label>@Model.Loc.Where(a => a.ResourceId == "spnRow").FirstOrDefault().Value.ToString():<small></small></label>
+                                            @Html.TextBoxFor(m => m.partCycleCountModel.Row, new { @class = "form-control search ", autocomplete = "off" })
+                                        </div>
+                                        <div class="form-group">
+                                            <label>@Model.Loc.Where(a => a.ResourceId == "spnShelf").FirstOrDefault().Value.ToString():<small></small></label>
+                                            @Html.TextBoxFor(m => m.partCycleCountModel.Shelf, new { @class = "form-control search ", autocomplete = "off" })
+                                        </div>
+                                        <div class="form-group">
+                                            <label>@Model.Loc.Where(a => a.ResourceId == "spnBin").FirstOrDefault().Value.ToString():<small></small></label>
+                                            @Html.TextBoxFor(m => m.partCycleCountModel.Bin, new { @class = "form-control search ", autocomplete = "off" })
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>@Model.Loc.Where(a => a.ResourceId == "spnStockType").FirstOrDefault().Value.ToString():<small></small></label>
+                                            @Html.DropDownListFor(m => m.partCycleCountModel.StockType, Model.partCycleCountModel.StockTypeList, new { @class = "form-control search select2picker adv-item", style = "width:100%;display:none;", multiple = "multiple" })
+                                        </div>
+                                        <div class="form-group">
+                                            <label>@Model.Loc.Where(a => a.ResourceId == "spnCritical").FirstOrDefault().Value.ToString():<small></small></label>
+                                            @Html.CheckBoxFor(m => m.partCycleCountModel.CriticalFlag)
+                                        </div>
+                                        <div class="form-group">
+                                            <label>@Model.Loc.Where(a => a.ResourceId == "spnConsignment").FirstOrDefault().Value.ToString():<small></small></label>
+                                            @Html.CheckBoxFor(m => m.partCycleCountModel.Consignment)
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+    </div>
+}
+<div id="finselectcontainer" class="m-portlet newPort" style="padding: 15px; margin-top: 5px; display: none;">
+    <div class="actionBar">
+        <div class="pull-left" style="position:relative;">
+            <button type="button" class="btn btn-white navbar-btn" id="sidebarCollapse" title="Advance Search"><i class="fa fa-filter" style="font-size: 1.3rem;"></i></button>
+            <ul class="filter_apply">
+                <li class="textFilter"><span class="filteritemcount">0</span> @Model.Loc.Where(a => a.ResourceId == "globalFiltersAppiled").FirstOrDefault().Value.ToString()</li>
+                <li class="textClear" id="liClearAdvSearchFilterAVPMG"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "globalClear").FirstOrDefault().Value.ToString()</a></li>
+            </ul>
+            <div style="clear:both;"></div>
+        </div>
+        <div class="pull-right marAdjst">
+            <button type="button" class="btn btn-white import-export" id="btnPartCountExport" onclick="funcShowExportbtn()">@Model.Loc.Where(a => a.ResourceId == "spnExport").FirstOrDefault().Value.ToString()</button>
+
+            <div style="clear:both;"></div>
+        </div>
+        <div style="clear:both;"></div>
+        <div id="advsearchfilteritems"></div>
+        <div style="clear:both;"></div>
+    </div>
+    <div class="table-responsive" style="margin-top:15px;">
+        <table id="tblpartcyclecount" class="eqpDtlTbl row-border custom-sort" style="width:100%;">
+            <thead>
+                <tr>
+                    <th data-col="0" data-th-index="0">@Model.Loc.Where(a => a.ResourceId == "spnPartID").FirstOrDefault().Value.ToString()</th>
+                    <th data-col="1" data-th-index="1">@Model.Loc.Where(a => a.ResourceId == "spnPartDescription").FirstOrDefault().Value.ToString()</th>
+                    @*V2-765*@
+                    @*<th data-col="2" data-th-index="2" style="text-align:right !important;">@Model.Loc.Where(a => a.ResourceId == "spnOnHand").FirstOrDefault().Value.ToString()</th>*@
+                    <th data-th-index="3" style="text-align: right !important; width: 100px; right: 25px !important;">@Model.Loc.Where(a => a.ResourceId == "spnCount").FirstOrDefault().Value.ToString()</th>
+                    <th data-col="3" data-th-index="4">@Model.Loc.Where(a => a.ResourceId == "spnArea").FirstOrDefault().Value.ToString()</th>
+                    <th data-col="4" data-th-index="5">@Model.Loc.Where(a => a.ResourceId == "spnSection").FirstOrDefault().Value.ToString()</th>
+                    <th data-col="5" data-th-index="6">@Model.Loc.Where(a => a.ResourceId == "spnRow").FirstOrDefault().Value.ToString()</th>
+                    <th data-col="6" data-th-index="7">@Model.Loc.Where(a => a.ResourceId == "spnSelf").FirstOrDefault().Value.ToString()</th>
+                    <th data-col="7" data-th-index="8">@Model.Loc.Where(a => a.ResourceId == "spnBin").FirstOrDefault().Value.ToString()</th>
+                    <th data-col="8" data-th-index="9" style="text-align: right !important; visibility:hidden">@Model.Loc.Where(a => a.ResourceId == "spnVariance").FirstOrDefault().Value.ToString()</th>
+                    <th width="17%" style="text-align:center !important;">@Model.Loc.Where(a => a.ResourceId == "globalAction").FirstOrDefault().Value.ToString()</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+    <div class="idBttns">
+        <div class="bttn_pagin">
+            <div class="bttns2">
+                <button type="button" class="btn btn-blue mobBttn" disabled id="btnconfirm"><i class="fa fa-check faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "spnRecordCount").FirstOrDefault().Value.ToString()</button>
+            </div>
+            <div style="clear:both;"></div>
+        </div>
+    </div>
+</div>
+@Html.Partial("_Export")
+@Html.Partial("_PartCycleCountAdvSearch")
+
+<style>
+
+    .select2-search.select2-search--inline {
+        display: none;
+        margin: 0 !important;
+    }
+
+    .form-control.search.dtpicker1 {
+        background-color: #ffffff !important;
+    }
+
+
+    ul.listView.nobrd li:first-child {
+        height: auto;
+        align-items: flex-start;
+    }
+
+    .select2-container--default .select2-selection--multiple .select2-selection__rendered li {
+        display: flex;
+        align-items: baseline;
+    }
+
+    ul.listView.nobrd li span.label, ul.listView.nobrd li span.inputText {
+        height: auto;
+    }
+
+    li.select2-selection__choice {
+        height: auto !important;
+    }
+
+    ul.listView.nobrd li.select2-selection__choice:first-child {
+        align-items: baseline !important;
+    }
+
+    .select2-container--default .select2-selection--multiple .select2-selection__rendered {
+        padding: 5px 6px !important;
+    }
+
+
+    ul.listView.nobrd {
+        border-bottom: 0px;
+    }
+
+    .import-export {
+        margin-right: 0px !important;
+    }
+
+    .bttns2 {
+        margin-bottom: 10px;
+    }
+
+    #popupExport {
+        position: absolute !important;
+        top: 50vh !important;
+        right: 28px !important;
+    }
+
+
+    @@media (max-width: 1370px) {
+
+        #popupExport {
+            position: absolute !important;
+            top: 69vh !important;
+        }
+    }
+
+    @@media (max-width: 1025px) {
+
+        .m-page #popupExport {
+            position: fixed !important;
+            right: 35% !important;
+        }
+
+        .two-column-layout .modal-col-wrap label {
+            min-width: 100px !important;
+        }
+
+        .two-column-layout .modal-col-wrap .form-control.search {
+            width: calc(100% - 100px) !important;
+        }
+
+        .two-column-layout .select2-container {
+            min-width: calc(100% - 107px) !important;
+        }
+    }
+
+    @@media (max-width: 480px) {
+
+        #popupExport {
+            position: fixed !important;
+            top: 52vh !important;
+        }
+    }
+
+    .select2picker.ddlStoreroom {
+        position: relative !important;
+    }
+</style>
+
+
+
+
+
+
+

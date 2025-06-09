@@ -1,0 +1,26 @@
+﻿@model Client.Models.Sanitation.SanitationVM
+<div class="row">
+    <div class="col-xl-12">
+        <div class="m-portlet" id="m_portlet" style="padding:15px;">
+            <div class="table-responsive">
+                <table id="SJNotesTable" class="eqpDtlTbl row-border custom-sort" style="width:100%;">
+                    <thead>
+                        <tr>
+                            <th>@Model.Loc.Where(a => a.ResourceId == "globalSubject").FirstOrDefault().Value.ToString()</th>
+                            <th>@Model.Loc.Where(a => a.ResourceId == "globalOwner").FirstOrDefault().Value.ToString()</th>
+                            <th>@Model.Loc.Where(a => a.ResourceId == "globalModifiedDate").FirstOrDefault().Value.ToString()</th>
+                            <th width="17%" style="text-align:center !important;">@Model.Loc.Where(a => a.ResourceId == "globalAction").FirstOrDefault().Value.ToString()</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+
+            <div class="bttn_pagin">
+                <div class="bttns">
+                    <button mbsc-button data-color="success" type="button" id="btnSJAddNote" class="btn btn-blue addNoteBttn"><i class="fa fa-plus faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "spnGlobalNotesAdd").FirstOrDefault().Value.ToString()</button>
+                </div>
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+    </div>
+</div>

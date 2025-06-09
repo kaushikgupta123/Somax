@@ -1,0 +1,673 @@
+﻿@model Client.Models.Configuration.ClientSetUp.ClientSetUpVM
+@{
+    string imageUrl = Model.clientSetUpModel.ImageUrl;
+    if (Model.clientSetUpModel.ClientOnPremise)
+    {
+        imageUrl = UtilityFunction.PhotoBase64ImgSrc(Model.clientSetUpModel.ImageUrl);
+    }
+
+}
+<div class="m-subheader">
+    <div class="new-m-subheader">
+        <div class="PageTitle">
+            <div class="align-items-center separator">
+                <h3 class="m-subheader__title ">
+                    @Model.Loc.Where(a => a.ResourceId == "spnConfiguration").FirstOrDefault().Value.ToString()
+                </h3>
+            </div>
+        </div>
+        <div class="NewBreadcrumbArea">
+            <div class="newBreadcrumb">
+                <ul>
+                    <li><a href="/Configuration/Dashboard">&nbsp;</a></li>
+                    <li class="active">@Model.Loc.Where(a => a.ResourceId == "spnClientSetup").FirstOrDefault().Value.ToString()</li>
+                </ul>
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+        <div style="clear:both;"></div>
+    </div>
+</div>
+
+@Html.Partial("_ErrorDiv")
+
+<div class="row">
+    <div class="col-xl-3">
+        <div class="m-portlet">
+            <div class="sideMenuArea nobg">
+                <ul class="vtabs" id="detmaintab">
+                    <li class="active" id="idOverview"><a href="#Overview">@Model.Loc.Where(a => a.ResourceId == "spnOverview").FirstOrDefault().Value.ToString()</a></li>
+                    <li id="photot"><a href="#Photos" id="anchPhoto">@Model.Loc.Where(a => a.ResourceId == "spnPhotos").FirstOrDefault().Value.ToString() </a></li>
+                    <li id="Passwordsetting" onclick="openCity(event, 'Passwordsettings')"><a href="#Passwordsettings">@Model.Loc.Where(a => a.ResourceId == "GlobalPasswordSettings").FirstOrDefault().Value.ToString() </a></li>
+                    @if (Model.security.WorkOrders.CompletionWizardConfiguration)
+                    {
+                        <li id="CompletionSetting" onclick="openCity(event, 'CompletionSettings')"><a href="#CompletionSettings">@Model.Loc.Where(a => a.ResourceId == "spnWOCompletionWizardSettings").FirstOrDefault().Value.ToString() </a></li>
+                    }
+                    @if (Model.security.WorkOrder_FormConfiguration.Access)
+                    {
+                        <li id="FormConfigurationSetting" onclick="openCity(event, 'FormConfigurationSettings')"><a href="#FormConfigurationSettings">@Model.Loc.Where(a => a.ResourceId == "spnWorkOrderFormConfiguration").FirstOrDefault().Value.ToString() </a></li>
+                    }
+                </ul>
+            </div>
+            <div class="selectTabs" id="selectTabs">
+                <select class="form-control" id="colorselector">
+                    <option value="idOverview">@Model.Loc.Where(a => a.ResourceId == "spnOverview").FirstOrDefault().Value.ToString()</option>
+                    <option value="Photos">@Model.Loc.Where(a => a.ResourceId == "spnPhotos").FirstOrDefault().Value.ToString()</option>
+                    <option value="Passwordsettings">@Model.Loc.Where(a => a.ResourceId == "GlobalPasswordSettings").FirstOrDefault().Value.ToString()</option>
+                    @if (Model.security.WorkOrders.CompletionWizardConfiguration)
+                    {
+                        <option value="CompletionSettings">@Model.Loc.Where(a => a.ResourceId == "spnWOCompletionWizardSettings").FirstOrDefault().Value.ToString() </option>
+                    }
+                    @if (Model.security.WorkOrder_FormConfiguration.Access)
+                    {
+                        <option value="FormConfigurationSettings">@Model.Loc.Where(a => a.ResourceId == "spnWorkOrderFormConfiguration").FirstOrDefault().Value.ToString() </option>
+                    }
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-9">
+        <div class="row">
+            <div class="col-xl-12" id="btnnblock">
+                <div class="m-portlet" id="m_portlet" style="padding:15px;">
+                    <div class="bottomBlock">
+                        @using (Ajax.BeginForm("UpdateClientSetup", "ClientSetUp", new AjaxOptions { HttpMethod = "Post", OnSuccess = "ClientUpdateAddOnSuccess", OnBegin = "AjaxBeginFormBegin", OnComplete = "AjaxBeginFormComplete", OnFailure = "AjaxBeginFormFaillure" }))
+                        {
+                            @Html.AntiForgeryToken()
+                            <div class="tabsArea nobg" id="Overview" style="display:block;">
+                                <ul class="listView nobrd">
+                                    <li>
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnClientName").FirstOrDefault().Value.ToString(): <small>*</small></span>
+                                        <span class="inputText">
+                                            @Html.ValidationMessageFor(m => m.clientSetUpModel.CompanyName, "", new { style = "display:none" })
+                                            @Html.TextBoxFor(m => m.clientSetUpModel.CompanyName, new { @class = "form-control search ", autocomplete = "off", maxlength = "63" })
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnPrimaryContact").FirstOrDefault().Value.ToString(): <small>*</small></span>
+                                        <span class="inputText">
+                                            @Html.ValidationMessageFor(m => m.clientSetUpModel.PrimaryContact, "", new { style = "display:none" })
+                                            @Html.TextBoxFor(m => m.clientSetUpModel.PrimaryContact, new { @class = "form-control search ", autocomplete = "off", maxlength = "63" })
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnPhone").FirstOrDefault().Value.ToString(): </span>
+                                        <span class="inputText">
+                                            @Html.TextBoxFor(m => m.clientSetUpModel.OfficerPhone, new { @class = "form-control search ", autocomplete = "off", maxlength = "31" })
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnEmail").FirstOrDefault().Value.ToString():<small>*</small> </span>
+                                        <span class="inputText">
+                                            @Html.ValidationMessageFor(m => m.clientSetUpModel.Email, "", new { style = "display:none" })
+                                            @Html.TextBoxFor(m => m.clientSetUpModel.Email, new { @class = "form-control search ", autocomplete = "off", maxlength = "255" })
+                                        </span>
+                                    </li>
+                                    @if (!(Model.clientSetUpModel._userdata.Site.APM == false && Model.clientSetUpModel._userdata.Site.CMMS == false && Model.clientSetUpModel._userdata.Site.Sanitation == true) && !(Model.clientSetUpModel._userdata.Site.APM == true && Model.clientSetUpModel._userdata.Site.CMMS == false && Model.clientSetUpModel._userdata.Site.Sanitation == false))
+                                    {
+                                        <li style="height:auto;">
+                                            <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnWorkOrderMessage").FirstOrDefault().Value.ToString():</span>
+                                            <span class="inputText" style="height:auto;">
+                                                @Html.TextAreaFor(m => m.clientSetUpModel.WOPrintMessage, new { @class = "form-control search", style = "resize:none;", autocomplete = "off", maxlength = "511" })
+                                            </span>
+                                            <div style="clear:both;"></div>
+                                        </li>
+                                    }
+                                    @*commented for v2-516*@
+                                    @*@if (Model.clientSetUpModel._userdata.DatabaseKey.Client.PackageLevel.ToUpper() == PackageLevelConstant.Enterprise.ToUpper())
+        {*@
+                                    <li style="height:auto;">
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnAssetTree").FirstOrDefault().Value.ToString():</span>
+                                        <span class="inputText">
+                                            @Html.CheckBoxFor(m => m.clientSetUpModel.AssetTree, new { @class = "form-control m-input", @style = "color:black; width: auto; margin-top: 12px;" })
+                                        </span>
+                                        <div style="clear:both;"></div>
+                                    </li>
+                                    @*}*@
+
+                                    <li style="height:auto;">
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnPMWorkOrderGenerationMethod").FirstOrDefault().Value.ToString():</span>
+                                        <span class="inputText">
+                                            @Html.DropDownListFor(m => m.clientSetUpModel.PMWOGenerateMethod, Model.PMWOGenerationMethodList, "--Select--", new { @class = "form-control select2picker", style = "width:100%;" })
+                                        </span>
+                                        <div style="clear:both;"></div>
+                                    </li>
+                                    @if (Model.clientSetUpModel._userdata.Site.Sanitation)
+                                    {
+                                        <li style="height:auto;">
+                                            <span class="label">@Model.Loc.Where(a => a.ResourceId == "spanMasterSanitationJobGenerationMethod").FirstOrDefault().Value.ToString():</span>
+                                            <span class="inputText">
+                                                @Html.DropDownListFor(m => m.clientSetUpModel.MasterSanGenerateMethod, Model.MasterSanGenerateMethodList, "--Select--", new { @class = "form-control select2picker", style = "width:100%;" })
+                                            </span>
+                                            <div style="clear:both;"></div>
+                                        </li>
+                                    }
+
+                                </ul>
+                                <div class="bttn_pagin">
+                                    <div class="bttns2">
+                                        <button class="btn btn-blue mobBttn" name="Command" value="save" id="btnSaveWO"><i class="fa fa-save faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+                                    </div>
+                                    <div style="clear:both;"></div>
+                                </div>
+                            </div>
+                            @Html.HiddenFor(x => x.clientSetUpModel.UpdateIndex)
+
+                            @Html.HiddenFor(m => m.clientSetUpModel.ClientId)
+                        }
+                        <div class="tabsArea nobg imageDropZone" id="Photos" style="display:none;">
+                            <div class="row">
+                                <div class="col-xl-4">
+                                    <div id="AzureImage" class="AzureImage">
+
+                                        @if (!string.IsNullOrEmpty(imageUrl))
+                                        {
+                                            <img src="@imageUrl" id="EquipZoom" class="equipImg" alt="Image" data-zoom-image="@imageUrl" />
+                                        }
+                                        else
+                                        {
+                                            <img src="~/Scripts/ImageZoom/images/NoImage.jpg" id="EquipZoom" class="equipImg" alt="Image" data-zoom-image="/Scripts/ImageZoom/images/NoImage.jpg" />
+                                        }
+                                        @if (!string.IsNullOrEmpty(Model.clientSetUpModel.ImageUrl) && !Model.clientSetUpModel.ImageUrl.Contains("NoImage"))
+                                        {
+                                            <a href="javascript:void(0)" id="deleteImg" class="trashIcon" title="@Model.Loc.Where(a => a.ResourceId == "globalDelete").FirstOrDefault().Value.ToString()"><i class="fa fa-trash"></i></a>
+                                        }
+                                    </div>
+                                </div>
+                                <div class="col-xl-8">
+                                    <div class="hldDropzone">
+                                        <div class="dropzone" id="dropzoneForm">
+                                            <div class="fallback">
+                                                <input name="file" type="file" multiple />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        @using (Ajax.BeginForm("UpdatePasswordSettings", "ClientSetUp", new AjaxOptions { HttpMethod = "Post", OnSuccess = "PasswordSettingsOnSuccess", OnBegin = "AjaxBeginFormBegin", OnComplete = "AjaxBeginFormComplete", OnFailure = "AjaxBeginFormFaillure" }))
+                        {
+                            @Html.AntiForgeryToken()
+                            <div class="tabsArea nobg" id="Passwordsettings" style="display:none;">
+                                <ul class="listView nobrd">
+                                    <li>
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "GlobalMaxFailLoginAttempts").FirstOrDefault().Value.ToString(): <small>*</small></span>
+                                        <span class="inputText">
+                                            @Html.ValidationMessageFor(m => m.passwordSettingsModel.MaxAttempts, "", new { style = "display:none" })
+                                            @Html.TextBoxFor(m => m.passwordSettingsModel.MaxAttempts, new { @class = "form-control search longinput", autocomplete = "off" })
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "GlobalReqMinlen").FirstOrDefault().Value.ToString(): </span>
+                                        <span class="inputText">
+                                            @Html.CheckBoxFor(m => m.passwordSettingsModel.PWReqMinLength, new { @class = "form-control m-input", id = "PWReqMinLength", @style = "color:black; width: auto; margin-top: 12px;" })
+                                        </span>
+                                    </li>
+
+                                    @if (Model.passwordSettingsModel.PWReqMinLength)
+                                    {
+                                        <li>
+                                            <span class="label">@Model.Loc.Where(a => a.ResourceId == "GlobalMinlengthPass").FirstOrDefault().Value.ToString(): <small id="MinLenPassReqId">*</small></span>
+                                            <span class="inputText">
+                                                @Html.ValidationMessageFor(m => m.passwordSettingsModel.PWMinLength, "", new { style = "display:none" })
+                                                @Html.TextBoxFor(m => m.passwordSettingsModel.PWMinLength, new { @class = "form-control search longinput", autocomplete = "off" })
+                                            </span>
+                                        </li>
+                                    }
+                                    else
+                                    {
+                                        <li>
+                                            <span class="label">@Model.Loc.Where(a => a.ResourceId == "GlobalMinlengthPass").FirstOrDefault().Value.ToString(): <small style="display:none" id="MinLenPassReqId">*</small></span>
+                                            <span class="inputText">
+                                                @Html.ValidationMessageFor(m => m.passwordSettingsModel.PWMinLength, "", new { style = "display:none" })
+                                                @Html.TextBox("passwordSettingsModel.PWMinLength", "", new { @class = "form-control search longinput readonly", @readonly = "readonly", autocomplete = "off", value = "" })
+                                            </span>
+                                        </li>
+                                    }
+
+                                    <li>
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "GlobalReqPassExpiration").FirstOrDefault().Value.ToString(): </span>
+                                        <span class="inputText">
+                                            @Html.CheckBoxFor(m => m.passwordSettingsModel.PWReqExpiration, new { @class = "form-control m-input", id = "PWReqExpiration", @style = "color:black; width: auto; margin-top: 12px;" })
+                                        </span>
+                                    </li>
+                                    @if (Model.passwordSettingsModel.PWReqExpiration)
+                                    {
+                                        <li>
+                                            <span class="label">@Model.Loc.Where(a => a.ResourceId == "GlobalPasswordAgeLimit").FirstOrDefault().Value.ToString(): <small id="PassAgeLimitReqId">*</small></span>
+                                            <span class="inputText">
+                                                @Html.ValidationMessageFor(m => m.passwordSettingsModel.PWExpiresDays, "", new { style = "display:none" })
+                                                @Html.TextBoxFor(m => m.passwordSettingsModel.PWExpiresDays, new { @class = "form-control search longinput", autocomplete = "off" })
+                                            </span>
+                                        </li>
+                                    }
+                                    else
+                                    {
+                                        <li>
+                                            <span class="label">@Model.Loc.Where(a => a.ResourceId == "GlobalPasswordAgeLimit").FirstOrDefault().Value.ToString(): <small style="display:none" id="PassAgeLimitReqId">*</small></span>
+                                            <span class="inputText">
+                                                @Html.ValidationMessageFor(m => m.passwordSettingsModel.PWExpiresDays, "", new { style = "display:none" })
+                                                @Html.TextBox("passwordSettingsModel.PWExpiresDays", "", new { @class = "form-control search longinput readonly", @readonly = "readonly", autocomplete = "off", value = "" })
+                                            </span>
+                                        </li>
+                                    }
+                                    <li>
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "GlobalpassReqNumber").FirstOrDefault().Value.ToString(): </span>
+                                        <span class="inputText">
+                                            @Html.CheckBoxFor(m => m.passwordSettingsModel.PWRequireNumber, new { @class = "form-control m-input", @style = "color:black; width: auto; margin-top: 12px;" })
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "GlobalPassReqAlphaChar").FirstOrDefault().Value.ToString(): </span>
+                                        <span class="inputText">
+                                            @Html.CheckBoxFor(m => m.passwordSettingsModel.PWRequireAlpha, new { @class = "form-control m-input", @style = "color:black; width: auto; margin-top: 12px;" })
+                                        </span>
+                                    </li>
+
+                                    <li>
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "GlobalBitPassMixedCase").FirstOrDefault().Value.ToString(): </span>
+                                        <span class="inputText">
+                                            @Html.CheckBoxFor(m => m.passwordSettingsModel.PWRequireMixedCase, new { @class = "form-control m-input", @style = "color:black; width: auto; margin-top: 12px;" })
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "GlobalPassReqSpecialChar").FirstOrDefault().Value.ToString(): </span>
+                                        <span class="inputText">
+                                            @Html.CheckBoxFor(m => m.passwordSettingsModel.PWRequireSpecialChar, new { @class = "form-control m-input", @style = "color:black; width: auto; margin-top: 12px;" })
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "GlobalSequentialRepeatCharNotAllowPassword").FirstOrDefault().Value.ToString(): </span>
+                                        <span class="inputText">
+                                            @Html.CheckBoxFor(m => m.passwordSettingsModel.PWNoRepeatChar, new { @class = "form-control m-input", @style = "color:black; width: auto; margin-top: 12px;" })
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "GlobalPasswordNotEqualUsername").FirstOrDefault().Value.ToString(): </span>
+                                        <span class="inputText">
+                                            @Html.CheckBoxFor(m => m.passwordSettingsModel.PWNotEqualUserName, new { @class = "form-control m-input", @style = "color:black; width: auto; margin-top: 12px;" })
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "GlobalAllowAdminResetPassword").FirstOrDefault().Value.ToString(): </span>
+                                        <span class="inputText">
+                                            @Html.CheckBoxFor(m => m.passwordSettingsModel.AllowAdminReset, new { @class = "form-control m-input", @style = "color:black; width: auto; margin-top: 12px;" })
+                                        </span>
+                                    </li>
+                                    <div style="clear:both;"></div>
+                                </ul>
+
+                                <div class="bttn_pagin">
+                                    <div class="bttns2">
+                                        <button class="btn btn-blue mobBttn" name="Command" value="save" id="btnSavePS"><i class="fa fa-save faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+                                    </div>
+                                    <div style="clear:both;"></div>
+                                </div>
+                            </div>
+                        }
+                        @if (Model.security.WorkOrders.CompletionWizardConfiguration)
+                        {
+                            using (Ajax.BeginForm("UpdateWOCompletionSettings", "ClientSetUp", new AjaxOptions { HttpMethod = "Post", OnSuccess = "CompletionSettingsOnSuccess", OnBegin = "AjaxBeginFormBegin", OnComplete = "AjaxBeginFormComplete", OnFailure = "AjaxBeginFormFaillure" }))
+                            {
+                                @Html.AntiForgeryToken()
+                                <div class="tabsArea nobg" id="CompletionSettings" style="display:none;">
+                                    <ul class="listView nobrd">
+                                        <li>
+                                            <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnUseWOCompletionWizard").FirstOrDefault().Value.ToString() : </span>
+                                            <span class="inputText">
+                                                @Html.CheckBoxFor(m => m.woCompletionSettingsModel.UseWOCompletionWizard, new { @class = "form-control m-input", @style = "color:black; width: auto; margin-top: 12px;" })
+                                            </span>
+                                        </li>
+                                        <li>
+                                            <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnWOCommentTab").FirstOrDefault().Value.ToString() : </span>
+                                            <span class="inputText">
+                                                @Html.CheckBoxFor(m => m.woCompletionSettingsModel.WOCommentTab, new { @class = "form-control m-input", @style = "color:black; width: auto; margin-top: 12px;" })
+                                            </span>
+                                        </li>
+                                        <li>
+                                            <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnTimeCardTab").FirstOrDefault().Value.ToString() : </span>
+                                            <span class="inputText">
+                                                @Html.CheckBoxFor(m => m.woCompletionSettingsModel.TimecardTab, new { @class = "form-control m-input", @style = "color:black; width: auto; margin-top: 12px;" })
+                                            </span>
+                                        </li>
+                                        <li>
+                                            <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnAutoAddTimecard").FirstOrDefault().Value.ToString() : </span>
+                                            <span class="inputText">
+                                                @Html.CheckBoxFor(m => m.woCompletionSettingsModel.AutoAddTimecard, new { @class = "form-control m-input", @style = "color:black; width: auto; margin-top: 12px;" })
+                                            </span>
+                                        </li>
+                                        @*V2-728 start*@
+                                        <li>
+                                            <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnCompletionCriteriaTab").FirstOrDefault().Value.ToString() :</span>
+                                            <span class="inputText">
+                                                <div class="row col-12">
+                                                    <div class="row col-4 text-left">
+                                                        @Html.CheckBoxFor(m => m.woCompletionSettingsModel.WOCompCriteriaTab, new { @class = "form-control m-input", @style = "color:black; width: auto; margin-top: 12px;" })
+                                                    </div>
+                                                    <div class="col-8 text-left">
+                                                        <button class="btn btn-blue mobBttn" type="button" name="CriteriaSetup" value="save" id="btnCriteriaSetup"><i class=""></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "spnCriteriaSetup").FirstOrDefault().Value.ToString()</button>
+                                                    </div>
+                                                </div>
+                                            </span>
+                                        </li>
+
+                                        @*V2-728 end*@
+
+                                        @Html.HiddenFor(m => m.woCompletionSettingsModel.WOCompletionSettingsId)
+                                    </ul>
+                                    <div class="bttn_pagin">
+                                        <div class="bttns2">
+                                            <button class="btn btn-blue mobBttn" name="Command" value="save" id="btnSaveWOCompletion"><i class="fa fa-save faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+                                        </div>
+                                        <div style="clear:both;"></div>
+                                    </div>
+                                </div>
+
+                            }
+                        }
+                        @if (Model.security.WorkOrder_FormConfiguration.Access)
+                        {
+                            <div class="tabsArea nobg" id="FormConfigurationSettings" style="display:none;">
+                                <div class="tab fullUser">
+                                    <button class="tablinks active" id="btnwosettings" onclick="openCity(event, 'WOFormSettings')">@Model.Loc.Where(a => a.ResourceId == "GlobalWorkOrder").FirstOrDefault().Value.ToString()</button>
+                                    <button class="tablinks" onclick="openCity(event, 'PRFormSettings')">@Model.Loc.Where(a => a.ResourceId == "spnPurchaseRequest").FirstOrDefault().Value.ToString()</button>
+                                    <button class="tablinks" onclick="openCity(event, 'POFormSettings')">@Model.Loc.Where(a => a.ResourceId == "spnPurchaseOrder").FirstOrDefault().Value.ToString()</button>
+                                    <button class="tablinks" onclick="openCity(event, 'PORFormSettings')">@Model.Loc.Where(a => a.ResourceId == "spnPurchaseOrderReceipt").FirstOrDefault().Value.ToString()</button>
+
+                                </div>
+                                <div class="selectTab mobUser">
+                                    <select class="form-control search" id="tabselector">
+                                        <option value="WOFormSettings">@Model.Loc.Where(a => a.ResourceId == "GlobalWorkOrder").FirstOrDefault().Value.ToString()</option>
+                                        <option value="PRFormSettings">@Model.Loc.Where(a => a.ResourceId == "spnPurchaseRequest").FirstOrDefault().Value.ToString()</option>
+                                        <option value="POFormSettings">@Model.Loc.Where(a => a.ResourceId == "spnPurchaseOrder").FirstOrDefault().Value.ToString()</option>
+                                        <option value="PORFormSettings">@Model.Loc.Where(a => a.ResourceId == "spnPurchaseOrderReceipt").FirstOrDefault().Value.ToString()</option>
+
+                                    </select>
+                                </div>
+                            </div>
+
+                            using (Ajax.BeginForm("UpdateWOFormConfiguration", "ClientSetUp", new AjaxOptions { HttpMethod = "Post", OnSuccess = "FormConfigurationOnSuccess", OnBegin = "AjaxBeginFormBegin", OnComplete = "AjaxBeginFormComplete", OnFailure = "AjaxBeginFormFaillure" }))
+                            {
+                                @Html.AntiForgeryToken()
+                                <div class="tabsArea nobg tabcontent2" id="WOFormSettings" style="display:none;">
+                                    <ul class="listView nobrd">
+
+                                        <li style="height:auto;">
+                                            <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnWOLaborRecording").FirstOrDefault().Value.ToString():</span>
+                                            <span class="inputText">
+                                                @Html.CheckBoxFor(m => m.woFormSettingsSetupModel.WOLaborRecording, new { @class = "form-control m-input", @style = "color:black; width: auto; margin-top: 12px;" })
+                                            </span>
+                                            <div style="clear:both;"></div>
+                                        </li>
+                                        <li style="height:auto;">
+                                            <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnWOUIC").FirstOrDefault().Value.ToString():</span>
+                                            <span class="inputText">
+                                                @Html.CheckBoxFor(m => m.woFormSettingsSetupModel.WOUIC, new { @class = "form-control m-input", @style = "color:black; width: auto; margin-top: 12px;" })
+                                            </span>
+                                            <div style="clear:both;"></div>
+                                        </li>
+                                        <li style="height:auto;">
+                                            <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnWOScheduling").FirstOrDefault().Value.ToString():</span>
+                                            <span class="inputText">
+                                                @Html.CheckBoxFor(m => m.woFormSettingsSetupModel.WOScheduling, new { @class = "form-control m-input", @style = "color:black; width: auto; margin-top: 12px;" })
+                                            </span>
+                                            <div style="clear:both;"></div>
+                                        </li>
+                                        <li style="height:auto;">
+                                            <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnWOSummary").FirstOrDefault().Value.ToString():</span>
+                                            <span class="inputText">
+                                                @Html.CheckBoxFor(m => m.woFormSettingsSetupModel.WOSummary, new { @class = "form-control m-input", @style = "color:black; width: auto; margin-top: 12px;" })
+                                            </span>
+                                            <div style="clear:both;"></div>
+                                        </li>
+                                        <li style="height:auto;">
+                                            <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnWOPhotos").FirstOrDefault().Value.ToString():</span>
+                                            <span class="inputText">
+                                                @Html.CheckBoxFor(m => m.woFormSettingsSetupModel.WOPhotos, new { @class = "form-control m-input", @style = "color:black; width: auto; margin-top: 12px;" })
+                                            </span>
+                                            <div style="clear:both;"></div>
+                                        </li>
+                                        <li style="height:auto;">
+                                            <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnWOComments").FirstOrDefault().Value.ToString():</span>
+                                            <span class="inputText">
+                                                @Html.CheckBoxFor(m => m.woFormSettingsSetupModel.WOComments, new { @class = "form-control m-input", @style = "color:black; width: auto; margin-top: 12px;" })
+                                            </span>
+                                            <div style="clear:both;"></div>
+                                        </li>
+
+                                        @Html.HiddenFor(m => m.woFormSettingsSetupModel.FormSettingsId)
+
+                                    </ul>
+                                    <div class="bttn_pagin">
+                                        <div class="bttns2">
+                                            <button class="btn btn-blue mobBttn" name="Command" value="save" id="btnSaveWOFormConfiguration"><i class="fa fa-save faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+                                        </div>
+                                        <div style="clear:both;"></div>
+                                    </div>
+                                </div>
+                            }
+                            using (Ajax.BeginForm("UpdatePRFormConfiguration", "ClientSetUp", new AjaxOptions { HttpMethod = "Post", OnSuccess = "FormConfigurationOnSuccess", OnBegin = "AjaxBeginFormBegin", OnComplete = "AjaxBeginFormComplete", OnFailure = "AjaxBeginFormFaillure" }))
+                            {
+                                @Html.AntiForgeryToken()
+                                <div class="tabsArea nobg tabcontent2" id="PRFormSettings" style="display:none;">
+                                    <ul class="listView nobrd">
+
+                                        <li style="height:auto;">
+                                            <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnPRUICSection").FirstOrDefault().Value.ToString():</span>
+                                            <span class="inputText">
+                                                @Html.CheckBoxFor(m => m.woFormSettingsSetupModel.PRUIC, new { @class = "form-control m-input", @style = "color:black; width: auto; margin-top: 12px;" })
+                                            </span>
+                                            <div style="clear:both;"></div>
+                                        </li>
+                                        <li style="height:auto;">
+                                            <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnPR2LineItem").FirstOrDefault().Value.ToString():</span>
+                                            <span class="inputText">
+                                                @Html.CheckBoxFor(m => m.woFormSettingsSetupModel.PRLine2, new { @class = "form-control m-input", @style = "color:black; width: auto; margin-top: 12px;" })
+                                            </span>
+                                            <div style="clear:both;"></div>
+                                        </li>
+                                        <li style="height:auto;">
+                                            <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnPRLineItemUIC").FirstOrDefault().Value.ToString():</span>
+                                            <span class="inputText">
+                                                @Html.CheckBoxFor(m => m.woFormSettingsSetupModel.PRLIUIC, new { @class = "form-control m-input", @style = "color:black; width: auto; margin-top: 12px;" })
+                                            </span>
+                                            <div style="clear:both;"></div>
+                                        </li>
+                                        <li style="height:auto;">
+                                            <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnWOComments").FirstOrDefault().Value.ToString():</span>
+                                            <span class="inputText">
+                                                @Html.CheckBoxFor(m => m.woFormSettingsSetupModel.PRComments, new { @class = "form-control m-input", @style = "color:black; width: auto; margin-top: 12px;" })
+                                            </span>
+                                            <div style="clear:both;"></div>
+                                        </li>
+
+                                        @Html.HiddenFor(m => m.woFormSettingsSetupModel.FormSettingsId)
+
+                                    </ul>
+                                    <div class="bttn_pagin">
+                                        <div class="bttns2">
+                                            <button class="btn btn-blue mobBttn" name="Command" value="save" id="btnSavePRFormConfiguration"><i class="fa fa-save faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+                                        </div>
+                                        <div style="clear:both;"></div>
+                                    </div>
+                                </div>
+                            }
+                            <form id="frmpoformconfig" name="frmpoformconfig" method="post" enctype="multipart/form-data">
+                                @Html.AntiForgeryToken()
+                                <div class="tabsArea nobg tabcontent2" id="POFormSettings" style="display:none;">
+                                    <ul class="listView nobrd">
+
+                                        <li style="height:auto;">
+                                            <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnPOUICSection").FirstOrDefault().Value.ToString():</span>
+                                            <span class="inputText">
+                                                @Html.CheckBoxFor(m => m.woFormSettingsSetupModel.POUIC, new { @class = "form-control m-input", @style = "color:black; width: auto; margin-top: 12px;" })
+                                            </span>
+                                            <div style="clear:both;"></div>
+                                        </li>
+                                        <li style="height:auto;">
+                                            <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnPR2LineItem").FirstOrDefault().Value.ToString():</span>
+                                            <span class="inputText">
+                                                @Html.CheckBoxFor(m => m.woFormSettingsSetupModel.POLine2, new { @class = "form-control m-input", @style = "color:black; width: auto; margin-top: 12px;" })
+                                            </span>
+                                            <div style="clear:both;"></div>
+                                        </li>
+                                        <li style="height:auto;">
+                                            <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnPOLineItemUIC").FirstOrDefault().Value.ToString():</span>
+                                            <span class="inputText">
+                                                @Html.CheckBoxFor(m => m.woFormSettingsSetupModel.POLIUIC, new { @class = "form-control m-input", @style = "color:black; width: auto; margin-top: 12px;" })
+                                            </span>
+                                            <div style="clear:both;"></div>
+                                        </li>
+                                        <li style="height:auto;">
+                                            <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnWOComments").FirstOrDefault().Value.ToString():</span>
+                                            <span class="inputText">
+                                                @Html.CheckBoxFor(m => m.woFormSettingsSetupModel.POComments, new { @class = "form-control m-input", @style = "color:black; width: auto; margin-top: 12px;" })
+                                            </span>
+                                            <div style="clear:both;"></div>
+                                        </li>
+                                        <li style="height:auto;">
+                                            <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnTandCSection").FirstOrDefault().Value.ToString():</span>
+                                            <span class="inputText">
+                                                @Html.CheckBoxFor(m => m.woFormSettingsSetupModel.POTandC, new { @class = "form-control m-input", @style = "color:black; width: auto; margin-top: 12px;", id = "POTandC" })
+                                            </span>
+                                            <div style="clear:both;"></div>
+                                        </li>
+                                        <li id="liPOTCURL" style="height: auto; display: none; align-items: normal">
+                                            <span class="label" id="spnFileReq" style="display:none;">@Model.Loc.Where(a => a.ResourceId == "globalFileName").FirstOrDefault().Value.ToString() : <small>*</small></span>
+                                            <span class="label" id="spnFileNotReq" style="display:none;">@Model.Loc.Where(a => a.ResourceId == "globalFileName").FirstOrDefault().Value.ToString() : </span>
+                                            <span class="inputText fileT">
+                                                @Html.ValidationMessageFor(m => m.woFormSettingsSetupModel.FileContent, "", new { style = "display:none" })
+                                                @Html.SomaxAttachmentFileFor(m => m.woFormSettingsSetupModel.FileContent, new { autocomplete = "off", @class = "attfile" })
+                                            </span>
+                                        </li>
+                                        @if (!string.IsNullOrEmpty(Model.woFormSettingsSetupModel.POTandCURL))
+                                        {
+                                            var fileName = "";
+                                            if (Model.clientSetUpModel.ClientOnPremise)
+                                            {
+                                                fileName = Model.woFormSettingsSetupModel.POTandCURL.Replace(@"\","/").Split('/').Last();
+                                            }
+                                            else
+                                            {
+                                                fileName = Model.woFormSettingsSetupModel.POTandCURL.Split('/').Last();
+                                            }
+                                            <li style="height:auto;">
+
+                                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "SpanUploadedPOTermsandConditions").FirstOrDefault().Value.ToString() :</span>
+                                                <span class="inputText">
+                                                    @*<a href="@Model.woFormSettingsSetupModel.POTandCURL" target="_blank" id="urlPOTandCFileName"></a>*@
+                                                    <span id="POTandCFileName">@fileName</span>
+                                                </span>
+                                                <div style="clear:both;"></div>
+                                            </li>
+                                        }
+
+                                        @Html.HiddenFor(m => m.woFormSettingsSetupModel.FormSettingsId)
+                                        @Html.HiddenFor(m => m.woFormSettingsSetupModel.POTandCURL, new { id = "POTandCURL" })
+                                        @Html.HiddenFor(m => m.woFormSettingsSetupModel.IsFileRequired, new { id = "IsFileRequired" })
+
+                                    </ul>
+                                    <div class="bttn_pagin">
+                                        <div class="bttns2">
+                                            <button type="submit" button class="btn btn-blue mobBttn" name="Command" value="save" id="btnSavePOFormConfiguration"><i class="fa fa-save faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+                                        </div>
+                                        <div style="clear:both;"></div>
+                                    </div>
+                                </div>
+                            </form>
+                            using (Ajax.BeginForm("UpdatePORFormConfiguration", "ClientSetUp", new AjaxOptions { HttpMethod = "Post", OnSuccess = "FormConfigurationOnSuccess", OnBegin = "AjaxBeginFormBegin", OnComplete = "AjaxBeginFormComplete", OnFailure = "AjaxBeginFormFaillure" }))
+                            {
+                                @Html.AntiForgeryToken()
+                                <div class="tabsArea nobg tabcontent2" id="PORFormSettings" style="display:none;">
+                                    <ul class="listView nobrd">
+
+                                        <li style="height:auto;">
+                                            <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnPORHeaderSection").FirstOrDefault().Value.ToString():</span>
+                                            <span class="inputText">
+                                                @Html.CheckBoxFor(m => m.woFormSettingsSetupModel.PORHeader, new { @class = "form-control m-input", @style = "color:black; width: auto; margin-top: 12px;" })
+                                            </span>
+                                            <div style="clear:both;"></div>
+                                        </li>
+                                        <li style="height:auto;">
+                                            <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnPOUICSection").FirstOrDefault().Value.ToString():</span>
+                                            <span class="inputText">
+                                                @Html.CheckBoxFor(m => m.woFormSettingsSetupModel.PORUIC, new { @class = "form-control m-input", @style = "color:black; width: auto; margin-top: 12px;" })
+                                            </span>
+                                            <div style="clear:both;"></div>
+                                        </li>
+                                        <li style="height:auto;">
+                                            <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnPOR2LineItem").FirstOrDefault().Value.ToString():</span>
+                                            <span class="inputText">
+                                                @Html.CheckBoxFor(m => m.woFormSettingsSetupModel.PORLine2, new { @class = "form-control m-input", @style = "color:black; width: auto; margin-top: 12px;" })
+                                            </span>
+                                            <div style="clear:both;"></div>
+                                        </li>
+                                        <li style="height:auto;">
+                                            <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnWOComments").FirstOrDefault().Value.ToString():</span>
+                                            <span class="inputText">
+                                                @Html.CheckBoxFor(m => m.woFormSettingsSetupModel.PORComments, new { @class = "form-control m-input", @style = "color:black; width: auto; margin-top: 12px;" })
+                                            </span>
+                                            <div style="clear:both;"></div>
+                                        </li>
+                                        <li style="height:auto;">
+                                            <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnPORPrint").FirstOrDefault().Value.ToString():</span>
+                                            <span class="inputText">
+                                                @Html.CheckBoxFor(m => m.woFormSettingsSetupModel.PORPrint, new { @class = "form-control m-input", @style = "color:black; width: auto; margin-top: 12px;" })
+                                            </span>
+                                            <div style="clear:both;"></div>
+                                        </li>
+
+                                        @Html.HiddenFor(m => m.woFormSettingsSetupModel.FormSettingsId)
+
+                                    </ul>
+                                    <div class="bttn_pagin">
+                                        <div class="bttns2">
+                                            <button class="btn btn-blue mobBttn" name="Command" value="save" id="btnSavePRFormConfiguration"><i class="fa fa-save faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+                                        </div>
+                                        <div style="clear:both;"></div>
+                                    </div>
+                                </div>
+                            }
+
+
+                        }
+                        <div style="clear:both;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@Html.HiddenFor(m => m.clientSetUpModel.ClientOnPremise)
+<style type="text/css">
+    .ui-tooltip.ui-tooltip1 {
+        z-index: 99999 !important;
+    }
+
+    .trashIcon {
+        z-index: 101;
+    }
+
+    ul.listView.nobrd li span.label, ul.listView.nobrd li span.inputText {
+        width: 50%;
+    }
+
+    @@media only screen and (max-width: 767px) {
+        ul.listView.nobrd li {
+            height: auto;
+            margin-bottom: 10px;
+        }
+
+            ul.listView.nobrd li span.label, ul.listView.nobrd li span.inputText {
+                width: 100%;
+            }
+    }
+
+    @@media only screen and (max-width: 639px) {
+        ul.listView.nobrd li span.label {
+            height: auto;
+            line-height: normal;
+        }
+    }
+</style>

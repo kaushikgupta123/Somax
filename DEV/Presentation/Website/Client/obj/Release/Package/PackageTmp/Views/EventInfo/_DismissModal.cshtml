@@ -1,0 +1,71 @@
+﻿@model Client.Models.EventInfo.EventInfoVM
+<div id="modalDismiss" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-info">
+        <div class="modal-content">
+            @Html.Partial("_ErrorDiv")
+            @using (Ajax.BeginForm("DismissEvent", "EventInfo", new AjaxOptions { HttpMethod = "Post", OnSuccess = "ModalDismissOnSuccess", OnBegin = "AjaxBeginFormBegin", OnComplete = "AjaxBeginFormComplete", OnFailure = "AjaxBeginFormFaillure" }))
+            {
+                @Html.AntiForgeryToken()
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">@Model.Loc.Where(a => a.ResourceId == "spnDismissEvent").FirstOrDefault().Value.ToString()</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>@Model.Loc.Where(a => a.ResourceId == "spnDismissReason").FirstOrDefault().Value.ToString() :<small>*</small></label>
+                        <span class="inputText wthAdjst">
+                            @Html.DropDownListFor(m => m.dismissModel.DismissReason, Model.dismissModel.DismissReasonList, "--Select--", new { @class = "form-control search select2picker", style = "width:100%;" })
+                            @Html.ValidationMessageFor(m => m.dismissModel.DismissReason, "", new { style = "display:none" })
+                        </span>
+                    </div>
+                    <div class="form-group">
+                        <label>@Model.Loc.Where(a => a.ResourceId == "spnLogComment").FirstOrDefault().Value.ToString() :<small>*</small></label>
+                        @Html.ValidationMessageFor(m => m.dismissModel.Comments, "", new { style = "display:none" })
+                        @Html.TextAreaFor(m => m.dismissModel.Comments, new { @class = "form-control search", style = "resize:none;", autocomplete = "off", maxlength = "255" })
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-close faIcon"></i> &nbsp;@Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button>
+                    <button type="submit" class="btn btn-blue" style="float:right;"><i class="fa fa-close faIcon"></i> &nbsp;@Model.Loc.Where(a => a.ResourceId == "spnDismiss").FirstOrDefault().Value.ToString()</button>
+                    <div style="clear:both;"></div>
+                </div>
+                @Html.HiddenFor(x => x.dismissModel.EventInfoId)
+            }
+        </div>
+
+    </div>
+</div>
+<style type="text/css">
+    .ui-tooltip { z-index: 1151 !important; }
+</style>
+<script>
+    $(document).ready(function () {
+        $(document).find('.select2picker').select2({});
+        $.validator.setDefaults({ ignore: null });
+        $.validator.unobtrusive.parse(document);
+        $('input, form').blur(function () {
+            $(this).valid();
+        });
+        $(document).find("#modalDismiss").on("hidden.bs.modal", function () {
+            $('.errormessage').html('').hide();
+            $("#modalDismiss").find("select").each(function () {
+                $(this).val('').trigger('change');
+                if ($(this).hasClass('input-validation-error')) {
+                    $(this).removeClass('input-validation-error');
+                }
+            });
+            $("#modalDismiss").find("textarea").each(function () {
+                $(this).val('');
+                if ($(this).hasClass('input-validation-error')) {
+                    $(this).removeClass('input-validation-error');
+                }
+            });
+        });
+    });
+
+    $(function () {
+        $(document).find(".modal").on("hidden.bs.modal", function () {
+            $(document).find('.ui-tooltip').hide();
+        })
+    });
+</script>

@@ -1,0 +1,69 @@
+﻿@model Client.Models.EventInfo.EventInfoVM
+<nav id="sidebar">
+    <div id="dismiss">
+        <i class="fa fa-close"></i>
+    </div>
+    <div class="sidebar-header">
+        <h3><i class="fa fa-filter" style="position: relative; top: -2px;"></i> &nbsp;@Model.Loc.Where(a => a.ResourceId == "globalFilter").FirstOrDefault().Value.ToString() <span class="filteritemcount">0</span></h3>
+        <button type="button" class="btn btn-blue filterSearch" id="btnAdvanceSearch"><i class="fa fa-search" style="margin-top:-3px;"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalSearch").FirstOrDefault().Value.ToString()</button>
+    </div>
+    <div class="sidebar-content" id="advsearchsidebar">
+        <form action="#" method="post">
+            <div class="form-group">
+                <label for="txteventId">@Model.Loc.Where(a => a.ResourceId == "spnEventID").FirstOrDefault().Value.ToString() :</label>
+                <input type="text" class="form-control search adv-item longinput" id="txteventId" autocomplete="off">
+            </div>
+            <div class="form-group">
+                <label for="txtSource">@Model.Loc.Where(a => a.ResourceId == "spnSource").FirstOrDefault().Value.ToString() :</label>
+                <input type="text" class="form-control search adv-item" id="txtSource" autocomplete="off">
+            </div>
+            <div class="form-group">
+                <label for="txtType">@Model.Loc.Where(a => a.ResourceId == "GlobalType").FirstOrDefault().Value.ToString() :</label>
+                @*<select id="txtType" style="width:100%;" class="form-control search adv-item select2picker"></select>*@
+                @Html.DropDownListFor(m => m.eventInfoModel.EventType, Model.eventInfoModel.EventTypeList, "--Select--", new { @class = "form-control search adv-item select2picker", @id = "txtType" })
+            </div>
+            <div class="form-group">
+                <label for="txtDescription">@Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString() :</label>
+                <textarea class="form-control search adv-item" rows="3" id="txtDescription" autocomplete="off"></textarea>
+            </div>
+            <div class="form-group">
+                <label for="txtStatus">@Model.Loc.Where(a => a.ResourceId == "spnStatus").FirstOrDefault().Value.ToString() :</label>
+                @*<select id="txtStatus" style="width:100%;" class="form-control search adv-item select2picker"></select>*@
+                @Html.DropDownListFor(m => m.eventInfoModel.Status, Model.eventInfoModel.EventStatusList, "--Select--", new { @class = "form-control search adv-item select2picker", @id = "txtStatus" })
+            </div>
+            <div class="form-group">
+                <label for="txtDisposition">@Model.Loc.Where(a => a.ResourceId == "spnDisposition").FirstOrDefault().Value.ToString() :</label>
+                @*<select id="txtDisposition" style="width:100%;" class="form-control search adv-item select2picker"></select>*@
+                @Html.DropDownListFor(m=>m.eventInfoModel.Disposition,Model.eventInfoModel.EventDispositionList,"--Select--",new {@class="form-control search adv-item select2picker" , @id = "txtDisposition" })
+            </div>
+            <div class="form-group">
+                <label for="txtWorkOrder">@Model.Loc.Where(a => a.ResourceId == "GlobalWorkOrder").FirstOrDefault().Value.ToString() :</label>
+                <input type="text" class="form-control search adv-item" id="txtWorkOrder" autocomplete="off">
+            </div>
+            <div class="form-group">
+                <label for="txtFaultCode">@Model.Loc.Where(a => a.ResourceId == "spnFaultCode").FirstOrDefault().Value.ToString() :</label>
+                <input type="text" class="form-control search adv-item" id="txtFaultCode" autocomplete="off">
+            </div>
+            <div class="form-group">
+                <label for="txtCreated">@Model.Loc.Where(a => a.ResourceId == "spnCreated").FirstOrDefault().Value.ToString() :</label>
+                <input type="text" class="form-control search adv-item dtpicker" id="txtCreated" autocomplete="off">
+            </div>
+            <div class="form-group">
+                <label for="txtSensorID">@Model.Loc.Where(a => a.ResourceId == "spnSensorID").FirstOrDefault().Value.ToString() :</label>
+                <input type="text" class="form-control search adv-item longinput" id="txtSensorID" autocomplete="off">
+            </div>
+            <div class="form-group">
+                <label for="txtProcessed">@Model.Loc.Where(a => a.ResourceId == "spnProcessed").FirstOrDefault().Value.ToString() :</label>
+                <input type="text" class="form-control search adv-item dtpicker" id="txtProcessed" autocomplete="off">
+            </div>
+            <div class="form-group">
+                <label for="txtProcessedBy">@Model.Loc.Where(a => a.ResourceId == "spnProcessedBy").FirstOrDefault().Value.ToString() :</label>
+                <input type="text" class="form-control search adv-item" id="txtProcessedBy" autocomplete="off">
+            </div>
+            <div class="form-group">
+                <label for="txtComments">@Model.Loc.Where(a => a.ResourceId == "spnLogComment").FirstOrDefault().Value.ToString() :</label>
+                <textarea class="form-control search adv-item" rows="3" id="txtComments" autocomplete="off"></textarea>
+            </div>
+        </form>
+    </div>
+</nav>

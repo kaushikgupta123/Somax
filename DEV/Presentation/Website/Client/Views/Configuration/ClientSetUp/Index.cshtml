@@ -1,0 +1,18 @@
+﻿@model Client.Models.Configuration.ClientSetUp.ClientSetUpVM
+@{
+    ViewBag.Title = "Somax-Config | Client Setup";
+}
+<link href="~/Scripts/dropzone/basic.min.css" rel="stylesheet" />
+<link href="~/Scripts/dropzone/dropzone.min.css" rel="stylesheet" />
+@Styles.Render("~/Content/somaxcommentsection")
+@section scripts {
+    @Scripts.Render("~/bundles/imagezoom")
+    <script src="~/Scripts/Pages/Configuration/ClientSetUp/ClientSetUp.js"></script>
+    @Scripts.Render("~/bundles/SomaxCkEditor")
+}
+<div>
+    @Html.Partial("~/Views/Configuration/ClientSetUp/_EditClientSetUp.cshtml", Model)
+    @Html.Partial("~/Views/Configuration/ClientSetUp/_CompletionCriteria.cshtml", Model)
+</div>
+
+

@@ -1,0 +1,404 @@
+﻿@model Client.Models.PersonnelVM
+@using Client.Models.Common
+@{
+    ViewBag.Title = "Somax | Personnel Details";
+}
+@*V2-831 start*@
+@{
+    bool OraclePurchaseRequestExportInUse = false;
+    bool PurchaseRequestExportInUse = false;   
+    var InterfacePropData = (List<InterfacePropModel>)Session["InterfacePropData"];
+    if (InterfacePropData != null && InterfacePropData.Count > 0)
+    {
+        OraclePurchaseRequestExportInUse = InterfacePropData.Where(x => x.InterfaceType == ApiConstants.OraclePurchaseRequestExport).Select(x => x.InUse).FirstOrDefault();
+        PurchaseRequestExportInUse = InterfacePropData.Where(x => x.InterfaceType == ApiConstants.PurchaseRequestExport).Select(x => x.InUse).FirstOrDefault();        
+    }
+}
+@*V2-831 end*@
+<link href="~/Scripts/Metronic/assets/demo/default/base/style_newCustom.css" rel="stylesheet" />
+
+<div class="m-subheader">
+    <div class="new-m-subheader">
+        <div class="PageTitle">
+            <div class="align-items-center separator">
+                <span style="line-height:35px;" id="personnelsearchtitle"></span>
+                <h3 class="m-subheader__title ">
+                    @Model.Loc.Where(a => a.ResourceId == "spnPersonnel").FirstOrDefault().Value.ToString()
+                </h3>
+            </div>
+        </div>
+        <div class="NewBreadcrumbArea">
+            <div class="newBreadcrumb">
+                <ul>
+                    <li><a href="/Dashboard/Dashboard">&nbsp;</a></li>
+                    <li><a href="/Personnel/Index?page=Personnel">@Model.Loc.Where(a => a.ResourceId == "spnPersonnel").FirstOrDefault().Value.ToString()</a></li>
+                    <li class="active CLientLookId">@Model.personnelModel.ClientLookupId</li>
+                </ul>
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+        @if (Model.security.Personnel_Auxiliary_Information.Access || Model.security.Personnel.MasterQuerySetup)
+        {
+            <div class="ActionBttnArea">
+                <div class="pull-left" id="accsearchactiondiv">
+                    <div class="btn-group bootstrap-select m-datatable__pager-size dropup show selectDrop actionNewDrop" style="margin-right:1;">
+                        <div class="btn-group bootstrap-select m-datatable__pager-size" style="width: 100%;">
+                            <button type="button" class="btn dropdown-toggle bs-placeholder btn-default" data-toggle="dropdown" role="button" title=""><span class="filter-option pull-left">Action</span>&nbsp;<span class="bs-caret"><span class="caret"></span></span></button>
+                            <div class="dropdown-menu open" role="combobox">
+                                <ul class="dropdown-menu inner" role="listbox" aria-expanded="false">
+                                    @if (Model.security.Personnel_Auxiliary_Information.Access)
+                                    {
+                                        <li data-toggle="modal" id="addAuxInformation"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnAuxiliaryInformation").FirstOrDefault().Value.ToString()</a></li>
+                                    }                                  
+                                    @if (Model.UseAssetGroupMasterQuery == true && Model.security.Personnel.MasterQuerySetup == true)
+                                    {
+                                        <li data-toggle="modal" id="OpenAssetGroupMasterQueryModal"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnMasterQuerySetup").FirstOrDefault().Value.ToString()</a></li>
+                                    }
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div style="clear:both;"></div>
+            </div>
+            <div style="clear:both;"></div>
+        }
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xl-3">
+        <div class="m-portlet">
+            <div class="sideMenuArea nobg">
+                <ul class="vtabs" id="detmaintab">
+                    <li class="active" id="livendor"><a href="#Overview">@Model.Loc.Where(a => a.ResourceId == "globalOverview").FirstOrDefault().Value.ToString()</a></li>
+                    <li id="liAttachment"><a href="#Attachments" onclick="GoToTab(event, 'Attachments')">@Model.Loc.Where(a => a.ResourceId == "globalAttachment").FirstOrDefault().Value.ToString()</a></li>
+                    <li id="liEvent"><a href="#Events" onclick="GoToTab(event, 'Events')">@Model.Loc.Where(a => a.ResourceId == "spnEvents").FirstOrDefault().Value.ToString()</a></li>
+                    <li id="liLabor"><a href="#Labor" onclick="GoToTab(event, 'Labor')">@Model.Loc.Where(a => a.ResourceId == "spnLabor").FirstOrDefault().Value.ToString()</a></li>                   
+                </ul>
+            </div>
+            <div class="selectTabs" id="selectTabs">
+                <select class="form-control" id="mobilesidemenuselector" style="border:1px solid #cccc;color:#000">
+                    <option value="Overview">@Model.Loc.Where(a => a.ResourceId == "globalOverview").FirstOrDefault().Value.ToString()</option>
+                    <option value="Attachments">@Model.Loc.Where(a => a.ResourceId == "globalAttachment").FirstOrDefault().Value.ToString()</option>
+                    <option value="Events">@Model.Loc.Where(a => a.ResourceId == "spnEvents").FirstOrDefault().Value.ToString()</option>
+                    <option value="Labor">@Model.Loc.Where(a => a.ResourceId == "spnLabor").FirstOrDefault().Value.ToString()</option>                   
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-9">
+        <div class="row">
+            <div class="col-xl-12" id="btnnblock">
+
+                <div class="m-portlet" id="m_portlet" style="padding:10px;">
+                    <div class="bottomBlock">
+                        <div class="tabsArea nobg" id="Overview" style="display:block;">
+                            <ul class="listView">
+                                <li>
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnPersonalID").FirstOrDefault().Value.ToString() :</span>
+                                    <span class="inputText">@Model.personnelModel.ClientLookupId</span>
+                                </li>
+                                <li>
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnFirstName").FirstOrDefault().Value.ToString() :</span>
+                                    <span class="inputText">@Model.personnelModel.FirstName</span>
+                                </li>
+                                <li>
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnmiddlename").FirstOrDefault().Value.ToString() :</span>
+                                    <span class="inputText">@Model.personnelModel.MiddleName</span>
+                                </li>
+                                <li>
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnLastName").FirstOrDefault().Value.ToString() :</span>
+                                    <span class="inputText">@Model.personnelModel.LastName</span>
+                                </li>
+                                <li>
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnCraft").FirstOrDefault().Value.ToString() :</span>
+                                    <span class="inputText description-span"> @Model.personnelModel.CraftDescription</span>
+                                </li>
+                                <li>
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnShift").FirstOrDefault().Value.ToString() :</span>
+                                    <span class="inputText">@Model.personnelModel.ShiftDescription</span>
+                                </li>  
+                                @if(Model.udata.DatabaseKey.Client.UseMultiStoreroom == true)
+                                {
+                                <li>
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnDefaultStoreroom").FirstOrDefault().Value.ToString() :</span>
+                                    <span class="inputText">@Model.personnelModel.DefaultStoreroom</span>
+                                </li>                                
+                                }                              
+
+                                <li>
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnGlobalScheduleEmployeeWO").FirstOrDefault().Value.ToString():</span>
+                                    <span class="inputText">
+                                        @Html.CheckBoxFor(m => m.personnelModel.ScheduleEmployee, new { @class = "form-control m-input", onclick = "return false;", @style = "color:black; width: auto; margin-top: 12px;" })
+                                    </span>
+                                </li>
+                                <li>
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnPlanner").FirstOrDefault().Value.ToString() :</span>
+                                    <span class="inputText">
+                                        @Html.CheckBoxFor(m => m.personnelModel.Planner, new { @class = "form-control m-input", onclick = "return false;", @style = "color:black; width: auto; margin-top: 12px;" })
+                                    </span>
+                                </li>
+                                @*V2-1108 start*@
+                                <li>
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnAssigned").FirstOrDefault().Value.ToString() @Model.AssetGroup1Label :</span>
+                                    <span class="inputText description-span" style="line-height:26px;">@Model.personnelModel.AssignedAssetGroup1Names</span>
+                                    <div style="clear:both;"></div>
+                                </li>
+                                <li>
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnAssigned").FirstOrDefault().Value.ToString() @Model.AssetGroup2Label :</span>
+                                    <span class="inputText description-span" style="line-height:26px;">@Model.personnelModel.AssignedAssetGroup2Names</span>
+                                    <div style="clear:both;"></div>
+                                </li>
+                                <li>
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnAssigned").FirstOrDefault().Value.ToString()  @Model.AssetGroup3Label :</span>
+                                    <span class="inputText description-span" style="line-height:26px;">@Model.personnelModel.AssignedAssetGroup3Names</span>
+                                    <div style="clear:both;"></div>
+                                </li>
+                                @*V2-1108 end*@
+                                @*V2-1098*@
+                                <li>
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "globalInActive").FirstOrDefault().Value.ToString() :</span>
+                                    <span class="inputText">
+                                        @Html.CheckBoxFor(m => m.personnelModel.InactiveFlag, new { @class = "form-control m-input", onclick = "return false;", @style = "color:black; width: auto; margin-top: 12px;" })
+                                    </span>
+                                </li>
+
+                                @*V2-831 start*@
+                                @if (OraclePurchaseRequestExportInUse || PurchaseRequestExportInUse)
+                                {
+                                    <li>
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnExternalId").FirstOrDefault().Value.ToString() :</span>
+                                        <span class="inputText">@Model.personnelModel.ExternalId</span>
+                                    </li>
+                                }
+                                @*V2-831 end*@
+                                @if (Model.UseAssetGroupMasterQuery)
+                                {
+                                    <li>
+                                        <span class="label">@Model.AssetGroup1Label :</span>
+                                        <span class="inputText description-span" style="line-height:26px;">@Model.personnelModel.AssetGroup1Names</span>
+                                        <div style="clear:both;"></div>
+                                    </li>
+                                    <li>
+                                        <span class="label">@Model.AssetGroup2Label :</span>
+                                        <span class="inputText description-span" style="line-height:26px;">@Model.personnelModel.AssetGroup2Names</span>
+                                        <div style="clear:both;"></div>
+                                    </li>
+                                    <li>
+                                        <span class="label">@Model.AssetGroup3Label :</span>
+                                        <span class="inputText description-span" style="line-height:26px;">@Model.personnelModel.AssetGroup3Names</span>
+                                        <div style="clear:both;"></div>
+                                    </li>
+                                }
+                            </ul>
+                                <div class="editBttn">
+                                    @if (Model.security.Personnel.Edit && Model.personnelModel.InactiveFlag != true)
+                                    {
+                                        <button type="button" id="editpersonnel" class="btn btn-blue"><i class="fa fa-pencil" style="margin-top:-3px;"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalEdit").FirstOrDefault().Value.ToString()</button>
+                                    }
+                                </div>
+                            </div>
+                            <!--Attachments-->
+                            <div class="tabsArea nobg" id="Attachments" style="display:none;">
+                                <div class="table-responsive">
+                                    <table id="attachTable" class="eqpDtlTbl row-border custom-sort" style="width:100%;">
+                                        <thead>
+                                            <tr>
+                                                <th>@Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString()</th>
+                                                <th>@Model.Loc.Where(a => a.ResourceId == "globalFileName").FirstOrDefault().Value.ToString()</th>
+                                                <th>@Model.Loc.Where(a => a.ResourceId == "globalFileSize").FirstOrDefault().Value.ToString()</th>
+                                                <th>@Model.Loc.Where(a => a.ResourceId == "spnUploadedBy").FirstOrDefault().Value.ToString()</th>
+                                                <th>@Model.Loc.Where(a => a.ResourceId == "globalCreateDate").FirstOrDefault().Value.ToString()</th>
+                                                <th width="17%" style="text-align:center !important;">@Model.Loc.Where(a => a.ResourceId == "globalAction").FirstOrDefault().Value.ToString()</th>
+                                            </tr>
+                                        </thead>
+
+                                    </table>
+                                </div>
+                                <div class="bttn_pagin">
+                                    <div class="bttns"><button type="button" class="btn btn-blue" data-toggle="" data-target="" id="btnAddAttachment"><i class="fa fa-plus faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalAddAttachment").FirstOrDefault().Value.ToString()</button></div>
+                                    <div style="clear:both;"></div>
+                                </div>
+                                <div style="clear:both;"></div>
+                            </div>
+                            <!--Attachments End-->
+                            <!--Events-->
+                            <div class="tabsArea nobg" id="Events" style="display:none;">
+                                <div class="table-responsive">
+                                    <table id="eventTable" class="eqpDtlTbl row-border custom-sort" style="width:100%;">
+                                        <thead>
+                                            <tr>
+                                                <th>@Model.Loc.Where(a => a.ResourceId == "GlobalType").FirstOrDefault().Value.ToString()</th>
+                                                <th>@Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString()</th>
+                                                <th>@Model.Loc.Where(a => a.ResourceId == "GlobalComplete").FirstOrDefault().Value.ToString()</th>
+                                                <th>@Model.Loc.Where(a => a.ResourceId == "GlobalExpire").FirstOrDefault().Value.ToString()</th>
+                                                <th width="17%" style="text-align:center !important;@((!Model.security.Personnel_Events.Create && !Model.security.Personnel_Events.Edit &&
+                                                     !Model.security.Personnel_Events.Delete)?"display:none":"")">@Model.Loc.Where(a => a.ResourceId == "globalAction").FirstOrDefault().Value.ToString()</th>
+                                                </tr>
+                                            </thead>
+
+                                        </table>
+                                    </div>
+                                    <div class="bttn_pagin">
+                                        @if (Model.security.Personnel_Events.Create)
+                                        {
+                                            <div class="bttns"><button type="button" class="btn btn-blue" data-toggle="" data-target="" id="btnAddEvents"><i class="fa fa-plus faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "spnAddEvent").FirstOrDefault().Value.ToString()</button></div>
+                                        }
+                                        <div style="clear:both;"></div>
+                                    </div>
+                                    <div style="clear:both;"></div>
+                                </div>
+                                <!--Events End-->
+                                <!--Labor-->
+                                <div class="tabsArea nobg" id="Labor" style="display:none;">
+                                    <div class="table-responsive">
+                                        <table id="LaborTable" class="eqpDtlTbl row-border custom-sort" style="width:100%;">
+                                            <thead>
+                                                <tr>
+                                                    <th>@Model.Loc.Where(a => a.ResourceId == "GlobalChargeTo").FirstOrDefault().Value.ToString()</th>
+                                                    <th>@Model.Loc.Where(a => a.ResourceId == "GlobalDate").FirstOrDefault().Value.ToString()</th>
+                                                    <th>@Model.Loc.Where(a => a.ResourceId == "spnHours").FirstOrDefault().Value.ToString()</th>
+                                                    <th>@Model.Loc.Where(a => a.ResourceId == "spnCost").FirstOrDefault().Value.ToString()</th>
+                                                </tr>
+                                            </thead>
+                                        </table>
+                                    </div>
+                                    <div style="clear:both;"></div>
+                                </div>
+                                <!--Labor End-->
+                                <!--Availability-->
+                                <div class="tabsArea nobg" id="Availability" style="display:none;">
+                                    <div class="table-responsive">
+                                        <table id="availabilityTable" class="eqpDtlTbl row-border custom-sort" style="width:100%;">
+                                            <thead>
+                                                <tr>
+                                                    <th>@Model.Loc.Where(a => a.ResourceId == "GlobalDate").FirstOrDefault().Value.ToString()</th>
+                                                    <th>@Model.Loc.Where(a => a.ResourceId == "spnHours").FirstOrDefault().Value.ToString()</th>
+                                                    <th>@Model.Loc.Where(a => a.ResourceId == "spnShift").FirstOrDefault().Value.ToString()</th>
+                                                    <th width="17%" style="text-align: center !important;
+                                                 @((!Model.security.Personnel_Availability.Create && !Model.security.Personnel_Availability.Edit &&
+                                                     !Model.security.Personnel_Availability.Delete)?"display:none":"")">
+                                                        @Model.Loc.Where(a => a.ResourceId == "globalAction").FirstOrDefault().Value.ToString()
+                                                    </th>
+                                                </tr>
+                                            </thead>
+
+                                        </table>
+                                    </div>
+                                    <div class="bttn_pagin">
+                                        @if (Model.security.Personnel_Availability.Create)
+                                        {
+                                            <div class="bttns">
+                                                <button type="button" class="btn btn-blue" data-toggle="" data-target="" id="btnAddAvailability" style="display:none;">
+                                                    <i class="fa fa-plus faIcon"></i>
+                                                    &nbsp; @Model.Loc.Where(a => a.ResourceId == "spnAddAvailability" && a.ResourceSet == LocalizeResourceSetConstants.PersonnelDetails).FirstOrDefault().Value.ToString()
+                                                </button>
+                                            </div>
+                                        }
+                                        <div style="clear:both;"></div>
+                                    </div>
+                                    <div style="clear:both;"></div>
+                                </div>
+                                <!--Availability End-->
+                                <!--Attendance-->
+                                <div class="tabsArea nobg" id="Attendance" style="display:none;">
+                                    <div class="table-responsive">
+                                        <table id="attendanceTable" class="eqpDtlTbl row-border custom-sort" style="width:100%;">
+                                            <thead>
+                                                <tr>
+                                                    <th>@Model.Loc.Where(a => a.ResourceId == "spnDate").FirstOrDefault().Value.ToString()</th>
+                                                    <th style="text-align:right !important">@Model.Loc.Where(a => a.ResourceId == "spnHours").FirstOrDefault().Value.ToString()</th>
+                                                    <th>@Model.Loc.Where(a => a.ResourceId == "spnShift").FirstOrDefault().Value.ToString()</th>
+                                                    <th width="17%" style="text-align:center !important;
+                                                @((!Model.security.Personnel_Attendance.Create && !Model.security.Personnel_Attendance.Edit &&
+                                                     !Model.security.Personnel_Attendance.Delete)?"display:none":"")">@Model.Loc.Where(a => a.ResourceId == "globalAction").FirstOrDefault().Value.ToString()</th>
+                                                </tr>
+                                            </thead>
+                                        </table>
+                                    </div>
+                                    @if (Model.security.Personnel_Attendance.Create)
+                                    {
+                                        <div class="bttn_pagin">
+                                            <div class="bttns"><button type="button" class="btn btn-blue" data-toggle="" data-target="" id="btnAddAttendance"><i class="fa fa-plus faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "spnAddAttendance").FirstOrDefault().Value.ToString()</button></div>
+                                            <div style="clear:both;"></div>
+                                        </div>
+                                    }
+                                    <div style="clear:both;"></div>
+                                </div>
+                                <!--Attendance End-->
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @Html.HiddenFor(x => x.personnelModel.PersonnelId)
+            @Html.HiddenFor(x => x.personnelModel.ClientLookupId)
+        </div>
+        @if (Model.security.Personnel_Auxiliary_Information.Access)
+        {
+            @Html.Partial("_AuxiliaryInformationModal", Model)
+        }
+        @if (Model.security.Personnel.MasterQuerySetup)
+        {
+            @Html.Partial("_AssetGroupMasterQuery", Model)
+        }
+
+        @*Page Specific CSS - Sudip (20-08-2021)*@
+        <style type="text/css">
+            @@media screen and (max-width: 1023px) {
+                .PageTitle {
+                    float: left;
+                }
+
+                .NewBreadcrumbArea {
+                    float: left;
+                }
+
+                .m-subheader .m-subheader__title {
+                    padding: 7px 12px 7px 0 !important;
+                }
+
+                .separator {
+                    border-right: 1px solid #ccc !important;
+                }
+
+                .newBreadcrumb ul li:first-child {
+                    margin-left: 0 !important;
+                }
+            }
+            @@media screen and (max-width: 767px) {
+                .ActionBttnArea .pull-left{
+                    width:100% !important;
+                }
+            }
+
+            @@media only screen and (min-width: 568px) and (max-width: 639px) {
+                .ActionBttnArea {
+                    width: 100%;
+                    float: left;
+                    margin-top: 8px;
+                }
+            }
+
+            @@media only screen and (min-width: 480px) and (max-width: 567px) {
+                .ActionBttnArea {
+                    width: 100%;
+                    float: left;
+                    margin-top: 8px;
+                }
+            }
+
+            #AssetGroupMasterQueryModal .select2-container--default .select2-selection--multiple {
+                min-height: 34px !important;
+                height: auto;
+            }
+            @@media only screen and (min-width: 320px) and (max-width: 359px) {
+                .bootstrap-select:not([class*="col-"]):not([class*="form-control"]):not(.input-group-btn) {
+                    width: 100% !important;
+                }
+            }
+        </style>

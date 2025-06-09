@@ -1,0 +1,216 @@
+﻿@model Client.Models.FleetIssue.FleetIssueVM
+<link href="~/Scripts/Metronic/assets/demo/default/base/style_newCustom.css" rel="stylesheet" />
+
+@if (Convert.ToString(Session["MenuState"]) == "" || Convert.ToString(Session["MenuState"]) == "open")
+{
+    <div class="m-subheader fixedDiv1">
+        <div class="new-m-subheader">
+            <div class="PageTitle">
+                <div class="align-items-center">
+                    <h3 class="m-subheader__title" style="padding:0;">
+                        <span class="dropToggle" id="spnDropToggle">
+                            <img src="~/Images/toggleMenu.png" />
+                        </span>
+                        <span style="line-height:35px;" id="fleetissuesearchtitle">
+
+                        </span>
+                    </h3>
+                         </div>
+            </div>
+
+            <div class="ActionBttnArea">
+                @if (Model.security.Fleet_Issues.Create)
+                {
+                    <button type="button" class="btn newBtn-add AddIssue pull-left" title="Add Issue">@Model.Loc.Where(a => a.ResourceId == "spnNewAddIssue").FirstOrDefault().Value.ToString()</button>
+                }
+                <div style="clear:both;"></div>
+            </div>
+            <div style="clear:both;"></div>
+        </div>
+    </div>
+}
+else
+{
+    <div class="m-subheader fixedDiv1 fixupperpannel2">
+        <div class="new-m-subheader">
+            <div class="PageTitle">
+                <div class="align-items-center">
+                    <h3 class="m-subheader__title" style="padding:0;">
+                        <span class="dropToggle" id="spnDropToggle">
+                            <img src="~/Images/toggleMenu.png" />
+                        </span>
+                        <span style="line-height:35px;" id="fleetissuesearchtitle">
+                        </span>
+                    </h3>
+                </div>
+            </div>
+
+            <div class="ActionBttnArea">
+               @if (Model.security.Fleet_Issues.Create)
+                {
+                <button type="button" class="btn newBtn-add AddIssue pull-left" title="Add Issue">@Model.Loc.Where(a => a.ResourceId == "spnNewAddIssue").FirstOrDefault().Value.ToString()</button>
+                }
+                <div style="clear:both;"></div>
+            </div>
+            <div style="clear:both;"></div>
+        </div>
+    </div>
+}
+
+<div class="pushDiv1"></div>
+<div class="row">
+    <div class="col-xl-12">
+        <div class="m-portlet" id="m_portlet" style="padding:15px;">
+            <div class="actionBar" style="display:block" id="fleetfuelGridAction">
+                <div class="pull-left" style="position:relative;">
+                    <button type="button" class="btn btn-white navbar-btn" title="Search" id="SrchBttnNew"><i class="fa fa-search" style="font-size: 1.1rem;position: relative;top: -2px;left: -2px;"></i> @Model.Loc.Where(a => a.ResourceId == "globalSearch").FirstOrDefault().Value.ToString()</button>
+                    <button type="button" class="btn btn-white navbar-btn" id="sidebarCollapse" title="Advance Search"><i class="fa fa-filter" style="font-size: 1.3rem;"></i></button>
+                    <div style="clear:both;"></div>
+                    <div class="searchBttnDrop desktop" id="searchBttnNewDrop" style="display:none;">
+                        <div class="form-group" style="position:relative;">
+                            <i class="fa fa-search txtSearchClick" style="font-size: 1.1rem;position: absolute;top: 9px;left: 15px;"></i>
+                            <a href="javascript:void(0)" id="cancelText"><i class="fa fa-close" style="font-size: 1.1rem;position: absolute;top: 9px;right: 15px;"></i></a>
+                            <input type="text" id="txtColumnSearch" class="form-control search" placeholder="Search..." style="padding: 0.65rem 2.75rem;" autocomplete="off">
+                        </div>
+                        <div class="searchTips">
+                            <div class="titleText">@Model.Loc.Where(a => a.ResourceId == "spnSearchTips").FirstOrDefault().Value.ToString()</div>
+                            <div class="infoText">@Model.Loc.Where(a => a.ResourceId == "spnSearchFleetIssue").FirstOrDefault().Value.ToString()</div>
+                            <div style="clear:both;"></div>
+                        </div>
+
+                        <div class="searchInfo">
+                            <span class="recent">
+                                @Model.Loc.Where(a => a.ResourceId == "GlobalRecentlySearched").FirstOrDefault().Value.ToString()
+                            </span>
+                            <div class="searchList" id="wosearchList">
+                                <ul id="UlSearchList"></ul>
+                            </div>
+                            <span class="clear">
+                                <a href="javascript:void(0)" id="clearText">
+                                    @Model.Loc.Where(a => a.ResourceId == "globalClear").FirstOrDefault().Value.ToString()
+                                </a>
+                            </span>
+                            <div style="clear:both;"></div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="pull-right">
+                    <button type="button" style="margin-right:0px !important;" class="btn btn-white import-export" id="btnFleetIssueExport" onclick="funcShowExportbtn()">
+                        @Model.Loc.Where(a => a.ResourceId == "spnExport").FirstOrDefault().Value.ToString()
+                    </button>
+                    
+                    <div style="clear:both;"></div>
+                </div>
+                <div style="clear:both;"></div>
+                <div id="dvFilterSearchSelect2"></div>
+                <div style="clear:both;"></div>
+            </div>
+
+            <div style="clear:both;"></div>
+            @Html.Partial("_FleetErrorDiv")
+            <div id="Active" class="tabcontent" style="display:block;">
+                <div class="table-responsive">
+                    <table id="fleetissueSearch" class="eqpDtlTbl row-border custom-sort tblMain tblDefaultSort" style="width:100%;">
+                        <thead>
+                            <tr>
+                                <th> @Model.Loc.Where(a => a.ResourceId == "hdrTitle").FirstOrDefault().Value.ToString()</th>
+                                <th>@Model.Loc.Where(a => a.ResourceId == "spnRecordDate").FirstOrDefault().Value.ToString()</th>
+                                <th >@Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString()</th>
+                                <th>@Model.Loc.Where(a => a.ResourceId == "spnStatus").FirstOrDefault().Value.ToString()</th>
+                                <th>@Model.Loc.Where(a => a.ResourceId == "spnDefects").FirstOrDefault().Value.ToString()</th>
+                                <th>@Model.Loc.Where(a => a.ResourceId == "GlobalComplete").FirstOrDefault().Value.ToString()</th>
+                                <th style="text-align:center !important; min-width:100px;">@Model.Loc.Where(a => a.ResourceId == "globalAction").FirstOrDefault().Value.ToString()</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div id="fleetIssueModalpopup" class="modal fade" role="dialog">
+    <div class="modal-dialog" id="FleetIssuePopup">
+    </div>
+</div>
+@Html.Partial("~/Views/FleetIssue/_FleetIssueEquipmentPopup.cshtml")
+@if (Convert.ToString(Session["MenuState"]) == "" || Convert.ToString(Session["MenuState"]) == "open")
+{
+    <div id="searcharea" class="slideToggleBar" style="display:none">
+        <div class="searchBoxArea">
+            <div class="form-group" style="margin-bottom:0; position:relative;">
+                <i class="fa fa-search" style="font-size: 1.1rem;position: absolute;top: 8px;left: 0px;"></i>
+                <input type="text" class="form-control searched" placeholder="Search for a view" id="fleetissuesearctxtbox">
+            </div>
+        </div>
+
+        <div class="searchList">
+            <ul id="fleetissuesearchListul">
+                @foreach (var item in Model.FleetIssueModel.IssueViewList)
+                {
+                    <li id="@item.Value" class="fleetissuesearchdrpbox"><a href="javascript:void(0)">@item.Text</a></li>
+                }
+            </ul>
+        </div>
+    </div>
+}
+else
+{
+    <div id="searcharea" class="slideToggleBar" style="display:none;left:81px !important;">
+        <div class="searchBoxArea">
+            <div class="form-group" style="margin-bottom:0; position:relative;">
+                <i class="fa fa-search" style="font-size: 1.1rem;position: absolute;top: 8px;left: 0px;"></i>
+                <input type="text" class="form-control searched" placeholder="Search for a view" id="fleetissuesearctxtbox">
+            </div>
+        </div>
+
+        <div class="searchList">
+            <ul id="fleetassetsearchListul">
+                @foreach (var item in Model.FleetIssueModel.IssueViewList)
+                {
+                    <li id="@item.Value" class="fleetissuesearchdrpbox"><a href="javascript:void(0)">@item.Text</a></li>
+                }
+            </ul>
+        </div>
+    </div>
+}
+
+@Html.Partial("_Export")
+@Html.Partial("_FleetIssueAdvancedSearch")
+@Html.Partial("_FleetIssueDateRangeModal")
+    <style>
+    #popupExport button#liCsv, #popupExport button#liExcel { display: none; }
+        #popupExport {
+            right: 30px !important;
+        }
+    #fleetIssueModalpopup .select2-container--default .select2-selection--multiple { min-height: 28px !important; height: auto; }    
+    .modal-open { overflow: hidden !important; }
+    /*.ui-tooltip { z-index: 99 !important; }*/
+    @@media only screen and (max-width: 1365px) and (min-width: 1200px) {
+        /*#popupExport { right: 123px !important; */}
+    }
+    @@media only screen and (max-width: 1023px) and (min-width: 768px) {
+        #popupExport { right: 138px !important; }
+        .modal-dialog { max-width: 730px; }
+    }
+    @@media screen and (max-width: 767px) {
+        .actionBar div.pull-left { width: auto; }
+        .actionBar div.pull-right { float: right; margin-top: 0; width: auto; }
+        .modal-dialog { max-width: 610px; }
+    }
+    @@media only screen and (max-width: 567px) and (min-width: 480px) {
+        .actionBar div.pull-right { float: left; margin-top: 10px; }
+    }
+    @@media screen and (max-width: 479px) {
+        .actionBar div.pull-right { width: 100%; }
+        .import-export { margin-top: 10px !important; }
+    }
+    @@media only screen and (max-width: 359px) and (min-width: 320px) {
+        #btnsortmenu { width: 170px; }
+    }
+    </style>
+
+

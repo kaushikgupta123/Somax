@@ -1,0 +1,110 @@
+﻿@model Client.Models.EquipmentCombined
+@{
+    var widgetClass = "";
+    if (Model.EquipData.Status == AssetStatusConstant.Assigned)
+    {
+        widgetClass = "assigned-widget";
+    }
+    else if (Model.EquipData.Status == AssetStatusConstant.Unassigned)
+    {
+        widgetClass = "unassigned-widget";
+    }
+   
+}
+<div class="m-portlet padAdjstNew" id="m_portlet">
+    <div class="m-portlet__head" style="padding:0; margin-bottom:10px;">
+        <div class="m-portlet__head-caption">
+            <div class="m-portlet__head-title">
+                <h3 class="m-portlet__head-text" style="font-size: 1.2rem; line-height:3.55;">
+                    @Model.Loc.Where(a => a.ResourceId == "spnAssignment").FirstOrDefault().Value.ToString()
+                </h3>
+            </div>
+        </div>
+    </div>
+
+    <div style="padding-top:5px;">
+        <div style="padding-bottom:10px;">
+            <div style="padding: 0 5px;">
+                <div class="">
+                    <div class="text-center">
+                        <h2 class="m-portlet__head-text @widgetClass">
+                          
+                            @if (Model.EquipData.Status == AssetStatusConstant.Assigned || Model.EquipData.Status == AssetStatusConstant.Unassigned)
+                            {
+                                @Model.EquipData.Status
+                            }
+                        </h2>
+                    </div>
+                </div>
+                <div>
+                    <ul class="listView new-design">
+                        <li>
+                          
+                            <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnAssignedtoAssetId").FirstOrDefault().Value.ToString()</span>
+                            <span class="inputText" title="@Model.EquipData.AssignedClientlookupid">@(String.IsNullOrEmpty(Model.EquipData.AssignedClientlookupid) ? "" : (Model.EquipData.AssignedClientlookupid.Length > 12 ? (Model.EquipData.AssignedClientlookupid.Substring(0, 12) + "...") : (Model.EquipData.AssignedClientlookupid)))</span>
+                        </li>
+                        <li style="height:auto;">
+                          
+                            <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnAssigntoAssetName").FirstOrDefault().Value.ToString()</span>
+                            <span class="inputText description-span" style="line-height:26px;">@Model.EquipData.AssignedAssetName</span>
+                            <div style="clear:both;"></div>
+                        </li>
+                        <li style="height:auto;">
+                            <span class="label">@Model._userdata.Site.AssetGroup1Name</span>
+                            <span class="inputText description-span" style="line-height:26px;">@Model.EquipData.AssetGroup1Desc</span>
+                            <div style="clear:both;"></div>
+                        </li>
+                        <li style="height:auto;">
+                            <span class="label">@Model._userdata.Site.AssetGroup2Name</span>
+                            <span class="inputText description-span" style="line-height:26px;">@Model.EquipData.AssetGroup2Desc</span>
+                            <div style="clear:both;"></div>
+                        </li>
+                        <li style="height:auto;">
+                            <span class="label">@Model._userdata.Site.AssetGroup3Name</span>
+                            <span class="inputText description-span" style="line-height:26px;">@Model.EquipData.AssetGroup3Desc</span>
+                            <div style="clear:both;"></div>
+                        </li>
+                        <li style="height:auto;">
+                            @*<span class="label">Location</span>*@
+                            <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnLocation").FirstOrDefault().Value.ToString()</span>
+                            <span class="inputText description-span" style="line-height:26px;">@Model.EquipData.Location</span>
+                            <div style="clear:both;"></div>
+                        </li>
+                        <li style="height:auto;">
+                            @*<span class="label">Parent</span>*@
+                            <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnParentId").FirstOrDefault().Value.ToString()</span>
+                            <span class="inputText description-span" style="line-height:26px;">@Model.EquipData.ParentIdClientLookupId</span>
+                            <div style="clear:both;"></div>
+                        </li>
+                    </ul>
+                </div>
+                <div style="clear:both;"></div>
+                <div class="form-group" style="margin-bottom:0;">
+                    @if (Model.EquipData.Status == AssetStatusConstant.Assigned && Model.security.Asset_RepairableSpare.Assignment)
+                    {
+                        <button type="button" class="btn btn-blue mobBttn openRepairableAsset" data-isassigned="false" style="cursor:pointer; float:right;">
+                            <i class="fa fa-reply"></i>&nbsp;
+                            @*Unassign*@
+                            @Model.Loc.Where(a => a.ResourceId == "spnUnassign").FirstOrDefault().Value.ToString()
+                        </button>
+                    }
+                    else if (Model.EquipData.Status == AssetStatusConstant.Unassigned && Model.security.Asset_RepairableSpare.Assignment)
+                    {
+                        <button type="button" class="btn btn-blue mobBttn openRepairableAsset" data-isassigned="true" style="cursor:pointer; float:right;">
+                            <i class="fa fa-share"></i>&nbsp;
+                            @*Assign*@
+                            @Model.Loc.Where(a => a.ResourceId == "spnAssign").FirstOrDefault().Value.ToString()
+                        </button>
+                    }
+                    @if (Model.security.Asset_RepairableSpare.Access)
+                    {
+                    <button type="button" id="btnAssignmentViewLog" class="btn btn-blue mobBttn" style="cursor:pointer; float:left;"><i class="fa fa-history"></i>&nbsp;@Model.Loc.Where(a => a.ResourceId == "spnViewLog").FirstOrDefault().Value.ToString()</button>
+                    }
+                    <div style="clear:both;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@Html.Partial("~/Views/Equipment/RepairableSpare/_AssignedUnAssignedModalPopup.cshtml")
+@Html.Partial("~/Views/Equipment/RepairableSpare/_AssignmentViewLogPopup.cshtml")

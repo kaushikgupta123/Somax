@@ -1,0 +1,325 @@
+﻿@model Client.Models.Configuration.UIConfiguration.UiConfigurationVM
+<link href="~/Scripts/Metronic/assets/demo/default/base/style_newCustom.css" rel="stylesheet" />
+<div class="ui-configuration-wrap">
+
+
+    <div class="m-subheader ">
+        <div class="new-m-subheader">
+            <div class="PageTitle">
+                <div class="align-items-center">
+                    <h3 class="m-subheader__title ">
+                        @Model.Loc.Where(a => a.ResourceId == "spnUserInterfaceConfiguration").FirstOrDefault().Value.ToString()
+                    </h3>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div style="clear:both;"></div>
+
+    @using (Ajax.BeginForm("UpdateSelecetdandAvailableList", "UiConfiguration", new AjaxOptions { HttpMethod = "Post", OnSuccess = "UiConfigurationAddOnSuccess", OnBegin = "onLoginBegin", OnFailure = "onLoginFailure" }, new { enctype = "multipart/form-data", id = "Uiaddform" }))
+    {
+        @Html.AntiForgeryToken()
+        <div class="ui-wrap-box">
+
+            <div class="row">
+                <div class="col-xl-12">
+                    <div class="tabsArea nobg">
+                        <ul class="listView nobrd" style="padding-bottom:10px; margin-bottom:10px;">
+                            <li class="descrptn">
+                                <span class="label lblDes">@Model.Loc.Where(a => a.ResourceId == "spnView").FirstOrDefault().Value.ToString() :</span>
+                                <span class="inputText lblDesinput">
+                                    @Html.DropDownListFor(m => m.UIViewId, Model.uiViewModel.ViewNameLookUpList, new { @class = "form-control search select2picker", style = "width:100%;", id = "viewNameLookUp" })
+                                </span>
+                            </li>
+                        </ul>
+                        <div style="clear:both;"></div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div id="AvailableandselectedContent">
+
+            </div>
+
+        </div>
+
+        @Html.HiddenFor(m => m.hiddenSelectedList, new { id = "hiddenSelectedList" })
+        @Html.HiddenFor(m => m.hiddenAvailableList, new { id = "hiddenAvailableList" })
+    }
+
+</div>
+@Html.Partial("~/Views/Configuration/UIConfiguration/_AddUserDefineFieldsModal.cshtml")
+@*@Html.Partial("~/Views/Configuration/UIConfiguration/_ColumnSettingDetails.cshtml")*@
+@Html.Partial("~/Views/Configuration/UIConfiguration/_AddSectionModal.cshtml")
+
+<div id="ColumnConfigurationSettings">
+
+</div>
+<!-- Modal -->
+@*<div class="modal fade" id="Fieldmodal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Add Defined Field</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <table class="table table-style table-striped">
+                        <thead>
+                            <tr>
+                                <th scope="col">Select </th>
+                                <th scope="col">Column Name</th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+
+                                <td><label class="m-checkbox m-checkbox--air m-checkbox--solid m-checkbox--state-brand somax-checkbox lbl-innergrid-checkbox"><input type="checkbox" checked="checked" class="status"><span></span></label></td>
+                                <td>Text 1</td>
+                            </tr>
+                            <tr>
+
+                                <td><label class="m-checkbox m-checkbox--air m-checkbox--state-brand somax-checkbox lbl-innergrid-checkbox"><input type="checkbox" class="status"><span></span></label></label></td>
+                                <td>Text 1</td>
+                            </tr>
+                            <tr>
+                                <td><label class="m-checkbox m-checkbox--air m-checkbox--state-brand somax-checkbox lbl-innergrid-checkbox"><input type="checkbox" class="status"><span></span></label></label></td>
+                                <td>Data1</td>
+                            </tr>
+                            <tr>
+                                <td>&nbsp</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>&nbsp</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>&nbsp</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>&nbsp</td>
+                                <td>&nbsp</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer" style="padding-top:15px !important;">
+                    <button type="button" data-dismiss="modal" class="btn btn-white saveConfig" style="float:right;">
+                        <i class="fa fa-close faIcon"></i> &nbsp; Cancel
+                    </button>
+                    <button type="button" class="btn btn-white" data-dismiss="modal">
+                        <i class="fa fa-plus"></i> &nbsp; Add Field
+                        <div style="clear:both;"></div>
+                </div>
+            </div>
+        </div>
+    </div>*@
+<!-- Modal -->
+
+
+
+
+
+
+
+<style>
+    .left-box {
+        display: flex;
+        align-items: center;
+        width: calc(100% - 68px);
+        flex-wrap: wrap;
+    }
+    .click-btn {
+        float:right;
+    }
+        .card-box {
+        background-position: 12px center;
+        background-repeat: no-repeat;
+        background-color: #d6d8dd;
+        box-shadow: 0 2px 6px 0 rgb(152 160 180);
+        margin: 0 0 10px 0;
+        width: 100%;
+        padding: 10px 20px 10px 10px;
+        background-size: 18px;
+        font-size: 15px;
+        border-radius: 10px;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-self: self-end;
+        justify-content: space-between;
+    }
+
+        .card-box .icon-drag {
+            background-image: url(/Content/Images/btn-bg.png);
+            background-position: center center;
+            background-repeat: no-repeat;
+            background-size: 100%;
+            width: 20px;
+            height: 20px;
+            display: inline-block;
+            margin-right: 15px;
+            cursor: pointer;
+        }
+
+    .table-style th {
+        background-color: #ccc;
+    }
+
+    .ui-wrap-box .btn.btn-outline-primary.gridinnerbutton {
+        color: #315a98 !important;
+        border-color: #315a98 !important;
+    }
+
+        .ui-wrap-box .btn.btn-outline-primary.gridinnerbutton:hover, .ui-wrap-box .btn.btn-outline-primary.gridinnerbutton:active, dropdown-toggle-split:active i, .ui-wrap-box .show > .btn-outline-primary.dropdown-toggle {
+            background: #315a98 !important;
+            color: #fff !important;
+        }
+
+    .ui-wrap-box .btn.dropdown-toggle:after {
+        display: none;
+    }
+
+    .card-box i {
+        font-size: 20px;
+        color: #000000;
+    }
+
+    .add-left {
+        margin-left: 15px;
+    }
+
+    .red-required {
+        color: #f00;
+        display: inline-block;
+        padding: 0 10px;
+        font-size: 12px;
+    }
+
+    .Columntext {
+        width: calc(100% - 105px);
+    }
+
+    .ui-wrap-box {
+        padding: 15px;
+        box-shadow: 0px 1px 15px 1px rgb(69 65 78 / 8%);
+        background-color: #ffffff;
+    }
+
+    .drop-down-box {
+        position: relative;
+        display: inline-block;
+    }
+
+        .drop-down-box ul {
+            width: 140px;
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            background-color: #fff;
+        }
+
+        .drop-down-box:hover ul {
+            display: block;
+        }
+
+        .drop-down-box ul li {
+            padding: 8px 10px;
+            border-bottom: rgb(152 160 180) 1px solid;
+            font-size: 14px;
+            font-weight: 400;
+            display: block;
+            text-align: left;
+        }
+
+            .drop-down-box ul li a {
+                text-decoration: none;
+            }
+
+                .drop-down-box ul li a:hover {
+                    color: #4da5fe;
+                }
+
+            .drop-down-box ul li:last-child {
+                border-bottom: 0;
+            }
+
+    .ui-wrap-box h5 {
+        font-size: 22px;
+        margin: 50px 0 0 0;
+    }
+
+    .card-box.white {
+        background-color: #ffffff;
+    }
+
+    .card-group {
+        padding: 30px 30px;
+    }
+
+    .icon-box {
+        width: 58px;
+        float: right;
+        height: 18px;
+    }
+
+    .click-btn {
+        display: inline-block;
+        padding: 0 4px
+    }
+
+    .row-wrap {
+        max-width: 900px;
+        margin: 30px auto 0;
+        padding: 30px 0;
+        border: #ccc 1px solid;
+    }
+
+    @@media(max-width: 480px) {
+
+        .card-box .icon-drag {
+            margin-left:6px
+        }
+        .left-box {
+            width: calc(100% - 45px);
+        }
+            .card-box {
+            padding: 10px;
+        }
+
+        .red-required {
+            padding: 0 11px;
+        }
+
+        .click-btn {
+            padding: 0 2px;
+        }
+
+        .icon-box {
+            width: 45px;
+        }
+
+        .card-box i {
+            font-size: 17px;
+            color: #000000;
+        }
+
+        .red-required {
+            padding: 2px 11px 0px 40px;
+        }
+
+       
+        .card-group {
+            padding: 30px 10px;
+        }
+
+        
+    }
+</style>
+

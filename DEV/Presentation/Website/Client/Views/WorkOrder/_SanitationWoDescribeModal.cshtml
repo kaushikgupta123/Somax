@@ -1,0 +1,68 @@
+﻿@model Client.Models.Work_Order.WorkOrderVM
+<div class="m-subheader fixedDiv1">
+    <div class="new-m-subheader">
+        <div class="PageTitle">
+            <div class="align-items-center separator">
+                <h3 class="m-subheader__title ">
+                    @Model.Loc.Where(a => a.ResourceId == "spnAddSanitationRequest").FirstOrDefault().Value.ToString()
+                </h3>
+            </div>
+        </div>
+
+        <div class="NewBreadcrumbArea">
+            <div class="newBreadcrumb">
+                <ul>
+                    <li><a href="/Dashboard/Dashboard">&nbsp;</a></li>
+                    <li><a href="/WorkOrder/Index?page=Maintenance_WorkOrder_Search">@Model.Loc.Where(a => a.ResourceId == "spnWorkOrderSearch").FirstOrDefault().Value.ToString()</a></li>
+                    <li><a href="javascript:void(0)" id="brdworkorder" data-val="@Model.sanitationDescribeWoModel.WorkOrderId">@Model.sanitationDescribeWoModel.ClientLookupId</a></li>
+                </ul>
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+        <div style="clear:both;"></div>
+    </div>
+</div>
+<div class="pushDiv1"></div>
+
+@Html.Partial("_ErrorDiv")
+<div class="row">
+    <div class="col-xl-12">
+        <div class="m-portlet newPort" id="m_portlet" style="padding:15px;">
+            <div class="bottomBlock" style="margin-bottom:15px;">
+                @using (Ajax.BeginForm("SaveSanitationDescribe", "WorkOrder", new AjaxOptions { HttpMethod = "Post", OnSuccess = "SanitationAddOnSuccess", OnBegin = "AjaxBeginFormBegin", OnComplete = "AjaxBeginFormComplete", OnFailure = "AjaxBeginFormFaillure" }))
+                { @Html.AntiForgeryToken()
+                    <div class="tabsArea nobg">
+                        <ul class="listView nobrd rt-part">
+                            <li class="txtSrchArea txtSrch">
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnOnDemandProcedure").FirstOrDefault().Value.ToString(): <small>*</small></span>
+                                <span class="inputText wthAdjst">
+                                    @Html.DropDownListFor(m => m.sanitationDescribeWoModel.OnDemandId, Model.sanitationDescribeWoModel.OnDemandList, "--Select--", new { @class = "form-control search select2picker", style = "width:100%;" })
+                                    @Html.ValidationMessageFor(m => m.sanitationDescribeWoModel.OnDemandId, "", new { style = "display:none" })
+                                </span>
+                            </li>
+                            <li class="txtSrchArea txtSrch">
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnRequired").FirstOrDefault().Value.ToString(): <small>*</small></span>
+                                <span class="inputText wthAdjst">
+                                    @Html.TextBoxFor(m => m.sanitationDescribeWoModel.Required, "{0:MM/dd/yyyy}", new { @class = "form-control search dtpicker", autocomplete = "off" })
+                                    @Html.ValidationMessageFor(m => m.sanitationDescribeWoModel.Required, "", new { style = "display:none" })
+                                </span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div style="clear:both;"></div>
+                    <div class="idBttns">
+                        <div class="bttn_pagin">
+                            <div class="bttns2">
+                                <button type="submit" class="btn btn-blue mobBttn"><i class="fa fa-save faIcon"></i> &nbsp;@Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+                            </div>
+                            <div class="bttns"><button type="button" class="btn btn-blue mobBttn btnCancelDataval" data-val="@Model.sanitationDescribeWoModel.WorkOrderId"><i class="fa fa-close faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button></div>
+                            <div style="clear:both;"></div>
+                        </div>
+                   </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+

@@ -1,0 +1,16 @@
+﻿
+@{
+    ViewBag.Title = "Somax-Config | Category Master";
+}
+
+@section scripts {
+    @Scripts.Render("~/bundles/datatable")
+    @Styles.Render("~/Content/dropzone")
+    @Scripts.Render("~/bundles/CategoryMaster")
+}
+@Styles.Render("~/Content/datatable")
+<link href="~/Scripts/dropzone/basic.min.css" rel="stylesheet" />
+<div id="renderCategoryMaster">
+    @Html.Partial("~/Views/Configuration/CategoryMaster/_CategoryMasterSearch.cshtml")
+</div>
+

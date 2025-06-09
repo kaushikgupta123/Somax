@@ -1,0 +1,115 @@
+﻿@model Client.Models.Dashboard.DashboardVM
+@using (Ajax.BeginForm("SaveDowntime_Mobile", "Dashboard", new AjaxOptions { HttpMethod = "Post", OnSuccess = "DowntimeAddOnSuccess", OnBegin = "AjaxBeginFormBegin", OnComplete = "AjaxBeginFormComplete", OnFailure = "AjaxBeginFormFaillure" }, new { id = "frmDowntimeAdd" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(m => m.woDowntimeModel.DowntimeId)
+    @Html.HiddenFor(m => m.woDowntimeModel.WorkOrderId)
+    @Html.HiddenFor(m => m.woDowntimeModel.ChargeToId)
+
+    <div class="slide-modal-head">
+        <a class="slide-back-btn clearstateDowntime"> <i class="fa fa-angle-left"></i> Back</a>
+        @if (ViewBag.Mode == "Add")
+        {
+            <div class="slide-back-title">
+                @Model.Loc.Where(a => a.ResourceId == "GlobalAddDowntime").FirstOrDefault().Value.ToString()
+            </div>
+        }
+        else
+        {
+         <div class="slide-back-title">
+            @Model.Loc.Where(a => a.ResourceId == "globalDowntimeEdit").FirstOrDefault().Value.ToString()
+         </div>
+        }
+    </div>
+    @Html.Partial("_ErrorDiv")
+    <div class="slide-modal-body">
+        <div mbsc-page class="demo-responsive">
+            <div style="height:100%">
+                <div mbsc-form class="mbsc-form-grid">
+                    <div class="mbsc-grid">
+                        <div class="mbsc-row">
+
+                            <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                <label>
+                                    @Model.Loc.Where(a => a.ResourceId == "GlobalDate").FirstOrDefault().Value.ToString()
+                                    @Html.TextBoxFor(m => m.woDowntimeModel.Downdate, "{0:MM/dd/yyyy}", new { @class = "form-control search", @mbsc_input = "true", @data_label_style = "floating", @placeholder = Model.Loc.Where(a => a.ResourceId == "GlobalDate").FirstOrDefault().Value.ToString(), @data_input_style = "box", autocomplete = "off" })
+                                </label>
+                                @Html.ValidationMessageFor(m => m.woDowntimeModel.Downdate, "", new { })
+                            </div>
+                            <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                <label>
+                                    @Model.Loc.Where(a => a.ResourceId == "globalMinutes").FirstOrDefault().Value.ToString()
+                                    @Html.TextBoxFor(m => m.woDowntimeModel.MinutesDown, new { @class = "form-control search", @mbsc_input = "true", @data_label_style = "floating", @placeholder = Model.Loc.Where(a => a.ResourceId == "globalMinutes").FirstOrDefault().Value.ToString(), @data_input_style = "box", autocomplete = "off" })
+                                </label>
+                                @Html.ValidationMessageFor(m => m.woDowntimeModel.MinutesDown, "", new { })
+                            </div>
+                            <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+
+                                <label>
+                                    @Model.Loc.Where(a => a.ResourceId == "spnReasonForDown").FirstOrDefault().Value.ToString()
+
+                                    @if (ViewBag.Mode == "Add")
+                                    {
+                                        @Html.DropDownListFor(m => m.woDowntimeModel.ReasonForDown, Model.woDowntimeModel.ReasonForDownList, "--Select--", new
+                                        {
+                                       @class = "form-control search mobiscrollselect",
+                                       @style = "width:100%;",
+                                       @mbsc_dropdown = "true",
+                                       @data_label = "Reason for Down",
+                                       @data_input_style = "box",
+                                       @data_label_style = "floating",
+                                       @placeholder = @Model.Loc.Where(a => a.ResourceId == "spnReasonForDown").FirstOrDefault().Value.ToString(),
+                                   })
+                                    }
+                                    else
+                                    {
+                                        @Html.DropDownListFor(m => m.woDowntimeModel.ReasonForDown, Model.woDowntimeModel.ReasonForDownList.Select(x => new SelectListItem { Text = x.Text, Value = x.Value, Selected = (x.Value == Model.woDowntimeModel.ReasonForDown.ToString()) }), "--Select--", new
+                                   {
+                                       @class = "form-control search mobiscrollselect",
+                                       @style = "width:100%;",
+                                       @mbsc_dropdown = "true",
+                                       @data_label = "Reason for Down",
+                                       @data_input_style = "box",
+                                       @data_label_style = "floating",
+                                       @placeholder = @Model.Loc.Where(a => a.ResourceId == "spnReasonForDown").FirstOrDefault().Value.ToString(),
+                                   })
+                                    }
+                                </label>
+                                @Html.ValidationMessageFor(m => m.woDowntimeModel.ReasonForDown, "", new { })
+                            </div>
+                        </div>
+                        <div class="mbsc-row">
+                            <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                <div class="design-box">
+                                    <div class="mbsc-button-group-block">
+                                        <button mbsc-button data-color="success" type="button" class="btn btn-blue mobBttn clearstateDowntime" id="btnDowntimecancel"><i class="fa fa-close faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                <div class="design-box">
+                                    <div class="mbsc-button-group-block">
+                                        <button data-color="success" type="submit" class="btn btn-blue mobBttn" style="cursor:pointer" value="save"><i class="fa fa-save faIcon"></i> &nbsp;@Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="slide-modal-footer"></div>
+}
+
+<script>
+    $(function () {
+        $(document).find('form').find("#woDowntimeModel_WorkOrderId").val($(document).find('#WorkOrderId').val());
+        $(document).find('form').find("#woDowntimeModel_ChargeToId").val($(document).find('#WoChargeToID').val());
+        $(document).find('form').find("#woDowntimeModel_ReasonForDown").removeClass("input-validation-error");
+        $(document).find('form').find("#woDowntimeModel_Downdate").removeClass("input-validation-error");
+        $(document).find('form').find("#woDowntimeModel_MinutesDown").removeClass("input-validation-error");
+    });
+</script>
+
+

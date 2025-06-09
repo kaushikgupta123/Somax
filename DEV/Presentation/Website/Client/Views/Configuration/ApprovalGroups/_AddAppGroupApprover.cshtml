@@ -1,0 +1,76 @@
+﻿@model Client.Models.Configuration.ApprovalGroups.ApprovalGroupsVM
+@using (Ajax.BeginForm("AddEditAppGroupApproval", "ApprovalGroups", new AjaxOptions { HttpMethod = "Post", OnSuccess = "AppGroupApprovalOnSuccess", OnBegin = "AjaxBeginFormBegin", OnComplete = "AjaxBeginFormComplete", OnFailure = "AjaxBeginFormFaillure" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(m => m.appGroupApproverModel.AppGroupApproversId)
+    @Html.HiddenFor(m => m.appGroupApproverModel.ApprovalGroupId)
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close btncancel" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title">@Model.Loc.Where(a=>a.ResourceId=="spnAddApprover").FirstOrDefault().Value.ToString()</h4>
+        </div>
+      
+        <div class="modal-body">
+            @Html.Partial("_ErrorDiv")
+            <div class="form-group" style="margin-bottom:0;">
+                <div class="bottomBlock">
+                    <div class="tabsArea nobg">
+                        <ul class="listView nobrd" style="border-bottom:0;">
+                            <li style="margin-bottom:3px;">
+                                <span class="label">@Html.LabelFor(m => m.appGroupApproverModel.Level) : <small>*</small> </span>
+                                @if (Model.LevelCount != 0)
+                                {
+                                    <span class="inputText">
+                                        @Html.ValidationMessageFor(m => m.appGroupApproverModel.Level, "", new { style = "display:none" })
+                                        @Html.DropDownListFor(m => m.appGroupApproverModel.Level, Model.LevelList, "--Select--", new { @class = "form-control search select2picker", style = "width:100%;" })
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="inputText">
+                                        @Html.ValidationMessageFor(m => m.appGroupApproverModel.Level, "", new { style = "display:none" })
+                                        @Html.DropDownListFor(m => m.appGroupApproverModel.Level, Model.LevelList, new { @class = "form-control search select2picker", style = "width:100%;" })
+                                    </span>
+                                }
+                            </li>
+
+                            <li style="margin-bottom:4px;">
+                                <span class="label">@Html.LabelFor(m => m.appGroupApproverModel.ApproverId) : <small>*</small></span>
+                                <span class="inputText">
+                                    @Html.ValidationMessageFor(m => m.appGroupApproverModel.ApproverId, "", new { style = "display:none" })
+                                    @Html.DropDownListFor(m => m.appGroupApproverModel.ApproverId, Model.ApproverPersonnelList, "--Select--", new { @class = "form-control search select2picker", style = "width:100%;" })
+                                </span>
+                            </li>
+                            @if (ViewBag.RequestTypes == ApprovalGroupRequestTypes.PurchaseRequest)
+                            {
+                                <li style="margin-bottom:4px;">
+                                    <span class="label">@Html.LabelFor(m => m.appGroupApproverModel.Limit) :</span>
+                                    <span class="inputText">
+                                        @Html.ValidationMessageFor(m => m.appGroupApproverModel.Limit, "", new { style = "display:none" })
+                                        @Html.TextBoxFor(m => m.appGroupApproverModel.Limit, "", new { @class = "form-control search decimalinput", autocomplete = "off" })
+                                    </span>
+                                </li>
+                            }
+
+                        </ul>
+                    </div>
+                    <div style="clear:both;"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal-footer" style="padding:15px 25px !important;">
+            <div class="idBttns">
+                <div class="bttn_pagin">
+                    <div class="bttns2" style="margin:0;">
+                        <button type="submit" class="btn btn-blue mobBttn" style="cursor:pointer" value="save"><i class="fa fa-save faIcon"></i> &nbsp;@Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+                    </div>
+                    <div class="bttns" style="margin:0;"><button type="button" data-dismiss="modal" class="btn btn-blue mobBttn btncancel"><i class="fa fa-close faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button></div>
+
+                    <div style="clear:both;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+}

@@ -1,0 +1,57 @@
+﻿@model Client.Models.PurchaseOrder.PurchaseOrderVM
+<nav class="sidebar">
+    <div class="dismiss">
+        <i class="fa fa-close"></i>
+    </div>
+    <div class="sidebar-header">
+        <h3><i class="fa fa-filter" style="position: relative; top: -2px;"></i> @Model.Loc.Where(a => a.ResourceId == "spnPoFilters").FirstOrDefault().Value.ToString()<span class="lifilteritemcount">0</span></h3>
+        <button type="button" class="btn btn-blue filterSearch" id="btnLItemDataAdvSrch"><i class="fa fa-search" style="margin-top:-3px;"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalSearch").FirstOrDefault().Value.ToString()</button>
+    </div>
+    <div class="sidebar-content" id="litemadvsearchsidebar">
+        <form action="#" method="post">
+            <div class="form-group POLI-LineNumber">
+                <label for="LineNo">@Model.Loc.Where(a => a.ResourceId == "spnPoLineNo").FirstOrDefault().Value.ToString() :</label>
+                <input type="text" class="form-control search adv-item" id="LineNo" autocomplete="off">
+            </div>
+            <div class="form-group POLI-PartClientLookupId">
+                <label for="PartID">@Model.Loc.Where(a => a.ResourceId == "spnPoPartID").FirstOrDefault().Value.ToString() :</label>
+                <input type="text" class="form-control search adv-item" id="PartID" autocomplete="off">
+            </div>
+            <div class="form-group POLI-Description">
+                <label for="Description">@Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString() :</label>
+                <input type="text" class="form-control search adv-item" id="Description" autocomplete="off">
+            </div>
+            <div class="form-group POLI-OrderQuantity">
+                <label for="OrderQty">@Model.Loc.Where(a => a.ResourceId == "spnPoOrderQty").FirstOrDefault().Value.ToString() :</label>
+                <input type="text" class="form-control search decimalinput adv-item" id="OrderQty" autocomplete="off">
+            </div>
+            <div class="form-group POLI-UnitOfMeasure">
+                <label for="UOM">@Model.Loc.Where(a => a.ResourceId == "spnPdUOM").FirstOrDefault().Value.ToString() :</label>
+                <select id="UOM" style="width:100%;" class="form-control search adv-item select2picker"></select>
+            </div>
+            <div class="form-group POLI-UnitCost">
+                <label for="UnitCost">@Model.Loc.Where(a => a.ResourceId == "spnUnitCost").FirstOrDefault().Value.ToString() :</label>
+                <input type="text" class="form-control search decimalinput adv-item" id="UnitCost" autocomplete="off">
+            </div>
+            <div class="form-group POLI-TotalCost">
+                <label for="TotalCost">@Model.Loc.Where(a => a.ResourceId == "spnPoTotal").FirstOrDefault().Value.ToString() :</label>
+                <input type="text" class="form-control search decimalinput adv-item" id="TotalCost" autocomplete="off">
+            </div>
+            <div class="form-group POLI-Status">
+                <label for="PoLiStatus">@Model.Loc.Where(a => a.ResourceId == "spnPoStatus").FirstOrDefault().Value.ToString() :</label>
+                <select class="form-control search adv-item select2picker" id="PoLiStatus" style="width:100%"></select>
+            </div>
+            <div class="form-group POLI-AccountClientLookupId">
+                <label for="liAccount">Account :</label>
+                @Html.DropDownListFor(m => m.PurchaseOrderModel.AccountClientLookupId, Model.PurchaseOrderModel.AccountList, "--Select--", new { @class = "form-control search adv-item select2picker", id = "liAccount", style = "width:100%;" })
+            </div>
+            <div class="form-group POLI-ChargeToClientLookupId">
+                <label for="ChargeToClientLookupId">@Model.Loc.Where(a => a.ResourceId == "GlobalChargeTo").FirstOrDefault().Value.ToString() :</label>
+                <input type="text" class="form-control search adv-item" id="ChargeToClientLookupId" autocomplete="off">
+            </div>
+        </form>
+    </div>
+</nav>
+
+
+

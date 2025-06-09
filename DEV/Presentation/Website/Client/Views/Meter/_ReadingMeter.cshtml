@@ -1,0 +1,94 @@
+﻿@model Client.Models.Meters.MetersVM
+
+<div id="readingMeterModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">@Model.Loc.Where(a => a.ResourceId == "spnRecordMeterReading").FirstOrDefault().Value.ToString()</h4>
+            </div>
+            @Html.Partial("_ErrorDiv")
+            @using (Ajax.BeginForm("AddReadings", "Meter", null, new AjaxOptions { HttpMethod = "Post", OnSuccess = "RecordMeterReadingAddOnSuccess", OnBegin = "AjaxBeginFormBegin", OnComplete = "AjaxBeginFormComplete", OnFailure = "AjaxBeginFormFaillure" }, new { id = "frmrecordmeterreading" }))
+            {
+                @Html.AntiForgeryToken()
+                <div class="modal-body">
+                    <ul class="listView nobrd2">
+                        <li>
+                            <span class="label"><label>@Model.Loc.Where(a => a.ResourceId == "spnReading").FirstOrDefault().Value.ToString() <small>*</small></label></span>
+                            <span class="inputText">
+                                @Html.ValidationMessageFor(m => m.Readings.Reading, "", new { style = "display:none" })
+                                @Html.TextBoxFor(m => m.Readings.Reading, new { @class = "form-control search decimalinput", autocomplete = "off" })
+                            </span>
+                        </li>
+                        <li>
+                            <span class="label"><label>@Model.Loc.Where(a => a.ResourceId == "spnReadingDate").FirstOrDefault().Value.ToString() <small>*</small></label></span>
+                            <span class="inputText">
+                                @Html.ValidationMessageFor(m => m.Readings.DateRead, "", new { style = "display:none" })
+                                @Html.TextBoxFor(m => m.Readings.DateRead, new { @class = "form-control search dtpicker", autocomplete = "off" })
+                            </span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-blue mobBttn pull-right"  name="Command" id="btnSave"  value="save"><i class="fa fa-save faIcon"></i> &nbsp;@Model.Loc.Where(a => a.ResourceId == "spnReccord").FirstOrDefault().Value.ToString()</button>
+                    <button type="button" class="btn btn-default mobBttn pull-left" data-dismiss="modal"><i class="fa fa-times faIcon"></i> &nbsp;@Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button>
+                    <div style="clear:both;"></div>
+                </div>
+                @Html.HiddenFor(m => m.Readings.MeterId)
+                @Html.HiddenFor(m => m.Readings.MeterClientLookUpId)
+            }
+        </div>
+    </div>
+</div>
+<style type="text/css">
+    ul.listView.nobrd2 {
+        border-bottom: 0px solid #ccc;
+        padding-bottom: 0;
+    }
+
+        ul.listView.nobrd2 li {
+            border-bottom: 0px solid #ccc;
+        }
+
+            ul.listView.nobrd2 li:last-child {
+                margin-bottom: 0px;
+            }
+
+    #readingMeterModal {
+        padding-right: 0 !important;
+    }
+
+        #readingMeterModal h4.modal-title {
+            line-height: 32px;
+        }
+
+        #readingMeterModal .modal-footer {
+            padding: 10px 25px !important;
+        }
+
+        #readingMeterModal .modal-dialog {
+            max-width: 500px;
+        }
+
+    ul.siteField li {
+        border: none;
+        height: 35px;
+        margin-bottom: 0px;
+    }
+
+        ul.siteField li span.label {
+            height: 35px;
+            line-height: 35px;
+            width: 35%;
+        }
+
+        ul.siteField li span.inputText {
+            width: 65%;
+            height: 35px;
+            line-height: 35px;
+        }
+
+    .ui-tooltip {
+        z-index: 1151 !important;
+    }
+</style>

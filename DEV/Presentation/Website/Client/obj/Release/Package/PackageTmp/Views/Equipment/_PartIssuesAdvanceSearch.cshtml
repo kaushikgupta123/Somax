@@ -1,0 +1,52 @@
+﻿@model Client.Models.EquipmentCombined
+
+<nav class="sidebar">
+    <div class="dismiss">
+        <i class="fa fa-close"></i>
+    </div>
+
+    <div class="sidebar-header">
+        <h3><i class="fa fa-filter" style="position: relative; top: -2px;"></i> @Model.Loc.Where(a => a.ResourceId == "spnFilters").FirstOrDefault().Value.ToString() <span class="partissuefilteritemcount">0</span></h3>
+        <button type="button" id="btnPartIssuesDataAdvSrch" class="btn btn-blue filterSearch">@Model.Loc.Where(a => a.ResourceId == "globalSearch").FirstOrDefault().Value.ToString() </button>
+    </div>
+
+    <div class="sidebar-content" id="advsearchsidebarPartIssues">
+        
+        <form action="#" method="post">
+            <div class="form-group">
+                <label for="piGridadvsearchPartId">@Model.Loc.Where(a => a.ResourceId == "spnPartID").FirstOrDefault().Value.ToString() :</label>
+                <input type="text" class="form-control search adv-item" autocomplete="off" id="piGridadvsearchPartId">
+            </div>
+            <div class="form-group">
+                <label for="piGridadvsearchDescription">@Model.Loc.Where(a => a.ResourceId == "spnMaintWarrantyDesc").FirstOrDefault().Value.ToString() :</label>
+                <input type="text" class="form-control search adv-item " autocomplete="off" id="piGridadvsearchDescription">
+            </div>
+            <div class="form-group">
+                <label for="piGridadvsearchDate">@Model.Loc.Where(a => a.ResourceId == "spnDate").FirstOrDefault().Value.ToString() :</label>
+                <input type="text" class="form-control search adv-item dtpicker" autocomplete="off" id="piGridadvsearchDate">
+            </div>
+            <div class="form-group">
+                <label for="piGridadvsearchChargeTo">@Model.Loc.Where(a => a.ResourceId == "GlobalChargeTo").FirstOrDefault().Value.ToString() :</label>
+                <input type="text" class="form-control search adv-item" autocomplete="off" id="piGridadvsearchChargeTo">
+            </div>
+            <div class="form-group">
+                <label for="piGridadvsearchQuantity">@Model.Loc.Where(a => a.ResourceId == "spnQuantity").FirstOrDefault().Value.ToString() :</label>
+                <input type="text" class="form-control search adv-item decimalinput" autocomplete="off" id="piGridadvsearchQuantity">
+            </div>
+            <div class="form-group">
+                <label for="piGridadvsearchUnit">@Model.Loc.Where(a => a.ResourceId == "spnUnit").FirstOrDefault().Value.ToString() :</label>
+                <input type="text" class="form-control search adv-item" autocomplete="off" id="piGridadvsearchUnit">
+            </div>
+            <div class="form-group">
+                <label for="piGridadvsearchCosts">@Model.Loc.Where(a => a.ResourceId == "spnCosts").FirstOrDefault().Value.ToString() :</label>
+                <input type="text" class="form-control search adv-item decimalinput" autocomplete="off" id="piGridadvsearchCosts">
+            </div>
+            <div class="form-group">
+                <label for="piGridadvsearchIssuedTo">@Model.Loc.Where(a => a.ResourceId == "spnIssuedTo").FirstOrDefault().Value.ToString() :</label>
+                <input type="text" class="form-control search adv-item" autocomplete="off" id="piGridadvsearchIssuedTo">
+            </div>
+        </form>
+    </div>
+</nav>
+
+

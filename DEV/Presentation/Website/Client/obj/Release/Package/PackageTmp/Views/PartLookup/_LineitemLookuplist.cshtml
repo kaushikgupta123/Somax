@@ -1,0 +1,58 @@
+﻿@model Client.Models.PartLookup.PartLookupVM
+<div id="LineitemlookupListPRModal" class="modal fade dropdown-modal" role="dialog" style="display:none;">
+    <div class="modal-dialog partPopup">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title" id="popLineitemlookupListPRTable"></h4>
+            </div>
+            <div class="modal-body">
+                <div id="tbldropdown" class="dropdown-content tbl-dropdown" style="display:block;">
+                    <div class="table-responsive dropTableOuter">
+                        <table id="LineitemlookupListPRTable" class="stripe dropTable globalDropTable" style="width:100%;">
+                            <thead>
+                                <tr style="text-align:center">
+                                    <th style="white-space: nowrap; padding-right: 38px !important;">@Model.Loc.Where(a => a.ResourceId == "globalRequestPurchaseOrder").FirstOrDefault().Value.ToString()</th>
+                                    <th>@Model.Loc.Where(a => a.ResourceId == "globalLine").FirstOrDefault().Value.ToString()</th>
+                                    <th>@Model.Loc.Where(a => a.ResourceId == "spnQuantity").FirstOrDefault().Value.ToString()</th>
+                                    <th>@Model.Loc.Where(a => a.ResourceId == "GlobalUnit").FirstOrDefault().Value.ToString()</th>
+                                    <th>@Model.Loc.Where(a => a.ResourceId == "GlobalRequestor").FirstOrDefault().Value.ToString()</th>
+                                    <th>@Model.Loc.Where(a => a.ResourceId == "spnCreated").FirstOrDefault().Value.ToString()</th>
+                                </tr>
+                            </thead>
+                          
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div style="padding:15px 25px !important;">
+                 <div class="idBttns">
+                    <div class="bttn_pagin">
+                        <div class="bttns2" style="padding: 10px;">
+                            <button type="submit" class="btn btn-blue mobBttn" style="cursor:pointer" value="save" id="addPartfromLineItemPopUp"><i class="fa fa-save faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "spnAddPart").FirstOrDefault().Value.ToString()</button>
+                        </div>
+                        <div class="bttns" style="padding: 10px;"><button type="button" data-dismiss="modal" class="btn btn-blue mobBttn clearstate1" id="btncancelfromLineItemPopUp"><i class="fa fa-close faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalDoNOTAddPart").FirstOrDefault().Value.ToString()</button></div>
+
+                        <div style="clear:both;"></div>
+                    </div>
+                </div>
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style type="text/css">
+    .dropdown-content {
+        max-height: 400px !important;
+    }
+
+    .dropTableOuter table.dataTable thead th {
+        padding: 10px 8px;
+    }
+
+
+  /*  .WorkOrderPRPopup {
+        max-width: 80% !important;
+    }*/
+</style>

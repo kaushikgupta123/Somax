@@ -1,0 +1,152 @@
+﻿
+@model Client.Models.VendorsVM
+
+<style>
+    #imgChargeToTree {
+        display: block !important
+    }
+
+    @@media only screen and (min-width: 1366px) and (max-width: 1599px) {
+        .openMenu
+        .chargeTree {
+            right: 70px !important;
+        }
+    }
+</style>
+
+<div class="modal-content">
+    <div class="modal-header">
+        <button type="button" class="close clearstate" data-dismiss="modal">&times;</button>
+        @if (Model.VendorAssetManagementModel.VendorAssetMgtId == 0)
+        {
+    <h4 class="modal-title">@Model.Loc.Where(a => a.ResourceId == "spnAddAssetManagement").FirstOrDefault().Value.ToString()</h4>
+        }
+        else
+        {
+    <h4 class="modal-title">@Model.Loc.Where(a => a.ResourceId == "spnEditAssetManagement").FirstOrDefault().Value.ToString()</h4>
+        }
+    </div>
+    @Html.Partial("_ErrorDiv")
+    <div class="modal-body">
+        <div class="form-group" style="margin-bottom:0;">
+            <div class="bottomBlock">
+                <div class="tabsArea nobg">
+                    @using (Ajax.BeginForm("AddVendorAssetManagement", "Vendor", new AjaxOptions { HttpMethod = "Post", OnSuccess = "AddVendorAssetManagementOnSuccess", OnBegin = "AjaxBeginFormBegin", OnComplete = "AjaxBeginFormComplete", OnFailure = "AjaxBeginFormFaillure" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        <div class="tabsArea nobg">
+
+                            <ul class="listView nobrd">
+
+                                <li class="txtSrchArea txtSrch">
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnPacketSent").FirstOrDefault().Value.ToString() : </span>
+                                    <span class="inputText">
+                                        @Html.TextBoxFor(m => m.VendorAssetManagementModel.PKGSent, "{0:MM/dd/yyyy}", new { @class = "form-control search dtpicker", autocomplete = "off" })
+                                        @Html.ValidationMessageFor(m => m.VendorAssetManagementModel.PKGSent, "", new { style = "display:none" })
+                                    </span>
+                                </li>
+                                <li class="txtSrchArea txtSrch">
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnSentVia").FirstOrDefault().Value.ToString() : </span>
+                                    <span class="inputText ">
+                                        @Html.TextBoxFor(m => m.VendorAssetManagementModel.SentVia, new { @class = "form-control search", autocomplete = "off", maxlength = 15 })
+                                        @Html.ValidationMessageFor(m => m.VendorAssetManagementModel.SentVia, "", new { style = "display:none" })
+                                    </span>
+                                </li>
+                                @if (Model.VendorAssetManagementModel.VendorAssetMgtId > 0)
+                                {
+
+                                    <li class="txtSrchArea txtSrch">
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnContractorReceivePacket").FirstOrDefault().Value.ToString() : </span>
+                                        <span class="inputText">
+                                            @Html.TextBoxFor(m => m.VendorAssetManagementModel.PKGContactorRecBy, "{0:MM/dd/yyyy}", new { @class = "form-control search dtpicker", autocomplete = "off" })
+                                            @Html.ValidationMessageFor(m => m.VendorAssetManagementModel.PKGContactorRecBy, "", new { style = "display:none" })
+                                        </span>
+                                    </li>
+                                    <li class="txtSrchArea txtSrch">
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnPacketReceived").FirstOrDefault().Value.ToString() : </span>
+                                        <span class="inputText">
+                                            @Html.TextBoxFor(m => m.VendorAssetManagementModel.PKGReceiveBy, "{0:MM/dd/yyyy}", new { @class = "form-control search dtpicker", autocomplete = "off" })
+                                            @Html.ValidationMessageFor(m => m.VendorAssetManagementModel.PKGReceiveBy, "", new { style = "display:none" })
+                                        </span>
+                                    </li>
+                                }
+                                <li class="txtSrchArea txtSrch">
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnCompany").FirstOrDefault().Value.ToString() : <small>*</small></span>
+                                    <span class="inputText ">
+                                        @Html.TextBoxFor(m => m.VendorAssetManagementModel.Company, new { @class = "form-control search", autocomplete = "off", maxlength = 63 })
+                                        @Html.ValidationMessageFor(m => m.VendorAssetManagementModel.Company, "", new { style = "display:none" })
+                                    </span>
+                                </li>
+
+                                <li class="txtSrchArea txtSrch">
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnContact").FirstOrDefault().Value.ToString() : </span>
+                                    <span class="inputText">
+                                        @Html.TextBoxFor(m => m.VendorAssetManagementModel.Contact, new { @class = "form-control search", autocomplete = "off", maxlength = 31 })
+                                        @Html.ValidationMessageFor(m => m.VendorAssetManagementModel.Contact, "", new { style = "display:none" })
+                                    </span>
+                                </li>
+                                <li class="txtSrchArea txtSrch">
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnContract").FirstOrDefault().Value.ToString() : </span>
+                                    <span class="inputText">
+                                        @Html.TextBoxFor(m => m.VendorAssetManagementModel.Contract, new { @class = "form-control search", autocomplete = "off", maxlength = 15 })
+                                        @Html.ValidationMessageFor(m => m.VendorAssetManagementModel.Contract, "", new { style = "display:none" })
+                                    </span>
+                                </li>
+                                <li class="txtSrchArea txtSrch">
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnContractEffective").FirstOrDefault().Value.ToString() : </span>
+                                    <span class="inputText">
+                                        @Html.TextBoxFor(m => m.VendorAssetManagementModel.EffectiveDate, "{0:MM/dd/yyyy}", new { @class = "form-control search dtpicker", autocomplete = "off" })
+                                        @Html.ValidationMessageFor(m => m.VendorAssetManagementModel.EffectiveDate, "", new { style = "display:none" })
+                                    </span>
+                                </li>
+                                <li class="txtSrchArea txtSrch">
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnContractExpiration").FirstOrDefault().Value.ToString() : </span>
+                                    <span class="inputText">
+                                        @Html.TextBoxFor(m => m.VendorAssetManagementModel.ExpireDate, "{0:MM/dd/yyyy}", new { @class = "form-control search dtpicker", autocomplete = "off" })
+                                        @Html.ValidationMessageFor(m => m.VendorAssetManagementModel.ExpireDate, "", new { style = "display:none" })
+                                    </span>
+                                </li>
+
+
+                            </ul>
+                        </div>
+
+                        <div style="clear:both;"></div>
+
+                        <div class="idBttns">
+                            <div class="bttn_pagin">
+                                <div class="bttns2">
+                                    <button type="submit" class="btn btn-blue mobBttn" name="SaveType" value="Add"><i class="fa fa-save faIcon"></i> &nbsp;@Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+                                </div>
+
+                                <div class="bttns"><button type="button" class="btn btn-blue mobBttn btnCancelAssetMgt"><i class="fa fa-close faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button></div>
+                                <div style="clear:both;"></div>
+                            </div>
+                        </div>
+                        @Html.HiddenFor(m => m.VendorAssetManagementModel.VendorId)
+                        @Html.HiddenFor(m => m.VendorAssetManagementModel.VendorAssetMgtId)
+                        @Html.HiddenFor(m => m.VendorAssetManagementModel.AssetMgtSource)
+                    }
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+<style>
+
+    .three-col-option {
+        display: flex;
+        width: calc(100% - 26px);
+    }
+
+        .three-col-option .dropdown.dropTableOuter {
+            width: 100% !important;
+        }
+
+        .three-col-option .chargeTree {
+            right: 4px !important;
+        }
+</style>

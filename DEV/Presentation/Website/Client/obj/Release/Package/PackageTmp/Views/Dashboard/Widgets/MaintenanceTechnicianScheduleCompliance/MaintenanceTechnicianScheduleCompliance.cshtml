@@ -1,0 +1,68 @@
+﻿@model Client.Models.Dashboard.DashboardVM
+
+@if (Model.security.MaintenanceCompletionWorkbenchWidget_Complete.Access)
+{
+    <div class="m-portlet m-portlet--full-height m-portlet--fit">
+        <div class="m-portlet__head">
+            <div class="m-portlet__head-caption">
+                <div class="m-portlet__head-title">
+                    <h3 class="m-portlet__head-text">
+                        @Model.Loc.Where(a => a.ResourceId == "spnTechnicianScheduleCompliance").FirstOrDefault().Value.ToString()
+                    </h3>
+                </div>
+            </div>
+        </div>
+
+        <div class="m-portlet__body">
+            <div class="tab-content">
+                <div class="row">
+                    <div class="col-xl-7">
+                        <label class="m-portlet__head-text" style="padding:0 0 5px 5px">
+                            <strong>@Model.Loc.Where(a => a.ResourceId == "WorkOrderPlanningDashboardScheduleComplienceText").FirstOrDefault().Value.ToString()</strong>
+                        </label>
+                        <div class="col-xl-2">
+                            <div class="dateRangeDrop">
+                                <div class="btn-group m-datatable__pager-size dropup show selectDrop">
+                                    @Html.DropDownListFor(m => m.selectedDateRangeVal, Model.DateRangeDropListForActivity, new { @class = "form-control search select2picker", style = "width:200%;", id = "activity-daterangeselector" })
+                                </div>
+                                <div style="clear:both; height:15px;"></div>
+                            </div>
+                        </div>
+                        <div class="col-xl-10">
+                            <div class="chartBox" style="position: relative; min-height: 300px; margin-top:0;">
+                                <div class="lds-ellipsis lds-adjust" id="scheduleComplienceloader">
+                                    <div></div>
+                                    <div></div>
+                                    <div></div>
+                                    <div></div>
+                                </div>
+                                <div id="MaintenanceScheduleComplience">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-5">
+                        <label class="m-portlet__head-text" style="padding:0 0 0 10px">
+                            <strong>
+                                @Model.Loc.Where(a => a.ResourceId == "spnLaborHours").FirstOrDefault().Value.ToString()
+                            </strong>
+                        </label>
+                        <div class="chartBox" style="position:relative">
+                            <div class="lds-ellipsis lds-adjust" id="maintenancelaborhourchartloader">
+                                <div></div>
+                                <div></div>
+                                <div></div>
+                                <div></div>
+                            </div>
+                            <div class="cntNoData"><h5>@Model.Loc.Where(a => a.ResourceId == "globalDataNotFound").FirstOrDefault().Value.ToString()</h5></div>
+                            @*<canvas id="m_chart_Labor_Hr"></canvas>*@
+                            <div id="maintenancelaborhourchart"></div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}

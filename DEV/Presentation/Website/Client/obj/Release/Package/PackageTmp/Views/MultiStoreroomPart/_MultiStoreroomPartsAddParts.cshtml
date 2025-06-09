@@ -1,0 +1,305 @@
+﻿@model Client.Models.MultiStoreroomPart.MultiStoreroomPartVM
+
+
+@if (Model.MultiStoreroomPartModel.PartId != 0)
+{
+    <div class="m-subheader fixedDiv1">
+        <div class="new-m-subheader">
+            <div class="PageTitle">
+                <div class="align-items-center separator">
+                    <h3 class="m-subheader__title ">
+                        @Model.Loc.Where(a => a.ResourceId == "spnParts").FirstOrDefault().Value.ToString()
+                    </h3>
+                </div>
+            </div>
+
+            <div class="NewBreadcrumbArea">
+                <div class="newBreadcrumb">
+                    <ul>
+                        <li><a href="/Dashboard/Dashboard">&nbsp;</a></li>
+                        <li><a href="/MultiStoreroomPart/Index?page=Inventory_MultiStoreroom_Part">@Model.Loc.Where(a => a.ResourceId == "spnPartSearch").FirstOrDefault().Value.ToString()</a></li>
+                        <li><a href="javascript:void(0)" id="brdpart" data-val="@Model.MultiStoreroomPartModel.PartId">@Model.MultiStoreroomPartModel.ClientLookupId</a></li>
+                        <li>@Model.Loc.Where(a => a.ResourceId == "spnEditPart").FirstOrDefault().Value.ToString()</li>
+                    </ul>
+                    <div style="clear:both;"></div>
+                </div>
+            </div>
+            <div style="clear:both;"></div>
+        </div>
+    </div>
+    <div class="pushDiv1"></div>
+}
+else
+{
+    <div class="m-subheader">
+        <div class="new-m-subheader">
+            <div class="PageTitle">
+                <div class="align-items-center separator">
+                    <h3 class="m-subheader__title ">
+                        @Model.Loc.Where(a => a.ResourceId == "spnParts").FirstOrDefault().Value.ToString()
+                    </h3>
+                </div>
+            </div>
+
+            <div class="NewBreadcrumbArea">
+                <div class="newBreadcrumb">
+                    <ul>
+                        <li><a href="/Dashboard/Dashboard">&nbsp;</a></li>
+                        <li><a href="/MultiStoreroomPart/Index?page=Inventory_MultiStoreroom_Part">@Model.Loc.Where(a => a.ResourceId == "spnPartSearch").FirstOrDefault().Value.ToString()</a></li>
+                        <li class="active">@Model.Loc.Where(a => a.ResourceId == "spnAddPart").FirstOrDefault().Value.ToString()</li>
+                    </ul>
+                    <div style="clear:both;"></div>
+                </div>
+            </div>
+            <div style="clear:both;"></div>
+        </div>
+    </div>
+}
+
+@Html.Partial("_ErrorDiv")
+
+@if (Model.MultiStoreroomPartModel.PartId != 0)
+{
+    <div class="row fixedDiv2">
+        @Html.Partial("_MultiStoreroomPartSummary", Model)
+    </div>
+    <div class="pushDiv2 partsAdjust"></div>
+    <!-- #region Show full description -->
+    @Html.Partial("~/Views/MultiStoreroomPart/_MultiStoreroomPartSummaryDescription.cshtml")
+    <!-- #endregion -->
+}
+
+@using (Ajax.BeginForm("AddParts", "MultiStoreroomPart", new AjaxOptions { HttpMethod = "Post", OnSuccess = "PartsAddOnSuccess", OnBegin = "AjaxBeginFormBegin", OnComplete = "AjaxBeginFormComplete", OnFailure = "AjaxBeginFormFaillure" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="row">
+
+        <div class="col-xl-12">
+            <div class="row">
+                <div class="col-xl-12" id="btnnblock">
+                    <div class="m-portlet" id="m_portlet" style="padding:15px;">
+                        <div class="bottomBlock">
+                            <div class="tabsArea nobg" id="Identification" style="display:block;">
+                                <ul class="listView nobrd">
+                                    <li>
+                                        <span class="label">@Html.LabelFor(m => m.MultiStoreroomPartModel.ClientLookupId) : <small>*</small></span>
+                                        <span class="inputText">
+                                            @if (Model.MultiStoreroomPartModel.PartId == 0)
+                                            {
+                                                @Html.ValidationMessageFor(m => m.MultiStoreroomPartModel.ClientLookupId, "", new { style = "display:none" })
+                                                @Html.TextBoxFor(m => m.MultiStoreroomPartModel.ClientLookupId, new { @class = "form-control search", autocomplete = "off", maxlength = "70" })
+
+                                            }
+                                            else
+                                            {
+                                                @Html.TextBoxFor(m => m.MultiStoreroomPartModel.ClientLookupId, new { @class = "form-control search readonly", @readonly = "readonly", autocomplete = "off" })
+                                            }
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label">@Html.LabelFor(m => m.MultiStoreroomPartModel.Description) : <small>*</small></span>
+                                        <span class="inputText">
+                                            @Html.ValidationMessageFor(m => m.MultiStoreroomPartModel.Description, "", new { style = "display:none" })
+                                            @Html.TextAreaFor(m => m.MultiStoreroomPartModel.Description, new { @class = "form-control search multilineedit", autocomplete = "off" })
+                                        </span>
+                                    </li>
+                                    @*<li>
+                                            <span class="label">@Html.LabelFor(m => m.MultiStoreroomPartModel.AccountId) : </span>
+                                            <span class="inputText">
+                                                @Html.DropDownListFor(m => m.MultiStoreroomPartModel.AccountId, Model.MultiStoreroomPartModel.AccountList, "--Select--", new { @class = "form-control search select2picker", style = "width:100%;" })
+                                            </span>
+                                        </li>*@
+                                    <li>
+                                        <span class="label">@Html.LabelFor(m => m.MultiStoreroomPartModel.AccountId) : </span>
+                                        <span class="inputText">
+                                            <div class="dropdown dropTableOuter">
+                                                <div class="input-group">
+                                                    @Html.TextBoxFor(m => m.MultiStoreroomPartModel.AccountClientLookupId, "", new
+                                                    {
+                                                        @class = "form-control search dropbtn readonly",
+                                                        @readonly = "readonly",
+                                                        autocomplete = "off",
+                                                        style = "display:block;"
+                                                    })
+                                                    @Html.TextBoxFor(m => m.MultiStoreroomPartModel.AccountId, new
+                                                    {
+                                                        @class = "form-control search dropbtn readonly",
+                                                        @readonly = "readonly",
+                                                        autocomplete = "off",
+                                                        style = "display:none;"
+                                                    })
+                                                    @if (string.IsNullOrEmpty(Model.MultiStoreroomPartModel.AccountClientLookupId))
+                                                    {
+                                                        <div class="input-group-btn">
+                                                            <button class="btn btn-white btntxtInputGroup ClearAccountModalPopupGridData" type="button" data-textfield="MultiStoreroomPartModel_AccountClientLookupId"
+                                                                    data-valuefield="MultiStoreroomPartModel_AccountId" style="display:none;">
+                                                                <i id="srcicon" class="fa fa-close"></i>
+                                                            </button>
+                                                        </div>
+                                                    }
+                                                    else
+                                                    {
+                                                        <div class="input-group-btn">
+                                                            <button class="btn btn-white btntxtInputGroup ClearAccountModalPopupGridData" type="button" data-textfield="MultiStoreroomPartModel_AccountClientLookupId"
+                                                                    data-valuefield="MultiStoreroomPartModel_AccountId" style="display:block;">
+                                                                <i id="srcicon" class="fa fa-close"></i>
+                                                            </button>
+                                                        </div>
+                                                    }
+                                                    <div class="input-group-btn">
+                                                        <button class="btn btn-white btntxtInputGroup OpenAccountModalPopupGrid" type="button" data-textfield="MultiStoreroomPartModel_AccountClientLookupId"
+                                                                data-valuefield="MultiStoreroomPartModel_AccountId">
+                                                            <i id="srcicon" class="fa fa-search"></i>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label">@Html.LabelFor(m => m.MultiStoreroomPartModel.StockType) : </span>
+                                        <span class="inputText">
+                                            @Html.DropDownListFor(m => m.MultiStoreroomPartModel.StockType, Model.MultiStoreroomPartModel.LookupStokeTypeList, "--Select--", new { @class = "form-control search select2picker", style = "width:100%;" })
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label">@Html.LabelFor(m => m.MultiStoreroomPartModel.IssueUnit) : <small>*</small></span>
+                                        <span class="inputText">
+                                            @Html.ValidationMessageFor(m => m.MultiStoreroomPartModel.IssueUnit, "", new { style = "display:none" })
+                                            @Html.DropDownListFor(m => m.MultiStoreroomPartModel.IssueUnit, Model.MultiStoreroomPartModel.LookupIssueUnitList, "--Select--", new { @class = "form-control search select2picker", style = "width:100%;" })
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label">@Html.LabelFor(m => m.MultiStoreroomPartModel.Manufacturer) : </span>
+                                        <span class="inputText">
+                                            @Html.ValidationMessageFor(m => m.MultiStoreroomPartModel.Manufacturer, "", new { style = "display:none" })
+                                            @Html.TextBoxFor(m => m.MultiStoreroomPartModel.Manufacturer, new { @class = "form-control search", autocomplete = "off", maxlength = "31" })
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label">@Html.LabelFor(m => m.MultiStoreroomPartModel.ManufacturerID) : </span>
+                                        <span class="inputText">
+                                            @Html.ValidationMessageFor(m => m.MultiStoreroomPartModel.ManufacturerID, "", new { style = "display:none" })
+                                            @Html.TextBoxFor(m => m.MultiStoreroomPartModel.ManufacturerID, new { @class = "form-control search", autocomplete = "off", maxlength = "63" })
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label">@Html.LabelFor(m => m.MultiStoreroomPartModel.AverageCost) : </span>
+                                        <span class="inputText">
+                                            @Html.ValidationMessageFor(m => m.MultiStoreroomPartModel.AverageCost, "", new { style = "display:none" })
+                                            @Html.TextBoxFor(m => m.MultiStoreroomPartModel.AverageCost, new { @class = "form-control search decimalinput", autocomplete = "off" })
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label">@Html.LabelFor(m => m.MultiStoreroomPartModel.AppliedCost) : </span>
+                                        <span class="inputText">
+                                            @Html.ValidationMessageFor(m => m.MultiStoreroomPartModel.AppliedCost, "", new { style = "display:none" })
+                                            @Html.TextBoxFor(m => m.MultiStoreroomPartModel.AppliedCost, new { @class = "form-control search decimalinput", autocomplete = "off" })
+                                        </span>
+                                    </li>
+                                    @if (Model.MultiStoreroomPartModel.PartId != 0)
+                                    {
+                                        <li>
+                                            <span class="label">@Html.LabelFor(m => m.MultiStoreroomPartModel.ABCCode) : </span>
+                                            <span class="inputText">
+                                                @Html.ValidationMessageFor(m => m.MultiStoreroomPartModel.ABCCode, "", new { style = "display:none" })
+                                                @Html.TextBoxFor(m => m.MultiStoreroomPartModel.ABCCode, new { @class = "form-control search", autocomplete = "off", maxlength = "7" })
+                                            </span>
+                                        </li>
+                                        <li>
+                                            <span class="label">@Html.LabelFor(m => m.MultiStoreroomPartModel.ABCStoreCost) : </span>
+                                            <span class="inputText">
+                                                @Html.ValidationMessageFor(m => m.MultiStoreroomPartModel.ABCStoreCost, "", new { style = "display:none" })
+                                                @Html.TextBoxFor(m => m.MultiStoreroomPartModel.ABCStoreCost, new { @class = "form-control search", autocomplete = "off", maxlength = "7" })
+                                            </span>
+                                        </li>
+                                        <li>
+                                            <span class="label">@Html.LabelFor(m => m.MultiStoreroomPartModel.Consignment) : </span>
+                                            <span class="inputText">
+                                                @Html.CheckBoxFor(m => m.MultiStoreroomPartModel.Consignment)
+                                            </span>
+                                        </li>
+                                        <li>
+                                            <span class="label">@Html.LabelFor(m => m.MultiStoreroomPartModel.CriticalFlag) : </span>
+                                            <span class="inputText">
+                                                @Html.CheckBoxFor(m => m.MultiStoreroomPartModel.CriticalFlag)
+                                            </span>
+                                        </li>
+                                        <li>
+                                            <span class="label">@Html.LabelFor(m => m.MultiStoreroomPartModel.MSDSContainerCode) : </span>
+                                            <span class="inputText">
+                                                @Html.ValidationMessageFor(m => m.MultiStoreroomPartModel.MSDSContainerCode, "", new { style = "display:none" })
+                                                @Html.TextBoxFor(m => m.MultiStoreroomPartModel.MSDSContainerCode, new { @class = "form-control search", autocomplete = "off", maxlength = "7" })
+                                            </span>
+                                        </li>
+                                        <li>
+                                            <span class="label">@Html.LabelFor(m => m.MultiStoreroomPartModel.MSDSPressureCode) : </span>
+                                            <span class="inputText">
+                                                @Html.ValidationMessageFor(m => m.MultiStoreroomPartModel.MSDSPressureCode, "", new { style = "display:none" })
+                                                @Html.TextBoxFor(m => m.MultiStoreroomPartModel.MSDSPressureCode, new { @class = "form-control search", autocomplete = "off", maxlength = "7" })
+                                            </span>
+                                        </li>
+                                        <li>
+                                            <span class="label">@Html.LabelFor(m => m.MultiStoreroomPartModel.MSDSReference) : </span>
+                                            <span class="inputText">
+                                                @Html.ValidationMessageFor(m => m.MultiStoreroomPartModel.MSDSReference, "", new { style = "display:none" })
+                                                @Html.TextBoxFor(m => m.MultiStoreroomPartModel.MSDSReference, new { @class = "form-control search", autocomplete = "off", maxlength = "31" })
+                                            </span>
+                                        </li>
+                                        <li>
+                                            <span class="label">@Html.LabelFor(m => m.MultiStoreroomPartModel.MSDSRequired) : </span>
+                                            <span class="inputText">
+                                                @Html.CheckBoxFor(m => m.MultiStoreroomPartModel.MSDSRequired)
+                                            </span>
+                                        </li>
+                                        <li>
+                                            <span class="label">@Html.LabelFor(m => m.MultiStoreroomPartModel.MSDSTemperatureCode) : </span>
+                                            <span class="inputText">
+                                                @Html.ValidationMessageFor(m => m.MultiStoreroomPartModel.MSDSTemperatureCode, "", new { style = "display:none" })
+                                                @Html.TextBoxFor(m => m.MultiStoreroomPartModel.MSDSTemperatureCode, new { @class = "form-control search", autocomplete = "off", maxlength = "7" })
+                                            </span>
+                                        </li>
+                                        <li>
+                                            <span class="label">@Html.LabelFor(m => m.MultiStoreroomPartModel.NoEquipXref) : </span>
+                                            <span class="inputText">
+                                                @Html.CheckBoxFor(m => m.MultiStoreroomPartModel.NoEquipXref)
+                                            </span>
+                                        </li>
+                                        <li>
+                                            <span class="label">@Html.LabelFor(m => m.MultiStoreroomPartModel.UPCCode) : </span>
+                                            <span class="inputText">
+                                                @Html.ValidationMessageFor(m => m.MultiStoreroomPartModel.UPCCode, "", new { style = "display:none" })
+                                                @Html.TextBoxFor(m => m.MultiStoreroomPartModel.UPCCode, new { @class = "form-control search", autocomplete = "off", maxlength = "31" })
+                                            </span>
+                                        </li>
+                                    }
+                                </ul>
+                            </div>
+
+                            <div class="idBttns">
+                                <div class="bttn_pagin">
+                                    <div class="bttns2">
+                                        @if (Model.MultiStoreroomPartModel.PartId == 0 && Model.security.Parts.Edit)
+                                        {
+                                            <button class="btn btn-white mobBttn" name="Command" value="saveAdd" id="btnSaveAnotherOpenPart"><i class="fa fa-save faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalSaveAndAdd").FirstOrDefault().Value.ToString()</button>
+                                        }
+                                        @if (Model.security.Parts.Edit)
+                                        {
+                                            <button class="btn btn-blue mobBttn" name="Command" value="save" id="btnSavePart"><i class="fa fa-save faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+                                        }
+                                    </div>
+                                    <div class="bttns"><button type="button" class="btn btn-blue mobBttn" id="btnCancelAddPart"><i class="fa fa-close faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button></div>
+
+                                    <div style="clear:both;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @Html.HiddenFor(m => m.MultiStoreroomPartModel.PartId)
+}
+@Html.Partial("~/Views/Shared/LookupTypeTablePopup/_AccountPopupLookup.cshtml")

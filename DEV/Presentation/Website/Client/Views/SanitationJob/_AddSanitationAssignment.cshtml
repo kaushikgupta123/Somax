@@ -1,0 +1,97 @@
+﻿
+@model Client.Models.Sanitation.SanitationVM
+
+<div class="m-subheader fixedDiv1">
+    <div class="new-m-subheader">
+        <div class="PageTitle">
+            <div class="align-items-center separator">
+                <h3 class="m-subheader__title ">
+                    @Model.Loc.Where(a => a.ResourceId == "spnSanitation").FirstOrDefault().Value.ToString()
+                </h3>
+            </div>
+        </div>
+
+        <div class="NewBreadcrumbArea">
+            <div class="newBreadcrumb">
+                <ul>
+                    <li><a href="/Dashboard/Dashboard">&nbsp;</a></li>
+                    <li><a href="/SanitationJob/Index?page=Sanitation_Jobs_Search">@Model.Loc.Where(a => a.ResourceId == "spnSanitaionJobSearch").FirstOrDefault().Value.ToString()</a></li>
+                    <li><a href="javascript:void(0)" id="brdSanitation" data-val="@Model.assignmentModel.SanitationJobId">@Model.assignmentModel.ClientLookupId</a></li>
+                    @if (Model.assignmentModel.SanitationJobScheduleId != 0)
+                    {
+                        <li class="active">@Model.Loc.Where(a => a.ResourceId == "spnUpdateAssignment").FirstOrDefault().Value.ToString()</li>
+                    }
+                    else
+                    {
+                        <li class="active">@Model.Loc.Where(a => a.ResourceId == "spnAddAssignment").FirstOrDefault().Value.ToString()</li>
+                    }
+                </ul>
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+        <div style="clear:both;"></div>
+    </div>
+</div>
+<div class="pushDiv1"></div>
+
+<div class="row fixedDiv2">
+    @Html.Partial("_SanitationJobSummary", Model)
+</div>
+<div class="pushDiv2 partsAdjust"></div>
+@Html.Partial("_ErrorDiv")
+
+@using (Ajax.BeginForm("Addassignment", "SanitationJob", new AjaxOptions { HttpMethod = "Post", OnSuccess = "SJAssignmentAddOnSuccess", OnBegin = "AjaxBeginFormBegin", OnComplete = "AjaxBeginFormComplete", OnFailure = "AjaxBeginFormFaillure" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="row">
+        <div class="col-xl-12">
+            <div class="m-portlet newPort" id="m_portlet" style="padding:15px;">
+                <div class="bottomBlock">
+                    <div class="tabsArea nobg">
+                        <ul class="listView nobrd">
+                            <li>
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnPersonnelID").FirstOrDefault().Value.ToString():<small>*</small> </span>
+                                <span class="inputText">
+                                    @Html.ValidationMessageFor(m => m.assignmentModel.PersonnelId, "", new { style = "display:none" })
+                                    @Html.DropDownListFor(m => m.assignmentModel.PersonnelId, Model.assignmentModel.PersonnelIdList, "--Select--", new { @class = "form-control search select2picker", style = "width:100%;" })
+                                </span>
+                            </li>
+                            <li>
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnScheduledStartDate").FirstOrDefault().Value.ToString() : <small>*</small></span>
+                                <span class="inputText">
+                                    @Html.ValidationMessageFor(m => m.assignmentModel.ScheduledStartDate, "", new { style = "display:none" })
+                                    @Html.TextBoxFor(m => m.assignmentModel.ScheduledStartDate, "{0:MM/dd/yyyy}", new { @class = "form-control search dtpicker", autocomplete = "off" })
+                                </span>
+                            </li>
+                            <li>
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnScheduledHours").FirstOrDefault().Value.ToString(): <small>*</small></span>
+                                <span class="inputText">
+                                    @Html.ValidationMessageFor(m => m.assignmentModel.ScheduledHours, "", new { style = "display:none" })
+                                    @Html.TextBoxFor(m => m.assignmentModel.ScheduledHours, new { @class = "form-control search decimalinput", autocomplete = "off" })
+                                </span>
+                            </li>
+
+                        </ul>
+                    </div>
+                    <div style="clear:both;"></div>
+
+                    <div class="idBttns">
+                        <div class="bttn_pagin">
+                            <div class="bttns2">
+                                <button type="submit" class="btn btn-blue mobBttn"><i class="fa fa-save faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+                            </div>
+                            <div class="bttns"><button type="button" class="btn btn-blue mobBttn" id="btnSJAssignmentcancel"><i class="fa fa-close faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button></div>
+
+                            <div style="clear:both;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @Html.HiddenFor(m => m.assignmentModel.SanitationJobId)
+    @Html.HiddenFor(m => m.assignmentModel.SanitationJobScheduleId)
+    @Html.HiddenFor(m => m.assignmentModel.UpdateIndex)
+    @Html.Partial("_SanitationJobSummaryDescriptionMore", Model) @*V2-988*@
+}

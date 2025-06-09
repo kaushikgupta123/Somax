@@ -1,0 +1,18 @@
+﻿@model Client.Models.PartsManagement.PartsReview.PartsReviewVM
+
+@{
+    ViewBag.Title = "Somax | Parts Master Review";
+}
+
+@Styles.Render("~/Content/datatable")
+<link href="~/Scripts/Metronic/assets/demo/default/base/GlobalSearchGrid.css" rel="stylesheet" />
+
+@section scripts {
+    @Scripts.Render("~/bundles/datatable")
+    @Scripts.Render("~/bundles/imagezoom")
+    <script src="~/Scripts/Pages/PartsManagement/PartsReview/PartsReview.js"></script>
+}
+
+<div id="renderpartsreview">
+    @Html.Partial("_PartsReviewSearch")
+</div>

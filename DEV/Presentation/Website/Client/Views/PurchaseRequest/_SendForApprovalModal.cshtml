@@ -1,0 +1,28 @@
+﻿@model Client.Models.PurchaseRequest.PurchaseRequestVM
+<form>
+    <div id="sendForApprovalModal" class="modal fade" role="dialog">
+        <div class="modal-dialog modal-info">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">@UtilityFunction.GetMessageFromResource("globalPurchaseRequestSendForApproval", LocalizeResourceSetConstants.Global)</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="Line" id="lblLine">@UtilityFunction.GetMessageFromResource("globalSendToPersonnel", LocalizeResourceSetConstants.Global) <small>*</small></label>
+                        @Html.DropDownListFor(m => m.purchaseRequestModel.PersonalName, Model.purchaseRequestModel.PersonnelList, "--Select--", new { @class = "form-control search select2picker", id = "txtsendtopersonnel", style = "width:100%;" })
+                    </div>
+                    <div class="form-group">
+                        <label for="Line" id="lblLine">@UtilityFunction.GetMessageFromResource("spnLogComment", LocalizeResourceSetConstants.Global)</label>
+                        <input type="text" class="form-control search" id="txtsendforapprovalcomments">
+                    </div>
+                </div>
+                <div class="modal-footer" style="padding:15px 25px !important;">
+                    <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-close faIcon"></i> &nbsp;@UtilityFunction.GetMessageFromResource("globalCancel", LocalizeResourceSetConstants.Global) </button>
+                    <button type="button" class="btn btn-blue" style="float:right;" id="btnsendforapproval"><i class="fa fa-envelope-o faIcon"></i> &nbsp;@UtilityFunction.GetMessageFromResource("spnPdSendforApproval", LocalizeResourceSetConstants.PurchaseRequest) </button>
+                    <div style="clear:both;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

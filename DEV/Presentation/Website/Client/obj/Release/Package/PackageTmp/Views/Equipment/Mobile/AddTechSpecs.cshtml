@@ -1,0 +1,122 @@
+﻿@model Client.Models.EquipmentCombined
+
+@using (Ajax.BeginForm("TechSpecsAdd", "Equipment", new AjaxOptions { HttpMethod = "Post", OnSuccess = "TechSpecAddOnSuccess", OnBegin = "AjaxBeginFormBegin", OnComplete = "AjaxBeginFormComplete", OnFailure = "AjaxBeginFormFaillure" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="slide-modal-head">
+        <a class="slide-back-btn TechSpecsclearstate"> <i class="fa fa-angle-left"></i>  @Model.Loc.Where(a => a.ResourceId == "spnBack").FirstOrDefault().Value.ToString()</a>
+        <div class="slide-back-title">
+            @if (Model.techSpecsModel.Mode == "add")
+            {
+                @Model.Loc.Where(a => a.ResourceId == "globalAdd").FirstOrDefault().Value.ToString()
+            }
+            else
+            {
+                @Model.Loc.Where(a => a.ResourceId == "globalUpdate").FirstOrDefault().Value.ToString()
+            }
+            @Model.Loc.Where(a => a.ResourceId == "anchTechSpec").FirstOrDefault().Value.ToString()
+        </div>
+
+    </div>
+    @Html.Partial("_ErrorDiv")
+    <div class="slide-modal-body">
+        <div mbsc-page class="demo-responsive">
+            <div style="height:100%">
+                <div mbsc-form class="mbsc-form-grid">
+                    <div class="mbsc-grid">
+                        <div class="mbsc-row">
+                            <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                <label>
+                                    @Model.Loc.Where(a => a.ResourceId == "spnSpecification").FirstOrDefault().Value.ToString()
+
+                                    @if (Model.techSpecsModel.Mode == "add")
+                                    {
+                                        @Html.DropDownListFor(m => m.techSpecsModel.TechSpecId, Model.techSpecsModel.TechSpecsList, "--Select--", new
+                                   {
+                                       @class = "form-control search mobiscrollselect",
+                                       @style = "width:100%;",
+                                       @mbsc_dropdown = "true",
+                                       @data_label = Model.Loc.Where(a => a.ResourceId == "spnSpecification").FirstOrDefault().Value.ToString(),
+                                       @data_input_style = "box",
+                                       @data_label_style = "floating",
+                                       @placeholder = Model.Loc.Where(a => a.ResourceId == "spnSpecification").FirstOrDefault().Value.ToString()
+                                   })
+                                    }
+                                    else
+                                    {
+                                        @Html.DropDownListFor(m => m.techSpecsModel.TechSpecId, Model.techSpecsModel.TechSpecsList, new
+                                   {
+                                       @class = "form-control search mobiscrollselect",
+                                       @style = "width:100%;",
+                                       @mbsc_dropdown = "true",
+                                       @data_label = Model.Loc.Where(a => a.ResourceId == "spnSpecification").FirstOrDefault().Value.ToString(),
+                                       @data_input_style = "box",
+                                       @data_label_style = "floating",
+                                       @placeholder = Model.Loc.Where(a => a.ResourceId == "spnSpecification").FirstOrDefault().Value.ToString(),
+                                       @disabled = "disabled"
+                                   })
+                                    }
+                                </label>
+                                @Html.ValidationMessageFor(m => m.techSpecsModel.TechSpecId, "", new { })
+                            </div>
+                            <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                <label>
+                                    @Model.Loc.Where(a => a.ResourceId == "spnValue").FirstOrDefault().Value.ToString()
+                                    @Html.TextBoxFor(m => m.techSpecsModel.SpecValue, new
+                                    {
+                                   @class = "form-control search",
+                                   @mbsc_input = "true",
+                                   @data_label_style = "floating",
+                                   @placeholder = Model.Loc.Where(a => a.ResourceId == "spnValue").FirstOrDefault().Value.ToString(),
+                                   @data_input_style = "box",
+                                   autocomplete = "off"
+                               })
+                                </label>
+                                @Html.ValidationMessageFor(m => m.techSpecsModel.SpecValue, "", new { })
+                            </div>
+                            <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                <label>
+                                    @Model.Loc.Where(a => a.ResourceId == "spnLogComment").FirstOrDefault().Value.ToString()
+                                    @Html.TextBoxFor(m => m.techSpecsModel.Comments, new
+                                    {
+                                   @class = "form-control search",
+                                   @mbsc_input = "true",
+                                   @data_label_style = "floating",
+                                   @placeholder = Model.Loc.Where(a => a.ResourceId == "spnLogComment").FirstOrDefault().Value.ToString(),
+                                   @data_input_style = "box",
+                                   autocomplete = "off"
+                               })
+                                </label>
+                            </div>
+                        </div>
+                        <div class="mbsc-row">
+                            <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                <div class="design-box">
+                                    <div class="mbsc-button-group-block">
+                                        <button mbsc-button data-color="success" type="button" class="btn btn-blue mobBttn TechSpecsclearstate" id="Techspeccancelbutton"><i class="fa fa-close faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                <div class="design-box">
+                                    <div class="mbsc-button-group-block">
+                                        <button data-color="success" type="submit" class="btn btn-blue mobBttn" style="cursor:pointer" value="save"><i class="fa fa-save faIcon"></i> &nbsp;@Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="slide-modal-footer"></div>
+
+    @Html.HiddenFor(m => m.techSpecsModel.EquipmentId)
+    @Html.HiddenFor(m => m.techSpecsModel.Mode)
+
+    @Html.HiddenFor(m => m.techSpecsModel.Equipment_TechSpecsId)
+    @Html.HiddenFor(m => m.techSpecsModel.updatedindex)
+}
+
+

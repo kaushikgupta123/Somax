@@ -1,0 +1,30 @@
+﻿@model Client.Models.PartTransfer.PartTransferVM
+<div id="confirmForceCompleteModal" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-info">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">@Model.Loc.Where(a => a.ResourceId == "spnConfirmForceComplete").FirstOrDefault().Value.ToString()</h4>
+            </div>
+            <div class="modal-body">
+                <p>@Model.Loc.Where(a => a.ResourceId == "spnforcecompletionparttransfer").FirstOrDefault().Value.ToString()</p>
+            </div>
+            @Html.Partial("_ErrorDiv")
+            @using (Ajax.BeginForm("ConfirmForceComplete", "PartTransfer", new AjaxOptions { HttpMethod = "Post", OnSuccess = "ForceCompleteOnSuccess", OnBegin = "AjaxBeginFormBegin", OnComplete = "AjaxBeginFormComplete", OnFailure = "AjaxBeginFormFaillure" }))
+            {
+                @Html.AntiForgeryToken()
+                <div class="modal-footer" style="padding:15px 25px !important;">
+                    <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-close buttonIcon"></i> &nbsp;@Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString() </button>
+                    <button type="submit" class="btn btn-blue" style="float:right;"><i class="fa fa-save buttonIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalconfirm").FirstOrDefault().Value.ToString()</button>
+                    <div style="clear:both;"></div>
+                </div>
+                @Html.HiddenFor(m => m.parttransfermodel.PartTransferId)
+            }
+        </div>
+    </div>
+</div>
+<script>
+ $(document).ready(function () {
+       $.validator.unobtrusive.parse(document);
+       });
+</script>

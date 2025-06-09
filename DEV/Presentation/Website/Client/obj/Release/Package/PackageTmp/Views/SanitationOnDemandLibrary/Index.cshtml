@@ -1,0 +1,12 @@
+﻿@{
+    ViewBag.Title = "Somax-Config | Sanitation On-Demand Library";
+}
+@Styles.Render("~/Content/datatable")
+<link href="~/Scripts/Metronic/assets/demo/default/base/GlobalSearchGrid.css" rel="stylesheet" />
+@section scripts {
+    @Scripts.Render("~/bundles/datatable")
+    @Scripts.Render("~/bundles/SanitationOnDemandLibrary")
+}
+<div id="rendersanitationondemandLibrary">
+    @Html.Partial("~/Views/SanitationOnDemandLibrary/_SanitOnDemandLibSearch.cshtml")
+</div>

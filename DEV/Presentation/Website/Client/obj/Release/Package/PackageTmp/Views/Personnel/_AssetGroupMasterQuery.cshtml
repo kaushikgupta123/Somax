@@ -1,0 +1,47 @@
+﻿@model Client.Models.PersonnelVM
+@{
+    var AssetGroup1Ids = string.Join(",", Model.assetGroupMasterQuery.AssetGroup1Ids);
+    var AssetGroup2Ids = string.Join(",", Model.assetGroupMasterQuery.AssetGroup2Ids);
+    var AssetGroup3Ids = string.Join(",", Model.assetGroupMasterQuery.AssetGroup3Ids);
+}
+<div id="AssetGroupMasterQueryModal" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-info">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">@Model.Loc.Where(a => a.ResourceId == "spnMasterQuerySetup").FirstOrDefault().Value.ToString()</h4>
+            </div>
+            @using (Ajax.BeginForm("UpdateAssetGroupMasterQuery", "Personnel", new AjaxOptions { HttpMethod = "Post", OnSuccess = "AssetGroupMasterQueryUpdateOnSuccess", OnBegin = "AjaxBeginFormBegin", OnComplete = "AjaxBeginFormComplete", OnFailure = "AjaxBeginFormFaillure" }))
+            {
+                @Html.AntiForgeryToken()
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="Line" id="lblLine">@Model.AssetGroup1Label :</label>
+                        @Html.ValidationMessageFor(m => m.assetGroupMasterQuery.AssetGroup1Ids, "", new { style = "display:none" })
+                        @Html.DropDownListFor(m => m.assetGroupMasterQuery.AssetGroup1Ids, Model.AssetGroup1List, new { @class = "form-control search select2picker", style = "width:100%;", @id = "AssetGroup1Ids", multiple = "multiple" })
+                    </div>
+                    <div class="form-group">
+                        <label for="Line" id="lblLine">@Model.AssetGroup2Label :</label>
+                        @Html.ValidationMessageFor(m => m.assetGroupMasterQuery.AssetGroup2Ids, "", new { style = "display:none" })
+                        @Html.DropDownListFor(m => m.assetGroupMasterQuery.AssetGroup2Ids, Model.AssetGroup2List, new { @class = "form-control search select2picker", style = "width:100%;", @id = "AssetGroup2Ids", multiple = "multiple" })
+                    </div>
+                    <div class="form-group">
+                        <label for="Line" id="lblLine">@Model.AssetGroup3Label :</label>
+                        @Html.ValidationMessageFor(m => m.assetGroupMasterQuery.AssetGroup3Ids, "", new { style = "display:none" })
+                        @Html.DropDownListFor(m => m.assetGroupMasterQuery.AssetGroup3Ids, Model.AssetGroup3List, new { @class = "form-control search select2picker", style = "width:100%;", @id = "AssetGroup3Ids", multiple = "multiple" })
+                    </div>
+                </div>
+                <div class="modal-footer" style="padding:15px 25px !important;">
+                    <button type="button" class="btn btn-default mobBttn" data-dismiss="modal"><i class="fa fa-close buttonIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button>
+                    <button type="submit" class="btn btn-blue mobBttn" style="float:right;"><i class="fa fa-save faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+                    <div style="clear:both;"></div>
+                </div>
+                @Html.HiddenFor(x => x.assetGroupMasterQuery.PersonnelId)
+
+                @Html.Hidden("hdnAssetGroup1Ids", AssetGroup1Ids)
+                @Html.Hidden("hdnAssetGroup2Ids", AssetGroup2Ids)
+                @Html.Hidden("hdnAssetGroup3Ids", AssetGroup3Ids)
+            }
+        </div>
+    </div>
+</div>

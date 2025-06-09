@@ -1,0 +1,119 @@
+﻿@model Client.Models.BusinessIntelligenceVM
+@using System.Text.RegularExpressions
+
+@{
+    int ReportTimeOut = Convert.ToInt32(System.Configuration.ConfigurationManager.AppSettings["ReportTimeOut"].ToString());
+    ViewBag.Title = "Somax | Report";
+    int i = 0;
+    string recentClassName = string.Empty;
+    string leftclassname = string.Empty;
+}
+@Styles.Render("~/Content/datatable")
+@Styles.Render("~/Content/common")
+@Styles.Render("~/Content/daterangepickercustom")
+@Styles.Render("~/Content/SomaxReports")
+<link href="~/Scripts/Metronic/assets/demo/default/base/style_newCustom.css" rel="stylesheet" />
+
+@section scripts {
+    @Scripts.Render("~/bundles/datatable")
+    @Scripts.Render("~/bundles/Reports")
+}
+<div id="maincontainer">
+    <div class="m-subheader ">
+        <div style="float:left;">
+            <div class="mr-auto">
+                <h3 class="m-subheader__title ">@Model.Loc.Where(a => a.ResourceId == "spnReports").FirstOrDefault().Value.ToString()</h3>
+            </div>
+        </div>
+        <div style="clear:both;"></div>
+    </div>
+
+    <div class="m-portlet ">
+        <div class="m-portlet__body  m-portlet__body--no-padding">
+            <div class="row recentReportsBlock">
+                <h3 class="title">@Model.Loc.Where(a => a.ResourceId == "spnRecentReports").FirstOrDefault().Value.ToString() </h3>
+                @foreach (var item in Model.RecentReports)
+                {
+                    if (i == 0)
+                    {
+                        recentClassName = "firstBox";
+                    }
+                    else if (i == 1)
+                    {
+                        recentClassName = "secondBox";
+                    }
+                    else if (i == 2)
+                    {
+                        recentClassName = "thirdBox";
+                    }
+                    else if (i == 3)
+                    {
+                        recentClassName = "forthBox";
+                        leftclassname = "left";
+                    }
+                    else
+                    {
+                        recentClassName = "fifthBox";
+                        leftclassname = "left";
+                    }
+                    <div class="recentReportsBox @recentClassName" data-reportid="@item.ReportListingId" data-isprompt="@item.IncludePrompt" data-IsUserReport="@item.IsUserReport"  data-isdevexpressrpt="@item.DevExpressRpt" data-reportname="@item.DevExpressRptName">
+                        <h2 class="reportheader hoverClass">@item.ReportName</h2>
+                        <h3 class="reportdesc hoverClass">@item.Description</h3>
+                        <div class="descriptionPopup">
+                            <h2>@item.ReportName</h2>
+                            <h3>@item.Description</h3>
+                        </div>
+                    </div>
+                    i++;
+                }
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-xl-3">
+            <div class="m-portlet">
+                <div class="sideMenuArea nobg">
+                    <ul class="vtabs" id="detmaintab">
+                        <li class="active favorites lireports" data-group="Favorites" id="Favorites"><a href="javascript:void(0)">Favorites</a></li>
+                        @foreach (var item in Model.ReportGroups)
+                        {
+                            <li class="lireports" data-group="@item" id="rpts_@Regex.Replace(item, @"\s", "")"><a href="javascript:void(0)">@item</a></li>
+                        }
+                    </ul>
+                </div>
+                <div class="selectTabs" id="selectTabs">
+                    <select class="form-control" id="colorselector">
+                        <option value="Favorites">Favorites</option>
+                        @foreach (var item in Model.ReportGroups)
+                        {
+                            <option value="@item">@item</option>
+                        }
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-9">
+            <div class="row">
+                <div class="col-xl-12" id="reportsblock"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal -->
+<div id="PrivateReportModalpopup" class="modal fade" role="dialog">
+    <div class="modal-dialog" id="PrivateReportPopup">
+    </div>
+</div>
+<div id="SiteReportModalpopup" class="modal fade" role="dialog">
+    <div class="modal-dialog" id="SiteReportPopup">
+    </div>
+</div>
+<div id="PublicReportModalpopup" class="modal fade" role="dialog">
+    <div class="modal-dialog" id="PublicReportPopup">
+    </div>
+</div>
+<script>
+    var ReportTimeOut = "@ReportTimeOut";
+</script>
+

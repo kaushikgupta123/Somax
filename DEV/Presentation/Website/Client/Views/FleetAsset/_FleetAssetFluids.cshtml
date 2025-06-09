@@ -1,0 +1,54 @@
+﻿@model Client.Models.FleetAsset.FleetAssetVM
+
+
+<ul class="listView nobrd">
+    <li>
+        <span class="label" id="spnFuelQuality">@Html.LabelFor(m => m.FleetAssetModel.FleetFuelQuality)</span>
+        <span class="inputText">
+            @Html.TextBoxFor(m => m.FleetAssetModel.FleetFuelQuality, new { @class = "form-control search m-input flt_fue", @style = "color:black", autocomplete = "off", maxlength = "15" })
+        </span>
+    </li>
+    <li>
+        <span class="label" id="spnFuelType">@Html.LabelFor(m => m.FleetAssetModel.FuelType)</span>
+        <span class="inputText">
+            @Html.DropDownListFor(m => m.FleetAssetModel.FuelType, Model.LookupFuelTypeList, "--Select--", new { @class = "form-control search select2picker flt_fue", style = "width:100%;" })
+        </span>
+    </li>
+    <li>
+        <span class="label" id="spnFuelTank1Capacity">@Html.LabelFor(m => m.FleetAssetModel.FuelTankCapacity1)</span>
+        <span class="inputText">
+            @Html.ValidationMessageFor(m => m.FleetAssetModel.FuelTankCapacity1, "", new { style = "display:none" })
+            @Html.TextBoxFor(m => m.FleetAssetModel.FuelTankCapacity1, new { @class = "form-control search decimalinput flt_fuedec", @style = "color:black", autocomplete = "off" })
+        </span>
+    </li>
+    <li>
+        <span class="label" id="spnFuelTank2Capacity">@Html.LabelFor(m => m.FleetAssetModel.FuelTankCapacity2)</span>
+        <span class="inputText">
+            @Html.ValidationMessageFor(m => m.FleetAssetModel.FuelTankCapacity2, "", new { style = "display:none" })
+            @Html.TextBoxFor(m => m.FleetAssetModel.FuelTankCapacity2, new { @class = "form-control search decimalinput flt_fuedec", @style = "color:black", autocomplete = "off" })
+        </span>
+    </li>
+    <li>
+        <span class="label" id="spnEPACity">@Html.LabelFor(m => m.FleetAssetModel.EPACity)</span>
+        <span class="inputText">
+            @Html.ValidationMessageFor(m => m.FleetAssetModel.EPACity, "", new { style = "display:none" })
+            @Html.TextBoxFor(m => m.FleetAssetModel.EPACity, new { @class = "form-control search decimalinput flt_fuedec", @style = "color:black", autocomplete = "off" })
+        </span>
+    </li>
+    <li>
+        <span class="label" id="spnEPAHighway">@Html.LabelFor(m => m.FleetAssetModel.EPAHighway)</span>
+        <span class="inputText">
+            @Html.ValidationMessageFor(m => m.FleetAssetModel.EPAHighway, "", new { style = "display:none" })
+            @Html.TextBoxFor(m => m.FleetAssetModel.EPAHighway, new { @class = "form-control search decimalinput flt_fuedec", @style = "color:black", autocomplete = "off" })
+        </span>
+    </li>
+    <li>
+        <span class="label" id="spnEPACombined">@Html.LabelFor(m => m.FleetAssetModel.EPACombined)</span>
+        <span class="inputText">
+            @Html.ValidationMessageFor(m => m.FleetAssetModel.EPACombined, "", new { style = "display:none" })
+            @Html.TextBoxFor(m => m.FleetAssetModel.EPACombined, new { @class = "form-control search decimalinput flt_fuedec", @style = "color:black", autocomplete = "off" })
+        </span>
+    </li>
+
+</ul>
+

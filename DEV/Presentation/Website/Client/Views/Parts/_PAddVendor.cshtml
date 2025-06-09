@@ -1,0 +1,150 @@
+﻿@model Client.Models.Parts.PartsVM
+
+<div class="m-subheader fixedDiv1">
+    <div class="new-m-subheader">
+        <div class="PageTitle">
+            <div class="align-items-center separator">
+                <h3 class="m-subheader__title ">
+                    @Model.Loc.Where(a => a.ResourceId == "hdrVendors").FirstOrDefault().Value.ToString()
+                </h3>
+            </div>
+        </div>
+
+        <div class="NewBreadcrumbArea">
+            <div class="newBreadcrumb">
+                <ul>
+                    <li><a href="/Dashboard/Dashboard">&nbsp;</a></li>
+                    <li><a href="/Parts/Index?page=Inventory_Parts">@Model.Loc.Where(a => a.ResourceId == "spnPartSearch").FirstOrDefault().Value.ToString()</a></li>
+                    <li><a href="javascript:void(0)" id="brdpart" data-val="@Model.PartModel.PartId">@Model.PartModel.ClientLookupId</a></li>
+                    @if (Model.partsVendorModel.PartVendorXrefId != 0)
+                    {
+                        <li class="active">@Model.Loc.Where(a => a.ResourceId == "spnVendorEdit ").FirstOrDefault().Value.ToString()</li>
+                    }
+                    else
+                    {
+                        <li class="active">@Model.Loc.Where(a => a.ResourceId == "spnVendorAdd").FirstOrDefault().Value.ToString()</li>
+                    }
+
+                </ul>
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+        <div style="clear:both;"></div>
+    </div>
+</div>
+<div class="pushDiv1"></div>
+
+<div class="row fixedDiv2">
+    @Html.Partial("_PartSummary", Model)
+</div>
+<div class="pushDiv2 partsAdjust"></div>
+
+@Html.Partial("_ErrorDiv")
+
+@using (Ajax.BeginForm("PartsVedndorAdd", "Parts", new AjaxOptions { HttpMethod = "Post", OnSuccess = "PartsVendorAddOnSuccess", OnBegin = "AjaxBeginFormBegin", OnComplete = "AjaxBeginFormComplete", OnFailure = "AjaxBeginFormFaillure" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="row">
+        <div class="col-xl-12">
+            <div class="m-portlet newPort" id="m_portlet" style="padding:15px;">
+                <div class="bottomBlock">
+                    <div class="tabsArea nobg">
+                        <ul class="listView nobrd">
+                            <li>
+                                <span class="label">@Html.LabelFor(m => m.partsVendorModel.VendorClientLookupId) : <small>*</small></span>
+                                <span class="inputText">
+                                    <div class="dropdown dropTableOuter">
+                                        <div class="input-group">
+                                            @Html.ValidationMessageFor(m => m.partsVendorModel.VendorClientLookupId, "", new { style = "display:none" })
+                                            @Html.TextBoxFor(m => m.partsVendorModel.VendorClientLookupId, new { @class = "form-control search dropbtn readonly", autocomplete = "off", @readonly = "readonly" })
+                                            <div class="input-group-btn">
+                                                <button class="btn btn-white btntxtInputGroup" type="button" id="opengrid">
+                                                    <i id="srcicon" class="fa fa-search"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </span>
+                            </li>
+                            <li>
+                                <span class="label">@Html.LabelFor(m => m.partsVendorModel.CatalogNumber) : </span>
+                                <span class="inputText">
+                                    @Html.TextBoxFor(m => m.partsVendorModel.CatalogNumber, new { @class = "form-control search", autocomplete = "off" })
+                                </span>
+                            </li>
+                            <li>
+                                <span class="label">@Html.LabelFor(m => m.partsVendorModel.Manufacturer) : </span>
+                                <span class="inputText">
+                                    @Html.TextBoxFor(m => m.partsVendorModel.Manufacturer, new { @class = "form-control search", autocomplete = "off" })
+                                </span>
+                            </li>
+                            <li>
+                                <span class="label">@Html.LabelFor(m => m.partsVendorModel.ManufacturerID) : </span>
+                                <span class="inputText">
+                                    @Html.TextBoxFor(m => m.partsVendorModel.ManufacturerID, new { @class = "form-control search", autocomplete = "off" })
+                                </span>
+                            </li>
+                            <li>
+                                <span class="label">@Html.LabelFor(m => m.partsVendorModel.OrderQuantity) : </span>
+                                <span class="inputText">
+                                    @Html.ValidationMessageFor(m => m.partsVendorModel.OrderQuantity, "", new { style = "display:none" })
+                                    @Html.TextBoxFor(m => m.partsVendorModel.OrderQuantity, new { @class = "form-control search longinput", autocomplete = "off" })
+                                </span>
+                            </li>
+                            <li>
+                                <span class="label">@Html.LabelFor(m => m.partsVendorModel.OrderUnit) : </span>
+                                <span class="inputText">
+                                    @Html.ValidationMessageFor(m => m.partsVendorModel.OrderUnit, "", new { style = "display:none" })
+                                    @Html.DropDownListFor(m => m.partsVendorModel.OrderUnit, Model.partsVendorModel.OrderUnitList, "--Select--", new { @class = "form-control select2picker", style = "width:100%;" })
+                                </span>
+                            </li>
+                            <li>
+                                <span class="label">@Html.LabelFor(m => m.partsVendorModel.Price) : </span>
+                                <span class="inputText">
+                                    @Html.ValidationMessageFor(m => m.partsVendorModel.Price, "", new { style = "display:none" })
+                                    @Html.TextBoxFor(m => m.partsVendorModel.Price, new { @class = "form-control search decimalinput", autocomplete = "off" })
+                                    @Html.HiddenFor(m => m.partsVendorModel.DefaultPricevalue, new { @id = "DefaultPricevalue"})
+                                </span>
+                            </li>
+                           
+                            <li>
+                                <span class="label">@Html.LabelFor(m => m.partsVendorModel.IssueOrder) : </span>
+                                <span class="inputText">
+                                    @Html.ValidationMessageFor(m => m.partsVendorModel.IssueOrder, "", new { style = "display:none" })
+                                    @Html.TextBoxFor(m => m.partsVendorModel.IssueOrder, new { @class = "form-control search decimalinput", autocomplete = "off" })
+                                    @Html.HiddenFor(m=>m.partsVendorModel.DefaultissueOrdervalue,new {@id= "DefaultissueOrdervalue" })
+                                </span>
+                            </li>
+                            <li>
+                                <span class="label">@Html.LabelFor(m => m.partsVendorModel.UOMConvRequired) : </span>
+                                <span class="inputText">
+                                    @Html.CheckBoxFor(m => m.partsVendorModel.UOMConvRequired,new { @id= "UOMConvRequired" })
+                                </span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div style="clear:both;"></div>
+
+                    <div class="idBttns">
+                        <div class="bttn_pagin">
+                            <div class="bttns2">
+                                <button type="submit" class="btn btn-blue mobBttn"><i class="fa fa-save faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+                            </div>
+                            <div class="bttns"><button type="button" class="btn btn-blue mobBttn" id="btnpvendorcancel"><i class="fa fa-close faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button></div>
+
+                            <div style="clear:both;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @Html.Partial("~/Views/Parts/_PartsVendorPopup.cshtml")
+    @Html.HiddenFor(m => m.partsVendorModel.PartId)
+    @Html.HiddenFor(m => m.partsVendorModel.PartVendorXrefId)
+}
+@*<script src="~/Scripts/Pages/part/partvendor-grid-dropdown.js"></script>*@
+<style type="text/css">
+    .ui-tooltip.ui-tooltip1 { z-index: 98 !important; }
+</style>

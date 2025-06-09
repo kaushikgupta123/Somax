@@ -1,0 +1,79 @@
+﻿@model Client.Models.PhysicalInventory.PhysicalInventoryVM
+@{
+    ViewBag.Title = "Somax | Physical Inventory";
+}
+
+@Styles.Render("~/Content/datatable")
+<link href="~/Scripts/Metronic/assets/demo/default/base/GlobalSearchGrid.css" rel="stylesheet" />
+
+@if (Model.udata.IsLoggedInFromMobile)
+{
+    @section scripts {
+        @Scripts.Render("~/bundles/QRScanner")
+        @Scripts.Render("~/bundles/datatable")
+        @Scripts.Render("~/bundles/InventoryPhysicalInventoryMobile")
+        <script type="text/javascript">
+            var errClass = 'mobile-validation-error';
+            $.validator.setDefaults({
+                ignore: null,
+                //errorClass: "mobile-validation-error", // default values is input-validation-error
+                //validClass: "valid", // default values is valid
+                highlight: function (element, errorClass, validClass) { //for the elements having error
+                    $(element).addClass(errClass).removeClass(validClass);
+                    $(element.form).find("#" + element.id).parent().parent().addClass("mbsc-err");
+                    var elemName = $(element.form).find("#" + element.id).attr('name');
+                    $(element.form).find('[data-valmsg-for="' + elemName + '"]').addClass("mbsc-err-msg");
+                },
+                unhighlight: function (element, errorClass, validClass) { //for the elements having not any error
+                    $(element).removeClass(errClass).addClass(validClass);
+                    $(element.form).find("#" + element.id).parent().parent().removeClass("mbsc-err");
+                    var elemName = $(element.form).find("#" + element.id).attr('name');
+                    $(element.form).find('[data-valmsg-for="' + elemName + '"]').removeClass("mbsc-err-msg");
+                },
+            });
+        </script>
+    }
+    @Html.Partial("Mobile/_InventoryIndex")
+    @Html.Partial("~/Views/InventoryPhysicalInventory/Mobile/_QrCodeReaderModal.cshtml")
+}
+else
+{
+    @section scripts {
+        @Scripts.Render("~/bundles/QRScanner")
+        @Scripts.Render("~/bundles/datatable")
+        @Scripts.Render("~/bundles/InventoryPhysicalInventory")
+    }
+    @Html.Partial("_InventoryIndex")
+    @Html.Partial("~/Views/Shared/QR/_QrCodeReaderModal.cshtml")
+}
+
+<style>
+    ul.listView li span.inputText {
+        width: calc(100% - 300px) !important;
+    }
+
+        ul.listView li span.inputText.wthAdjst2 {
+            width: calc(100% - 345px) !important;
+        }
+
+    #btnQrScanner {
+        margin: 2px 0 0 5px;
+    }
+
+    @@media only screen and (min-width: 768px) and (max-width: 1023px) {
+        ul.listView li span.inputText {
+            width: calc(100% - 206px) !important;
+        }
+
+        ul.listView li:nth-child(2) span.inputText.wthAdjst2 {
+            width: calc(100% - 250px) !important;
+        }
+    }
+
+
+    @@media (max-width: 600px) {
+        ul.listView li span.inputText, ul.listView li span.inputText.wthAdjst2 {
+            width: calc(100% - 0px) !important;
+        }
+    }
+</style>

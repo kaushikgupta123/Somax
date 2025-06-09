@@ -1,0 +1,42 @@
+﻿@model Client.Models.VendorsVM
+
+@using (Ajax.BeginForm("ChangeVendorId", "Vendor", new AjaxOptions { HttpMethod = "POST", OnBegin = "AjaxBeginFormBegin", OnSuccess = "ChangeVendorIdSuccess", OnFailure = "AjaxBeginFormFaillure", OnComplete = "AjaxBeginFormComplete" }, new { id = "frmChangeVendorId" }))
+{
+    @Html.AntiForgeryToken()
+    <div id="changeVendorIDModalDetailsPage" class="modal fade" role="dialog" style="padding-right:0px !important;">
+        <div class="modal-dialog modal-info">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">@Model.Loc.Where(a => a.ResourceId == "spnChangeVendorId").FirstOrDefault().Value.ToString()</h4>
+                </div>
+
+                <div class="modal-body">
+
+                    <div class="form-group">
+                        <label for="Line" id="lblLine">@Html.LabelFor(m => m.vendors.VendorId):<small>*</small></label>
+                        @Html.ValidationMessageFor(m => m._ChangeVendorIDModel.NewClientLookupId, "", new { style = "display:none" })
+                        @Html.TextBoxFor(m => m._ChangeVendorIDModel.NewClientLookupId, new { @class = "form-control search m-input ", @style = "color:black", autocomplete = "off", maxlength = "31", id = "NewClientLookupId" })
+                    </div>
+                </div>
+                <div class="modal-footer" style="padding:15px 25px !important;">
+                    <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-close faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button>
+                    <button class="btn btn-blue" style="float:right;" id="changeVendor" data-venid="@Model._ChangeVendorIDModel.VendorId"><i class="fa fa-save faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+                    <div style="clear:both;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @Html.HiddenFor(m => m._ChangeVendorIDModel.VendorId)
+    @Html.HiddenFor(m => m._ChangeVendorIDModel.OldClientLookupId, new { id = "OldClientLookupId" })
+}
+
+<style type="text/css">
+    .ui-tooltip {
+        z-index: 1151 !important;
+    }
+
+    .errormessage {
+        margin-bottom: 1px !important;
+    }
+</style>

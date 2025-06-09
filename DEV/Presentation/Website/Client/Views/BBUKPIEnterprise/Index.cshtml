@@ -1,0 +1,19 @@
+﻿@model Client.Models.BBUKPIEnterprise.BBUKPIEnterpriseVM
+@{
+    ViewBag.Title = "Somax | BBU - KPI Enterprise";
+}
+@Styles.Render("~/Content/datatable")
+@Styles.Render("~/Content/daterangepickercustom")
+<link href="~/Content/sidebar_custom.css" rel="stylesheet" />
+<link href="~/Scripts/Metronic/assets/demo/default/base/GlobalSearchGrid.css" rel="stylesheet" />
+
+@section scripts {
+    @Scripts.Render("~/bundles/datatable")
+    @Scripts.Render("~/bundles/BBUKPIEnterprise")
+    @Scripts.Render("~/bundles/SomaxCkEditor")
+}
+@Styles.Render("~/Content/LaborSchedulingList")
+
+<div id="BBUKPIEnterpriseContainer">
+    @Html.Partial("_BBUKPIEnterpriseSearch", Model)
+</div>

@@ -1,0 +1,87 @@
+﻿@model Client.Models.WorkOrderPlanning.WorkOrderPlanningVM
+<div id="PlanWoWorkOrderPlanLookupModal" class="modal fade dropdown-modal" role="dialog" style="display:none;">
+    <div class="modal-dialog partPopup">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title" id="hdrPopWoWorkplan">@Model.Loc.Where(a => a.ResourceId == "spnSelectWorkorder").FirstOrDefault().Value.ToString()</h4>
+            </div>
+            <div class="modal-body">
+                <div id="tbldropdown" class="dropdown-content tbl-dropdown" style="display:block;">
+                    <div class="table-responsive dropTableOuter">
+                        <table id="PlanWoWorkOrderPlanLookupTable" class="stripe dropTable globalDropTable" style="width:100%;">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        <input name="WoLookupGridselect_all" value="1" id="woforplanLookupsearch-select-all" type="checkbox" />
+                                    </th>
+                                    <th>@Model.Loc.Where(a => a.ResourceId == "spnGlobalWorkOrderID").FirstOrDefault().Value.ToString()</th>
+                                    <th>@Model.Loc.Where(a => a.ResourceId == "GlobalChargeTo").FirstOrDefault().Value.ToString()</th>
+                                    <th>@Model.Loc.Where(a => a.ResourceId == "spnGlobalChargeToName").FirstOrDefault().Value.ToString()</th>
+                                    <th>@Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString()</th>
+                                    <th>@Model.Loc.Where(a => a.ResourceId == "spnStatus").FirstOrDefault().Value.ToString()</th>
+                                    <th>@Model.Loc.Where(a => a.ResourceId == "spnPriority").FirstOrDefault().Value.ToString()</th>
+                                    <th>@Model.Loc.Where(a => a.ResourceId == "GlobalType").FirstOrDefault().Value.ToString()</th>
+                                    <th>@Model.Loc.Where(a => a.ResourceId == "spnRequiredDate").FirstOrDefault().Value.ToString()</th>
+                                </tr>
+                            </thead>
+                            <tfoot id="tbleqpfooter" style="display:none">
+                                <tr>
+                                    <th></th>
+                                    <th style="position:relative;">@Model.Loc.Where(a => a.ResourceId == "spnGlobalWorkOrderID").FirstOrDefault().Value.ToString()</th>
+                                    <th style="position:relative;">@Model.Loc.Where(a => a.ResourceId == "GlobalChargeTo").FirstOrDefault().Value.ToString()</th>
+                                    <th style="position:relative;">@Model.Loc.Where(a => a.ResourceId == "spnGlobalChargeToName").FirstOrDefault().Value.ToString()</th>
+                                    <th style="position:relative;">@Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString()</th>
+                                    <th style="position:relative;">@Model.Loc.Where(a => a.ResourceId == "spnStatus").FirstOrDefault().Value.ToString()</th>
+                                    <th style="position:relative;">@Model.Loc.Where(a => a.ResourceId == "spnPriority").FirstOrDefault().Value.ToString()</th>
+                                    <th style="position:relative;">@Model.Loc.Where(a => a.ResourceId == "GlobalType").FirstOrDefault().Value.ToString()</th>
+                                    <th style="position:relative;"></th>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+                <div class="col-lg-12 col-md-12" style="text-align:right;padding:10px;">
+                    <div class="pull-left">
+                        <ul class="filter_apply2">
+                            <li><span class="WoLookupGriditemcount">0</span>&nbsp;@Model.Loc.Where(a => a.ResourceId == "globalItemsSelected").FirstOrDefault().Value.ToString()</li>
+                        </ul>
+
+                    </div>
+                    <button type="button" class="btn btn-blue" style="float: right; margin: 0 7px;" id="AddPopupWo"><i class="fa fa-plus" style="margin-top:-3px;"></i> &nbsp;@Model.Loc.Where(a => a.ResourceId == "globalAdd").FirstOrDefault().Value.ToString()</button>
+                </div>
+            </div>
+            <div class="modal-footer" style="padding:15px 25px !important;">
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style type="text/css">
+    table.dataTable.dropTable tbody td {
+        height: 27px;
+    }
+
+    .dropdown-content {
+        height: 400px !important;
+    }
+
+    .dropdown-modal .tbl-dropdown .dataTables_wrapper {
+        width: 100% !important;
+    }
+
+    @@media only screen and (max-width: 1367px) {
+        tfoot#tbleqpfooter th:nth-child(1) input.tfootsearchtxt {
+            width: 150px !important;
+        }
+
+        tfoot#tbleqpfooter th:nth-child(2) input.tfootsearchtxt {
+            width: 150px !important;
+        }
+
+        .dropdown-content {
+            height: 465px !important;
+        }
+    }
+</style>

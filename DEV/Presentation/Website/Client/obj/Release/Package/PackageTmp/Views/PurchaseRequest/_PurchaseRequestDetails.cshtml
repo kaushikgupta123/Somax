@@ -1,0 +1,616 @@
+﻿@model Client.Models.PurchaseRequest.PurchaseRequestVM
+@using Client.Models.Common
+@using Client.CustomValidation
+@{
+    bool OraclePurchaseRequestExportInUse = false;
+    bool EPMInvoiceImportInUse = false;
+    var InterfacePropData = (List<InterfacePropModel>)Session["InterfacePropData"];
+    if (InterfacePropData != null && InterfacePropData.Count > 0)
+    {
+        OraclePurchaseRequestExportInUse = InterfacePropData.Where(x => x.InterfaceType == ApiConstants.OraclePurchaseRequestExport).Select(x => x.InUse).FirstOrDefault();
+        EPMInvoiceImportInUse = InterfacePropData.Where(x => x.InterfaceType == ApiConstants.EPMInvoiceImport).Select(x => x.InUse).FirstOrDefault();
+    }
+    string hColumnList = "";
+    if (Model.hiddenColumnList != null && Model.hiddenColumnList.Count > 0)
+    {
+        foreach (var item in Model.hiddenColumnList)
+        {
+            hColumnList = hColumnList + item + ",";
+        }
+        hColumnList = hColumnList.Remove(hColumnList.Length - 1);
+    }
+}
+
+<div class="m-subheader fixedDiv1">
+    <div class="new-m-subheader">
+        <div class="filterDescription">
+            <a href="javascript:void(0)" id="linkToSearch" data-reqfromapproval="@Model.purchaseRequestModel.IsPurchaseRequestFromApproval"><span id="spnlinkToSearch"></span></a> - @Model.purchaseRequestModel.ClientLookupId
+        </div>
+        <div class="ActionBttnArea">
+            <div class="actionDiv pull-left" id="prdetailactiondiv">
+                <div class="btn-group bootstrap-select m-datatable__pager-size dropup show selectDrop actionNewDrop" style="margin-right:0;">
+                    <div class="btn-group bootstrap-select m-datatable__pager-size" style="width: 100%;">
+                        <button type="button" class="btn dropdown-toggle bs-placeholder btn-default" data-toggle="dropdown" role="button" title=""><span class="filter-option pull-left">@Model.Loc.Where(a => a.ResourceId == "globalAction").FirstOrDefault().Value.ToString()</span>&nbsp;<span class="bs-caret"><span class="caret"></span></span></button>
+                        <div class="dropdown-menu open" role="combobox">
+                            <ul class="dropdown-menu inner" role="listbox" aria-expanded="false">
+                                @if (Model.purchaseRequestModel.PrApproveSecurity && (Model.purchaseRequestModel.Status == PurchaseRequestStatusConstants.Open
+|| Model.purchaseRequestModel.Status == PurchaseRequestStatusConstants.AwaitApproval
+|| Model.purchaseRequestModel.Status == PurchaseRequestStatusConstants.Resubmit) && !Model.IsPurchaseRequestApproval)
+                                {
+                                    if (OraclePurchaseRequestExportInUse)
+                                    {
+                                        if (Model.udata.DatabaseKey.Personnel.ExOracleUserId != "" && Model.purchaseRequestModel.ApproveSecurity)
+                                        {
+                                            if (Model.purchaseRequestModel.CountLineItem > 0)
+                                            {
+                                                <li id="approvePR"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnPdApprove").FirstOrDefault().Value.ToString()</a></li>
+                                            }
+                                            <li data-toggle="modal" data-target="#denyModal"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnPdDeny").FirstOrDefault().Value.ToString()</a></li>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        if (Model.purchaseRequestModel.CountLineItem > 0)
+                                        {
+                                            <li id="approvePR"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnPdApprove").FirstOrDefault().Value.ToString()</a></li>
+                                        }
+                                        <li data-toggle="modal" data-target="#denyModal"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnPdDeny").FirstOrDefault().Value.ToString()</a></li>
+                                    }
+                                }
+                                @if (Model.purchaseRequestModel.PrApproveSecurity && (Model.purchaseRequestModel.Status == PurchaseRequestStatusConstants.AwaitApproval) && Model.IsPurchaseRequestApproval && Model.IsPurchaseRequestApprovalAccessCheck)
+                                {
+                                    if (OraclePurchaseRequestExportInUse)
+                                    {
+                                        if (Model.udata.DatabaseKey.Personnel.ExOracleUserId != "" && Model.purchaseRequestModel.ApproveSecurity)
+                                        {
+                                            if (Model.purchaseRequestModel.CountLineItem > 0)
+                                            {
+                                                <li id="MultiLevelApprovePR"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnPdApprove").FirstOrDefault().Value.ToString()</a></li>
+                                            }
+                                            <li id="denyMultiLevelPR"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnPdDeny").FirstOrDefault().Value.ToString()</a></li>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        if (Model.purchaseRequestModel.CountLineItem > 0)
+                                        {
+                                            <li id="MultiLevelApprovePR"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnPdApprove").FirstOrDefault().Value.ToString()</a></li>
+                                        }
+                                        <li id="denyMultiLevelPR"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnPdDeny").FirstOrDefault().Value.ToString()</a></li>
+                                    }
+                                }
+                                @if (Model.purchaseRequestModel.EditSecurity && (Model.purchaseRequestModel.Status == PurchaseRequestStatusConstants.Open
+|| Model.purchaseRequestModel.Status == PurchaseRequestStatusConstants.AwaitApproval
+|| Model.purchaseRequestModel.Status == PurchaseRequestStatusConstants.Resubmit))
+                                {
+                                    if (Model.purchaseRequestModel.PersonnelId == Model.purchaseRequestModel.CreatedBy_PersonnelId)
+                                    {
+                                        <li data-toggle="modal" data-target="#cancelModal"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</a></li>
+                                    }
+                                }
+                                @if (((Model.purchaseRequestModel.Status == PurchaseRequestStatusConstants.Extracted || Model.purchaseRequestModel.Status == PurchaseRequestStatusConstants.Approved)
+&& (Model.udata.DatabaseKey.User.IsSuperUser)))
+                                {
+                                    <li data-toggle="modal" data-target="#cancelModal"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</a></li>
+                                }
+                                @if (Model.security.PurchaseRequest.MaterialRequestItems && (Model.purchaseRequestModel.Status == PurchaseRequestStatusConstants.Open))
+                                {
+                                    <li id="PRMaterialRequest"><a href="javascript:void(0)">Add Material Request Items</a></li>
+                                }
+
+                                @if (Model.security.PurchaseRequest.Consolidate && (Model.purchaseRequestModel.Status == PurchaseRequestStatusConstants.Open
+                                                                                        || Model.purchaseRequestModel.Status == PurchaseRequestStatusConstants.AwaitApproval
+                                                                                        || Model.purchaseRequestModel.Status == PurchaseRequestStatusConstants.Resubmit))
+                                {
+                                    <li id="PRConsolidate"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnConsolidate").FirstOrDefault().Value.ToString()</a></li>
+                                }
+                                <li id="openPREmailModal"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnPdEmailtoVendor").FirstOrDefault().Value.ToString()</a></li>
+
+                                @if (Model.security.PurchaseRequest.Create && (Model.purchaseRequestModel.Status == PurchaseRequestStatusConstants.Open
+                                  || Model.purchaseRequestModel.Status == PurchaseRequestStatusConstants.AwaitApproval
+                                  || Model.purchaseRequestModel.Status == PurchaseRequestStatusConstants.Resubmit) &&
+                         Model.security.PurchaseRequest_Review.Access && (Model.purchaseRequestModel.CountLineItem > 0))
+                                {
+                                    <li data-toggle="modal" data-target="#ReviewSendForApprovalModalDetailsPage"><a href="javascript:void(0)"> @Model.Loc.Where(a => a.ResourceId == "globalReviewAndSendForApproval").FirstOrDefault().Value.ToString() </a></li>
+                                }
+                                @if (Model.security.PurchaseRequest.Create && (Model.purchaseRequestModel.Status == PurchaseRequestStatusConstants.Open
+                                    || Model.purchaseRequestModel.Status == PurchaseRequestStatusConstants.AwaitApproval
+                                    || Model.purchaseRequestModel.Status == PurchaseRequestStatusConstants.Resubmit) && (Model.purchaseRequestModel.CountLineItem > 0))
+                                {
+                                    <li data-toggle="modal" data-target="#SendForApprovalModalDetailsPage"><a href="javascript:void(0)"> @Model.Loc.Where(a => a.ResourceId == "globalSendforApproval").FirstOrDefault().Value.ToString() </a></li>
+                                }
+                                @if (Model.purchaseRequestModel.PrApproveSecurity && (Model.purchaseRequestModel.Status == PurchaseRequestStatusConstants.AwaitApproval) && !Model.IsPurchaseRequestApproval)
+                                {
+                                    <li id="returnrequestPR" data-toggle="modal" data-target="#returnTorequesterModal"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnPdReturntoRequester").FirstOrDefault().Value.ToString()</a></li>
+                                }
+                                <li>
+                                    <a id="printPR" href="javascript:void(0);">@Model.Loc.Where(a => a.ResourceId == "globalPrint").FirstOrDefault().Value.ToString()</a>
+                                </li>
+                                @if (Model.purchaseRequestModel.CreateSecurity && (Model.purchaseRequestModel.Status == PurchaseRequestStatusConstants.Approved) && (Model.purchaseRequestModel.VendorId > 0))
+                                {
+                                    if (!(Model.isActiveInterface && Model.purchaseRequestModel.VendorIsExternal))
+                                    {
+                                        /*V2-1112 Start*/
+                                        if (!EPMInvoiceImportInUse)
+                                        {
+                                            if (Model.udata.Security.Convert_To_PurchaseOrder.Access)
+                                            {
+                                                <li id="ConverttoPurchaseOrder"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnConvertToPurchaseOrder").FirstOrDefault().Value.ToString()</a></li>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <li id="customEPMConvertToPurchaseOrder"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnConvertToPurchaseOrder").FirstOrDefault().Value.ToString()</a></li>
+
+                                        }
+                                        /*V2-1112 End*/
+                                    }
+                                    if ((Model.isActiveInterface && Model.purchaseRequestModel.VendorIsExternal))
+                                    {
+
+                                        <li id="sendToCoupa"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnSendtoCoupa").FirstOrDefault().Value.ToString()</a></li>
+                                    }
+                                }
+                                @if (Model.IsSendToSAP && Model.purchaseRequestModel.Status == PurchaseRequestStatusConstants.Approved
+                                    && Model.purchaseRequestModel.VendorIsExternal)
+                                {
+                                    <li id="SendToSAP"><a href="javascript:void(0)">Send to SAP</a></li>
+                                }
+                            </ul>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @if (Model.security.PurchaseRequest.Create)
+            {
+                <button type="button" class="btn newBtn-add AddPrequest innerBtn pull-left" title="Add Purchase Request"><i class="fa fa-plus"></i></button>
+            }
+            <div style="clear:both;"></div>
+        </div>
+        <div style="clear:both;"></div>
+    </div>
+</div>
+<div class="pushDiv1"></div>
+
+<div class="row">
+    <div class="col-xl-3">
+        <div class="m-portlet" id="prequestdetailbottom">
+            <div class="sideMenuArea nobg">
+                <ul class="vtabs" id="detmaintab">
+                    <li class="active" id="proverviewt"><a href="#PurchasingOverview">@Model.Loc.Where(a => a.ResourceId == "spnPdPurchasingRqstOverview").FirstOrDefault().Value.ToString()</a></li>
+                    <li id="prnotest" onclick="openCity(event, 'PRNotes')"><a href="#PRNotes">@Model.Loc.Where(a => a.ResourceId == "spnGlobalNote").FirstOrDefault().Value.ToString()</a></li>
+                    <li id="prattachmentst" onclick="openCity(event, 'PRAttachments')" style="position:relative;">
+                        <a href="#PRAttachments">@Model.Loc.Where(a => a.ResourceId == "spnAttachments").FirstOrDefault().Value.ToString()</a>
+                        @if (Model.attachmentCount > 0)
+                        {
+                            <span class="m-badge m-badge--danger count-badge" id="pureqAttachmentCount">@Model.attachmentCount</span>
+                        }
+                    </li>
+                </ul>
+            </div>
+            <div class="selectTabs" id="selectTabs">
+                <select class="form-control" id="colorselector">
+                    <option value="PurchasingOverview">@Model.Loc.Where(a => a.ResourceId == "spnPdPurchasingRqstOverview").FirstOrDefault().Value.ToString()</option>
+                    <option value="PRNotes">@Model.Loc.Where(a => a.ResourceId == "spnGlobalNote").FirstOrDefault().Value.ToString()</option>
+                    <option value="PRAttachments">@Model.Loc.Where(a => a.ResourceId == "spnPdAttachment").FirstOrDefault().Value.ToString()</option>
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-9">
+        <div class="row">
+            <div class="col-xl-12" id="btnnblock">
+                <div class="m-portlet" id="m_portlet" style="padding:15px; margin-bottom:0;">
+                    <div class="bottomBlock">
+                        <div class="tabsArea nobg" id="PurchasingOverview" style="display:block;">
+
+                            <div>
+                                <ul class="listView">
+                                    @Html.Partial("~/Views/PurchaseRequest/_PurchaseRequestViewDynamic.cshtml", Model)
+                                </ul>
+                            </div>
+                            <div class="editBttn">
+                                @if ((Model.purchaseRequestModel.EditSecurity && (Model.purchaseRequestModel.Status == PurchaseRequestStatusConstants.Open || Model.purchaseRequestModel.Status == PurchaseRequestStatusConstants.Resubmit))
+|| (Model.purchaseRequestModel.EditAwaitApproveSecurity && Model.purchaseRequestModel.Status == PurchaseRequestStatusConstants.AwaitApproval) || (Model.purchaseRequestModel.EditApprovedSecurity && Model.purchaseRequestModel.Status == PurchaseRequestStatusConstants.Approved))
+                                {
+                                    <button type="button" class="btn btn-blue" id="purchaserequestedit"><i class="fa fa-pencil" style="margin-top:-3px;"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "spnPdEdit").FirstOrDefault().Value.ToString()</button>
+                                }
+
+                            </div>
+                            <div style="clear:both;"></div>
+                        </div>
+
+                        <div class="tabsArea nobg" id="PRNotes" style="display:none;">
+                            <div class="table-responsive">
+                                <table id="prnotesTable" class="eqpDtlTbl row-border custom-sort" style="width:100%;">
+                                    <thead>
+                                        <tr>
+                                            <th>@Model.Loc.Where(a => a.ResourceId == "globalSubject").FirstOrDefault().Value.ToString()</th>
+                                            <th>@Model.Loc.Where(a => a.ResourceId == "globalOwner").FirstOrDefault().Value.ToString()</th>
+                                            <th>@Model.Loc.Where(a => a.ResourceId == "globalModifiedDate").FirstOrDefault().Value.ToString()</th>
+                                            <th width="17%" style="text-align:center !important;">@Model.Loc.Where(a => a.ResourceId == "globalAction").FirstOrDefault().Value.ToString()</th>
+                                        </tr>
+                                    </thead>
+
+                                </table>
+                            </div>
+                            <div class="bttns">
+                                <button type="button" class="btn btn-blue" id="btnPRAddNote"><i class="fa fa-plus faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalAddNotes").FirstOrDefault().Value.ToString()</button>
+                            </div>
+                            <div style="clear:both;"></div>
+                        </div>
+
+                        <div class="tabsArea nobg" id="PRAttachments" style="display:none;">
+                            <div class="table-responsive">
+                                <table id="PRAttachmentTable" class="eqpDtlTbl row-border custom-sort" style="width:100%;">
+                                    <thead>
+                                        <tr>
+                                            <th>@Model.Loc.Where(a => a.ResourceId == "globalSubject").FirstOrDefault().Value.ToString()</th>
+                                            <th>@Model.Loc.Where(a => a.ResourceId == "globalFileName").FirstOrDefault().Value.ToString()</th>
+                                            <th>@Model.Loc.Where(a => a.ResourceId == "globalFileSize").FirstOrDefault().Value.ToString()</th>
+                                            <th>@Model.Loc.Where(a => a.ResourceId == "globalOwner").FirstOrDefault().Value.ToString()</th>
+                                            <th>@Model.Loc.Where(a => a.ResourceId == "globalCreateDate").FirstOrDefault().Value.ToString()</th>
+                                            <th width="17%" style="text-align:center !important;">@Model.Loc.Where(a => a.ResourceId == "globalAction").FirstOrDefault().Value.ToString()</th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                            <div class="bttns">
+                                <button type="button" class="btn btn-blue" data-toggle="" data-target="" id="btnPRAddAttachment"><i class="fa fa-plus faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalAddAttachment").FirstOrDefault().Value.ToString()</button>
+                            </div>
+                            <div style="clear:both;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div style="clear:both;"></div>
+
+    <div class="col-xl-12">
+        <div class="tabsArea nobg" id="PurchaseRequestLineItem" style="margin-top:20px;">
+            <div class="m-portlet" id="m_portlet" style="padding:15px; margin-bottom:0;">
+                <div class="m-portlet__head" style="padding:0; height:2.5rem; margin-bottom:15px;">
+                    <div class="m-portlet__head-caption">
+                        <div class="m-portlet__head-title">
+                            <h3 class="m-portlet__head-text" style="vertical-align:top;">
+                                @Model.Loc.Where(a => a.ResourceId == "spnLineItems").FirstOrDefault().Value.ToString()
+                            </h3>
+                        </div>
+                    </div>
+                    <div class="pull-right" id="AdvanceSearchDesktop">
+                        <button type="button" class="btn btn-white navbar-btn" id="lineitemsidebarCollapse" title="Advance Search"><i class="fa fa-filter" style="font-size: 1.3rem;"></i></button>
+                        <ul class="filter_apply globalFilterAdjusted">
+                            <li class="textFilter"><span class="lifilteritemcount">0</span> @Model.Loc.Where(a => a.ResourceId == "globalFiltersAppiled").FirstOrDefault().Value.ToString()</li>
+                            <li class="textClear" id="lineitemClearAdvSearchFilter"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "globalClear").FirstOrDefault().Value.ToString()</a></li>
+                        </ul>
+                        <div style="clear:both;"></div>
+                    </div>
+                    <div style="clear:both;"></div>
+                </div>
+                <div class="actionBar" id="actionBar">
+                    <div class="pull-left" id="AdvanceSearchMobile">
+                        <button type="button" class="btn btn-white navbar-btn" id="lineitemsidebarCollapse" title="Advance Search"><i class="fa fa-filter" style="font-size: 1.3rem;"></i></button>
+                        <ul class="filter_apply globalFilterAdjusted">
+                            <li class="textFilter"><span class="lifilteritemcount">0</span> @Model.Loc.Where(a => a.ResourceId == "globalFiltersAppiled").FirstOrDefault().Value.ToString()</li>
+                            <li class="textClear" id="lineitemClearAdvSearchFilter"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "globalClear").FirstOrDefault().Value.ToString()</a></li>
+                        </ul>
+                        <div style="clear:both;"></div>
+                    </div>
+                    <div style="clear:both;"></div>
+                    <div id="lineitemadvsearchfilteritems"></div>
+                    <div style="clear:both;"></div>
+                </div>
+                <div style="clear:both;"></div>
+                <div class="table-responsive">
+                    <table id="tblLineItem" class="eqpDtlTbl row-border custom-sort" style="width:100%;">
+                        <thead>
+                            <tr>
+                                <th class="GLineNumber">@Model.Loc.Where(a => a.ResourceId == "spnPdLineNo").FirstOrDefault().Value.ToString()</th>
+                                <th class="GPartClientLookupId">@Model.Loc.Where(a => a.ResourceId == "spnPartID").FirstOrDefault().Value.ToString()</th>
+                                <th class="GDescription">@Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString()</th>
+                                <th class="GOrderQuantity" style="text-align:right !important;">@Model.Loc.Where(a => a.ResourceId == "spnPdQuantity").FirstOrDefault().Value.ToString()</th>
+                                <th class="GUnitofMeasure">@Model.Loc.Where(a => a.ResourceId == "spnPdUOM").FirstOrDefault().Value.ToString()</th>
+                                <th class="GUnitCost" style="text-align:right !important;">@Model.Loc.Where(a => a.ResourceId == "spnUnitCost").FirstOrDefault().Value.ToString()</th>
+                                <th class="GTotalCost" style="text-align:right !important;">@Model.Loc.Where(a => a.ResourceId == "spnPdTotalCost").FirstOrDefault().Value.ToString()</th>
+                                <th class="GAccount_ClientLookupId">@Model.Loc.Where(a => a.ResourceId == "spnPdAccount").FirstOrDefault().Value.ToString()</th>
+                                <th class="GRequiredDate">@Model.Loc.Where(a => a.ResourceId == "spnRequiredDate").FirstOrDefault().Value.ToString()</th>
+                                <th class="GChargeToClientLookupId">@Model.Loc.Where(a => a.ResourceId == "GlobalChargeTo").FirstOrDefault().Value.ToString()</th>
+                                <th width="17%" style="text-align:center !important;">@Model.Loc.Where(a => a.ResourceId == "globalAction").FirstOrDefault().Value.ToString()</th>
+                            </tr>
+                        </thead>
+                        <tfoot id="tblLineItemfoot">
+
+                        </tfoot>
+                    </table>
+                </div>
+
+                @if (((Model.purchaseRequestModel.EditSecurity && (Model.purchaseRequestModel.Status == PurchaseRequestStatusConstants.Open || Model.purchaseRequestModel.Status == PurchaseRequestStatusConstants.Resubmit))
+                                        || (Model.purchaseRequestModel.EditAwaitApproveSecurity && Model.purchaseRequestModel.Status == PurchaseRequestStatusConstants.AwaitApproval)) || (Model.purchaseRequestModel.IsPunchOut))
+                {
+                    <div class="bttns">
+                        @if ((Model.purchaseRequestModel.EditSecurity && (Model.purchaseRequestModel.Status == PurchaseRequestStatusConstants.Open || Model.purchaseRequestModel.Status == PurchaseRequestStatusConstants.Resubmit))
+|| (Model.purchaseRequestModel.EditAwaitApproveSecurity && Model.purchaseRequestModel.Status == PurchaseRequestStatusConstants.AwaitApproval))
+                        {
+                            <button type="button" id="addLineItem" class="btn btn-blue" data-toggle="modal" data-target="#AddLineItems" style="display:none; float:left; margin-right:10px;"><i class="fa fa-plus faIcon"></i> &nbsp; Add Line Items</button>
+                        }
+                        @if (Model.purchaseRequestModel.IsPunchOut)
+                        {
+                            <button type="button" id="punchoutId" class="btn btn-blue" style="float:left;"><i class="fa fa-shopping-cart faIcon"></i> &nbsp;Punch Out</button>
+                        }
+                    </div>
+                }
+                <div style="clear:both"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="AddLineItems" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-info">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">@Model.Loc.Where(a => a.ResourceId == "spnPdAddLineItems").FirstOrDefault().Value.ToString()</h4>
+            </div>
+            @Html.HiddenFor(m => m.purchaseRequestModel.PurchaseRequestLineItemId)
+            <div class="modal-body" style="text-align:center;">
+                <button type="button" class="btn btn-blue btnRqst" id="selectidpartininventory"><i class="fa fa-hand-pointer-o faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "spnPdPartInInventory").FirstOrDefault().Value.ToString()</button>
+                <button type="button" class="btn btn-blue btnRqst" id="selectidpartnotininventory"><i class="fa fa-file-text-o faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "spnPdPartnotinInventory").FirstOrDefault().Value.ToString()</button>
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+    </div>
+</div>
+@Html.HiddenFor(m => m.purchaseRequestModel.Status)
+@Html.HiddenFor(m => m.purchaseRequestModel.CountLineItem)
+@Html.HiddenFor(m => m.purchaseRequestModel.VendorIsExternal)
+@Html.HiddenFor(m => m.purchaseRequestModel.VendorId)
+@Html.HiddenFor(m => m.purchaseRequestModel.PurchaseRequestId)
+@Html.HiddenFor(m => m.purchaseRequestModel.ClientId)
+@Html.HiddenFor(m => m.purchaseRequestModel.SiteId)
+@Html.HiddenFor(m => m.purchaseRequestModel.ClientLookupId)
+@Html.HiddenFor(m => m.purchaseRequestModel.PRUsePunchOutSecurity)
+@Html.HiddenFor(m => m.purchaseRequestModel.IsSitePunchOut)
+@Html.HiddenFor(m => m.purchaseRequestModel.CreatedBy_PersonnelId)
+@Html.HiddenFor(m => m.purchaseRequestModel.StoreroomId)
+@Html.HiddenFor(m => m.purchaseRequestModel.SingleStockLineItem)
+
+@Html.Partial("_LineItemAdvanceSearch", Model)
+
+@Html.Partial("_CancelModal")
+@Html.Partial("_ConvertToPOModal")
+@Html.Partial("_EmailModal")
+@Html.Partial("_SendForApprovalModal", Model)
+@if (Model.security.PurchaseRequest.Create)
+{
+    @Html.Partial("_SendPurchaseRequestForApproval")
+}
+
+@Html.Partial("_DenyModal")
+@Html.Partial("_ReturnTorequesterModal")
+@if (Model.purchaseRequestModel.PRUsePunchOutSecurity && Model.purchaseRequestModel.IsSitePunchOut)
+{
+    @Html.Partial("_PRVendorPopup")
+}
+
+@*V2-730*@
+@Html.HiddenFor(m => m.ApprovalRouteModelByObjectId.ApprovalGroupId)
+@if (Model.purchaseRequestModel.PrApproveSecurity && (Model.purchaseRequestModel.Status == PurchaseRequestStatusConstants.AwaitApproval) && Model.IsPurchaseRequestApproval && Model.IsPurchaseRequestApprovalAccessCheck)
+{
+    if (OraclePurchaseRequestExportInUse)
+    {
+        if (Model.udata.DatabaseKey.Personnel.ExOracleUserId != "" && Model.purchaseRequestModel.ApproveSecurity)
+        {
+            <div id="MultiLevelApproverListModalpopup" class="modal fade" role="dialog">
+                <div class="modal-dialog" id="MultiLevelApproverListPopUp">
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        <div id="MultiLevelApproverListModalpopup" class="modal fade" role="dialog">
+            <div class="modal-dialog" id="MultiLevelApproverListPopUp">
+            </div>
+        </div>
+    }
+}
+@*End*@
+@if (Model.security.PurchaseRequest_Review.Access)
+{
+    @Html.Partial("_ReviewAndSendForApprovalModal")
+}
+@*V2-1046*@
+<div id="ConsolidateModalpopup" class="modal fade" role="dialog">
+    <div class="modal-dialog" id="ConsolidatePopUp" style="overflow:hidden;">
+    </div>
+</div>
+@*End*@
+@*V2-1063*@
+<div id="MaterialRequestModalpopup" class="modal fade" role="dialog">
+    <div class="modal-dialog" id="MaterialRequestPopUp" style="overflow:hidden;">
+    </div>
+</div>
+@*End*@
+@*V2-1112 Start*@
+@if (EPMInvoiceImportInUse)
+{
+    @Html.Partial("~/Views/PurchaseRequest/_AddEPMCustomPurchaseOrder.cshtml", Model);
+}
+@*End*@
+<link href="~/Scripts/Metronic/assets/demo/default/base/style_newCustom.css" rel="stylesheet" />
+<script type="text/javascript">
+        var lineNumberGridSecurity = '@ViewBag.LineItemSecurity';
+        var AddLineItemSecurity = '@ViewBag.AddLineItemSecurity';
+        var IsPunchout = '@ViewBag.IsPunchout';
+</script>
+
+<style type="text/css">
+    .actionDrop.newAction {
+        width: 150px;
+        height: auto;
+        right: 0;
+    }
+
+    .btn-action.new {
+        width: 151px;
+        text-align: left;
+    }
+
+    .bootstrap-select.btn-group.show > .dropdown-toggle.btn-default,
+    .bootstrap-select.btn-group.show > .dropdown-toggle.btn-secondary {
+        border-color: #ccc;
+        -webkit-box-shadow: none;
+        -moz-box-shadow: none;
+        box-shadow: none;
+    }
+
+    .bootstrap-select.btn-group .dropdown-menu.inner > li > a {
+        padding: 7px 15px;
+    }
+
+    .disabled {
+        pointer-events: none;
+        opacity: 0.6;
+    }
+
+    #AdvanceSearchDesktop .btn-white {
+        padding: 0.5rem 0.7rem;
+        margin-top: 2px !important;
+    }
+
+    #AdvanceSearchMobile {
+        display: none;
+    }
+
+    #AdvanceSearchDesktop {
+        padding-bottom: 10px;
+        display: block;
+    }
+
+    #actionBar {
+        padding-top: 10px;
+        padding-bottom: 0;
+    }
+
+        #actionBar .tagTo {
+            margin-top: 0;
+            margin-bottom: 10px;
+        }
+
+    #PurchaseRequestLineItem.tabsArea.nobg .m-portlet__head {
+        margin-bottom: 0 !important;
+    }
+
+    .filterDescription {
+        width: auto;
+        float: left;
+        font-size: 1.2rem;
+        color: #000;
+        font-weight: 500;
+        line-height: 33px;
+    }
+
+        .filterDescription a {
+            color: #36a3f7;
+            text-decoration: none !important;
+        }
+
+    @@media only screen and (min-width: 640px) and (max-width: 767px) {
+        #AdvanceSearchMobile {
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        #AdvanceSearchDesktop {
+            padding-bottom: 10px;
+            display: none;
+        }
+    }
+
+    @@media only screen and (min-width: 568px) and (max-width: 639px) {
+        #AdvanceSearchMobile {
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        #AdvanceSearchDesktop {
+            padding-bottom: 10px;
+            display: none;
+        }
+    }
+
+    @@media only screen and (min-width: 480px) and (max-width: 567px) {
+        #AdvanceSearchMobile {
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        #AdvanceSearchDesktop {
+            padding-bottom: 10px;
+            display: none;
+        }
+
+        .filterDescription {
+            float: none;
+        }
+    }
+
+    @@media only screen and (min-width: 360px) and (max-width: 479px) {
+        #AdvanceSearchMobile {
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        #AdvanceSearchDesktop {
+            padding-bottom: 10px;
+            display: none;
+        }
+
+        #AdvanceSearchMobile ul.filter_apply.globalFilterAdjusted {
+            margin: 0;
+        }
+    }
+
+    @@media only screen and (min-width: 320px) and (max-width: 359px) {
+        #AdvanceSearchMobile {
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        #AdvanceSearchDesktop {
+            padding-bottom: 10px;
+            display: none;
+        }
+
+        #AdvanceSearchMobile ul.filter_apply.globalFilterAdjusted {
+            margin: 0;
+        }
+    }
+
+    .dropTableOuter table.dataTable.PRToPO thead .sorting_asc {
+        background-image: url('/Scripts/Metronic/Images/upArrow1.png') !important;
+        background-repeat: no-repeat;
+        background-position: center right;
+    }
+
+    .dropTableOuter table.dataTable.PRToPO thead .sorting_desc {
+        background-image: url('/Scripts/Metronic/Images/downArrow1.png') !important;
+        background-repeat: no-repeat;
+        background-position: center right;
+    }
+
+    #ConvertPRToPOTable thead .sorting_asc {
+        background-image: url('/Scripts/Metronic/Images/upArrow1.png') !important;
+        background-repeat: no-repeat;
+        background-position: center right;
+    }
+
+    #ConvertPRToPOTable thead .sorting_desc {
+        background-image: url('/Scripts/Metronic/Images/downArrow1.png') !important;
+        background-repeat: no-repeat;
+        background-position: center right;
+    }
+</style>

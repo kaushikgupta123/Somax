@@ -1,0 +1,77 @@
+﻿@model Client.Models.Sanitation.SanitationVM
+
+
+@using (Ajax.BeginForm("SaveNotes_Mobile", "SanitationJob", new AjaxOptions { HttpMethod = "Post", OnSuccess = "SJNotesAddOnSuccess", OnBegin = "AjaxBeginFormBegin", OnComplete = "AjaxBeginFormComplete", OnFailure = "AjaxBeginFormFaillure" }, new { id = "frmLabourAdd" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="slide-modal-head">
+        <a class="slide-back-btn SJNotesclearstate"> <i class="fa fa-angle-left"></i> Back</a>
+        @if (Model.notesModel.NotesId == 0)
+        {
+            <div class="slide-back-title">
+                @Model.Loc.Where(a => a.ResourceId == "spnGlobalNotesAdd").FirstOrDefault().Value.ToString()
+            </div>
+        }
+        else
+        {
+            <div class="slide-back-title">
+                @Model.Loc.Where(a => a.ResourceId == "spnUpdateNote").FirstOrDefault().Value.ToString()
+            </div>
+        }
+    </div>
+    @Html.Partial("_ErrorDiv")
+    <div class="slide-modal-body">
+        <div mbsc-page class="demo-responsive">
+            <div style="height:100%">
+                <div mbsc-form class="mbsc-form-grid">
+                    <div class="mbsc-grid">
+                        <div class="mbsc-row">
+                            <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                <label>
+                                    @Model.Loc.Where(a => a.ResourceId == "globalSubject").FirstOrDefault().Value.ToString()
+                                    @Html.TextBoxFor(m => m.notesModel.Subject, "", new { @class = "form-control search", @mbsc_input = "true", @data_label_style = "floating", @placeholder = Model.Loc.Where(a => a.ResourceId == "globalSubject").FirstOrDefault().Value.ToString(), @data_input_style = "box", autocomplete = "off" })
+                                </label>
+                            </div>
+                            <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                <label>
+                                    @Model.Loc.Where(a => a.ResourceId == "noteContent").FirstOrDefault().Value.ToString()
+                                    @Html.TextBoxFor(m => m.notesModel.Content, "{0:n2}", new { @class = "form-control search", @mbsc_input = "true", @data_label_style = "floating", @placeholder = Model.Loc.Where(a => a.ResourceId == "noteContent").FirstOrDefault().Value.ToString(), @data_input_style = "box", autocomplete = "off" })
+                                </label>
+                                @Html.ValidationMessageFor(m => m.notesModel.Content, "", new { })
+                            </div>
+                        </div>
+                        <div class="mbsc-row">
+                            <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                <div class="design-box">
+                                    <div class="mbsc-button-group-block">
+                                        <button mbsc-button data-color="success" type="button" class="btn btn-blue mobBttn SJNotesclearstate" id="btnSJnotescancel"><i class="fa fa-close faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                <div class="design-box">
+                                    <div class="mbsc-button-group-block">
+                                        <button data-color="success" type="submit" class="btn btn-blue mobBttn" style="cursor:pointer" value="save"><i class="fa fa-save faIcon"></i> &nbsp;@Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @Html.HiddenFor(m => m.notesModel.SanitationJobId)
+    @Html.HiddenFor(m => m.notesModel.NotesId)
+    @Html.HiddenFor(m => m.notesModel.updatedindex)
+    <div class="slide-modal-footer"></div>
+}
+
+
+<script>
+    $(function () {
+        $(document).find('form').find("#notesModel_Subject").removeClass("input-validation-error");
+        $(document).find('form').find("#notesModel_Content").removeClass("input-validation-error");
+    });
+</script>

@@ -1,0 +1,49 @@
+﻿@model Client.Models.ProjectCosting.ProjectCostingVM
+@{
+    ViewBag.Title = "Somax | ProjectCosting";
+}
+@Styles.Render("~/Content/dashboardStyle")
+@Styles.Render("~/Content/datatable")
+@Styles.Render("~/Content/daterangepickercustom")
+@Styles.Render("~/Content/GanttDHTMLX")
+
+<link href="~/Content/sidebar_custom.css" rel="stylesheet" />
+<link href="~/Scripts/Metronic/assets/demo/default/base/GlobalSearchGrid.css" rel="stylesheet" />
+<link href="~/Scripts/Metronic/assets/demo/default/base/style_newCustom.css" rel="stylesheet" />
+<link href="~/Content/Project/TimelineDetails.css" rel="stylesheet" />
+
+@section scripts {
+    @Scripts.Render("~/bundles/datatable")
+    @Scripts.Render("~/bundles/ProjectCosting")
+    @Scripts.Render("~/bundles/FusionChart")
+    @Scripts.Render("~/bundles/GanttDHTMLX")
+    @Scripts.Render("~/bundles/SomaxCkEditor")
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            // SetControls();
+            $.validator.unobtrusive.parse(document);
+            $('.select2picker, form').change(function () {
+                var areaddescribedby = $(this).attr('aria-describedby');
+                if ($(this).parents().find('.sidebar-content').attr('id') != "advsearchsidebarProj") {
+                    if ($(this).valid()) {
+                        if (typeof areaddescribedby !== 'undefined') {
+                            $('#' + areaddescribedby).hide();
+                        }
+                    }
+                    else {
+                        if (typeof areaddescribedby !== 'undefined') {
+                            $('#' + areaddescribedby).show();
+                        }
+                    }
+                }
+            });
+            $(document).find('.select2picker').select2({});
+        })
+    </script>
+}
+<div id="projectmaincontainer">
+    @Html.Partial("~/Views/ProjectCosting/ProjectCostingSearch/_ProjectCostingSearch.cshtml", Model)
+
+</div>
+

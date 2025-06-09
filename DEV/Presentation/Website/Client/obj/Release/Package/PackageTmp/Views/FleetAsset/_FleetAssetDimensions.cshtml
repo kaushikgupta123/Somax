@@ -1,0 +1,92 @@
+﻿@model Client.Models.FleetAsset.FleetAssetVM
+<ul class="listView nobrd">
+    <li>
+        <span class="label" id="spnColor">@Html.LabelFor(m => m.FleetAssetModel.Color)</span>
+        <span class="inputText">
+            @Html.TextBoxFor(m=>m.FleetAssetModel.Color, new { @class = "form-control search m-input flt_dim", @style = "color:black", autocomplete = "off", maxlength = "30" })
+        </span>
+    </li>
+    <li>
+        <span class="label" id="spnBodyType">@Html.LabelFor(m => m.FleetAssetModel.BodyType)</span>
+        <span class="inputText">
+            @Html.TextBoxFor(m => m.FleetAssetModel.BodyType, new { @class = "form-control search m-input flt_dim", @style = "color:black", autocomplete = "off", maxlength = "30" })
+        </span>
+    </li>
+    <li>
+        <span class="label" id="spnWidth">@Html.LabelFor(m => m.FleetAssetModel.Width)</span>
+        <span class="inputText">
+            @Html.ValidationMessageFor(m => m.FleetAssetModel.Width, "", new { style = "display:none" })
+            @Html.TextBoxFor(m => m.FleetAssetModel.Width, new { @class = "form-control search decimalinput flt_dimdec", @style = "color:black", autocomplete = "off" })
+        </span>
+    </li>
+    <li>
+        <span class="label" id="spnHeight">@Html.LabelFor(m => m.FleetAssetModel.Height)</span>
+        <span class="inputText">
+            @Html.ValidationMessageFor(m => m.FleetAssetModel.Height, "", new { style = "display:none" })
+            @Html.TextBoxFor(m => m.FleetAssetModel.Height, new { @class = "form-control search decimalinput flt_dimdec", @style = "color:black", autocomplete = "off" })
+        </span>
+    </li>
+    <li>
+        <span class="label" id="spnLength">@Html.LabelFor(m => m.FleetAssetModel.Length)</span>
+        <span class="inputText">
+            @Html.ValidationMessageFor(m => m.FleetAssetModel.Length, "", new { style = "display:none" })
+            @Html.TextBoxFor(m => m.FleetAssetModel.Length, new { @class = "form-control search decimalinput flt_dimdec", @style = "color:black", autocomplete = "off" })
+        </span>
+    </li>
+    <li>
+        <span class="label" id="spnPassengerVolume">@Html.LabelFor(m => m.FleetAssetModel.PassengerVolume)</span>
+        <span class="inputText">
+            @Html.ValidationMessageFor(m => m.FleetAssetModel.PassengerVolume, "", new { style = "display:none" })
+            @Html.TextBoxFor(m => m.FleetAssetModel.PassengerVolume, new { @class = "form-control search decimalinput flt_dimdec", @style = "color:black", autocomplete = "off" })
+        </span>
+    </li>
+    <li>
+        <span class="label" id="spnCargoVolume">@Html.LabelFor(m => m.FleetAssetModel.CargoVolume)</span>
+        <span class="inputText">
+            @Html.ValidationMessageFor(m => m.FleetAssetModel.CargoVolume, "", new { style = "display:none" })
+            @Html.TextBoxFor(m => m.FleetAssetModel.CargoVolume, new { @class = "form-control search decimalinput flt_dimdec", @style = "color:black", autocomplete = "off" })
+        </span>
+    </li>
+    <li>
+        <span class="label" id="spnGroundClearance">@Html.LabelFor(m => m.FleetAssetModel.GroundClearance)</span>
+        <span class="inputText">
+            @Html.ValidationMessageFor(m => m.FleetAssetModel.GroundClearance, "", new { style = "display:none" })
+            @Html.TextBoxFor(m => m.FleetAssetModel.GroundClearance, new { @class = "form-control search decimalinput flt_dimdec", @style = "color:black", autocomplete = "off" })
+        </span>
+    </li>
+    <li>
+        <span class="label" id="spnBedLength">@Html.LabelFor(m => m.FleetAssetModel.BedLength)</span>
+        <span class="inputText">
+            @Html.ValidationMessageFor(m => m.FleetAssetModel.BedLength, "", new { style = "display:none" })
+            @Html.TextBoxFor(m => m.FleetAssetModel.BedLength, new { @class = "form-control search decimalinput flt_dimdec", @style = "color:black", autocomplete = "off" })
+        </span>
+    </li>
+    <li>
+        <span class="label" id="spnCurbWeight">@Html.LabelFor(m => m.FleetAssetModel.CurbWeight)</span>
+        <span class="inputText">
+            @Html.ValidationMessageFor(m => m.FleetAssetModel.CurbWeight, "", new { style = "display:none" })
+            @Html.TextBoxFor(m => m.FleetAssetModel.CurbWeight, new { @class = "form-control search decimalinput flt_dimdec", @style = "color:black", autocomplete = "off" })
+        </span>
+    </li>
+    <li>
+        <span class="label" id="spnVehicleWeight">@Html.LabelFor(m => m.FleetAssetModel.VehicleWeight)</span>
+        <span class="inputText">
+            @Html.ValidationMessageFor(m => m.FleetAssetModel.VehicleWeight, "", new { style = "display:none" })
+            @Html.TextBoxFor(m => m.FleetAssetModel.VehicleWeight, new { @class = "form-control search decimalinput flt_dimdec", @style = "color:black", autocomplete = "off" })
+        </span>
+    </li>
+    <li>
+        <span class="label" id="spnTowingCapacity">@Html.LabelFor(m => m.FleetAssetModel.TowingCapacity)</span>
+        <span class="inputText">
+            @Html.ValidationMessageFor(m => m.FleetAssetModel.TowingCapacity, "", new { style = "display:none" })
+            @Html.TextBoxFor(m => m.FleetAssetModel.TowingCapacity, new { @class = "form-control search decimalinput flt_dimdec", @style = "color:black", autocomplete = "off" })
+        </span>
+    </li>
+    <li>
+        <span class="label" id="spnMaxPayload">@Html.LabelFor(m => m.FleetAssetModel.MaxPayload)</span>
+        <span class="inputText">
+            @Html.ValidationMessageFor(m => m.FleetAssetModel.MaxPayload, "", new { style = "display:none" })
+            @Html.TextBoxFor(m => m.FleetAssetModel.MaxPayload, new { @class = "form-control search decimalinput flt_dimdec", @style = "color:black", autocomplete = "off" })
+        </span>
+    </li>
+</ul>

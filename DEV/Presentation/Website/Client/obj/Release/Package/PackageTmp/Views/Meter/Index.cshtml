@@ -1,0 +1,15 @@
+﻿@model Client.Models.Meters.MetersVM
+@{
+    ViewBag.Title = "Somax | Meter";
+}
+@Styles.Render("~/Content/dashboardStyle")
+@Styles.Render("~/Content/datatable")
+<link href="~/Scripts/Metronic/assets/demo/default/base/GlobalSearchGrid.css" rel="stylesheet" />
+@section scripts {
+    @Scripts.Render("~/bundles/datatable")
+    @Scripts.Render("~/bundles/QRPrint")
+    @Scripts.Render("~/bundles/Meter")   
+}
+<div id="metercontainer">
+    @Html.Partial("MeterSearch")
+</div>

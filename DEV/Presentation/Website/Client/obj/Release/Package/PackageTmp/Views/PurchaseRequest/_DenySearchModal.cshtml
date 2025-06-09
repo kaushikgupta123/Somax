@@ -1,0 +1,22 @@
+﻿@model Client.Models.PurchaseRequest.PurchaseRequestVM
+<div id="denySearchModal" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-info">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">@Model.Loc.Where(a => a.ResourceId == "spnPdDenyPurchaseRequest").FirstOrDefault().Value.ToString()</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="Line" id="lblLine">@Model.Loc.Where(a => a.ResourceId == "spnPdDenyComments").FirstOrDefault().Value.ToString()</label>
+                    <textarea class="form-control search" id="txtdenycomments"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer" style="padding:15px 25px !important;">
+                <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-close faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button>
+                <button type="button" class="btn btn-blue" style="float:right;" id="updatedenyBatchstatus"><i class="fa fa-save faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,248 @@
+﻿@model Client.Models.PreventiveMaintenance.PrevMaintVM
+
+@using (Ajax.BeginForm("EditPartInInventory", "PreventiveMaintenance", new AjaxOptions { HttpMethod = "Post", OnSuccess = "EditMaterialRequestOnSuccess", OnBegin = "AjaxBeginFormBegin", OnComplete = "AjaxBeginFormComplete", OnFailure = "AjaxBeginFormFaillure" }, new { id = "frmEditPRLineItemId" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close clearstate" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title">@Model.Loc.Where(a => a.ResourceId == "spnEditMaterialRequest").FirstOrDefault().Value.ToString()</h4>
+            @*}*@
+        </div>
+        @Html.Partial("_ErrorDiv")
+        <div class="modal-body">
+            <div class="form-group" style="margin-bottom:0;">
+                <div class="bottomBlock">
+                    <div class="tabsArea nobg">
+                        <ul class="listView nobrd" style="border-bottom:0;">
+                            @if (Model.PartNotInInventoryModel.CategoryId != 0)
+                            {
+                                <li id="liPartClientLookupId" style="margin-bottom:4px;">
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnPart").FirstOrDefault().Value.ToString() : <small>*</small></span>
+                                    <span class="inputText">
+                                        @Html.TextBoxFor(m => m.PartNotInInventoryModel.PartClientLookupId, new { @class = "form-control search readonly", autocomplete = "off", @readonly = "readonly" })
+                                    </span>
+                                </li>
+                            }
+                            else
+                            {
+                                <li style="margin-bottom:4px;">
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString() : <small>*</small></span>
+                                    <span class="inputText">
+                                        @Html.ValidationMessageFor(m => m.PartNotInInventoryModel.Description, "", new { style = "display:none" })
+                                        @Html.TextBoxFor(m => m.PartNotInInventoryModel.Description, new { @class = "form-control search", autocomplete = "off" })
+                                    </span>
+                                </li>
+                            }
+
+                            <li style="margin-bottom:4px;">
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnQuantity").FirstOrDefault().Value.ToString() : <small>*</small></span>
+                                <span class="inputText">
+                                    @Html.ValidationMessageFor(m => m.PartNotInInventoryModel.Quantity, "", new { style = "display:none" })
+                                    @Html.TextBoxFor(m => m.PartNotInInventoryModel.Quantity, new { @class = "form-control search decimalinput", autocomplete = "off", maxlength = "16" })
+                                </span>
+                            </li>
+                            <li style="margin-bottom:4px;">
+                                <span class="label">@Html.LabelFor(m => m.PartNotInInventoryModel.UnitCost) :</span>
+                                <span class="inputText">
+                                    @Html.ValidationMessageFor(m => m.PartNotInInventoryModel.UnitCost, "", new { style = "display:none" })
+                                    @Html.TextBoxFor(m => m.PartNotInInventoryModel.UnitCost, new { @class = "form-control search decimalinput", autocomplete = "off" })
+                                </span>
+                            </li>
+
+                            <li style="height:auto;">
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnUnitofMeasure").FirstOrDefault().Value.ToString() :</span>
+                                <span class="inputText">
+                                    @Html.ValidationMessageFor(m => m.PartNotInInventoryModel.Unit, "", new { style = "display:none" })
+                                    @Html.DropDownListFor(m => m.PartNotInInventoryModel.Unit, Model.UnitOfmesureListWo, "--Select--", new { @class = "form-control search select2picker", style = "width:100%;", @id = "Unit" })
+                                </span>
+                            </li>
+
+                            <li>
+                                <span class="label">
+                                    @Html.LabelFor(m => m.PartNotInInventoryModel.AccountClientLookupId) :
+                                </span>
+                                <span class="inputText">
+                                    <div class="dropdown dropTableOuter">
+                                        <div class="input-group">
+                                            @Html.TextBoxFor(m => m.PartNotInInventoryModel.AccountClientLookupId, "", new
+                                       {
+                                           @class = "form-control search dropbtn readonly",
+                                           @readonly = "readonly",
+                                           autocomplete = "off",
+                                           style = "display:block;"
+                                       })
+                                            @Html.TextBoxFor(m => m.PartNotInInventoryModel.AccountId, new
+                                       {
+                                           @class = "form-control search dropbtn readonly",
+                                           @readonly = "readonly",
+                                           autocomplete = "off",
+                                           style = "display:none;"
+                                       })
+                                            @if (Model.PartNotInInventoryModel.AccountClientLookupId == "" || Model.PartNotInInventoryModel.AccountClientLookupId == null)
+                                            {
+                                                <div class="input-group-btn">
+                                                    <button class="btn btn-white btntxtInputGroup ClearAccountModalPopupGridData" type="button" data-textfield="PartNotInInventoryModel_AccountClientLookupId"
+                                                            data-valuefield="PartNotInInventoryModel_AccountId" style="display:none;">
+                                                        <i id="srcicon" class="fa fa-close"></i>
+                                                    </button>
+                                                </div>
+                                            }
+                                            else
+                                            {
+                                                <div class="input-group-btn">
+                                                    <button class="btn btn-white btntxtInputGroup ClearAccountModalPopupGridData" type="button" data-textfield="PartNotInInventoryModel_AccountClientLookupId"
+                                                            data-valuefield="PartNotInInventoryModel_AccountId" style="display:block;">
+                                                        <i id="srcicon" class="fa fa-close"></i>
+                                                    </button>
+                                                </div>
+                                            }
+                                            <div class="input-group-btn">
+                                                <button class="btn btn-white btntxtInputGroup OpenAccountModalPopupGrid" type="button" data-textfield="PartNotInInventoryModel_AccountClientLookupId"
+                                                        data-valuefield="PartNotInInventoryModel_AccountId">
+                                                    <i id="srcicon" class="fa fa-search"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </span>
+                            </li>
+
+                            <li>
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnVendor").FirstOrDefault().Value.ToString() : </span>
+                                <span class="inputText">
+                                    <div class="dropdown dropTableOuter">
+                                        <div class="input-group">
+                                            @Html.TextBoxFor(m => m.PartNotInInventoryModel.VendorClientLookupId, "", new
+                                            {
+                                                @class = "form-control search dropbtn readonly",
+                                                @readonly = "readonly",
+                                                autocomplete = "off",
+                                                style = "display:block;"
+                                            })
+                                            @Html.TextBoxFor(m => m.PartNotInInventoryModel.VendorId, new
+                                            {
+                                                @class = "form-control search dropbtn readonly",
+                                                @readonly = "readonly",
+                                                autocomplete = "off",
+                                                style = "display:none;"
+                                            })
+                                            @if (string.IsNullOrEmpty(Model.PartNotInInventoryModel.VendorClientLookupId))
+                                            {
+                                                <div class="input-group-btn">
+                                                    <button class="btn btn-white btntxtInputGroup ClearVendorModalPopupGridData" type="button" data-textfield="PartNotInInventoryModel_VendorClientLookupId"
+                                                            data-valuefield="PartNotInInventoryModel_VendorId" style="display:none;">
+                                                        <i id="srcicon" class="fa fa-close"></i>
+                                                    </button>
+                                                </div>
+                                            }
+                                            else
+                                            {
+                                                <div class="input-group-btn">
+                                                    <button class="btn btn-white btntxtInputGroup ClearVendorModalPopupGridData" type="button" data-textfield="PartNotInInventoryModel_VendorClientLookupId"
+                                                            data-valuefield="PartNotInInventoryModel_VendorId" style="display:block;">
+                                                        <i id="srcicon" class="fa fa-close"></i>
+                                                    </button>
+                                                </div>
+                                            }
+                                            <div class="input-group-btn">
+                                                <button class="btn btn-white btntxtInputGroup OpenVendorModalPopupGrid" type="button" data-textfield="PartNotInInventoryModel_VendorClientLookupId"
+                                                        data-valuefield="PartNotInInventoryModel_VendorId">
+                                                    <i id="srcicon" class="fa fa-search"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </span>
+                            </li>
+
+
+                        </ul>
+                    </div>
+                    <div style="clear:both;"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal-footer" style="padding:15px 25px !important;">
+            <div class="idBttns">
+                <div class="bttn_pagin">
+                    <div class="bttns2" style="margin:0;">
+                        <button type="submit" class="btn btn-blue mobBttn" style="cursor:pointer" value="save" id="btnPREditLineItemSave"><i class="fa fa-save faIcon"></i> &nbsp;@Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+
+                    </div>
+                    <div class="bttns" style="margin:0;"><button type="button" data-dismiss="modal" class="btn btn-blue mobBttn clearstate" id="btnPartNotInInventorycancel"><i class="fa fa-close faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button></div>
+
+                    <div style="clear:both;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @Html.HiddenFor(m => m.PartNotInInventoryModel.ObjectId)
+    @Html.HiddenFor(m => m.PartNotInInventoryModel.PrevMaintMasterId)
+    @Html.HiddenFor(m => m.PartNotInInventoryModel.EstimatedCostsId)
+    @Html.HiddenFor(m => m.PartNotInInventoryModel.CategoryId)
+    @Html.HiddenFor(m => m.PartNotInInventoryModel.Description)
+
+    @Html.Partial("~/Views/Shared/LookupTypeTablePopup/_AccountPopupLookup.cshtml") //V2-1068
+    @Html.Partial("~/Views/Shared/LookupTypeTablePopup/_VendorPopup.cshtml")
+    @Html.HiddenFor(m => m.PartNotInInventoryModel.ShoppingCart, new { id = "ShoppingCart" })
+}
+@*@Scripts.Render("~/bundles/PREditPopUp")*@
+
+<style type="text/css">
+    #AccountTableModalPopup.dropdown-modal.modal.show .partPopup {
+        max-width: 100% !important;
+        margin: 0;
+        z-index: 20;
+    }
+
+    #VendorTableModalPopup .modal-dialog,
+    #PartCategoryMasterTableModalPopup .modal-dialog {
+        max-width: 100% !important;
+        margin: 0;
+    }
+
+    #AccountTableModalPopup.dropdown-modal.modal.show .dropdown-content,
+    #VendorTableModalPopup.dropdown-modal.modal.show .dropdown-content,
+    #PartCategoryMasterTableModalPopup.dropdown-modal.modal.show .dropdown-content {
+        height: 329px;
+    }
+
+    #AddPartNotInInventoryModalpopup.modal.show .modal-content .modal-body {
+        overflow: hidden;
+        overflow-y: auto;
+    }
+
+    @@media only screen and (min-width: 768px) and (max-width: 1080px) {
+        #VendorTableModalPopup.dropdown-modal.modal.show .modal-dialog,
+        #PartCategoryMasterTableModalPopup.dropdown-modal.modal.show .modal-dialog {
+            margin: 0;
+        }
+
+        #AccountTableModalPopup.dropdown-modal.modal.show .dropdown-content,
+        #VendorTableModalPopup.dropdown-modal.modal.show .dropdown-content,
+        #PartCategoryMasterTableModalPopup.dropdown-modal.modal.show .dropdown-content {
+            height: 329px !important;
+        }
+    }
+
+    @@media (max-width: 501px) {
+        #AccountTableModalPopup.dropdown-modal.modal.show .partPopup,
+        #VendorTableModalPopup.dropdown-modal.modal.show .modal-dialog,
+        #PartCategoryMasterTableModalPopup.dropdown-modal.modal.show .modal-dialog,
+        #AccountTableModalPopup.dropdown-modal.modal.show .modal-content,
+        #VendorTableModalPopup.dropdown-modal.modal.show .modal-content,
+        #PartCategoryMasterTableModalPopup.dropdown-modal.modal.show .modal-content,
+        #AccountTableModalPopup.dropdown-modal.modal.show .modal-content .modal-body,
+        #VendorTableModalPopup.dropdown-modal.modal.show .modal-content .modal-body,
+        #PartCategoryMasterTableModalPopup.dropdown-modal.modal.show .modal-content .modal-body,
+        #AccountTableModalPopup.dropdown-modal.modal.show .dropdown-content,
+        #VendorTableModalPopup.dropdown-modal.modal.show .dropdown-content,
+        #PartCategoryMasterTableModalPopup.dropdown-modal.modal.show .dropdown-content {
+            height: 100% !important;
+        }
+    }
+</style>
+

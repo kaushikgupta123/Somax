@@ -1,0 +1,53 @@
+﻿@model Client.Models.AutoPRGenerationVM
+
+<div id="_PurchaseRequestAutoGeneration" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-info">
+        <div class="modal-content">
+            <div class="modal-header" style="padding: 15px 25px 5px !important;">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">@Model.Loc.Where(a => a.ResourceId == "spnPurchaseRequestAutoGeneration").FirstOrDefault().Value.ToString()</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-lg-12 col-sm-12">
+                        <div class="form-group" style="margin-bottom:0;">
+                            <div class="lblRow">
+                                <label id="lblPartsSelected" class="lftLbl">
+                                    <strong>@Model.Loc.Where(a => a.ResourceId == "spnPartsSelected").FirstOrDefault().Value.ToString() :</strong>
+                                </label>
+                                <label id="lblPartsSelectedCount" class="rhtLbl">
+                                    @Model.Loc.Where(a => a.ResourceId == "spnNoPartsSelected").FirstOrDefault().Value.ToString()
+                                </label>
+                                <div class="clear"></div>
+                            </div>
+                            <div class="lblRow">
+                                <label id="lblPurchaseRequestCreated" class="lftLbl">
+                                    <strong>@Model.Loc.Where(a => a.ResourceId == "spnPurchaseRequestCreated").FirstOrDefault().Value.ToString() :</strong>
+                                </label>
+                                <label id="lblPurchaseRequestCreatedCount" class="rhtLbl">
+                                    @Model.Loc.Where(a => a.ResourceId == "spnNoPurchaseRequestsCreated").FirstOrDefault().Value.ToString()
+                                </label>
+                                <div class="clear"></div>
+                            </div>
+                            <div class="lblRow">
+                                <label id="lblLineItemsCreated" class="lftLbl">
+                                    <strong>@Model.Loc.Where(a => a.ResourceId == "spnLineItemsCreated").FirstOrDefault().Value.ToString() :</strong>
+                                </label>
+                                <label id="lblLineItemsCreatedCount" class="rhtLbl">
+                                    @Model.Loc.Where(a => a.ResourceId == "spnNoLineItemsCreated").FirstOrDefault().Value.ToString()
+                                </label>
+                                <div class="clear"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="clear:both;"></div>
+                </div>
+            </div>
+            <div class="modal-footer" style="padding:15px 25px !important;">
+                <button type="button" class="btn btn-default" style="float:right;" id="btnOkPurchaseRequest"><i class="fa fa-check faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalOK").FirstOrDefault().Value.ToString()</button>
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+    </div>
+</div>
+

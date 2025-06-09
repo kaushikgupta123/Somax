@@ -1,0 +1,513 @@
+﻿@model Client.Models.Invoice.InvoiceVM
+@{
+    ViewBag.Title = "Somax | Invoice";
+}
+
+@{
+    var ItemAmount = Model.InvoiceMatchHeaderModel.ItemTotal;
+    var TaxAmount = Model.InvoiceMatchHeaderModel.TaxAmount;
+    var ShipAmount = Model.InvoiceMatchHeaderModel.ShipAmount;
+    var TotaltemAmount = ItemAmount + TaxAmount + ShipAmount;
+    var TotalInput = Model.InvoiceMatchHeaderModel.TotalInput;
+    var Varience = TotaltemAmount - TotalInput;
+
+}
+
+<link href="~/Scripts/Metronic/assets/demo/default/base/style_newCustom.css" rel="stylesheet" />
+<div class="m-subheader fixedDiv1">
+    <div class="new-m-subheader">
+        <div class="filterDescription">
+            <a href="javascript:void(0)" id="linkToSearch"><span id="spnlinkToSearch"></span></a>
+            - @Model.InvoiceMatchHeaderModel.ClientLookupId
+        </div>
+
+        <div class="ActionBttnArea">
+            @if ((((Model.security.InvoiceMatching.ChangeInvoiceId && Model.InvoiceMatchHeaderModel.Status != InvoiceMatchStatus.Paid) || (Model.security.InvoiceMatching.AuthorizeToPay && Model.InvoiceMatchHeaderModel.Status == InvoiceMatchStatus.Open) || (Model.security.InvoiceMatching.ReOpen && Model.InvoiceMatchHeaderModel.Status == InvoiceMatchStatus.AuthorizedToPay)) && Model.InvoiceMatchHeaderModel.SecurityInvoiceEdit) || (Model.InvoiceMatchHeaderModel.AuthorisedToPayStatusSecurity && Model.InvoiceMatchHeaderModel.SecurityInvoicePaid))
+            {
+            <div class="actionDiv pull-left">
+                <div class="btn-group bootstrap-select m-datatablinkse__pager-size dropup show selectDrop actionNewDrop" style="margin-right:0;">
+
+                    <div class="btn-group bootstrap-select m-datatable__pager-size" style="width: 100%;">
+                        <button type="button" class="btn dropdown-toggle bs-placeholder btn-default" data-toggle="dropdown" role="button" title=""><span class="filter-option pull-left">@Model.Loc.Where(a => a.ResourceId == "globalAction").FirstOrDefault().Value.ToString()</span>&nbsp;<span class="bs-caret"><span class="caret"></span></span></button>
+                        <div class="dropdown-menu open" role="combobox">
+                            <ul class="dropdown-menu inner" role="listbox" aria-expanded="false">
+
+                                @if (Model.security.InvoiceMatching.ChangeInvoiceId && Model.InvoiceMatchHeaderModel.SecurityInvoiceEdit && Model.InvoiceMatchHeaderModel.Status != InvoiceMatchStatus.Paid)
+                                {
+                                <li id="ChangeInvoiceDrop" data-toggle="modal"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnInvChangeInvoiceId").FirstOrDefault().Value.ToString()</a></li>
+                                }
+                                @if (Model.InvoiceMatchHeaderModel.Status == InvoiceMatchStatus.Open && Model.security.InvoiceMatching.Delete)
+                                {
+                                <li id="deleteInv"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "globalDelete").FirstOrDefault().Value.ToString()</a>@*<i class="fa fa-trash"></i>*@</li>
+
+                                }
+                                @if (Model.security.InvoiceMatching.AuthorizeToPay && Model.InvoiceMatchHeaderModel.SecurityInvoiceEdit && Model.InvoiceMatchHeaderModel.Status == InvoiceMatchStatus.Open)
+                                {
+                                <li id="AuthorizedToPayOptions"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnInvStatusAuthorizedToPay").FirstOrDefault().Value.ToString()</a></li>
+                                }
+                                @if (Model.InvoiceMatchHeaderModel.AuthorisedToPayStatusSecurity && Model.InvoiceMatchHeaderModel.SecurityInvoicePaid)
+                                {
+                                <li id="PaidOptions"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnInvStatusPaid").FirstOrDefault().Value.ToString()</a></li>
+                                }
+                                @if (Model.security.InvoiceMatching.ReOpen && Model.InvoiceMatchHeaderModel.Status == InvoiceMatchStatus.AuthorizedToPay)
+                                {
+                                <li id="ReopenOptions"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "globalReopen").FirstOrDefault().Value.ToString()</a></li>
+                                }
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            }
+            @if (Model.security.InvoiceMatching.Create && (Model.udata.DatabaseKey.Client.PackageLevel.ToUpper() == PackageLevelConstant.Professional || Model.udata.DatabaseKey.Client.PackageLevel.ToUpper() == PackageLevelConstant.Enterprise))
+            {
+            <button type="button" title="Add Invoice" class="btn newBtn-add addInvoice innerBtn pull-left"><i class="fa fa-plus"></i></button>
+            }
+
+            <div style="clear:both;"></div>
+        </div>
+        <div style="clear:both;"></div>
+    </div>
+</div>
+<div class="pushDiv1"></div>
+<div class="row fixedDiv2">
+    @Html.Partial("_InvoiceSummary", Model)
+</div>
+
+<div class="pushDiv2"></div>
+
+<div class="row">
+    <div class="col-xl-3">
+        <div class="m-portlet">
+            <div class="sideMenuArea nobg">
+                <ul class="vtabs" id="detmaintab">
+                    <li class="active" id="InvoiceOverViewSidebar"><a href="#InvoiceOverview">@Model.Loc.Where(a => a.ResourceId == "spnIdInvoiceMatchOverview").FirstOrDefault().Value.ToString()</a></li>
+                    <li id="InvoiceNote" onclick="openCity(event, 'INVNotes')"><a href="#INVNotes">@Model.Loc.Where(a => a.ResourceId == "spnGlobalNote").FirstOrDefault().Value.ToString()</a></li>
+                    <li id="InvoiceAttachment" onclick="openCity(event, 'INVAttachments')" style="position:relative;">
+                        <a href="#INVAttachments">@Model.Loc.Where(a => a.ResourceId == "spnAttachments").FirstOrDefault().Value.ToString()</a>
+                        @if (Model.attachmentCount > 0)
+                        {
+                        <span class="m-badge m-badge--danger count-badge" id="invAttachmentCount">@Model.attachmentCount</span>
+                        }
+                    </li>
+                </ul>
+            </div>
+            <div class="selectTabs" id="selectTabs">
+                <select class="form-control" id="colorselector">
+                    <option value="InvoiceOverview">&nbsp;@Model.Loc.Where(a => a.ResourceId == "spnIdInvoiceMatchOverview").FirstOrDefault().Value.ToString()</option>
+                    <option value="INVNotes">&nbsp; @Model.Loc.Where(a => a.ResourceId == "spnGlobalNote").FirstOrDefault().Value.ToString()</option>
+                    <option value="INVAttachments">&nbsp; @Model.Loc.Where(a => a.ResourceId == "spnIdAttachments").FirstOrDefault().Value.ToString()</option>
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-9">
+        <div class="row">
+            <div class="col-xl-12" id="btnnblock">
+                <div class="m-portlet style-none" id="m_portlet">
+
+                    <div class="bottomBlock">
+                        <div class="tabsArea nobg" id="InvoiceOverview" style="display:block; margin-top:-15px;">
+                            <div class="top-sec-wrap">
+                                <ul class="listView clsoverview">
+                                    <li>
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnIdInvoice").FirstOrDefault().Value.ToString() :</span>
+                                        <span class="inputText">
+                                            @Model.InvoiceMatchHeaderModel.ClientLookupId
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnIdStatus").FirstOrDefault().Value.ToString() :</span>
+                                        <span class="inputText">@Model.InvoiceMatchHeaderModel.Status_Display</span>
+                                    </li>
+                                    <li>
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "GlobalType").FirstOrDefault().Value.ToString() :</span>
+                                        <span class="inputText">@UtilityFunction.GetMessageFromResource(Model.InvoiceMatchHeaderModel.Type, LocalizeResourceSetConstants.InvoiceMatchType)</span>
+
+
+                                    </li>
+                                    <li>
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnIdVendor").FirstOrDefault().Value.ToString() :</span>
+                                        <span class="inputText">@Model.InvoiceMatchHeaderModel.VendorClientLookupId &nbsp;&nbsp;&nbsp;&nbsp;@Model.InvoiceMatchHeaderModel.VendorName </span>
+                                    </li>
+                                    <li>
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnIdReceiptDate").FirstOrDefault().Value.ToString() :</span>
+                                        @if (Model.InvoiceMatchHeaderModel.ReceiptDate.HasValue && Model.InvoiceMatchHeaderModel.ReceiptDate.Value != default(DateTime))
+                                        {
+                                        <span class="inputText">@Model.InvoiceMatchHeaderModel.ReceiptDate.Value.ToString("MM/dd/yyyy", CultureInfo.InvariantCulture)</span>
+                                        }
+                                        else
+                                        { <span class="inputText"></span>
+                                        }
+                                    </li>
+                                    <li>
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnIdDueDate").FirstOrDefault().Value.ToString() :</span>
+
+                                        @if (Model.InvoiceMatchHeaderModel.DueDate.HasValue && Model.InvoiceMatchHeaderModel.DueDate.Value != default(DateTime))
+                                        {
+                                        <span class="inputText">@Model.InvoiceMatchHeaderModel.DueDate.Value.ToString("MM/dd/yyyy", CultureInfo.InvariantCulture)</span>
+                                        }
+                                        else
+                                        { <span class="inputText"></span>
+                                        }
+                                    </li>
+                                    <li>
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnIdPurchaseOrder").FirstOrDefault().Value.ToString() :</span>
+                                        <span class="inputText">@Model.InvoiceMatchHeaderModel.POClientLookUpId</span>
+                                    </li>
+                                    <li>
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnIdResponsible").FirstOrDefault().Value.ToString() :</span>
+                                        <span class="inputText">@Model.InvoiceMatchHeaderModel.Responsible</span>
+                                    <li>
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnIdItemAmount").FirstOrDefault().Value.ToString() :</span>
+                                        <span class="inputText">@ItemAmount</span>
+                                    </li>
+                                    <li>
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnIdTaxAmount").FirstOrDefault().Value.ToString() :</span>
+                                        <span class="inputText">@TaxAmount</span>
+                                    </li>
+                                    <li>
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnIdShippingAmount").FirstOrDefault().Value.ToString() :</span>
+                                        <span class="inputText">@ShipAmount</span>
+                                    </li>
+                                    <li>
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnIdTotal").FirstOrDefault().Value.ToString() :</span>
+                                        <span class="inputText">@TotaltemAmount</span>
+                                    </li>
+                                    <li>
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnIdInputAmount").FirstOrDefault().Value.ToString() :</span>
+                                        <span class="inputText"> @TotalInput</span>
+                                    </li>
+                                    <li>
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnIdVariance").FirstOrDefault().Value.ToString() :</span>
+                                        <span class="inputText">@Varience</span>
+                                    </li>
+                                    <li>
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnInvStatusAuthorizedToPay").FirstOrDefault().Value.ToString() :</span>
+                                        @if (Model.InvoiceMatchHeaderModel.AuthorizedToPayDate.HasValue && Model.InvoiceMatchHeaderModel.AuthorizedToPayDate.Value != default(DateTime))
+                                        {
+                                        <span class="inputText">@Model.InvoiceMatchHeaderModel.AuthorizedToPayDate.Value.ToString("MM/dd/yyyy", CultureInfo.InvariantCulture)</span>
+                                        }
+                                        else
+                                        { <span class="inputText"></span>
+                                        }
+                                    </li>
+                                    <li>
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnIdAuthorizedtoPayBy").FirstOrDefault().Value.ToString() :</span>
+                                        <span class="inputText">@Model.InvoiceMatchHeaderModel.AuthorizedToPayBy</span>
+                                    </li>
+                                    <li>
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnInvStatusPaid").FirstOrDefault().Value.ToString() :</span>
+                                        @if (Model.InvoiceMatchHeaderModel.PaidDate.HasValue && Model.InvoiceMatchHeaderModel.PaidDate.Value != default(DateTime))
+                                        {
+                                        <span class="inputText">@Model.InvoiceMatchHeaderModel.PaidDate.Value.ToString("MM/dd/yyyy", CultureInfo.InvariantCulture)</span>
+                                        }
+                                        else
+                                        { <span class="inputText"></span>
+                                        }
+
+                                    </li>
+                                    <li>
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnIdPaidBy").FirstOrDefault().Value.ToString() :</span>
+                                        <span class="inputText">@Model.InvoiceMatchHeaderModel.PaidBy</span>
+                                    </li>
+                                    <li>
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnIdCreateDate").FirstOrDefault().Value.ToString() :</span>
+                                        @if (Model.InvoiceMatchHeaderModel.CreateDate.HasValue && Model.InvoiceMatchHeaderModel.CreateDate.Value != default(DateTime))
+                                        {
+                                        <span class="inputText">@Model.InvoiceMatchHeaderModel.CreateDate.Value.ToString("MM/dd/yyyy", CultureInfo.InvariantCulture)</span>
+                                        }
+                                        else
+                                        { <span class="inputText"></span>
+                                        }
+
+                                    </li>
+                                    <li>
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnIdCreateBy").FirstOrDefault().Value.ToString() :</span>
+                                        <span class="inputText">@Model.InvoiceMatchHeaderModel.CreateBy</span>
+                                    </li>
+
+                                    <li>
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnIdModifyDate").FirstOrDefault().Value.ToString() :</span>
+                                        @if (Model.InvoiceMatchHeaderModel.ModifyDate.HasValue && Model.InvoiceMatchHeaderModel.ModifyDate.Value != default(DateTime))
+                                        {
+                                        <span class="inputText">@Model.InvoiceMatchHeaderModel.ModifyDate.Value.ToString("MM/dd/yyyy", CultureInfo.InvariantCulture)</span>
+                                        }
+                                        else
+                                        { <span class="inputText"></span>
+                                        }
+
+                                    </li>
+                                    <li>
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnIdModifyBy").FirstOrDefault().Value.ToString() :</span>
+                                        <span class="inputText">@Model.InvoiceMatchHeaderModel.ModifyBy</span>
+                                    </li>
+                                </ul>
+
+                                <div class="editBttn">
+                                    @if (Model.security.InvoiceMatching.Edit)
+                                    {
+                                    <button type="button" class="btn btn-blue" id="editInvoiceMatch"><i class="fa fa-pencil" style="margin-top:-3px;"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "spnIdEdit").FirstOrDefault().Value.ToString()</button>
+                                    }
+                                </div>
+                            </div>
+                            <div class="itemlines-details-wrap">
+
+                                <div style="clear:both;"></div><br />
+
+                                <div class="m-portlet__head" style="padding:0; height:2.5rem; margin-bottom:10px;">
+                                    <div class="m-portlet__head-caption">
+                                        <div class="m-portlet__head-title">
+                                            <h3 class="m-portlet__head-text" style="vertical-align:top;">
+                                                @Model.Loc.Where(a => a.ResourceId == "spnIdLineItems").FirstOrDefault().Value.ToString()
+                                            </h3>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="actionBar">
+                                    <div class="pull-left">
+                                        <button type="button" class="btn btn-white navbar-btn" id="ListsidebarCollapse" title="Advance Search"><i class="fa fa-filter" style="font-size: 1.3rem;"></i></button>
+                                        <ul class="filter_apply globalFilterAdjusted">
+                                            <li class="textFilter"><span class="filteritemcount">0</span>&nbsp;@Model.Loc.Where(a => a.ResourceId == "spnIdFilterApplied").FirstOrDefault().Value.ToString()</li>
+                                            <li class="textClear" id="liClearAdvSearchFilterListInvoice"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "globalClear").FirstOrDefault().Value.ToString()</a></li>
+                                        </ul>
+                                        <div style="clear:both;"></div>
+                                    </div>
+                                    <div style="clear:both;"></div>
+                                    <div id="advsearchfilteritems"></div>
+                                    <div style="clear:both;"></div>
+                                </div>
+
+
+                                <div style="clear:both;"></div>
+
+                                <div id="Active" class="tabcontent" style="display:block;">
+                                    <div class="table-responsive">
+                                        <table id="tblInvoiceItemList" class="eqpDtlTbl row-border custom-sort" style="width:100%;">
+                                            <thead>
+                                                <tr>
+                                                    <th>@Model.Loc.Where(a => a.ResourceId == "spnIdLineNumber").FirstOrDefault().Value.ToString()</th>
+                                                    <th>@Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString()</th>
+                                                    <th>@Model.Loc.Where(a => a.ResourceId == "spnIdQuantity").FirstOrDefault().Value.ToString()</th>
+                                                    <th>@Model.Loc.Where(a => a.ResourceId == "spnUnitofMeasure").FirstOrDefault().Value.ToString()</th>
+                                                    <th>@Model.Loc.Where(a => a.ResourceId == "spnUnitCost").FirstOrDefault().Value.ToString()</th>
+                                                    <th>@Model.Loc.Where(a => a.ResourceId == "spnIdTotalCost").FirstOrDefault().Value.ToString()</th>
+                                                    <th>@Model.Loc.Where(a => a.ResourceId == "spnIdPurchaseOrder").FirstOrDefault().Value.ToString()</th>
+                                                    <th>@Model.Loc.Where(a => a.ResourceId == "spnIdAccount").FirstOrDefault().Value.ToString()</th>
+                                                    <th width="17%" style="text-align:center !important;">@Model.Loc.Where(a => a.ResourceId == "globalAction").FirstOrDefault().Value.ToString()</th>
+                                                </tr>
+                                            </thead>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="idBttns">
+                                    <div class="bttn_pagin">
+                                        <div class="bttns2">
+                                            @if (Model.InvoiceMatchHeaderModel.Status != InvoiceMatchStatus.Open)
+                                            {
+                                                <button type="button" class="btn btn-blue mobBttn" id="AddInvoiceReceipt" disabled="disabled"><i class="fa fa-plus faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "spnIdAddReceipts").FirstOrDefault().Value.ToString()</button>
+                                            }
+                                            else
+                                            {
+                                                if (Model.InvoiceMatchHeaderModel.SecurityInvoiceEdit)
+                                                {
+                                                    <button type="button" class="btn btn-blue mobBttn" id="AddInvoiceReceipt"><i class="fa fa-plus faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "spnIdAddReceipts").FirstOrDefault().Value.ToString()</button>
+                                                }
+                                                else
+                                                {
+                                                    <button type="button" class="btn btn-blue mobBttn" id="AddInvoiceReceipt" disabled="disabled"><i class="fa fa-plus faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "spnIdAddReceipts").FirstOrDefault().Value.ToString()</button>
+                                                }
+                                            }
+                                        </div>
+                                        @if (Model.InvoiceMatchHeaderModel.Type == InvoiceMatchingTypeConstants.Purch)
+                                        {
+                                            if (Model.InvoiceMatchHeaderModel.Status != InvoiceMatchStatus.Open)
+                                            {
+                                                <div class="bttns"><button type="button" class="btn btn-blue mobBttn" id="selectReceiptGrid" disabled="disabled"><i class="fa fa-plus faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "spnIdSelectReceipts").FirstOrDefault().Value.ToString()</button></div>
+                                            }
+                                            else
+                                            {
+                                                <div class="bttns"><button type="button" class="btn btn-blue mobBttn" id="selectReceiptGrid"><i class="fa fa-plus faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "spnIdSelectReceipts").FirstOrDefault().Value.ToString()</button></div>
+                                            }
+                                        }
+                                      
+                                        <div style="clear:both;"></div>
+                                    </div>
+                                </div>
+                                <div style="clear:both"></div>
+                            </div>
+                        </div>
+                        <div class="tabsArea nobg" id="INVNotes" style="display:none;">
+                            <div class="itemlines-details-wrap">
+                                <div class="table-responsive">
+                                    <table id="notesTable" class="eqpDtlTbl row-border custom-sort" style="width:100%;">
+                                        <thead>
+                                            <tr>
+                                                <th>@Model.Loc.Where(a => a.ResourceId == "globalSubject").FirstOrDefault().Value.ToString()</th>
+                                                <th>@Model.Loc.Where(a => a.ResourceId == "globalOwner").FirstOrDefault().Value.ToString()</th>
+                                                <th>@Model.Loc.Where(a => a.ResourceId == "globalModifiedDate").FirstOrDefault().Value.ToString()</th>
+                                                <th width="17%" style="text-align:center !important;">@Model.Loc.Where(a => a.ResourceId == "globalAction").FirstOrDefault().Value.ToString()</th>
+                                            </tr>
+                                        </thead>
+                                    </table>
+                                </div>
+                                <div class="bttns">
+                                    <button type="button" id="btnAddNote" class="btn btn-blue" data-toggle="" data-target=""><i class="fa fa-plus faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "spnIdAddNote").FirstOrDefault().Value.ToString()</button>
+                                </div>
+                                <div style="clear:both;"></div>
+                            </div>
+                        </div>
+
+
+                        <div class="tabsArea nobg" id="INVAttachments" style="display:none;">
+                            <div class="itemlines-details-wrap">
+                                <div class="table-responsive">
+                                    <table id="InvAttachmentTable" class="eqpDtlTbl row-border custom-sort" style="width:100%;">
+                                        <thead>
+                                            <tr>
+                                                <th>@Model.Loc.Where(a => a.ResourceId == "globalSubject").FirstOrDefault().Value.ToString()</th>
+                                                <th>@Model.Loc.Where(a => a.ResourceId == "globalFileName").FirstOrDefault().Value.ToString()</th>
+                                                <th>@Model.Loc.Where(a => a.ResourceId == "globalFileSize").FirstOrDefault().Value.ToString()</th>
+                                                <th>@Model.Loc.Where(a => a.ResourceId == "globalOwner").FirstOrDefault().Value.ToString()</th>
+                                                <th>@Model.Loc.Where(a => a.ResourceId == "globalCreateDate").FirstOrDefault().Value.ToString()</th>
+                                                <th width="17%" style="text-align:center !important;">@Model.Loc.Where(a => a.ResourceId == "globalAction").FirstOrDefault().Value.ToString()</th>
+                                            </tr>
+                                        </thead>
+                                    </table>
+                                </div>
+                                <div class="bttns">
+                                    <button type="button" class="btn btn-blue" data-toggle="" data-target="" id="btnAddInvAttachment"><i class="fa fa-plus faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalAddAttachment").FirstOrDefault().Value.ToString()</button>
+                                </div>
+                                <div style="clear:both;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+    @Html.HiddenFor(m => m.InvoiceMatchHeaderModel.InvoiceMatchHeaderId)
+    @Html.HiddenFor(m => m.InvoiceMatchHeaderModel.VendorId)
+    @Html.HiddenFor(m => m.InvoiceMatchHeaderModel.ClientLookupId)
+    @Html.Partial("_ChangeInvoiceModal")
+
+<nav class="sidebar">
+    <div id="dismiss">
+        <i class="fa fa-close"></i>
+    </div>
+    <div class="sidebar-header">
+        <h3><i class="fa fa-filter" style="position: relative; top: -2px;"></i>@Model.Loc.Where(a => a.ResourceId == "spnIdFilters").FirstOrDefault().Value.ToString() <span class="filteritemcount">0</span></h3>
+        <button type="button" id="btnDataAdvSrchListInvoiceItem" class="btn btn-blue filterSearch">@Model.Loc.Where(a => a.ResourceId == "globalSearch").FirstOrDefault().Value.ToString()</button>
+    </div>
+    <div class="sidebar-content" id="advsearchsidebarListItemInvoice">
+        <div class="form-group">
+            <label for="GAlinenumber">@Model.Loc.Where(a => a.ResourceId == "spnIdLineNumber").FirstOrDefault().Value.ToString():</label>
+            <input type="text" class="form-control search adv-item" id="GAlinenumber">
+        </div>
+        <div class="form-group">
+            <label for="GAdescription">@Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString():</label>
+            <input type="text" class="form-control search adv-item" id="GAdescription">
+        </div>
+        <div class="form-group">
+            <label for="GAquantity">@Model.Loc.Where(a => a.ResourceId == "spnIdQuantity").FirstOrDefault().Value.ToString():</label>
+            <input type="text" class="form-control search adv-item longinput" id="GAquantity">
+        </div>
+        <div class="form-group">
+            <label for="GAunitofmeasure">@Model.Loc.Where(a => a.ResourceId == "spnUnitofMeasure").FirstOrDefault().Value.ToString():</label>
+            <input type="text" class="form-control search adv-item" id="GAunitofmeasure">
+        </div>
+        <div class="form-group">
+            <label for="GAunitcost">@Model.Loc.Where(a => a.ResourceId == "spnUnitCost").FirstOrDefault().Value.ToString():</label>
+            <input type="text" class="form-control search adv-item decimalinput" id="GAunitcost">
+        </div>
+        <div class="form-group">
+            <label for="GAtotalcost">@Model.Loc.Where(a => a.ResourceId == "spnIdTotalCost").FirstOrDefault().Value.ToString():</label>
+            <input type="text" class="form-control search adv-item decimalinput" id="GAtotalcost">
+        </div>
+        <div class="form-group">
+            <label for="GApurchaseOrder">@Model.Loc.Where(a => a.ResourceId == "spnIdPurchaseOrder").FirstOrDefault().Value.ToString():</label>
+            <input type="text" class="form-control search adv-item" id="GApurchaseOrder">
+        </div>
+        <div class="form-group">
+            <label for="GAaccount">@Model.Loc.Where(a => a.ResourceId == "spnIdAccount").FirstOrDefault().Value.ToString():</label>
+            <input type="text" class="form-control search adv-item" id="GAaccount">
+        </div>
+    </div>
+</nav>
+
+<style type="text/css">
+    .m-portlet.style-none {
+    background:none !important;
+    box-shadow:none !important;
+    }
+
+    .itemlines-details-wrap, .top-sec-wrap {
+    box-shadow: 0px 1px 15px 1px rgba(69, 65, 78, 0.08) !important;
+    background-color: #ffffff !important;
+    padding: 15px !important;
+    }
+    .top-sec-wrap {
+    margin-bottom: 15px !important;
+    margin-top: 15px !important;
+    }
+
+    .filterDescription {
+    width: auto;
+    float: left;
+    font-size: 1.2rem;
+    color: #000;
+    font-weight: 500;
+    line-height: 33px;
+    }
+
+    .filterDescription a {
+    color: #36a3f7;
+    text-decoration: none !important;
+    }
+
+    .modal-open {
+    overflow: hidden !important;
+    }
+
+    @@media only screen and (max-width: 767px) and (min-width: 640px) {
+    .actionBar div.pull-left {
+    width: auto;
+    }
+    }
+
+    @@media screen and (max-width: 410px) {
+    .filterDescription {
+    float: none !important;
+    }
+    }
+    ul.listView li span.label {
+    width: 40%;
+    }
+
+    ul.listView li span.inputText {
+    width: 60%;
+    }
+
+    ul.listView.clsoverview {
+    height: 300px;
+    overflow: auto;
+    }
+
+    ul.listView.clsoverview li span.label {
+    line-height: 35px;
+    }
+
+    ul.listView.clsoverview li span.inputText.description-span {
+    padding-top: 6px;
+    }
+
+
+    ul.listView.clsoverview li span.inputText {
+    line-height: 23px;
+    height: 30px;
+    }
+</style>

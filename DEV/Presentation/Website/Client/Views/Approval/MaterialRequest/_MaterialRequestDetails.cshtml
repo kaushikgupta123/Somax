@@ -1,0 +1,30 @@
+﻿@model Client.Models.Approval.ApprovalVM
+
+<div class="col-xl-12"><h5><b>@Model.Loc.Where(a => a.ResourceId == "spnMaterialRequest").FirstOrDefault().Value.ToString() @Model.Loc.Where(a => a.ResourceId == "spnDetails").FirstOrDefault().Value.ToString() - <span id="txtMRclientlookup"></span></b></h5></div>
+<div class="row">
+    <div class="col-xl-8">
+        <div class="m-portlet" id="m_portlet" style="padding:10px;">
+            <div>
+                <ul class="listView">
+                    @Html.Partial("~/Views/Approval/MaterialRequest/_MaterialRequestView.cshtml", Model)
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-4">
+        <div id="tskBttns">
+            <div class="bttns">
+                <button type="button" class="btn btn-blue" data-toggle="" data-target="" style="margin-right:10px" id="btnMaterialrequestApprove"><i class="fa fa-check faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalApprove").FirstOrDefault().Value.ToString()</button>
+            </div>
+        </div>
+        <div class="bttns">
+            <button type="button" class="btn btn-blue" data-toggle="modal" data-target="" style="margin-right:10px" id="btnMaterialrequestDeny"><i class="fa fa-close faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalDeny").FirstOrDefault().Value.ToString()</button>
+        </div>
+    </div>
+</div>
+
+
+
+@Html.Hidden("EstimatedCostsId", "", new { @id = "hdnEstimatedCostsId" })
+@Html.Hidden("ClientLookupId", "", new { @id = "hdnClientLookupId" })
+@Html.Hidden("ApprovalGroupId", "", new { @id = "hdnApprovalGroupId" })

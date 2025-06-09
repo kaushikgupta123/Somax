@@ -1,0 +1,81 @@
+﻿@model Client.Models.Parts.PartsVM
+
+<div class="m-portlet padAdjstNew" id="m_portlet">
+    <div class="m-portlet__head" style="padding:0; margin-bottom:10px;">
+        <div class="m-portlet__head-caption">
+            <div class="m-portlet__head-title">
+                <h3 class="m-portlet__head-text" style="font-size: 1.2rem; line-height:3.55;">
+                    @Model.Loc.Where(a => a.ResourceId == "spnPartMasterInformation").FirstOrDefault().Value.ToString()
+                </h3>
+            </div>
+        </div>
+    </div>
+    <div id="pmwidget" class="row widget-scroll mCustomScrollbar light" data-mcs-theme="minimal-dark">
+        <div class="col-xl-12">
+            <ul class="listView">
+                <li>
+                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnPartID").FirstOrDefault().Value.ToString(): </span>
+                    <span class="inputText">@Model.PartModel.PartMaster_ClientLookupId</span>
+
+                </li>
+                <li style="height:auto;">
+                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnLongDescription").FirstOrDefault().Value.ToString(): </span>
+                    <span class="inputText description-span" style="text-overflow:inherit !important">@Model.PartModel.LongDescription</span>
+                    <div style="clear:both;"></div>
+                </li>
+                <li style="height:auto;">
+                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnShortDescription").FirstOrDefault().Value.ToString(): </span>
+                    <span class="inputText description-span" style="text-overflow:inherit !important"> @Model.PartModel.ShortDescription</span>
+                    <div style="clear:both;"></div>
+                </li>
+                <li>
+                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnCategory").FirstOrDefault().Value.ToString(): </span>
+                    <span class="inputText">@Model.PartModel.Category</span>
+                </li>
+                <li>
+                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnCategoryDescription").FirstOrDefault().Value.ToString(): </span>
+                    <span class="inputText description-span">@Model.PartModel.CategoryDesc</span>
+
+                </li>
+
+
+            </ul>
+            <div style="clear:both;"></div>
+            <div class="m-portlet__head" style="padding:0; margin-bottom:10px;">
+                <div class="m-portlet__head-caption">
+                    <div class="m-portlet__head-title">
+                        <h3 class="m-portlet__head-text" style="font-size: 1.2rem; line-height:3.55;">
+                            @Model.Loc.Where(a => a.ResourceId == "spnVendorCatalogEntries").FirstOrDefault().Value.ToString()
+                        </h3>
+                    </div>
+                </div>
+            </div>
+            <div class="table-responsive tblscrolladjust">
+                <table id="tblVCItem" class="eqpDtlTbl row-border custom-sort" style="width:100%;">
+                    <thead>
+                        <tr>
+                            <th>@Model.Loc.Where(a => a.ResourceId == "spnVendorName").FirstOrDefault().Value.ToString()</th>
+                            <th style="text-align:right !important;">@Model.Loc.Where(a => a.ResourceId == "spnUnitCost").FirstOrDefault().Value.ToString()</th>
+                            <th>@Model.Loc.Where(a => a.ResourceId == "spnUnitofMeasure").FirstOrDefault().Value.ToString()</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<style>
+    .widget-scroll {
+        height:500px;
+    }
+    .tblscrolladjust {
+        width: calc(100% - 20px);
+        right: -10px;
+        position:relative;
+    }
+    .widget-scroll .mCSB_container, .widget-scroll .mCustomScrollBox {
+        overflow: hidden !important;
+    }
+</style>

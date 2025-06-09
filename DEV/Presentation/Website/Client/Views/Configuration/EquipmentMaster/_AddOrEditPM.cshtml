@@ -1,0 +1,101 @@
+﻿@model Client.Models.Configuration.EquipmentMaster.EquipmentMasterVM
+
+<div class="m-subheader">
+    <div class="new-m-subheader">
+        <div class="PageTitle">
+            <div class="align-items-center separator">
+                <h3 class="m-subheader__title ">
+                    @Model.Loc.Where(a => a.ResourceId == "spnEquipmentMaster").FirstOrDefault().Value.ToString()
+                </h3>
+            </div>
+        </div>
+        <div class="NewBreadcrumbArea">
+            <div class="newBreadcrumb">
+                <ul>
+                    <li><a href="/Configuration/Dashboard">&nbsp;</a></li>
+                    <li>
+                        <a href="/EquipmentMaster/index?page=Masters_Assets">
+                            @Model.Loc.Where(a => a.ResourceId == "spnEquipmentMasterSearch").FirstOrDefault().Value.ToString()
+                        </a>
+                    </li>
+                    <li><a href="javascript:void(0)" id="brdpm" data-val="@Model.EquipmentMasterPmModel.EQMasterId">@Model.EquipmentMasterPmModel.Name</a></li>
+                    @if (Model.EquipmentMasterPmModel.EQMaster_PMLibraryId != 0)
+                    {
+
+                        <li class="active">@Model.Loc.Where(a => a.ResourceId == "spnUpdatePreventiveMaintenance").FirstOrDefault().Value.ToString()</li>
+                    }
+                    else
+                    {
+                        <li class="active">@Model.Loc.Where(a => a.ResourceId == "spnAddPreventiveMaintenance").FirstOrDefault().Value.ToString()</li>
+                    }
+                </ul>
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+        <div style="clear:both;"></div>
+    </div>
+</div>
+@Html.Partial("_ErrorDiv")
+@using (Ajax.BeginForm("AddPM", "EquipmentMaster", new AjaxOptions { HttpMethod = "Post", OnSuccess = "PmAddOnSuccess", OnBegin = "AjaxBeginFormBegin", OnComplete = "AjaxBeginFormComplete", OnFailure = "AjaxBeginFormFaillure" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="row">
+        <div class="col-xl-12">
+            <div class="m-portlet newPort" id="m_portlet" style="padding:15px;">
+                <div class="bottomBlock">
+                    <div class="tabsArea nobg">
+                        @if (Model.EquipmentMasterPmModel.EQMaster_PMLibraryId != 0)
+                        {
+                            @Html.HiddenFor(m => m.EquipmentMasterPmModel.EQMaster_PMLibraryId)
+                        }
+                        <ul class="listView nobrd">
+                            <li id="pmdrop-region">
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnPMMasterID").FirstOrDefault().Value.ToString() : </span>
+                                <span class="inputText">
+                                    <div class="dropdown dropTableOuter">
+                                        <div class="input-group">
+                                            @Html.ValidationMessageFor(m => m.EquipmentMasterPmModel.ClientLookupId, "", new { style = "display:none" })
+                                            @Html.TextBoxFor(m => m.EquipmentMasterPmModel.ClientLookupId, new { @class = "form-control search dropbtn", id = "txtpmid", autocomplete = "off",@readonly= "readonly" })
+                                            <div class="input-group-btn">
+                                                <button class="btn btn-white btntxtInputGroup" type="button" id="opengrid">
+                                                    <i id="srcicon" class="fa fa-search"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                       
+                                    </div>
+                                </span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div style="clear:both;"></div>
+                    <div class="idBttns" id="idBttns" style="border-top: 1px solid #fff;">
+                        <div class="bttn_pagin">
+                            <div class="bttns2">
+                                <button type="submit" class="btn btn-blue mobBttn"><i class="fa fa-save faIcon"></i>&nbsp;@Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+                            </div>
+                            <div class="bttns"><button type="button" class="btn btn-blue mobBttn" id="btnPMcancel"><i class="fa fa-close faIcon"></i>&nbsp;@Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button></div>
+                            <div style="clear:both;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @Html.HiddenFor(m => m.EquipmentMasterPmModel.EQMasterId)
+    @Html.Partial("~/Views/Configuration/EquipmentMaster/_AddPMIdPopUp.cshtml")
+}
+
+<script src="~/Scripts/Pages/Configuration/EquipmentMaster/pm-grid-dropdown.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+

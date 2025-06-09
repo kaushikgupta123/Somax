@@ -1,0 +1,95 @@
+﻿@model Client.Models.EquipmentCombined
+<div class="m-portlet padAdjstNew" id="m_portlet">
+    <div class="m-portlet__head" style="padding:0; margin-bottom:10px;">
+        <div class="m-portlet__head-caption">
+            <div class="m-portlet__head-title">
+                <h3 class="m-portlet__head-text" style="font-size: 1.2rem; line-height:3.55;">
+                    @Model.Loc.Where(a => a.ResourceId == "spnAvailability").FirstOrDefault().Value.ToString()
+                </h3>
+            </div>
+        </div>
+    </div>
+
+    <div style="padding-top:5px;">
+        <div style="padding-bottom:10px;">
+            <div style="padding:0 5px;">
+                <div class="form-group" style="margin-bottom:0;">
+                    <div class="clsOutservice" style="padding:0; margin:0 0 20px 0;">
+                        <h2 class="m-portlet__head-text outserv outservBig">
+                            @Model.Loc.Where(a => a.ResourceId == "spnOutofService").FirstOrDefault().Value.ToString()
+                        </h2>
+                        <div class="outDetails">
+                            <div class="form-group" style="margin-bottom:0;">
+                                <label for="Line" id="lblremove" style="font-weight:500; margin-bottom:0;">@Model.Loc.Where(a => a.ResourceId == "globalRemoved").FirstOrDefault().Value.ToString():</label>
+                                @if (Model.EquipData.RemoveFromServiceDate.HasValue && Model.EquipData.RemoveFromServiceDate.Value != default(DateTime))
+                                {
+                                    <label class="inputText" style="margin-bottom:0;">@Model.RemoveServiceDate.ToString("MM/dd/yyyy hh:mm tt", CultureInfo.InvariantCulture)</label>
+                                }
+                                else
+                                {
+                                    <label class="inputText" style="margin-bottom:0;"></label>
+                                }
+
+                            </div>
+                            <div class="form-group" style="margin-bottom:0;">
+                                <label for="Line" id="lblremove" style="font-weight:500; margin-bottom:0;">@Model.Loc.Where(a => a.ResourceId == "spnExpectedReturn").FirstOrDefault().Value.ToString():</label>
+                                @if (Model.EquipData.ExpectedReturnToService.HasValue && Model.EquipData.ExpectedReturnToService.Value != default(DateTime))
+                                {
+                                    <label class="inputText" style="margin-bottom:0;">@Model.EquipData.ExpectedReturnToService.Value.ToString("MM/dd/yyyy", CultureInfo.InvariantCulture)</label>
+                                }
+                                else
+                                {
+                                    <label class="inputText" style="margin-bottom:0;"></label>
+                                }
+                            </div>
+                        </div>
+                        <div style="clear:both;"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="Line" id="lblreason" style="font-weight:500">@Model.Loc.Where(a => a.ResourceId == "GlobalReason").FirstOrDefault().Value.ToString():</label>
+                        <label class="inputText" style="margin-bottom:0;"> @Model.ServiceReasonCode</label>
+                        
+                    </div>
+                    <div class="form-group">
+                        <label for="Line" id="lblreason" style="font-weight:500">@Model.Loc.Where(a => a.ResourceId == "spnComment").FirstOrDefault().Value.ToString():</label>
+                        <div>
+                            @if (Model.EquipData.RemoveFromServiceReason != "")
+                            {
+                                <label for="Line" class="reason">@Model.EquipData.RemoveFromServiceReason</label>
+                            }
+                            else
+                            {
+                                <label for="Line">@Model.EquipData.RemoveFromServiceReason</label>
+                            }
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-blue mobBttn" id="btnAstReturn" data-equipid="@Model.EquipData.EquipmentId" style="cursor:pointer; float:right;"><i class="fa fa-undo"></i>&nbsp;@Model.Loc.Where(a => a.ResourceId == "GlobalReturn").FirstOrDefault().Value.ToString()</button>
+                    <button type="button" class="btn btn-blue mobBttn" id="btnAstUpdate" data-toggle="modal" data-target="#UpdateAssetAvailabilityModal" style="cursor:pointer; float:right; margin-right:10px;"><i class="fa fa-pencil-square-o"></i>&nbsp;@Model.Loc.Where(a => a.ResourceId == "globalUpdate").FirstOrDefault().Value.ToString()</button>
+                    <button type="button" class="btn btn-blue mobBttn" id="btnAstViewLog" style="cursor:pointer; float:left;"><i class="fa fa-history"></i>&nbsp;@Model.Loc.Where(a => a.ResourceId == "spnViewLog").FirstOrDefault().Value.ToString()</button>
+                    <div style="clear:both;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style type="text/css">
+    .outservBig {
+        padding: 3px 15px;
+        width: auto;
+        float: left;
+        margin: 3px 20px 0 0;
+        font-size: 18px;
+        border-radius: 5px;
+    }
+
+    .outDetails {
+        float: left;
+    }
+    .reason {
+        border: solid 1px;
+        padding: 2px 5px 4px 5px;
+        width: 100%;
+    }
+</style>
+

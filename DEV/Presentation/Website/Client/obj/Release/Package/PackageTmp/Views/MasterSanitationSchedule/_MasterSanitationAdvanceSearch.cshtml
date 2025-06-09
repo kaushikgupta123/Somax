@@ -1,0 +1,54 @@
+﻿
+
+
+@model Client.Models.MasterSanitationSchedule.MasterScheduleVM
+
+<nav id="sidebar">
+    <div id="dismiss">
+        <i class="fa fa-close"></i>
+    </div>
+    <div class="sidebar-header">
+        <h3><i class="fa fa-filter" style="position: relative; top: -2px;"></i>&nbsp;@Model.Loc.Where(a => a.ResourceId == "spnFilters").FirstOrDefault().Value.ToString() <span class="filteritemcount">0</span></h3>
+        <button type="button" class="btn btn-blue filterSearch" id="btnMsAdvSrch">
+            <i class="fa fa-search" style="margin-top:-3px;"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalSearch").FirstOrDefault().Value.ToString()
+        </button>
+    </div>
+    <div class="sidebar-content" id="advsearchsidebar">
+        <div class="form-group">
+            <label for="txtDescription">@Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString():</label>
+            <input type="text" class="form-control search adv-item" id="txtDescription" autocomplete="off">
+        </div>
+        <div class="form-group">
+            <label for="txtEquipment">@Model.Loc.Where(a => a.ResourceId == "spnEquipment").FirstOrDefault().Value.ToString() :</label>
+            <input type="text" class="form-control search adv-item" id="txtEquipment" autocomplete="off">
+        </div>
+        <div class="form-group">
+            <label for="txtFrequency">@Model.Loc.Where(a => a.ResourceId == "spnFrequency").FirstOrDefault().Value.ToString() :</label>
+            <input type="text" class="form-control search adv-item longinput" id="txtFrequency" autocomplete="off">
+        </div>
+        <div class="form-group">
+            <label for="txtAssigned">@Model.Loc.Where(a => a.ResourceId == "spnAssigned").FirstOrDefault().Value.ToString():</label>
+            <input type="text" class="form-control search adv-item" id="txtAssigned" autocomplete="off">
+        </div>
+        <div class="form-group">
+            <label for="txtShift">@Model.Loc.Where(a => a.ResourceId == "spnShift").FirstOrDefault().Value.ToString() :</label>
+            <input type="text" class="form-control search adv-item" id="txtShift" autocomplete="off">
+        </div>
+        <div class="form-group">
+            <label for="txtDuration">@Model.Loc.Where(a => a.ResourceId == "spnDuration").FirstOrDefault().Value.ToString():</label>
+            <input type="text" class="form-control search adv-item decimalinput" id="txtDuration" autocomplete="off">
+        </div>
+        <div class="form-group">
+            <label for="txtNextDue">@Model.Loc.Where(a => a.ResourceId == "spnNextDue").FirstOrDefault().Value.ToString():</label>
+            <input type="text" class="form-control search adv-item dtpicker" id="txtNextDue" autocomplete="off">
+        </div>
+        <div class="form-group">
+            <label for="isInactive">@Model.Loc.Where(a => a.ResourceId == "globalInActive").FirstOrDefault().Value.ToString() :</label>
+            <select id="isInactive" class="form-control search adv-item select2picker">
+                <option value="">--Select--</option>
+                <option value="false">Yes</option>
+                <option value="true">No</option>
+            </select>
+        </div>
+    </div>
+</nav>

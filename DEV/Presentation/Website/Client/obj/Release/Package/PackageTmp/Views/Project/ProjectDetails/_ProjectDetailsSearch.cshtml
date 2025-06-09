@@ -1,0 +1,80 @@
+﻿@model Client.Models.Project.ProjectVM
+<div class="row">
+    <div class="col-xl-12">
+        <div class="m-portlet" id="m_portlet" style="padding:15px;">
+            <div class="actionBar" style="" id="ptlGridAction">
+                <div class="pull-left" style="position:relative;">
+                    <button type="button" class="btn btn-white navbar-btn" title="Search" id="PTLSrchBttnNew"><i class="fa fa-search" style="font-size: 1.1rem;position: relative;top: -2px;left: -2px;"></i> Search @*@Model.Loc.Where(a => a.ResourceId == "globalSelectWorkorder").FirstOrDefault().Value.ToString()*@</button>
+                    <button type="button" class="btn btn-white navbar-btn" id="sidebarPTLCollapse" title="@Model.Loc.Where(a => a.ResourceId == "globalAdvSearch").FirstOrDefault().Value.ToString()"><i class="fa fa-filter" style="font-size: 1.3rem;"></i></button>
+                    <div style="clear:both;"></div>
+                    <div class="searchBttnDrop desktop" id="PTLsearchBttnNewDrop" style="display:none;">
+                        <div class="form-group" style="position:relative;">
+                            <i class="fa fa-search txtSearchPTLClick" style="font-size: 1.1rem;position: absolute;top: 9px;left: 15px;"></i>
+                            <a href="javascript:void(0)" id="cancelText"><i class="fa fa-close" style="font-size: 1.1rem;position: absolute;top: 9px;right: 15px;"></i></a>
+                            <input type="text" id="txtColumnPTLSearch" class="form-control search" placeholder="Search..." style="padding: 0.65rem 2.75rem;" autocomplete="off">
+                        </div>
+
+                        <div class="searchTips">
+                            <div class="titleText">@Model.Loc.Where(a => a.ResourceId == "GlobalSearchTips").FirstOrDefault().Value.ToString()</div>
+                            <div class="infoText"> @Model.Loc.Where(a => a.ResourceId == "spnPTSearchTxtForProject").FirstOrDefault().Value.ToString()</div>
+
+                            <div style="clear:both;"></div>
+                        </div>
+
+                        <div class="searchInfo">
+                            <span class="recent">@Model.Loc.Where(a => a.ResourceId == "GlobalRecentlySearched").FirstOrDefault().Value.ToString()</span>
+                            <div class="searchList" id="ptlsearchList">
+                                <ul id="UlSearchListPTL"></ul>
+                            </div>
+                            <span class="clear"><a href="javascript:void(0)" id="clearTextPTL">Clear</a></span>
+                            <div style="clear:both;"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pull-right">
+                    <div style="clear:both;"></div>
+                </div>
+                <div style="clear:both;"></div>
+                <div id="advsearchfilteritemsPTL"><div style="clear:both;"></div></div>
+                <div style="clear:both;"></div>
+            </div>
+            <div style="clear:both;"></div>
+
+            <div id="Active" class="tabcontent" style="display:block;">
+                <div class="col-lg-12 col-md-12" style="text-align:right;padding:10px;display:none" id="DivPTLSearchitemcount">
+                    <div class="pull-left">
+                        <ul class="filter_apply2">
+                            <li><span class="PTLSearchitemcount">0</span>&nbsp;Item(s) Selected</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="table-responsive">
+                    <table id="ProjectTaskListSearchTable" class="eqpDtlTbl row-border hover custom-sort tblMain tblDefaultSort" style="width:100%;">
+                        <thead>
+                            <tr>
+                                <th>
+                                    <input name="ProjectTaskselect_all" value="1" id="ptlsearch-select-all" type="checkbox" />
+                                </th>
+                                <th data-col="1" data-th-index="0" data-th-prop="WOClientLookupID">@Model.Loc.Where(a => a.ResourceId == "spnGlobalWorkOrderID").FirstOrDefault().Value.ToString()</th>
+                                <th data-col="2" data-th-index="1" data-th-prop="Description">@Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString()</th>
+                                <th data-col="3" data-th-index="2" data-th-prop="StartDate">@Model.Loc.Where(a => a.ResourceId == "globalStart").FirstOrDefault().Value.ToString()</th>
+                                <th data-col="4" data-th-index="3" data-th-prop="EndDate">@Model.Loc.Where(a => a.ResourceId == "globalSpnEnd").FirstOrDefault().Value.ToString()</th>
+                                <th data-col="5" data-th-index="4" data-th-prop="Progress">@Model.Loc.Where(a => a.ResourceId == "spnProgress").FirstOrDefault().Value.ToString()</th>
+                                <th data-col="6" data-th-index="5" data-th-prop="WorkOrderId">WO</th>
+                              
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .hide_column {
+        display: none;
+    }
+</style>

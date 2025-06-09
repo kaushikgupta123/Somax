@@ -1,0 +1,148 @@
+﻿@model Client.Models.Configuration.Dashboard.ConfigDashboardVM
+
+<div class="col-xl-6">
+    <div class="m-portlet m-portlet--full-height m-portlet--fit">
+        <div class="m-portlet__head">
+            <div class="m-portlet__head-caption">
+                <div class="m-portlet__head-title">
+                    <h3 class="m-portlet__head-text">
+                        @Model.Loc.Where(a => a.ResourceId == "spnSeatAvailability").FirstOrDefault().Value.ToString()
+                    </h3>
+                </div>
+            </div>
+        </div>
+
+        <div class="m-portlet__body">
+            <div class="tab-content">
+                <div class="chartBox" style="position: relative; min-height: 350px; margin-top:0;">
+                    <div class="lds-ellipsis lds-adjust available-user-loader">
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                    </div>
+                    <div id="availabilitynodata" class="cntNoData"><h5>@Model.Loc.Where(a => a.ResourceId == "globalDataNotFound").FirstOrDefault().Value.ToString()</h5></div>
+                    <div id="seatavailablechart"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="col-xl-6 rightWidgetArea">
+    <div class="row">
+        <div class="col-xl-5 col-md-6 planed">
+            <div class="m-portlet m-portlet--fit">
+                <div class="m-portlet__head">
+                    <div class="m-portlet__head-caption">
+                        <div class="m-portlet__head-title">
+                            <h3 class="m-portlet__head-text">
+                                @Model.Loc.Where(a => a.ResourceId == "spnTotalSeats").FirstOrDefault().Value.ToString()
+                            </h3>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="m-portlet__body">
+                    <div class="tab-content">
+                        <div class="chartBox">
+                            <span id="totalseatsCount"></span>
+                            <div class="lds-ellipsis lds-adjust available-user-loader">
+                                <div></div>
+                                <div></div>
+                                <div></div>
+                                <div></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-5 col-md-6 incomplete">
+            <div class="m-portlet m-portlet--fit">
+                <div class="m-portlet__head">
+                    <div class="m-portlet__head-caption">
+                        <div class="m-portlet__head-title">
+                            <h3 class="m-portlet__head-text">
+                                @Model.Loc.Where(a => a.ResourceId == "spnSeatsAvailability").FirstOrDefault().Value.ToString()
+                            </h3>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="m-portlet__body">
+                    <div class="tab-content">
+                        <div class="chartBox">
+                            <span id="seatsAvailableCount"></span>
+                            <div class="lds-ellipsis lds-adjust  available-user-loader">
+                                <div></div>
+                                <div></div>
+                                <div></div>
+                                <div></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-xl-5 col-md-6 complete">
+            <div class="m-portlet m-portlet--fit">
+                <div class="m-portlet__head">
+                    <div class="m-portlet__head-caption">
+                        <div class="m-portlet__head-title">
+                            <h3 class="m-portlet__head-text">
+                                @Model.Loc.Where(a => a.ResourceId == "spnActiveUsers").FirstOrDefault().Value.ToString()
+                            </h3>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="m-portlet__body">
+                    <div class="tab-content">
+                        <div class="chartBox">
+                            <span id="activeUserCount"></span>
+                            <div class="lds-ellipsis lds-adjust available-user-loader">
+                                <div></div>
+                                <div></div>
+                                <div></div>
+                                <div></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-5 col-md-6 breakIn">
+            <div class="m-portlet m-portlet--fit">
+                <div class="m-portlet__head">
+                    <div class="m-portlet__head-caption">
+                        <div class="m-portlet__head-title">
+                            <h3 class="m-portlet__head-text">
+                                @Model.Loc.Where(a => a.ResourceId == "GlobalWorkRequestUsers").FirstOrDefault().Value.ToString()
+                            </h3>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="m-portlet__body">
+                    <div class="tab-content">
+                        <div class="chartBox">
+                            <span id="workRequestUserCount"></span>
+                            <div class="lds-ellipsis lds-adjust  available-user-loader">
+                                <div></div>
+                                <div></div>
+                                <div></div>
+                                <div></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,233 @@
+﻿@model Client.Models.EquipmentCombined
+
+<div class="m-subheader fixedDiv1">
+    <div class="new-m-subheader">
+        <div class="PageTitle">
+            <div class="align-items-center separator">
+                <h3 class="m-subheader__title ">
+                    @Model.Loc.Where(a => a.ResourceId == "hdrTitle").FirstOrDefault().Value.ToString()
+                </h3>
+            </div>
+        </div>
+        <div class="NewBreadcrumbArea">
+            <div class="newBreadcrumb">
+                <ul>
+                    <li><a href="/Dashboard/Dashboard">&nbsp;</a></li>
+                    <li><a href="/Equipment/Index?page=Maintenance_Assets" id="anchPagename">@Model.Loc.Where(a => a.ResourceId == "anchPagename").FirstOrDefault().Value.ToString()</a></li>
+                    <li class="lithisequipment" data-val="@Model.EquipModel.EquipmentID"><a href="javascript:void(0)">@Model.EquipModel.ClientLookupId</a></li>
+                    <li class="active">@Model.Loc.Where(a => a.ResourceId == "globalEdit").FirstOrDefault().Value.ToString()</li>
+                </ul>
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+        <div style="clear:both;"></div>
+    </div>
+</div>
+<div class="pushDiv1"></div>
+
+<div class="row fixedDiv2">
+    @Html.Partial("_EquipmentSummary", Model)
+</div>
+<div class="pushDiv2"></div>
+@Html.Partial("_ErrorDiv")
+@using (Ajax.BeginForm("UpdateEquipmentInfo", "Equipment", new AjaxOptions { HttpMethod = "Post", OnSuccess = "EquipmentEditOnSuccess", OnBegin = "AjaxBeginFormBegin", OnComplete = "AjaxBeginFormComplete", OnFailure = "AjaxBeginFormFaillure" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="row">
+        <div class="col-xl-3">
+            <div class="m-portlet">
+                <div class="sideMenuArea nobg">
+                    <ul class="vtabs" id="detmaintab">
+                        <li id="equipmentabdidtab" class="active"><a href="#Identifications">@Model.Loc.Where(a => a.ResourceId == "btnIdentification").FirstOrDefault().Value.ToString()</a></li>
+                        <li id="equipmentabwarrantytab"><a href="#Warrantys">@Model.Loc.Where(a => a.ResourceId == "btnWarranty").FirstOrDefault().Value.ToString()</a></li>
+                    </ul>
+                </div>
+                <div class="selectTabs" id="selectTabs">
+                    <select class="form-control" id="colorselector">
+                        <option value="equipmentabdidtab">@Model.Loc.Where(a => a.ResourceId == "btnIdentification").FirstOrDefault().Value.ToString()</option>
+                        <option value="equipmentabwarrantytab">@Model.Loc.Where(a => a.ResourceId == "btnWarranty").FirstOrDefault().Value.ToString()</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-9">
+            <div class="row">
+                <div class="col-xl-12" id="btnnblock">
+                    <div class="m-portlet" id="m_portlet" style="padding:15px;">
+                        <div class="bottomBlock">
+                            <div class="tabsArea nobg" id="Identifications" style="display:block;">
+                                <ul class="listView nobrd">
+                                    <li>
+                                        <span class="label" id="spnEquipmentId">@Model.Loc.Where(a => a.ResourceId == "spnGlobalEquipmentId").FirstOrDefault().Value.ToString()<small>*</small></span>
+                                        <span class="inputText">
+                                            @Html.TextBoxFor(m => m.EquipModel.ClientLookupId, new { @class = "form-control m-input search", @style = "color:black", @readonly = "readonly", autocomplete = "off" })
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label" id="spnName"> @Model.Loc.Where(a => a.ResourceId == "spnName").FirstOrDefault().Value.ToString()<small>*</small></span>
+                                        <span class="inputText">
+                                            @Html.ValidationMessageFor(m => m.EquipModel.Name, "", new { style = "display:none" })
+                                            @Html.TextBoxFor(m => m.EquipModel.Name, new { @class = "form-control m-input search", @style = "color:black", autocomplete = "off", maxlength = "63" })
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label" id="spnAssetCategory">@Html.LabelFor(m => m.EquipModel.AssetCategory) <small>*</small></span>
+                                        <span class="inputText">
+                                            @Html.ValidationMessageFor(m => m.EquipModel.AssetCategory, "", new { style = "display:none" })
+                                            @Html.DropDownListFor(m => m.EquipModel.AssetCategory, Model.EquipModel.AssetCategoryList, "--Select--", new { @class = "form-control search select2picker", style = "width:100%;" })
+                                        </span>
+                                    </li>
+                                    @if (Model.EquipModel.BusinessType.ToUpper() != BusinessTypeConstants.Facilities)
+                                    {
+                                        <li>
+                                            <span class="label" id="spnLocation">@Model.Loc.Where(a => a.ResourceId == "spnLocation").FirstOrDefault().Value.ToString()</span>
+                                            <span class="inputText">
+                                                @Html.TextBoxFor(m => m.EquipModel.Location, new { @class = "form-control m-input search ", @style = "color:black", autocomplete = "off", maxlength = "63" })
+                                            </span>
+                                        </li>
+                                    }
+
+                                    <li>
+                                        <span class="label">@Model.EquipModel.AssetGroup1Name</span>
+                                        <span class="inputText">
+                                            @Html.DropDownListFor(m => m.EquipModel.AssetGroup1Id, Model.EquipModel.AssetGroup1List, "--Select--", new { @class = "form-control search select2picker", style = "width:100%;" })
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label">@Model.EquipModel.AssetGroup2Name</span>
+                                        <span class="inputText">
+                                            @Html.DropDownListFor(m => m.EquipModel.AssetGroup2Id, Model.EquipModel.AssetGroup2List, "--Select--", new { @class = "form-control search select2picker", style = "width:100%;", disabled = "disabled" })
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label">@Model.EquipModel.AssetGroup3Name</span>
+                                        <span class="inputText">
+                                            @Html.DropDownListFor(m => m.EquipModel.AssetGroup3Id, Model.EquipModel.AssetGroup3List, "--Select--", new { @class = "form-control search select2picker", style = "width:100%;", disabled = "disabled" })
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label" id="spnSerialNo">@Model.Loc.Where(a => a.ResourceId == "spnSerialNo").FirstOrDefault().Value.ToString()</span>
+                                        <span class="inputText">
+                                            @Html.TextBoxFor(m => m.EquipModel.SerialNumber, new { @class = "form-control m-input search", @style = "color:black", autocomplete = "off", maxlength = "63" })
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label" id="spnType">@Model.Loc.Where(a => a.ResourceId == "GlobalType").FirstOrDefault().Value.ToString()<small>*</small></span>
+                                        <span class="inputText">
+                                            @Html.ValidationMessageFor(m => m.EquipModel.Type, "", new { style = "display:none" })
+                                            @Html.DropDownListFor(m => m.EquipModel.Type, Model.LookupTypeList, "--Select--", new { @class = "form-control select2picker", style = "width:100%;" })
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label" id="spnMake">@Model.Loc.Where(a => a.ResourceId == "spnMake").FirstOrDefault().Value.ToString()</span>
+                                        <span class="inputText">
+                                            @Html.TextBoxFor(m => m.EquipModel.Make, new { @class = "form-control m-input search", @style = "color:black", autocomplete = "off", maxlength = "31" })
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label" id="spnModelNo">@Model.Loc.Where(a => a.ResourceId == "spnModelNo").FirstOrDefault().Value.ToString()</span>
+                                        <span class="inputText">
+                                            @Html.TextBoxFor(m => m.EquipModel.ModelNumber, new { @class = "form-control m-input search", @style = "color:black", autocomplete = "off", maxlength = "63" })
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label" id="spnAccount">@Model.Loc.Where(a => a.ResourceId == "spnAccount").FirstOrDefault().Value.ToString()</span>
+                                        <span class="inputText">
+                                            @Html.DropDownListFor(m => m.EquipModel.Account, Model.AccountList, "--Select--", new { @class = "form-control select2picker", style = "width:100%;" })
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label" id="spnParentId">@Model.Loc.Where(a => a.ResourceId == "spnParentId").FirstOrDefault().Value.ToString()</span>
+                                        <span class="inputText">
+                                            @Html.TextBoxFor(m => m.EquipModel.ParentIdClientLookupId, new { @class = "form-control m-input search readonly", @style = "color:black", @readonly = "readonly", autocomplete = "off" })
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label" id="spnAssetNo">@Model.Loc.Where(a => a.ResourceId == "spnAssetNo").FirstOrDefault().Value.ToString()</span>
+                                        <span class="inputText">
+                                            @Html.TextBoxFor(m => m.EquipModel.AssetNumber, new { @class = "form-control m-input search", @style = "color:black", autocomplete = "off", maxlength = "31" })
+                                        </span>
+                                    </li>                                   
+                                    <li>
+                                        <span class="label" id="spnCritical">@Model.Loc.Where(a => a.ResourceId == "spnCritical").FirstOrDefault().Value.ToString()</span>
+                                        <span class="inputText">
+                                            @Html.CheckBoxFor(m => m.EquipModel.CriticalFlag, new { @class = "form-control m-input", @style = "color:black; width: auto; margin-top: 12px;" })
+                                        </span>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="tabsArea nobg" id="Warrantys" style="display:none;">
+                                <ul class="listView nobrd">
+                                    <li>
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnExpires").FirstOrDefault().Value.ToString()</span>
+                                        <span class="inputText">
+                                            @Html.TextBoxFor(m => m.EquipModel.Maint_WarrantyExpire, "{0:MM/dd/yyyy}", new { @class = "form-control search dtpicker" })
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnVendor").FirstOrDefault().Value.ToString()</span>
+                                        <span class="inputText">
+                                            <div class="dropdown dropTableOuter">
+                                                <div class="input-group">
+                                                    @Html.TextBoxFor(m => m.EquipModel.MaintVendorIdClientLookupId, new { @class = "form-control search dropbtn eqpvendid readonly", @readonly = "readonly", autocomplete = "off" })
+                                                    <div class="input-group-btn">
+                                                        <button class="btn btn-white btntxtInputGroup" type="button" id="openvendorgrid">
+                                                            <i id="srcicon" class="fa fa-search"></i>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>                                           
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString()</span>
+                                        <span class="inputText">
+                                            @Html.TextBoxFor(m => m.EquipModel.Maint_WarrantyDesc, new { @class = "form-control search", autocomplete = "off", maxlength = "127" })
+                                        </span>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div style="clear:both;"></div>
+
+                            <div class="idBttns">
+                                <div class="bttn_pagin">
+                                    <div class="bttns2">
+                                        <button type="submit" class="btn btn-blue mobBttn" id="btneditequipment"><i class="fa fa-save faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+                                    </div>
+                                    <div class="bttns"><button type="button" class="btn btn-blue mobBttn" id="eqeditcancel"><i class="fa fa-close faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button></div>
+
+                                    <div style="clear:both;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @Html.Partial("~/Views/Equipment/_EqpVendorPopup.cshtml")
+    @Html.HiddenFor(m => m.EquipModel.EquipmentID)
+    @Html.HiddenFor(m => m.EquipModel.PlantLocation, new { id = "PlantLocation" })
+    @Html.HiddenFor(m => m.HiddenType)
+    @Html.HiddenFor(m => m.EquipModel.HiddenInactiveFlag)
+    @Html.HiddenFor(m => m.EquipModel.InactiveFlag)
+}
+
+<div id="equipTreeModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title" id="hdrPlantLocation">@Model.Loc.Where(a => a.ResourceId == "hdrPlantLocation").FirstOrDefault().Value.ToString()</h4>
+            </div>
+            <div class="modal-body">
+                <div class="cntTree"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<style type="text/css">
+    .ui-tooltip { z-index: 98 !important; }
+    .select2-container--default .select2-selection--single .select2-selection__rendered { padding-right: 30px; }
+</style>

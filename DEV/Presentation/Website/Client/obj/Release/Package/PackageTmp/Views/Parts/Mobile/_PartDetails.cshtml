@@ -1,0 +1,402 @@
+﻿@model Client.Models.Parts.PartsVM
+<link href="~/Scripts/Metronic/assets/demo/default/base/style_newCustom.css" rel="stylesheet" />
+<link href="~/Content/Dashboard/MaintenanceCompletionWorkbench.css" rel="stylesheet" />
+@Styles.Render("~/Content/somaxcommentsection")
+<link href="~/Content/Wizard/Wizard.css" rel="stylesheet" />
+
+<!-- mobiscroll form-->
+<link rel="stylesheet" href="~/Scripts/mobile/css/mobiscroll.jquery.min.css">
+<!-- mobiscroll form-->
+<link href="~/Scripts/mobile/css/mobile-style.css" rel="stylesheet" />
+<link href="~/Scripts/mobile/css/mobile-dashboard-style.css" rel="stylesheet" />
+
+<script src="~/Scripts/treeTable.js"></script>
+<script type="text/javascript">
+    com_github_culmat_jsTreeTable.register(this);
+
+
+
+
+</script>
+
+
+
+<div class="m-subheader fixedDiv1">
+    <div class="new-m-subheader">
+        <div class="filterDescription">
+            <a href="javascript:void(0)" id="linkToSearch"><span id="spnlinkToSearch"></span></a>
+            @if (Model.IsAddPartFromEquipment)
+            {
+                <b>-</b>
+                <a href="javascript:void(0)" id="linkToEquipment">
+                    <span id="spnlinkToEquipment"></span>
+                    @Model.Equipment_ClientLookupId
+                </a>
+            }
+            - @Model.PartModel.ClientLookupId
+        </div>
+        <!--#region ActionBttnArea-->
+        <div class="ActionBttnArea">
+            @if (Model.security.Parts.Edit)
+            {
+                <div class="actionDiv pull-left" id="ad1" style="margin-right:0px !important; ">
+                    <div class="btn-group bootstrap-select m-datatable__pager-size dropup show selectDrop actionNewDrop" style="margin-right:0px;">
+                        <div class="btn-group bootstrap-select m-datatable__pager-size" style="width: 100%;">
+                            <button type="button" class="btn dropdown-toggle bs-placeholder btn-default" data-toggle="dropdown" role="button" title=""><span class="filter-option pull-left">@Model.Loc.Where(a => a.ResourceId == "globalAction").FirstOrDefault().Value.ToString()</span>&nbsp;<span class="bs-caret"><span class="caret"></span></span></button>
+                            <div class="dropdown-menu open" role="combobox">
+                                <ul class="dropdown-menu inner" role="listbox" aria-expanded="false">
+                                    <li id="printDetailsPartQrcode"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "globalPrint").FirstOrDefault().Value.ToString()</a></li>
+                                    @if (Model.security.Parts.ConfigureAutoPurchasing)
+                                    {
+                                        <li data-toggle="modal" onclick="ShowConfigureAutoPurchasing()"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnAutoPurchasingConfiguration").FirstOrDefault().Value.ToString()</a></li>
+                                    }
+                                    <li id="CreatedLastUpdatedModalPartid"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnCreateLastUpdate").FirstOrDefault().Value.ToString()</a></li>
+                                    @if ((Model.security.Parts.ChangeClientLookupId && !Model._userdata.Site.UsePartMaster && !Model._userdata.Site.NoPartIdChange)
+|| (Model.security.Parts.ChangeClientLookupId && Model._userdata.DatabaseKey.Personnel.InitialLevel == "ChangePartId"))
+
+                                    {
+                                        <li id="liChangePartId"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnChangePartId").FirstOrDefault().Value.ToString()</a></li>
+                                    }
+                                    @if (Model.security.Parts.Delete && Model.PartModel.InactiveFlag == true)
+                                    {
+                                        <li id="actinctivatepart"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnGlobalActivate").FirstOrDefault().Value.ToString()</a></li>
+                                    }
+                                    @if (Model.security.Parts.Delete && Model.PartModel.InactiveFlag == false)
+                                    {
+                                        <li id="actinctivatepart"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnGlobalInactivate").FirstOrDefault().Value.ToString()</a></li>
+                                    }
+                                    @if (Model.security.Parts.Physical)
+                                    {
+                                        <li onclick="ShowAdjustHandQty()"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "AdjustOnHandQty").FirstOrDefault().Value.ToString()</a></li>
+                                    }
+                                    @if (Model.security.Parts.Checkout && Model.PartModel.InactiveFlag == false)
+                                    {
+                                        <li data-toggle="modal" onclick="ShowPartCheckout()"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnPartCheckout").FirstOrDefault().Value.ToString()</a></li>
+                                    }
+                                    @if (Model.security.Parts_Photos.Create)
+                                    {
+                                        <li id="liAddimage">
+                                            <div class="bttns" style="margin-left:15px">
+                                                <label for="files" class=""><i class=""></i>@Model.Loc.Where(a => a.ResourceId == "spnAddPhotos").FirstOrDefault().Value.ToString()</label>
+                                                <input id="files" accept=".jpeg,.jpg,.png,.JPEG,.JPG,.PNG" style="display:none;" type="file" value="">
+                                            </div>
+                                        </li>
+                                    }
+                                </ul>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="actionDiv pull-left" id="ad1" style="margin-right:0;">
+                    <div class="btn-group bootstrap-select m-datatable__pager-size dropup show selectDrop actionNewDrop">
+                        <div class="btn-group bootstrap-select m-datatable__pager-size" style="width:100%;">
+                            <button type="button" class="btn dropdown-toggle bs-placeholder btn-default" data-toggle="dropdown" role="button" title=""><span class="filter-option pull-left">@Model.Loc.Where(a => a.ResourceId == "globalAction").FirstOrDefault().Value.ToString()</span>&nbsp;<span class="bs-caret"><span class="caret"></span></span></button>
+                            <div class="dropdown-menu open" role="combobox">
+                                <ul class="dropdown-menu inner" role="listbox" aria-expanded="false">
+                                    <li id="printDetailsPartQrcode"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "globalPrint").FirstOrDefault().Value.ToString()</a></li>
+                                    @if (Model.security.Parts.ConfigureAutoPurchasing)
+                                    {
+                                        <li data-toggle="modal" onclick="ShowConfigureAutoPurchasing()"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnAutoPurchasingConfiguration").FirstOrDefault().Value.ToString()</a></li>
+                                    }
+                                    <li data-toggle="modal" data-target="#CreatedLastUpdatedModalPart"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnCreateLastUpdate").FirstOrDefault().Value.ToString()</a></li>
+                                    @if ((Model.security.Parts.ChangeClientLookupId && !Model._userdata.Site.UsePartMaster && !Model._userdata.Site.NoPartIdChange)
+|| (Model.security.Parts.ChangeClientLookupId && Model._userdata.DatabaseKey.Personnel.InitialLevel == "ChangePartId"))
+
+                                    {
+                                        <li id="liChangePartId"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnChangePartId").FirstOrDefault().Value.ToString()</a></li>
+                                    }
+                                    @if (Model.security.Parts.Delete && Model.PartModel.InactiveFlag == true)
+                                    {
+                                        <li id="actinctivatepart"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnGlobalActivate").FirstOrDefault().Value.ToString()</a></li>
+                                    }
+                                    @if (Model.security.Parts.Delete && Model.PartModel.InactiveFlag == false)
+                                    {
+                                        <li id="actinctivatepart"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnGlobalInactivate").FirstOrDefault().Value.ToString()</a></li>
+                                    }
+                                    @if (Model.security.Parts.Physical)
+                                    {
+                                        <li data-toggle="modal" onclick="ShowAdjustHandQty()"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "AdjustOnHandQty").FirstOrDefault().Value.ToString()</a></li>
+                                    }
+                                    @if (Model.security.Parts.Checkout && Model.PartModel.InactiveFlag == false)
+                                    {
+                                        <li data-toggle="modal" onclick="ShowPartCheckout()"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnPartCheckout").FirstOrDefault().Value.ToString()</a></li>
+                                    }
+                                    @if (Model.security.Parts_Photos.Create)
+                                    {
+                                        <li id="liAddimage">
+                                            <div class="bttns" style="margin-left:15px">
+                                                <label for="files" class=""><i class=""></i>@Model.Loc.Where(a => a.ResourceId == "spnAddPhotos").FirstOrDefault().Value.ToString()</label>
+                                                <input id="files" accept=".jpeg,.jpg,.png,.JPEG,.JPG,.PNG" style="visibility:hidden;" type="file" value="">
+                                            </div>
+                                        </li>
+                                    }
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+
+        <div style="clear:both;"></div>
+    </div>
+    <!--#endregion-->
+
+
+
+</div>
+
+
+
+<div class="pushDiv1"></div>
+
+<div class="fixedDiv2 row">
+    @Html.Partial("Mobile/_PartSummary", Model)
+</div>
+
+<div class="row" style="padding-top:250px;">
+    <div class="col-xl-12">
+        <div class="m-portlet top-tab" id="m_portlet" style="padding:15px;">
+            <ul class="no-border-bottom tab-nav" id="tabscroll">
+                <li data-selected="true">  <button data-tab="Overview" class="tablinks wo-det-tab active">@Model.Loc.Where(a => a.ResourceId == "spnDetails").FirstOrDefault().Value.ToString()</button> </li>
+                @if (Model.security.Parts_Photos.Access)
+                {
+                    <li>
+                        <button data-tab="Photos" class="tablinks wo-det-tab">@Model.Loc.Where(a => a.ResourceId == "spnPhotos").FirstOrDefault().Value.ToString()</button>
+                    </li>
+                }
+                @*V2-918*@
+                <li>
+                    <button data-tab="Attachments" class="tablinks wo-det-tab">@Model.Loc.Where(a => a.ResourceId == "spnAttachments").FirstOrDefault().Value.ToString()</button>
+                    @if (Model.attachmentCount > 0)
+                    {
+                        <span class="m-badge m-badge--danger count-badge" id="partAttachmentCount">@Model.attachmentCount</span>
+                    }
+                </li>
+                <li>
+                    <button data-tab="Vendors" class="tablinks wo-det-tab">@Model.Loc.Where(a => a.ResourceId == "spnVendor").FirstOrDefault().Value.ToString()</button>
+                </li>
+                <li>
+                    <button data-tab="Equipments" class="tablinks wo-det-tab">@Model.Loc.Where(a => a.ResourceId == "spnEquipments").FirstOrDefault().Value.ToString()</button>
+                </li>
+                <li>
+                    <button data-tab="History" class="tablinks wo-det-tab">@Model.Loc.Where(a => a.ResourceId == "spnHistory").FirstOrDefault().Value.ToString()</button>
+                </li>
+                <li>
+                    <button data-tab="Receipt" class="tablinks wo-det-tab">@Model.Loc.Where(a => a.ResourceId == "spnReceipts").FirstOrDefault().Value.ToString()</button>
+                </li>
+                @if ((Model.security.Parts.SiteReview && Model.PackageLevel.ToUpper() == PackageLevelConstant.Enterprise && Model.UsePartMaster == true && Model.partMasterModel.PartMasterId > 0))
+                {
+                    <li>
+                        <button data-tab="Review" class="tablinks wo-det-tab">@Model.Loc.Where(a => a.ResourceId == "spnReviewSites").FirstOrDefault().Value.ToString()</button>
+                    </li>
+                }
+                @*V2-918*@
+
+                <li>
+                    <button data-tab="Comments" class="tablinks wo-det-tab">@Model.Loc.Where(a => a.ResourceId == "spnLogComment").FirstOrDefault().Value.ToString()</button>
+                </li>
+
+            </ul>
+
+
+        </div>
+
+        <div class="md-apps-tab md-apps-tab-sel tabcontent" id="Overview">
+            @Html.Partial("Mobile/_PartViewDynamic", Model)
+        </div>
+        @if (Model.security.Parts_Photos.Access)
+        {
+            <div class="md-apps-tab tabcontent" id="Photos"></div>
+        }
+        @*V2-918*@
+        <div class="md-apps-tab tabcontent" id="Attachments"></div>
+        <div class="md-apps-tab tabcontent" id="Vendors"></div>
+        <div class="md-apps-tab tabcontent" id="Equipments"></div>
+        <div class="md-apps-tab tabcontent" id="History"></div>
+        <div class="md-apps-tab tabcontent" id="Receipt"></div>
+        <div class="md-apps-tab tabcontent" id="Review"></div>
+        <div class="slide-modal" id="AddAttachmentModal_Mobile"></div>
+        <div class="slide-modal" id="AddVendorModal_Mobile"></div>
+        <div class="slide-modal" id="AddEquipmentModal_Mobile"></div>
+        @*V2-918*@
+        <div class="md-apps-tab tabcontent" id="Comments"></div>
+    </div>
+
+
+</div>
+@if (Model.security.Parts.Edit)
+{
+    <div id="EditPartDiv"></div>
+}
+<div id="printPartDetailsqrcodemodalcontainer"></div>
+@if ((Model.security.Parts.Edit && !Model._userdata.Site.UsePartMaster && !Model._userdata.Site.NoPartIdChange)
+|| (Model.security.Parts.Edit && Model._userdata.DatabaseKey.Personnel.InitialLevel == "ChangePartId"))
+{
+    @Html.Partial("Mobile/_ChangePartIdModal")
+}
+@Html.Partial("Mobile/_CreatedLastUpdatedModalPart")
+@Html.Partial("Mobile/_ChangeHandsOnQtyModal", Model)
+@Html.Partial("Mobile/_PartCheckoutModal", Model)
+@Html.Partial("Mobile/_PartSummaryDescription")
+@Html.HiddenFor(m => m.PartModel.PartId)
+@Html.HiddenFor(m => m.PartModel.ClientLookupId)
+@Html.HiddenFor(m => m.PartModel.Description)
+@Html.HiddenFor(m => m.PartModel.PlaceArea)
+@Html.HiddenFor(m => m.PartModel.Section)
+@Html.HiddenFor(m => m.PartModel.Row)
+@Html.HiddenFor(m => m.PartModel.Shelf)
+@Html.HiddenFor(m => m.PartModel.Bin)
+@Html.HiddenFor(m => m.PartModel.Consignment)
+@Html.HiddenFor(m => m.PartModel.RepairablePart)
+@Html.HiddenFor(m => m.partMasterModel.PartMasterId)
+@Html.HiddenFor(m => m.IsPartDetailsFromEquipment)
+@Html.HiddenFor(m => m.PartModel.InactiveFlag, new { id = "parthiddeninactiveflag" })
+@Html.HiddenFor(m => m.PartModel.UPCCode)
+@Html.HiddenFor(m => m.PartModel.partStatusForRedirection)
+@Html.HiddenFor(m => m.PartModel.IssueUnit)
+@Html.HiddenFor(m => m.PartModel.Minimum)
+@Html.HiddenFor(m => m.PartModel.Maximum)
+@Html.HiddenFor(m => m.PartModel.Manufacturer)
+@Html.HiddenFor(m => m.PartModel.ManufacturerID)@*V2-998*@
+@Html.HiddenFor(m => m.PartModel.ClientOnPremise)
+@Html.HiddenFor(m => m.EquipmentId)@*V2-1007*@
+@if (Model.security.Parts.ConfigureAutoPurchasing)
+{
+    @Html.Partial("Mobile/_PartsConfigureAutoPurchasing", Model)
+}
+<!-- Modal -->
+
+@if (Model.security.Parts_Photos.Access)
+{
+    <div id="OpenImgActionPopup" class="slide-modal">
+        @Html.Hidden("AttachmentId", "", new { @id = "imgAttachmentId" })
+        @Html.Hidden("AttachmentURL", "", new { @id = "imgAttachmentURL" })
+        <div class="slide-modal-head">
+            <a class="slide-back-btn actionpopupmobileback"> <i class="fa fa-angle-left"></i> Back</a>
+            <div class="slide-back-title">
+                @Model.Loc.Where(a => a.ResourceId == "globalAction").FirstOrDefault().Value.ToString()
+            </div>
+        </div>
+        <div class="slide-modal-body">
+            <div mbsc-page class="demo-responsive">
+                <div style="height:100%;margin-top:10px;">
+                    <div mbsc-form class="mbsc-form-grid">
+                        <div class="mbsc-grid">
+                            <div class="mbsc-row">
+                                @if (Model.security.Parts_Photos.Access)
+                                {
+                                    <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                        <div class="design-box">
+                                            <div class="mbsc-button-group-block">
+                                                <button mbsc-button data-color="success" type="button" class="btn btn-blue mobBttn mbsc-btn selectidOpen">@Model.Loc.Where(a => a.ResourceId == "GlobalOpen").FirstOrDefault().Value.ToString()</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                                @if (Model.security.Parts_Photos.Edit)
+                                {
+                                    <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                        <div class="design-box">
+                                            <div class="mbsc-button-group-block">
+                                                <button mbsc-button data-color="success" type="button" class="btn btn-blue btnRqst mobBttn mbsc-btn" id="selectidSetAsDefault">@Model.Loc.Where(a => a.ResourceId == "spnSetDefault").FirstOrDefault().Value.ToString()</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                                @if (Model.security.Parts_Photos.Delete)
+                                {
+                                    <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                        <div class="design-box">
+                                            <div class="mbsc-button-group-block">
+                                                <button mbsc-button data-color="success" type="button" class="btn btn-blue btnRqst mobBttn mbsc-btn" id="selectidDelete">@Model.Loc.Where(a => a.ResourceId == "globalDelete").FirstOrDefault().Value.ToString()</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="slide-modal-footer"></div>
+    </div>
+
+    <div id="ShowImgPopup" class="slide-modal">
+        <div class="slide-modal-head">
+            <a class="slide-back-btn openimgback"> <i class="fa fa-angle-left"></i> Back</a>
+            <div class="slide-back-title">
+                @Model.Loc.Where(a => a.ResourceId == "spnImagePreview").FirstOrDefault().Value.ToString()
+            </div>
+        </div>
+        <div class="slide-modal-body">
+            <div mbsc-page class="demo-responsive">
+                <div style="height:100%;margin-top:10px;">
+                    <div mbsc-form class="mbsc-form-grid">
+                        <div class="mbsc-grid">
+                            <div class="mbsc-row">
+                                <div class="mbsc-col-12 mbsc-col-md-12 mbsc-col-lg-12">
+                                    <img id="SelectedImg" src="" style="width: 100%; padding:1rem" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="slide-modal-footer"></div>
+    </div>
+}
+
+<style type="text/css">
+    .cam-container {
+        margin: 18px auto;
+    }
+    /*.vd-webcam-container {
+        height: 100vh;
+        width: 100vw;
+        background-color: black;
+    }*/
+    .vd-webcam {
+        display: block;
+        position: relative;
+        width: 100%;
+        height: auto;
+        padding: 1rem;
+        pointer-events: none;
+        margin: 0 auto;
+    }
+
+    @@media (max-width:900px) {
+        .gridStatus span.newStatus {
+            bottom: -10px !important;
+        }
+    }
+
+    @@media only screen and (min-width: 360px) and (max-width: 479px) {
+        .ActionBttnArea {
+            width: 140px !important;
+        }
+
+        .gridList button.complete, .updateArea button.complete {
+            margin: 5px 0px !important;
+        }
+    }
+
+    @@media (max-width:767px) {
+        #commentstems .ckeditorarea .mobBttn.btneditcomments {
+            margin-bottom: 10px !important;
+        }
+    }
+
+    @@media (max-width: 1023px) {
+        .row {
+            padding-top: 0px !important;
+        }
+    }
+</style>

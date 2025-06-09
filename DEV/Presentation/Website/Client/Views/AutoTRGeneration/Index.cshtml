@@ -1,0 +1,19 @@
+﻿@model Client.Models.AutoTRGenerationVM
+@{
+    ViewBag.Title = "Somax | Auto TR Generation";
+}
+@Styles.Render("~/Content/dashboardStyle")
+@Styles.Render("~/Content/datatable")
+<link href="~/Content/sidebar_custom.css" rel="stylesheet" />
+<link href="~/Scripts/Metronic/assets/demo/default/base/GlobalSearchGrid.css" rel="stylesheet" />
+<link href="~/Scripts/Metronic/assets/demo/default/base/style_newCustom.css" rel="stylesheet" />
+@section scripts {
+    @Scripts.Render("~/bundles/datatable")
+    <script src="~/Scripts/Pages/AutoTRGeneration/AutoTRGeneration.js"></script>
+}
+<div id="AutoTRGenerationmaincontainer">
+    @Html.Partial("~/Views/AutoTRGeneration/_AutoTRGeneration.cshtml", Model)
+    @Html.Partial("~/Views/AutoTRGeneration/_TRStoreroomPopup.cshtml", Model)
+    @Html.Partial("~/Views/AutoTRGeneration/_AutoTRGenerationSearch.cshtml", Model)
+</div>
+

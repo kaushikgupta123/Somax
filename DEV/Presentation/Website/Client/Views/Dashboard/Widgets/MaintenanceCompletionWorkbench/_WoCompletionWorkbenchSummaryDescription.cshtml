@@ -1,0 +1,16 @@
+﻿@model Client.Models.Dashboard.DashboardVM
+
+<div id="wocdetaildesmodal" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-info">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">@Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString()</h4>
+            </div>
+
+            <div class="modal-body" style="text-align:center;">
+                <span id="wocdetaildesmodaltext"></span>
+            </div>
+        </div>
+    </div>
+</div>

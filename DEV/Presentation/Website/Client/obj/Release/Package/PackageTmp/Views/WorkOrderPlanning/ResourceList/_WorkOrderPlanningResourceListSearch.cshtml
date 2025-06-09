@@ -1,0 +1,135 @@
+﻿@model Client.Models.WorkOrderPlanning.WorkOrderPlanningVM
+<link href="~/Scripts/Metronic/assets/demo/default/base/style_newCustom.css" rel="stylesheet" />
+<div class="row">
+    <div class="col-xl-12">
+        <div class="m-portlet" id="m_portlet" style="padding:15px;">            
+            <div class="actionBar" style="display:block" id="lsGridAction">
+                <div class="pull-left" style="position:relative;">                  
+                    <div class="assignedBlockRL" style="display:none">
+                        <label>@Model.Loc.Where(a => a.ResourceId == "spnGlobalAssigned").FirstOrDefault().Value.ToString() : </label>
+                        @{
+                            List<SelectListItem> selectListItems = Model.PersonnelList.ToList();
+                            selectListItems.Insert(0, (new SelectListItem { Text = "Select All", Value = "" }));
+                        }
+
+                        @Html.DropDownList("PersonnelIds", selectListItems, new { @class = "form-control search", style = "width:100%;", id = "ddlUserRL", multiple = "multiple" })
+                    </div>
+
+                    <button type="button" class="btn btn-white navbar-btn" style="display:none;" id="sidebarRLCollapse" title="Advance Search"><i class="fa fa-filter" style="font-size: 1.3rem;"></i></button>
+
+                    <button type="button" class="btn btn-white navbar-btn" style="display:none;" title="Search" id="SrchBttnNewRL"><i class="fa fa-search" style="font-size: 1.1rem;position: relative;top: -2px;left: -2px;"></i>  @Model.Loc.Where(a => a.ResourceId == "globalSearch").FirstOrDefault().Value.ToString()</button>
+                    <div class="searchBttnDrop desktop" id="searchBttnNewDropRL" style="display:none;">
+                        <div class="form-group" style="position:relative;">
+                            <i class="fa fa-search txtSearchClickRL" style="font-size: 1.1rem;position: absolute;top: 9px;left: 15px;"></i>
+                            <a href="javascript:void(0)" id="cancelText"><i class="fa fa-close" style="font-size: 1.1rem;position: absolute;top: 9px;right: 15px;"></i></a>
+                            <input type="text" id="txtColumnRLSearch" class="form-control search" placeholder="Search..." style="padding: 0.65rem 2.75rem;" autocomplete="off">
+                        </div>
+                        <div class="searchTips">
+                            <div class="titleText">@Model.Loc.Where(a => a.ResourceId == "spnSearchTips").FirstOrDefault().Value.ToString()</div>
+                            <div class="infoText">Search for Resource List by Work Order ID, Asset ID, and Asset Name.</div>
+                            <div style="clear:both;"></div>
+                        </div>
+
+                        <div class="searchInfo">
+                            <span class="recent">
+                                @Model.Loc.Where(a => a.ResourceId == "GlobalRecentlySearched").FirstOrDefault().Value.ToString()
+                            </span>
+                            <div class="searchList" id="wosearchList">
+                                <ul id="UlSearchListRL"></ul>
+                            </div>
+                            <span class="clear">
+                                <a href="javascript:void(0)" id="clearText">
+                                    @Model.Loc.Where(a => a.ResourceId == "globalClear").FirstOrDefault().Value.ToString()
+                                </a>
+                            </span>
+                            <div style="clear:both;"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pull-right">
+                    <div class="groupBlock" style="display:none">
+                        <label>@Model.Loc.Where(a => a.ResourceId == "spnGlobalGroup").FirstOrDefault().Value.ToString() : </label>
+                        <select id="GroupingLabor" style="width:100%;" class="form-control search select2picker">
+                            @foreach (var item in Model.ScheduledGroupingList)
+                            {
+                                <option value="@item.Value">@item.Text</option>
+                            }
+                        </select>
+                    </div>
+                    <button type="button" class="btn btn-white availableWorkRL" style="display:none" id="btnAvailableWorkRL"><i class="fa fa-check"></i> @Model.Loc.Where(a => a.ResourceId == "spnAvailableWork").FirstOrDefault().Value.ToString()</button>
+                    <button type="button" class="btn btn-white import-export" style="display:none;margin-right:10px !important" id="btnWoExport" onclick="funcShowExportRLbtn()">@Model.Loc.Where(a => a.ResourceId == "spnExport").FirstOrDefault().Value.ToString()</button>
+                    <div style="clear:both;"></div>
+                </div>
+
+                <div style="clear:both;"></div>
+                <div id="advsearchfilteritemsRL"></div>
+                <div style="clear:both;"></div>
+            </div>
+            <div class="updateArea" style="display:none;">
+                <div class="pull-left">
+                    <ul class="filter_apply2">
+                        <li style="border:0;"><span class="itemcount">0</span> @Model.Loc.Where(a => a.ResourceId == "globalItemsSelected").FirstOrDefault().Value.ToString()</li>
+                    </ul>
+                </div>
+                <div class="pull-right">
+                    <button type="button" class="btn btn-blue" title="Remove" id="btnRemove" style="float:right;">@Model.Loc.Where(a => a.ResourceId == "globalRemove").FirstOrDefault().Value.ToString()</button>
+                    <button type="button" class="btn btn-blue" title="Reschedule" id="btnReschedule" style="float:right;">@Model.Loc.Where(a => a.ResourceId == "spnGlobalReschedule").FirstOrDefault().Value.ToString()</button>
+                </div>
+                <div style="clear:both;"></div>
+            </div>
+
+            <div style="clear:both;"></div>
+
+            <div id="ResourceListid" class="tabcontentRL" style="display:none;">
+                <div class="table-responsive">
+                    <table id="ResourceListSearchTable" class="eqpDtlTbl row-border custom-sort tblMain" style="width:100%;">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th data-col="1" data-th-index="0" data-th-prop="PersonnelName">@Model.Loc.Where(a => a.ResourceId == "spnPersonnel").FirstOrDefault().Value.ToString()</th>
+                                <th data-col="2" data-th-index="1" data-th-prop="WorkOrderClientLookupId">@Model.Loc.Where(a => a.ResourceId == "spnGlobalWorkOrderID").FirstOrDefault().Value.ToString()</th>
+                                <th data-col="3" data-th-index="2" data-th-prop="Description">@Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString()</th>
+                                <th data-col="4" data-th-index="3" data-th-prop="Type">@Model.Loc.Where(a => a.ResourceId == "GlobalType").FirstOrDefault().Value.ToString()</th>
+                                <th data-col="5" data-th-index="4" style="padding-left: 20px;" data-th-prop="ScheduledStartDateString">@Model.Loc.Where(a => a.ResourceId == "spnGlobalScheduled").FirstOrDefault().Value.ToString()</th>
+                                <th data-col="6" data-th-index="5" style="text-align:center !important" data-th-prop="ScheduledHours">@Model.Loc.Where(a => a.ResourceId == "spnHours").FirstOrDefault().Value.ToString()</th>
+                                <th data-col="7" data-th-index="6" data-th-prop="RequiredDateString">@Model.Loc.Where(a => a.ResourceId == "spnRequired").FirstOrDefault().Value.ToString()</th>
+                                <th data-col="8" data-th-index="7" data-th-prop="EquipmentClientLookupId">@Model.Loc.Where(a => a.ResourceId == "spnAssetID").FirstOrDefault().Value.ToString()</th>
+                                <th data-col="9" data-th-index="8" data-th-prop="ChargeTo_Name">@Model.Loc.Where(a => a.ResourceId == "spnGlobalAssetName").FirstOrDefault().Value.ToString()</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+<div id="AvailableWorkRL"></div>
+
+@*@Html.Partial("_Export")*@
+@Html.Partial("ResourceList/_WorkOrderPlanningResourceListAdvSearch")
+@Html.Partial("ResourceList/_RescheduleModal")
+
+@if (Model.resourceListSearchModel.LockPlan && Model.resourceListSearchModel.PlanStatus == "Locked")
+{
+    <div id="popupExport" class="AvailableClass">
+        <button type="button" class="btn btn-blue" id="liPdf">PDF</button>
+        <button type="button" class="btn btn-blue" id="liCsv">CSV</button>
+        <button type="button" class="btn btn-blue" id="liExcel">Excel</button>
+        <button type="button" class="btn btn-blue" id="liPrint">Print</button>
+    </div>
+    <div id="mask" onclick="funcCloseExportbtn()"></div>
+}
+else
+{
+    <div id="popupExport"  class="NotAvailableClass">
+    <button type="button" class="btn btn-blue" id="liPdf">PDF</button>
+    <button type="button" class="btn btn-blue" id="liCsv">CSV</button>
+    <button type="button" class="btn btn-blue" id="liExcel">Excel</button>
+    <button type="button" class="btn btn-blue" id="liPrint">Print</button>
+</div>
+<div id="mask" onclick="funcCloseExportbtn()"></div> 
+}
+

@@ -1,0 +1,29 @@
+﻿@model Client.Models.Approval.ApprovalVM
+<div class="col-xl-12"><h5><b>@Model.Loc.Where(a => a.ResourceId == "spnWorkRequest").FirstOrDefault().Value.ToString() @Model.Loc.Where(a => a.ResourceId == "spnDetails").FirstOrDefault().Value.ToString() - <span id="txtWRclientlookup"></span></b></h5></div>
+<div class="col-xl-8">
+    <div class="m-portlet" id="m_portlet" style="padding:10px;">
+        <div>
+            <ul class="listView clsoverview">
+                @Html.Partial("~/Views/Approval/WorkRequest/_WorkRequestView.cshtml", Model)
+            </ul>
+        </div>
+    </div>
+</div>
+<div class="col-xl-4">
+    <div id="tskBttns">
+        <div class="bttns">
+            <button type="button" class="btn btn-blue" style="margin-right:10px" id="btnworkrequestApprove"><i class="fa fa-check faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalApprove").FirstOrDefault().Value.ToString()</button>
+        </div>
+    </div>
+    <div class="bttns">
+        <button type="button" class="btn btn-blue" style="margin-right:10px" id="btnworkrequestDeny"><i class="fa fa-close faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalDeny").FirstOrDefault().Value.ToString()</button>
+    </div>
+</div>
+
+@Html.Hidden("WorkOrderId", "", new { @id = "hdnWorkOrderId" })
+@Html.Hidden("ClientLookupId", "", new { @id = "hdnClientLookupId" })
+@Html.Hidden("ApprovalGroupId", "", new { @id = "hdnApprovalGroupId" })
+<div id="MultiLevelApproverListModalpopup" class="modal fade" role="dialog">
+    <div class="modal-dialog" id="MultiLevelApproverListPopUp">
+    </div>
+</div>

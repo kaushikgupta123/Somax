@@ -1,0 +1,86 @@
+﻿@model Client.Models.Configuration.SiteSetUp.SiteSetUpVM
+<div class="m-subheader">
+    <div class="new-m-subheader">
+        <div class="PageTitle">
+            <div class="align-items-center separator">
+                <h3 class="m-subheader__title ">
+                    @Model.Loc.Where(a => a.ResourceId == "spnConfiguration").FirstOrDefault().Value.ToString()
+                </h3>
+            </div>
+        </div>
+        <div class="NewBreadcrumbArea">
+            <div class="newBreadcrumb">
+                <ul>
+                    <li><a href="/Configuration/Dashboard">&nbsp;</a></li>
+                    <li><a href="/SiteSetUp/index?page=Site">@Model.Loc.Where(a => a.ResourceId == "spnSiteSetup").FirstOrDefault().Value.ToString()</a></li>
+                    @if (Model.departmentModel.DepartmentId == 0)
+                    {
+                        <li class="active">@Model.Loc.Where(a => a.ResourceId == "spnAddDepartment").FirstOrDefault().Value.ToString()</li>
+                    }
+                    else
+                    {
+                        <li class="active">@Model.Loc.Where(a => a.ResourceId == "spnEditDepartment").FirstOrDefault().Value.ToString()</li>
+                    }
+                </ul>
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+        <div style="clear:both;"></div>
+    </div>
+</div>
+@Html.Partial("_ErrorDiv")
+@using (Ajax.BeginForm("AddEditDepartment", "SiteSetup", new AjaxOptions { HttpMethod = "Post", OnSuccess = "DepartmentAddEditOnSuccess", OnBegin = "AjaxBeginFormBegin", OnComplete = "AjaxBeginFormComplete", OnFailure = "AjaxBeginFormFaillure" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="row">
+        <div class="col-xl-12">
+            <div class="m-portlet newPort" id="m_portlet" style="padding:15px;">
+                <div class="bottomBlock">
+                    <div class="tabsArea nobg">
+                        <ul class="listView nobrd">
+                            <li>
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnDepartmentID").FirstOrDefault().Value.ToString(): <small>*</small></span>
+                                <span class="inputText">
+                                    @if (Model.departmentModel.DepartmentId != 0)
+                                    {
+                                        @Html.TextBoxFor(m => m.departmentModel.ClientLookupId, new { @class = "form-control search readonly", @readonly = "readonly" })
+                                    }
+                                    else
+                                    {
+                                        @Html.ValidationMessageFor(m => m.departmentModel.ClientLookupId, "", new { style = "display:none" })
+                                        @Html.TextBoxFor(m => m.departmentModel.ClientLookupId, new { @class = "form-control search", autocomplete = "off", maxlength = "31" })
+                                    }
+
+                                </span>
+                            </li>
+                            <li style="height:auto;">
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString(): <small>*</small></span>
+                                <span class="inputText" style="height:auto;">    
+                            @Html.ValidationMessageFor(m => m.departmentModel.Description, "", new { style = "display:none" })
+                                    @Html.TextAreaFor(m => m.departmentModel.Description, new { @class = "form-control search", @rows = "2", maxlength = "63" })
+                                </span>
+                                <div style="clear:both;"></div>
+                            </li>
+                            <li>
+                                <span class="label"><label for="userModels_IsActive">@Model.Loc.Where(a => a.ResourceId == "globalInActive").FirstOrDefault().Value.ToString()</label> : </span>
+                                <span class="inputText">
+                                    @Html.DropDownListFor(m => m.departmentModel.InactiveFlag, Model.departmentModel.InactiveFlagList, new { @class = "form-control search select2picker", style = "width:100%;" })
+                                </span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div style="clear:both;"></div>
+                    <div class="bttn_pagin">
+                        <div class="bttns2">
+                            <button type="submit" class="btn btn-blue mobBttn"><i class="fa fa-save faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+                        </div>
+                        <div class="bttns"><button type="button" class="btn btn-blue mobBttn" id="btncancel"><i class="fa fa-close faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button></div>
+                        <div style="clear:both;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @Html.HiddenFor(m => m.departmentModel.DepartmentId)
+    @Html.HiddenFor(m => m.departmentModel.UpdateIndex)
+}

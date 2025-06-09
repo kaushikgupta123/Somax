@@ -1,0 +1,99 @@
+﻿@model Client.Models.Invoice.InvoiceVM
+<div class="m-subheader fixedDiv1">
+    <div class="new-m-subheader">
+        <div class="PageTitle">
+            <div class="align-items-center separator">
+                <h3 class="m-subheader__title ">
+                    @Model.Loc.Where(a => a.ResourceId == "spnIdInvoiceMatching").FirstOrDefault().Value.ToString()
+                </h3>
+            </div>
+        </div>
+
+        <div class="NewBreadcrumbArea">
+            <div class="newBreadcrumb">
+                <ul>
+                    <li><a href="/Dashboard/Dashboard">&nbsp;</a></li>
+                    <li><a href="/Invoice/Index?page=Procurement_Invoice_Matching">@Model.Loc.Where(a => a.ResourceId == "spnIdInvoiceMatchSearch").FirstOrDefault().Value.ToString() </a></li>
+                    <li><a href="javascript:void(0)" id="BackToDetails" data-val="@Model.InvoiceMatchItemModel.InvoiceMatchHeaderId">@Model.InvoiceMatchHeaderModel.ClientLookupId</a></li>
+                    <li class="active">@Model.Loc.Where(a => a.ResourceId == "spnIdItemEdit").FirstOrDefault().Value.ToString()</li>
+                </ul>
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+        <div style="clear:both;"></div>
+    </div>
+</div>
+<div class="pushDiv1"></div>
+
+@Html.Partial("_ErrorDiv")
+@using (Ajax.BeginForm("EditInvoiceReceipt", "Invoice", new AjaxOptions { HttpMethod = "Post", OnSuccess = "ListItemEditOnSuccess", OnBegin = "AjaxBeginFormBegin", OnComplete = "AjaxBeginFormComplete", OnFailure = "AjaxBeginFormFaillure" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="row">
+        <div class="col-xl-12">
+            <div class="m-portlet newPort" id="m_portlet" style="padding:15px;">
+                <div class="bottomBlock">
+                    <div class="tabsArea nobg">
+                        <ul class="listView nobrd">
+                            <li>
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnIdLineNumber").FirstOrDefault().Value.ToString() : </span>
+                                <span class="inputText">@Html.TextBoxFor(m => m.InvoiceMatchItemModel.LineNumber, new { @class = "form-control search readonly", autocomplete = "off", @readonly = true })</span>
+                            </li>
+                            <li>
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnIdPONumber").FirstOrDefault().Value.ToString() : </span>
+                                <span class="inputText">@Html.TextBoxFor(m => m.InvoiceMatchItemModel.PurchaseOrder, new { @class = "form-control search readonly", autocomplete = "off", @readonly = true })</span>
+                            </li>
+                            <li style="height:auto;">
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString() :</span>
+                                <span class="inputText" style="height:auto;">
+                                    @Html.TextAreaFor(m => m.InvoiceMatchItemModel.Description, new { @class = "form-control search", autocomplete = "off" })
+                                </span>
+                                <div style="clear:both;"></div>
+                            </li>
+                            <li>
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnIdQuantity").FirstOrDefault().Value.ToString() : </span>
+                                <span class="inputText">@Html.TextBoxFor(m => m.InvoiceMatchItemModel.Quantity, new { @class = "form-control search", autocomplete = "off" })</span>
+                            </li>
+                            <li>
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnIdUnits").FirstOrDefault().Value.ToString() : </span>
+                                <span class="inputText">
+                                    @Html.DropDownListFor(m => m.InvoiceMatchItemModel.UnitOfMeasure, Model.InvoiceMatchItemModel.UnitOfMeasureList, "--Select--", new { @class = "form-control search select2picker", style = "width:100%;" })
+                                </span>
+                            </li>
+                            <li>
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnIdUnitsCost").FirstOrDefault().Value.ToString(): </span>
+                                <span class="inputText">@Html.TextBoxFor(m => m.InvoiceMatchItemModel.UnitCost, new { @class = "form-control search", autocomplete = "off" })</span>
+                            </li>
+                            <li>
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnIdTotalCost").FirstOrDefault().Value.ToString(): </span>
+                                <span class="inputText">@Html.TextBoxFor(m => m.InvoiceMatchItemModel.TotalCost, new { @class = "form-control search readonly", autocomplete = "off", @readonly = true })</span>
+                            </li>
+                            <li>
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnIdAccount").FirstOrDefault().Value.ToString() : </span>
+                                <span class="inputText">
+                                    @Html.DropDownListFor(m => m.InvoiceMatchItemModel.AccountId, Model.InvoiceMatchItemModel.AccountList, "--Select--", new { @class = "form-control search select2picker", style = "width:100%;" })
+                                </span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div style="clear:both;"></div>
+                    <div class="idBttns">
+                        <div class="bttn_pagin">
+                            <div class="bttns2">
+                                <button type="submit" name="Command" value="save" class="btn btn-blue mobBttn"><i class="fa fa-save faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+                            </div>
+                            <div class="bttns">
+                                    <button type="button" class="btn btn-blue mobBttn" id="btnInvReceiptCancel"><i class="fa fa-close faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button>
+                            </div>
+                            <div style="clear:both;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @Html.HiddenFor(m => m.InvoiceMatchItemModel.InvoiceMatchHeaderId)
+    @Html.HiddenFor(m => m.InvoiceMatchItemModel.InvoiceMatchItemId)
+
+}
+

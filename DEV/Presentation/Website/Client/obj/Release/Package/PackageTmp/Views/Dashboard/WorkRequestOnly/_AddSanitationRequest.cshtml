@@ -1,0 +1,507 @@
+﻿@model Client.Models.Sanitation.SanitationVM
+<style>
+    .inputText.wthAdjstNew2 {
+        width: 67.5% !important;
+    }
+
+    ul.listView li input.search {
+        border-radius: 0.25rem 0 0 0.25rem;
+        margin-top: 2px;
+    }
+
+    .TreeAdjustNew {
+        right: -2px !important;
+    }
+    .takePic {
+        margin: 0 auto;
+        max-width: 300px;
+        text-align: center;
+        padding: 0 0 15px 0;
+    }
+
+    .col-sec-row {
+        display:flex;
+    }
+
+    .col-sec-row span.label {
+        width:250px;
+    }
+
+    .col-sec-row .right-col {
+        width: calc(100% - 250px) !important;
+        display: flex;
+    }
+
+    .col-sec-row .right-col .inputText.wthAdjstNew2 {
+        width: calc(100% - 50px) !important;
+    }
+
+    .col-sec-row .right-col .chargeTree.TreeAdjustNew {
+        width: 35px !important;
+        line-height: 35px;
+        position: relative !important;
+        text-align: center;
+        right: 0px !important;
+        top: 0px !important;
+        margin-left: 10px;
+    }
+
+
+    .col-sec-row-normal {
+        display: flex;
+    }
+
+    .col-sec-row-normal span.label {
+        width: 250px;
+    }
+    .col-sec-row-normal .right-col .textarea-box {
+        width: 100%;
+    }
+    .col-sec-row-normal .right-col {
+        width: calc(100% - 250px) !important;
+        display: flex;
+    }
+
+    @@media(max-width:900px) {
+        .col-sec-row .right-col {
+            width: calc(100% - 200px) !important;
+        }
+
+        .col-sec-row-normal .right-col {
+            width: calc(100% - 200px) !important;
+        }
+    }
+    @@media(max-width:700px) {
+        .col-sec-row .right-col .inputText.wthAdjstNew2 {
+            width: calc(100% - 0px) !important;
+        }
+        .col-sec-row-normal .right-col {
+            width: 100% !important;
+        }
+        .col-sec-row .right-col .chargeTree.TreeAdjustNew {
+            width: calc(100% - 0px) !important;
+            margin: 10px 0 0 0;
+            background-color:#fff;
+            border: #b9c1c4 1px solid !important;
+            border-radius:5px;
+        }
+        .right-col {
+            display:block;
+        }
+        .col-sec-row .right-col {
+            display: block;
+            width: 100% !important;
+        }
+    }
+
+</style>
+@Styles.Render("~/Content/datatable");
+<div class="m-subheader">
+    <div class="new-m-subheader">
+        <div class="PageTitle">
+            <div class="align-items-center separator">
+                <h3 class="m-subheader__title ">
+                    @Model.Loc.Where(a => a.ResourceId == "spnSanitationJobDescribe").FirstOrDefault().Value.ToString()
+                </h3>
+            </div>
+        </div>
+
+        <div class="NewBreadcrumbArea">
+            <div class="newBreadcrumb">
+                <ul>
+                    <li><a href="/Dashboard/Dashboard">&nbsp;</a></li>
+                    <li><a href="/Dashboard/Dashboard">@Model.Loc.Where(a => a.ResourceId == "spnSanitationSearch").FirstOrDefault().Value.ToString()</a></li>
+                    <li class="active">@Model.Loc.Where(a => a.ResourceId == "spnAddSanitation").FirstOrDefault().Value.ToString()</li>
+                </ul>
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+        <div style="clear:both;"></div>
+    </div>
+</div>
+@Html.Partial("_ErrorDiv")
+
+@using (Ajax.BeginForm("AddSanitationRequest", "SanitationJob", new AjaxOptions { HttpMethod = "Post", OnSuccess = "SanitationRequestAddOnSuccess", OnBegin = "AjaxBeginFormBegin", OnComplete = "AjaxBeginFormComplete", OnFailure = "AjaxBeginFormFaillure" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="row">
+        <div class="col-xl-12">
+            <div class="m-portlet newPort" id="m_portlet" style="padding:15px;">
+                <div class="bottomBlock">
+                    <div class="tabsArea nobg">
+                        <ul class="listView nobrd">
+                            @if (Model._userdata.IsLoggedInFromMobile && Model._userdata.Security.SanitationJob_Photos.Create)
+                            {
+                                <li>
+                                    @*<span style="padding-bottom:15px">*@
+                                    <div class="takePic">
+                                        <img src="~/Scripts/ImageZoom/images/NoImage.jpg" class="productImg clsproductImg" id="addphotoworkrequest" style="border: #f5f7f7 1px solid; border-radius: 5px; width: 100%; height: 250px; padding-bottom: 10px">
+
+                                        <button type="button" class="btn btn-blue" title="Take Picture" style="width:100%">
+                                            <label for="add_photosSani" style="margin-bottom:0px !important">@Model.Loc.Where(a => a.ResourceId == "spnAddPhotos").FirstOrDefault().Value.ToString()</label>
+                                            <input id="add_photosSani" class="addphotoWorkorder" style="display:none;" type="file" value="" accept="image/*" capture="">
+                                        </button>
+                                    </div>
+                                    @*</span>*@
+                                </li>
+                            }
+                            <li style="position:relative;" class="col-sec-row">
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "GlobalChargeTo").FirstOrDefault().Value.ToString() : <small>*</small></span>
+                                <div class="right-col">
+                                    <span class="inputText wthAdjstNew2">
+
+                                        <div class="dropdown dropTableOuter">
+                                            <div class="input-group">
+                                                @Html.TextBoxFor(m => m.ODescribeModel.PlantLocationDescription, new { @class = "form-control search dropbtn readonly", @style = "color:black", autocomplete = "off", @readonly = "readonly" })
+                                                @Html.ValidationMessageFor(m => m.ODescribeModel.PlantLocationDescription, "", new { style = "display:none" })
+                                                <div class="input-group-btn">
+                                                    <button class="btn btn-white btntxtInputGroup" type="button" id="openOJobAssetgrid">
+                                                        <i id="srcicon" class="fa fa-search"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </span>
+                                    @*For v2-609*@
+                                    @if (Model.AssetTree == true)
+                                    {
+                                        <i class="fa fa-tree chargeTree TreeAdjustNew" id="pldArray" style="display: block;"></i>
+                                    }
+                                </div>
+                                
+                            </li>
+                            <li style="height:auto;" class="col-sec-row-normal">
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString() : <small>*</small></span>
+                                <div class="right-col">
+                                    <span class="inputText textarea-box " style="height:auto;">
+                                        @Html.ValidationMessageFor(m => m.ODescribeModel.Description, "", new { style = "display:none" })
+                                        @Html.Hidden("hdnId")
+                                        @Html.TextAreaFor(m => m.ODescribeModel.Description, new { @class = "form-control search", style = "resize:none;", autocomplete = "off" })
+                                    </span>
+                                </div>
+
+                            </li>
+                        </ul>
+                    </div>
+                    <div style="clear:both;"></div>
+
+                    <div class="idBttns">
+                        <div class="bttn_pagin">
+                            <div class="bttns2">
+                                <button type="submit" class="btn btn-blue mobBttn" name="SaveType" value="Request_Describe"><i class="fa fa-save faIcon"></i> &nbsp;@Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+                            </div>
+
+                            <div class="bttns"><button type="button" class="btn btn-blue mobBttn" id="btnCancelAddSanitationRequestWO"><i class="fa fa-close faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button></div>
+
+
+                            <div style="clear:both;"></div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    @Html.HiddenFor(m => m.TchargeType)
+    @Html.HiddenFor(m => m.TplantLocationId)
+    @Html.HiddenFor(m => m.TplantLocationDescription)
+    @Html.HiddenFor(m => m.IsJobAddFromDashboard)
+    @Html.HiddenFor(m => m.IsAddForRequest)
+    @Html.HiddenFor(m => m.AssetTree)
+    @Html.Partial("~/Views/SanitationJob/_AssetGridPopup.cshtml")
+}
+
+<div id="sanitationTreeModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title" id="hdrPlantLocation">@Model.Loc.Where(a => a.ResourceId == "spnGlobalEquipmentTreeLookup").FirstOrDefault().Value.ToString()</h4>
+            </div>
+            <div class="modal-body">
+                <div class="cntTree">
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/Scripts/treeTable.js"></script>
+    @Scripts.Render("~/bundles/datatable")
+    @Scripts.Render("~/bundles/ImageCompressor")
+    <script src="~/Scripts/Pages/Sanitation/asset-grid-popup.js"></script>
+    <script type="text/javascript">
+        com_github_culmat_jsTreeTable.register(this);
+        //#region for removeclass
+        if ($("#AssetTree").val() == "False") {
+            $('ul li span').removeClass('wthAdjstNew2');
+        }
+        //#endregion
+        //#region tree
+        var equipmentid = -1;
+        $(document).on('click', '.txtTreeView', function () {
+            $(this).blur();
+            generateTree(-1);
+        });
+        $(document).on('click', '#pldArray', function (e) {
+            $(this).blur();
+            generateTree(-1);
+        });
+        function generateTree(paramVal) {
+            $.ajax({
+                url: '/PlantLocationTree/SanitationEquipmentHierarchyTree',
+                datatype: "json",
+                type: "post",
+                contenttype: 'application/json; charset=utf-8',
+                async: true,
+                cache: false,
+                beforeSend: function () {
+                    ShowLoader();
+                },
+                success: function (data) {
+                    $(document).find(".cntTree").html(data);
+                }
+                ,
+                complete: function () {
+                    CloseLoader();
+                    treeTable($(document).find('#tblTree'));
+
+                    $(document).find('.radSelectSanitation').each(function () {
+                        if ($(document).find('#hdnId').val() == '0' || $(document).find('#hdnId').val() == '') {
+
+                            if ($(this).data('equipmentid') === equipmentid) {
+                                $(this).attr('checked', true);
+                            }
+
+                        }
+                        else {
+
+                            if ($(this).data('equipmentid') == $(document).find('#hdnId').val()) {
+                                $(this).attr('checked', true);
+                            }
+
+                        }
+
+                    });
+                    $('#sanitationTreeModal').modal('show');
+                    //---------------------------------------------------
+                    // looking for the collapse icon and triggered click to collapse
+                    $.each($(document).find('#tblTree > tbody > tr').find('img[src="data:image/png;base64,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"]'), function (i, elem) {
+                        var parentId = elem.parentNode.parentNode.getAttribute('data-tt-id');
+                        $(document).find('#tblTree > tbody > tr[data-tt-id=' + parentId + ']').trigger('click');
+                    });
+                    //-- collapse all element
+                    CloseLoader();
+                },
+                error: function (xhr) {
+                    alert('error');
+                }
+            });
+        }
+
+        $(document).on('change', ".radSelectSanitation", function () {
+            $(document).find('#hdnId').val('0');
+            equipmentid = $(this).data('equipmentid');
+            var clientlookupid = $(this).data('clientlookupid');
+            var chargetoname = $(this).data('itemname');
+            //chargetoname = chargetoname.substring(0, chargetoname.length - 1);
+            chargetoname = clientlookupid + '(' + (chargetoname.substring(0, chargetoname.length - 1)).trim() + ')';
+            $(document).find("#TchargeType").val("Equipment");
+            $(document).find("#TplantLocationId").val(equipmentid);
+            $(document).find('#TplantLocationDescription').val(clientlookupid);
+            //$(document).find('#DemandModel_PlantLocationDescription').val(clientlookupid).removeClass('input-validation-error').trigger('change');
+            //$(document).find('#JobDetailsModel_ChargeTo_Name').val(chargetoname);
+            //$(document).find('#JobDetailsModel_PlantLocationDescription').val(clientlookupid);
+            $(document).find('#ODescribeModel_PlantLocationDescription').val(chargetoname).removeClass('input-validation-error').trigger('change');
+            $('#sanitationTreeModal').modal('hide');
+
+        });
+
+
+        function SanitationRequestAddOnSuccess(data) {
+            CloseLoader();
+            if (data.data === "success") {
+                if (data.Command === "save" || data.Command === "complete") {
+                    var message;
+                    if (data.mode === "add") {
+                        SuccessAlertSetting.text = getResourceValue("SanitationAddAlert");
+                    }
+                    else if (data.mode === "complete") {
+                        SuccessAlertSetting.text = getResourceValue("SanitationCompleteAlert");
+                    }
+                    else {
+                        SuccessAlertSetting.text = getResourceValue("SanitationUpdateAlert");
+                    }
+                    if (fileExtAddProccess != "") {
+                        var imgname = data.SanitationJobId + "_" + Math.floor((new Date()).getTime() / 1000);
+                        CompressImageAddProccess(FilesAddProccess[0], imgname + "." + fileExtAddProccess, data.SanitationJobId);
+                        fileExtAddProccess = "";
+                    }
+                    swal(SuccessAlertSetting, function () {
+                        localStorage.setItem("TabType", 'SaitationRequest')
+                        window.location.href = '/Dashboard/Dashboard';
+                    });
+                }
+                else {
+                    if (fileExtAddProccess != "") {
+                        var imgname = data.SanitationJobId + "_" + Math.floor((new Date()).getTime() / 1000);
+                        CompressImageAddProccess(FilesAddProccess[0], imgname + "." + fileExtAddProccess, data.SanitationJobId);
+                        fileExtAddProccess = "";
+                    }
+                    ResetErrorDiv();
+                    $('#identificationtab').addClass('active').trigger('click');
+                    SuccessAlertSetting.text = getResourceValue("SanitationAddAlert");
+                    swal(SuccessAlertSetting, function () {
+                        $(document).find('form').trigger("reset");
+                        $(document).find('form').find("select").val("").trigger('change');
+                        $(document).find('form').find("select").removeClass("input-validation-error");
+                        $(document).find('form').find("input").removeClass("input-validation-error");
+                        $(document).find('form').find("textarea").removeClass("input-validation-error");
+                    });
+                }
+            }
+            else {
+                if (data.Command === "complete") {
+                    message = getResourceValue(data.Result);
+                    ShowGenericErrorOnAddUpdate(message);
+                }
+                else {
+                    ShowGenericErrorOnAddUpdate(data.Result);
+                }
+            }
+
+        }
+
+        $(document).on('click', "#btnCancelAddSanitationRequestWO", function () {
+            RedirectToDetailOncancelWOSanitationReqForDashboard();
+        });
+        function RedirectToDetailOncancelWOSanitationReqForDashboard() {
+            swal(CancelAlertSetting, function () {
+                window.location.href = '/Dashboard/Dashboard';
+            });
+        }
+        ////#endregion
+        //#region Asset popup
+        $(document).on('click', "#openOJobAssetgrid", function () {
+            generateAssetPopupTable();
+        });
+        //#endregion
+        //#region V2-865
+
+        var FilesAddProccess;
+        var fileExtAddProccess = "";
+        $(document).on('change', '.addphotoWorkorder', function () {
+
+            var id = $(this).attr('id');
+            var val = $(this).val();
+            var previewid = $(this).closest(".takePic").find("img").attr('id');
+            var imageName = val.replace(/^.*[\\\/]/, '');
+            var fileUpload = $("#" + id).get(0);
+            var fileExt = imageName.substr(imageName.lastIndexOf('.') + 1);
+
+            if (fileExt != 'jpeg' && fileExt != 'jpg' && fileExt != 'png' && fileExt != 'JPEG' && fileExt != 'JPG' && fileExt != 'PNG') {
+                ShowErrorAlert(getResourceValue("spnValidImage"));
+                $("#" + id).val('');
+                //e.preventDefault();
+                return false;
+            }
+            else if (this.files[0].size > (1024 * 1024 * 10)) {
+                ShowImageSizeExceedAlert();
+                $("#" + id).val('');
+                //e.preventDefault();
+                return false;
+            }
+
+            else {
+
+                if (window.FormData !== undefined) {
+                    var url = window.URL.createObjectURL(this.files[0]);
+                    $('#' + previewid).attr('src', url);
+                    FilesAddProccess = fileUpload.files;
+                    fileExtAddProccess = fileExt;
+                }
+                else {
+
+                }
+
+            }
+        });
+        function CompressImageAddProccess(files, imageName, SanitationJobId) {
+            new Compressor(files, {
+                quality: 0.6,
+                convertTypes: ['image/png'],
+                convertSize: 100000,
+                // The compression process is asynchronous,
+                // which means you have to access the `result` in the `success` hook function.
+                success(result) {
+                    if (result.size < files.size) {
+                        SaveCompressedImageAddProccess(result, imageName, SanitationJobId);
+                    }
+                    else {
+                        SaveCompressedImageAddProccess(files, imageName, SanitationJobId);
+                    }
+                    console.log('file name ' + result.name + ' after compress ' + result.size);
+                },
+                error(err) {
+                    console.log(err.message);
+                },
+            });
+        }
+        function SaveCompressedImageAddProccess(data, imageName, SanitationJobId) {
+            var AddPhotoFileData = new FormData();
+            AddPhotoFileData.append('file', data, imageName);
+
+            $.ajax({
+                url: '../base/SaveUploadedFile',
+                type: "POST",
+                contentType: false, // Not to set any content header
+                processData: false, // Not to process data
+                data: AddPhotoFileData,
+                success: function (result) {
+                    SaveUploadedFileToServerAddProccess(SanitationJobId, imageName);
+                    $('#add_photosWR').val('');
+                }
+            });
+        }
+        function SaveUploadedFileToServerAddProccess(SanitationJobId, imageName) {
+            $.ajax({
+                url: '../base/SaveMultipleUploadedFileToServer',
+                type: 'POST',
+
+                data: { 'fileName': imageName, objectId: SanitationJobId, TableName: "Sanitation", AttachObjectName: "Sanitation" },
+                beforeSend: function () {
+                    ShowLoader();
+                },
+                success: function (data) {
+                    if (data.result == "0") {
+
+                        CloseLoader();
+                        /*ShowImageSaveSuccessAlert();*/
+                    }
+                    else if (data.result == "1") {
+                        CloseLoader();
+                        var errorMessage = getResourceValue("ImageExistAlert");
+                        ShowErrorAlert(errorMessage);
+
+                    }
+                    else {
+                        CloseLoader();
+                        var errorMessage = getResourceValue("NotAuthorisedUploadFileAlert");
+                        ShowErrorAlert(errorMessage);
+
+                    }
+                },
+                complete: function () {
+
+                },
+                error: function () {
+                    CloseLoader();
+                }
+            });
+        }
+//#endregion
+    </script>
+}
+

@@ -1,0 +1,52 @@
+﻿@model Client.Models.Approval.ApprovalVM
+
+<li id="PurchaseOrderClientLookupId">
+    <span class="label"> Material Request Id :</span>
+    <span class="inputText">@Model.materialRequestSummary.MaterialRequestId</span>
+</li>
+<li>
+    <span class="label">  @Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString() :</span>
+    <span class="inputText">@Model.materialRequestSummary.Description</span>
+</li>
+<li>
+    <span class="label">  @Model.Loc.Where(a => a.ResourceId == "GlobalStatus").FirstOrDefault().Value.ToString() :</span>
+    <span class="inputText">@Model.materialRequestSummary.Status</span>
+</li>
+<li>
+    <span class="label">@Model.Loc.Where(a => a.ResourceId == "GlobalRequestor").FirstOrDefault().Value.ToString()  :</span>
+    <span class="inputText">@Model.materialRequestSummary.Personnel_NameFirst  @Model.materialRequestSummary.Personnel_NameLast</span>
+</li>
+
+<li>
+    <span class="label"> @Model.Loc.Where(a => a.ResourceId == "spnCreated").FirstOrDefault().Value.ToString()  :</span>
+    <span class="inputText">
+        @if (@Model.materialRequestSummary.CreateDate.HasValue && @Model.materialRequestSummary.CreateDate.Value != default(DateTime))
+        {
+            @Model.materialRequestSummary.CreateDate.Value.ToString("MM/dd/yyyy", CultureInfo.InvariantCulture)
+        }
+    </span>
+</li>
+<li>
+    <span class="label"> @Model.Loc.Where(a => a.ResourceId == "spnRequired").FirstOrDefault().Value.ToString()  :</span>
+    <span class="inputText">
+        @if (Model.materialRequestSummary.RequiredDate.HasValue && @Model.materialRequestSummary.RequiredDate.Value != default(DateTime))
+        {
+            @Model.materialRequestSummary.RequiredDate.Value.ToString("MM/dd/yyyy", CultureInfo.InvariantCulture)
+        }
+    </span>
+</li>
+<li>
+    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnGlobalCompleted").FirstOrDefault().Value.ToString()  :</span>
+    <span class="inputText">
+        @if (Model.materialRequestSummary.CompleteDate.HasValue && Model.materialRequestSummary.CompleteDate.Value != default(DateTime))
+        {
+            @Model.materialRequestSummary.CompleteDate.Value.ToString("MM/dd/yyyy", CultureInfo.InvariantCulture)
+        }
+    </span>
+</li>
+<li>
+    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnAccount").FirstOrDefault().Value.ToString()  :</span>
+    <span class="inputText">
+        @Model.materialRequestSummary.Account_ClientLookupId
+    </span>
+</li>

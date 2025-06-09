@@ -1,0 +1,26 @@
+﻿@model Client.Models.Dashboard.DashboardVM
+<div class="sparklineArea">
+    <div class="forthBox">
+        <div class="lds-ellipsis lds-adjust spline-loader" id="lowpartspchartloader">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+        @if (Model.PartSecurity)
+        {
+            <h2 id="lowPartsCount" class="hoverClass"></h2>
+            <h3 class="hoverClass" id="lowPartstxt">@Model.Loc.Where(a => a.ResourceId == "spnLowParts").FirstOrDefault().Value.ToString()</h3>
+        }
+        else
+        {
+            <h2 id="lowPartsCountInactive"></h2>
+            <h3>@Model.Loc.Where(a => a.ResourceId == "spnLowParts").FirstOrDefault().Value.ToString()</h3>
+        }
+        <div class="sparklineGraph">
+            <canvas id="myChart_LowParts" class="sparklinecanvas"></canvas>
+            <div class="clear"></div>
+        </div>
+    </div>
+</div>
+

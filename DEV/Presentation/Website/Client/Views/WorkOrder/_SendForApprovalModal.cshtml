@@ -1,0 +1,42 @@
+﻿@model Client.Models.Work_Order.WorkOrderVM
+<div id="SendForApprovalModal" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-info">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close btncancelsendForApproval" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">@Model.Loc.Where(a => a.ResourceId == "globalSendforApproval").FirstOrDefault().Value.ToString()</h4>
+            </div>
+            @using (Ajax.BeginForm("WoSendForApproval", "WorkOrder", new AjaxOptions { HttpMethod = "Post", OnSuccess = "WoSendForApprovalOnSuccess", OnBegin = "AjaxBeginFormBegin", OnComplete = "AjaxBeginFormComplete", OnFailure = "AjaxBeginFormFaillure" }))
+            {
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="Line" id="lblLine">@Model.Loc.Where(a => a.ResourceId == "globalSendTo").FirstOrDefault().Value.ToString() :<small>*</small></label>
+                        @if (Model.woSendForApprovalModel.Personnellist != null)
+                        {
+                            @Html.ValidationMessageFor(m => m.woSendForApprovalModel.PersonnelId, "", new { style = "display:none" })
+                            @Html.DropDownListFor(m => m.woSendForApprovalModel.PersonnelId, Model.woSendForApprovalModel.Personnellist, "--Select--", new { @class = "form-control search select2picker", style = "width:100%;", id = "ddlSendForApprovalUser" })
+                        }
+                    </div>
+                    
+                </div>
+                <div class="modal-footer" style="padding:15px 25px !important;">
+                    <button type="button" class="btn btn-default mobBttn btncancelsendForApproval" data-dismiss="modal"><i class="fa fa-close buttonIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button>
+                    <button type="submit" class="btn btn-blue mobBttn" style="float:right;"><i class="fa fa-save faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+                    <div style="clear:both;"></div>
+                </div>
+                @Html.HiddenFor(x => x.woSendForApprovalModel.WorkOrderId)
+            }
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        $.validator.setDefaults({ ignore: null });
+        $(document).find('.select2picker').select2({});
+        $.validator.unobtrusive.parse(document);
+        $('input, form').blur(function () {
+            $(this).valid();
+        });      
+    });
+</script>
+ 

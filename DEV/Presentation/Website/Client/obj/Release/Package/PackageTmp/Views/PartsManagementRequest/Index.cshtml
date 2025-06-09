@@ -1,0 +1,21 @@
+﻿@{
+    ViewBag.Title = "Somax | Part Management Request";
+}
+
+@Styles.Render("~/Content/datatable")
+@Styles.Render("~/Content/dropzone")
+<link href="~/Scripts/dropzone/basic.min.css" rel="stylesheet" />
+<link href="~/Scripts/Metronic/assets/demo/default/base/GlobalSearchGrid.css" rel="stylesheet" />
+
+@section scripts {
+    @Scripts.Render("~/bundles/datatable")
+    @Scripts.Render("~/bundles/imagezoom")
+    @Scripts.Render("~/bundles/PartsManagementRequest")
+}
+
+<div id="renderpartsreview">
+    @Html.Partial("_PartsMRequestSearch")
+</div>
+<style type="text/css">
+  .ui-tooltip { z-index:101 !important; }
+</style>

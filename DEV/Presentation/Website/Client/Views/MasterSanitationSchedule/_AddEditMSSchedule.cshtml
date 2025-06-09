@@ -1,0 +1,317 @@
+﻿@model Client.Models.MasterSanitationSchedule.MasterScheduleVM
+@{
+    ViewBag.Title = "Somax | MasterSanitationScheduleAddEdit";
+}
+<div class="m-subheader">
+    <div class="new-m-subheader">
+        <div class="PageTitle">
+            <div class="align-items-center separator">
+                <h3 class="m-subheader__title ">
+                    @Model.Loc.Where(a => a.ResourceId == "spnSanitationMaster").FirstOrDefault().Value.ToString()
+                </h3>
+            </div>
+        </div>
+
+        <div class="NewBreadcrumbArea">
+            <div class="newBreadcrumb">
+                <ul>
+                    <li><a href="/Dashboard/Dashboard">&nbsp;</a></li>
+                    <li><a href="/MasterSanitationSchedule/index?page=Sanitation_Master_Schedule_Search">@Model.Loc.Where(a => a.ResourceId == "spnMasterSanitationScheduleSearch").FirstOrDefault().Value.ToString()</a></li>
+                    @if (Model.MasterSanitModel.SanitationMasterId == 0)
+                    {
+                        <li class="active">@Model.Loc.Where(a => a.ResourceId == "spnAddSanitationMaster").FirstOrDefault().Value.ToString()</li>
+                    }
+                    else
+                    {
+                        <li><a href="javascript:void(0)" id=brdMsEdit data-val="@Model.MasterSanitModel.SanitationMasterId">@Model.MasterSanitModel.Description</a> </li>
+                        <li class="active">@Model.Loc.Where(a => a.ResourceId == "spnEditSanitationMaster").FirstOrDefault().Value.ToString()</li>
+                    }
+                </ul>
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+        <div style="clear:both;"></div>
+    </div>
+</div>
+@Html.Partial("_ErrorDiv")
+
+@using (Ajax.BeginForm("AddEditMSSchedule", "MasterSanitationSchedule", new AjaxOptions { HttpMethod = "Post", OnSuccess = "MSScheduleAddEditOnSuccess", OnBegin = "AjaxBeginFormBegin", OnComplete = "AjaxBeginFormComplete", OnFailure = "AjaxBeginFormFaillure" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="row">
+        <div class="col-xl-12">
+            <div class="m-portlet newPort" id="m_portlet" style="padding:15px;">
+                <div class="bottomBlock">
+                    <div class="tabsArea nobg">
+                        <ul class="listView nobrd list-module">
+                            <li style="height:auto;">
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString() :<small>*</small></span>
+                                <span class="inputText wthAdjst" style="height:auto;">
+                                    @Html.ValidationMessageFor(m => m.MasterSanitModel.Description, "", new { style = "display:none" })
+                                    @Html.TextAreaFor(m => m.MasterSanitModel.Description, new { @class = "form-control search", style = "resize:none;", autocomplete = "off" })
+                                </span>
+                                <div style="clear:both;"></div>
+                            </li>
+
+                            <li class="tree-option">
+                                <span class="label" id="spnPlantDesc">@Model.Loc.Where(a => a.ResourceId == "GlobalChargeTo").FirstOrDefault().Value.ToString():<small>*</small></span>
+                                <span class="inputText wthAdjst">
+
+                                    <div class="dropdown dropTableOuter">
+                                        <div class="input-group">
+                                            @Html.TextBoxFor(m => m.MasterSanitModel.ChargeToDescription, new { @class = "form-control search dropbtn readonly", @style = "color:black", autocomplete = "off", @readonly = "readonly" })
+                                            @Html.Hidden("hdnId", Model.MasterSanitModel.PlantLocationId)
+                                            @Html.ValidationMessageFor(m => m.MasterSanitModel.ChargeToDescription, "", new { style = "display:none" })
+
+                                            <div class="input-group-btn">
+                                                <button class="btn btn-white btntxtInputGroup srh-job" type="button" id="openOJobAssetgrid">
+                                                    <i id="srcicon" class="fa fa-search"></i>
+                                                </button>
+                                            </div>
+                                            @*For v2-609*@
+                                            <div class="treebox">
+                                                @if (Model.AssetTree == true)
+                                                {
+                                                    <i class="fa fa-tree chargeTree TreeAdjustNew2" id="pldArray" style="display: block;"></i>
+                                                }
+                                            </div>
+                                        </div>
+                                        </div>
+                                </span>
+                                
+                                
+                            </li>
+
+                            @if (Model.MasterSanitModel.SanitationMasterId != 0)
+                            {
+                                <li>
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnName").FirstOrDefault().Value.ToString() :</span>
+                                    <span class="inputText wthAdjst">
+                                        @Html.TextBoxFor(m => m.MasterSanitModel.ChargeToName, new { @class = "form-control search readonly", autocomplete = "off", @readonly = "readonly" })
+                                    </span>
+                                </li>
+                            }
+                            <li>
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnScheduleType").FirstOrDefault().Value.ToString():<small>*</small></span>
+                                <span class="inputText wthAdjst">
+                                    @Html.ValidationMessageFor(m => m.MasterSanitModel.ScheduledType, "", new { style = "display:none" })
+                                    @Html.DropDownListFor(m => m.MasterSanitModel.ScheduledType, Model.MasterSanitModel.ScheduleTypeList, "--Select--", new { @class = "form-control search select2picker", style = "width:100%;", id = "ScheduledType" })
+                                </span>
+                            </li>
+                            <li>
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnFrequency").FirstOrDefault().Value.ToString() :</span>
+                                <span class="inputText wthAdjst">
+                                    @Html.ValidationMessageFor(m => m.MasterSanitModel.Frequency, "", new { style = "display:none" })
+                                    @Html.TextBoxFor(m => m.MasterSanitModel.Frequency, new { @class = "form-control search longinput", autocomplete = "off" })
+                                </span>
+                            </li>
+                            <li>
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnNextDue").FirstOrDefault().Value.ToString():<small>*</small></span>
+                                <span class="inputText wthAdjst">
+                                    @Html.ValidationMessageFor(m => m.MasterSanitModel.NextDue, "", new { style = "display:none" })
+                                    @Html.TextBoxFor(m => m.MasterSanitModel.NextDue, "{0:MM/dd/yyyy}", new { @class = "form-control search dtpicker", autocomplete = "off" })
+                                </span>
+                            </li>
+                            <li>
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnOnDemandGroup").FirstOrDefault().Value.ToString():<small id="txtOnDemand"></small></span>
+                                <span class="inputText wthAdjst">
+                                    @Html.ValidationMessageFor(m => m.MasterSanitModel.OnDemandGroup, "", new { style = "display:none" })
+                                    @Html.DropDownListFor(m => m.MasterSanitModel.OnDemandGroup, Model.MasterSanitModel.OnDemandGroupList, "--Select--", new { @class = "form-control search select2picker", style = "width:100%;" })
+
+                                </span>
+                            </li>
+                            <li>
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnAssigned").FirstOrDefault().Value.ToString() :</span>
+                                <span class="inputText wthAdjst">
+                                    @Html.DropDownListFor(m => m.MasterSanitModel.Assignto_PersonnelId, Model.MasterSanitModel.PersonnelList, "--Select--", new { @class = "form-control search select2picker", style = "width:100%;" })
+                                </span>
+                            </li>
+                            <li>
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnShift").FirstOrDefault().Value.ToString() :</span>
+                                <span class="inputText wthAdjst">
+                                    @Html.DropDownListFor(m => m.MasterSanitModel.Shift, Model.MasterSanitModel.ShiftList, "--Select--", new { @class = "form-control search select2picker", style = "width:100%;" })
+                                </span>
+                            </li>
+                            <li>
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnDuration").FirstOrDefault().Value.ToString() :</span>
+                                <span class="inputText wthAdjst">
+                                    @Html.TextBoxFor(m => m.MasterSanitModel.ScheduledDuration, new { @class = "form-control search decimalinput", autocomplete = "off" })
+                                </span>
+                            </li>
+
+                            @if (Model.MasterSanitModel.SanitationMasterId != 0)
+                            {
+                                <li>
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnLastScheduled").FirstOrDefault().Value.ToString():</span>
+                                    <span class="inputText wthAdjst">
+                                        @Html.TextBoxFor(m => m.MasterSanitModel.LastScheduled, "{0:MM/dd/yyyy}", new { @class = "form-control search dtpicker", autocomplete = "off", @disabled = "disabled" })
+                                    </span>
+                                </li>
+                                <li>
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "globalInActive").FirstOrDefault().Value.ToString() :</span>
+                                    <span class="inputText wthAdjst">
+                                        @*@Html.CheckBoxFor(m => m.MasterSanitModel.InactiveFlag, new { onclick = "return false;" })*@
+                                        @Html.CheckBoxFor(m => m.MasterSanitModel.InactiveFlag)  @*v2 520*@
+                                    </span>
+                                    @*@if (Model.MasterSanitModel.InactiveFlag)
+                                        {
+                                            <span class="inputText">
+                                                @Html.CheckBoxFor(m => m.MasterSanitModel.InactiveFlag, new { @class = "form-control m-input ", @style = "color:black; width: auto; margin-top: 12px;", @disabled = "disabled", @checked = "checked" })
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="inputText">
+                                                @Html.CheckBoxFor(m => m.MasterSanitModel.InactiveFlag, new { @class = "form-control m-input ", @style = "color:black; width: auto; margin-top: 12px;", @disabled = "disabled" })
+                                            </span>
+                                        }*@
+                                </li>
+                                <li style="height:auto;">
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnExclude").FirstOrDefault().Value.ToString() :</span>
+                                    <span class="inputText wthAdjst">
+                                        @Html.ListBoxFor(m => m.MasterSanitModel.ExclusionDaysString, Model.MasterSanitModel.DaysOfWeekList, new { @class = "form-control search multi-select2picker", multiple = "multiple", style = "width:100%;" })
+                                    </span>
+                                    <div style="clear:both;"></div>
+                                </li>
+                            }
+                        </ul>
+                    </div>
+                    <div style="clear:both;"></div>
+
+                    <div class="idBttns">
+                        <div class="bttn_pagin">
+                            <div class="bttns2">
+                                @if (Model.MasterSanitModel.SanitationMasterId == 0)
+                                {
+                                    <button class="btn btn-white mobBttn" name="Command" value="saveAdd" id="btnSaveAnotherMSSchedule"><i class="fa fa-save faIcon"></i> &nbsp;  @Model.Loc.Where(a => a.ResourceId == "globalSaveAndAdd").FirstOrDefault().Value.ToString()</button>
+                                }
+                                <button type="submit" class="btn btn-blue mobBttn" name="Command" value="save" id="btnSaveMSSchedule"><i class="fa fa-save faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+                            </div>
+                            <div class="bttns"><button type="button" class="btn btn-blue mobBttn" id="btnCancelAddMSSchedule"><i class="fa fa-close faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button></div>
+
+                            <div style="clear:both;"></div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    @Html.HiddenFor(m => m.MasterSanitModel.PlantLocationId)
+    @Html.HiddenFor(m => m.MasterSanitModel.ChargeToClientLookupId)
+    @Html.HiddenFor(m => m.MasterSanitModel.SanitationMasterId)
+    @Html.HiddenFor(m => m.MasterSanitModel.ChargeType)
+    @Html.HiddenFor(m => m.MasterSanitModel.UpdateIndex)
+    @Html.HiddenFor(m => m.MasterSanitModel.PlantLocation, new { id = "MasterSanitationPlantLocation" })
+    @Html.HiddenFor(m => m.AssetTree)
+    @Html.Partial("~/Views/SanitationJob/_AssetGridPopup.cshtml")
+}
+
+<div id="masterSanitationTreeModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title" id="hdrPlantLocation">@Model.Loc.Where(a => a.ResourceId == "spnGlobalEquipmentTreeLookup").FirstOrDefault().Value.ToString()</h4>
+            </div>
+            <div class="modal-body">
+                <div class="cntTree">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<style type="text/css">
+    .select2-container--default .select2-selection--multiple .select2-selection__rendered .select2-selection__choice {
+        padding: 5px;
+        margin: 0 2px;
+        height: auto;
+    }
+
+    .select2-container--default.select2-container--focus .select2-selection--multiple {
+        border: 1px solid #b9c1c4;
+    }
+
+    .select2-container--default .select2-selection--multiple {
+        height: auto;
+    }
+
+    li.select2-search.select2-search--inline {
+        display: none;
+    }
+
+    .inputText.wthAdjstNew2 {
+        width: 70% !important;
+    }
+
+    ul.listView li input.search {
+        border-radius: 0.25rem 0 0 0.25rem;
+        margin-top: 2px;
+    }
+
+    .ui-tooltip.ui-tooltip1 {
+        z-index: 101 !important;
+    }
+
+    /*.chargeTree {
+        right: 0px;
+    }*/
+
+    .inputText.wthAdjstNew {
+        width: 67% !important;
+    }
+
+    .inputText.wthAdjstNew2 {
+        width: 68% !important;
+        right: auto !important;
+    }
+    .list-module li {
+        width: 100% !important;
+    }
+
+        .list-module li .mobBttn {
+            margin-top: 1px !important;
+        }
+
+        .list-module li span.wthAdjst {
+            width: calc(100% - 225px) !important;
+        }
+
+    .list-module .input-group {
+        align-items: center !important;
+    }
+
+    .list-module .chargeTree {
+        position: relative !important;
+        left: auto !important;
+        top: 7px !important;
+        right: auto !important;
+        text-align: center;
+    }
+
+    .list-module .treebox {
+        width: 37px;
+        height: 33px;
+    }
+
+    ul.listView.list-module li span.label {
+        width: 225px !important;
+    }
+    .treebox {
+        margin-right: 0px;
+        margin-left: 5px;
+    }
+
+
+
+    @@media(max-width: 767px){
+        .treebox {
+            margin-right: 0px;
+            margin-left: 0px;
+        }
+
+        .tree-option .btntxtInputGroup.srh-job {
+            margin-top: 0px !important;
+        }
+    }
+</style>

@@ -1,0 +1,71 @@
+﻿@model Client.Models.Configuration.UIConfiguration.UiConfigurationVM
+@{
+    Layout = null;
+}
+<table id="tblUdfLookUpListGridNew" dt-options="dtOptions" class="childtable cell-border" style="width:100%">
+    <thead>
+        <tr>
+            <th width="25%">@Model.Loc.Where(a => a.ResourceId == "spnValue").FirstOrDefault().Value.ToString()</th>
+            <th>@Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString()</th>
+            <th width="17%" style="text-align:center !important;"></th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model.udfLookuplistModelList.Count > 0)
+        {
+            foreach (var udf in Model.udfLookuplistModelList)
+            {
+                <tr>
+                    <td class="longtextbreak">@udf.ListValue</td>
+                    <td class="longtextbreak">@udf.Description</td>
+                    <td>
+                        <a class="btn btn-outline-success editUdfBtn gridinnerbutton AddEditLookup" title="Edit" data-LookupId="@udf.LookupListId" data-Description="@udf.Description" data-ListName="@udf.ListName" data-ListValue="@udf.ListValue" data-updateIndex="@udf.UpdateIndex"> <i class="fa fa-pencil"></i></a>
+                        <a class="btn btn-outline-danger delUdfBtn gridinnerbutton" title="Delete" data-LookupId="@udf.LookupListId" data-ListName="@udf.ListName"> <i class="fa fa-trash"></i></a>
+                    </td>
+
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+<style type="text/css">
+    .childtable tr th {
+        background: #ebe8f2;
+        color: #575962 !important;
+        white-space: nowrap !important;
+        text-align: left !important;
+        font-weight: 400 !important;
+    }
+
+    .link {
+        color: #235ddd;
+    }
+
+        .link:hover {
+            color: #32bf0e;
+        }
+
+    .nolink {
+        pointer-events: none;
+        color: #91a0a0;
+    }
+
+    table.dataTable thead .sorting {
+        padding-right: 15px;
+        background-image:none;
+    }
+
+    table.dataTable thead .sorting_asc {
+        padding-right: 15px;
+    }
+
+    table.dataTable.display tbody tr:first-child td {
+        width: 1%;
+    }
+    .longtextbreak {
+        word-break: break-all;
+        white-space: break-spaces;
+    }
+
+
+</style>

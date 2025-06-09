@@ -1,0 +1,53 @@
+﻿@model Client.Models.FleetAsset.FleetAssetVM
+
+<ul class="listView nobrd">
+    <li>
+        <span class="label" id="spnBrakeSystem">@Html.LabelFor(m => m.FleetAssetModel.BrakeSystem)</span>
+        <span class="inputText">
+            @Html.TextBoxFor(m => m.FleetAssetModel.BrakeSystem, new { @class = "form-control search m-input flt_whe", @style = "color:black", autocomplete = "off", maxlength = "30" })
+        </span>
+    </li>
+    <li>
+        <span class="label" id="spnRearTrackWidth">@Html.LabelFor(m => m.FleetAssetModel.RearTrackWidth)</span>
+        <span class="inputText">
+            @Html.ValidationMessageFor(m => m.FleetAssetModel.RearTrackWidth, "", new { style = "display:none" })
+            @Html.TextBoxFor(m => m.FleetAssetModel.RearTrackWidth, new { @class = "form-control search decimalinput flt_whedec", @style = "color:black", autocomplete = "off" })
+        </span>
+    </li>
+    <li>
+        <span class="label" id="spnWheelbase">@Html.LabelFor(m => m.FleetAssetModel.Wheelbase)</span>
+        <span class="inputText">
+            @Html.ValidationMessageFor(m => m.FleetAssetModel.Wheelbase, "", new { style = "display:none" })
+            @Html.TextBoxFor(m => m.FleetAssetModel.Wheelbase, new { @class = "form-control search decimalinput flt_whedec", @style = "color:black", autocomplete = "off" })
+        </span>
+    </li>
+    <li>
+        <span class="label" id="spnFrontWheelDiameter">@Html.LabelFor(m => m.FleetAssetModel.FrontWheelDiameter)</span>
+        <span class="inputText">
+            @Html.ValidationMessageFor(m => m.FleetAssetModel.FrontWheelDiameter, "", new { style = "display:none" })
+            @Html.TextBoxFor(m => m.FleetAssetModel.FrontWheelDiameter, new { @class = "form-control search decimalinput flt_whedec", @style = "color:black", autocomplete = "off" })
+        </span>
+    </li>
+    <li>
+        <span class="label" id="spnRearWheelDiameter">@Html.LabelFor(m => m.FleetAssetModel.RearWheelDiameter)</span>
+        <span class="inputText">
+            @Html.ValidationMessageFor(m => m.FleetAssetModel.RearWheelDiameter, "", new { style = "display:none" })
+            @Html.TextBoxFor(m => m.FleetAssetModel.RearWheelDiameter, new { @class = "form-control search decimalinput flt_whedec", @style = "color:black", autocomplete = "off" })
+        </span>
+    </li>
+    <li>
+        <span class="label" id="spnFrontTirePSI">@Html.LabelFor(m => m.FleetAssetModel.FrontTirePSI)</span>
+        <span class="inputText">
+            @Html.ValidationMessageFor(m => m.FleetAssetModel.FrontTirePSI, "", new { style = "display:none" })
+            @Html.TextBoxFor(m => m.FleetAssetModel.FrontTirePSI, new { @class = "form-control search decimalinput flt_whedec", @style = "color:black", autocomplete = "off" })
+        </span>
+    </li>
+    <li>
+        <span class="label" id="spnRearTirePSI">@Html.LabelFor(m => m.FleetAssetModel.RearTirePSI)</span>
+        <span class="inputText">
+            @Html.ValidationMessageFor(m => m.FleetAssetModel.RearTirePSI, "", new { style = "display:none" })
+            @Html.TextBoxFor(m => m.FleetAssetModel.RearTirePSI, new { @class = "form-control search decimalinput flt_whedec", @style = "color:black", autocomplete = "off" })
+        </span>
+    </li>
+
+</ul>

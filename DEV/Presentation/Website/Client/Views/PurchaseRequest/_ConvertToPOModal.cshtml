@@ -1,0 +1,48 @@
+﻿@model Client.Models.PurchaseRequest.PurchaseRequestVM
+<div id="convertToPoModal" class="modal fade dropdown-modal" role="dialog">
+    <div class="modal-dialog partPopup">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" id="btnclose">&times;</button>
+                <h4 class="modal-title">@Model.Loc.Where(a => a.ResourceId == "spnConvertPRToPO").FirstOrDefault().Value.ToString()</h4>
+            </div>
+            <div class="modal-body">
+              <div id="tbldropdown" class="dropdown-content tbl-dropdown" style="display:block;">
+                <div class="table-responsive dropTableOuter">
+                  <table id="ConvertPRToPOTable" class="dropTable globalDropTable hover haschild" style="width:100%;height:390px !important;">
+                    <thead>
+                      <tr>
+                        <th style="width:1px;"></th>
+                        <th style="width:1px;"><input type="checkbox" id="cprpoidselectall"></th>
+                        <th>@Model.Loc.Where(a => a.ResourceId == "spnPdRequest").FirstOrDefault().Value.ToString()</th>
+                        <th>@Model.Loc.Where(a => a.ResourceId == "spnCount").FirstOrDefault().Value.ToString()</th>
+                        <th>@Model.Loc.Where(a => a.ResourceId == "spnPRReason").FirstOrDefault().Value.ToString()</th>
+                        <th>@Model.Loc.Where(a => a.ResourceId == "spnCreatorPersonnelname").FirstOrDefault().Value.ToString()</th>
+                        <th>@Model.Loc.Where(a => a.ResourceId == "spnApprovedPersonnelName").FirstOrDefault().Value.ToString()</th>
+                      </tr>
+                    </thead>
+                  </table>
+                </div>
+              </div>
+            </div>
+              <div class="modal-footer" style="padding:15px 25px !important;">
+                <button type="button" class="btn btn-default" id="btnCancel"><i class="fa fa-close faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button>
+                <button type="button" class="btn btn-blue" style="float:right;" id="btnConvert"><i class="fa fa-exchange faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "spnConvert").FirstOrDefault().Value.ToString()</button>
+                <div style="clear:both;"></div>
+              </div>
+            </div>
+    </div>
+</div>
+<style type="text/css">
+    .ConvertMsg.sweet-alert { width: 510px; margin-left: -255px; box-shadow: 0 0 10px #8a8a8a; }
+    .ConvertMsg.sweet-alert h2 { margin-top: 0px !important; font-size: 18px !important; }
+    .ConvertMsg .errormessage { padding: 10px !important; height:103px; overflow-y:auto; }
+    .ConvertMsg .errormessage ul li { font-size: 13px !important; text-align: left !important; }
+    .ui-tooltip { z-index: 1151 !important; }
+   #convertToPoModal .modal-footer {
+    display: block !important;
+  }
+  #convertToPoModal .modal-content {
+    max-height: 600px !important;
+  }
+</style>

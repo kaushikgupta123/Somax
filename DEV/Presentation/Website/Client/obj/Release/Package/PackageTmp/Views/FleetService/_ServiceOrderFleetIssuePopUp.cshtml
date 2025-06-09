@@ -1,0 +1,86 @@
+﻿@model Client.Models.FleetService.FleetServiceVM
+<div id="ServiceOrderFleetIssueModal" class="modal fade dropdown-modal" role="dialog" style="display:none;">
+    <div class="modal-dialog partPopup">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title" id="hdrPopVendor">@Model.Loc.Where(a => a.ResourceId == "spnSelectFleetIssues").FirstOrDefault().Value.ToString()</h4>
+            </div>
+            <div class="modal-body">
+                <div id="tbldropdown" class="dropdown-content tbl-dropdown" style="display:block;">
+                    <div class="table-responsive dropTableOuter">
+                        <table id="FleetIssuePopupTable" class="stripe dropTable globalDropTable" style="width:100%;">
+                            <thead>
+                                <tr>
+                                    <th>@Model.Loc.Where(a => a.ResourceId == "spnRecordDate").FirstOrDefault().Value.ToString()</th>
+                                    <th>@Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString()</th>
+                                    <th>@Model.Loc.Where(a => a.ResourceId == "spnStatus").FirstOrDefault().Value.ToString()</th>                                   
+                                    <th>@Model.Loc.Where(a => a.ResourceId == "spnDefects").FirstOrDefault().Value.ToString()</th>  
+                                </tr>                               
+                            </thead>
+                            <tfoot id="tblFleetIssuefooter" style="display:none">
+                                <tr>
+                                    <th style="position:relative;">@Model.Loc.Where(a => a.ResourceId == "spnRecordDate").FirstOrDefault().Value.ToString()</th>
+                                    <th style="position:relative;">@Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString()</th>                                    
+                                    <th style="position:relative;">@Model.Loc.Where(a => a.ResourceId == "spnStatus").FirstOrDefault().Value.ToString()</th>
+                                    <th style="position:relative;">@Model.Loc.Where(a => a.ResourceId == "spnDefects").FirstOrDefault().Value.ToString()</th>
+                                   
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="padding:15px 25px !important;">
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style type="text/css">
+    table.dataTable.dropTable tbody td {
+        height: 27px;
+    }
+
+    .dropdown-content {
+        height: 450px !important;
+    }
+
+    .dropdown-modal .tbl-dropdown .dataTables_wrapper {
+        width: 100% !important;
+    }
+
+    @@media only screen and (max-width: 1367px) {
+        tfoot#tbleqpfooter th:nth-child(1) input.tfootsearchtxt {
+            width: 150px !important;
+        }
+
+        tfoot#tbleqpfooter th:nth-child(2) input.tfootsearchtxt {
+            width: 150px !important;
+        }
+
+        .dropdown-content {
+            height: 465px !important;
+        }
+    }
+
+    .dtpickerNew { /*width: 120px;*/
+        width: 100px;
+        float: left;
+    }
+    .ui-datepicker-trigger {
+        width: 30px;
+        float: left;
+        margin-left: -3px;
+        margin-right: 10px;
+    }
+
+
+    #ui-datepicker-div.ui-datepicker.ui-widget.ui-widget-content {
+        z-index: 1153 !important;
+        top: 150px !important;
+    }
+ 
+   
+</style>

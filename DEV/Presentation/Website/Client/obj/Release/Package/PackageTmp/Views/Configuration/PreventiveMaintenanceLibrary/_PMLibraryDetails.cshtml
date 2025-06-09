@@ -1,0 +1,146 @@
+﻿@model Client.Models.Configuration.PreventiveMaintenanceLibrary.PrevMaintLibraryVM
+<div class="m-subheader">
+    <div class="new-m-subheader">
+        <div class="PageTitle">
+            <div class="align-items-center separator">
+                <h3 class="m-subheader__title ">
+                    @Model.Loc.Where(a => a.ResourceId == "spnLibraries").FirstOrDefault().Value.ToString()
+                </h3>
+            </div>
+        </div>
+
+        <div class="NewBreadcrumbArea">
+            <div class="newBreadcrumb">
+                <ul>
+                    <li><a href="/Configuration/Dashboard">&nbsp;</a></li>
+                    <li><a href="/PreventiveMaintenanceLibrary/Index?page=Libraries_Preventive_Maintenance">@Model.Loc.Where(a => a.ResourceId == "spnPMLibrarySearch").FirstOrDefault().Value.ToString()</a></li>
+                    <li class="active">@Model.preventiveMaintenanceLibraryModel.ClientLookupId</li>
+                </ul>
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+
+        <div class="ActionBttnArea">
+
+            <div class="actionDiv pull-left">
+                <div class="btn-group bootstrap-select m-datatable__pager-size dropup show selectDrop actionNewDrop" style="margin-right:0px;">
+                    <div class="btn-group bootstrap-select m-datatable__pager-size" style="width: 100%;">
+                        <button type="button" class="btn dropdown-toggle bs-placeholder btn-default" data-toggle="dropdown" role="button" title=""><span class="filter-option pull-left">Action</span>&nbsp;<span class="bs-caret"><span class="caret"></span></span></button>
+                        <div class="dropdown-menu open" role="combobox">
+                            <ul class="dropdown-menu inner" role="listbox" aria-expanded="false">
+                                 <li data-toggle="modal" id="ChangePrevenMaintLibId" ><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnChangePreventiveLibraryId").FirstOrDefault().Value.ToString()</a></li>
+                               
+                            </ul>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @if (Model.security.PrevMaintLibrary.Create)
+            {
+                <button id="addPrevMaintLibrary" type="button" class="btn newBtn-add addPreventiveMaintenanceLibrary pull-left" title="Add Preventive Maintenance Library"><i class="fa fa-plus"></i></button>
+            }
+            <div style="clear:both;"></div>
+        </div>
+        <div style="clear:both;"></div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xl-3">
+        <div class="m-portlet">
+            <div class="sideMenuArea">
+                <ul class="vtabs" id="detmaintab">
+                    <li class="active"><a href="#PreventiveOverview">@Model.Loc.Where(a => a.ResourceId == "spnOverview").FirstOrDefault().Value.ToString()</a></li>
+                    <li id="litask" onclick="openCity(event, 'Tasks')"><a href="#Tasks">@Model.Loc.Where(a => a.ResourceId == "spnTasks").FirstOrDefault().Value.ToString()</a></li>
+                </ul>
+            </div>
+            <div class="selectTabs" id="selectTabs">
+                <select class="form-control" id="colorselector">
+                    <option value="PreventiveOverview">@Model.Loc.Where(a => a.ResourceId == "spnOverview").FirstOrDefault().Value.ToString()</option>
+                    <option value="Tasks">@Model.Loc.Where(a => a.ResourceId == "spnTasks").FirstOrDefault().Value.ToString()</option>
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-9">
+        <div class="row">
+            <div class="col-xl-12" id="btnnblock">
+                <div class="m-portlet" id="m_portlet" style="padding:15px;">
+                    <div class="bottomBlock">
+                        <div class="tabsArea nobg" id="PreventiveOverview" style="display:block;">
+                            <ul class="listView">
+                                <li>
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnPMMasterID").FirstOrDefault().Value.ToString(): </span>
+                                    <span class="inputText">@Model.preventiveMaintenanceLibraryModel.ClientLookupId</span>
+                                </li>
+                                <li style="height:auto;">
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString():</span>
+                                    <span class="inputText description-span">@Model.preventiveMaintenanceLibraryModel.Description</span>
+                                    <div style="clear:both;"></div>
+                                </li>
+                                <li>
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "GlobalType").FirstOrDefault().Value.ToString():</span>
+                                    <span class="inputText">@Model.preventiveMaintenanceLibraryModel.Type</span>
+                                </li>
+                                <li>
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "globalInActive").FirstOrDefault().Value.ToString():</span>
+                                    <span class="inputText">@Html.CheckBoxFor(m => m.preventiveMaintenanceLibraryModel.InactiveFlag, new { @class = "form-control m-input", @disabled = "disabled", @style = "color:black; width: auto; margin-top: 12px;" })</span>
+                                </li>
+                                <li>
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnDownRequired").FirstOrDefault().Value.ToString():</span>
+                                    <span class="inputText">@Html.CheckBoxFor(m => m.preventiveMaintenanceLibraryModel.DownRequired, new { @class = "form-control m-input", @disabled = "disabled", @style = "color:black; width: auto; margin-top: 12px;" })</span>
+                                </li>
+
+                                <li>
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnFrequencyType").FirstOrDefault().Value.ToString(): <small></small></span>
+                                    <span class="inputText">@Model.preventiveMaintenanceLibraryModel.FrequencyType</span>
+                                </li>
+                                <li>
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnFrequency").FirstOrDefault().Value.ToString(): <small></small></span>
+                                    <span class="inputText">@Model.preventiveMaintenanceLibraryModel.Frequency</span>
+                                </li>
+                                <li>
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnSchdType").FirstOrDefault().Value.ToString(): <small></small></span>
+                                    <span class="inputText">@Model.preventiveMaintenanceLibraryModel.ScheduleType</span>
+                                </li>
+                                <li>
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnScheduleMethod").FirstOrDefault().Value.ToString(): <small></small></span>
+                                    <span class="inputText">@Model.preventiveMaintenanceLibraryModel.ScheduleMethod</span>
+                                </li>
+                            </ul>
+                            <div class="editBttn">
+                                @if (Model.preventiveMaintenanceLibraryModel.PrevMaintLibraryId > 0)
+                                {
+                                    <button type="button" class="btn btn-blue" id="editpreventiveMaintenanceLibrary"><i class="fa fa-pencil" style="margin-top:-3px;"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalEdit").FirstOrDefault().Value.ToString()</button>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tabsArea nobg" id="Tasks" style="display:none;">
+                        <div class="table-responsive">
+                            <table id="tasksPMLTable" class="eqpDtlTbl row-border custom-sort" style="width:100%;">
+                                <thead>
+                                    <tr>
+                                        <th>@Model.Loc.Where(a => a.ResourceId == "spnTaskNumber").FirstOrDefault().Value.ToString()</th>
+                                        <th>@Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString()</th>
+                                        <th width="17%" style="text-align:center !important;">@Model.Loc.Where(a => a.ResourceId == "globalAction").FirstOrDefault().Value.ToString()</th>
+                                    </tr>
+                                </thead>
+
+                            </table>
+                        </div>
+                        <div class="bttns" id="btnAddTaskContainer" style="display:none">
+                            <button type="button" class="btn btn-blue" id="btnAddTask"><i class="fa fa-plus faIcon"></i> &nbsp;@Model.Loc.Where(a => a.ResourceId == "spnAddTask").FirstOrDefault().Value.ToString() </button>
+                        </div>
+                        <div style="clear:both;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@Html.HiddenFor(m => m.preventiveMaintenanceLibraryModel.PrevMaintLibraryId)
+@Html.HiddenFor(m => m.preventiveMaintenanceLibraryModel.ClientLookupId)
+@Html.Partial("~/Views/Configuration/PreventiveMaintenanceLibrary/_ChangePreventiveLibraryID.cshtml")
+

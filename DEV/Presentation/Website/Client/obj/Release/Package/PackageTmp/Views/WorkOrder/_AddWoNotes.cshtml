@@ -1,0 +1,97 @@
+﻿@model Client.Models.Work_Order.WorkOrderVM
+<div class="m-subheader fixedDiv1">
+    <div class="new-m-subheader">
+        <div class="PageTitle">
+            <div class="align-items-center separator">
+                <h3 class="m-subheader__title ">
+                    @Model.Loc.Where(a => a.ResourceId == "spnGlobalNote").FirstOrDefault().Value.ToString()
+                </h3>
+            </div>
+        </div>
+
+        <div class="NewBreadcrumbArea">
+            <div class="newBreadcrumb">
+                <ul>
+                    <li><a href="/Dashboard/Dashboard">&nbsp;</a></li>
+                    <li><a href="/WorkOrder/Index?page=Maintenance_Work_Order_Search">@Model.Loc.Where(a => a.ResourceId == "spnWorkOrderSearch").FirstOrDefault().Value.ToString()</a></li>
+                    <li><a href="javascript:void(0)" id="brdwonotes" data-val="@Model.notesModel.WorkOrderId">@Model.notesModel.ClientLookupId</a></li>
+                    @if (Model.notesModel.NotesId != 0)
+                    {
+                        <li class="active">@Model.Loc.Where(a => a.ResourceId == "spnUpdateNote").FirstOrDefault().Value.ToString()</li>
+                    }
+                    else
+                    {
+                        <li class="active">@Model.Loc.Where(a => a.ResourceId == "spnAddNote").FirstOrDefault().Value.ToString()</li>
+                    }
+                </ul>
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+        <div style="clear:both;"></div>
+    </div>
+</div>
+<div class="pushDiv1"></div>
+
+<div class="row fixedDiv2">
+    @Html.Partial("_WorkOrderSummary", Model)
+</div>
+<div class="pushDiv2 WOScheduleAdjust"></div>
+@Html.Partial("_ErrorDiv")
+@using (Ajax.BeginForm("AddNotes", "WorkOrder", new AjaxOptions { HttpMethod = "Post", OnSuccess = "WONotesAddOnSuccess", OnBegin = "AjaxBeginFormBegin", OnComplete = "AjaxBeginFormComplete", OnFailure = "AjaxBeginFormFaillure" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="row">
+        <div class="col-xl-12">
+            <div class="m-portlet newPort" id="m_portlet" style="padding:15px;">
+                <div class="bottomBlock">
+                    <div class="tabsArea nobg">
+                        <ul class="listView nobrd">
+                            <li>
+                                <span class="label">@Html.LabelFor(m => m.notesModel.Subject) : </span>
+                                <span class="inputText">
+                                    @Html.TextBoxFor(m => m.notesModel.Subject, new { @class = "form-control search", autocomplete = "off" })
+                                </span>
+                            </li>
+                            <li>
+                                <span class="label">@Html.LabelFor(m => m.notesModel.Content) : <small>*</small></span>
+                                <span class="inputText">
+                                    @Html.ValidationMessageFor(m => m.notesModel.Content, "", new { style = "display:none" })
+                                    @Html.TextBoxFor(m => m.notesModel.Content, new { @class = "form-control search", autocomplete = "off" })
+                                </span>
+                            </li>
+
+                        </ul>
+                    </div>
+                    <div style="clear:both;"></div>
+
+                    <div class="idBttns">
+                        <div class="bttn_pagin">
+                            <div class="bttns2">
+                                <button type="submit" class="btn btn-blue mobBttn"><i class="fa fa-save faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+                            </div>
+                            <div class="bttns"><button type="button" class="btn btn-blue mobBttn" id="btnwonotescancel"><i class="fa fa-close faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button></div>
+
+                            <div style="clear:both;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @Html.HiddenFor(m => m.notesModel.WorkOrderId)
+    @Html.HiddenFor(m => m.notesModel.NotesId)
+    @Html.HiddenFor(m => m.notesModel.updatedindex)
+}
+@Html.Partial("_WOSummaryDescription", Model)
+@Html.Partial("_CompleteModal")
+@Html.Partial("_CancelModal")
+@Html.Partial("_ScheduleModal")
+
+
+<link href="~/Scripts/Metronic/assets/demo/default/base/style_newCustom.css" rel="stylesheet" />
+<style type="text/css">
+    .pushDiv2.WOScheduleAdjust { height: 161px !important; }
+    .gridList:hover { background: #fff; }
+    .row[class*="m-row--col-separator-"] > div:last-child { border-bottom: 0px solid #ebedf2; }
+</style>

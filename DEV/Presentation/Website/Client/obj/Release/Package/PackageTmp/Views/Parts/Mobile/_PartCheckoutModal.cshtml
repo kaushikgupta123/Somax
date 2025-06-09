@@ -1,0 +1,123 @@
+﻿@model Client.Models.Parts.PartsVM
+
+
+
+@using (Ajax.BeginForm("SaveInventorydata", "Parts", new AjaxOptions { HttpMethod = "Post", OnSuccess = "ValidateParCheckOutOnSuccess", OnBegin = "AjaxBeginFormBegin", OnFailure = "AjaxBeginFormFaillure" }))
+{
+    @Html.HiddenFor(m => m.inventoryCheckoutModel.PartClientLookupId)
+    @Html.HiddenFor(m => m.inventoryCheckoutModel.PartId)
+    @Html.HiddenFor(m => m.inventoryCheckoutModel.PartDescription)
+    @Html.HiddenFor(m => m.inventoryCheckoutModel.UPCCode)
+
+    @Html.AntiForgeryToken()
+    <div class="slide-modal" id="partCheckOutPopUp">
+        <div class="slide-modal-head">
+            <a class="slide-back-btn partCheckOutPopUpHide" id="closeprtissue"> <i class="fa fa-angle-left"></i> Back</a>
+            <div class="slide-back-title">
+                @Model.Loc.Where(a => a.ResourceId == "spnPartCheckout").FirstOrDefault().Value.ToString()
+            </div>
+        </div>
+        @Html.Partial("_ErrorDiv")
+        <div class="slide-modal-body">
+            <div mbsc-page class="demo-responsive">
+                <div style="height:100%">
+                    <div mbsc-form class="mbsc-form-grid">
+                        <div class="mbsc-grid">
+                            <div class="mbsc-row">
+                                <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                    <label>
+                                        @Model.Loc.Where(a => a.ResourceId == "spnChargeType").FirstOrDefault().Value.ToString()
+                                        @Html.DropDownListFor(m => m.inventoryCheckoutModel.ChargeType, Model.inventoryCheckoutModel.ChargeTypeList, "--Select--", new
+                                        {
+                                            @class = "form-control search mobiscrollselect",
+                                            @style = "width:100%;",
+                                            @mbsc_dropdown = "true",
+                                            @data_label = Model.Loc.Where(a => a.ResourceId == "spnChargeType").FirstOrDefault().Value.ToString(),
+                                            @data_input_style = "box",
+                                            @data_label_style = "floating",
+                                            @placeholder = Model.Loc.Where(a => a.ResourceId == "spnChargeType").FirstOrDefault().Value.ToString()
+                                        })
+                                    </label>
+                                    @Html.ValidationMessageFor(m => m.inventoryCheckoutModel.ChargeType, "", new { })
+                                </div>
+                                <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                    <label>
+                                        @Model.Loc.Where(a => a.ResourceId == "GlobalChargeTo").FirstOrDefault().Value.ToString() :
+                                        @Html.HiddenFor(m => m.inventoryCheckoutModel.ChargeToId, new { id = "hdnChargeToId" })
+                                        @Html.TextBoxFor(x => x.inventoryCheckoutModel.ChargeToClientLookupId, new { @class = "form-control search dropbtn readonly", id = "txtChargeToId", autocomplete = "off", @readonly = "readonly", @mbsc_input = "true", @data_input_style = "box", @data_label_style = "floating" })
+                                    </label>
+                                    @Html.ValidationMessageFor(x => x.inventoryCheckoutModel.ChargeToClientLookupId, "", new { })
+                                </div>
+                                <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                    <div class=" design-box">
+                                        <div class="input-group-btn">
+                                            <button type="button" class="btn btn-blue mobBttn" id="openpartChkoutgrid" disabled="disabled">
+                                                <i id="srcicon" class="fa fa-search"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                @if (Model._userdata.DatabaseKey.Client.AssetTree == true)
+                                {
+                                    <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                        <div class=" design-box">
+                                            <div class="input-group-btn">
+
+                                                <button type="button" class="btn btn-blue mobBttn" data-assignedid="txtChargeToId" id="imgChargeToTree">
+                                                    <i id="srcicon" class="fa fa-tree chargeTree" style="display:block;"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                }
+                                <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                    <label id="spnQuantityMaintenance">
+                                        @Model.Loc.Where(a => a.ResourceId == "spnQuantity").FirstOrDefault().Value.ToString():
+
+                                        @Html.TextBoxFor(x => x.inventoryCheckoutModel.Quantity, new { @class = "form-control search decimalinput", autocomplete = "off", @mbsc_input = "true", placeholder = Model.Loc.Where(a => a.ResourceId == "spnQuantity").FirstOrDefault().Value.ToString(), @data_input_style = "box", @data_label_style = "floating" })
+                                    </label>
+                                    @Html.ValidationMessageFor(x => x.inventoryCheckoutModel.Quantity, "", new { })
+                                </div>
+                            </div>
+                            <div class="mbsc-row">
+                                <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                    <div class="design-box">
+                                        <div class="mbsc-button-group-block">
+                                            <button mbsc-button data-color="success" type="button" class="btn btn-blue mobBttn partCheckOutPopUpHide" id="btnPartCheckOutCancel"><i class="fa fa-close faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                    <div class="design-box">
+                                        <div class="mbsc-button-group-block">
+                                            <button type="submit" class="btn btn-blue mobBttn"><i class="fa fa-check faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "spnIssue").FirstOrDefault().Value.ToString()</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="slide-modal-footer"></div>
+    </div>
+}
+<div class="slide-modal" id="commonWOTreeModal">
+    <div class="slide-modal-head ">
+        <a id="commonWOTreeModalHide" class="slide-back-btn"> <i class="fa fa-angle-left"></i> Back</a>
+        <div class="slide-back-title">
+            @Model.Loc.Where(a => a.ResourceId == "spnGlobalEquipmentTreeLookup").FirstOrDefault().Value.ToString()
+        </div>
+    </div>
+    <div class="slide-modal-body">
+        <div class="cntTree">
+        </div>
+    </div>
+    <div class="slide-modal-footer"></div>
+</div>
+@Html.Partial("~/Views/Parts/Mobile/_EquipmentGridPopUp.cshtml", Model)
+@Html.Partial("~/Views/Parts/Mobile/_WorkOrderGridPopUp.cshtml", Model)
+@Html.Partial("~/Views/Parts/Mobile/_LocationGridPopUp.cshtml", Model)

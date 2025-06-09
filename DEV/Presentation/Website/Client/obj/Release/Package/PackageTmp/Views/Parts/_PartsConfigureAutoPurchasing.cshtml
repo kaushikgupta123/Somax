@@ -1,0 +1,117 @@
+﻿@model Client.Models.Parts.PartsVM
+<div id="UpdatePartsConfigureAutoPurchasingPopUp" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close UpdatePartsConfigureAutoPurchasingPopUpClose">&times;</button>
+                <h4 class="modal-title">@Model.Loc.Where(a => a.ResourceId == "spnAutoPurchasingConfiguration").FirstOrDefault().Value.ToString()</h4>
+            </div>
+            @Html.Partial("_ErrorDiv")
+            @using (Ajax.BeginForm("UpdatePartsConfigureAutoPurchasing", "Parts", new AjaxOptions { HttpMethod = "Post", OnSuccess = "UpdatePartsConfigureAutoPurchasingOnSuccess", OnBegin = "AjaxBeginFormBegin", OnFailure = "AjaxBeginFormFaillure" }))
+            {
+                @Html.AntiForgeryToken()
+                <div class="modal-body">
+                    <div class="form-group" style="margin-bottom:0;">
+                        <div class="bottomBlock">
+                            <div>
+                                <ul class="listView listViewPart nobrd" style="border-bottom:0;">
+                                    @Html.HiddenFor(m => m.partsConfigureAutoPurchasingModel.PartId)
+                                    @Html.HiddenFor(m => m.partsConfigureAutoPurchasingModel.PartStoreroomId)
+                                    <li class="txtSrchArea txtSrch" style="margin-bottom:0;">
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnAutoPurchase").FirstOrDefault().Value.ToString():</span>
+                                        <span class="inputText">
+                                            @Html.ValidationMessageFor(m => m.partsConfigureAutoPurchasingModel.IsAutoPurchase, "", new { style = "display:none" })
+                                            @Html.CheckBoxFor(m => m.partsConfigureAutoPurchasingModel.IsAutoPurchase)
+                                        </span>
+                                        <div style="clear:both;"></div>
+                                    </li>
+
+                                    <li style="position:relative;" class="search-feild">
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnAutoPurchaseVendor").FirstOrDefault().Value.ToString():</span>
+                                        <div class="opt-btn-boxVendorPartsConfigure">
+                                            <span class="inputText">
+
+                                                <div class="input-group">
+                                                    @Html.ValidationMessageFor(m => m.partsConfigureAutoPurchasingModel.PartVendorId, "", new { style = "display:none" })
+                                                    @Html.DropDownListFor(m => m.partsConfigureAutoPurchasingModel.PartVendorId, Model.partsConfigureAutoPurchasingModel.VendorList, "--Select--", new { @class = "form-control search select2picker", style = "width:100%;" })
+                                                </div>
+                                            </span>
+                                            <span style="margin-left:6px">
+                                                <button type="button" id="addPartVendorforAutoPurchasingConfig" class="btn btn-blue mobBttn" title="Add Vendor"><i class="fa fa-plus"></i></button>
+                                            </span>
+
+                                        </div>
+                                    </li>
+                                    <li class="txtSrchArea txtSrch" style="margin-bottom:0;">
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnMaximum").FirstOrDefault().Value.ToString() :</span>
+                                        <span class="inputText">
+                                            @Html.ValidationMessageFor(m => m.partsConfigureAutoPurchasingModel.QtyMaximum, "", new { style = "display:none" })
+                                            @Html.TextBoxFor(m => m.partsConfigureAutoPurchasingModel.QtyMaximum, new { @class = "form-control search decimalinput partsConfigureQty", autocomplete = "off", placeholder = "0.00000", @id = "QtyMaximum" })
+                                        </span>
+                                        <div style="clear:both;"></div>
+                                    </li>
+                                    <li class="txtSrchArea txtSrch" style="margin-bottom:0;">
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnMinimum").FirstOrDefault().Value.ToString() :</span>
+                                        <span class="inputText">
+                                            @Html.ValidationMessageFor(m => m.partsConfigureAutoPurchasingModel.QtyReorderLevel, "", new { style = "display:none" })
+                                            @Html.TextBoxFor(m => m.partsConfigureAutoPurchasingModel.QtyReorderLevel, new { @class = "form-control search decimalinput partsConfigureQty", @id = "QtyReorderLevel", autocomplete = "off", placeholder = "0.00000" })
+                                        </span>
+                                        <div style="clear:both;"></div>
+                                    </li>
+                                </ul>
+                                <div style="clear:both;"></div>
+                            </div>
+                            <div style="clear:both;"></div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer" style="padding:15px 25px !important;">
+                    <button type="button" class="btn btn-default mobBttn  UpdatePartsConfigureAutoPurchasingPopUpClose" data-dismiss="modal"><i class="fa fa-close faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button>
+                    <button class="btn btn-blue mobBttn" style="float:right;"> <i class="fa fa-save faIcon"></i> &nbsp;@Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+                    <div style="clear:both;"></div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+@Html.Partial("~/Views/Shared/LookupTypeTablePopup/_VendorPopup.cshtml")
+<style>
+
+    #UpdatePartsConfigureAutoPurchasingPopUp .listViewPart li span.label {
+        max-width: 195px;
+    }
+    .opt-btn-boxVendorPartsConfigure {
+        width: calc(100% - 190px) !important;
+    }
+    #UpdatePartsConfigureAutoPurchasingPopUp .listViewPart li span.inputText {
+        width: calc(100% - 45px);
+    }
+    #UpdatePartsConfigureAutoPurchasingPopUp .listViewPart.nobrd li {
+        margin: 1px;
+    }
+
+   @@media only screen and (max-width: 991px) {
+        #UpdatePartsConfigureAutoPurchasingPopUp .listViewPart li span.label {
+            max-width: 170px;
+        }
+    .opt-btn-boxVendorPartsConfigure {
+        width: calc(100% - 170px) !important;
+        display: flex;
+    }
+    }
+
+    @@media screen and (max-width: 767px) {
+        #UpdatePartsConfigureAutoPurchasingPopUp .listViewPart.nobrd li, .opt-btn-boxVendorPartsConfigure{display:flex;}
+    }
+
+    @@media screen and (max-width: 479px) {
+        #UpdatePartsConfigureAutoPurchasingPopUp .listViewPart li span.label {
+            max-width: 100%;
+        }
+        #UpdatePartsConfigureAutoPurchasingPopUp .listViewPart li span.inputText, .opt-btn-boxVendorPartsConfigure {
+            width: 100% !important;
+        }
+    }
+    
+</style>

@@ -1,0 +1,65 @@
+﻿@model Client.Models.MultiStoreroomPart.MultiStoreroomPartVM
+
+<nav class="sidebar">
+    <div class="dismiss">
+        <i class="fa fa-close"></i>
+    </div>
+
+    <div class="sidebar-header">
+        <h3><i class="fa fa-filter" style="position: relative; top: -2px;"></i> @Model.Loc.Where(a => a.ResourceId == "spnFilters").FirstOrDefault().Value.ToString()<span class="filteritemcount">0</span></h3>
+        <button type="button" class="btn btn-blue filterSearch" id="btnMSPDataAdvSrchHistory"><i class="fa fa-search" style="margin-top:-3px;"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalSearch").FirstOrDefault().Value.ToString()</button>
+    </div>
+
+    <div class="sidebar-content" id="mspadvsearchsidebarHistory">
+        <form action="#" method="post">
+            <div class="form-group">
+                <label for="mspgridadvsearchTransactionType">@Model.Loc.Where(a => a.ResourceId == "GlobalType").FirstOrDefault().Value.ToString() :</label>
+                <select class="form-control search select2picker adv-item" id="mspgridadvsearchTransactionType" style="width: 100% !important;"></select>
+            </div>
+            <div class="form-group">
+                <label for="mspgridadvsearchRequestorName">@Model.Loc.Where(a => a.ResourceId == "spnRequestor").FirstOrDefault().Value.ToString() :</label>
+                <input type="text" class="form-control search adv-item" autocomplete="off" id="mspgridadvsearchRequestorName">
+            </div>
+            <div class="form-group">
+                <label for="mspgridadvsearchPerformByName">@Model.Loc.Where(a => a.ResourceId == "spnPerformedBy").FirstOrDefault().Value.ToString() :</label>
+                <input type="text" class="form-control search adv-item" autocomplete="off" id="mspgridadvsearchPerformByName">
+            </div>
+            <div class="form-group">
+                <label for="mspgridadvsearchTransactionDate">@Model.Loc.Where(a => a.ResourceId == "spnDate").FirstOrDefault().Value.ToString() :</label>
+                <input type="text" class="form-control search dtpicker adv-item" autocomplete="off" id="mspgridadvsearchTransactionDate">
+            </div>
+            <div class="form-group">
+                <label for="mspgridadvsearchTransactionQuantity">@Model.Loc.Where(a => a.ResourceId == "spnQuantity").FirstOrDefault().Value.ToString() :</label>
+                <input type="text" class="form-control search decimalinput adv-item" autocomplete="off" id="mspgridadvsearchTransactionQuantity">
+            </div>
+            <div class="form-group">
+                <label for="mspgridadvsearchCost">@Model.Loc.Where(a => a.ResourceId == "spnUnitCost").FirstOrDefault().Value.ToString() :</label>
+                <input type="text" class="form-control search decimalinput adv-item" autocomplete="off" id="mspgridadvsearchCost">
+            </div>
+            <div class="form-group">
+                <label for="mspgridadvsearchChargeTypePrimary">@Model.Loc.Where(a => a.ResourceId == "spnChargeType").FirstOrDefault().Value.ToString() :</label>
+                <select id="mspgridadvsearchChargeTypePrimary" style="width:100%;" class="form-control search adv-item select2picker"></select>
+            </div>
+            <div class="form-group">
+                <label for="mspgridadvsearchChargeToName">@Model.Loc.Where(a => a.ResourceId == "GlobalChargeTo").FirstOrDefault().Value.ToString() :</label>
+                <input type="text" class="form-control search adv-item" autocomplete="off" id="mspgridadvsearchChargeToName">
+            </div>
+            <div class="form-group">
+                <label for="mspgridadvsearchAccountId">@Model.Loc.Where(a => a.ResourceId == "spnAccount").FirstOrDefault().Value.ToString() :</label>
+                <input type="text" class="form-control search adv-item" autocomplete="off" id="mspgridadvsearchAccountId">
+            </div>
+            <div class="form-group">
+                <label for="mspgridadvsearchPurchaseOrderClientLookupId">@Model.Loc.Where(a => a.ResourceId == "spnPurchaseOrder").FirstOrDefault().Value.ToString() :</label>
+                <input type="text" class="form-control search adv-item" autocomplete="off" id="mspgridadvsearchPurchaseOrderClientLookupId">
+            </div>
+            <div class="form-group">
+                <label for="mspgridadvsearchVendorClientLookupId">@Model.Loc.Where(a => a.ResourceId == "spnVendor").FirstOrDefault().Value.ToString() :</label>
+                <select id="mspgridadvsearchVendorClientLookupId" style="width:100%;" class="form-control search adv-item select2picker"></select>
+            </div>
+            <div class="form-group">
+                <label for="mspgridadvsearchVendorName">@Model.Loc.Where(a => a.ResourceId == "spnVendorName").FirstOrDefault().Value.ToString() :</label>
+                <input type="text" class="form-control search adv-item" autocomplete="off" id="mspgridadvsearchVendorName">
+            </div>
+        </form>
+    </div>
+</nav>

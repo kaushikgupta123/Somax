@@ -1,0 +1,16 @@
+﻿@model Client.Models.Parts.PartsVM
+
+
+
+<div class="slide-modal" id="partdetaildesmodal">
+    <div class="slide-modal-head">
+        <a class="slide-back-btn" id="partdetaildesmodalHide"> <i class="fa fa-angle-left"></i> Back</a>
+        <div class="slide-back-title summarydescriptionmodaltitle">
+            @Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString()
+        </div>
+    </div>
+    <div class="slide-modal-body" style="text-align:center;">
+        <span id="partdetaildesmodaltext"></span>
+    </div>
+</div>
+

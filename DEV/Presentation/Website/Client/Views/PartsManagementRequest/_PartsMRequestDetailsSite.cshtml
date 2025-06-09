@@ -1,0 +1,387 @@
+﻿@model Client.Models.PartsManagement.PartsManagementRequest.PartsManagementRequestVM
+
+<div class="m-subheader">
+    <div class="new-m-subheader">
+        <div class="PageTitle">
+            <div class="align-items-center separator">
+                <h3 class="m-subheader__title ">
+                    @Model.Loc.Where(a => a.ResourceId == "spnPartMasterRequestDetailSite").FirstOrDefault().Value.ToString()
+                </h3>
+            </div>
+        </div>
+
+        <div class="NewBreadcrumbArea">
+            <div class="newBreadcrumb">
+                <ul>
+                    <li><a href="/Dashboard/Dashboard">&nbsp;</a></li>
+                    <li><a href="/PartsManagementRequest/Index?page=Inventory_Parts_Management_Parts_Management_Requests">@Model.Loc.Where(a => a.ResourceId == "spnPartMasterRequestSearch").FirstOrDefault().Value.ToString()</a></li>
+                    <li class="active">@Model.partsManagementRequestModel.PartMasterRequestId</li>
+                </ul>
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+        @if (Model.PmMenuVisibility)
+        {
+            <div class="ActionBttnArea">
+                <div class="actionDiv pull-left" style="margin-right:0;">
+                    <div class="btn-group bootstrap-select m-datatable__pager-size dropup show selectDrop actionNewDrop">
+                        <div class="btn-group bootstrap-select m-datatable__pager-size" style="width: 100%;">
+                            <button type="button" class="btn dropdown-toggle bs-placeholder btn-default" data-toggle="dropdown" role="button" title=""><span class="filter-option pull-left">@Model.Loc.Where(a => a.ResourceId == "globalAction").FirstOrDefault().Value.ToString()</span>&nbsp;<span class="bs-caret"><span class="caret"></span></span></button>
+                            <div class="dropdown-menu open" role="combobox">
+                                <ul class="dropdown-menu inner" role="listbox" aria-expanded="false">
+                                    <li class="localPart">
+                                        <a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnLocalPartManagement").FirstOrDefault().Value.ToString() <i class="fa fa-angle-left" aria-hidden="true"></i></a>
+                                        <ul class="actionSubmenu menuLocalPart">
+                                            <li><a href="javascript:void(0)" id="optAssignPartMaster">@Model.Loc.Where(a => a.ResourceId == "spnAssignPartMastertLocalBakery").FirstOrDefault().Value.ToString()</a></li>
+                                            <li><a href="javascript:void(0)" id="optReplacePartMaster">@Model.Loc.Where(a => a.ResourceId == "spnReplacePartwithExistinPartMaster").FirstOrDefault().Value.ToString()</a></li>
+                                            <li><a href="javascript:void(0)" id="optInactivePartMaster">@Model.Loc.Where(a => a.ResourceId == "spnInactivatePart").FirstOrDefault().Value.ToString()</a></li>
+                                            <li><a href="javascript:void(0)" id="optReplaceSXPartMaster">@Model.Loc.Where(a => a.ResourceId == "spnReplaceSXPartwithExistingPartMaster").FirstOrDefault().Value.ToString()</a></li>
+                                        </ul>
+                                    </li>
+                                    <li class="enterpricePart">
+                                        <a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnEnterpricePartManagement").FirstOrDefault().Value.ToString()<i class="fa fa-angle-left" aria-hidden="true"></i></a>
+                                        <ul class="actionSubmenu menuEnterpricePart">
+                                            <li><a href="javascript:void(0)" id="optAddNewPartMaster">@Model.Loc.Where(a => a.ResourceId == "spnAddNewPartMaster").FirstOrDefault().Value.ToString()</a></li>
+                                            <li><a href="javascript:void(0)" id="optReplacePartWithNewPartMaster">@Model.Loc.Where(a => a.ResourceId == "spnReplacePartwithNewPartMaster").FirstOrDefault().Value.ToString()</a></li>
+                                            <li><a href="javascript:void(0)" id="optReplacePartWithExistingPartMaster">@Model.Loc.Where(a => a.ResourceId == "spnReplaceParwithExistinPartMaster").FirstOrDefault().Value.ToString()</a></li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div style="clear:both;"></div>
+            </div>
+        }
+        <div style="clear:both;"></div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xl-3">
+        <div class="m-portlet">
+            <div class="sideMenuArea nobg">
+                <ul class="vtabs" id="detmaintab">
+                    <li id="partst" class="active"><a href="#PMRContainer">@Model.Loc.Where(a => a.ResourceId == "spnPartsMasterOverview").FirstOrDefault().Value.ToString()</a></li>
+                    <li id="photot" onclick="openCity(event, 'PMRPhoto')"><a href="#PMRPhoto">@Model.Loc.Where(a => a.ResourceId == "spnPhoto").FirstOrDefault().Value.ToString()</a></li>
+                    <li id="statust" onclick="openCity(event, 'PMRStatus')"><a href="#PMRStatus">@Model.Loc.Where(a => a.ResourceId == "spnStatus").FirstOrDefault().Value.ToString()</a></li>
+                    <li id="pmrattachmentt" onclick="openCity(event, 'PMRAttachment')"><a href="#PMRAttachment">@Model.Loc.Where(a => a.ResourceId == "globalAttachment").FirstOrDefault().Value.ToString()</a></li>
+                    <li id="pmrreviewLog" onclick="openCity(event, 'PMRReviewLog')"><a href="#PMRReviewLog"> @Model.Loc.Where(a => a.ResourceId == "spnReviewLog").FirstOrDefault().Value.ToString()</a></li>
+                </ul>
+            </div>
+            <div class="selectTabs" id="selectTabs">
+                <select class="form-control" id="colorselector">
+                    <option value="PMRContainer">@Model.Loc.Where(a => a.ResourceId == "spnPartsMasterOverview").FirstOrDefault().Value.ToString()</option>
+                    <option value="PMRPhoto">@Model.Loc.Where(a => a.ResourceId == "spnPhoto").FirstOrDefault().Value.ToString()</option>
+                    <option value="PMRStatus">@Model.Loc.Where(a => a.ResourceId == "spnStatus").FirstOrDefault().Value.ToString()</option>
+                    <option value="PMRAttachment">@Model.Loc.Where(a => a.ResourceId == "globalAttachment").FirstOrDefault().Value.ToString()</option>
+                    <option value="PMRReviewLog">@Model.Loc.Where(a => a.ResourceId == "spnReviewLog").FirstOrDefault().Value.ToString()</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-9">
+        <div class="row">
+            <div class="col-xl-12" id="btnnblock">
+                <div class="m-portlet" id="m_portlet" style="padding:15px;">
+                    <div class="bottomBlock">
+                        <div class="tabsArea nobg" id="PMRContainer" style="display:block; margin-top:-15px;">
+                            <ul class="listView">
+                                <li>
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnRequestId").FirstOrDefault().Value.ToString():</span>
+                                    <span class="inputText">@Model.partsManagementRequestModel.PartMasterRequestId</span>
+                                </li>
+                                <li style="height:auto;">
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString() :</span>
+                                    <span class="inputText" style="height: 45px; line-height: 22px; overflow-y: auto;">@Model.partsManagementRequestModel.Description</span>
+                                    <div style="clear:both;"></div>
+                                </li>
+                                <li>
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnManufacturer").FirstOrDefault().Value.ToString() :</span>
+                                    <span class="inputText">@Model.partsManagementRequestModel.Manufacturer</span>
+                                </li>
+                                <li>
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnManufacturerPartNumber").FirstOrDefault().Value.ToString():</span>
+                                    <span class="inputText">@Model.partsManagementRequestModel.ManufacturerId</span>
+                                </li>
+                                <li>
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnUnitofMeasure").FirstOrDefault().Value.ToString():</span>
+                                    <span class="inputText">@Model.partsManagementRequestModel.UnitOfMeasure</span>
+                                </li>
+                                <li>
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnRequester").FirstOrDefault().Value.ToString() :</span>
+                                    <span class="inputText">@Model.partsManagementRequestModel.Requester</span>
+                                </li>
+                                <li>
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnCreated").FirstOrDefault().Value.ToString() :</span>
+                                    <span class="inputText">@Model.partsManagementRequestModel.CreatedDate</span>
+                                </li>
+                                <li style="height:auto;">
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnJustification").FirstOrDefault().Value.ToString() :</span>
+                                    <span class="inputText" style="height: 45px; line-height: 22px; overflow-y: auto;">@Model.partsManagementRequestModel.Justification</span>
+                                    <div style="clear:both;"></div>
+                                </li>
+                                <li>
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnCriticalForProduction").FirstOrDefault().Value.ToString() :</span>
+                                    @if (Model.partsManagementRequestModel.Critical)
+                                    {
+                                        <span class="inputText">@Html.CheckBoxFor(m => m.partsManagementRequestModel.Critical, new { @disabled = "disabled", @checked = "checked" })</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="inputText">@Html.CheckBoxFor(m => m.partsManagementRequestModel.Critical, new { @disabled = "disabled" })</span>
+                                    }
+                                </li>
+                                <li>
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnPurchaseFrequency").FirstOrDefault().Value.ToString():</span>
+                                    <span class="inputText">@UtilityFunction.GetMessageFromResource(Model.partsManagementRequestModel.PurchaseFreq + "Fre", LocalizeResourceSetConstants.PartManagementRequest)</span>
+                                </li>
+                                <li>
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnLeadTime").FirstOrDefault().Value.ToString():</span>
+                                    <span class="inputText">@UtilityFunction.GetMessageFromResource(Model.partsManagementRequestModel.PurchaseLeadTime, LocalizeResourceSetConstants.PartManagementRequest)</span>
+                                </li>
+                                <li>
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnCostLevel").FirstOrDefault().Value.ToString():</span>
+                                    <span class="inputText">@UtilityFunction.GetMessageFromResource(Model.partsManagementRequestModel.PurchaseCost, LocalizeResourceSetConstants.PartManagementRequest)</span>
+                                </li>
+                                <li>
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnRequestType").FirstOrDefault().Value.ToString():</span>
+                                    <span class="inputText">@Model.partsManagementRequestModel.RequestType</span>
+                                </li>
+                                <li>
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnStatus").FirstOrDefault().Value.ToString() :</span>
+                                    <span class="inputText">
+                                        <script>
+                                         var status = getStatusValue('@Model.partsManagementRequestModel.Status');
+                                            $("#statuslocval").html(status);
+                                        </script>
+                                        <span id='statuslocval' class="inputText"></span>
+                                    </span>
+                                </li>
+                                <li>
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnUnitCost").FirstOrDefault().Value.ToString():</span>
+                                    <span class="inputText">@Model.partsManagementRequestModel.UnitCost</span>
+                                </li>
+                                <li>
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnLocation").FirstOrDefault().Value.ToString():</span>
+                                    <span class="inputText">@Model.partsManagementRequestModel.Location</span>
+                                </li>
+                                <li>
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "globalMinimumQuantity").FirstOrDefault().Value.ToString():</span>
+                                    <span class="inputText">@Model.partsManagementRequestModel.QtyMinimum</span>
+                                </li>
+                                <li>
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "GlobalMaximumQuantity").FirstOrDefault().Value.ToString():</span>
+                                    <span class="inputText">@Model.partsManagementRequestModel.QtyMaximum</span>
+                                </li>
+                            </ul>
+
+                            <div class="bttns2">
+                                @if (Model.partsManagementRequestModel.btnSendToApproval)
+                                {
+                                    <button type="button" class="btn btn-blue mobBttn" id="btnSendForApproval" data-toggle="modal"><i class="fa fa-paper-plane" style="margin-top:-3px;"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "spnSendforApproval").FirstOrDefault().Value.ToString()</button>
+                                }
+                                @if (Model.partsManagementRequestModel.btnReturn2Requester)
+                                {
+                                    <button type="button" class="btn btn-blue mobBttn" id="btnReturnToRequester" data-toggle="modal"><i class="fa fa-undo" style="margin-top:-3px;"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "spnReturntoRequester").FirstOrDefault().Value.ToString()</button>
+                                }
+                                @if (Model.partsManagementRequestModel.btndenied)
+                                {
+                                    <button type="button" class="btn btn-blue mobBttn" id="btnDeny" data-toggle="modal"><i class="fa fa-ban" style="margin-top:-3px;"></i> &nbsp;@Model.Loc.Where(a => a.ResourceId == "globalDeny").FirstOrDefault().Value.ToString()</button>
+                                }
+                                @if (Model.partsManagementRequestModel.btnApprv)
+                                {
+                                    <button type="button" class="btn btn-blue mobBttn" id="btnSiteApprove"><i class="fa fa-check" style="margin-top:-3px;"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "spnSiteApprove").FirstOrDefault().Value.ToString()</button>
+                                }
+                                @if (Model.partsManagementRequestModel.btnCancel)
+                                {
+                                    <button type="button" class="btn btn-blue mobBttn" id="btnCancel"><i class="fa fa-times" style="margin-top:-3px;"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button>
+                                }
+                                @if (Model.partsManagementRequestModel.btnEnterpriseApprv)
+                                {
+                                    <button type="button" class="btn btn-blue mobBttn" id="btnEnterpriseApprove"><i class="fa fa-check" style="margin-top:-3px;"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "spnEnterpriseApprove").FirstOrDefault().Value.ToString()</button>
+                                }
+                                @if (Model.partsManagementRequestModel.btnSave)
+                                {
+                                    <button type="button" class="btn btn-blue mobBttn" id="btnSiteEdit"><i class="fa fa-pencil" style="margin-top:-3px;"></i> &nbsp;@Model.Loc.Where(a => a.ResourceId == "globalEdit").FirstOrDefault().Value.ToString()</button>
+                                }
+                            </div>
+                            <div style="clear:both;"></div>
+                        </div>
+                        <div class="tabsArea nobg imageDropZone" id="PMRPhoto" style="display:none;">
+                            <div class="row">
+                                <div class="col-xl-4">
+                                    <div id="AzureImage" class="AzureImage">
+                                        @if (!string.IsNullOrEmpty(Model.partsManagementRequestModel.ImageURL))
+                                        {
+                                            <img src="@Model.partsManagementRequestModel.ImageURL" alt="Image" id="PartMasterRequestZoom" data-zoom-image="@Model.partsManagementRequestModel.ImageURL" />
+                                        }
+                                        else
+                                        {
+                                            <img src="~/Scripts/ImageZoom/images/NoImage.jpg" alt="Image" id="PartMasterRequestZoom" />
+                                        }
+                                        @if (!string.IsNullOrEmpty(Model.partsManagementRequestModel.ImageURL) && !Model.partsManagementRequestModel.ImageURL.Contains("NoImage"))
+                                        {
+                                            <a href="javascript:void(0)" id="deleteImg" class="trashIcon" title="@Model.Loc.Where(a => a.ResourceId == "globalDelete").FirstOrDefault().Value.ToString()"><i class="fa fa-trash"></i></a>
+                                        }
+                                    </div>
+                                </div>
+                                <div class="col-xl-8">
+                                    <div class="hldDropzone">
+                                        <div class="dropzone" id="dropzoneForm">
+                                            <div class="fallback">
+                                                <input name="file" type="file" multiple />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="tabsArea nobg" id="PMRStatus" style="display:none; margin-top:-15px;">
+                            <ul class="listView">
+                                <li>
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnLastReviewedBy").FirstOrDefault().Value.ToString():</span>
+                                    <span class="inputText">@Model.partsManagementRequestModel.LastReviewedBy</span>
+                                </li>
+                                <li>
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnLastReviewed").FirstOrDefault().Value.ToString():</span>
+                                    <span class="inputText">@Model.partsManagementRequestModel.LastReviewed_Date</span>
+                                </li>
+                                <li>
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnSiteApprovedBy").FirstOrDefault().Value.ToString() :</span>
+                                    <span class="inputText">@Model.partsManagementRequestModel.ApproveDenyBy</span>
+                                </li>
+                                <li>
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnSiteApproved").FirstOrDefault().Value.ToString() :</span>
+                                    <span class="inputText">@Model.partsManagementRequestModel.ApproveDeny_Date</span>
+                                </li>
+                                <li>
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnEnterpriseApprovedBy").FirstOrDefault().Value.ToString():</span>
+                                    <span class="inputText">@Model.partsManagementRequestModel.ApproveDenyBy2</span>
+                                </li>
+                                <li>
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnEnterpriseApproved").FirstOrDefault().Value.ToString():</span>
+                                    <span class="inputText">@Model.partsManagementRequestModel.ApproveDeny2_Date</span>
+                                </li>
+                                <li>
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnPartMasterId").FirstOrDefault().Value.ToString():</span>
+                                    <span class="inputText">@Model.partsManagementRequestModel.PartMasterId</span>
+                                </li>
+                            </ul>
+                            <div class="editBttn">
+                            </div>
+                            <div style="clear:both;"></div>
+                        </div>
+
+                        <div class="tabsArea nobg" id="PMRAttachment" style="display:none;">
+                            <div class="table-responsive">
+                                <table id="tblpmrattachment" class="eqpDtlTbl row-border custom-sort" style="width:100%;">
+                                    <thead>
+                                        <tr>
+                                            <th>@Model.Loc.Where(a => a.ResourceId == "globalFileName").FirstOrDefault().Value.ToString()</th>
+                                            <th>@Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString()</th>
+                                            <th>@Model.Loc.Where(a => a.ResourceId == "spnUploadedBy").FirstOrDefault().Value.ToString()</th>
+                                            <th>@Model.Loc.Where(a => a.ResourceId == "spnUploaded").FirstOrDefault().Value.ToString()</th>
+                                            <th width="17%" style="text-align:center !important;">@Model.Loc.Where(a => a.ResourceId == "globalAction").FirstOrDefault().Value.ToString()</th>
+                                        </tr>
+                                </table>
+                            </div>
+
+                            <div class="bttn_pagin">
+                                <div class="bttns"><button type="button" class="btn btn-blue" id="btnAddPartMasterRequestAttachment"><i class="fa fa-plus faIcon"></i>&nbsp; @Model.Loc.Where(a => a.ResourceId == "globalAddAttachment").FirstOrDefault().Value.ToString()</button></div>
+                                <div style="clear:both;"></div>
+                            </div>
+                            <div style="clear:both;"></div>
+                            <div style="clear:both;"></div>
+                        </div>
+
+                        <div class="tabsArea nobg" id="PMRReviewLog" style="display:none;">
+                            <div class="actionBar">
+                                <div class="pull-left">
+                                    <button type="button" class="btn btn-white navbar-btn" id="pmsidebarCollapse" title="Advance Search"><i class="fa fa-filter" style="font-size: 1.3rem;"></i></button>
+                                    <ul class="filter_apply globalFilterAdjusted">
+                                        <li class="textFilter"><span class="filteritemcount">0</span>&nbsp;@Model.Loc.Where(a => a.ResourceId == "globalFiltersAppiled").FirstOrDefault().Value.ToString()</li>
+                                        <li class="textClear" id="rlClearAdvSearchFilter"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "globalClear").FirstOrDefault().Value.ToString()</a></li>
+                                    </ul>
+                                    <div style="clear:both;"></div>
+                                </div>
+                                <div style="clear:both;"></div>
+                                <div id="rlitemadvsearchfilteritems"></div>
+                                <div style="clear:both;"></div>
+                            </div>
+                            <div style="clear:both;"></div>
+
+                            <div class="table-responsive">
+                                <table id="tblpmreviewlog" class="eqpDtlTbl row-border custom-sort" style="width:100%;">
+                                    <thead>
+                                        <tr>
+                                            <th>@Model.Loc.Where(a => a.ResourceId == "spnReviewedBy").FirstOrDefault().Value.ToString()</th>
+                                            <th>@Model.Loc.Where(a => a.ResourceId == "spnLogComment").FirstOrDefault().Value.ToString()</th>
+                                            <th>@Model.Loc.Where(a => a.ResourceId == "spnDate").FirstOrDefault().Value.ToString()</th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                            <div style="clear:both;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="pmreviewadvsearchcontainer">
+    @Html.Partial("_PmReviewLogAdvancedSearch", Model)
+</div>
+@Html.HiddenFor(m => m.partsManagementRequestModel.ShowDeleteBtnAfterUpload, new { id = "ShowDeleteBtnAfterUpload" })
+<div id="AssignPartMasterModalContainer"></div>
+<div id="ReplacePartMasterModalContainer"></div>
+<div id="InactivatePartMasterModalContainer"></div>
+<div id="ReplaceSXPartMasterModalContainer"></div>
+<div id="AddNewPartMasterModalContainer"></div>
+@Html.HiddenFor(m => m.partsManagementRequestModel.PartMasterRequestId)
+
+<style type="text/css">
+    .actionNewDrop { width: 235px !important; }
+    ul.actionSubmenu {
+        list-style: none;
+        padding: 10px;
+        margin: 0;
+        display: none;
+        position: absolute;
+        width: 300px;
+        left: -300px;
+        background: #fff;
+        border-radius: 4px;
+        top: 0;
+        border: 0;
+        -webkit-box-shadow: 0px 0px 15px 1px rgba(69, 65, 78, 0.2);
+        -moz-box-shadow: 0px 0px 15px 1px rgba(69, 65, 78, 0.2);
+        box-shadow: 0px 0px 15px 1px rgba(69, 65, 78, 0.2);
+    }
+    ul.actionSubmenu li { color: #575962; font-weight: 400; font-size: 1rem; }
+    ul.actionSubmenu li a { color: #575962; padding: 5px 10px; display: block; text-decoration: none; }
+    ul.actionSubmenu li a:hover { color: #4da5fe; text-decoration: none; }
+    .dropdown-menu > li > a > i.fa-angle-left { float: left; position: relative; top: 10px; left:-18px; }
+    .bootstrap-select.btn-group .dropdown-menu li.localPart:hover ul.actionSubmenu.menuLocalPart { display: block; }
+    .bootstrap-select.btn-group .dropdown-menu li.enterpricePart:hover ul.actionSubmenu.menuEnterpricePart { display: block; }
+    /*.bootstrap-select.btn-group .dropdown-menu li.gridPart:hover ul.actionSubmenu.menuGridPart { display:block; }*/
+    .modal-open .modal { padding-right: 0 !important; }
+    .trashIcon { z-index: 101; }
+    @@media only screen and (min-width: 320px) and (max-width: 359px)
+    {
+        .ActionBttnArea .actionDiv .bootstrap-select:not([class*="col-"]):not([class*="form-control"]):not(.input-group-btn) { width: 235px !important; }
+    }
+</style>
+
+@Html.HiddenFor(m => m.partsManagementRequestModel.PartMasterRequestId)
+@Html.HiddenFor(m => m.partsManagementRequestModel.PartMaster_ClientLookupId)
+@Html.HiddenFor(m => m.partsManagementRequestModel.RequestType)
+
+@Html.Partial("_PartMRequestReturnRequesterModal")
+@Html.Partial("_PartMRequestSendApprovalModal")
+@Html.Partial("_PartMRequestDenyModal")
+@Html.Partial("_EditAttachmentModal")

@@ -1,0 +1,528 @@
+﻿@model Client.Models.PurchaseRequest.PurchaseRequestVM
+@{
+    string hColumnList = "";
+    string reqColumnList = "";
+    string disablColumnList = "";
+    if (Model.hiddenColumnList != null && Model.hiddenColumnList.Count > 0)
+    {
+        foreach (var item in Model.hiddenColumnList)
+        {
+            hColumnList = hColumnList + item + ",";
+        }
+    }
+    if (Model.requiredColumnList != null && Model.requiredColumnList.Count > 0)
+    {
+        foreach (var item in Model.requiredColumnList)
+        {
+            reqColumnList = reqColumnList + item + ",";
+        }
+    }
+    if (Model.disabledColumnList != null && Model.disabledColumnList.Count > 0)
+    {
+        foreach (var item in Model.disabledColumnList)
+        {
+            disablColumnList = disablColumnList + item + ",";
+        }
+    }
+}
+<script type="text/javascript">
+    $(function () {
+        var v = "@hColumnList";
+        var str = v.split(",");
+        if (str != null && str != "") {
+            $.each(str, function (i, jvalue) {
+                var elementId = '#li' + jvalue;
+                $(document).find(elementId).hide();
+            });
+        }
+        var rq = "@reqColumnList";
+        var arr = rq.split(",");
+        if (arr!=null && arr!="")
+        {
+            $.each(arr, function (i, jvalue) {
+                var reqElementId = '#r' + jvalue;
+                if ($(reqElementId).length)
+                {
+                    $(document).find(reqElementId).css('visibility', 'visible');
+                }
+            });
+        }
+       var dq = "@disablColumnList";
+        var amr = dq.split(",");
+        if (amr != null && amr != "") {
+            $.each(amr, function (i, jvalue) {
+                var reqElementId = '#' + 'purchaseRequestModel_' + jvalue;
+                if ($(reqElementId).length) {
+                    if ($(reqElementId).prop('type') == 'text') {
+                        $(document).find(reqElementId).attr('readonly', 'readonly').addClass('readonly');
+                    }
+                    //else if ($(reqElementId).prop('type') == 'select-one') {
+                    else {
+                        $(document).find(reqElementId).attr('disabled', 'disabled');
+                    }
+                }
+            });
+        }
+    });
+</script>
+
+<div class="m-subheader">
+    <div class="new-m-subheader">
+        <div class="PageTitle">
+            <div class="align-items-center separator">
+                <h3 class="m-subheader__title ">
+                    @Model.Loc.Where(a => a.ResourceId == "spnPurchaseRequest").FirstOrDefault().Value.ToString()
+                </h3>
+            </div>
+        </div>
+
+        <div class="NewBreadcrumbArea">
+            <div class="newBreadcrumb">
+                <ul>
+                    <li><a href="/Dashboard/Dashboard">&nbsp;</a></li>
+                    @if (Model.purchaseRequestModel.PurchaseRequestId == 0)
+                    {
+                        <li><a href="/PurchaseRequest/Index?page=Procurement_Requests">@Model.Loc.Where(a => a.ResourceId == "spnPdPurchaseRequestSearch").FirstOrDefault().Value.ToString()</a></li>
+                        <li class="active"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnPdPurchaseRequestAdd").FirstOrDefault().Value.ToString()</a></li>
+                    }
+                    else
+                    {
+                        <li>
+                            <a href="/PurchaseRequest/Index?page=Procurement_Requests">
+                                @Model.Loc.Where(a => a.ResourceId == "spnPdPurchaseRequestSearch").FirstOrDefault().Value.ToString()
+                            </a>
+                        </li>
+                        <li><a href="javascript:void(0)" class="brdprrequest" data-val="@Model.purchaseRequestModel.PurchaseRequestId">@Model.purchaseRequestModel.ClientLookupId</a></li>
+                        <li class="active">@Model.Loc.Where(a => a.ResourceId == "spnPdPurchaseRequestUpdate").FirstOrDefault().Value.ToString()</li>
+                    }
+                </ul>
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+        <div style="clear:both;"></div>
+    </div>
+</div>
+
+@Html.Partial("_ErrorDiv")
+
+@using (Ajax.BeginForm("AddPurchaseRequest", "Purchaserequest", new AjaxOptions { HttpMethod = "Post", OnSuccess = "PurchaseRequestAddOnSuccess", OnBegin = "AjaxBeginFormBegin", OnComplete = "AjaxBeginFormComplete", OnFailure = "AjaxBeginFormFaillure" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="row">
+        <div class="col-xl-12">
+            <div class="m-portlet newPort" id="m_portlet" style="padding:15px;">
+                <div class="bottomBlock">
+                    <div class="tabsArea nobg">
+                        <ul class="listView nobrd">
+                            @if (Model.purchaseRequestModel.PurchaseRequestId != 0)
+                            {
+                                if (Model.purchaseRequestModel.IsPunchOut)
+                                {
+                                    <li id="liStatus">
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnWrStatus").FirstOrDefault().Value.ToString() :</span>
+                                        <span class="inputText">
+                                            @Html.TextBoxFor(m => m.purchaseRequestModel.LocalizedStatus, new { @class = "form-control search readonly", @readonly = "readonly", })
+                                        </span>
+                                    </li>
+                                }
+                                else
+                                {
+                                    <li id="liStatus">
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnWrStatus").FirstOrDefault().Value.ToString() :</span>
+                                        <span class="inputText">
+                                            @Html.TextBoxFor(m => m.purchaseRequestModel.LocalizedStatus, new { @class = "form-control search readonly", @readonly = "readonly", })
+                                        </span>
+                                    </li>
+                                }
+                            }
+                            @if (Model.purchaseRequestModel.PurchaseRequestId == 0)
+                            {
+                                <li>
+                                    @*<span class="label">@Model.Loc.Where(a => a.ResourceId == "spnWrVendor").FirstOrDefault().Value.ToString() :<small id="rVendorClientLookupId" style="visibility:hidden;">*</small> </span>*@
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnWrVendor").FirstOrDefault().Value.ToString() :<small>*</small> </span>
+                                    <span class="inputText">
+                                        <div class="dropdown dropTableOuter">
+                                            <div class="input-group">
+                                                @Html.ValidationMessageFor(m => m.purchaseRequestModel.VendorClientLookupId, "", new { style = "display:none" })
+                                                @Html.TextBoxFor(m => m.purchaseRequestModel.VendorClientLookupId, new { @class = "form-control search dropbtn readonly", autocomplete = "off", @readonly = "readonly" })
+                                                <div class="input-group-btn">
+                                                    <button class="btn btn-white btntxtInputGroup" type="button" id="vopengrid">
+                                                        <i id="srcicon" class="fa fa-search"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </span>
+                                </li>
+
+
+
+
+                             
+
+
+                                <li id="liReason">
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnWrReason").FirstOrDefault().Value.ToString() : <small id="rReason" style="visibility:hidden;">*</small></span>
+                                    <span class="inputText">
+                                        @Html.ValidationMessageFor(m => m.purchaseRequestModel.Reason, "", new { style = "display:none" })
+                                        @Html.TextBoxFor(m => m.purchaseRequestModel.Reason, new { @class = "form-control search", autocomplete = "off", maxlength = "255" })
+                                    </span>
+                                </li>
+                                <li id="liVendorName">
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnWrVendorName").FirstOrDefault().Value.ToString() : </span>
+                                    <span class="inputText">
+                                        @Html.TextBoxFor(m => m.purchaseRequestModel.VendorName, new { @class = "form-control search readonly", @readonly = "readonly" })
+                                    </span>
+                                </li>
+                            }
+                            @if (Model.purchaseRequestModel.PurchaseRequestId != 0)
+                            {
+                                if (Model.purchaseRequestModel.IsPunchOut)
+                                {
+
+                                    <li>
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnWrVendor").FirstOrDefault().Value.ToString() :<small>*</small> </span>
+                                        <span class="inputText">
+                                            <div class="dropdown dropTableOuter">
+                                                <div class="input-group">
+                                                    @Html.ValidationMessageFor(m => m.purchaseRequestModel.VendorClientLookupId, "", new { style = "display:none" })
+                                                    @Html.TextBoxFor(m => m.purchaseRequestModel.VendorClientLookupId, new { @class = "form-control search dropbtn readonly", autocomplete = "off", @readonly = "readonly" })
+                                                </div>
+                                            </div>
+
+                                        </span>
+                                    </li>
+                                    <li id="liReason">
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnWrReason").FirstOrDefault().Value.ToString() : <small id="rReason" style="visibility:hidden;">*</small></span>
+                                        <span class="inputText">
+                                            @Html.ValidationMessageFor(m => m.purchaseRequestModel.Reason, "", new { style = "display:none" })
+                                            @Html.TextBoxFor(m => m.purchaseRequestModel.Reason, new { @class = "form-control search", autocomplete = "off", maxlength = "255" })
+                                        </span>
+                                    </li>
+                                    <li id="liVendorName">
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnWrVendorName").FirstOrDefault().Value.ToString() : </span>
+                                        <span class="inputText">
+                                            @Html.TextBoxFor(m => m.purchaseRequestModel.VendorName, new { @class = "form-control search readonly", @readonly = "readonly" })
+                                        </span>
+                                    </li>
+                                    <li id="liCreator_PersonnelName">
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnWrCreatedBy").FirstOrDefault().Value.ToString() : </span>
+                                        <span class="inputText">
+                                            @Html.TextBoxFor(m => m.purchaseRequestModel.Creator_PersonnelName, new { @class = "form-control search readonly", @readonly = "readonly" })
+                                        </span>
+                                    </li>
+                                    <li id="liApproved_PersonnelName">
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnPdApprovedBy").FirstOrDefault().Value.ToString() : </span>
+                                        <span class="inputText">
+                                            @Html.TextBoxFor(m => m.purchaseRequestModel.Approved_PersonnelName, new { @class = "form-control search readonly", @readonly = "readonly" })
+                                        </span>
+                                    </li>
+                                    <li id="liProcessed_PersonnelName">
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnWrProcessedBy").FirstOrDefault().Value.ToString() : </span>
+                                        <span class="inputText">
+                                            @Html.TextBoxFor(m => m.purchaseRequestModel.Processed_PersonnelName, new { @class = "form-control search readonly", @readonly = "readonly" })
+                                        </span>
+                                    </li>
+                                    <li id="liPurchaseOrderClientLookupId">
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnPdPurchaseOrderID").FirstOrDefault().Value.ToString() : </span>
+                                        <span class="inputText">
+                                            @Html.TextBoxFor(m => m.purchaseRequestModel.PurchaseOrderClientLookupId, new { @class = "form-control search readonly", @readonly = "readonly" })
+                                        </span>
+                                    </li>
+                                    <li id="liCountLineItem">
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnLineItems").FirstOrDefault().Value.ToString() : </span>
+                                        <span class="inputText">
+                                            @Html.TextBoxFor(m => m.purchaseRequestModel.CountLineItem, new { @class = "form-control search readonly", @readonly = "readonly" })
+                                        </span>
+                                    </li>
+                                    <li id="liTotalCost">
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnPdTotalCost").FirstOrDefault().Value.ToString() : </span>
+                                        <span class="inputText">
+                                            @Html.TextBoxFor(m => m.purchaseRequestModel.TotalCost, new { @class = "form-control search readonly", @readonly = "readonly" })
+                                        </span>
+                                    </li>
+                                    <li id="liCreateDate">
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnWrCreated").FirstOrDefault().Value.ToString() : </span>
+                                        <span class="inputText">
+                                            @if (Model.purchaseRequestModel.CreateDate != null && Model.purchaseRequestModel.CreateDate != default(DateTime))
+                                            {
+                                                @Html.TextBoxFor(m => m.purchaseRequestModel.CreateDate, "{0:MM/dd/yyyy}", new { @class = "form-control search dtpicker readonly", @readonly = "readonly", autocomplete = "off" })
+                                            }
+                                            else
+                                            {
+                                                <input type="text" class="form-control search readonly" readonly="readonly" />
+                                            }
+                                        </span>
+                                    </li>
+                                    <li id="liApprovedDate">
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnPdApproved").FirstOrDefault().Value.ToString() : </span>
+                                        <span class="inputText">
+                                            @if (Model.purchaseRequestModel.Approved_Date != null && Model.purchaseRequestModel.Approved_Date != default(DateTime))
+                                            {
+                                                @Html.TextBoxFor(m => m.purchaseRequestModel.Approved_Date, "{0:MM/dd/yyyy}", new { @class = "form-control search readonly", @readonly = "readonly" })
+                                            }
+                                            else
+                                            {
+                                                <input type="text" class="form-control search readonly" readonly="readonly" />
+                                            }
+                                        </span>
+                                    </li>
+                                    <li id="liProcessedDate">
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnPdProcessedDate").FirstOrDefault().Value.ToString() : </span>
+                                        <span class="inputText">
+                                            @if (Model.purchaseRequestModel.Processed_Date != null && Model.purchaseRequestModel.Processed_Date != default(DateTime))
+                                            {
+                                                @Html.TextBoxFor(m => m.purchaseRequestModel.Processed_Date, "{0:MM/dd/yyyy}", new { @class = "form-control search readonly", @readonly = "readonly" })
+                                            }
+                                            else
+                                            {
+                                                <input type="text" class="form-control search readonly" readonly="readonly" />
+                                            }
+                                        </span>
+                                    </li>
+                                    if (Model.purchaseRequestModel.Status == PurchaseRequestStatusConstants.Denied)
+                                    {
+                                        <li id="liProcess_Comments">
+                                            <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnPdDenyComments").FirstOrDefault().Value.ToString() :</span>
+                                            <span class="inputText">
+                                                @Html.TextBoxFor(m => m.purchaseRequestModel.Process_Comments, new { @class = "form-control search readonly", @readonly = "readonly" })
+                                            </span>
+                                        </li>
+                                    }
+                                    else if (Model.purchaseRequestModel.Status == PurchaseRequestStatusConstants.AwaitApproval)
+                                    {
+                                        <li id="liProcess_Comments">
+                                            <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnPdAwaitingApprovalComments").FirstOrDefault().Value.ToString() :</span>
+                                            <span class="inputText">
+                                                @Html.TextBoxFor(m => m.purchaseRequestModel.Process_Comments, new { @class = "form-control search readonly", @readonly = "readonly" })
+                                            </span>
+                                        </li>
+                                    }
+                                    else if (Model.purchaseRequestModel.Status == PurchaseRequestStatusConstants.Resubmit)
+                                    {
+                                        <li id="liReturn_Comments">
+                                            <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnPdReturnComments").FirstOrDefault().Value.ToString() :</span>
+                                            <span class="inputText">
+                                                @Html.TextBoxFor(m => m.purchaseRequestModel.Return_Comments, new { @class = "form-control search readonly", @readonly = "readonly" })
+                                            </span>
+                                        </li>
+                                    }
+                                    <li id="liAutoGenerated">
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnPdAutoGenerated").FirstOrDefault().Value.ToString() : </span>
+                                        <span class="inputText">
+                                            @Html.CheckBoxFor(m => m.purchaseRequestModel.AutoGenerated, new { @class = "readonly", @readonly = "readonly", onclick = "return false;" })
+                                        </span>
+                                    </li>
+                                }
+
+                                else
+                                {
+                                    <li>
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnWrVendor").FirstOrDefault().Value.ToString() :<small>*</small> </span>
+
+                                        <span class="inputText">
+                                            <div class="dropdown dropTableOuter">
+                                                <div class="input-group">
+                                                    @Html.ValidationMessageFor(m => m.purchaseRequestModel.VendorClientLookupId, "", new { style = "display:none" })
+                                                    @Html.TextBoxFor(m => m.purchaseRequestModel.VendorClientLookupId, new { @class = "form-control search dropbtn readonly", autocomplete = "off", @readonly = "readonly" })
+                                                    <div class="input-group-btn">
+                                                        <button class="btn btn-white btntxtInputGroup" type="button" id="vopengrid">
+                                                            <i id="srcicon" class="fa fa-search"></i>
+                                                        </button>
+                                                    </div>
+                                                    @*@if (Model.purchaseRequestModel.CountLineItem > 0)
+                                {
+                                    @Html.ValidationMessageFor(m => m.purchaseRequestModel.VendorClientLookupId, "", new { style = "display:none" })
+                                    @Html.TextBoxFor(m => m.purchaseRequestModel.VendorClientLookupId, new { @class = "form-control search dropbtn readonly", autocomplete = "off", @readonly = "readonly" })
+                                }
+                                else
+                                {
+                                    @Html.ValidationMessageFor(m => m.purchaseRequestModel.VendorClientLookupId, "", new { style = "display:none" })
+                                    @Html.TextBoxFor(m => m.purchaseRequestModel.VendorClientLookupId, new { @class = "form-control search dropbtn readonly", autocomplete = "off", @readonly = "readonly" })
+                                    <div class="input-group-btn">
+                                        <button class="btn btn-white btntxtInputGroup" type="button" id="vopengrid">
+                                            <i id="srcicon" class="fa fa-search"></i>
+                                        </button>
+                                    </div>
+
+                                }*@
+                                                </div>
+                                            </div>
+
+                                        </span>
+
+                                    </li>
+
+                                    <li id="liReason">
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnWrReason").FirstOrDefault().Value.ToString() : <small id="rReason" style="visibility:hidden;">*</small></span>
+                                        <span class="inputText">
+                                            @Html.ValidationMessageFor(m => m.purchaseRequestModel.Reason, "", new { style = "display:none" })
+                                            @Html.TextBoxFor(m => m.purchaseRequestModel.Reason, new { @class = "form-control search", autocomplete = "off", maxlength = "255" })
+                                        </span>
+                                    </li>
+                                    <li id="liVendorName">
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnWrVendorName").FirstOrDefault().Value.ToString() : </span>
+                                        <span class="inputText">
+                                            @Html.TextBoxFor(m => m.purchaseRequestModel.VendorName, new { @class = "form-control search readonly", @readonly = "readonly" })
+                                        </span>
+                                    </li>
+
+                                    <li id="liCreator_PersonnelName">
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnWrCreatedBy").FirstOrDefault().Value.ToString() : </span>
+                                        <span class="inputText">
+                                            @Html.TextBoxFor(m => m.purchaseRequestModel.Creator_PersonnelName, new { @class = "form-control search readonly", @readonly = "readonly" })
+                                        </span>
+                                    </li>
+                                    <li id="liApproved_PersonnelName">
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnPdApprovedBy").FirstOrDefault().Value.ToString() : </span>
+                                        <span class="inputText">
+                                            @Html.TextBoxFor(m => m.purchaseRequestModel.Approved_PersonnelName, new { @class = "form-control search readonly", @readonly = "readonly" })
+                                        </span>
+                                    </li>
+                                    <li id="liProcessed_PersonnelName">
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnWrProcessedBy").FirstOrDefault().Value.ToString() : </span>
+                                        <span class="inputText">
+                                            @Html.TextBoxFor(m => m.purchaseRequestModel.Processed_PersonnelName, new { @class = "form-control search readonly", @readonly = "readonly" })
+                                        </span>
+                                    </li>
+                                    <li id="liPurchaseOrderClientLookupId">
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnPdPurchaseOrderID").FirstOrDefault().Value.ToString() : </span>
+                                        <span class="inputText">
+                                            @Html.TextBoxFor(m => m.purchaseRequestModel.PurchaseOrderClientLookupId, new { @class = "form-control search readonly", @readonly = "readonly" })
+                                        </span>
+                                    </li>
+                                    <li id="liCountLineItem">
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnLineItems").FirstOrDefault().Value.ToString() : </span>
+                                        <span class="inputText">
+                                            @Html.TextBoxFor(m => m.purchaseRequestModel.CountLineItem, new { @class = "form-control search readonly", @readonly = "readonly" })
+                                        </span>
+                                    </li>
+                                    <li id="liTotalCost">
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnPdTotalCost").FirstOrDefault().Value.ToString() : </span>
+                                        <span class="inputText">
+                                            @Html.TextBoxFor(m => m.purchaseRequestModel.TotalCost, new { @class = "form-control search readonly", @readonly = "readonly" })
+                                        </span>
+                                    </li>
+                                    <li id="liCreateDate">
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnWrCreated").FirstOrDefault().Value.ToString() : </span>
+                                        <span class="inputText">
+                                            @if (Model.purchaseRequestModel.CreateDate != null && Model.purchaseRequestModel.CreateDate != default(DateTime))
+                                            {
+                                                @Html.TextBoxFor(m => m.purchaseRequestModel.CreateDate, "{0:MM/dd/yyyy}", new { @class = "form-control search dtpicker readonly", @readonly = "readonly", autocomplete = "off" })
+                                            }
+                                            else
+                                            {
+                                                <input type="text" class="form-control search readonly" readonly="readonly" />
+                                            }
+                                        </span>
+                                    </li>
+                                    <li id="liApproved_Date">
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnPdApproved").FirstOrDefault().Value.ToString() : </span>
+                                        <span class="inputText">
+                                            @if (Model.purchaseRequestModel.Approved_Date != null && Model.purchaseRequestModel.Approved_Date != default(DateTime))
+                                            {
+                                                @Html.TextBoxFor(m => m.purchaseRequestModel.Approved_Date, "{0:MM/dd/yyyy}", new { @class = "form-control search readonly", @readonly = "readonly" })
+                                            }
+                                            else
+                                            {
+                                                <input type="text" class="form-control search readonly" readonly="readonly" />
+                                            }
+                                        </span>
+                                    </li>
+                                    <li id="liProcessedDate">
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnPdProcessedDate").FirstOrDefault().Value.ToString() : </span>
+                                        <span class="inputText">
+                                            @if (Model.purchaseRequestModel.Processed_Date != null && Model.purchaseRequestModel.Processed_Date != default(DateTime))
+                                            {
+                                                @Html.TextBoxFor(m => m.purchaseRequestModel.Processed_Date, "{0:MM/dd/yyyy}", new { @class = "form-control search readonly", @readonly = "readonly" })
+                                            }
+                                            else
+                                            {
+                                                <input type="text" class="form-control search readonly" readonly="readonly" />
+                                            }
+                                        </span>
+                                    </li>
+                                    if (Model.purchaseRequestModel.Status == PurchaseRequestStatusConstants.Denied)
+                                    {
+                                        <li id="liProcess_Comments">
+                                            <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnPdDenyComments").FirstOrDefault().Value.ToString() :</span>
+                                            <span class="inputText">
+                                                @Html.TextBoxFor(m => m.purchaseRequestModel.Process_Comments, new { @class = "form-control search readonly", @readonly = "readonly" })
+                                            </span>
+                                        </li>
+                                    }
+                                    else if (Model.purchaseRequestModel.Status == PurchaseRequestStatusConstants.AwaitApproval)
+                                    {
+                                        <li id="liProcess_Comments">
+                                            <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnPdAwaitingApprovalComments").FirstOrDefault().Value.ToString() :</span>
+                                            <span class="inputText">
+                                                @Html.TextBoxFor(m => m.purchaseRequestModel.Process_Comments, new { @class = "form-control search readonly", @readonly = "readonly" })
+                                            </span>
+                                        </li>
+                                    }
+                                    else if (Model.purchaseRequestModel.Status == PurchaseRequestStatusConstants.Resubmit)
+                                    {
+                                        <li id="liReturn_Comments">
+                                            <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnPdReturnComments").FirstOrDefault().Value.ToString() :</span>
+                                            <span class="inputText">
+                                                @Html.TextBoxFor(m => m.purchaseRequestModel.Return_Comments, new { @class = "form-control search readonly", @readonly = "readonly" })
+                                            </span>
+                                        </li>
+                                    }
+                                    <li id="liAutoGenerated">
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnPdAutoGenerated").FirstOrDefault().Value.ToString() : </span>
+                                        <span class="inputText">
+                                            @Html.CheckBoxFor(m => m.purchaseRequestModel.AutoGenerated, new { @class = "readonly", @readonly = "readonly", onclick = "return false;" })
+                                        </span>
+                                    </li>
+                                }
+
+                            }
+                        </ul>
+                    </div>
+
+                    <div style="clear:both;"></div>
+
+                    <div class="idBttns">
+                        <div class="bttn_pagin">
+                            <div class="bttns2">
+                                @if (Model.purchaseRequestModel.PurchaseRequestId == 0)
+                                {
+                                    <button class="btn btn-white mobBttn" name="Command" value="saveAdd" id="btnSaveAnotherOpenPO"><i class="fa fa-save faIcon"></i> &nbsp;  @Model.Loc.Where(a => a.ResourceId == "globalSaveAndAdd").FirstOrDefault().Value.ToString()</button>
+                                }
+                                @if (Model.purchaseRequestModel.PurchaseRequestId != 0 && ((Model.security.PurchaseRequest.Edit
+&& (Model.purchaseRequestModel.Status == PurchaseRequestStatusConstants.Open || Model.purchaseRequestModel.Status == PurchaseRequestStatusConstants.Resubmit))
+|| (Model.purchaseRequestModel.EditAwaitApproveSecurity && Model.purchaseRequestModel.Status == PurchaseRequestStatusConstants.AwaitApproval)))
+                                {
+                                    <button type="submit" class="btn btn-blue mobBttn" name="Command" value="save"><i class="fa fa-save faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+                                }
+                                else
+                                {
+                                    <button type="submit" class="btn btn-blue mobBttn" name="Command" value="save"><i class="fa fa-save faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+
+                                }
+                            </div>
+                            <div class="bttns" id="btnCancelAddPRRequest"><button type="button" class="btn btn-blue mobBttn"><i class="fa fa-close faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button></div>
+                            <div style="clear:both;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @Html.Partial("~/Views/PurchaseRequest/_PRVendorPopup.cshtml")
+    @*@Html.HiddenFor(m => m.purchaseRequestModel.IsExternal, new { id = "IsExternal" })*@
+
+    if (Model.purchaseRequestModel.PurchaseRequestId != 0)
+    {
+        @Html.HiddenFor(m => m.purchaseRequestModel.CountLineItem)
+        @Html.HiddenFor(m => m.purchaseRequestModel.IsPunchOut)
+        @Html.HiddenFor(m => m.purchaseRequestModel.PurchaseRequestId)
+        @Html.HiddenFor(m => m.purchaseRequestModel.AutoGenerated, new { id = "UiconfigAutoGenerated" })
+    }
+    @Html.HiddenFor(m => m.purchaseRequestModel.ViewName, new { id = "ViewName" })
+    @Html.HiddenFor(m => m.purchaseRequestModel.VendorId)
+    @*@Html.HiddenFor(m => m.purchaseRequestModel.DisabledVal, new { id = "DisabledVal" })*@
+}
+
+

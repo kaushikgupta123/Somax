@@ -1,0 +1,95 @@
+﻿@model Client.Models.WorkOrderPlanning.WorkOrderPlanningVM
+<div class="m-subheader">
+    <div class="new-m-subheader">
+        <div class="PageTitle">
+            <div class="align-items-center separator">
+                <h3 class="m-subheader__title ">
+                    @Model.Loc.Where(a => a.ResourceId == "spnWorkOrderPlan").FirstOrDefault().Value.ToString()
+                </h3>
+            </div>
+        </div>
+
+        <div class="NewBreadcrumbArea">
+            <div class="newBreadcrumb">
+                <ul>
+                    <li><a href="/Dashboard/Dashboard">&nbsp;</a></li>
+                    @if (Model.workorderPlanningModel.WorkOrderPlanId == 0)
+                    {
+                        <li><a href="/WorkOrderPlanning/Index?page=Maintenance_Work_Order_Planning">@Model.Loc.Where(a => a.ResourceId == "spnWorkOrderPlanSearch").FirstOrDefault().Value.ToString()</a></li>
+                        <li class="active">@Model.Loc.Where(a => a.ResourceId == "spnAddWorkOrderPlan").FirstOrDefault().Value.ToString()</li>
+                    }
+                    else
+                    {
+                        <li><a href="/WorkOrderPlanning/Index?page=Maintenance_Work_Order_Planning">@Model.Loc.Where(a => a.ResourceId == "spnWorkOrderPlanSearch").FirstOrDefault().Value.ToString()</a></li>
+                        <li><a href="javascript:void(0)" id="brdPO" data-val="@Model.workorderPlanningModel.WorkOrderPlanId">@Model.workorderPlanningModel.WorkOrderPlanId</a></li>
+                        <li>@Model.Loc.Where(a => a.ResourceId == "spnEditWorkOrderPlan").FirstOrDefault().Value.ToString()</li>
+                    }
+                </ul>
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+        <div style="clear:both;"></div>
+    </div>
+</div>
+
+@Html.Partial("_ErrorDiv")
+
+@using (Ajax.BeginForm("AddWorkOrderPlan", "WorkOrderPlanning", new AjaxOptions { HttpMethod = "Post", OnSuccess = "WOPAddOnSuccess", OnBegin = "AjaxBeginFormBegin", OnComplete = "AjaxBeginFormComplete", OnFailure = "AjaxBeginFormFaillure" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="row">
+        <div class="col-xl-12">
+            <div class="m-portlet newPort" id="m_portlet" style="padding:15px;">
+                <div class="bottomBlock">
+                    <div>
+                        <div class="tabsArea nobg" id="WOPCharge" style="display:block;">
+                            <ul class="listView nobrd">
+                                <li style="height: 55px;">
+                                    <span class="label" id="spnDescription">@Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString()</span>
+                                    <span class="inputText">
+                                        @Html.TextAreaFor(m => m.workorderPlanningModel.Description, new { @class = "form-control search m-input", maxlength = "200", @style = "color:black", autocomplete = "off" })
+                                    </span>
+                                </li>
+                                <li>
+                                    <span class="label" id="spnStartDate">@Model.Loc.Where(a => a.ResourceId == "globalStartDate").FirstOrDefault().Value.ToString()<small>*</small></span>
+                                    <span class="inputText">
+                                        @Html.ValidationMessageFor(m => m.workorderPlanningModel.StartDate, "", new { style = "display:none" })
+                                        @Html.TextBoxFor(m => m.workorderPlanningModel.StartDate, "{0:MM/dd/yyyy}", new { @class = "form-control search m-input dtpicker",  @style = "color:black", autocomplete = "off",id= "StartDate" })
+                                    </span>
+                                </li>
+                                <li>
+                                    <span class="label" id="spnEndDate">@Model.Loc.Where(a => a.ResourceId == "spnEndDate").FirstOrDefault().Value.ToString()<small>*</small></span>
+                                    <span class="inputText">
+                                        @Html.ValidationMessageFor(m => m.workorderPlanningModel.EndDate, "", new { style = "display:none" })
+                                        @Html.TextBoxFor(m => m.workorderPlanningModel.EndDate, "{0:MM/dd/yyyy}", new { @class = "form-control search m-input dtpicker",  @style = "color:black", autocomplete = "off" })
+                                    </span>
+                                </li>
+                                <li>
+                                    <span class="label" id="spnPlanner">@Model.Loc.Where(a => a.ResourceId == "globalPlanner").FirstOrDefault().Value.ToString()</span>
+                                    <span class="inputText">
+                                        @Html.ValidationMessageFor(m => m.workorderPlanningModel.PersonnelId, "", new { style = "display:none" })
+                                        @Html.DropDownListFor(m => m.workorderPlanningModel.PersonnelId, Model.workorderPlanningModel.PersonnelList, "--Select--", new { @class = "form-control search select2picker", style = "width:100%;" })
+                                    </span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div style="clear:both;"></div>
+                    <div class="idBttns">
+                        <div class="bttn_pagin">
+                            <div class="bttns2">
+                                <button class="btn btn-white mobBttn" name="Command" value="saveAdd" id="btnSaveAnotherOpenWOP"><i class="fa fa-save faIcon"></i> &nbsp;  @Model.Loc.Where(a => a.ResourceId == "globalSaveAndAdd").FirstOrDefault().Value.ToString()</button>
+                                <button type="submit" class="btn btn-blue mobBttn" name="Command" value="save" id="btnSaveWOP"><i class="fa fa-save faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+                            </div>
+                            <div class="bttns"><button type="button" class="btn btn-blue mobBttn" id="btnCancelAddWOP"><i class="fa fa-close faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button></div>
+
+                            <div style="clear:both;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+}

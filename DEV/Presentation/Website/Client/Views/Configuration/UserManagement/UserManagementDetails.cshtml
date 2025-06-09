@@ -1,0 +1,476 @@
+﻿@model Client.Models.Configuration.UserManagement.UserManagementVM
+@{
+    string PackageLevel = Model.userModels._userdata.DatabaseKey.Client.PackageLevel.ToUpper();
+    string UserType = Model.userModels.UserType.ToUpper();
+    bool IsSuperUser = Model.userModels._userdata.DatabaseKey.User.IsSuperUser;
+    string UserTypeloginUser = Model.userModels._userdata.DatabaseKey.User.UserType.ToUpper();
+}
+<div id="userModelsscontainer">
+    <div class="m-subheader">
+        <div class="new-m-subheader">
+            <div class="filterDescription">
+                <a href="javascript:void(0)" id="linkToSearch"><span id="spnlinkToSearch"></span></a> - @Model.userModels.UserName
+            </div>
+            <div class="ActionBttnArea">
+                <div class="actionDiv pull-left">
+                    <div class="btn-group bootstrap-select m-datatable__pager-size dropup show selectDrop actionNewDrop" style="margin-right:0;">
+                        <div class="btn-group bootstrap-select m-datatable__pager-size" style="width: 100%;">
+                            <button type="button" class="btn dropdown-toggle bs-placeholder btn-default" data-toggle="dropdown" role="button" title=""><span class="filter-option pull-left">@Model.Loc.Where(a => a.ResourceId == "globalAction").FirstOrDefault().Value.ToString()</span>&nbsp;<span class="bs-caret"><span class="caret"></span></span></button>
+                            <div class="dropdown-menu open" role="combobox">
+                                <ul class="dropdown-menu inner" role="listbox" aria-expanded="false">
+                                        @if (UserType != UserTypeConstants.Reference.ToUpper())
+                                        {
+                                          <li data-toggle="modal" id="openresetpasswordmodal"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnLinktoResetPassword").FirstOrDefault().Value.ToString()</a></li>
+                                        }
+                                        @if (Model.userModels.FailedAttempts >= Model.userModels._userdata.DatabaseKey.Client.MaxAttempts)
+                                        {
+                                            <li id="unlockaccount" data-infoid=@Model.userModels.UserInfoId data-siteid="@Model.userModels.DefaultSiteId" data-personnelid="@Model.userModels.PersonnelId"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnUnlockAccount").FirstOrDefault().Value.ToString()</a></li>
+                                        }
+
+                                        @if (UserType != UserTypeConstants.Reference.ToUpper())
+                                        {
+                                            <li data-toggle="modal" id="changeuseraccessmodal"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "globalChangeUserAcces").FirstOrDefault().Value.ToString()</a></li>
+                                        }
+                                        @if (Model.passwordSettingsModel.AllowAdminReset && UserType != UserTypeConstants.Reference.ToUpper())
+                                        {
+                                            <li data-toggle="modal" id="manualPassReset" data-infoid=@Model.userModels.UserInfoId data-siteid="@Model.userModels.DefaultSiteId" data-personnelid="@Model.userModels.PersonnelId"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnManualReset").FirstOrDefault().Value.ToString()</a></li>
+                                        }
+                                        <!--//V2-417 Inactivate and Active Users-->
+                                        @{
+                                            if (Model.userModels.IsActive == true)
+                                            {
+                                                <li id="ActivateInactivateUser" data-id=@Model.userModels.UserInfoId><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnGlobalInactivate").FirstOrDefault().Value.ToString()</a></li>
+                                            }
+                                            if (Model.userModels.IsActive == false)
+                                            {
+                                                <li id="ActivateInactivateUser" data-id=@Model.userModels.UserInfoId><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnGlobalActivate").FirstOrDefault().Value.ToString()</a></li>
+                                            }
+                                        }
+                                        <li id="changeusername"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "GlobalChangeUserName").FirstOrDefault().Value.ToString()</a></li>
+                                        @if (UserTypeloginUser == UserTypeConstants.Admin.ToUpper() || IsSuperUser)
+                                        {
+                                            <li id="AddReferenceUser"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "AddReferenceUser").FirstOrDefault().Value.ToString()</a></li>
+                                        }
+                                        @Html.HiddenFor(m => m.userModels.IsActive, new { id = "UserStatus" })
+                                        <!--//V2-417 Inactivate and Active Users-->
+                                    </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button type="button" class="btn btn-add adduser innerBtn pull-left" title="Add User"><i class="fa fa-plus"></i></button>
+                <div style="clear:both;"></div>
+            </div>
+            <div style="clear:both;"></div>
+        </div>
+    </div>
+    <!--V2-417 Inactivate and Active Users-->
+    @if ((Model.userModels.IsActive == false))
+    {
+        <div class="col-xl-12">
+            <div class="row m-row--col-separator-xl" style="margin-bottom:15px;">
+                <div class="col-md-12 col-lg-6 col-xl-3">
+                    <div class="m-widget24 imageBox macHeights">
+                        <div class="imgInfoUser" style="position:relative; height:20px;">
+                            <span class="introTagsUser">@Model.Loc.Where(a => a.ResourceId == "globalInActive").FirstOrDefault().Value.ToString()</span>
+                        </div>
+                        <div style="clear:both;"></div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    }
+    <!--V2-417 Inactivate and Active Users-->
+    <div class="row">
+        <div class="col-xl-3">
+            <div class="m-portlet">
+                <div class="sideMenuArea nobg">
+                    <ul class="vtabs" id="detmaintab">
+                        <li class="active" data-val="@Model.userModels.UserInfoId" id="liuser"><a href="#Usertab">@Model.Loc.Where(a => a.ResourceId == "UserOverView").FirstOrDefault().Value.ToString() </a></li>
+                        <li id="linotes"><a href="#Notes" onclick="openCity(event, 'Notes')">@Model.Loc.Where(a => a.ResourceId == "spnGlobalNote").FirstOrDefault().Value.ToString()</a></li>
+                        <li id="liattachment"><a href="#Attachment" onclick="openCity(event, 'Attachment')">@Model.Loc.Where(a => a.ResourceId == "globalAttachment").FirstOrDefault().Value.ToString()</a></li>
+                        <li id="licontacts"><a href="#Contacts" onclick="openCity(event, 'Contacts')">@Model.Loc.Where(a => a.ResourceId == "Contacts").FirstOrDefault().Value.ToString()</a></li>
+                        @if (PackageLevel == UserTypeConstants.Enterprise.ToUpper() && IsSuperUser)
+                        {
+                            <li id="lisites"><a href="#Sites" onclick="openCity(event, 'Sites')">@Model.Loc.Where(a => a.ResourceId == "Sites").FirstOrDefault().Value.ToString()</a></li>
+                        }
+                        <!--V2-680-->
+                        @if ((Model.userModels._userdata.DatabaseKey.User.UserType.ToUpper() == UserTypeConstants.Admin.ToUpper() || Model.userModels._userdata.DatabaseKey.User.IsSuperUser) && (Model.userModels._userdata.DatabaseKey.Client.UseMultiStoreroom))
+                        {
+                            <li id="listorerooms"><a href="#Storerooms" onclick="openCity(event, 'Storerooms')">@Model.Loc.Where(a => a.ResourceId == "Storerooms").FirstOrDefault().Value.ToString()</a></li>
+                        }
+                        <!--V2-680-->
+                    </ul>
+                </div>
+                <div class="selectTabs" id="selectTabs">
+                    <select class="form-control" id="colorselector">
+                        <option value="Usertab">@Model.Loc.Where(a => a.ResourceId == "UserOverView").FirstOrDefault().Value.ToString() </option>
+                        <option value="Notes">@Model.Loc.Where(a => a.ResourceId == "spnGlobalNote").FirstOrDefault().Value.ToString()</option>
+                        <option value="Attachment">@Model.Loc.Where(a => a.ResourceId == "globalAttachment").FirstOrDefault().Value.ToString()</option>
+                        <option value="Contacts">@Model.Loc.Where(a => a.ResourceId == "Contacts").FirstOrDefault().Value.ToString()</option>
+                        @if (PackageLevel == UserTypeConstants.Enterprise.ToUpper() && IsSuperUser)
+                        {
+                            <option value="Sites">@Model.Loc.Where(a => a.ResourceId == "Sites").FirstOrDefault().Value.ToString()</option>
+                        }
+                        <!--V2-680-->
+                        @if ((Model.userModels._userdata.DatabaseKey.User.UserType.ToUpper() == UserTypeConstants.Admin.ToUpper() || Model.userModels._userdata.DatabaseKey.User.IsSuperUser) && (Model.userModels._userdata.DatabaseKey.Client.UseMultiStoreroom))
+                        {
+                            <option value="Storerooms">@Model.Loc.Where(a => a.ResourceId == "Storerooms").FirstOrDefault().Value.ToString()</option>
+                        }
+                        <!--V2-680-->
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-9">
+            <div class="row">
+                <div class="col-xl-12">
+                    <div class="m-portlet" id="m_portlet" style="padding:15px;">
+                        <div class="bottomBlock">
+                            <div class="tabsArea nobg" id="Usertab" style="display:block;">
+                                <div class="tab fullUser">
+                                    <button class="tablinks active" id="btndetails" onclick="openCity(event, 'Details')">@Model.Loc.Where(a => a.ResourceId == "UserInforamtion").FirstOrDefault().Value.ToString()</button>
+                                    <button class="tablinks" onclick="openCity(event, 'Address')">@Model.Loc.Where(a => a.ResourceId == "ContactInformation").FirstOrDefault().Value.ToString()</button>
+                                    <!--V2-803-->
+                                    <button class="tablinks" onclick="openCity(event, 'SignOn')">Single Sign On</button>
+                                    <!--V2-803-->
+                                </div>
+                                <div class="selectTab mobUser">
+                                    <select class="form-control search" id="tabselector">
+                                        <option value="Details">@Model.Loc.Where(a => a.ResourceId == "UserInforamtion").FirstOrDefault().Value.ToString()</option>
+                                        <option value="Address">@Model.Loc.Where(a => a.ResourceId == "ContactInformation").FirstOrDefault().Value.ToString()</option>
+                                        <!--V2-803-->
+                                        <option value="SignOn">@Model.Loc.Where(a => a.ResourceId == "SingleSignOnSetting").FirstOrDefault().Value.ToString()</option>
+                                        <!--V2-803-->
+                                    </select>
+                                </div>
+                                <div id="Details" class="tabcontent2" style="display:block;">
+                                    <ul class="listView">
+                                        <li>
+                                            <span class="label">@Html.LabelFor(m => m.userModels.UserName) : </span>
+                                            <span class="inputText">@Model.userModels.UserName</span>
+                                        </li>
+                                        @if (PackageLevel == UserTypeConstants.Enterprise.ToUpper() && IsSuperUser)
+                                        {
+                                            <li>
+                                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnSiteGlobal").FirstOrDefault().Value.ToString() : </span>
+                                                <span class="inputText">@Model.userModels.SiteName</span>
+                                            </li>
+                                        }
+                                        <li>
+                                            <span class="label">@Html.LabelFor(m => m.userModels.FirstName) :</span>
+                                            <span class="inputText">@Model.userModels.FirstName</span>
+                                        </li>
+                                        <li>
+                                            <span class="label">@Html.LabelFor(m => m.userModels.MiddleName) : <small></small></span>
+                                            <span class="inputText">@Model.userModels.MiddleName</span>
+                                        </li>
+                                        <li>
+                                            <span class="label">@Html.LabelFor(m => m.userModels.LastName) : <small></small></span>
+                                            <span class="inputText">@Model.userModels.LastName</span>
+                                        </li>
+                                        @* start V2-877*@
+                                        <li>
+                                            <span class="label">@Html.LabelFor(m => m.userModels.EmployeeId) : <small></small></span>
+                                            <span class="inputText">@Model.userModels.EmployeeId</span>
+                                        </li>
+                                        @* end V2-877*@
+                                        @if (!(Model.userModels._userdata.Site.APM == true && Model.userModels._userdata.Site.CMMS == false && Model.userModels._userdata.Site.Sanitation == false) && !(Model.userModels._userdata.Site.APM == false && Model.userModels._userdata.Site.CMMS == false && Model.userModels._userdata.Site.Sanitation == true))
+                                        {
+                                            <li>
+                                                <span class="label">@Html.LabelFor(m => m.userModels.CraftId) : <small></small></span>
+                                                <span class="inputText">@Model.userModels.CraftName</span>
+                                            </li>
+                                        }
+                                        <li>
+                                            <span class="label">@Html.LabelFor(m => m.userModels.Shift) : <small></small></span>
+                                            <span class="inputText">@Model.userModels.Shift</span>
+                                        </li>
+                                        <li>
+                                            <span class="label">@Html.LabelFor(m => m.userModels.SecurityQuestion) : <small></small></span>
+                                            <span class="inputText">@Model.userModels.SecurityQuestion</span>
+                                        </li>
+                                        <li>
+                                            <span class="label">@Html.LabelFor(m => m.userModels.SecurityResponse) : <small></small></span>
+                                            <span class="inputText">@Model.userModels.SecurityResponse</span>
+                                        </li>
+                                        <li>
+                                            <span class="label">@Html.LabelFor(m => m.userModels.Email) : <small></small></span>
+                                            <span class="inputText">@Model.userModels.Email</span>
+                                        </li>
+                                        <li>
+                                            <span class="label">@Html.LabelFor(m => m.userModels.UserType) : <small></small></span>
+                                            <span class="inputText" id="txtUserType">@Model.userModels.UserType</span>
+                                        </li>
+                                        <li>
+                                            <span class="label">@Html.LabelFor(m => m.userModels.SecurityProfileId) : <small></small></span>
+                                            @*<span class="inputText">@Model.userModels.SecurityProfile</span>*@
+                                            <span class="inputText">@Model.userModels.SecurityProfileName</span>
+                                        </li>
+                                        <li>
+                                            <span class="label">@Html.LabelFor(m => m.userModels.IsActive) : </span>
+                                            <span class="inputText">
+                                                @Html.CheckBoxFor(m => m.userModels.IsActive, new { @class = "form-control m-input", onclick = "return false;", @style = "color:black; width: auto; margin-top: 12px;" })
+                                            </span>
+                                        </li>
+                                        <li>
+                                            <span class="label">@Html.LabelFor(m => m.userModels.IsSuperUser) : </span>
+                                            <span class="inputText">
+                                                @Html.CheckBoxFor(m => m.userModels.IsSuperUser, new { @class = "form-control m-input", onclick = "return false;", @style = "color:black; width: auto; margin-top: 12px;" })
+                                            </span>
+                                        </li>
+                                        @if (!(Model.userModels._userdata.Site.APM == true && Model.userModels._userdata.Site.CMMS == false && Model.userModels._userdata.Site.Sanitation == false) && !(Model.userModels._userdata.Site.APM == false && Model.userModels._userdata.Site.CMMS == false && Model.userModels._userdata.Site.Sanitation == true))
+                                        {
+                                            <li>
+                                                <span class="label">@Html.LabelFor(m => m.userModels.Buyer) : </span>
+                                                <span class="inputText">
+                                                    @Html.CheckBoxFor(m => m.userModels.Buyer, new { @class = "form-control m-input", onclick = "return false;", @style = "color:black; width: auto; margin-top: 12px;" })
+                                                </span>
+                                            </li>
+                                        }
+                                    </ul>
+                                </div>
+                                <div id="Address" class="tabcontent2">
+                                    <ul class="listView">
+                                        <li>
+                                            <span class="label">@Html.LabelFor(m => m.userModels.Phone1) : </span>
+                                            <span class="inputText">@Model.userModels.Phone1</span>
+                                        </li>
+                                        <li>
+                                            <span class="label">@Html.LabelFor(m => m.userModels.Phone2) : </span>
+                                            <span class="inputText">@Model.userModels.Phone2</span>
+                                        </li>
+                                        <li>
+                                            <span class="label">@Html.LabelFor(m => m.userModels.Address1) : </span>
+                                            <span class="inputText">@Model.userModels.Address1</span>
+                                        </li>
+                                        @if (!string.IsNullOrEmpty(Model.userModels.Address2))
+                                        {
+                                            <li>
+                                                <span class="label"></span>
+                                                <span class="inputText">@Model.userModels.Address2</span>
+                                            </li>
+                                        }
+                                        @if (!string.IsNullOrEmpty(Model.userModels.Address3))
+                                        {
+                                            <li>
+                                                <span class="label"></span>
+                                                <span class="inputText">@Model.userModels.Address3</span>
+                                            </li>
+                                        }
+                                        <li>
+                                            <span class="label">@Html.LabelFor(m => m.userModels.AddressCity) : </span>
+                                            <span class="inputText">@Model.userModels.AddressCity</span>
+                                        </li>
+                                        <li>
+                                            <span class="label">@Html.LabelFor(m => m.userModels.AddressState) : </span>
+                                            <span class="inputText description">@Model.userModels.AddressState</span>
+                                        </li>
+                                        <li>
+                                            <span class="label">@Html.LabelFor(m => m.userModels.AddressPostCode) : </span>
+                                            <span class="inputText description">@Model.userModels.AddressPostCode</span>
+                                        </li>
+                                        <li>
+                                            <span class="label">@Html.LabelFor(m => m.userModels.AddressCountry) : </span>
+                                            <span class="inputText description">@Model.userModels.AddressCountry</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <!--V2-803-->
+                                <div id="SignOn" class="tabcontent2">
+                                    <ul class="listView">
+                                        <li>
+                                            <span class="label">@Html.LabelFor(m => m.userModels.GMailId) : </span>
+                                            <span class="inputText">@Model.userModels.GMailId</span>
+                                        </li>
+                                        <li>
+                                            <span class="label">@Html.LabelFor(m => m.userModels.MicrosoftMailId) : </span>
+                                            <span class="inputText">@Model.userModels.MicrosoftMailId</span>
+                                        </li>
+                                        <li>
+                                            <span class="label">@Html.LabelFor(m => m.userModels.WindowsADUserId) : </span>
+                                            <span class="inputText">@Model.userModels.WindowsADUserId</span>
+                                        </li>
+
+                                    </ul>
+                                </div>
+                                <!--V2-803-->
+                                <div class="editBttn">
+                                    <button type="button" class="btn btn-blue" id="edituser"><i class="fa fa-pencil" style="margin-top:-3px;"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalEdit").FirstOrDefault().Value.ToString()</button>
+                                </div>
+                            </div>
+                            <div class="tabsArea nobg" id="Notes" style="display:none;">
+                                <div class="table-responsive">
+                                    <table id="notesTable" class="eqpDtlTbl row-border custom-sort" style="width:100%;">
+                                        <thead>
+                                            <tr>
+                                                <th width="33%">@Model.Loc.Where(a => a.ResourceId == "globalSubject").FirstOrDefault().Value.ToString()</th>
+                                                <th width="33%">@Model.Loc.Where(a => a.ResourceId == "globalOwner").FirstOrDefault().Value.ToString()</th>
+                                                <th width="19%">@Model.Loc.Where(a => a.ResourceId == "spnModifyDate").FirstOrDefault().Value.ToString()</th>
+                                                <th width="17%" style="text-align:center !important;">@Model.Loc.Where(a => a.ResourceId == "globalAction").FirstOrDefault().Value.ToString()</th>
+                                            </tr>
+                                        </thead>
+                                    </table>
+                                </div>
+                                <div class="bttn_pagin">
+                                    <div class="bttns"><button type="button" class="btn btn-blue" data-toggle="" data-target="" id="btnAddNote"><i class="fa fa-plus faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "spnGlobalNotesAdd").FirstOrDefault().Value.ToString()</button></div>
+                                    <div style="clear:both;"></div>
+                                </div>
+                                <div style="clear:both;"></div>
+                            </div>
+                            <div class="tabsArea nobg" id="Attachment" style="display:none;">
+                                <div class="table-responsive">
+                                    <table id="attachTable" class="eqpDtlTbl row-border custom-sort" style="width:100%;">
+                                        <thead>
+                                            <tr>
+                                                <th>@Model.Loc.Where(a => a.ResourceId == "globalSubject").FirstOrDefault().Value.ToString()</th>
+                                                <th>@Model.Loc.Where(a => a.ResourceId == "globalFileName").FirstOrDefault().Value.ToString()</th>
+                                                <th>@Model.Loc.Where(a => a.ResourceId == "globalFileSize").FirstOrDefault().Value.ToString()</th>
+                                                <th>@Model.Loc.Where(a => a.ResourceId == "globalOwner").FirstOrDefault().Value.ToString()</th>
+                                                <th>@Model.Loc.Where(a => a.ResourceId == "globalCreateDate").FirstOrDefault().Value.ToString()</th>
+                                                <th width="17%" style="text-align:center !important;">@Model.Loc.Where(a => a.ResourceId == "globalAction").FirstOrDefault().Value.ToString()</th>
+                                            </tr>
+                                        </thead>
+                                    </table>
+                                </div>
+                                <div class="bttn_pagin">
+                                    <div class="bttns"><button type="button" class="btn btn-blue" data-toggle="" data-target="" id="btnAddumAttachment"><i class="fa fa-plus faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalAddAttachment").FirstOrDefault().Value.ToString()</button></div>
+                                    <div style="clear:both;"></div>
+                                </div>
+                                <div style="clear:both;"></div>
+                            </div>
+                            <div class="tabsArea nobg" id="Contacts" style="display:none;">
+                                <div class="table-responsive">
+                                    <table id="contactTable" class="eqpDtlTbl row-border custom-sort" style="width:100%;">
+                                        <thead>
+                                            <tr>
+                                                <th>@Model.Loc.Where(a => a.ResourceId == "spnName").FirstOrDefault().Value.ToString()</th>
+                                                <th>@Model.Loc.Where(a => a.ResourceId == "UserOffice").FirstOrDefault().Value.ToString()</th>
+                                                <th>@Model.Loc.Where(a => a.ResourceId == "UserEmail1").FirstOrDefault().Value.ToString()</th>
+                                                <th>@Model.Loc.Where(a => a.ResourceId == "globalOwner").FirstOrDefault().Value.ToString()</th>
+                                                <th width="17%" style="text-align:center !important;">@Model.Loc.Where(a => a.ResourceId == "globalAction").FirstOrDefault().Value.ToString()</th>
+                                            </tr>
+                                        </thead>
+                                    </table>
+                                </div>
+                                <div class="bttn_pagin">
+                                    <div class="bttns"><button type="button" class="btn btn-blue" data-toggle="" data-target="" id="btnAddContact"><i class="fa fa-plus faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "UserAddContact").FirstOrDefault().Value.ToString()</button></div>
+                                    <div style="clear:both;"></div>
+                                </div>
+                                <div style="clear:both;"></div>
+                            </div>
+                            <div class="tabsArea nobg" id="Sites" style="display:none;">
+                                <div class="table-responsive">
+                                    <table id="siteTable" class="eqpDtlTbl row-border custom-sort" style="width:100%;">
+                                        <thead>
+                                            <tr>
+                                                <th>@Model.Loc.Where(a => a.ResourceId == "spnSiteGlobal").FirstOrDefault().Value.ToString()</th>
+                                                <th>@Model.Loc.Where(a => a.ResourceId == "spnSiteNameGlobal").FirstOrDefault().Value.ToString()</th>
+                                                <th>@Model.Loc.Where(a => a.ResourceId == "Craft").FirstOrDefault().Value.ToString()</th>
+                                                <th width="17%" style="text-align:center !important;">@Model.Loc.Where(a => a.ResourceId == "globalAction").FirstOrDefault().Value.ToString()</th>
+
+                                            </tr>
+                                        </thead>
+                                    </table>
+                                </div>
+
+
+                                <div style="clear:both;"></div>
+                            </div>
+                            <div class="tabsArea nobg" id="Storerooms" style="display:none;">
+                                <div class="table-responsive">
+                                    <table id="storeroomTable" class="eqpDtlTbl row-border custom-sort" style="width:100%;">
+                                        <thead>
+                                            <tr>
+                                                <th width="40%">@Model.Loc.Where(a => a.ResourceId == "spnSiteGlobal").FirstOrDefault().Value.ToString()</th>
+                                                <th width="40%">@Model.Loc.Where(a => a.ResourceId == "spnStoreroomGlobal").FirstOrDefault().Value.ToString()</th>
+                                                <th width="20%" style="text-align:center !important;">@Model.Loc.Where(a => a.ResourceId == "globalAction").FirstOrDefault().Value.ToString()</th>
+                                            </tr>
+                                        </thead>
+                                    </table>
+                                </div>
+                                <div class="bttn_pagin">
+                                    <div class="bttns"><button type="button" class="btn btn-blue" data-toggle="" data-target="" id="btnAddStoreroom" style="display:none;"><i class="fa fa-plus faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "spnGlobalStoreroomAdd").FirstOrDefault().Value.ToString()</button></div>
+                                    <div style="clear:both;"></div>
+                                </div>
+                                <div style="clear:both;"></div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@Html.HiddenFor(m => m.userModels.UserInfoId, new { id = "UserInfoId" })
+@Html.HiddenFor(m => m.userModels.PersonnelId)
+@Html.HiddenFor(m => m.userModels.UserName)
+@Html.HiddenFor(m => m.userModels.ClientLookupId)
+@Html.HiddenFor(m => m.userModels.SecurityProfileId)
+@Html.HiddenFor(m => m.userModels.UserType)
+@Html.HiddenFor(m => m.userModels.SecurityProfileName)
+@Html.HiddenFor(m => m.userModels.SecurityProfileId)
+@Html.HiddenFor(m => m.userModels.DefaultSiteId)
+@Html.HiddenFor(m => m.userModels.DefaultPersonnelId)
+@Html.HiddenFor(m => m.userModels.FirstName)
+@Html.HiddenFor(m => m.userModels.MiddleName)
+@Html.HiddenFor(m => m.userModels.LastName)
+@Html.HiddenFor(m => m.userModels.IsSuperUser)
+@Html.HiddenFor(m => m.userModels.SiteControlled)
+
+@Html.Hidden("CurrentUserType", Model.userModels._userdata.DatabaseKey.User.UserType)
+@Html.Partial("~/Views/Configuration/UserManagement/_ResetPasswordModalNew.cshtml")
+@if (UserType != UserTypeConstants.Reference.ToUpper())
+{
+    <div id="UMchangeUserAccessModalPopup">
+
+    </div>
+}
+
+@*@Html.Partial("~/Views/Configuration/UserManagement/_ManualResetPasswordModal.cshtml")*@
+@if (Model.passwordSettingsModel.AllowAdminReset)
+{
+    <div id="ManualResetPasswordModalPopup" class="modal fade" role="dialog">
+        <div class="modal-dialog" id="ManualResetPasswordModal">
+
+        </div>
+    </div>
+}
+<div id="UMchangeUserNameModalPopup">
+
+</div>
+@if (UserTypeloginUser == UserTypeConstants.Admin.ToUpper() || IsSuperUser)
+{
+    <div id="AddReferenceUserModalPopup">
+
+    </div>
+}
+
+    <style>
+        .filterDescription {
+            width: auto;
+            float: left;
+            font-size: 1.2rem;
+            color: #000;
+            font-weight: 500;
+            line-height: 33px;
+        }
+
+            .filterDescription a {
+                color: #36a3f7;
+                text-decoration: none !important;
+            }
+
+        .modal-open {
+            overflow: hidden;
+        }
+
+        @@media screen and (max-width: 567px) {
+            .filterDescription {
+                width: 100%;
+                float: none;
+            }
+        }
+    </style>

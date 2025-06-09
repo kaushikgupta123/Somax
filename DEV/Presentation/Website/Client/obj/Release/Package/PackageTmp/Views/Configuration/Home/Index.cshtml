@@ -1,0 +1,153 @@
+﻿@model Client.Models.Configuration.Dashboard.ConfigDashboardVM
+
+@{
+    ViewBag.Title = "Somax-Config | Dashboard";
+}
+@Styles.Render("~/Content/dashboardStyle")
+@Styles.Render("~/Content/datatable")
+@section scripts {
+    @Scripts.Render("~/bundles/datatable")
+    @Scripts.Render("~/bundles/FusionChart")
+    @Scripts.Render("~/bundles/ConfigDashboard")
+    <script src="~/Scripts/Pages/Configuration/Dashboard/configdashboard.js"></script>
+}
+<div class="m-subheader fixedDiv1">
+    <div class="new-m-subheader">
+        <div class="PageTitle">
+            <div class="align-items-center">
+                <h3 class="m-subheader__title ">
+                    @Model.Loc.Where(a => a.ResourceId == "spnConfigDashboardheader").FirstOrDefault().Value.ToString()
+                </h3>
+            </div>
+        </div>
+        @if (Model.IsSiteControl && Model.IsSuperUser)
+        {
+            <div class="ActionBttnArea">
+                <div class="pull-left" style="padding-right: 15px; line-height: 34px; font-weight:500;font-size:1.1rem;">Site</div>
+                <div class="actionDiv pull-left" id="ad1" style="margin-right:0 !important;width:250px;">
+                    @Html.DropDownListFor(m => m.LoggedInUserSiteId, Model.SiteList, new { @class = "form-control search select2picker", style = "width:100%;", id = "siteselector" })
+                </div>
+                <div style="clear:both;"></div>
+            </div>
+        }
+        <div style="clear:both;"></div>
+    </div>
+</div>
+<div class="pushDiv1"></div>
+
+<div class="row">
+    @Html.Partial("~/Views/Configuration/Home/Availability/SeatAvailability.cshtml", Model)
+
+    @Html.Partial("~/Views/Configuration/Home/Activity/Activity.cshtml", Model)
+
+    @if (!Model.IsSiteControl && Model.IsSuperUser)
+    {
+        @Html.Partial("~/Views/Configuration/Home/Engagement/Engagement.cshtml", Model)
+    }
+</div>
+<script>
+    var SiteControl = '@Model.IsSiteControl';
+    var SuperUser = '@Model.IsSuperUser';
+</script>
+
+<style type="text/css">
+    .rightWidgetArea {
+        padding: 46px;
+    }
+
+    .planed {
+        margin-right: 62px;
+        margin-bottom: 23px;
+    }
+
+    .incomplete {
+        margin-left: 62px;
+        margin-bottom: 23px;
+    }
+
+    .complete {
+        margin-right: 62px;
+        margin-top: 23px;
+    }
+
+    .breakIn {
+        margin-left: 62px;
+        margin-top: 23px;
+    }
+
+    .lds-ellipsis.lds-adjust {
+        margin-top: -32px;
+        z-index: 9;
+    }
+
+    .rightWidgetArea .chartBox {
+        position: relative;
+        min-height: 38px;
+        margin-top: 0;
+        font-size: 25px;
+        font-weight: 500;
+        font-family: Roboto;
+    }
+
+    @@media only screen and (min-width: 480px) and (max-width: 567px) {
+        table #loginAuditingRetrieveUsertable {
+            width: 480px !important;
+        }
+    }
+
+    @@media only screen and (min-width: 360px) and (max-width: 479px) {
+        table#loginAuditingRetrieveUsertable {
+            width: 480px !important;
+        }
+    }
+
+    @@media only screen and (min-width: 320px) and (max-width: 359px) {
+        table#loginAuditingRetrieveUsertable {
+            width: 480px !important;
+        }
+    }
+
+    @@media screen and (max-width: 1899px) {
+        .planed, .complete, .estHrs, .actHrs {
+            margin-right: 38px;
+        }
+
+        .incomplete, .breakIn {
+            margin-left: 38px;
+        }
+    }
+
+    @@media screen and (max-width: 1599px) {
+        .planed, .complete {
+            margin-right: 38px;
+        }
+
+        .incomplete, .breakIn {
+            margin-left: 38px;
+        }
+    }
+
+    @@media screen and (max-width: 1359px) {
+        .planed, .complete {
+            margin-right: 32px;
+        }
+
+        .incomplete, .breakIn {
+            margin-left: 32px;
+        }
+    }
+
+    @@media screen and (max-width: 1199px) {
+        .rightWidgetArea {
+            padding: 0 10px;
+        }
+
+        .planed, .complete {
+            margin: 0;
+        }
+
+        .incomplete, .breakIn {
+            margin: 0;
+        }
+    }
+</style>

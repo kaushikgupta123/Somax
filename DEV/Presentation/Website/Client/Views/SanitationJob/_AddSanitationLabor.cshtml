@@ -1,0 +1,97 @@
+﻿@model Client.Models.Sanitation.SanitationVM
+
+<div class="m-subheader fixedDiv1">
+    <div class="new-m-subheader">
+        <div class="PageTitle">
+            <div class="align-items-center separator">
+                <h3 class="m-subheader__title ">
+                    @Model.Loc.Where(a => a.ResourceId == "spnSanitation").FirstOrDefault().Value.ToString()
+                </h3>
+            </div>
+        </div>
+
+        <div class="NewBreadcrumbArea">
+            <div class="newBreadcrumb">
+                <ul>
+                    <li><a href="/Dashboard/Dashboard">&nbsp;</a></li>
+                    <li><a href="/SanitationJob/Index?page=Sanitation_Jobs_Search">@Model.Loc.Where(a => a.ResourceId == "spnSanitaionJobSearch").FirstOrDefault().Value.ToString()</a></li>
+                    <li><a href="javascript:void(0)" id="brdSanitation" data-val="@Model.laborModel.ChargeToId_Primary">@Model.laborModel.ClientLookupId</a></li>
+                    @if (Model.laborModel.TimecardId != 0)
+                    {
+                        <li class="active">@Model.Loc.Where(a => a.ResourceId == "spnUpdateLabor").FirstOrDefault().Value.ToString()</li>
+                    }
+                    else
+                    {
+                        <li class="active">@Model.Loc.Where(a => a.ResourceId == "spnAddLabor").FirstOrDefault().Value.ToString()</li>
+                    }
+                </ul>
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+        <div style="clear:both;"></div>
+    </div>
+</div>
+<div class="pushDiv1"></div>
+
+<div class="row fixedDiv2">
+    @Html.Partial("_SanitationJobSummary", Model)
+</div>
+<div class="pushDiv2 partsAdjust"></div>
+@Html.Partial("_ErrorDiv")
+
+@using (Ajax.BeginForm("AddLabor", "SanitationJob", new AjaxOptions { HttpMethod = "Post", OnSuccess = "SJLaborAddOnSuccess", OnBegin = "AjaxBeginFormBegin", OnComplete = "AjaxBeginFormComplete", OnFailure = "AjaxBeginFormFaillure" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="row">
+        <div class="col-xl-12">
+            <div class="m-portlet newPort" id="m_portlet" style="padding:15px;">
+                <div class="bottomBlock">
+                    <div class="tabsArea nobg">
+                        <ul class="listView nobrd">
+                            <li>
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnPersonnelID").FirstOrDefault().Value.ToString():<small>*</small> </span>
+                                <span class="inputText">
+                                    @Html.ValidationMessageFor(m => m.laborModel.PersonnelId, "", new { style = "display:none" })
+                                    @Html.DropDownListFor(m => m.laborModel.PersonnelId, Model.laborModel.PersonnelIdList, "--Select--", new { @class = "form-control search select2picker", style = "width:100%;" })
+                                </span>
+                            </li>
+                            <li>
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnDate").FirstOrDefault().Value.ToString() : <small>*</small></span>
+                                <span class="inputText">
+                                    @Html.ValidationMessageFor(m => m.laborModel.StartDate, "", new { style = "display:none" })
+                                    @Html.TextBoxFor(m => m.laborModel.StartDate, "{0:MM/dd/yyyy}", new { @class = "form-control search dtpicker", autocomplete = "off" })
+                                </span>
+                            </li>
+                            <li>
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnHours").FirstOrDefault().Value.ToString(): <small>*</small></span>
+                                <span class="inputText">
+                                    @Html.ValidationMessageFor(m => m.laborModel.Hours, "", new { style = "display:none" })
+                                    @Html.TextBoxFor(m => m.laborModel.Hours, new { @class = "form-control search decimalinput", autocomplete = "off" })
+                                </span>
+                            </li>
+
+                        </ul>
+                    </div>
+                    <div style="clear:both;"></div>
+
+                    <div class="idBttns">
+                        <div class="bttn_pagin">
+                            <div class="bttns2">
+                                <button type="submit" class="btn btn-blue mobBttn"><i class="fa fa-save faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+                            </div>
+                            <div class="bttns"><button type="button" class="btn btn-blue mobBttn" id="btnSJlaborcancel"><i class="fa fa-close faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button></div>
+
+                            <div style="clear:both;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @Html.HiddenFor(m => m.laborModel.ChargeToId_Primary)
+    @Html.HiddenFor(m => m.laborModel.TimecardId)
+    @Html.HiddenFor(m => m.laborModel.UpdateIndex)
+    @Html.Partial("_SanitationJobSummaryDescriptionMore", Model) @*V2-988*@
+
+}

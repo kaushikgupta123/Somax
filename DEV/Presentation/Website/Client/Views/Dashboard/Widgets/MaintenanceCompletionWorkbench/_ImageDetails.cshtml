@@ -1,0 +1,49 @@
+﻿@model Client.Models.Dashboard.DashboardVM
+
+<div class="tabsArea nobg">
+    <div class="m-portlet" id="m_portlet" style="padding:10px;">
+        <div class="table-responsive">
+            @if (Model.security.MaintenanceCompletionWorkbenchWidget_Photos.Access)
+            {
+                <div id="ImageGrid" style="width:100%">
+                    <div class="lds-ellipsis lds-adjust" id="imagedataloader">
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                    </div>
+                    @Html.Partial("/Views/Dashboard/Widgets/MaintenanceCompletionWorkbench/_ImageGrid.cshtml")
+                    
+                </div>
+                if (Model.security.MaintenanceCompletionWorkbenchWidget_Photos.Create /*&& (Model.security.Equipment.Edit && (Model._userdata.Site.APM == false && Model._userdata.Site.CMMS == true) || (Model._userdata.Site.APM == true && Model._userdata.Site.CMMS == false) || (Model._userdata.Site.APM == true && Model._userdata.Site.CMMS == true) || (Model._userdata.Site.APM == true && Model._userdata.Site.CMMS == true) || (Model._userdata.Site.APM == false && Model._userdata.Site.CMMS == false && Model._userdata.Site.Sanitation == true))*/)
+                {
+                    <div class="bttns" style="margin-left:15px">
+                        <label for="files" class="btn btn-blue"><i class="fa fa-plus faIcon"></i>@Model.Loc.Where(a => a.ResourceId == "spnAddPhotos").FirstOrDefault().Value.ToString()</label>
+                        <input id="files" accept=".jpeg,.jpg,.png,.JPEG,.JPG,.PNG" style="visibility:hidden;" type="file" value="">
+                    </div>
+                }
+            }
+            </div>
+        <div style="clear:both;"></div>
+    </div>
+</div>
+@*<div class="tabsArea nobg imageDropZone" id="Photos" style="display:none;">
+        <div class="row">
+            <div id="ImageGrid">
+                <div class="lds-ellipsis lds-adjust" id="imagedataloader" style="display:none;">
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                </div>
+                @Html.Partial("/Views/Equipment/_ImageGrid.cshtml")
+            </div>
+            @if (Model.security.Asset_Photos.Create && (Model.security.Equipment.Edit && (Model._userdata.Site.APM == false && Model._userdata.Site.CMMS == true) || (Model._userdata.Site.APM == true && Model._userdata.Site.CMMS == false) || (Model._userdata.Site.APM == true && Model._userdata.Site.CMMS == true) || (Model._userdata.Site.APM == true && Model._userdata.Site.CMMS == true) || (Model._userdata.Site.APM == false && Model._userdata.Site.CMMS == false && Model._userdata.Site.Sanitation == true)))
+            {
+                <div class="bttns">
+                    <label for="files" class="btn btn-blue"><i class="fa fa-plus faIcon"></i>@Model.Loc.Where(a => a.ResourceId == "spnAddPhotos").FirstOrDefault().Value.ToString()</label>
+                    <input id="files" style="visibility:hidden;" type="file" value="">
+                </div>
+            }
+        </div>
+    </div>*@

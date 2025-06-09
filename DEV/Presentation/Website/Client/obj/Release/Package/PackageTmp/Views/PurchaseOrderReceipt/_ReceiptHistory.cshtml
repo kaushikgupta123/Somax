@@ -1,0 +1,109 @@
+﻿@model Client.Models.PurchaseOrder.PurchaseOrderVM
+<div class="m-subheader">
+    <div class="new-m-subheader">
+        <div class="PageTitle">
+            <div class="align-items-center separator">
+                <h3 class="m-subheader__title ">
+                    @Model.Loc.Where(a => a.ResourceId == "spnPOR").FirstOrDefault().Value.ToString()
+                </h3>
+            </div>
+        </div>
+
+        <div class="NewBreadcrumbArea">
+            <div class="newBreadcrumb">
+                <ul>
+                    <li><a href="/Dashboard/Dashboard">&nbsp;</a></li>
+                    <li><a href="/PurchaseOrderReceipt/Index?page=Procurement_Receipts">@Model.Loc.Where(a => a.ResourceId == "spnPORSearch").FirstOrDefault().Value.ToString()</a></li>
+                    <li><a href="javascript:void(0)" id="brdPO" data-val="@Model.PurchaseOrderModel.PurchaseOrderId">@Model.PurchaseOrderModel.ClientLookupId</a></li>
+                    <li class="active">@Model.Loc.Where(a => a.ResourceId == "spnPORHistory").FirstOrDefault().Value.ToString()</li>
+                </ul>
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+        <div style="clear:both;"></div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xl-12" id="btnnblock">
+        <div class="m-portlet newPort" id="m_portlet" style="padding:10px;">
+            <div class="bottomBlock">
+                <div class="tabsArea nobg">
+                    <ul class="listView nobrd">
+                        <li>
+                            <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnPONo").FirstOrDefault().Value.ToString() : </span>
+                            <span class="inputText wthAdjst">
+                                @Html.TextBoxFor(m => m.PurchaseOrderModel.ClientLookupId, new { @class = "form-control search readonly", @readonly = "readonly", autocomplete = "off" })
+                            </span>
+                        </li>
+                        <li>
+                            <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnAttention").FirstOrDefault().Value.ToString() : </span>
+                            <span class="inputText wthAdjst">
+                                @Html.TextBoxFor(m => m.PurchaseOrderModel.Attention, new { @class = "form-control search readonly", @readonly = "readonly", autocomplete = "off" })
+                            </span>
+                        </li>
+                        <li>
+                            <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnItems").FirstOrDefault().Value.ToString() : </span>
+                            <span class="inputText wthAdjst">
+                                @Html.TextBoxFor(m => m.PurchaseOrderModel.CountLineItem, new { @class = "form-control search readonly", @readonly = "readonly", autocomplete = "off" })
+                            </span>
+                        </li>
+                        <li>
+                            <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnVendorID").FirstOrDefault().Value.ToString() : </span>
+                            <span class="inputText wthAdjst">
+                                @Html.TextBoxFor(m => m.PurchaseOrderModel.VendorClientLookupId, new { @class = "form-control search readonly", @readonly = "readonly", autocomplete = "off" })
+                            </span>
+                        </li>
+                        <li>
+                            <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnPoVendorName").FirstOrDefault().Value.ToString() : </span>
+                            <span class="inputText wthAdjst">
+                                @Html.TextBoxFor(m => m.PurchaseOrderModel.VendorName, new { @class = "form-control search readonly", @readonly = "readonly", autocomplete = "off" })
+                            </span>
+                        </li>
+                        <li>
+                            <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnPoStatus").FirstOrDefault().Value.ToString() : </span>
+                            <span class="inputText wthAdjst">
+                                @Html.TextBoxFor(m => m.PurchaseOrderModel.Status, new { @class = "form-control search readonly", @readonly = "readonly", autocomplete = "off" })
+                            </span>
+                        </li>
+                        <li>
+                            <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnPoCreatedBy").FirstOrDefault().Value.ToString() :</span>
+                            <span class="inputText wthAdjst">
+                                @Html.TextBoxFor(m => m.PurchaseOrderModel.Creator_PersonnelName, new { @class = "form-control search readonly", @readonly = "readonly", autocomplete = "off" })
+                            </span>
+                        </li>
+                    </ul>
+                </div>
+                <div style="clear:both;"></div>
+                <div class="idBttns">
+                    <div class="bttn_pagin">
+                        <div class="bttns2">
+                        </div>
+                        <div style="clear:both;"></div>
+                    </div>
+                </div>
+                <div style="clear:both;"></div>
+            </div>
+            <div style="clear:both;"></div>
+            <div class="table-responsive">
+                <table id="tblLineItem" class="eqpDtlTbl row-border custom-sort" style="width:100%;">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>@Model.Loc.Where(a => a.ResourceId == "spnLine").FirstOrDefault().Value.ToString()</th>
+                            <th>@Model.Loc.Where(a => a.ResourceId == "spnPartID").FirstOrDefault().Value.ToString()</th>
+                            <th>@Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString()</th>
+                            <th>@Model.Loc.Where(a => a.ResourceId == "spnOrderQnt").FirstOrDefault().Value.ToString()</th>
+                            <th>@Model.Loc.Where(a => a.ResourceId == "globalUnits").FirstOrDefault().Value.ToString()</th>
+                            <th>@Model.Loc.Where(a => a.ResourceId == "spnQtyToDt").FirstOrDefault().Value.ToString()</th>
+                            <th>@Model.Loc.Where(a => a.ResourceId == "spnPoStatus").FirstOrDefault().Value.ToString()</th>
+                            <th>@Model.Loc.Where(a => a.ResourceId == "spnBckOrd").FirstOrDefault().Value.ToString()</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+@Html.Partial("_ReversedCommentsModal")
+@Html.HiddenFor(m => m.PurchaseOrderModel.PurchaseOrderId)

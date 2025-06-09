@@ -1,0 +1,282 @@
+﻿
+@model Client.Models.Parts.PartsVM
+
+@{
+    int lastpage = 0;
+    int toRecords = 0;
+    int currentpage = Convert.ToInt32(ViewBag.CurrentPage); ;
+    int length = Convert.ToInt32(ViewBag.Length);
+    int start = Convert.ToInt32(ViewBag.Start);
+    int TotalRecords = Convert.ToInt32(ViewBag.TotalRecords);
+    int startRecords = Convert.ToInt32(ViewBag.Start) + 1;
+    if (start + length <= TotalRecords)
+    {
+        toRecords = start + length;
+    }
+    else
+    {
+        toRecords = TotalRecords;
+    }
+
+    int paginationdropval1 = length;
+    int paginationdropval2 = length + paginationdropval1;
+    int paginationdropval3 = length + paginationdropval2;
+    int paginationdropval4 = length + paginationdropval3;
+    int paginationdropval5 = length + paginationdropval4;
+
+    int startpage = 1;
+    int page2 = startpage + 1;
+    int page3 = startpage + 2;
+    int page4 = startpage + 3;
+    int page5 = startpage + 4;
+    int page6 = startpage + 5;
+    int modforlastpage = TotalRecords / length;
+    if (modforlastpage == 0 || TotalRecords % length == 0)
+    {
+        lastpage = TotalRecords / length;
+    }
+    else
+    {
+        lastpage = TotalRecords / length + 1;
+    }
+    int lastpage_1 = lastpage - 1;
+    int lastpage_2 = lastpage - 2;
+    int lastpage_3 = lastpage - 3;
+
+    int curremtpagetoshow = currentpage;
+    int precurremtpagetoshow = currentpage - 1;
+    int postcurremtpagetoshow = currentpage + 1;
+
+
+}
+
+@foreach (var item in Model.PartModelList)
+{
+    string imageUrl = item.AzureImageURL;
+    if (item.ClientOnPremise)
+    {
+        imageUrl = UtilityFunction.PhotoBase64ImgSrc(item.AzureImageURL);
+    }
+    <div class="m-portlet cardRow crdVu partcardview">
+        <div class="m-portlet__body gridList">
+            <div class="row">
+                <div class="col-12 col-sm-12 col-md-4 col-lg-4 col-xl-3">
+                    <div class="gridImgBox">
+                        @if (!string.IsNullOrEmpty(imageUrl))
+                        {
+                            <img src="@imageUrl" id="EquipZoom" alt="Image" data-zoom-image="@imageUrl" />
+                        }
+                        else
+                        {
+                            <img src="~/Scripts/ImageZoom/images/NoImage.jpg" id="EquipZoom" alt="Image" data-zoom-image="/Scripts/ImageZoom/images/NoImage.jpg" />
+                        }
+                    </div>
+                    <div style="clear:both;"></div>
+                </div>
+                <div class="col-12 col-sm-12 col-md-4 col-lg-4 col-xl-4">
+                    <div class="newDescription">
+                        <span class="orderId">
+                            <a href="JavaScript:void(0);"><span class="lnk_part" id=@item.PartId clientlookupid=@item.ClientLookupId>@item.ClientLookupId</span></a> &nbsp;
+                        </span>
+                        <p>@item.Description</p>
+                        <p>
+                            @Model.Loc.Where(a => a.ResourceId == "spnOnHand").FirstOrDefault().Value.ToString()  :
+                            @item.OnHandQuantity
+                        </p>
+                        <p>
+                            @Model.Loc.Where(a => a.ResourceId == "spnMinimum").FirstOrDefault().Value.ToString()  :
+                            @item.MinimumQuantity
+                        </p>
+                        <p>
+                            @Model.Loc.Where(a => a.ResourceId == "spnMaximum").FirstOrDefault().Value.ToString()  :
+                            @item.Maximum
+                        </p>
+                        <p>
+                            @Model.Loc.Where(a => a.ResourceId == "spnAppliedCost").FirstOrDefault().Value.ToString()  :
+                            @item.AppliedCost
+                        </p>
+                        <p>
+                            @Model.Loc.Where(a => a.ResourceId == "spnIssueUnit").FirstOrDefault().Value.ToString()  :
+                            @item.IssueUnit
+                        </p>
+                    </div>
+                </div>
+
+                <div class="col-12 col-sm-12 col-md-4 col-lg-4 col-xl-5">
+                    <div class="newDescription">
+                        <p>
+                            @Model.Loc.Where(a => a.ResourceId == "spnStockType").FirstOrDefault().Value.ToString()  :
+                            @item.StockType
+                        </p>
+                        <p>
+                            @Model.Loc.Where(a => a.ResourceId == "spnManufacturer").FirstOrDefault().Value.ToString()  :
+                            @item.Manufacturer
+                        </p>
+                        <p>
+                            @Model.Loc.Where(a => a.ResourceId == "spnManufacturerID").FirstOrDefault().Value.ToString()  :
+                            @item.ManufacturerID
+                        </p>
+                        <p>
+                            @Model.Loc.Where(a => a.ResourceId == "spnPlaceArea").FirstOrDefault().Value.ToString()  :
+                            @item.PlaceArea
+                        </p>
+                        <p>
+                            @Model.Loc.Where(a => a.ResourceId == "spnSection").FirstOrDefault().Value.ToString()  :
+                            @item.Section
+                        </p>
+                        <p>
+                            @Model.Loc.Where(a => a.ResourceId == "spnRow").FirstOrDefault().Value.ToString()  :
+                            @item.Row
+                        </p>
+                        <p>
+                            @Model.Loc.Where(a => a.ResourceId == "spnShelf").FirstOrDefault().Value.ToString()  :
+                            @item.Shelf
+                        </p>
+                        <p>
+                            @Model.Loc.Where(a => a.ResourceId == "spnBin").FirstOrDefault().Value.ToString()  :
+                            @item.Bin
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+@if (Model.PartModelList.Count < 1)
+{
+    <div class="m-portlet cardRow">
+        <div id="spnNoData" style="display:block; text-align:center; padding:5px;">
+            @UtilityFunction.GetMessageFromResource("GlobalNoDataAvailable", LocalizeResourceSetConstants.Global)
+        </div>
+    </div>
+}
+<div class="dataTables_wrapper CardPagination">
+    <div class="dataTables_length" id="" style="display: block;">
+        <label>
+            <select class="searchdt-menu" id="partcardviewpagelengthdrp">
+                <option value="10">10</option>
+                <option value="20">20</option>
+                <option value="30">30</option>
+                <option value="40">40</option>
+                <option value="50">50</option>
+            </select>
+        </label>
+    </div>
+    @if (Model.PartModelList.Count < 1)
+    {
+
+        <div class="dataTables_info" id="" role="status" aria-live="polite">Showing @String.Format("{0:n0}", 0) to @String.Format("{0:n0}", toRecords) of @String.Format("{0:n0}", TotalRecords) entries</div>
+    }
+    else
+    {
+
+        <div class="dataTables_info" id="" role="status" aria-live="polite">Showing @String.Format("{0:n0}", startRecords) to @String.Format("{0:n0}", toRecords) of @String.Format("{0:n0}", TotalRecords) entries</div>
+    }
+    @*<div class="dataTables_paginate paging_full_numbers" id="tblparts_paginate">
+            <ul class="pagination">
+                <li class="paginate_button page-item first disabled" id="tbl_first"><a href="javascript:void(0)" aria-controls="tblparts" data-dt-idx="0" tabindex="0" class="page-link"><img src="../images/drop-grid-first.png"></a></li>
+                <li class="paginate_button page-item previous disabled" id="tbl_previous"><a href="javascript:void(0)" aria-controls="tblparts" data-dt-idx="1" tabindex="0" class="page-link"><img src="../images/drop-grid-prev.png"></a></li>
+                @if (TotalRecords > 0)
+                {
+                    if (currentpage <= 4)
+                    {
+                        <li class="paginate_button page-item" data-currentpage="1"><a href="javascript:void(0)" aria-controls="tblparts" data-currentpage="1" tabindex="0" class="page-link">@startpage</a></li>
+                        if (lastpage >= 2)
+                        {
+                            <li class="paginate_button page-item" data-currentpage="2"><a href="javascript:void(0)" aria-controls="tblparts" tabindex="0" class="page-link">2</a></li>
+                        }
+                        if (lastpage >= 3)
+                        {
+                            <li class="paginate_button page-item" data-currentpage="3"><a href="javascript:void(0)" aria-controls="tblparts" tabindex="0" class="page-link">3</a></li>
+                        }
+                        if (lastpage >= 4)
+                        {
+                            <li class="paginate_button page-item" data-currentpage="4"><a href="javascript:void(0)" aria-controls="tblparts" tabindex="0" class="page-link">4</a></li>
+                        }
+                        if (lastpage >= 5)
+                        {
+                            <li class="paginate_button page-item" data-currentpage="5"><a href="javascript:void(0)" aria-controls="tblparts" tabindex="0" class="page-link">5</a></li>
+                            <li class="paginate_button page-item disabled" id="tblparts_ellipsis"><a href="javascript:void(0)" aria-controls="tblparts" data-dt-idx="7" tabindex="0" class="page-link">…</a></li>
+                            <li class="paginate_button page-item" data-currentpage="@lastpage"><a href="javascript:void(0)" aria-controls="tblparts" data-dt-idx="8" tabindex="0" class="page-link">@lastpage</a></li>
+                        }
+                    }
+                    else if (currentpage == 5)
+                    {
+                        <li class="paginate_button page-item" data-currentpage="1"><a href="javascript:void(0)" aria-controls="tblparts" data-current="1" tabindex="0" class="page-link">@startpage</a></li>
+                        <li class="paginate_button page-item disabled" id="tblparts_ellipsis"><a href="javascript:void(0)" aria-controls="tblparts" data-dt-idx="7" tabindex="0" class="page-link">…</a></li>
+                        if (lastpage >= 3)
+                        {
+                            <li class="paginate_button page-item" data-currentpage="3"><a href="javascript:void(0)" aria-controls="tblparts" data-current="3" tabindex="0" class="page-link">3</a></li>
+                        }
+                        if (lastpage >= 4)
+                        {
+                            <li class="paginate_button page-item" data-currentpage="4"><a href="javascript:void(0)" aria-controls="tblparts" data-current="4" tabindex="0" class="page-link">4</a></li>
+                        }
+                        if (lastpage >= 5)
+                        {
+                            <li class="paginate_button page-item" data-currentpage="5"><a href="javascript:void(0)" aria-controls="tblparts" data-current="5" tabindex="0" class="page-link">5</a></li>
+                        }
+                        <li class="paginate_button page-item disabled" id="tblparts_ellipsis"><a href="javascript:void(0)" aria-controls="tblparts" data-dt-idx="7" tabindex="0" class="page-link">…</a></li>
+                        <li class="paginate_button page-item" data-currentpage="@lastpage"><a href="javascript:void(0)" aria-controls="tblparts" data-dt-idx="8" tabindex="0" class="page-link">@lastpage</a></li>
+                    }
+                    else if (currentpage > 5 && currentpage < lastpage - 4)
+                    {
+                        <li class="paginate_button page-item" data-currentpage="1"><a href="javascript:void(0)" aria-controls="tblparts" data-current="1" tabindex="0" class="page-link">@startpage</a></li>
+                        <li class="paginate_button page-item disabled" id="tblparts_ellipsis"><a href="javascript:void(0)" aria-controls="tblparts" data-dt-idx="7" tabindex="0" class="page-link">…</a></li>
+                        <li class="paginate_button page-item" data-currentpage="@precurremtpagetoshow"><a href="javascript:void(0)" aria-controls="tblparts" data-current="3" tabindex="0" class="page-link">@precurremtpagetoshow</a></li>
+                        <li class="paginate_button page-item" data-currentpage="@curremtpagetoshow"><a href="javascript:void(0)" aria-controls="tblparts" data-current="3" tabindex="0" class="page-link">@curremtpagetoshow</a></li>
+                        <li class="paginate_button page-item" data-currentpage="@postcurremtpagetoshow"><a href="javascript:void(0)" aria-controls="tblparts" data-current="3" tabindex="0" class="page-link">@postcurremtpagetoshow</a></li>
+                        <li class="paginate_button page-item disabled" id="tblparts_ellipsis"><a href="javascript:void(0)" aria-controls="tblparts" data-dt-idx="7" tabindex="0" class="page-link">…</a></li>
+                        <li class="paginate_button page-item" data-currentpage="@lastpage"><a href="javascript:void(0)" aria-controls="tblparts" data-dt-idx="8" tabindex="0" class="page-link">@lastpage</a></li>
+                    }
+                    else
+                    {
+                        <li class="paginate_button page-item" data-currentpage="1"><a href="javascript:void(0)" aria-controls="tblparts" data-current="1" tabindex="0" class="page-link">@startpage</a></li>
+                        <li class="paginate_button page-item disabled" id="tblparts_ellipsis"><a href="javascript:void(0)" aria-controls="tblparts" data-dt-idx="7" tabindex="0" class="page-link">…</a></li>
+                        if (lastpage >= 3)
+                        {
+                            <li class="paginate_button page-item" data-currentpage="@lastpage_3"><a href="javascript:void(0)" aria-controls="tblparts" data-current="3" tabindex="0" class="page-link">@lastpage_3</a></li>
+                        }
+                        if (lastpage >= 4)
+                        {
+                            <li class="paginate_button page-item" data-currentpage="@lastpage_2"><a href="javascript:void(0)" aria-controls="tblparts" data-current="4" tabindex="0" class="page-link">@lastpage_2</a></li>
+                        }
+                        if (lastpage >= 5)
+                        {
+                            <li class="paginate_button page-item" data-currentpage="@lastpage_1"><a href="javascript:void(0)" aria-controls="tblparts" data-current="5" tabindex="0" class="page-link">@lastpage_1</a></li>
+                        }
+                        <li class="paginate_button page-item" data-currentpage="@lastpage"><a href="javascript:void(0)" aria-controls="tblparts" data-dt-idx="8" tabindex="0" class="page-link">@lastpage</a></li>
+                    }
+                }
+                <li class="paginate_button page-item next" id="tbl_next"><a href="javascript:void(0)" aria-controls="tblparts" data-dt-idx="9" tabindex="0" class="page-link"><img src="../images/drop-grid-next.png"></a></li>
+                <li class="paginate_button page-item last" id="tbl_last"><a href="javascript:void(0)" aria-controls="tblparts" data-dt-idx="10" tabindex="0" class="page-link"><img src="../images/drop-grid-last.png"></a></li>
+            </ul>
+        </div>*@
+    <div class="dataTables_paginate paging_input pagenavdiv" id="tblparts_paginate" style="">
+        @if (TotalRecords > 0)
+        {
+            <span class="first paginate_button page-item disabled" id="tbl_first"><img src="../images/drop-grid-first.png"></span>
+            <span class="previous paginate_button page-item disabled" id="tbl_previous"><img src="../images/drop-grid-prev.png"></span>
+            <span>Page </span>
+            <input id="txtcurrentpage" class="paginate_input" type="text" value="@currentpage">
+            <span> of </span><span class="paginate_total" id="spntotalpages">@lastpage</span>
+            <span></span>
+            <span class="next paginate_button page-item" id="tbl_next"><img src="../images/drop-grid-next.png"></span>
+            <span class="last paginate_button page-item" id="tbl_last"><img src="../images/drop-grid-last.png"></span>
+        }
+    </div>
+</div>
+
+<style>
+
+    .partcardview .gridImgBox img {
+        max-width: 100% !important;
+        max-height: 235px;
+    }
+
+    @@media(max-width:1100px) {
+        .partcardview .gridImgBox {
+            width: 100% !important;
+        }
+    }
+</style>

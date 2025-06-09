@@ -1,0 +1,42 @@
+﻿<div id="VMAddGridModal" class="modal fade dropdown-modal" role="dialog" style="display:none;">
+  <div class="modal-dialog partPopup">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Select Vendors to add to your Site</h4>
+      </div>
+      <div class="modal-body">
+        <div id="tbldropdown" class="dropdown-content tbl-dropdown" style="display:block;height:400px !important">
+          <div class="table-responsive dropTableOuter">
+            <table id="tblVMAddGrid" class="stripe dropTable globalDropTable" style="width:100%;">
+              <thead>
+                <tr>
+                  <th><input name="select_all" value="1" id="VMAddGrid-select-all" type="checkbox" /></th>
+                  <th>Vendor ID</th>
+                  <th>Name</th>
+                  <th>City</th>
+                  <th>State</th>
+                  <th>Type</th>
+                  <th>Inactive</th>
+                </tr>
+              </thead>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer" style="padding:15px 25px !important;">
+        <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-close faIcon"></i> &nbsp; Cancel</button>
+        <button type="button" class="btn btn-blue" style="float:right;" id="btnAddVendorFromVM"><i class="fa fa-plus faIcon"></i> &nbsp;Add</button>
+        <div style="clear:both;"></div>
+      </div>
+    </div>
+  </div>
+</div>
+<style type="text/css">
+  #VMAddGridModal .modal-footer {
+    display: block !important;
+  }
+  #tblVMAddGrid thead th:first-child{
+    width:4% !important;
+  }
+</style>

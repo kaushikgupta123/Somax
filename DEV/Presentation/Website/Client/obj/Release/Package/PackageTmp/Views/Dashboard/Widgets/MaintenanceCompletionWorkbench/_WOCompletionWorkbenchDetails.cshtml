@@ -1,0 +1,312 @@
+﻿@model Client.Models.Dashboard.DashboardVM
+<link href="~/Scripts/Metronic/assets/demo/default/base/style_newCustom.css" rel="stylesheet" />
+<link href="~/Content/Dashboard/MaintenanceCompletionWorkbench.css" rel="stylesheet" />
+@Styles.Render("~/Content/somaxcommentsection")
+<link href="~/Content/Wizard/Wizard.css" rel="stylesheet" />
+@Scripts.Render("~/bundles/QRScanner")
+<script src="~/Scripts/treeTable.js"></script>
+@*----------------For BarCode CODE39-------------------------*@
+<script src="~/Scripts/jsbarcode/JsBarcode.code39.min.js"></script>
+@*----------------BarCode CODE39-------------------------*@
+<script type="text/javascript">
+    com_github_culmat_jsTreeTable.register(this);
+</script>
+
+<div class="m-subheader fixedDiv1">
+    <div class="new-m-subheader">
+        <div class="filterDescription">
+            <a href="javascript:void(0)" id="linkToSearchWorkbench"><span id="spnlinkToSearch">@Model.Loc.Where(a => a.ResourceId == "spnCompletionWorkbench").FirstOrDefault().Value.ToString()</span></a>
+            - @Model.woCompletionDetailsHeader.ClientLookupId
+        </div>
+        <!--#region ActionBttnArea-->
+        @if (((Model.woCompletionWorkbenchSummary.Status == WorkOrderStatusConstants.Scheduled || Model.woCompletionWorkbenchSummary.Status == WorkOrderStatusConstants.Approved) && (Model.security.MaintenanceCompletionWorkbenchWidget_Cancel.Access || Model.security.MaintenanceCompletionWorkbenchWidget_Complete.Access)) || (Model.security.MaintenanceCompletionWorkbenchWidget_AddUnplannedWO.Access) || (Model.security.MaintenanceCompletionWorkbenchWidget_AddFollowUpWO.Access))
+        {
+        <div class="ActionBttnArea">
+            <div class="actionDiv pull-left" id="ad1" style="margin-right:0px !important; ">
+                <div class="btn-group bootstrap-select m-datatable__pager-size dropup show selectDrop actionNewDrop" style="margin-right:0px;">
+                    <div class="btn-group bootstrap-select m-datatable__pager-size" style="width: 100%;">
+                        <button type="button" class="btn dropdown-toggle bs-placeholder btn-default" data-toggle="dropdown" role="button" title=""><span class="filter-option pull-left">@Model.Loc.Where(a => a.ResourceId == "globalAction").FirstOrDefault().Value.ToString()</span>&nbsp;<span class="bs-caret"><span class="caret"></span></span></button>
+                        <div class="dropdown-menu open" role="combobox">
+                            <ul class="dropdown-menu inner" role="listbox" aria-expanded="false">
+                                @if (Model.woCompletionWorkbenchSummary.Status == WorkOrderStatusConstants.Scheduled || Model.woCompletionWorkbenchSummary.Status == WorkOrderStatusConstants.Approved)
+                                {
+                                if (Model.security.MaintenanceCompletionWorkbenchWidget_Cancel.Access)
+                                {
+                                <li><a id="actionCancelWO" href="javascript:void(0);">@Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</a></li>
+
+                                }
+                                if (Model.security.MaintenanceCompletionWorkbenchWidget_Complete.Access)
+                                {
+                                if (Model.UseWOCompletionWizard == true) //V2-634
+                                {
+                                <li><a id="CompleteWoCheckListWizard_Workbench" data-workbench_WorkOrder_ClientLookupId='@Model.woCompletionWorkbenchSummary.WorkOrder_ClientLookupId' data-workbench_wostatus='@Model.woCompletionWorkbenchSummary.Status' href="javascript:void(0);">@Model.Loc.Where(a => a.ResourceId == "GlobalComplete").FirstOrDefault().Value.ToString()</a></li>
+
+                                }
+                                else
+                                {
+                                <li><a id="actionCompleteWO" href="javascript:void(0);">@Model.Loc.Where(a => a.ResourceId == "GlobalComplete").FirstOrDefault().Value.ToString()</a></li>
+                                }
+                                }
+                                }
+                                @if (Model.security.MaintenanceCompletionWorkbenchWidget_AddWorkRequest.Access == true)
+                                {
+                                <li><a id="AddWorkRequestBtn" href="javascript:void(0);">@Model.Loc.Where(a => a.ResourceId == "spnAddWorkRequest").FirstOrDefault().Value.ToString()</a></li>
+                                }
+                                @if (Model.security.MaintenanceCompletionWorkbenchWidget_AddUnplannedWO.Access)
+                                {
+                                <li data-toggle="modal" data-target="#UnplannedWo"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnAddNewUnPlanedWorkOrder").FirstOrDefault().Value.ToString() </a></li>
+                                }
+                                @if (Model.security.MaintenanceCompletionWorkbenchWidget_AddFollowUpWO.Access)
+                                {
+                                <li><a id="actionAddFollowUpWO" href="javascript:void(0);">@Model.Loc.Where(a => a.ResourceId == "spnAddFollowUpWorkOrder").FirstOrDefault().Value.ToString()</a></li>
+                                }
+                                @*V2-1056 .Add Sanitation Request Btn*@
+                                @if (Model._userdata.Site.Sanitation == true && Model._userdata.Site.CMMS == true && Model.security.SanitationJob_Sanitation_Request_From_Maintenance.Access == true)
+                                {
+                                <li><a id="AddSanitationRequestBtn" href="javascript:void(0);">@Model.Loc.Where(a => a.ResourceId == "spnAddSanitationRequest").FirstOrDefault().Value.ToString()</a></li>
+                                }
+                                <!--barcode detail-->
+                                @if (!string.IsNullOrEmpty(Model.WOBarcode))
+                                {
+                                if (Model.WOBarcode.ToLower() == WorkOrderBarCodeConstant.BarCode.ToLower())
+                                {
+                                <li><a id="BarCodeDetails" href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "globalWoBarCode").FirstOrDefault().Value.ToString()</a></li>
+                                }
+                                else if (Model.WOBarcode.ToLower() == WorkOrderBarCodeConstant.QRCode.ToLower())
+                                {
+                                <li><a id="QrCodeDetail" href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "globalWoQRCode").FirstOrDefault().Value.ToString()</a></li>
+                                }
+                                }
+
+
+                            </ul>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+
+
+        </div>
+        }
+        <div style="clear:both;"></div>
+    </div>
+    <!--#endregion-->
+
+
+
+</div>
+
+
+
+<div class="pushDiv1"></div>
+
+<div class="fixedDiv2 row">
+    @Html.Partial("~/Views/Dashboard/Widgets/MaintenanceCompletionWorkbench/_WoCompletionWorkbenchSummary.cshtml", Model)
+</div>
+
+<div class="row" style="padding-top: 160px;">
+    <div class="col-xl-12">
+        <div class="m-portlet" id="m_portlet" style="padding:15px;">
+            <div class="tab no-border-bottom">
+                @if (Model.security.MaintenanceCompletionWorkbenchWidget_Complete.Access)
+                {
+                <button class="tablinks wo-det-tab active" data-tab="Labor">@Model.Loc.Where(a => a.ResourceId == "spnLabor").FirstOrDefault().Value.ToString()</button>
+                }
+                @if (Model.security.MaintenanceCompletionWorkbenchWidget_PartIssue.Access)
+                {
+                <button class="tablinks wo-det-tab" data-tab="Parts">@Model.Loc.Where(a => a.ResourceId == "spnParts").FirstOrDefault().Value.ToString()</button>
+                }
+                @if (Model.security.MaintenanceCompletionWorkbenchWidget_Complete.Access)
+                {
+                <button class="tablinks wo-det-tab" data-tab="Tasks">@Model.Loc.Where(a => a.ResourceId == "spnTasks").FirstOrDefault().Value.ToString()</button>
+                }
+                @if (Model.security.MaintenanceCompletionWorkbenchWidget_Complete.Access)
+                {
+                <button class="tablinks wo-det-tab" data-tab="Instructions">@Model.Loc.Where(a => a.ResourceId == "spnAddInstructions").FirstOrDefault().Value.ToString()</button>
+                }
+                @if (Model.security.MaintenanceCompletionWorkbenchWidget_Complete.Access)
+                {
+                <button class="tablinks wo-det-tab" data-tab="Comments">@Model.Loc.Where(a => a.ResourceId == "spnLogComment").FirstOrDefault().Value.ToString()</button>
+                }
+                @if (Model.security.MaintenanceCompletionWorkbenchWidget_Downtime.Access)
+                {
+                <button class="tablinks wo-det-tab" data-tab="Downtime">@Model.Loc.Where(a => a.ResourceId == "spnDowntime").FirstOrDefault().Value.ToString()</button>
+                }
+                @if (Model.security.MaintenanceCompletionWorkbenchWidget_Photos.Access)
+                {
+                <button class="tablinks wo-det-tab" data-tab="Photos">@Model.Loc.Where(a => a.ResourceId == "spnPhotos").FirstOrDefault().Value.ToString()</button>
+                }
+                @if (Model.security.MaintenanceCompletionWorkbenchWidget_Complete.Access)
+                {
+                <button class="tablinks wo-det-tab" data-tab="Attachments">@Model.Loc.Where(a => a.ResourceId == "spnAttachments").FirstOrDefault().Value.ToString()</button>
+                }
+                @if (Model.security.MaintenanceCompletionWorkbenchWidget_MaterialRequest.Access)
+                {
+                <button class="tablinks wo-det-tab" data-tab="MaterialRequests">@Model.Loc.Where(a => a.ResourceId == "spnMaterialRequest").FirstOrDefault().Value.ToString()</button>
+                }
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-12">
+        @if (Model.security.MaintenanceCompletionWorkbenchWidget_Complete.Access)
+        {
+        <div id="Labor" class="tabcontent" style="display:block;"></div>
+        }
+        @if (Model.security.MaintenanceCompletionWorkbenchWidget_PartIssue.Access)
+        {
+        <div id="Parts" class="tabcontent">@Model.Loc.Where(a => a.ResourceId == "spnParts").FirstOrDefault().Value.ToString()</div>
+        }
+        @if (Model.security.MaintenanceCompletionWorkbenchWidget_Complete.Access)
+        {
+        <div id="Tasks" class="tabcontent"></div>
+        }
+        @if (Model.security.MaintenanceCompletionWorkbenchWidget_Complete.Access)
+        {
+        <div id="Instructions" class="tabcontent"></div>
+        }
+        @if (Model.security.MaintenanceCompletionWorkbenchWidget_Complete.Access)
+        {
+        <div id="Comments" class="tabcontent"></div>
+        }
+        @if (Model.security.MaintenanceCompletionWorkbenchWidget_Downtime.Access)
+        {
+        <div id="Downtime" class="tabcontent"></div>
+        }
+        @if (Model.security.MaintenanceCompletionWorkbenchWidget_Photos.Access)
+        {
+        <div id="Photos" class="tabcontent"></div>
+        }
+        @if (Model.security.MaintenanceCompletionWorkbenchWidget_Complete.Access)
+        {
+        <div id="Attachments" class="tabcontent"></div>
+        }
+        @if (Model.security.MaintenanceCompletionWorkbenchWidget_MaterialRequest.Access)
+        {
+        <div id="MaterialRequests" class="tabcontent"></div>
+        }
+    </div>
+
+</div>
+
+<!-- Modal -->
+<div id="AddLaborModalpopup" class="modal fade" role="dialog">
+    <div class="modal-dialog" id="LaborPopUp">
+    </div>
+</div>
+
+<!-- #region Add unplanned Work Order -->
+<div id="AddOnDemandWOModalpopup" class="modal fade" role="dialog">
+    <div class="modal-dialog" id="OnDemandWOPopUp">
+    </div>
+</div>
+
+<div id="AddDescribeWOModalpopup" class="modal fade" role="dialog">
+    <div class="modal-dialog" id="DescribeWOPopUp">
+    </div>
+</div>
+<div id="DescribeWOPopUpDynamic"></div> <!--V2-1067-->
+<!-- #endregion -->
+<!-- #region Add follow up Work Order -->
+<div id="AddFollowupWOModalpopup" class="modal fade" role="dialog">
+    <div class="modal-dialog" id="FollowupWOPopUp">
+    </div>
+</div>
+<!-- #region Add Sanitation Request Work Order -->
+<div id="AddSanitationRequestWODashboardModalpopup" class="modal fade" role="dialog">
+    <div class="modal-dialog" id="AddSanitationRequestWODashboardPopUp">
+    </div>
+</div>
+<!-- #endregion -->
+<!-- Modal -->
+<div id="AddDowntimeModalpopup" class="modal fade" role="dialog">
+    <div class="modal-dialog" id="DowntimePopUp">
+    </div>
+</div>
+
+
+<div id="commonWOTreeModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title" id="hdrPlantLocation">@Model.Loc.Where(a => a.ResourceId == "spnGlobalEquipmentTreeLookup").FirstOrDefault().Value.ToString()</h4>
+            </div>
+            <div class="modal-body">
+                <div class="cntTree">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@if (Model.security.MaintenanceCompletionWorkbenchWidget_Complete.Access && Model.UseWOCompletionWizard)
+{
+<div id="WorkorderCompletionWizardDiv"></div>
+}
+@if (Model.security.MaintenanceCompletionWorkbenchWidget_AddWorkRequest.Access == true)
+{
+<div id="AddWorkRequestDiv"></div>
+}
+@Html.Partial("~/Views/Shared/QR/_QrCodeReaderModal.cshtml")
+@Html.Partial("~/Views/Dashboard/Widgets/MaintenanceCompletionWorkbench/_UnplannedWOPopUp.cshtml")
+
+@Html.Partial("~/Views/Dashboard/Widgets/MaintenanceCompletionWorkbench/_EquipmentGridPopUp.cshtml")
+
+@Html.Partial("~/Views/Dashboard/Widgets/MaintenanceCompletionWorkbench/_AccountGridPopUp.cshtml")
+
+@Html.Partial("~/Views/Dashboard/Widgets/MaintenanceCompletionWorkbench/_WoCompletionWorkbenchSummaryDescription.cshtml", Model)
+@Html.Partial("Widgets/MaintenanceCompletionWorkbench/_CancelModal", Model)
+@Html.Hidden("WorkOrderId", Model.woCompletionDetailsHeader.WorkOrderId, new { @id = "WorkOrderId" })
+@Html.Hidden("WorkOrderClientLookupId", Model.woCompletionDetailsHeader.ClientLookupId, new { @id = "WorkOrderClientLookupId" })
+@Html.Hidden("hdnFoodSafetyPopup", Model._userdata.DatabaseKey.Client.BusinessType.ToUpper())
+@if (Model.WOBarcode == WorkOrderBarCodeConstant.QRCode)
+{
+    @Html.Partial("~/Views/Shared/QR/_WOClientLookupIdQr.cshtml")
+}
+@if (Model.WOBarcode.ToLower() == WorkOrderBarCodeConstant.BarCode.ToLower())
+{
+    @Html.Partial("~/Views/Shared/BarCode/_WOClientLookupIdBarCode.cshtml")
+}
+
+@Html.HiddenFor(m => m._userdata.DatabaseKey.Client.OnPremise, new { id = "MCW_ClientOnPremise" })
+@Html.HiddenFor(m => m.woCompletionWorkbenchSummary.Status)
+<style type="text/css">
+
+    #AddOnDemandWOModalpopup .modal-dialog .form-group {
+    width: 100%;
+    }
+    #AddOnDemandWOModalpopup .modal-open,
+    #AddOnDemandWOModalpopup .modal-content {
+    overflow-x: hidden !important;
+    }
+    #AddOnDemandWOModalpopup .modal-body {
+    overflow: unset !important;
+    }
+
+    .three-col-option .chargeTree {
+    right: -9px !important;
+    top: 1px;
+    width: 35px;
+    height: 35px;
+    text-align: center;
+    position:relative;
+    padding:8px 0 0 0;
+    }
+    .three-col-option .chargeTree i {
+    padding: 9px 0 0 0;
+    display: block;
+    }
+
+    .select2-container--default .select2-selection--single .select2-selection__arrow {
+    height:5px !important;
+    }
+
+    .three-col-option {
+    width: calc(100% - 8px);
+    }
+
+    .three-col-option .dropTableOuter {
+    overflow:hidden !important;
+    }
+</style>

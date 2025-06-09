@@ -1,0 +1,86 @@
+﻿@model Client.Models.EquipmentCombined
+
+<div class="m-subheader fixedDiv1">
+    <div class="new-m-subheader">
+        <div class="PageTitle">
+            <div class="align-items-center separator">
+                <h3 class="m-subheader__title ">
+                    @Model.Loc.Where(a => a.ResourceId == "hdrTitle").FirstOrDefault().Value.ToString()
+                </h3>
+            </div>
+        </div>
+
+        <div class="NewBreadcrumbArea">
+            <div class="newBreadcrumb">
+                <ul>
+                    <li><a href="/Dashboard/Dashboard">&nbsp;</a></li>
+                    <li><a href="/Equipment/Index?page=Maintenance_Assets">@Model.Loc.Where(a => a.ResourceId == "anchPagename").FirstOrDefault().Value.ToString()</a></li>
+                    <li class="lithisequipment" data-val="@Model.notesModel.EquipmentId"><a href="javascript:void(0)">@Model._EquipmentSummaryModel.Equipment_ClientLookupId</a></li>
+                    @if (Model.notesModel.NotesId != 0)
+                    {
+                        <li class="active">@Model.Loc.Where(a => a.ResourceId == "spnUpdateNote").FirstOrDefault().Value.ToString()</li>
+                    }
+                    else
+                    {
+                <li class="active">@Model.Loc.Where(a => a.ResourceId == "spnGlobalNotesAdd").FirstOrDefault().Value.ToString()</li>
+                    }
+                </ul>
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+        <div style="clear:both;"></div>
+    </div>
+</div>
+<div class="pushDiv1"></div>
+
+<div class="row fixedDiv2">
+    @Html.Partial("_EquipmentSummary", Model)
+</div>
+<div class="pushDiv2"></div>
+
+@Html.Partial("_ErrorDiv")
+
+@using (Ajax.BeginForm("AddNotes", "Equipment", new AjaxOptions { HttpMethod = "Post", OnSuccess = "EqpNotesAddOnSuccess", OnBegin = "AjaxBeginFormBegin", OnComplete = "AjaxBeginFormComplete", OnFailure = "AjaxBeginFormFaillure" }, new { id = "frmeqpnotesadd" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="row">
+        <div class="col-xl-12">
+            <div class="m-portlet newPort" id="m_portlet" style="padding:15px;">
+                <div class="bottomBlock">
+                    
+                    <div class="tabsArea nobg">
+                        <ul class="listView nobrd">
+                            <li>
+                                <span class="label">@Html.LabelFor(m => m.notesModel.Subject) : </span>                               
+                                <span class="inputText">
+                                    @Html.TextBoxFor(m => m.notesModel.Subject, new { @class = "form-control search", autocomplete = "off" })
+                                </span>
+                            </li>
+                            <li>                               
+                                <span class="label">@Html.LabelFor(m => m.notesModel.Content) : <small>*</small></span>                                
+                                <span class="inputText">                                    
+                                    @Html.ValidationMessageFor(m => m.notesModel.Content, "", new { style = "display:none" })
+                                    @Html.TextBoxFor(m => m.notesModel.Content, new { @class = "form-control search", autocomplete = "off" })
+                                </span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div style="clear:both;"></div>
+                    <div class="idBttns">
+                        <div class="bttn_pagin">
+                            <div class="bttns2">                                
+                                <button type="submit" class="btn btn-blue mobBttn"><i class="fa fa-save faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+                            </div>
+                            <div class="bttns"><button type="button" class="btn btn-blue mobBttn" id="btnnotescancel"><i class="fa fa-close faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button></div>
+                            <div style="clear:both;"></div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    @Html.HiddenFor(m => m.notesModel.EquipmentId)
+    @Html.HiddenFor(m => m.notesModel.NotesId)
+    @Html.HiddenFor(m => m.notesModel.updatedindex)
+}

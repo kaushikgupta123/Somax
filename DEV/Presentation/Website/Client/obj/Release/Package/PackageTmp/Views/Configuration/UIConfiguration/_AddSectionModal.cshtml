@@ -1,0 +1,41 @@
+﻿@model Client.Models.Configuration.UIConfiguration.UiConfigurationVM
+<div id="addSectionModal" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-info">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title"> @Model.Loc.Where(a => a.ResourceId == "spnAddSection").FirstOrDefault().Value.ToString()</h4>
+            </div>
+            @Html.Partial("_ErrorDiv")
+            @using (Ajax.BeginForm("AddSection", "UiConfiguration", new AjaxOptions { HttpMethod = "Post", OnSuccess = "AddSectionOnSuccess", OnBegin = "AjaxBeginFormBegin", OnComplete = "AjaxBeginFormComplete", OnFailure = "AjaxBeginFormFaillure" }, new { enctype = "multipart/form-data", id = "addSectionform" }))
+            {
+                @Html.AntiForgeryToken()
+                <div class="modal-body">
+                    <div class="form-group">
+                        <ul class="listView nobrd" style="border-bottom:0;">
+                            <li>
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnSectionName").FirstOrDefault().Value.ToString() : <small>*</small></span>
+                                <span class="inputText">
+                                    <div class="dropdown dropTableOuter">
+                                        <div class="input-group">
+                                            @Html.ValidationMessageFor(m => m.addSectiomModel.SectionName, "", new { style = "display:none" })
+                                            @Html.TextBoxFor(m => m.addSectiomModel.SectionName, new { @class = "form-control search m-input", maxlength = "31", @style = "color:black", autocomplete = "off" })
+                                        </div>
+                                    </div>
+                                </span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="modal-footer" style="padding:15px 25px !important;">
+                    <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-close buttonIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button>
+                    <button type="submit" class="btn btn-blue" style="float:right;" id="btnAddSection"><i class="fa fa-save buttonIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+                    <div style="clear:both;"></div>
+                </div>
+                @Html.HiddenFor(m => m.UIViewId)
+            }
+
+        </div>
+    </div>
+</div>
+

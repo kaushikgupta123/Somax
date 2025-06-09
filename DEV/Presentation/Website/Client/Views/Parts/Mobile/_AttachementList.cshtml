@@ -1,0 +1,28 @@
+﻿@model Client.Models.Parts.PartsVM
+<div class="tabsArea nobg" id="Attachments">
+    <div class="m-portlet" id="m_portlet" style="padding:15px;">
+        <div class="bottomBlock">
+            <div class="table-responsive">
+                <table id="pattachmentTable_Mobile" class="eqpDtlTbl row-border custom-sort" style="width:100%;">
+                    <thead>
+                        <tr>
+                            <th>@Model.Loc.Where(a => a.ResourceId == "globalSubject").FirstOrDefault().Value.ToString()</th>
+                            <th>@Model.Loc.Where(a => a.ResourceId == "globalFileName").FirstOrDefault().Value.ToString()</th>
+                            <th>@Model.Loc.Where(a => a.ResourceId == "globalFileSize").FirstOrDefault().Value.ToString()</th>
+                            <th>@Model.Loc.Where(a => a.ResourceId == "globalOwner").FirstOrDefault().Value.ToString()</th>
+                            <th>@Model.Loc.Where(a => a.ResourceId == "globalCreateDate").FirstOrDefault().Value.ToString()</th>
+                            <th width="17%" style="text-align:center !important;">@Model.Loc.Where(a => a.ResourceId == "globalAction").FirstOrDefault().Value.ToString()</th>
+                        </tr>
+                    </thead>
+
+                </table>
+            </div>
+
+            <div class="bttn_pagin">
+                <div class="bttns"><button type="button" class="btn btn-blue" data-toggle="" data-target="" id="btnAddpAttachment_Mobile"><i class="fa fa-plus faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalAddAttachment").FirstOrDefault().Value.ToString()</button></div>
+                <div style="clear:both;"></div>
+            </div>
+            <div style="clear:both;"></div>
+        </div>
+    </div>
+</div>

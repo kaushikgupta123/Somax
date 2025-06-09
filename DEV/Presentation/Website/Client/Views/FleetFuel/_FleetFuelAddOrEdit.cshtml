@@ -1,0 +1,165 @@
+﻿@model Client.Models.FleetFuel.FleetFuelVM
+@*@Html.Partial("_ErrorDiv")*@
+@using (Ajax.BeginForm("FleetFuelAddOrEdit", "FleetFuel", new AjaxOptions { HttpMethod = "Post", OnSuccess = "FleetFuelAddOnSuccess", OnBegin = "AjaxBeginFormBegin", OnComplete = "AjaxBeginFormComplete", OnFailure = "AjaxBeginFormFaillure" }, new { enctype = "multipart/form-data", id = "fleetFuelform" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close clearerrdiv" data-dismiss="modal">&times;</button>
+            @if (Model.FleetFuelModel.Pagetype == "Add")
+            {
+                <h4 class="modal-title">@Model.Loc.Where(a => a.ResourceId == "hrdAddFuelTitle").FirstOrDefault().Value.ToString()</h4>
+            }
+            else
+            {
+                <h4 class="modal-title">@Model.Loc.Where(a => a.ResourceId == "hrdEditFuelTitle").FirstOrDefault().Value.ToString()</h4>
+            }
+        </div>
+        @Html.Partial("_ErrorDiv")
+        <div class="modal-body">
+            <div class="form-group" style="margin-bottom:0;">
+                <div class="bottomBlock">
+                    <div class="tabsArea nobg">
+                        <ul class="listView nobrd" style="border-bottom:0;">
+                            <li>
+                                <span class="label">@Html.LabelFor(m => m.FleetFuelModel.ClientLookupId) : <small>*</small></span>
+                                <span class="inputText">
+                                    <div class="dropdown dropTableOuter">
+                                        <div class="input-group">
+                                            @Html.ValidationMessageFor(m => m.FleetFuelModel.ClientLookupId, "", new { style = "display:none" })
+                                            @Html.TextBoxFor(m => m.FleetFuelModel.ClientLookupId, new { @class = "form-control search dropbtn readonly", autocomplete = "off", @readonly = "readonly" })
+                                            <div class="input-group-btn" id="divSearch">
+                                                <button class="btn btn-white btntxtInputGroup" type="button" id="opengrid">
+                                                    <i id="srcicon" class="fa fa-search"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </span>
+                            </li>
+                            <li>
+                                <span class="label" id="spnDate">@Html.LabelFor(m => m.FleetFuelModel.MtrCurrentReadingDate) : <small>*</small></span>
+                                <span class="inputText">
+                                    @Html.ValidationMessageFor(m => m.FleetFuelModel.MtrCurrentReadingDate, "", new { style = "display:none" })
+                                    @Html.TextBoxFor(m => m.FleetFuelModel.MtrCurrentReadingDate, "{0:MM/dd/yyyy}", new { @class = "form-control search dtpickerNew restkey", autocomplete = "off", disabled = "disabled" })
+                                    @Html.ValidationMessageFor(m => m.FleetFuelModel.StartTimeValue, "", new { style = "display:none" })
+                                    @Html.TextBoxFor(m => m.FleetFuelModel.StartTimeValue, new { @class = "form-control search timerId restkey", autocomplete = "off", disabled = "disabled" })
+                                </span>
+                            </li>
+                            <li id="errmsg" class="errorMsgBlk" style="display:none;">
+                                <span id="ErrorMsg"><i class="fa fa-warning"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "spnFuelTrackingErrorMsg").FirstOrDefault().Value.ToString()</span>
+                            </li>
+                            <li>
+                                <span class="label" id="spnMeter1CurrentReading">@Html.LabelFor(m => m.FleetFuelModel.Reading) : <small>*</small></span>
+                                <span class="inputText">
+                                    @Html.ValidationMessageFor(m => m.FleetFuelModel.Reading, "", new { style = "display:none" })
+                                    @Html.TextBoxFor(m => m.FleetFuelModel.Reading, new { @class = "form-control search decimalinput resetText", autocomplete = "off", disabled = "disabled", value = "0.0" })
+                                    @*<i class="Chckerror" style="color:red;display:none;margin: -8px 0px 0px 21px;"></i>*@
+                                    <span class="Chckerror" style="color:red; position: relative;left: 200px;display:none;"></span>
+                                </span>
+
+                            </li>
+                            <li>
+                                <span class="label">@Html.LabelFor(m => m.FleetFuelModel.Void) : </span>
+                                <span class="inputText">
+                                    @Html.CheckBoxFor(m => m.FleetFuelModel.Void, new { @class = "form-control m-input reset", @style = "color:black; width: auto; margin-top: 12px;", disabled = "disabled" })
+                                </span>
+                            </li>
+                            <li>
+                                <span class="label spnFuelUnit">@Html.LabelFor(m => m.FleetFuelModel.FuelAmount) : <small>*</small></span>
+                                <span class="inputText">
+                                    @Html.ValidationMessageFor(m => m.FleetFuelModel.FuelAmount, "", new { style = "display:none" })
+                                    @Html.TextBoxFor(m => m.FleetFuelModel.FuelAmount, new { @class = "form-control search decimalinput resetText", autocomplete = "off", disabled = "disabled" })
+                                </span>
+                            </li>
+                            <li>
+                                <span class="label">@Html.LabelFor(m => m.FleetFuelModel.UnitCost) : <small>*</small></span>
+                                <span class="inputText">
+                                    @Html.ValidationMessageFor(m => m.FleetFuelModel.UnitCost, "", new { style = "display:none" })
+                                    @Html.TextBoxFor(m => m.FleetFuelModel.UnitCost, new { @class = "form-control search decimalinput resetText", autocomplete = "off", disabled = "disabled" })
+                                </span>
+                            </li>
+                            <li style="margin-bottom:0;">
+                                <span class="label">@Html.LabelFor(m => m.FleetFuelModel.FuelType): </span>
+                                <span class="inputText">
+                                    @Html.DropDownListFor(m => m.FleetFuelModel.FuelType, Model.LookupFuelTypeList, "--Select--", new { @class = "form-control search select2picker flt_fue", style = "width:100%;", disabled = "disabled" })
+                                </span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div style="clear:both;"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal-footer" style="padding:15px 25px !important;">
+            <div class="idBttns">
+                <div class="bttn_pagin">
+                    <div class="bttns2" style="margin:0;">
+                        @if (Model.FleetFuelModel.Pagetype == "Add")
+                        {
+                            <button type="submit" class="btn btn-blue mobBttn" name="Command" style="cursor:pointer" value="save" id="btnFleetFuelRecord" disabled><i class="fa fa-save faIcon"></i> &nbsp;@Model.Loc.Where(a => a.ResourceId == "spnReccord").FirstOrDefault().Value.ToString()</button>
+                        }
+                        else
+                        {
+                            <button type="submit" class="btn btn-blue mobBttn" name="Command" style="cursor:pointer" value="save" id="btnFleetFuelRecord" disabled><i class="fa fa-save faIcon"></i> &nbsp;@Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+                        }
+                    </div>
+                    <div class="bttns" style="margin:0;">
+                        <button type="button" class="btn btn-blue mobBttn" id="btnFleetFuelcancel"><i class="fa fa-close faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button>
+                    </div>
+                    <div style="clear:both;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @Html.HiddenFor(m => m.FleetFuelModel.EquipmentID)
+    @Html.HiddenFor(m => m.FleetFuelModel.FuelTrackingId)
+    @Html.HiddenFor(m => m.FleetFuelModel.PrevMeter1Reading)
+    @Html.HiddenFor(m => m.FleetFuelModel.FuelUnit)
+    @Html.HiddenFor(m => m.FleetFuelModel.FleetMeterReadingId)
+    @Html.HiddenFor(m => m.FleetFuelModel.Pagetype)
+    @Html.HiddenFor(m => m.FleetFuelModel.Mtr1CurrentReadingDate)
+    @Html.HiddenFor(m => m.FleetFuelModel.Meter1CurrentReading)
+    @Html.HiddenFor(m => m.FleetFuelModel.Meter1Units)
+    @Html.HiddenFor(m => m.FleetFuelModel.FltMrtReading)
+}
+
+<style type="text/css">
+    .dtpickerNew { /*width: 120px;*/ width: 95px; float: left; }
+    .timerId { /*width: 100px;*/ width: 90px; float: left; }
+    .ui-datepicker-trigger { float: left; margin-left: -3px; margin-right: 10px; }
+    .errorMsgBlk { background-color: #d86564; font-size: 13px; color: #fff; font-weight: 400; line-height: 37px; padding: 0 10px; }
+    @@media screen and (max-width: 639px) {
+        .ui-datepicker-trigger { height: 34px; }
+    }
+</style>
+
+<script>
+    $(function () {
+        $(".dtpickerNew").datepicker({
+            showOn: 'button',
+            buttonImageOnly: true,
+            maxDate: new Date(),
+            buttonImage: '/Images/calender.png'
+        });
+     if ('@Model.FleetFuelModel.Pagetype' === "Add") {
+            $('.dtpickerNew').datepicker('setDate', new Date());
+        }
+        var timerVal = moment().format('hh:mm A');
+        $('.timerId').timepicker(
+            {
+                template: 'dropdown',
+                minuteStep: 1,
+                // secondStep: 1,
+                showMeridian: true,
+                defaultTime: timerVal
+            });
+    });
+    $(function () {
+        $('.restkey').bind('keyup keydown keypress', function (evt) {
+            return false;
+        });
+        $(document).find('form').find("#FleetFuelModel_ClientLookupId").removeClass("input-validation-error");
+    });
+</script>

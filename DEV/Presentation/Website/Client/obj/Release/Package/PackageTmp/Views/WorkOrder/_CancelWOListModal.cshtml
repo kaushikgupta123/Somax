@@ -1,0 +1,27 @@
+﻿@model Client.Models.Work_Order.WorkOrderVM
+<div id="cancelModalIndexPage" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-info">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close cleardesctxt" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">@Model.Loc.Where(a => a.ResourceId == "spnCancelJob").FirstOrDefault().Value.ToString()</h4>
+            </div>
+
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="Line" id="lblLine">@Model.Loc.Where(a => a.ResourceId == "spnCancelReason").FirstOrDefault().Value.ToString():</label>
+                    <select id="txtCancelReasonBatchSelect" style="width:100%;" class="form-control search adv-item select2picker"></select>
+                </div>
+                <div class="form-group">
+                    <label for="Line" id="lblLine">@Model.Loc.Where(a => a.ResourceId == "spnCancelComments").FirstOrDefault().Value.ToString():</label>
+                    <textarea class="form-control search" id="txtcancelBatchcomments"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer" style="padding:15px 25px !important;">
+                <button type="button" class="btn btn-default cleardesctxt" data-dismiss="modal"><i class="fa fa-close buttonIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button>
+                <button type="button" class="btn btn-blue" style="float:right;" id="cancelWorkOrderListJob"><i class="fa fa-save buttonIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+    </div>
+</div>

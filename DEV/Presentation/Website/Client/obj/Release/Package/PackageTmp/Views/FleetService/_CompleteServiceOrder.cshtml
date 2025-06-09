@@ -1,0 +1,144 @@
+﻿@model Client.Models.FleetService.FleetServiceVM
+<div id="CompleteServiceOrderModal" class="modal fade" data-backdrop="static" data-keyboard="false" role="dialog">
+    <div class="modal-dialog">
+       
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close ResetAllContent" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title"> @Model.Loc.Where(a => a.ResourceId == "spnCompleteServiceOrder").FirstOrDefault().Value.ToString()</h4>
+            </div>
+            @using (Ajax.BeginForm("CompleteServiceOrder", "FleetService", new AjaxOptions { HttpMethod = "Post", OnSuccess = "CompleteServiceAddOnSuccess", OnBegin = "AjaxBeginFormBegin", OnComplete = "AjaxBeginFormComplete", OnFailure = "AjaxBeginFormFaillure" }, new { enctype = "multipart/form-data", id = "fleetServiceCompleteform" }))
+            {
+                @*@Html.AntiForgeryToken()*@
+                @Html.Partial("_ErrorDiv")
+                <div class="modal-body">
+                    <div class="form-group" style="margin-bottom:0;">
+                        <div class="bottomBlock">
+                            <div class="tabsAreanew nobg">
+                                <ul class="listView nobrd" style="border-bottom:0;">
+                                    <li>
+                                        <span class="label">@Html.LabelFor(m => m.CompleteServiceOrderModel.EquipmentClientLookupId) : <small>*</small></span>
+                                        <span class="inputText">
+                                            <div class="dropdown dropTableOuter">
+                                                <div class="input-group">
+                                                    @Html.ValidationMessageFor(m => m.CompleteServiceOrderModel.EquipmentClientLookupId, "", new { style = "display:none" })
+                                                    @Html.TextBoxFor(m => m.CompleteServiceOrderModel.EquipmentClientLookupId, new { @class = "form-control search dropbtn readonly", autocomplete = "off", @readonly = "readonly" })
+                                                </div>
+                                            </div>
+                                        </span>
+                                    </li>
+                                    <li id="errmsg" class="errorMsgBlk" style="display:none;">
+                                        <span id="ErrorMsg"><i class="fa fa-warning"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "spnSOFuelTrackingErrorMsg").FirstOrDefault().Value.ToString()</span>
+                                    </li>
+                                    <li id="liOdometer">
+                                        <span class="label">@Html.LabelFor(m => m.CompleteServiceOrderModel.SOMeter1CurrentReading) : <small>*</small></span>
+                                        <span class="inputText">
+                                            @Html.ValidationMessageFor(m => m.CompleteServiceOrderModel.SOMeter1CurrentReading, "", new { style = "display:none" })
+                                            @Html.TextBoxFor(m => m.CompleteServiceOrderModel.SOMeter1CurrentReading, new { @class = "form-control search decimalinput", autocomplete = "off", value = "0.0" })
+                                            <span id="spnMeter1dayDiff" style="color:red; position: relative;left: 200px;display:none;"></span>
+                                        </span>
+                                    </li>
+                                    <li id="liOdometerVoid">
+                                        <span class="label">@Html.LabelFor(m => m.CompleteServiceOrderModel.Meter1Void) : </span>
+                                        <span class="inputText">
+                                            @Html.CheckBoxFor(m => m.CompleteServiceOrderModel.Meter1Void, new { @class = "form-control m-input", @style = "color:black; width: auto; margin-top: 12px;" })
+                                        </span>
+                                    </li>
+                                    <li id="liHour">
+                                        <span class="label">@Html.LabelFor(m => m.CompleteServiceOrderModel.SOMeter2CurrentReading) : <small>*</small></span>
+                                        <span class="inputText">
+                                            @Html.ValidationMessageFor(m => m.CompleteServiceOrderModel.SOMeter2CurrentReading, "", new { style = "display:none" })
+                                            @Html.TextBoxFor(m => m.CompleteServiceOrderModel.SOMeter2CurrentReading, new { @class = "form-control search decimalinput", autocomplete = "off", value = "0.0" })
+                                            <span id="spnMeter2dayDiff" style="color:red; position: relative;left: 200px;display:none;"></span>
+                                        </span>
+                                    </li>
+                                    <li id="liHourVoid">
+                                        <span class="label">@Html.LabelFor(m => m.CompleteServiceOrderModel.Meter2Void) : </span>
+                                        <span class="inputText">
+                                            @Html.CheckBoxFor(m => m.CompleteServiceOrderModel.Meter2Void, new { @class = "form-control m-input", @style = "color:black; width: auto; margin-top: 12px;" })
+                                        </span>
+                                    </li>
+                                    <li style="margin-bottom:0;">
+                                        <span class="label">@Html.LabelFor(m => m.CompleteServiceOrderModel.CurrentReadingDate) : <small>*</small></span>
+                                        <span class="inputText">
+                                            @Html.ValidationMessageFor(m => m.CompleteServiceOrderModel.CurrentReadingDate, "", new { style = "display:none" })
+                                            @Html.TextBoxFor(m => m.CompleteServiceOrderModel.CurrentReadingDate, "{0:MM/dd/yyyy}", new { @class = "form-control search dtpickerNew restkey", autocomplete = "off", @readonly = "readonly" })
+                                            @Html.TextBoxFor(m => m.CompleteServiceOrderModel.CurrentReadingTime, new { @class = "form-control search timerId restkey", autocomplete = "off", @readonly = "readonly" })
+                                        </span>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div style="clear:both;"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer" style="padding:15px 25px !important;">
+                    <div class="idBttns">
+                        <div class="bttn_pagin">
+                            <div class="bttns2" style="margin:0;">
+                                <button type="submit" class="btn btn-blue mobBttn" name="Command" style="cursor:pointer" value="save" id="btnAddMeterRecord"><i class="fa fa-save faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+                            </div>
+                            <div class="bttns" style="margin:0;">
+                                <button type="button" class="btn btn-blue mobBttn ResetAllContent" id="btnFleetMetercancel"><i class="fa fa-close faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button>
+                            </div>
+                            <div style="clear:both;"></div>
+                        </div>
+                    </div>
+                </div>
+                @Html.HiddenFor(m => m.CompleteServiceOrderModel.EquipmentId)
+                @Html.HiddenFor(m => m.CompleteServiceOrderModel.Meter1Type)
+                @Html.HiddenFor(m => m.CompleteServiceOrderModel.Meter2Type)
+                @Html.HiddenFor(m => m.CompleteServiceOrderModel.Meter1CurrentReading, new { id = "FM1CurrentReading" })
+                @Html.HiddenFor(m => m.CompleteServiceOrderModel.Meter2CurrentReading, new { id = "FM2CurrentReading" })
+                @Html.HiddenFor(m => m.CompleteServiceOrderModel.MetersAssociated)
+                @Html.HiddenFor(m => m.CompleteServiceOrderModel.ServiceOrderId)
+            }
+        </div>
+           
+    </div>
+</div>
+
+@*<script>
+    $(function () {
+        CloseLoader();
+        $.validator.setDefaults({ ignore: null });
+        $.validator.unobtrusive.parse(document);
+        $('input, form').blur(function () {
+            $(this).valid();
+        });
+        $('.select2picker, form').change(function () {
+            var areaddescribedby = $(this).attr('aria-describedby');
+            if ($(this).valid()) {
+                if (typeof areaddescribedby !== 'undefined') {
+                    $('#' + areaddescribedby).hide();
+                }
+            }
+            else {
+                if (typeof areaddescribedby !== 'undefined') {
+                    $('#' + areaddescribedby).show();
+                }
+            }
+        });
+        $(document).find('.select2picker').select2({});
+        ZoomImage($(document).find('#EquipZoom'));
+        $(document).find('.dtpicker').datepicker({
+            changeMonth: true,
+            changeYear: true,
+            beforeShow: function (i) { if ($(i).attr('readonly')) { return false; } },
+            "dateFormat": "mm/dd/yy",
+            autoclose: true
+        }).inputmask('mm/dd/yyyy');
+        SetFixedHeadStyle();
+    });
+    
+</script>*@
+
+<script>
+    $(document).ready(function () {
+       
+        $.validator.setDefaults({ ignore: null });
+        $.validator.unobtrusive.parse(document);
+        
+    });
+</script>

@@ -1,0 +1,237 @@
+﻿@model Client.Models.Project.ProjectVM
+@*<h2>This is the details Page for Project - @Model.projectModel.ProjectId</h2>*@
+@Styles.Render("~/Content/somaxcommentsection")
+<link href="~/Content/Ckeditor/Activity_Comments.css" rel="stylesheet" />
+<div class="m-subheader fixedDiv1">
+    <div class="new-m-subheader">
+        <div class="filterDescription">
+            <a href="javascript:void(0)" id="linkToSearch"><span id="spnlinkToSearch">@Model.Loc.Where(a => a.ResourceId == "spnProjectDetails").FirstOrDefault().Value.ToString()</span></a>
+            - @Model.projectHeaderSummaryModel.ClientlookupId
+            @Html.HiddenFor(m => m.projectHeaderSummaryModel.ProjectId, new { id = "projectModel_ProjectId" })
+        </div>
+        <!--#region ActionBttnArea-->
+        <div class="ActionBttnArea">
+            <div class="actionDiv pull-left" id="ad1" style="margin-right:0px !important; ">
+                <div class="btn-group bootstrap-select m-datatable__pager-size dropup show selectDrop actionNewDrop">
+                    <div class="btn-group bootstrap-select m-datatable__pager-size" style="width: 100%;">
+                        <button type="button" class="btn dropdown-toggle bs-placeholder btn-default" data-toggle="dropdown" role="button" title=""><span class="filter-option pull-left">@Model.Loc.Where(a => a.ResourceId == "globalAction").FirstOrDefault().Value.ToString()</span>&nbsp;<span class="bs-caret"><span class="caret"></span></span></button>
+                        <div class="dropdown-menu open" role="combobox">
+                            <ul class="dropdown-menu inner" role="listbox" aria-expanded="false">
+                                @if (Model.security.Project.Complete == true)
+                                {
+                                    <li><a id="ProjectComplete" onclick="ProjectStatusUpdate('Complete')" href="javascript:void(0);">@Model.Loc.Where(a => a.ResourceId == "GlobalComplete").FirstOrDefault().Value.ToString()</a></li>
+                                }
+                                @if (Model.security.Project.Cancel == true)
+                                {
+                                    <li><a id="ProjectCancel" onclick="ProjectStatusUpdate('Canceled')" href="javascript:void(0);">@Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</a></li>
+                                }
+                                @if (Model.security.Project.Complete == true &&
+                                    (Model.projectHeaderSummaryModel.Status.ToLower() == ProjectStatusConstants.Complete.ToLower() ||
+                                    Model.projectHeaderSummaryModel.Status.ToLower() == ProjectStatusConstants.Canceled.ToLower())
+                                    )
+                                {
+                                    <li><a id="ProjectReopen" onclick="ProjectStatusUpdate('Open')" href="javascript:void(0);">@Model.Loc.Where(a => a.ResourceId == "globalReopen").FirstOrDefault().Value.ToString()</a></li>
+                                }
+                            </ul>
+                        </div>
+
+                    </div>
+                </div>
+                @if (Model.security.Project.Create == true)
+                {
+                    <button type="button" class="btn newBtn-add innerBtn pull-left AddnewProject" title="@Model.Loc.Where(a => a.ResourceId == "spnAddProject").FirstOrDefault().Value.ToString()" data-toggle="modal" data-target="#AddProjectModalPopup"><i class="fa fa-plus"></i></button>
+                }
+
+            </div>
+
+            <div style="clear:both;"></div>
+        </div>
+        <!--#endregion-->
+        <div style="clear:both;"></div>
+    </div>
+
+</div>
+<div class="pushDiv1"></div>
+
+<div class="row">
+    <div class="col-xl-12">
+        <div class="m-portlet" id="m_portlet" style="padding:15px;">
+            <div class="tab">
+                <button class="tablinks wop-det-tab active" data-tab="Project">@Model.Loc.Where(a => a.ResourceId == "spnProject").FirstOrDefault().Value.ToString()</button>
+                <button class="tablinks wop-det-tab" data-tab="Timeline">@Model.Loc.Where(a => a.ResourceId == "spnTimeline").FirstOrDefault().Value.ToString()</button>
+                <button class="tablinks wop-det-tab" data-tab="Dashboard">@Model.Loc.Where(a => a.ResourceId == "spnDashboard").FirstOrDefault().Value.ToString()</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-12">
+        <!--#region Project Tab-->
+        <div id="Project" class="tabcontent" style="display:block;">
+            @Html.Partial("ProjectDetails/_ProjectDetailsHeaderSummary", Model)
+        </div>
+        <!--#endregion-->
+        <div id="Timeline" class="tabcontent">
+            @*@Html.Partial("~/Views/Project/TimelineDetails/GanttChart.cshtml")*@
+        </div>
+
+        <div id="Dashboard" class="tabcontent">
+
+        </div>
+    </div>
+</div>
+@Html.HiddenFor(m => m.security.Project.Edit, new {id= "securityProjectEdit" })
+<style type="text/css">
+    .filterDescription {
+        width: auto;
+        float: left;
+        font-size: 1.2rem;
+        color: #000;
+        font-weight: 500;
+        line-height: 33px;
+    }
+
+        .filterDescription a {
+            color: #36a3f7;
+            text-decoration: none !important;
+        }
+
+    .tab {
+        border-bottom: 0;
+    }
+
+        .tab button {
+            margin-bottom: 0;
+        }
+
+    .rightWidgetArea {
+        padding: 46px;
+    }
+
+    .planed {
+        margin-right: 62px;
+        margin-bottom: 23px;
+    }
+
+    .incomplete {
+        margin-left: 62px;
+        margin-bottom: 23px;
+    }
+
+    .complete {
+        margin-right: 62px;
+        margin-top: 23px;
+    }
+
+    .breakIn {
+        margin-left: 62px;
+        margin-top: 23px;
+    }
+
+    .lds-ellipsis.lds-adjust {
+        margin-top: -32px;
+        z-index: 9;
+    }
+
+    .rightWidgetArea .chartBox {
+        position: relative;
+        min-height: 38px;
+        margin-top: 0;
+        font-size: 25px;
+        font-weight: 500;
+        font-family: Roboto;
+    }
+
+        .rightWidgetArea .chartBox span {
+            font-size: 1.1rem;
+            font-weight: 500;
+            font-family: Roboto;
+            display: block;
+        }
+
+            .rightWidgetArea .chartBox span.chartCount {
+                font-size: 20px !important;
+                margin-bottom: 30px !important;
+            }
+
+            .rightWidgetArea .chartBox span.chartCountText {
+                font-size: 12px !important;
+            }
+
+    .estHrs {
+        margin-right: 62px;
+        margin-bottom: 23px;
+    }
+
+    .actHrs {
+        margin-right: 62px;
+        margin-top: 23px;
+    }
+
+    .gridList:hover {
+        background: #fff;
+    }
+
+    .padAdjstNew {
+        padding: 0 10px 10px 10px;
+    }
+
+    button.dt-button.buttons-copy {
+        display: none;
+    }
+
+    @@media screen and (max-width: 1899px) {
+        .planed, .complete, .estHrs, .actHrs {
+            margin-right: 38px;
+        }
+
+        .incomplete, .breakIn {
+            margin-left: 38px;
+        }
+    }
+
+    @@media screen and (max-width: 1599px) {
+        .planed, .complete, .estHrs, .actHrs {
+            margin-right: 38px;
+        }
+
+        .incomplete, .breakIn {
+            margin-left: 38px;
+        }
+    }
+
+    @@media screen and (max-width: 1359px) {
+        .planed, .complete, .estHrs, .actHrs {
+            margin-right: 32px;
+        }
+
+        .incomplete, .breakIn {
+            margin-left: 32px;
+        }
+    }
+
+    @@media screen and (max-width: 1199px) {
+        .rightWidgetArea {
+            padding: 0 10px;
+        }
+
+        .planed, .complete, .estHrs, .actHrs {
+            margin: 0;
+        }
+
+        .incomplete, .breakIn {
+            margin: 0;
+        }
+    }
+    @@media screen and (max-width: 767px) {
+        .actionDiv {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+        }
+    }
+    @@media only screen and (min-width: 320px) and (max-width: 767px) {
+    .m-subheader.fixedDiv1 .new-m-subheader {
+        display: block !important;
+    }
+}
+</style>

@@ -1,0 +1,16 @@
+﻿@model Client.Models.PartTransfer.PartTransferVM
+@{
+    ViewBag.Title = "Somax | Part Transfer";
+}
+@Styles.Render("~/Content/datatable")
+<link href="~/Content/sidebar_custom.css" rel="stylesheet" />
+<link href="~/Scripts/Metronic/assets/demo/default/base/GlobalSearchGrid.css" rel="stylesheet" />
+@section scripts {
+    @Scripts.Render("~/bundles/datatable")
+    @Scripts.Render("~/bundles/PartTransfer")
+
+}
+<div id="renderparttransferinfo">
+    @Html.Partial("~/Views/PartTransfer/_PartTransferSearch.cshtml")
+</div>
+

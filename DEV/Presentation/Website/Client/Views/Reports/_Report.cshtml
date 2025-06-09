@@ -1,0 +1,137 @@
+﻿@model Client.Models.BusinessIntelligenceVM
+@{
+    ViewBag.Title = "Somax | Report";
+}
+<div class="m-subheader">
+    <div class="new-m-subheader">
+        <div class="PageTitle">
+            <div class="align-items-center separator">
+                <h3 class="m-subheader__title ">
+                    @Model.Loc.Where(a => a.ResourceId == "spnReports").FirstOrDefault().Value.ToString()
+                </h3>
+            </div>
+        </div>
+        <div class="NewBreadcrumbArea">
+            <div class="newBreadcrumb">
+                <ul>
+                    <li style="display:none;"><a></a></li>
+                    <li style="background:none;padding: 0 10px 0 0px;"><a href="/Reports/Index?page=Reports_Reports__beta_">@Model.Loc.Where(a => a.ResourceId == "spnReports").FirstOrDefault().Value.ToString()</a></li>
+                    <li class="active" id="reportname"></li>
+                </ul>
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+        <div class="ActionBttnArea">
+            @if (Model.security.Create_Private_Reports.Access && Model.security.Create_Site_Reports.Access && Model.security.Create_Public_Reports.Access)
+            {
+            <button type="button" class="btn btn-white pull-left" title="Add Report" id="AddPublicReport"><i class="fa fa-plus buttonIcon"></i> &nbsp;@Model.Loc.Where(a => a.ResourceId == "spnAddReport").FirstOrDefault().Value.ToString()</button>
+            }
+            else if (Model.security.Create_Private_Reports.Access && Model.security.Create_Site_Reports.Access)
+            {
+            <button type="button" class="btn btn-white pull-left" title="Add Report" id="AddSiteReport"><i class="fa fa-plus buttonIcon"></i> &nbsp;@Model.Loc.Where(a => a.ResourceId == "spnAddReport").FirstOrDefault().Value.ToString()</button>
+            }
+            else if (Model.security.Create_Private_Reports.Access)
+            {
+                <button type="button" class="btn btn-white pull-left" title="Add Report" id="AddPrivateReport"><i class="fa fa-plus buttonIcon"></i> &nbsp;@Model.Loc.Where(a => a.ResourceId == "spnAddReport").FirstOrDefault().Value.ToString()</button>
+            }
+            @if (Model.IsUserReport)
+            {
+                <button type="button" class="btn newBtn-add pull-right" style="margin-left: 10px;" disabled="disabled" id="btnUserReportSave"><i class="fa fa-save buttonIcon"></i> &nbsp;@Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+            }
+            <div style="clear:both;"></div>
+        </div>
+        <div style="clear:both;"></div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-xl-12">
+        <div class="m-portlet" id="m_portlet" style="padding:15px;">
+
+            <div class="actionBar" id="crossbtnarea">
+                @if (Model.IncludePrompt)
+                {
+                    <div class="pull-left" style="position:relative;">
+
+                        <div class="popupInfo" id="promptvalcontainer" style="display:none; margin-bottom:0;">
+                            <div class="form-group">
+                                @if (!string.IsNullOrEmpty(Model.reportListingModel.Prompt1Source))
+                                {
+                                    <label id="lblpropmtselcted1"><strong></strong></label>
+                                }
+                                @if (!string.IsNullOrEmpty(Model.reportListingModel.Prompt2Source))
+                                {
+                                    if (!string.IsNullOrEmpty(Model.reportListingModel.Prompt1Source))
+                                    {
+                                        <label style="margin:0 7px;">|</label>
+                                    }
+                                    <label id="lblpropmtselcted2"><strong></strong></label>
+                                }
+                            </div>
+                            @if (!string.IsNullOrEmpty(Model.reportListingModel.Prompt1Source) || !string.IsNullOrEmpty(Model.reportListingModel.Prompt2Source))
+                            {
+                                <a href="javascript:void(0)" class="popupInfoEdit" data-toggle="modal" title="Edit Prompt" id="prompedit"><i class="fa fa-edit"></i></a>
+                            }
+                        </div>
+
+                    </div>
+                }
+                <div class="pull-right">
+                    <button type="button" class="btn btn-white navbar-btn" id="liCustomize" title="Customize" data-toggle="modal" data-target="#gridcolumncustomizemodal"><i class="fa fa-cog" style="font-size: 1.3rem;"></i></button>
+                    <button type="button" class="btn btn-white navbar-btn" id="sidebarCollapse" title="Advance Search"><i class="fa fa-filter" style="font-size: 1.3rem;"></i></button>
+                    <button type="button" class="btn btn-white" disabled onclick="funcShowExportbtn()" id="reportexport">@Model.Loc.Where(a => a.ResourceId == "spnExport").FirstOrDefault().Value.ToString()</button>
+                    <div style="clear:both;"></div>
+                </div>
+                <div style="clear:both;"></div>
+                <div id="advsearchfilteritems"></div>
+                <div style="clear:both;"></div>
+            </div>
+
+
+
+            <div id="Active" class="tabcontent" style="display:block;clear:both;">
+                <div class="table-responsive">
+                    <table id="tblreport" class="eqpDtlTbl row-border custom-sort" style="width:100%;">
+                        <tfoot id="tblfooter" style="color:#575962 !important;display:none;"></tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@Html.HiddenFor(m => m.IsGrouped)
+@Html.HiddenFor(m => m.reportListingModel.ReportListingId)
+@if (Model.IncludePrompt)
+{
+    @Html.Partial("_promptModal")
+}
+@Html.Partial("_Export")
+@Html.Partial("_ReportCustomizeGridSetup")
+@Html.Partial("_ReportAdvanceSearch")
+
+<!-- Modal -->
+<div id="PrivateReportModalpopup" class="modal fade" role="dialog">
+    <div class="modal-dialog" id="PrivateReportPopup">
+    </div>
+</div>
+<div id="SiteReportModalpopup" class="modal fade" role="dialog">
+    <div class="modal-dialog" id="SiteReportPopup">
+    </div>
+</div>
+<div id="PublicReportModalpopup" class="modal fade" role="dialog">
+    <div class="modal-dialog" id="PublicReportPopup">
+    </div>
+</div>
+
+<style type="text/css">
+    @@media screen and (max-width: 767px) {
+        #popupExport { left: 50% !important; top: 50% !important; right: auto !important; bottom: auto !important; margin-left: -83px !important; margin-top: -84px !important; }
+        .NewBreadcrumbArea { float: none; }
+        .PageTitle { float: none; }
+        .ActionBttnArea { float: left; }
+        #crossbtnarea .pull-left, #crossbtnarea .pull-right { float:none; width:auto; margin-top:0 !important; }
+        #crossbtnarea .pull-left .popupInfo { float:none; width:auto; }
+    }
+    @@media only screen and (min-width: 320px) and (max-width: 359px) {
+        #liCustomize { margin-top: 0 !important; margin-left: 0 !important; }
+    }
+</style>

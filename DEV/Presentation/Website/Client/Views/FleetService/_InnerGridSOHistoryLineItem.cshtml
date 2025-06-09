@@ -1,0 +1,79 @@
+﻿@model Client.Models.FleetService.FleetServiceVM
+@{
+    Layout = null;
+}
+<table id="" dt-options="dtOptions" class="ServiceOrderHistoryinnerDataTable childtable cell-border" style="width:100%">
+    <thead>
+        <tr>
+            <th style="padding-left:8px;">@Model.Loc.Where(a => a.ResourceId == "spnServiceTask").FirstOrDefault().Value.ToString()</th>
+            <th style="padding-left:8px;">@Model.Loc.Where(a => a.ResourceId == "spnRepairReason").FirstOrDefault().Value.ToString()</th>
+            <th style="text-align:right !important;padding-right:0px;">@Model.Loc.Where(a => a.ResourceId == "spnLabor").FirstOrDefault().Value.ToString()</th>
+            <th style="text-align:right !important;padding-right:0px;">@Model.Loc.Where(a => a.ResourceId == "spnMaterials").FirstOrDefault().Value.ToString()</th>
+            <th style="text-align:right !important;padding-right:0px;">@Model.Loc.Where(a => a.ResourceId == "spnTotal").FirstOrDefault().Value.ToString()</th>
+
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model.FleetServiceLineItemModelList.Count > 0)
+        {
+            foreach (var fs in Model.FleetServiceLineItemModelList)
+            {
+                <tr>
+                    <td>@fs.Description</td>
+                    <td>@fs.RepairReason</td>
+                    <td style="text-align:right !important;">@fs.Labor</td>
+                    <td style="text-align:right !important;">@fs.Materials </td>
+                    <td style="text-align:right !important;">@fs.Total</td>
+                </tr>
+            }
+        }
+    </tbody>
+    <tfoot>
+        <tr>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th style="text-align:right !important;font-weight: 500 !important;background: #b3b1b7 !important;"></th>
+        </tr>
+    </tfoot>
+</table>
+<style type="text/css">
+    .childtable tr th {
+        background: #4da5fe;
+        color: #fff !important;
+        white-space: nowrap !important;
+        text-align: center !important;
+        font-weight: 400 !important;    
+    }
+    
+
+    .link {
+        color: #235ddd;
+    }
+
+        .link:hover {
+            color: #32bf0e;
+        }
+
+    .nolink {
+        pointer-events: none;
+        color: #91a0a0;
+    }
+
+    table.dataTable thead .sorting {
+        padding-right: 25px !important;
+    }
+
+    table.dataTable thead .sorting_asc {
+        padding-right: 25px !important;
+    }
+    table.dataTable thead .sorting_desc {
+        padding-right: 25px !important;
+    }
+
+    table.dataTable.display tbody tr:first-child td {
+        width: 1%;
+    }
+</style>
+

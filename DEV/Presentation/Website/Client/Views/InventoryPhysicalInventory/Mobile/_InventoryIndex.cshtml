@@ -1,0 +1,199 @@
+﻿@model Client.Models.PhysicalInventory.PhysicalInventoryVM
+
+<link href="~/Scripts/Metronic/assets/demo/default/base/style_newCustom.css" rel="stylesheet" />
+<link rel="stylesheet" href="~/Scripts/mobile/css/mobiscroll.jquery.min.css">
+<link href="~/Scripts/mobile/css/mobile-style.css" rel="stylesheet" />
+<style>
+    .title-head {
+        padding: 0 15px 15px 15px;
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+    }
+    .title-head h3 {
+        font-size:15px;
+        margin:0px;
+    }
+
+    @@media(max-width:650px) {
+        .title-head {
+            display:block;
+        }
+    }
+</style>
+
+    <div class="title-head">
+        <div class="PageTitle">
+            <div class="align-items-center separator">
+                <h3 class="m-subheader__title ">
+                    @Model.Loc.Where(a => a.ResourceId == "hdfPhysicalInventory").FirstOrDefault().Value.ToString()
+                </h3>
+            </div>
+        </div>
+
+        <div class="NewBreadcrumbArea">
+            <div class="newBreadcrumb">
+                <ul>
+                    <li><a href="/Dashboard/Dashboard">&nbsp;</a></li>
+                    <li class="active"><a> @Model.Loc.Where(a => a.ResourceId == "hdfPhysicalInventory").FirstOrDefault().Value.ToString()</a></li>
+                </ul>
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+        <div style="clear:both;"></div>
+    </div>
+
+@Html.Partial("_ErrorDiv")
+@using (Ajax.BeginForm("ValidateData", "InventoryPhysicalInventory", new AjaxOptions { HttpMethod = "Post", OnSuccess = "ValidationOnSuccess", OnBegin = "AjaxBeginFormBegin", OnComplete = "AjaxBeginFormComplete", OnFailure = "AjaxBeginFormFaillure" }, new { id = "frmLabourAdd" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="row">
+        <div class="col-xl-12" id="MobilePhInvnt">
+            <div class="m-portlet newPort" id="m_portlet" style="padding:15px;">
+                <div mbsc-page class="demo-responsive">
+                    <div style="height:100%">
+                        <div mbsc-form class="mbsc-form-grid">
+                            <div class="mbsc-grid">
+                                <div class="mbsc-row">
+                                    @if (Model.inventoryModel.MultiStoreroom)
+                                    {
+                                        <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                            <label>
+                                                @Model.Loc.Where(a => a.ResourceId == "spnStoreroom").FirstOrDefault().Value.ToString()
+                                                @Html.DropDownListFor(m => m.inventoryModel.StoreroomId, Model.inventoryModel.StoreroomList, "--Select--", new
+                                                {
+                                                    @class = "form-control search mobiscrollselect ddlStoreroom",
+                                                    @style = "width:100%;",
+                                                    @mbsc_dropdown = "true",
+                                                    @data_label = Model.Loc.Where(a => a.ResourceId == "spnStoreroom").FirstOrDefault().Value.ToString(),
+                                                    @data_input_style = "box",
+                                                    @data_label_style = "floating",
+                                                    @placeholder = Model.Loc.Where(a => a.ResourceId == "spnStoreroom").FirstOrDefault().Value.ToString(),
+                                                    @id = "StoreroomId"
+                                                })
+                                            </label>
+                                            @Html.ValidationMessageFor(m => m.inventoryModel.StoreroomId, "", new { })
+                                        </div>
+                                    }
+                                    <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                        <label>
+                                            @Model.Loc.Where(a => a.ResourceId == "spnPartID").FirstOrDefault().Value.ToString() :
+
+
+                                            @Html.TextBoxFor(x => x.inventoryModel.PartClientLookupId, new { @class = "form-control search dropbtn readonly", id = "txtPartId", autocomplete = "off", @readonly = "readonly", @mbsc_input = "true", @data_input_style = "box", @data_label_style = "floating" })
+                                        </label>
+                                        @Html.ValidationMessageFor(x => x.inventoryModel.PartClientLookupId, "", new { })
+                                        @Html.HiddenFor(m => m.inventoryModel.PartId, new { id = "hdnPartId" })
+                                    </div>
+                                    <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6"
+                                         style=@(Model.inventoryModel.MultiStoreroom?"display:none;":"")>
+                                        <div class=" design-box" style="padding: 10px 16px !important">
+                                            <div class="input-group-btn">
+                                                <button type="button" class="btn btn-blue mobBttn" id="openinvpartgrid" data-multistoreroomvalue="@Model.inventoryModel.MultiStoreroom">
+                                                    <i id="srcicon" class="fa fa-search"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6"
+                                         style=@(Model.inventoryModel.MultiStoreroom?"display:none;":"")>
+                                        <div class=" design-box" style="padding: 10px 16px !important">
+                                            <div class="input-group-btn">
+                                                <button type="button" class="btn btn-blue mobBttn" id="btnQrScanner">
+                                                    <i class="fa fa-qrcode" style="margin-top:-2px;"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                        <label id="spnQuantityMaintenance">
+                                            @Model.Loc.Where(a => a.ResourceId == "spnQuantity").FirstOrDefault().Value.ToString():
+
+                                            @Html.TextBoxFor(x => x.inventoryModel.ReceiptQuantity, new { @class = "form-control search", autocomplete = "off", @mbsc_input = "true", placeholder = Model.Loc.Where(a => a.ResourceId == "spnQuantity").FirstOrDefault().Value.ToString(), @data_input_style = "box", @data_label_style = "floating" })
+                                        </label>
+                                        @Html.ValidationMessageFor(x => x.inventoryModel.ReceiptQuantity, "", new { })
+                                    </div>
+                                </div>
+                                <div class="mbsc-row">
+                                    @*<div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                <div class="design-box">
+                                    <div class="mbsc-button-group-block">
+                                        <button mbsc-button data-color="success" type="button" class="btn btn-blue mobBttn" id="btnPartIssuecancel"><i class="fa fa-close faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button>
+                                    </div>
+                                </div>
+                            </div>*@
+                                    <div class="mbsc-col-12 mbsc-col-md-12 mbsc-col-lg-12">
+                                        <div class="design-box">
+                                            <div class="mbsc-button-group-block">
+                                                <button data-color="success" type="submit" class="btn btn-blue mobBttn" style="cursor:pointer" value="save" id="btnselectinventory"><i class="fa fa-plus faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalAdd").FirstOrDefault().Value.ToString()</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="finselectcontainer" style="display:none">
+                    <div class="table-responsive" style="margin-top:15px;">
+                        <table id="tblfinalSelectReceiptsGrid" class="eqpDtlTbl row-border custom-sort" style="width:100%;">
+                            <thead>
+                                <tr>
+                                    <th></th>
+                                    <th>@Model.Loc.Where(a => a.ResourceId == "spnStoreroom").FirstOrDefault().Value.ToString()</th>
+                                    <th>@Model.Loc.Where(a => a.ResourceId == "spnPartID").FirstOrDefault().Value.ToString()</th>
+                                    <th>@Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString()</th>
+                                    <th>@Model.Loc.Where(a => a.ResourceId == "spnUPCCode").FirstOrDefault().Value.ToString()</th>
+                                    <th>@Model.Loc.Where(a => a.ResourceId == "spnOnHand").FirstOrDefault().Value.ToString()</th>
+                                    <th>@Model.Loc.Where(a => a.ResourceId == "spnQuantityCounted").FirstOrDefault().Value.ToString()</th>
+                                    <th>@Model.Loc.Where(a => a.ResourceId == "spnSection").FirstOrDefault().Value.ToString()</th>
+                                    <th>@Model.Loc.Where(a => a.ResourceId == "spnRow").FirstOrDefault().Value.ToString()</th>
+                                    <th>@Model.Loc.Where(a => a.ResourceId == "spnSelf").FirstOrDefault().Value.ToString()</th>
+                                    <th>@Model.Loc.Where(a => a.ResourceId == "spnBin").FirstOrDefault().Value.ToString()</th>
+                                    <th width="17%" style="text-align:center !important;">@Model.Loc.Where(a => a.ResourceId == "globalAction").FirstOrDefault().Value.ToString()</th>
+                                    <th>@Model.Loc.Where(a => a.ResourceId == "spnGlobalStoreRoomId").FirstOrDefault().Value.ToString()</th>
+                                </tr>
+                            </thead>
+
+                        </table>
+                    </div>
+
+                    <div class="idBttns">
+                        <div class="bttn_pagin">
+                            <div class="bttns">
+                                <button type="button" class="btn btn-blue mobBttn" id="btncancel"><i class="fa fa-plus faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "spnCancelAll").FirstOrDefault().Value.ToString()</button>
+                            </div>
+                            <div class="bttns" style="float:right">
+                                <button type="button" class="btn btn-blue mobBttn" id="btnconfirm"><i class="fa fa-check faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "spnRecordCount").FirstOrDefault().Value.ToString()</button>
+                            </div>
+                            <div style="clear:both;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @Html.TextBoxFor(m => m.inventoryModel.MultiStoreroom, new { id = "MultiStoreroom", style = "display:none" })
+
+    @*@Html.Partial("~/Views/InventoryPhysicalInventory/_AddPhyInvPartPopUp.cshtml")*@
+}
+
+<div class="slide-modal" id="maintenancepartIdModal">
+    <div class="slide-modal-head">
+        <a class="slide-back-btn" id="maintenancepartIdModalHide"> <i class="fa fa-angle-left"></i> Back</a>
+        <div class="slide-back-title">
+            @Model.Loc.Where(a => a.ResourceId == "spnSelectPart").FirstOrDefault().Value.ToString()
+        </div>
+    </div>
+    <div class="slide-modal-body">
+        <div class="form-group" style="position:relative;">
+            <i class="fa fa-search txtSearchClickComp" style="font-size: 1.1rem;position: absolute;top: 9px;left: 15px;"></i>
+            <a href="javascript:void(0)"><i class="fa fa-close clearTextBoxValue" data-txtboxid="txtPartSearch_Mobile" style="font-size: 1.1rem;position: absolute;top: 9px;right: 15px;"></i></a>
+            <input type="search" id="txtPartSearch_Mobile" class="form-control search unsortable" placeholder="Search..." style="padding: 0.65rem 2.75rem;" autocomplete="off">
+        </div>
+        <div id="DivPartSearchScrollViewModal"></div>
+    </div>
+</div>
+
+

@@ -1,0 +1,252 @@
+﻿@model Client.Models.PreventiveMaintenance.PrevMaintVM
+<link href="~/Scripts/Metronic/assets/demo/default/base/style_newCustom.css" rel="stylesheet" />
+
+<div class="m-subheader">
+    <div class="new-m-subheader">
+        <div class="PageTitle">
+            <div class="align-items-center">
+                <h3 class="m-subheader__title" style="padding:0;">
+                    <span class="dropToggle" id="spnDropToggle">
+                        <img src="~/Images/toggleMenu.png" />
+                    </span>
+                    <span style="line-height:35px;" id="prevsearchtitle"></span>
+                </h3>
+            </div>
+        </div>
+        <div class="ActionBttnArea">
+            @if (Model.prevMaintOptionModel.IsPrevMaintCreate)
+            {
+                <div class="actionDiv pull-left">
+                    <div class="btn-group bootstrap-select m-datatable__pager-size dropup show selectDrop actionNewDrop" style="margin-right:0;">
+                        <div class="btn-group bootstrap-select m-datatable__pager-size" style="width: 100%;">
+                            <button type="button" class="btn dropdown-toggle bs-placeholder btn-default" data-toggle="dropdown" role="button" title=""><span class="filter-option pull-left">@Model.Loc.Where(a => a.ResourceId == "globalAction").FirstOrDefault().Value.ToString()</span>&nbsp;<span class="bs-caret"><span class="caret"></span></span></button>
+                            <div class="dropdown-menu open" role="combobox">
+                                <ul class="dropdown-menu inner" role="listbox" aria-expanded="false">
+                                    @if (Model.prevMaintOptionModel.IsPrevMaintEdit)
+                                    {
+                                        <li id="liReassign"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnReassign").FirstOrDefault().Value.ToString()</a></li>
+                                    }
+                                    <li id="liFltEq" data-toggle="modal"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnFilterByEqu").FirstOrDefault().Value.ToString()</a></li>
+                                    @if (Model.prevMaintOptionModel.IsBusinessTypefacilities)
+                                    {
+                                        <li id="liFltLoc" data-toggle="modal" data-target="#LocationPMModal"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnFilterByLoc").FirstOrDefault().Value.ToString()</a></li>
+                                    }
+                                    <li id="liFltAssign" data-toggle="modal"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnFilterByAssign").FirstOrDefault().Value.ToString()</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                if (Model.IsPMLibrary)
+                {
+                    <button type="button" class="btn newBtn-add addPreventive pull-left" title="Add Preventive">@Model.Loc.Where(a => a.ResourceId == "spnNewPreventiveMaintenance").FirstOrDefault().Value.ToString()</button>
+                }
+                else
+                {
+                    <button type="button" class="btn newBtn-add addPreventiveDesc pull-left" title="Add Preventive">@Model.Loc.Where(a => a.ResourceId == "spnNewPreventiveMaintenance").FirstOrDefault().Value.ToString()</button>
+                }
+            }
+            else
+            {
+                <div class="actionDiv pull-left" style="margin-right:0;">
+                    <div class="btn-group bootstrap-select m-datatable__pager-size dropup show selectDrop actionNewDrop" style="margin-right:0;">
+                        <div class="btn-group bootstrap-select m-datatable__pager-size" style="width: 100%;">
+                            <button type="button" class="btn dropdown-toggle bs-placeholder btn-default" data-toggle="dropdown" role="button" title=""><span class="filter-option pull-left">@Model.Loc.Where(a => a.ResourceId == "globalAction").FirstOrDefault().Value.ToString()</span>&nbsp;<span class="bs-caret"><span class="caret"></span></span></button>
+                            <div class="dropdown-menu open" role="combobox">
+                                <ul class="dropdown-menu inner" role="listbox" aria-expanded="false">
+                                    @if (Model.prevMaintOptionModel.IsPrevMaintEdit)
+                                    {
+                                        <li id="liReassign"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnReassign").FirstOrDefault().Value.ToString()</a></li>
+                                    }
+                                    <li id="liFltEq" data-toggle="modal"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnFilterByEqu").FirstOrDefault().Value.ToString()</a></li>
+                                    @if (Model.prevMaintOptionModel.IsBusinessTypefacilities)
+                                    {
+                                        <li id="liFltLoc" data-toggle="modal" data-target="#LocationPMModal"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnFilterByLoc").FirstOrDefault().Value.ToString()</a></li>
+                                    }
+                                    <li id="liFltAssign" data-toggle="modal"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnFilterByAssign").FirstOrDefault().Value.ToString()</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+            <div style="clear:both;"></div>
+        </div>
+        <div style="clear:both;"></div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xl-12">
+        <div class="m-portlet" id="m_portlet" style="padding:15px;">
+            <div class="actionBar" style="display:none" id="PMGridAction">
+                <div class="pull-left" style="position:relative;">
+                    <button type="button" class="btn btn-white navbar-btn" title="Search" id="SrchBttnNew"><i class="fa fa-search" style="font-size: 1.1rem;position: relative;top: -2px;left: -2px;"></i> @Model.Loc.Where(a => a.ResourceId == "globalSearch").FirstOrDefault().Value.ToString()</button>
+                    <button type="button" class="btn btn-white navbar-btn" id="sidebarCollapse" title="Advance Search"><i class="fa fa-filter" style="font-size: 1.3rem;"></i></button>
+                    <ul class="filter_apply globalFilterAdjusted clsgridreset">
+                        <li class="textClear" id="liResetGridClearBtn"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "globalClear").FirstOrDefault().Value.ToString()</a></li>
+                    </ul>
+                    <div style="clear:both;"></div>
+                    <div class="searchBttnDrop desktop" id="searchBttnNewDrop" style="display:none;">
+                        <div class="form-group" style="position:relative; margin-bottom:5px;">
+                            <i class="fa fa-search txtSearchClick" style="font-size: 1.1rem;position: absolute;top: 9px;left: 15px;"></i>
+                            <a href="javascript:void(0)" id="cancelText"><i class="fa fa-close" style="font-size: 1.1rem;position: absolute;top: 9px;right: 15px;"></i></a>
+                            <input type="text" id="txtColumnSearch" class="form-control search" placeholder="Search..." style="padding: 0.65rem 2.75rem;" autocomplete="off">
+                        </div>
+                        <div class="searchTips">
+                            <div class="titleText">Search Tips</div>
+                            @if (Model.Loc.Any(a => a.ResourceId == SearchTipsType.PrevMaintSearchTips))
+                            {
+                                <div class="infoText">@Model.Loc.Where(a => a.ResourceId == SearchTipsType.PrevMaintSearchTips).FirstOrDefault().Value.ToString()</div>
+                            }
+                            else
+                            {
+                                <div class="infoText">Search for Preventive Maintenance by Master Job ID, Description, Charge To, and Charge To Name.</div>
+                            }
+
+                            <div style="clear:both;"></div>
+                        </div>
+                        <div class="searchInfo">
+                            <span class="recent">@Model.Loc.Where(a => a.ResourceId == "GlobalRecentlySearched").FirstOrDefault().Value.ToString()</span>
+                            <div class="searchList" id="wosearchList">
+                                <ul id="UlSearchList"></ul>
+                            </div>
+                            <span class="clear"><a href="javascript:void(0)" id="clearText">@Model.Loc.Where(a => a.ResourceId == "globalClear").FirstOrDefault().Value.ToString()</a></span>
+                            <div style="clear:both;"></div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="pull-right marAdjst">
+                    <button type="button" class="btn btn-white import-export" disabled onclick="funcShowExportbtn()">@Model.Loc.Where(a => a.ResourceId == "spnExport").FirstOrDefault().Value.ToString()</button>
+                    <button type="button" class="btn btn-white" id="liCustomize" title="Customize" data-toggle="modal" data-target="#gridcolumncustomizemodal"><i class="fa fa-cog" style="font-size: 1.3rem;"></i></button>
+                    <div style="clear:both;"></div>
+                </div>
+                <div style="clear:both;"></div>
+                <div id="advsearchfilteritems"></div>
+                <div style="clear:both;"></div>
+            </div>
+
+            <div id="Active" class="tabcontent" style="display:block;">
+                <div class="table-responsive">
+                    <table id="prevSearchTable" class="eqpDtlTbl row-border custom-sort tblMain hover haschild tblDefaultSort" style="width:100%;">
+                        <thead>
+                            <tr>
+                                <th style="width:20px;"></th>
+                                <th data-col="1" id="thPmId" class="th-PmId" data-th-index="0" data-th-prop="ClientLookupId">@Model.Loc.Where(a => a.ResourceId == "spnPrevMstrId").FirstOrDefault().Value.ToString()</th>
+                                <th data-col="2" data-th-index="1" data-th-prop="ScheduleType">@Model.Loc.Where(a => a.ResourceId == "spnSchdType").FirstOrDefault().Value.ToString()</th>
+                                <th data-col="3" id="thPmDesc" data-th-index="2" data-th-prop="Description">@Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString()</th>
+                                <th data-col="4" id="thPmType" data-th-index="3" data-th-prop="Type">@Model.Loc.Where(a => a.ResourceId == "GlobalType").FirstOrDefault().Value.ToString()</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@if (Convert.ToString(Session["MenuState"]) == "" || Convert.ToString(Session["MenuState"]) == "open")
+{
+    <div id="searcharea" class="slideToggleBar" style="display:none">
+        <div class="searchBoxArea">
+            <div class="form-group" style="margin-bottom:0; position:relative;">
+                <i class="fa fa-search" style="font-size: 1.1rem;position: absolute;top: 8px;left: 0px;"></i>
+                <input type="text" class="form-control searched" placeholder="Search for a view" id="prevsearctxtbox">
+            </div>
+        </div>
+
+        <div class="searchList">
+            <ul id="prevsearchListul">
+                <li id="1" class="prevsearchview"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "globalActive").FirstOrDefault().Value.ToString()</a></li>
+                <li id="2" class="prevsearchview"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "globalInActive").FirstOrDefault().Value.ToString()</a></li>
+            </ul>
+        </div>
+    </div>
+}
+else
+{
+    <div id="searcharea" class="slideToggleBar" style="display:none;left:81px !important;">
+        <div class="searchBoxArea">
+            <div class="form-group" style="margin-bottom:0; position:relative;">
+                <i class="fa fa-search" style="font-size: 1.1rem;position: absolute;top: 8px;left: 0px;"></i>
+                <input type="text" class="form-control searched" placeholder="Search for a view" id="prevsearctxtbox">
+            </div>
+        </div>
+
+        <div class="searchList">
+            <ul id="prevsearchListul">
+                <li id="1" class="prevsearchview"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "globalActive").FirstOrDefault().Value.ToString()</a></li>
+                <li id="2" class="prevsearchview"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "globalInActive").FirstOrDefault().Value.ToString()</a></li>
+            </ul>
+        </div>
+    </div>
+}
+
+@Html.Partial("_CustomizeGridSetup")
+@Html.Partial("_Export")
+
+<style type="text/css">    
+    #prevSearchTable_wrapper .buttons-excel { display: none; }
+    .clsgridreset {
+        margin-top: 0px !important;
+    }
+
+        .clsgridreset li {
+            border-left: 1px solid #ccc;
+            border-right: 0px !important;
+            padding-left: 10px !important;
+        }
+
+    @@media only screen and (min-width: 360px) and (max-width: 479px) {
+        .newBtn-add { float: left !important; margin-top: 10px !important; }
+    }
+    @@media only screen and (min-width: 320px) and (max-width: 359px) {
+        .newBtn-add { float: left !important; margin-top: 10px !important; }
+    }
+    @@media only screen and (width: 414px) {
+        .actionBar div.pull-right.marAdjst #shortDrop { margin-top: 0px !important; margin-right: 10px !important; }
+    }
+    @@media only screen and (width:411px) {
+        .newBtn-add { float: left !important; margin-top: 10px !important; }
+    }
+    @@media(max-width: 767px) { 
+        .ActionBttnArea .newBtn-add.addPreventive {
+            margin-top: 0px !important;
+        }
+        .actionBar div.pull-left {
+            width: auto !important;
+        }
+        .actionBar div.pull-right {
+            float: right !important;
+            margin-top: 0px !important;            
+            width: auto !important;
+        }
+        
+    }
+
+    @@media(max-width: 480px) {
+        .ActionBttnArea .actionDiv.pull-left {
+            width: calc(100% - 0px);
+            margin:5px 0px !important;
+        }
+        .ActionBttnArea .btn.newBtn-add.addPreventive.pull-left {
+            width:100% !important;
+        }
+    }
+</style>
+
+@Html.Partial("_EquipmentPMModal")
+@if (Model.prevMaintOptionModel.IsBusinessTypefacilities)
+{
+    @Html.Partial("_LocationPMModal")
+}
+@Html.Partial("_AssignedPMModal")
+@Html.Partial("_WorkOrderPMModal")
+@Html.Partial("_PreventiveAdvancedSearch")
+@Html.Partial("_CreatePreventiveMasterPopup")
+@Html.Partial("_SelectPmProcedureModal")
+
+
+
+

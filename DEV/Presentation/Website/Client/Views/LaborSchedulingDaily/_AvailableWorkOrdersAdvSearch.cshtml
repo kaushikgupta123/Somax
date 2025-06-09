@@ -1,0 +1,72 @@
+﻿@model Client.Models.LaborScheduling.LaborSchedulingVM
+<nav id="sidebar">
+    <div id="dismiss">
+        <i class="fa fa-close"></i>
+    </div>
+    <div class="sidebar-header">
+        <h3><i class="fa fa-filter" style="position: relative; top: -2px;"></i> @Model.Loc.Where(a => a.ResourceId == "spnFilters").FirstOrDefault().Value.ToString() <span class="filteritemcount">0</span></h3>
+        <button type="button" class="btn btn-blue filterSearch" id="btnAvailableLaborDataAdvSrch"><i class="fa fa-search" style="margin-top:-3px;"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "GlobalApply").FirstOrDefault().Value.ToString()</button>
+    </div>
+    <div class="sidebar-content" id="advsearchsidebarAvailableLabor">
+        <div class="form-group">
+            <label for="AWOWorkOrder">@Model.Loc.Where(a => a.ResourceId == "GlobalWorkOrder").FirstOrDefault().Value.ToString() :</label>
+            <input type="text" class="form-control search adv-item" id="AWOWorkOrder">
+        </div>
+        <div class="form-group">
+            <label for="AWOChargeTo">@Model.Loc.Where(a => a.ResourceId == "GlobalChargeTo").FirstOrDefault().Value.ToString() :</label>
+            <input type="text" class="form-control search adv-item" id="AWOChargeTo">
+        </div>
+        <div class="form-group">
+            <label for="AWOChargeToName">@Model.Loc.Where(a => a.ResourceId == "spnChargeToName").FirstOrDefault().Value.ToString() :</label>
+            <input type="text" class="form-control search adv-item" id="AWOChargeToName">
+        </div>
+        <div class="form-group">
+            <label for="AWODescription">@Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString() :</label>
+            <input type="text" class="form-control search adv-item" id="AWODescription">
+        </div>
+        <div class="form-group">
+            <label for="AWOStatus">@Model.Loc.Where(a => a.ResourceId == "spnStatus").FirstOrDefault().Value.ToString() :</label>
+            @*<input type="text" class="form-control search adv-item" id="AWOStatus">*@
+            @Html.DropDownListFor(m => m.AvailableSchedulingModel.Status, Model.AvailableSchedulingModel.StatusList, new { @class = "form-control search adv-item select2picker", @id = "AWOStatus", style = "width:100%;", multiple = "multiple" })
+        </div>
+        <div class="form-group">
+            <label for="AWOPriority">@Model.Loc.Where(a => a.ResourceId == "spnPriority").FirstOrDefault().Value.ToString() :</label>
+            @*<input type="text" class="form-control search decimalinput adv-item" id="AWOPriority">*@
+            @Html.DropDownListFor(m => m.AvailableSchedulingModel.Priority, Model.AvailableSchedulingModel.PriorityList, new { @class = "form-control search adv-item select2picker", style = "width:100%;", @id = "AWOPriority", multiple = "multiple" })
+        </div>
+        <div class="form-group">
+            <label for="AWODownRequired">@Model.Loc.Where(a => a.ResourceId == "spnDownRequired").FirstOrDefault().Value.ToString() :</label>
+            @*<input type="text" class="form-control search adv-item" id="AWODownRequired">*@
+            @Html.DropDownListFor(m => m.AvailableSchedulingModel.DownRequired, Model.AvailableSchedulingModel.DownRequiredInactiveFlagList, "--Select--", new { @class = "form-control search adv-item select2picker", style = "width:100%;", @id = "AWODownRequired" })
+        </div>
+        <div class="form-group">
+            <label for="AWOAssigned">@Model.Loc.Where(a => a.ResourceId == "spnAssigned").FirstOrDefault().Value.ToString() :</label>
+            @*<input type="text" class="form-control search adv-item" id="AWOAssigned">*@
+            @Html.DropDownListFor(m => m.AvailableSchedulingModel.Assigned, Model.AvailableSchedulingModel.PersonnelIdList, new { @class = "form-control search adv-item select2picker",@id= "AWOAssigned", style = "width:100%;", multiple = "multiple" })
+        </div>
+    <div class="form-group">
+        <label for="AWOWOType">@Model.Loc.Where(a => a.ResourceId == "spnWOType").FirstOrDefault().Value.ToString() :</label>
+        @*<input type="text" class="form-control search adv-item" id="AWOWOType">*@
+        @Html.DropDownListFor(m => m.AvailableSchedulingModel.Type, Model.AvailableSchedulingModel.TypeList, new { @class = "form-control search adv-item select2picker Select2-multiselect", style = "width:100%;", @id = "AWOWOType", multiple = "multiple" })
+    </div>
+        <div class="form-group">
+            <label for="AWOStartDate">@Model.Loc.Where(a => a.ResourceId == "spnStart").FirstOrDefault().Value.ToString() :</label>
+            <input type="text" class="form-control search dtpicker adv-item" id="AWOStartDate">
+        </div>
+        <div class="form-group">
+            <label for="AWODuration">@Model.Loc.Where(a => a.ResourceId == "spnDuration").FirstOrDefault().Value.ToString() :</label>
+            <input type="text" class="form-control search decimalinput adv-item" id="AWODuration">
+        </div>
+        <div class="form-group">
+            <label for="AWORequiredDate">@Model.Loc.Where(a => a.ResourceId == "spnRequiredDate").FirstOrDefault().Value.ToString() :</label>
+            <input type="text" class="form-control search dtpicker adv-item" id="AWORequiredDate">
+        </div>
+    </div>
+</nav>
+<style>
+    #advsearchsidebarAvailableLabor .select2-container--default .select2-selection--multiple {
+        height:auto !important;
+        min-height:30px !important;
+    }
+</style>
+

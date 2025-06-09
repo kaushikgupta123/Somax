@@ -1,0 +1,203 @@
+﻿@model Client.Models.VendorsVM
+
+<style>
+    #imgChargeToTree {
+        display: block !important
+    }
+
+    @@media only screen and (min-width: 1366px) and (max-width: 1599px) {
+        .openMenu
+        .chargeTree {
+            right: 70px !important;
+        }
+    }
+</style>
+
+<div class="modal-content">
+    <div class="modal-header">
+        <button type="button" class="close clearstate" data-dismiss="modal">&times;</button>
+        @if (Model.VendorInsuranceModel.VendorInsuranceId == 0)
+        {
+            <h4 class="modal-title"> @Model.Loc.Where(a => a.ResourceId == "spnAddVendorInsurance").FirstOrDefault().Value.ToString()</h4>
+        }
+        else
+        {
+            <h4 class="modal-title"> @Model.Loc.Where(a => a.ResourceId == "spnEditVendorInsurance").FirstOrDefault().Value.ToString()</h4>
+        }
+    </div>
+    @Html.Partial("_ErrorDiv")
+    <div class="modal-body">
+        <div class="form-group" style="margin-bottom:0;">
+            <div class="bottomBlock">
+                <div class="tabsArea nobg">
+                    @using (Ajax.BeginForm("AddVendorInsurance", "Vendor", new AjaxOptions { HttpMethod = "Post", OnSuccess = "AddVendorInsuranceOnSuccess", OnBegin = "AjaxBeginFormBegin", OnComplete = "AjaxBeginFormComplete", OnFailure = "AjaxBeginFormFaillure" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        <div class="tabsArea nobg">
+
+                            <ul class="listView nobrd">
+
+                                <li class="txtSrchArea txtSrch">
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnPacketSent").FirstOrDefault().Value.ToString() : </span>
+                                    <span class="inputText">
+                                        @Html.TextBoxFor(m => m.VendorInsuranceModel.PKGSent, "{0:MM/dd/yyyy}", new { @class = "form-control search dtpicker", autocomplete = "off" })
+                                        @Html.ValidationMessageFor(m => m.VendorInsuranceModel.PKGSent, "", new { style = "display:none" })
+                                    </span>
+                                </li>
+                                <li class="txtSrchArea txtSrch">
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnSentVia").FirstOrDefault().Value.ToString() : </span>
+                                    <span class="inputText ">
+                                        @Html.TextBoxFor(m => m.VendorInsuranceModel.SentVia, new { @class = "form-control search", autocomplete = "off", maxlength = 15 })
+                                        @Html.ValidationMessageFor(m => m.VendorInsuranceModel.SentVia, "", new { style = "display:none" })
+                                    </span>
+                                </li>
+                                @if (Model.VendorInsuranceModel.VendorInsuranceId > 0)
+                                {
+                                    <li class="txtSrchArea txtSrch">
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnLiabilityAgreement").FirstOrDefault().Value.ToString() : </span>
+                                        <span class="inputText">
+                                            @Html.CheckBoxFor(m => m.VendorInsuranceModel.LiabilityAgreement)
+                                            @Html.ValidationMessageFor(m => m.VendorInsuranceModel.LiabilityAgreement, "", new { style = "display:none" })
+                                        </span>
+                                    </li>
+                                    <li class="txtSrchArea txtSrch">
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnContractorReceivePacket").FirstOrDefault().Value.ToString() : </span>
+                                        <span class="inputText">
+                                            @Html.TextBoxFor(m => m.VendorInsuranceModel.PKGContractorRecBy, "{0:MM/dd/yyyy}", new { @class = "form-control search dtpicker", autocomplete = "off" })
+                                            @Html.ValidationMessageFor(m => m.VendorInsuranceModel.PKGContractorRecBy, "", new { style = "display:none" })
+                                        </span>
+                                    </li>
+                                    <li class="txtSrchArea txtSrch">
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnPacketReceived").FirstOrDefault().Value.ToString() : </span>
+                                        <span class="inputText">
+                                            @Html.TextBoxFor(m => m.VendorInsuranceModel.PKGReceiveBy, "{0:MM/dd/yyyy}", new { @class = "form-control search dtpicker", autocomplete = "off" })
+                                            @Html.ValidationMessageFor(m => m.VendorInsuranceModel.PKGReceiveBy, "", new { style = "display:none" })
+                                        </span>
+                                    </li>
+                                }
+                                <li class="txtSrchArea txtSrch">
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnCompany").FirstOrDefault().Value.ToString() : <small>*</small></span>
+                                    <span class="inputText ">
+                                        @Html.TextBoxFor(m => m.VendorInsuranceModel.Company, new { @class = "form-control search", autocomplete = "off", maxlength = 63 })
+                                        @Html.ValidationMessageFor(m => m.VendorInsuranceModel.Company, "", new { style = "display:none" })
+                                    </span>
+                                </li>
+
+                                <li class="txtSrchArea txtSrch">
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnContact").FirstOrDefault().Value.ToString() : </span>
+                                    <span class="inputText">
+                                        @Html.TextBoxFor(m => m.VendorInsuranceModel.Contact, new { @class = "form-control search", autocomplete = "off", maxlength = 31 })
+                                        @Html.ValidationMessageFor(m => m.VendorInsuranceModel.Contact, "", new { style = "display:none" })
+                                    </span>
+                                </li>
+                                <li class="txtSrchArea txtSrch">
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnInsuranceCertificate").FirstOrDefault().Value.ToString() : </span>
+                                    <span class="inputText">
+                                        @Html.TextBoxFor(m => m.VendorInsuranceModel.InsuranceCertificate, new { @class = "form-control search", autocomplete = "off", maxlength = 15 })
+                                        @Html.ValidationMessageFor(m => m.VendorInsuranceModel.InsuranceCertificate, "", new { style = "display:none" })
+                                    </span>
+                                </li>
+                                <li class="txtSrchArea txtSrch">
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnCertificateEffective").FirstOrDefault().Value.ToString() : </span>
+                                    <span class="inputText">
+                                        @Html.TextBoxFor(m => m.VendorInsuranceModel.EffectiveDate, "{0:MM/dd/yyyy}", new { @class = "form-control search dtpicker", autocomplete = "off" })
+                                        @Html.ValidationMessageFor(m => m.VendorInsuranceModel.EffectiveDate, "", new { style = "display:none" })
+                                    </span>
+                                </li>
+                                <li class="txtSrchArea txtSrch">
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnCertificateExpiration").FirstOrDefault().Value.ToString() : </span>
+                                    <span class="inputText">
+                                        @Html.TextBoxFor(m => m.VendorInsuranceModel.ExpireDate, "{0:MM/dd/yyyy}", new { @class = "form-control search dtpicker", autocomplete = "off" })
+                                        @Html.ValidationMessageFor(m => m.VendorInsuranceModel.ExpireDate, "", new { style = "display:none" })
+                                    </span>
+                                </li>
+                                @if (Model.VendorInsuranceModel.VendorInsuranceId > 0)
+                                {
+                                    <li class="txtSrchArea txtSrch">
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnPreQualifySurvey").FirstOrDefault().Value.ToString() : </span>
+                                        <span class="inputText">
+                                            @Html.CheckBoxFor(m => m.VendorInsuranceModel.PreQualifySurvey)
+                                            @Html.ValidationMessageFor(m => m.VendorInsuranceModel.PreQualifySurvey, "", new { style = "display:none" })
+                                        </span>
+                                    </li>
+                                    <li class="txtSrchArea txtSrch">
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnAdditionalInsurance").FirstOrDefault().Value.ToString() : </span>
+                                        <span class="inputText">
+                                            @Html.CheckBoxFor(m => m.VendorInsuranceModel.AdditionalInsurance)
+                                            @Html.ValidationMessageFor(m => m.VendorInsuranceModel.AdditionalInsurance, "", new { style = "display:none" })
+                                        </span>
+                                    </li>
+                                }
+                                <li class="txtSrchArea txtSrch">
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnAmount").FirstOrDefault().Value.ToString() : </span>
+                                    <span class="inputText">
+                                        @Html.TextBoxFor(m => m.VendorInsuranceModel.Amount, new { @class = "form-control search integerinput", autocomplete = "off" })
+                                        @Html.ValidationMessageFor(m => m.VendorInsuranceModel.Amount, "", new { style = "display:none" })
+                                    </span>
+                                </li>
+                                @if (Model.VendorInsuranceModel.VendorInsuranceId > 0)
+                                {
+                                    <li class="txtSrchArea txtSrch">
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnMedicalAmount").FirstOrDefault().Value.ToString() : </span>
+                                        <span class="inputText">
+                                            @Html.TextBoxFor(m => m.VendorInsuranceModel.Amount_Medical, new { @class = "form-control search integerinput", autocomplete = "off" })
+                                            @Html.ValidationMessageFor(m => m.VendorInsuranceModel.Amount_Medical, "", new { style = "display:none" })
+                                        </span>
+                                    </li>
+                                    <li class="txtSrchArea txtSrch">
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnOCCAmount").FirstOrDefault().Value.ToString() : </span>
+                                        <span class="inputText">
+                                            @Html.TextBoxFor(m => m.VendorInsuranceModel.Amount_OCC, new { @class = "form-control search integerinput", autocomplete = "off" })
+                                            @Html.ValidationMessageFor(m => m.VendorInsuranceModel.Amount_OCC, "", new { style = "display:none" })
+                                        </span>
+                                    </li>
+                                    <li class="txtSrchArea txtSrch">
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnPINAmount").FirstOrDefault().Value.ToString() : </span>
+                                        <span class="inputText">
+                                            @Html.TextBoxFor(m => m.VendorInsuranceModel.Amount_PIN, new { @class = "form-control search integerinput", autocomplete = "off" })
+                                            @Html.ValidationMessageFor(m => m.VendorInsuranceModel.Amount_PIN, "", new { style = "display:none" })
+                                        </span>
+                                    </li>
+                                }
+                            </ul>
+                        </div>
+
+                        <div style="clear:both;"></div>
+
+                        <div class="idBttns">
+                            <div class="bttn_pagin">
+                                <div class="bttns2">
+                                    <button type="submit" class="btn btn-blue mobBttn" name="SaveType" value="Add"><i class="fa fa-save faIcon"></i> &nbsp;@Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+                                </div>
+
+                                <div class="bttns"><button type="button" class="btn btn-blue mobBttn btnCancelInsurance"><i class="fa fa-close faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button></div>
+                                <div style="clear:both;"></div>
+                            </div>
+                        </div>
+                        @Html.HiddenFor(m => m.VendorInsuranceModel.VendorId)
+                        @Html.HiddenFor(m => m.VendorInsuranceModel.VendorInsuranceId)
+                        @Html.HiddenFor(m => m.VendorInsuranceModel.Vendor_InsuranceSource)
+                    }
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+<style>
+
+    .three-col-option {
+        display: flex;
+        width: calc(100% - 26px);
+    }
+
+        .three-col-option .dropdown.dropTableOuter {
+            width: 100% !important;
+        }
+
+        .three-col-option .chargeTree {
+            right: 4px !important;
+        }
+</style>

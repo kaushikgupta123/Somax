@@ -1,0 +1,74 @@
+﻿@model Client.Models.ProjectCosting.ProjectCostingVM
+<div>
+    <div class="m-portlet" id="m_portlet" style="padding:15px;">
+        <div class="bottomBlock">
+            <div id="tbldropdown" class="m-portlet" style="display:block;">
+                <div class="table-responsive dropTableOuter">
+                    <table id="ProjectCostingWorkOrderLookupTable" class="stripe dropTable globalDropTable" style="width:100%;">
+                        <thead>
+                            <tr>
+                                <th>@Model.Loc.Where(a => a.ResourceId == "spnGlobalWorkOrderID").FirstOrDefault().Value.ToString()</th>
+                                <th>@Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString()</th>
+                                <th>@Model.Loc.Where(a => a.ResourceId == "GlobalStatus").FirstOrDefault().Value.ToString()</th>
+                                <th>@Model.Loc.Where(a => a.ResourceId == "globalPlanner").FirstOrDefault().Value.ToString()</th>
+                                <th>@Model.Loc.Where(a => a.ResourceId == "spnCompleteDate").FirstOrDefault().Value.ToString()</th>
+                                <th style="text-align: right !important; padding-right: 25px;">@Model.Loc.Where(a => a.ResourceId == "spnGlobalMaterialCost").FirstOrDefault().Value.ToString()</th>
+                                <th style="text-align: right !important; padding-right: 25px;">@Model.Loc.Where(a => a.ResourceId == "spnGlobalLaborCost").FirstOrDefault().Value.ToString()</th>
+                                <th style="text-align: right !important; padding-right: 25px;">@Model.Loc.Where(a => a.ResourceId == "spnTotalCost").FirstOrDefault().Value.ToString()</th>
+                            </tr>
+                        </thead>
+                        <tfoot id="tbleqpfooter" style="display:none">
+                            <tr>
+                                <th style="position:relative;">@Model.Loc.Where(a => a.ResourceId == "spnGlobalWorkOrderID").FirstOrDefault().Value.ToString()</th>
+                                <th style="position:relative;">@Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString()</th>
+                                <th style="position:relative;">@Model.Loc.Where(a => a.ResourceId == "GlobalStatus").FirstOrDefault().Value.ToString()</th>
+                                <th style="position:relative;">@Model.Loc.Where(a => a.ResourceId == "globalPlanner").FirstOrDefault().Value.ToString()</th>
+                                <th style="position:relative;">@Model.Loc.Where(a => a.ResourceId == "spnCompleteDate").FirstOrDefault().Value.ToString()</th>
+                                <th style="position:relative;">@Model.Loc.Where(a => a.ResourceId == "spnGlobalMaterialCost").FirstOrDefault().Value.ToString()</th>
+                                <th style="position:relative;">@Model.Loc.Where(a => a.ResourceId == "spnGlobalLaborCost").FirstOrDefault().Value.ToString()</th>
+                                <th style="position:relative;">@Model.Loc.Where(a => a.ResourceId == "spnTotalCost").FirstOrDefault().Value.ToString()</th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style type="text/css">
+    table.dataTable.dropTable tbody td {
+        height: 27px;
+    }
+
+    .dropdown-content {
+        height: 400px !important;
+    }
+
+    .dropdown-modal .tbl-dropdown .dataTables_wrapper {
+        width: 100% !important;
+    }
+
+    @@media only screen and (max-width: 1367px) {
+        tfoot#tbleqpfooter th:nth-child(1) input.tfootsearchtxt {
+            width: 150px !important;
+        }
+
+        tfoot#tbleqpfooter th:nth-child(2) input.tfootsearchtxt {
+            width: 150px !important;
+        }
+
+        .dropdown-content {
+            height: 465px !important;
+        }
+    }
+
+    .table-responsive {
+        /* min-height: 81px; */
+        min-height: 100% !important;
+        height: 100% !important;
+        overflow-y: hidden;
+        max-width: 100%;
+    }
+
+</style>

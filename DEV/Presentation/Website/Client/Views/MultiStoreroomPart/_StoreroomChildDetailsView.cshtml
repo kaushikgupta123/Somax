@@ -1,0 +1,183 @@
+﻿@model Client.Models.MultiStoreroomPart.MultiStoreroomPartVM
+@{
+    Layout = null;
+    var item = Model.StoreroomInnerChild;
+
+    var VendorClientLookupIdAndName = string.IsNullOrEmpty(item.VendorClientLookupId) ? "" : item.VendorClientLookupId + " - " + item.VendorName;
+
+}
+
+
+<div class="two-col-info-box">
+    <div class="row">
+        <div class="col-sm-12 col-md-6 col-xl-6">
+            <h5>@Model.Loc.Where(a => a.ResourceId == "spnStoreroomPhysicalInventory").FirstOrDefault().Value.ToString()</h5>
+
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    @*<thead class="thead-dark">
+                            <tr>
+
+                                <th scope="col"><input type="checkbox"> Part Counted</th>
+                                <th scope="col"></th>
+
+
+                            </tr>
+                        </thead>*@
+                    <tbody>
+
+                        <tr>
+
+                            <td>
+                                @Model.Loc.Where(a => a.ResourceId == "spnLastCounted").FirstOrDefault().Value.ToString() :
+                                @if (item.LastCounted.HasValue && item.LastCounted.Value != default(DateTime))
+                                {
+                                    @item.LastCounted.Value.ToString("MM/dd/yyyy", CultureInfo.InvariantCulture)
+                                }
+                            </td>
+
+                            @*<td>Cycle :</td>*@
+
+
+
+                        </tr>
+                        <tr>
+                            @*<td>Next Count</td>*@
+                            <td>@Model.Loc.Where(a => a.ResourceId == "spnFrequency").FirstOrDefault().Value.ToString() : @item.CountFrequency</td>
+                            <td></td>
+
+                        </tr>
+                        <tr>
+                            @*<td>Next Count</td>*@
+                            <td>&nbsp;</td>
+                            <td></td>
+
+                        </tr>
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class=" col-sm-12 col-md-6 col-xl-6">
+            <h5>@Model.Loc.Where(a => a.ResourceId == "spnStorageLocations").FirstOrDefault().Value.ToString()</h5>
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th></th>
+                            <th scope="col">@Model.Loc.Where(a => a.ResourceId == "spnSection").FirstOrDefault().Value.ToString()</th>
+                            <th scope="col">@Model.Loc.Where(a => a.ResourceId == "spnRow").FirstOrDefault().Value.ToString()</th>
+                            <th scope="col">@Model.Loc.Where(a => a.ResourceId == "spnShelf").FirstOrDefault().Value.ToString()</th>
+                            <th scope="col">@Model.Loc.Where(a => a.ResourceId == "spnBin").FirstOrDefault().Value.ToString()</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td>@item.Location1_1</td>
+                            <td>@item.Location1_2</td>
+                            <td>@item.Location1_3</td>
+                            <td>@item.Location1_4</td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>@item.Location2_1</td>
+                            <td>@item.Location2_2</td>
+                            <td>@item.Location2_3</td>
+                            <td>@item.Location2_4</td>
+                        </tr>
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="two-col-info-box">
+    <div class="row">
+        <div class="col-sm-12 col-md-6 col-xl-6">
+            <h5>@item.StoreroomName</h5>
+            <div class="m-portlet" id="m_portlet">
+                <div class="bottomBlock">
+                    <div id="Identification" style="display:block;">
+                        <ul class="listView">
+                            <li>
+                                <span class="label">
+                                    <label for="Critical">
+                                        <input type="checkbox" onclick="return false;" checked="@item.Critical" /> @Model.Loc.Where(a => a.ResourceId == "spnCritical").FirstOrDefault().Value.ToString()
+                                    </label>
+                                </span>
+                                <span class="inputText" id="Critical"></span>
+                            </li>
+
+
+
+                        </ul>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-12 col-md-6 col-xl-6">
+            <h5> @Model.Loc.Where(a => a.ResourceId == "spnAutoPurchasing").FirstOrDefault().Value.ToString()</h5>
+            <div class="m-portlet" id="m_portlet">
+                <div class="bottomBlock">
+                    <div id="Identification" style="display:block;">
+                        <ul class="listView">
+                            <li>
+                                <span class="label">
+                                    <span> <input type="checkbox" onclick="return false;" checked="@item.AutoPurchase" /> @Model.Loc.Where(a => a.ResourceId == "spnInclude").FirstOrDefault().Value.ToString()  </span> &nbsp;&nbsp;&nbsp;&nbsp; <span>
+                                        @Model.Loc.Where(a => a.ResourceId == "GlobalVendor").FirstOrDefault().Value.ToString() :
+                                        @VendorClientLookupIdAndName
+                                    </span>
+                                </span>
+                            </li>
+                        </ul>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .two-col-info-box {
+        background: #fff;
+        padding: 15px 0px;
+        margin: -8px;
+    }
+
+        .two-col-info-box h5 {
+            font-family: 'Roboto', sans-serif;
+            font-size: 1rem;
+            font-weight: 500;
+            color: #575962;
+        }
+
+        .two-col-info-box ul.listView li {
+            border: 1px solid #d0d4da;
+            padding: 0px 15px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+            .two-col-info-box ul.listView li label {
+                margin-bottom: 0px;
+            }
+
+        .two-col-info-box .row .col-xl-6:first-child table tbody tr:hover, .two-col-info-box .row .col-xl-6:first-child table tbody tr:hover {
+            background-color: #fff !important;
+        }
+
+        .two-col-info-box ul.listView li span {
+            padding: 0 15px 0 0;
+            width: auto !important;
+        }
+
+    @@media(max-width: 480px) {
+        .summaryview {
+            padding: 9px 0px;
+        }
+    }
+</style>

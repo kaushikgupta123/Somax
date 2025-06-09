@@ -1,0 +1,25 @@
+﻿@{
+    ViewBag.Title = "Somax | Devices";
+}
+
+@Styles.Render("~/Content/datatable")
+<link href="~/Scripts/dropzone/basic.min.css" rel="stylesheet" />
+<link href="~/Scripts/dropzone/dropzone.min.css" rel="stylesheet" />
+<link href="~/Content/sidebar_custom.css" rel="stylesheet" />
+<link href="~/Scripts/Metronic/assets/demo/default/base/GlobalSearchGrid.css" rel="stylesheet" />
+
+@section scripts{
+    @Scripts.Render("~/bundles/datatable")
+    @Scripts.Render("~/bundles/FusionChart")
+    @Scripts.Render("~/bundles/devices")
+}
+<div id="renderdevices">
+    @if (Model.IsFromEquipment)
+    {
+        @Html.Partial("_DeviceDetails")
+    }
+    else
+    {
+        @Html.Partial("DeviceSearch")
+    }   
+</div>

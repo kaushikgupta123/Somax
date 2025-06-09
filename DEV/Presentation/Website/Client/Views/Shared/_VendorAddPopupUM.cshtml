@@ -1,0 +1,18 @@
+﻿@*@model Client.Models.Dashboard.DashboardVM*@
+<div id="AddVendorPopupModal" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-info">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">@UtilityFunction.GetMessageFromResource("VendorAddButton", LocalizeResourceSetConstants.VendorDetails)</h4>
+            </div>
+            <div class="modal-body" style="text-align:center;">
+                <button type="button" class="btn btn-blue btnRqst" id="SelectFromVenMastUM"> <i class="fa fa-hand-pointer-o faIcon"></i> &nbsp;@UtilityFunction.GetMessageFromResource("spnSelectVendorMaster", LocalizeResourceSetConstants.VendorDetails)</button>
+                <button type="button" class="btn btn-blue btnRqst" onclick="location.href='@Url.Action("Add", "Vendor",new { addfor="Job", addtype="Describe"})';return false;"><i class="fa fa-file-text-o faIcon"></i> &nbsp;@UtilityFunction.GetMessageFromResource("spnAddLocalVendor", LocalizeResourceSetConstants.VendorDetails)</button>
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+

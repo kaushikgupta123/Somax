@@ -1,0 +1,75 @@
+﻿@model Client.Models.Sanitation.SanitationVM
+
+<div class="m-subheader fixedDiv1">
+    <div class="new-m-subheader">
+        <div class="PageTitle">
+            <div class="align-items-center separator">
+                <h3 class="m-subheader__title ">
+                    @Model.Loc.Where(a => a.ResourceId == "spnSanitation").FirstOrDefault().Value.ToString()
+                </h3>
+            </div>
+        </div>
+
+        <div class="NewBreadcrumbArea">
+            <div class="newBreadcrumb">
+                <ul>
+                    <li><a href="/Dashboard/Dashboard">&nbsp;</a></li>
+                    <li><a href="/SanitationJob/Index?page=Sanitation_Jobs_Search">@Model.Loc.Where(a => a.ResourceId == "spnSanitaionJobSearch").FirstOrDefault().Value.ToString()</a></li>
+                    <li><a href="javascript:void(0)" id="brdSanitation" data-val="@Model.attachmentModel.SanitationJobId">@Model.attachmentModel.ClientLookupId</a></li>
+                    <li class="active">@Model.Loc.Where(a => a.ResourceId == "globalAddAttachment").FirstOrDefault().Value.ToString()</li>
+                </ul>
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+        <div style="clear:both;"></div>
+    </div>
+</div>
+<div class="pushDiv1"></div>
+
+<div class="row fixedDiv2">
+    @Html.Partial("_SanitationJobSummary", Model)
+</div>
+<div class="pushDiv2 partsAdjust"></div>
+@Html.Partial("_ErrorDiv")
+<form id="frmSJattachmentadd" name="frmSJattachmentadd" method="post" enctype="multipart/form-data">
+    @Html.AntiForgeryToken()
+    <div class="row">
+        <div class="col-xl-12">
+            <div class="m-portlet newPort" id="m_portlet" style="padding:15px;">
+                <div class="bottomBlock">
+                    <div class="tabsArea nobg">
+                        <ul class="listView nobrd">
+                            <li>
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "globalSubject").FirstOrDefault().Value.ToString() : </span>
+                                <span class="inputText">
+                                    @Html.TextBoxFor(m => m.attachmentModel.Subject, new { @class = "form-control search", autocomplete = "off" })
+                                </span>
+                            </li>
+                            <li>
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "atchFileName").FirstOrDefault().Value.ToString() : <small>*</small></span>
+                                <span class="inputText fileT">
+                                    @Html.SomaxAttachmentFileFor(m => m.attachmentModel.FileContent, new { autocomplete = "off", @class = "attfile" })
+                                    @Html.ValidationMessageFor(m => m.attachmentModel.FileContent, "", new { style = "display:none" })
+                                </span>
+                            </li>
+
+                        </ul>
+                    </div>
+                    <div style="clear:both;"></div>
+                    <div class="idBttns">
+                        <div class="bttn_pagin">
+                            <div class="bttns2">
+                                <button class="btn btn-blue mobBttn"><i class="fa fa-save faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+                            </div>
+                            <div class="bttns"><button type="button" class="btn btn-blue mobBttn" id="btnSJattachmentcancel"><i class="fa fa-close faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button></div>
+
+                            <div style="clear:both;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @Html.HiddenFor(m => m.attachmentModel.SanitationJobId)
+    @Html.Partial("_SanitationJobSummaryDescriptionMore", Model) @*V2-988*@
+</form>

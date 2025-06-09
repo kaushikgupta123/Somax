@@ -1,0 +1,82 @@
+﻿@model Client.Models.Invoice.InvoiceVM
+@{
+    Layout = null;
+}
+<table id="" dt-options="dtOptions" class="invMatchinnerDataTable childtable cell-border" style="width:100%">
+    <thead>
+        <tr>
+            <th>@Model.Loc.Where(a => a.ResourceId == "spnIdLineNumber").FirstOrDefault().Value.ToString()</th>
+            <th>@Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString()</th>
+            <th>@Model.Loc.Where(a => a.ResourceId == "spnIdQuantity").FirstOrDefault().Value.ToString()</th>
+            <th>@Model.Loc.Where(a => a.ResourceId == "spnUnitofMeasure").FirstOrDefault().Value.ToString()</th>
+            <th>@Model.Loc.Where(a => a.ResourceId == "spnUnitCost").FirstOrDefault().Value.ToString()</th>
+            <th>@Model.Loc.Where(a => a.ResourceId == "spnIdTotalCost").FirstOrDefault().Value.ToString()</th>
+            <th>@Model.Loc.Where(a => a.ResourceId == "spnIdPurchaseOrder").FirstOrDefault().Value.ToString()</th>
+            <th>@Model.Loc.Where(a => a.ResourceId == "spnIdAccount").FirstOrDefault().Value.ToString()</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model.InvoiceMatchItemModelList.Count > 0)
+        {
+            foreach (var inv in Model.InvoiceMatchItemModelList)
+            {
+                <tr>
+                    <td>@inv.LineNumber</td>
+                    <td>@inv.Description</td>
+                    <td>@inv.Quantity </td>
+                    <td>@inv.UnitOfMeasure</td>
+                    <td>@inv.UnitCost</td>
+                    <td>@inv.TotalCost</td>
+                    <td>@inv.PurchaseOrder</td>
+                    <td>@inv.Account</td>
+                </tr>
+            }
+        }
+    </tbody>
+    <tfoot>
+        <tr>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th style="text-align:right !important;font-weight: 500 !important;background: #b3b1b7 !important;"></th>
+            <th></th>
+            <th></th>
+        </tr>
+    </tfoot>
+</table>
+<style type="text/css">
+    .childtable tr th {
+        background: #4da5fe;
+        color: #fff !important;
+        white-space: nowrap !important;
+        text-align: center !important;
+        font-weight: 400 !important;
+    }
+
+    .link {
+        color: #235ddd;
+    }
+
+        .link:hover {
+            color: #32bf0e;
+        }
+
+    .nolink {
+        pointer-events: none;
+        color: #91a0a0;
+    }
+
+    table.dataTable thead .sorting {
+        padding-right: 15px;
+    }
+
+    table.dataTable thead .sorting_asc {
+        padding-right: 15px;
+    }
+
+    table.dataTable.display tbody tr:first-child td {
+        width: 1%;
+    }
+</style>

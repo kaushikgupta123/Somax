@@ -1,0 +1,969 @@
+﻿@model Client.Models.EquipmentCombined
+@{
+    string imageUrl = Model._EquipmentSummaryModel.ImageUrl;
+    if (Model._EquipmentSummaryModel.ClientOnPremise)
+    {
+        imageUrl = UtilityFunction.PhotoBase64ImgSrc(Model._EquipmentSummaryModel.ImageUrl);
+    }
+
+}
+<link href="~/Scripts/Metronic/assets/demo/default/base/style_newCustom.css" rel="stylesheet" />
+@Styles.Render("~/Content/somaxcommentsection")
+<div class="m-subheader fixedDiv1">
+    <div class="new-m-subheader">
+        <div class="filterDescription">
+            <a href="javascript:void(0)" id="linkToSearch"><span id="spnlinkToSearch"></span></a> - @Model.EquipData.ClientLookupId
+        </div>
+
+        <div class="ActionBttnArea">
+            @if (!Model.EquipModel.AlertFollowedEquipment)
+
+            {
+                if (Model.security.Equipment.Edit || Model.security.Equipment.Create)
+                {
+                    if (Model.security.Equipment.Edit)
+                    {
+                        <div class="actionDiv pull-left" id="ad1">
+                            <div class="btn-group bootstrap-select m-datatable__pager-size dropup show selectDrop actionNewDrop" style="margin-right:0;">
+                                <div class="btn-group bootstrap-select m-datatable__pager-size" style="width: 100%;">
+                                    <button type="button" class="btn dropdown-toggle bs-placeholder btn-default" data-toggle="dropdown" role="button" title=""><span class="filter-option pull-left">@Model.Loc.Where(a => a.ResourceId == "globalAction").FirstOrDefault().Value.ToString()</span>&nbsp;<span class="bs-caret"><span class="caret"></span></span></button>
+                                    <div class="dropdown-menu open" role="combobox">
+                                        <ul class="dropdown-menu inner" role="listbox" aria-expanded="false">
+                                            @if (Model._userdata.DatabaseKey.Client.AssetTree == true)
+                                            {
+                                                if (Model._userdata.Site.ProcessSystemTree == true)
+                                                {
+                                                    <li data-toggle="modal" id="BindTreeLookupEquipment"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnTreeLookup").FirstOrDefault().Value.ToString()</a></li>
+                                                }
+                                                else
+                                                {
+                                                    <li data-toggle="modal" id="BindTreeLookupEquipment"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnGlobalEquipmentTreeLookup").FirstOrDefault().Value.ToString()</a></li>
+                                                }
+                                            }
+                                            @if (Model.security.Equipment.Delete && Model.EquipData.AssetCategory != AssetCategoryConstant.RepairableSpare)
+                                            {
+                                                if (Model.EquipData.InactiveFlag == true)
+                                                {
+                                                    <li id="ActivateInactivateEquipment" data-id=@Model.EquipData.EquipmentId><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnGlobalActivate").FirstOrDefault().Value.ToString()</a></li>
+                                                }
+                                                if (Model.EquipData.InactiveFlag == false)
+                                                {
+                                                    <li id="ActivateInactivateEquipment" data-id=@Model.EquipData.EquipmentId><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnGlobalInactivate").FirstOrDefault().Value.ToString()</a></li>
+                                                }
+                                            }
+                                            @if (Model.security.Equipment.ChangeClientLookupId)
+                                            {
+                                                <li data-toggle="modal" id="optchangeequipid"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnChangeEquipmentId").FirstOrDefault().Value.ToString()</a></li>
+                                            }
+                                            @if (Model.security.Equipment.Model)
+                                            {
+                                                <li id="assetModelWizard"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnModel").FirstOrDefault().Value.ToString()</a></li>
+                                            }
+                                            <li data-toggle="modal" data-target="#CreatedLastUpdatedModalDetailsPage"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnCreateLastUpdate").FirstOrDefault().Value.ToString()</a></li>
+                                            @*V2-1079 EPMInvoiceImportInUse is used to check if the client is using EPM interface. There is implemented in multiple  places in this page*@
+                                            @if (Model.EPMInvoiceImportInUse)
+                                            {
+                                                <li id="printEqDetailsEPMQrCode"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "globalPrint").FirstOrDefault().Value.ToString()</a></li>
+                                            }
+                                            else
+                                            {
+                                                <li data-toggle="modal" data-target="#printEqDetailsQrCodeModal"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "globalPrint").FirstOrDefault().Value.ToString()</a></li>
+                                            }
+                                            @if (Model.security.Asset_RepairableSpare.Create)
+                                            {
+
+                                                <li id="RepairableSpareAction" data-id=@Model.EquipData.EquipmentId><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnAddRepairableSpare").FirstOrDefault().Value.ToString()</a></li>
+                                            }
+                                            @if (Model.security.Equipment.Asset_ScrapAsset)
+                                            {
+                                                if (Model.EquipData.InactiveFlag == false && Model.EquipData.Status != AssetStatusConstant.Scrapped)
+                                                {
+                                                    <li id="ScrapAsset" data-id=@Model.EquipData.EquipmentId><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnScrapAsset").FirstOrDefault().Value.ToString()</a></li>
+                                                }
+                                                if (Model.EquipData.InactiveFlag == true && Model.EquipData.Status == AssetStatusConstant.Scrapped)
+                                                {
+                                                    <li id="ReturnScrapEquipment" data-id=@Model.EquipData.EquipmentId><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnReturnScrapAsset").FirstOrDefault().Value.ToString()</a></li>
+                                                }
+                                            }
+                                            @*V2-808*@
+                                            @if (Model.security.Asset_Photos.Create)
+                                            {
+                                                <li id="lifileAssetForMobile">
+                                                    <a href="javascript:void(0)">
+                                                        <label for="files">@Model.Loc.Where(a => a.ResourceId == "spnAddPhotos").FirstOrDefault().Value.ToString()</label>
+                                                        <input id="files" accept=".jpeg,.jpg,.png,.JPEG,.JPG,.PNG" style="display:none;" type="file" value="">
+                                                    </a>
+                                                </li>
+                                            }
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    if (Model.security.Equipment.Create)
+                    {
+                        <button type="button" class="btn newBtn-add AddEquip innerBtn pull-left" id="AddEquip" title="Add Asset"><i class="fa fa-plus"></i></button>
+                    }
+                }
+                else
+                {
+                    <div class="actionDiv pull-left" id="ad1" style="margin-right:0;">
+                        <div class="btn-group bootstrap-select m-datatable__pager-size dropup show selectDrop actionNewDrop" style="margin-right:0;">
+                            <div class="btn-group bootstrap-select m-datatable__pager-size" style="width: 100%;margin-right:0;">
+                                <button type="button" class="btn dropdown-toggle bs-placeholder btn-default" data-toggle="dropdown" role="button" title=""><span class="filter-option pull-left">@Model.Loc.Where(a => a.ResourceId == "globalAction").FirstOrDefault().Value.ToString()</span>&nbsp;<span class="bs-caret"><span class="caret"></span></span></button>
+                                <div class="dropdown-menu open" role="combobox">
+                                    <ul class="dropdown-menu inner" role="listbox" aria-expanded="false">
+                                        @if (Model._userdata.DatabaseKey.Client.AssetTree == true)
+                                        {
+                                            if (Model._userdata.Site.ProcessSystemTree == true)
+                                            {
+                                                <li data-toggle="modal" id="BindTreeLookupEquipment"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnTreeLookup").FirstOrDefault().Value.ToString()</a></li>
+                                            }
+                                            else
+                                            {
+                                                <li data-toggle="modal" id="BindTreeLookupEquipment"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnGlobalEquipmentTreeLookup").FirstOrDefault().Value.ToString()</a></li>
+                                            }
+                                        }
+                                        @if (Model.security.Equipment.Delete)
+                                        {
+                                            if (Model.EquipData.InactiveFlag == true)
+                                            {
+                                                <li id="InactivateEquipment" data-id=@Model.EquipData.EquipmentId><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnGlobalInactivate").FirstOrDefault().Value.ToString()</a></li>
+                                            }
+                                            if (Model.EquipData.InactiveFlag == false)
+                                            {
+                                                <li id="ActivateEquipment" data-id=@Model.EquipData.EquipmentId><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnGlobalActivate").FirstOrDefault().Value.ToString()</a></li>
+                                            }
+                                        }
+                                        @if (Model.security.Equipment.ChangeClientLookupId)
+                                        {
+                                            <li data-toggle="modal" id="optchangeequipid"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnChangeEquipmentId").FirstOrDefault().Value.ToString()</a></li>
+                                        }
+                                        <li data-toggle="modal" data-target="#CreatedLastUpdatedModalDetailsPage"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnCreateLastUpdate").FirstOrDefault().Value.ToString()</a></li>
+                                        @if (Model.EPMInvoiceImportInUse)
+                                        {
+                                            <li id="printEqDetailsEPMQrCode"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "globalPrint").FirstOrDefault().Value.ToString()</a></li>
+                                        }
+                                        else
+                                        {
+                                            <li data-toggle="modal" data-target="#printEqDetailsQrCodeModal"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "globalPrint").FirstOrDefault().Value.ToString()</a></li>
+                                        }
+                                        @if (Model.security.Asset_RepairableSpare.Create)
+                                        {
+
+                                            <li id="RepairableSpareAction" data-id=@Model.EquipData.EquipmentId><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnAddRepairableSpare").FirstOrDefault().Value.ToString()</a></li>
+                                        }
+                                        @*V2-808*@
+                                        @if (Model.security.Asset_Photos.Create)
+                                        {
+                                            <li id="lifileAssetForMobile">
+                                                <a href="javascript:void(0)">
+                                                    <label for="files">@Model.Loc.Where(a => a.ResourceId == "spnAddPhotos").FirstOrDefault().Value.ToString()</label>
+                                                    <input id="files" accept=".jpeg,.jpg,.png,.JPEG,.JPG,.PNG" style="display:none;" type="file" value="">
+                                                </a>
+                                            </li>
+                                        }
+
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+
+            }
+            else
+            {
+                if (Model.security.Equipment.Edit || Model.security.Equipment.Create)
+                {
+                    if (Model.security.Equipment.Edit)
+                    {
+                        <div class="actionDiv pull-left" id="ad1" style="margin-right:0;">
+                            <div class="btn-group bootstrap-select m-datatable__pager-size dropup show selectDrop actionNewDrop">
+                                <div class="btn-group bootstrap-select m-datatable__pager-size" style="width: 100%;">
+
+                                    <button type="button" class="btn dropdown-toggle bs-placeholder btn-default" data-toggle="dropdown" role="button" title=""><span class="filter-option pull-left">@Model.Loc.Where(a => a.ResourceId == "spnOptions").FirstOrDefault().Value.ToString()</span>&nbsp;<span class="bs-caret"><span class="caret"></span></span></button>
+                                    <div class="dropdown-menu open" role="combobox">
+                                        <ul class="dropdown-menu inner" role="listbox" aria-expanded="false">
+                                            @if (Model._userdata.DatabaseKey.Client.AssetTree == true)
+                                            {
+                                                <li data-toggle="modal" id="BindTreeLookupEquipment"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnTreeLookup").FirstOrDefault().Value.ToString()</a></li>
+                                            }
+                                            @if (Model.security.Equipment.ChangeClientLookupId)
+                                            {
+                                                <li data-toggle="modal" data-target="#changeEquipmentIDModalDetailsPage"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnChangeEquipmentId").FirstOrDefault().Value.ToString()</a></li>
+                                            }
+                                            <li data-toggle="modal" data-target="#CreatedLastUpdatedModalDetailsPage"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnCreateLastUpdate").FirstOrDefault().Value.ToString()</a></li>
+                                            @if (Model.EPMInvoiceImportInUse)
+                                            {
+                                                <li id="printEqDetailsEPMQrCode"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "globalPrint").FirstOrDefault().Value.ToString()</a></li>
+                                            }
+                                            else
+                                            {
+                                                <li data-toggle="modal" data-target="#printEqDetailsQrCodeModal"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "globalPrint").FirstOrDefault().Value.ToString()</a></li>
+                                            }
+                                            @if (Model.security.Asset_RepairableSpare.Create)
+                                            {
+
+                                                <li id="RepairableSpareAction" data-id=@Model.EquipData.EquipmentId><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnAddRepairableSpare").FirstOrDefault().Value.ToString()</a></li>
+                                            }
+                                            @if (Model.security.Equipment.Asset_ScrapAsset)
+                                            {
+                                                if (Model.EquipData.InactiveFlag == false && Model.EquipData.Status != AssetStatusConstant.Scrapped)
+                                                {
+                                                    <li id="ScrapAsset" data-id=@Model.EquipData.EquipmentId><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnScrapAsset").FirstOrDefault().Value.ToString()</a></li>
+                                                }
+                                                if (Model.EquipData.InactiveFlag == true && Model.EquipData.Status == AssetStatusConstant.Scrapped)
+                                                {
+                                                    <li id="ReturnScrapEquipment" data-id=@Model.EquipData.EquipmentId><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnReturnScrapAsset").FirstOrDefault().Value.ToString()</a></li>
+                                                }
+                                            }
+                                            @*V2-808*@
+                                            @if (Model.security.Asset_Photos.Create)
+                                            {
+                                                <li id="lifileAssetForMobile">
+                                                    <a href="javascript:void(0)">
+                                                        <label for="files">@Model.Loc.Where(a => a.ResourceId == "spnAddPhotos").FirstOrDefault().Value.ToString()</label>
+                                                        <input id="files" accept=".jpeg,.jpg,.png,.JPEG,.JPG,.PNG" style="display:none;" type="file" value="">
+                                                    </a>
+                                                </li>
+                                            }
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    if (Model.security.Equipment.Create)
+                    {
+                        <button type="button" class="btn btn-add AddEquip innerBtn pull-left" id="AddEquip" title="Add Asset"><i class="fa fa-plus"></i></button>
+                    }
+                }
+                else
+                {
+                    <div class="actionDiv pull-left" id="ad1" style="margin-right:0;">
+                        <div class="btn-group bootstrap-select m-datatable__pager-size dropup show selectDrop actionNewDrop" style="margin-right:0;">
+                            <div class="btn-group bootstrap-select m-datatable__pager-size" style="width: 100%;margin-right:0;">
+
+                                <button type="button" class="btn dropdown-toggle bs-placeholder btn-default" data-toggle="dropdown" role="button" title=""><span class="filter-option pull-left">@Model.Loc.Where(a => a.ResourceId == "spnOptions").FirstOrDefault().Value.ToString()</span>&nbsp;<span class="bs-caret"><span class="caret"></span></span></button>
+                                <div class="dropdown-menu open" role="combobox">
+                                    <ul class="dropdown-menu inner" role="listbox" aria-expanded="false">
+                                        @if (Model._userdata.DatabaseKey.Client.AssetTree == true)
+                                        {
+                                            <li data-toggle="modal" id="BindTreeLookupEquipment"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnTreeLookup").FirstOrDefault().Value.ToString()</a></li>
+                                        }
+                                        @if (Model.security.Equipment.ChangeClientLookupId)
+                                        {
+                                            <li data-toggle="modal" data-target="#changeEquipmentIDModalDetailsPage"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnChangeEquipmentId").FirstOrDefault().Value.ToString()</a></li>
+                                        }
+                                        <li data-toggle="modal" data-target="#CreatedLastUpdatedModalDetailsPage"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnCreateLastUpdate").FirstOrDefault().Value.ToString()</a></li>
+                                        @if (Model.EPMInvoiceImportInUse)
+                                        {
+                                            <li id="printEqDetailsEPMQrCode"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "globalPrint").FirstOrDefault().Value.ToString()</a></li>
+                                        }
+                                        else
+                                        {
+                                            <li data-toggle="modal" data-target="#printEqDetailsQrCodeModal"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "globalPrint").FirstOrDefault().Value.ToString()</a></li>
+                                        }
+                                        @if (Model.security.Asset_RepairableSpare.Create)
+                                        {
+
+                                            <li id="RepairableSpareAction" data-id=@Model.EquipData.EquipmentId><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnAddRepairableSpare").FirstOrDefault().Value.ToString()</a></li>
+                                        }
+                                        @*V2-808*@
+                                        @if (Model.security.Asset_Photos.Create)
+                                        {
+                                            <li id="lifileAssetForMobile">
+                                                <a href="javascript:void(0)">
+                                                    <label for="files">@Model.Loc.Where(a => a.ResourceId == "spnAddPhotos").FirstOrDefault().Value.ToString()</label>
+                                                    <input id="files" accept=".jpeg,.jpg,.png,.JPEG,.JPG,.PNG" style="display:none;" type="file" value="">
+                                                </a>
+                                            </li>
+                                        }
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+
+            }
+            <div style="clear:both;"></div>
+        </div>
+        <div style="clear:both;"></div>
+    </div>
+</div>
+<div class="pushDiv1"></div>
+
+<div class="row fixedDiv2">
+    @Html.Partial("_EquipmentSummary", Model)
+</div>
+<div class="pushDiv2"></div>
+
+<div class="row">
+    <div class="col-xl-2">
+        <div class="m-portlet">
+            <div class="sideMenuArea nobg">
+                <ul class="vtabs" id="detmaintab">
+                    <li class="active" id="EquipmentOverview"><a href="#Equipmenttab">@Model.Loc.Where(a => a.ResourceId == "EquipmentOverview").FirstOrDefault().Value.ToString()</a></li>
+                    @if (Model.security.Asset_Photos.Access)
+                    {
+                        <li id="photot" onclick="openCity(event, 'Photos')"><a href="#Photos" id="anchPhoto">@Model.Loc.Where(a => a.ResourceId == "anchPhoto").FirstOrDefault().Value.ToString()</a></li>
+                    }
+
+                    <li id="Attachmentt" onclick="openCity(event, 'Attachment')" style="position:relative;">
+                        <a href="#Attachment" id="anchAttachment">@Model.Loc.Where(a => a.ResourceId == "spnAttachments").FirstOrDefault().Value.ToString()</a>
+                        @if (Model.attachmentCount > 0)
+                        {
+                            <span class="m-badge m-badge--danger count-badge" id="asstAttachmentCount">@Model.attachmentCount</span>
+                        }
+                    </li>
+                    @if (Model._userdata.Site.APM == true)
+                    {
+                        <li id="Sensorst" onclick="openCity(event, 'divSensors')"><a href="#divSensors" id="anchSensors">@Model.Loc.Where(a => a.ResourceId == "anchSensors").FirstOrDefault().Value.ToString()</a></li>
+                    }
+                    @if (Model._userdata.Site.CMMS == true)
+                    {
+                        <li id="Tech-Specs" onclick="openCity(event, 'TechSpecs')"><a href="#TechSpecs" id="anchTechSpec">@Model.Loc.Where(a => a.ResourceId == "anchTechSpec").FirstOrDefault().Value.ToString()</a></li>
+                        <li id="Partst" onclick="openCity(event, 'PartsContainer')"><a href="#PartsContainer" id="anchParts">@Model.Loc.Where(a => a.ResourceId == "anchParts").FirstOrDefault().Value.ToString()</a></li>
+                        <li id="Downtimet" onclick="openCity(event, 'Downtime')"><a href="#Downtime" id="anchDowntime">@Model.Loc.Where(a => a.ResourceId == "anchDowntime").FirstOrDefault().Value.ToString()</a></li>
+                        <li id="PM-List" onclick="openCity(event, 'PMList')"><a href="#PMList" id="anchPMList">@Model.Loc.Where(a => a.ResourceId == "anchPMList").FirstOrDefault().Value.ToString()</a></li>
+                        <li id="WO-Active" onclick="openCity(event, 'WOActive')"><a href="#WOActive" id="anchWOActive">@Model.Loc.Where(a => a.ResourceId == "anchWOActive").FirstOrDefault().Value.ToString()</a></li>
+                        <li id="WO-Complete" onclick="openCity(event, 'WOComplete')"><a href="#WOComplete" id="anchWoComplete">@Model.Loc.Where(a => a.ResourceId == "anchWoComplete").FirstOrDefault().Value.ToString()</a></li>
+                        <li id="Part-Issues" onclick="openCity(event, 'PartIssues')"><a href="#PartIssues" id="anchPartIssues">@Model.Loc.Where(a => a.ResourceId == "anchPartIssues").FirstOrDefault().Value.ToString()</a></li>
+                    }
+                </ul>
+            </div>
+            <div class="selectTabs" id="selectTabs">
+                <select class="form-control" id="colorselector">
+                    <option value="Equipmenttab">@Model.Loc.Where(a => a.ResourceId == "EquipmentOverview").FirstOrDefault().Value.ToString()</option>
+                    @if (Model.security.Asset_Photos.Access)
+                    {
+                        <option value="Photos">@Model.Loc.Where(a => a.ResourceId == "anchPhoto").FirstOrDefault().Value.ToString()</option>
+                    }
+
+
+                    <option value="Attachment">@Model.Loc.Where(a => a.ResourceId == "globalAttachment").FirstOrDefault().Value.ToString()</option>
+
+                    @if (Model._userdata.Site.APM == true)
+                    {
+                        <option value="divSensors">@Model.Loc.Where(a => a.ResourceId == "anchSensors").FirstOrDefault().Value.ToString()</option>
+                    }
+                    @if (Model._userdata.Site.CMMS == true)
+                    {
+                        <option value="TechSpecs">@Model.Loc.Where(a => a.ResourceId == "anchTechSpec").FirstOrDefault().Value.ToString()</option>
+                        <option value="PartsContainer">@Model.Loc.Where(a => a.ResourceId == "anchParts").FirstOrDefault().Value.ToString()</option>
+                        <option value="Downtime">@Model.Loc.Where(a => a.ResourceId == "anchDowntime").FirstOrDefault().Value.ToString()</option>
+                        <option value="PMList">@Model.Loc.Where(a => a.ResourceId == "anchPMList").FirstOrDefault().Value.ToString()</option>
+                        <option value="WOActive">@Model.Loc.Where(a => a.ResourceId == "anchWOActive").FirstOrDefault().Value.ToString()</option>
+                        <option value="WOComplete">@Model.Loc.Where(a => a.ResourceId == "anchWoComplete").FirstOrDefault().Value.ToString()</option>
+                        <option value="PartIssues">@Model.Loc.Where(a => a.ResourceId == "anchPartIssues").FirstOrDefault().Value.ToString()</option>
+                    }
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-10">
+
+        <div class="row">
+            @if (Model._userdata.Site.APM == true || Model._userdata.Site.CMMS == true || Model._userdata.Site.Sanitation == true)
+            {
+                <div class="col-xl-6" id="btnnblock">
+                    <div class="m-portlet" id="m_portlet" style="padding:15px;">
+                        <div class="bottomBlock">
+                            @if ((Model._userdata.Site.APM == false && Model._userdata.Site.CMMS == true) || (Model._userdata.Site.APM == true && Model._userdata.Site.CMMS == false) || (Model._userdata.Site.APM == true && Model._userdata.Site.CMMS == true) || (Model._userdata.Site.APM == false && Model._userdata.Site.CMMS == false && Model._userdata.Site.Sanitation == true))
+                            {
+                                <div class="tabsArea nobg" id="Equipmenttab" style="display:block;">
+
+                                    <div>
+                                        <ul class="listView">
+                                            @Html.Partial("~/Views/Equipment/RepairableSpare/_RepairableSpareEquipmentView.cshtml", Model)
+                                        </ul>
+                                    </div>
+
+                                    <div class="editBttn">
+                                        @if (Model.security.Asset_RepairableSpare.Edit)
+                                        {
+                                            <button type="button" class="btn btn-blue" id="RepairableAssetEdit"><i class="fa fa-pencil" style="margin-top:-3px;"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalEdit").FirstOrDefault().Value.ToString()</button>
+                                            <div style="clear:both;"></div>
+                                        }
+                                    </div>
+                                </div>
+                                <div class="tabsArea nobg imageDropZone" id="Photos" style="display:none;">
+                                    <div class="row">
+
+                                        @if (Model.security.Asset_Photos.Access)
+                                        {
+                                            <div id="ImageGrid" style="width:100%">
+                                                <div class="lds-ellipsis lds-adjust" id="imagedataloader" style="display:none;">
+                                                    <div></div>
+                                                    <div></div>
+                                                    <div></div>
+                                                    <div></div>
+                                                </div>
+                                                @Html.Partial("/Views/Equipment/RepairableSpare/_ImageGrid.cshtml")
+
+                                            </div>
+                                            if (Model.security.Asset_Photos.Create /*&& (Model.security.Equipment.Edit && (Model._userdata.Site.APM == false && Model._userdata.Site.CMMS == true) || (Model._userdata.Site.APM == true && Model._userdata.Site.CMMS == false) || (Model._userdata.Site.APM == true && Model._userdata.Site.CMMS == true) || (Model._userdata.Site.APM == true && Model._userdata.Site.CMMS == true) || (Model._userdata.Site.APM == false && Model._userdata.Site.CMMS == false && Model._userdata.Site.Sanitation == true))*/)
+                                            {
+                                                <div class="bttns" style="margin-left:15px" id="divfileAsset">
+                                                    <label for="files" class="btn btn-blue"><i class="fa fa-plus faIcon"></i>@Model.Loc.Where(a => a.ResourceId == "spnAddPhotos").FirstOrDefault().Value.ToString()</label>
+                                                    <input id="files" accept=".jpeg,.jpg,.png,.JPEG,.JPG,.PNG" style="visibility:hidden;" type="file" value="">
+                                                </div>
+                                            }
+                                        }
+                                    </div>
+                                </div>
+
+                                <div class="tabsArea nobg" id="Attachment" style="display:none;">
+                                    <div class="table-responsive">
+                                        <table id="AttachTable" class="eqpDtlTbl row-border custom-sort" style="width:100%;">
+                                            <thead>
+                                                <tr>
+                                                    <th>@Model.Loc.Where(a => a.ResourceId == "globalSubject").FirstOrDefault().Value.ToString()</th>
+                                                    <th>@Model.Loc.Where(a => a.ResourceId == "globalFileName").FirstOrDefault().Value.ToString()</th>
+                                                    <th>@Model.Loc.Where(a => a.ResourceId == "globalFileSize").FirstOrDefault().Value.ToString()</th>
+                                                    <th>@Model.Loc.Where(a => a.ResourceId == "globalOwner").FirstOrDefault().Value.ToString()</th>
+                                                    <th>@Model.Loc.Where(a => a.ResourceId == "globalCreateDate").FirstOrDefault().Value.ToString()</th>
+                                                    <th width="17%" style="text-align:center !important;">@Model.Loc.Where(a => a.ResourceId == "globalAction").FirstOrDefault().Value.ToString()</th>
+                                                </tr>
+                                            </thead>
+                                        </table>
+                                    </div>
+                                    <div class="bttn_pagin">
+                                        <div class="bttns"><button type="button" class="btn btn-blue" data-toggle="" data-target="" id="btnAddAttachment"><i class="fa fa-plus"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalAddAttachment").FirstOrDefault().Value.ToString()</button></div>
+                                        <div style="clear:both;"></div>
+                                    </div>
+                                    <div style="clear:both;"></div>
+                                </div>
+                            }
+                            @if ((Model._userdata.Site.APM == true && Model._userdata.Site.CMMS == false) || (Model._userdata.Site.APM == true && Model._userdata.Site.CMMS == true))
+                            {
+                                <div id="divSensors" class="tabsArea nobg" style="display:none;">
+                                    <div class="table-responsive">
+                                        <table id="sensorTable" class="eqpDtlTbl row-border custom-sort" style="width:100%;">
+                                            <thead>
+                                                <tr>
+                                                    <th style="text-align:center !important;">@Model.Loc.Where(a => a.ResourceId == "spnSensorID").FirstOrDefault().Value.ToString()</th>
+                                                    <th>@Model.Loc.Where(a => a.ResourceId == "spnName").FirstOrDefault().Value.ToString()</th>
+                                                    <th>@Model.Loc.Where(a => a.ResourceId == "GlobalType").FirstOrDefault().Value.ToString()</th>
+                                                    <th style="text-align:right !important;">@Model.Loc.Where(a => a.ResourceId == "spnLastReading").FirstOrDefault().Value.ToString()</th>
+                                                    <th>@Model.Loc.Where(a => a.ResourceId == "spnUnit").FirstOrDefault().Value.ToString()</th>
+                                                    <th>@Model.Loc.Where(a => a.ResourceId == "spnLastReadingDate").FirstOrDefault().Value.ToString()</th>
+                                                    <th>@Model.Loc.Where(a => a.ResourceId == "globalInActive").FirstOrDefault().Value.ToString()</th>
+                                                </tr>
+                                            </thead>
+                                        </table>
+                                    </div>
+                                </div>
+                            }
+                            @if ((Model._userdata.Site.APM == false && Model._userdata.Site.CMMS == true) || (Model._userdata.Site.APM == true && Model._userdata.Site.CMMS == true))
+                            {
+                                <div id="TechSpecs" class="tabsArea nobg" style="display:none;">
+                                    <div class="table-responsive">
+                                        <table id="techSpecsTable" class="eqpDtlTbl row-border custom-sort" style="width:100%">
+                                            <thead>
+                                                <tr>
+                                                    <th>@Model.Loc.Where(a => a.ResourceId == "spnSpecification").FirstOrDefault().Value.ToString()</th>
+                                                    <th>@Model.Loc.Where(a => a.ResourceId == "spnValue").FirstOrDefault().Value.ToString()</th>
+                                                    @*
+                                                        <th>@Model.Loc.Where(a => a.ResourceId == "spnUnit").FirstOrDefault().Value.ToString()</th>*@   @*V2-295*@
+                                                        <th>@Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString()</th>
+                                                        <th>@Model.Loc.Where(a => a.ResourceId == "spnLogComment").FirstOrDefault().Value.ToString()</th>
+                                                        <th width="17%" style="text-align:center !important;">@Model.Loc.Where(a => a.ResourceId == "globalAction").FirstOrDefault().Value.ToString()</th>
+                                                    </tr>
+                                                </thead>
+                                            </table>
+                                        </div>
+                                        <div class="bttn_pagin">
+
+                                            <div class="bttns"><button type="button" class="btn btn-blue" data-toggle="" data-target="" id="btnAddTechSpecs" style="display:none;"><i class="fa fa-plus"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "spnAddTechSpecs").FirstOrDefault().Value.ToString()</button></div>
+                                            <div style="clear:both;"></div>
+                                        </div>
+                                    </div>
+                                    <div id="PartsContainer" class="tabsArea nobg" style="display:none;">
+                                        <div class="table-responsive">
+                                            <table id="partsTable" class="eqpDtlTbl row-border custom-sort" style="width:100%;">
+                                                <thead>
+                                                    <tr>
+                                                        <th>@Model.Loc.Where(a => a.ResourceId == "spnPartID").FirstOrDefault().Value.ToString()</th>
+                                                        <th>@Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString()</th>
+                                                        <th>@Model.Loc.Where(a => a.ResourceId == "spnQtyNeeded").FirstOrDefault().Value.ToString()</th>
+                                                        <th>@Model.Loc.Where(a => a.ResourceId == "spnQtyUsed").FirstOrDefault().Value.ToString()</th>
+                                                        <th>@Model.Loc.Where(a => a.ResourceId == "spnLogComment").FirstOrDefault().Value.ToString()</th>
+                                                        <th width="17%" style="text-align:center !important;">@Model.Loc.Where(a => a.ResourceId == "globalAction").FirstOrDefault().Value.ToString()</th>
+                                                    </tr>
+                                                </thead>
+                                            </table>
+                                        </div>
+                                        <div class="bttn_pagin">
+                                            @*<div class="bttns"><button type="button" class="btn btn-blue" data-toggle="" data-target="" id="btnAddParts" style="display:none;"><i class="fa fa-plus"></i> &nbsp; Add Parts</button></div>*@
+                                            <div class="bttns"><button type="button" class="btn btn-blue" data-toggle="" data-target="" id="btnAddParts" style="display:none;"><i class="fa fa-plus"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "spnAddParts").FirstOrDefault().Value.ToString()</button></div>
+                                            <div style="clear:both;"></div>
+                                        </div>
+                                    </div>
+                                    <div id="Downtime" class="tabsArea nobg" style="display:none;">
+                                        <div class="table-responsive">
+                                            <table id="downtimeTable" class="eqpDtlTbl row-border custom-sort" style="width:100%;">
+                                                <thead>
+                                                    <tr>
+                                                        <th>@Model.Loc.Where(a => a.ResourceId == "GlobalWorkOrder").FirstOrDefault().Value.ToString()</th>
+                                                        <th>@Model.Loc.Where(a => a.ResourceId == "GlobalDate").FirstOrDefault().Value.ToString()</th>
+                                                        <th style="text-align: right !important;width:60px !important">@Model.Loc.Where(a => a.ResourceId == "globalMinutes").FirstOrDefault().Value.ToString()</th>
+                                                        @*For V2-695*@
+                                                        <th>@Model.Loc.Where(a => a.ResourceId == "spnReasonForDown").FirstOrDefault().Value.ToString()</th>
+                                                        <th width="17%" style="text-align:center !important;">@Model.Loc.Where(a => a.ResourceId == "globalAction").FirstOrDefault().Value.ToString()</th>
+                                                    </tr>
+                                                </thead>
+                                                <tfoot id="downtimeTablefoot">
+
+                                                </tfoot>
+                                            </table>
+                                        </div>
+                                        <div class="bttn_pagin">
+                                            <div class="bttns"><button type="button" class="btn btn-blue" data-toggle="" data-target="" id="btnAddDownTime" style="display:none;"><i class="fa fa-plus"></i> &nbsp; Add Downtime</button></div>
+                                            <div style="clear:both;"></div>
+                                        </div>
+                                    </div>
+                                    <div id="PMList" class="tabsArea nobg" style="display:none;">
+                                        <div class="table-responsive">
+                                            <table id="pmTable" class="eqpDtlTbl row-border custom-sort" style="width:100%;">
+                                                <thead>
+                                                    <tr>
+                                                        <th>@Model.Loc.Where(a => a.ResourceId == "spnMasterJobID").FirstOrDefault().Value.ToString()</th>
+                                                        <th>@Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString()</th>
+                                                        <th>@Model.Loc.Where(a => a.ResourceId == "spnLastScheduled").FirstOrDefault().Value.ToString()</th>
+                                                        <th>@Model.Loc.Where(a => a.ResourceId == "spnLastPerformed").FirstOrDefault().Value.ToString()</th>
+                                                        <th>@Model.Loc.Where(a => a.ResourceId == "spnAssignedTo").FirstOrDefault().Value.ToString()</th>
+                                                        <th width="17%" style="text-align:center !important;">@Model.Loc.Where(a => a.ResourceId == "globalAction").FirstOrDefault().Value.ToString()</th>
+                                                    </tr>
+                                                </thead>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <div id="WOActive" class="tabsArea nobg" style="display:none;">
+                                        <div class="actionBar">
+                                            <div class="pull-left">
+                                                <button type="button" class="btn btn-white navbar-btn" id="woactivesidebarCollapse" title="Advance Search"><i class="fa fa-filter" style="font-size: 1.3rem;"></i></button>
+                                                <ul class="filter_apply globalFilterAdjusted">
+                                                    <li class="textFilter"><span class="woactivefilteritemcount">0</span>&nbsp;@Model.Loc.Where(a => a.ResourceId == "globalFiltersAppiled").FirstOrDefault().Value.ToString()</li>
+                                                    <li class="textClear" id="woactiveliClearAdvSearchFilter"><a id="clearAll" href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "globalClear").FirstOrDefault().Value.ToString()</a></li>
+                                                </ul>
+                                                <div style="clear:both;"></div>
+                                            </div>
+                                            <div style="clear:both;"></div>
+                                            <div id="woactiveadvsearchfilteritems"></div>
+                                            <div style="clear:both;"></div>
+                                        </div>
+
+                                        <div class="table-responsive">
+                                            <table id="woActiveTable" class="eqpDtlTbl row-border custom-sort" style="width:100%;">
+                                                <thead>
+                                                    <tr>
+                                                        <th>@Model.Loc.Where(a => a.ResourceId == "GlobalWorkOrder").FirstOrDefault().Value.ToString()</th>
+                                                        <th>@Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString()</th>
+                                                        <th>@Model.Loc.Where(a => a.ResourceId == "spnWorkAssigned").FirstOrDefault().Value.ToString()</th>
+                                                        <th>@Model.Loc.Where(a => a.ResourceId == "spnStatus").FirstOrDefault().Value.ToString()</th>
+                                                        <th>@Model.Loc.Where(a => a.ResourceId == "GlobalType").FirstOrDefault().Value.ToString()</th>
+                                                        <th>@Model.Loc.Where(a => a.ResourceId == "globalCreateDate").FirstOrDefault().Value.ToString()</th>
+                                                    </tr>
+                                                </thead>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <div id="WOComplete" class="tabsArea nobg" style="display:none;">
+                                        <div class="actionBar">
+                                            <div class="pull-left">
+                                                <button type="button" class="btn btn-white navbar-btn" id="wocompletesidebarCollapse" title="Advance Search"><i class="fa fa-filter" style="font-size: 1.3rem;"></i></button>
+                                                <ul class="filter_apply globalFilterAdjusted">
+                                                    <li class="textFilter" id="liSelectCount"><span class="wocompletefilteritemcount">0</span>&nbsp;@Model.Loc.Where(a => a.ResourceId == "globalFiltersAppiled").FirstOrDefault().Value.ToString() </li>
+                                                    <li class="textClear" id="wocompleteClearAdvSearchFilter"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "globalClear").FirstOrDefault().Value.ToString()</a></li>
+                                                </ul>
+                                                <div style="clear:both;"></div>
+                                            </div>
+                                            <div style="clear:both;"></div>
+                                            <div id="wocompletesearchfilteritems"></div>
+                                            <div style="clear:both;"></div>
+                                        </div>
+
+                                        <div class="table-responsive">
+                                            <table id="woCompleteTable" class="eqpDtlTbl row-border custom-sort" style="width:100%;">
+                                                <thead>
+                                                    <tr>
+                                                        <th>@Model.Loc.Where(a => a.ResourceId == "GlobalWorkOrder").FirstOrDefault().Value.ToString()</th>
+                                                        <th>@Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString()</th>
+                                                        <th>@Model.Loc.Where(a => a.ResourceId == "spnWorkAssigned").FirstOrDefault().Value.ToString()</th>
+                                                        <th>@Model.Loc.Where(a => a.ResourceId == "spnStatus").FirstOrDefault().Value.ToString()</th>
+                                                        <th>@Model.Loc.Where(a => a.ResourceId == "GlobalType").FirstOrDefault().Value.ToString()</th>
+                                                        <th>@Model.Loc.Where(a => a.ResourceId == "globalCreateDate").FirstOrDefault().Value.ToString()</th>
+                                                    </tr>
+                                                </thead>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <div id="PartIssues" class="tabsArea nobg" style="display:none;">
+                                        <div class="actionBar">
+                                            <div class="pull-left">
+                                                <button type="button" class="btn btn-white navbar-btn" id="partIssuesidebarCollapse" title="Advance Search"><i class="fa fa-filter" style="font-size: 1.3rem;"></i></button>
+                                                <ul class="filter_apply globalFilterAdjusted">
+                                                    <li class="textFilter" id="liSelectCount"><span class="partissuefilteritemcount">0</span>&nbsp;@Model.Loc.Where(a => a.ResourceId == "globalFiltersAppiled").FirstOrDefault().Value.ToString() </li>
+                                                    <li class="textClear" id="partissueClearAdvSearchFilter"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "globalClear").FirstOrDefault().Value.ToString()</a></li>
+                                                </ul>
+                                                <div style="clear:both;"></div>
+                                            </div>
+                                            <div style="clear:both;"></div>
+                                            <div id="partissuesearchfilteritems"></div>
+                                            <div style="clear:both;"></div>
+                                        </div>
+                                        <div class="table-responsive">
+                                            <table id="partIssuesTable" class="eqpDtlTbl row-border custom-sort" style="width:100%;">
+                                                <thead>
+                                                    <tr>
+                                                        <th>@Model.Loc.Where(a => a.ResourceId == "spnPartID").FirstOrDefault().Value.ToString()</th>
+                                                        <th>@Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString()</th>
+                                                        <th>@Model.Loc.Where(a => a.ResourceId == "spnDate").FirstOrDefault().Value.ToString()</th>
+                                                        <th>@Model.Loc.Where(a => a.ResourceId == "GlobalChargeTo").FirstOrDefault().Value.ToString()</th>
+                                                        <th>@Model.Loc.Where(a => a.ResourceId == "spnQuantity").FirstOrDefault().Value.ToString()</th>
+                                                        <th>@Model.Loc.Where(a => a.ResourceId == "spnUnit").FirstOrDefault().Value.ToString()</th>
+                                                        <th>@Model.Loc.Where(a => a.ResourceId == "spnCosts").FirstOrDefault().Value.ToString()</th>
+                                                        <th>@Model.Loc.Where(a => a.ResourceId == "spnIssuedTo").FirstOrDefault().Value.ToString()</th>
+                                                    </tr>
+                                                </thead>
+                                            </table>
+                                        </div>
+                                    </div>
+                                }
+                        </div>
+                    </div>
+                </div>
+            }
+
+            <div class="col-xl-6" id="auditlogcontainer">
+                @if (Model.EquipData.AssetCategory == AssetCategoryConstant.RepairableSpare)
+                {
+                    @Html.Partial("~/Views/Equipment/RepairableSpare/_RepairableSpareAssignmentWidget.cshtml")
+                }
+                @if (Model.IsAssetAvailability && (Model.EquipData.AssetCategory == AssetCategoryConstant.Equipment ||
+                Model.EquipData.AssetCategory == AssetCategoryConstant.Location ||
+                Model.EquipData.AssetCategory != AssetCategoryConstant.RepairableSpare))
+                {
+                    if (Model.EquipData.RemoveFromService == false)
+                    {
+                        @Html.Partial("_AssetAvailability")
+                    }
+                    else
+                    {
+                        @Html.Partial("_AssetAvailabilityOutOfService")
+                    }
+                }
+
+                <div class="lds-ellipsis lds-adjust" id="commentsdataloader" style="display:none;">
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                </div>
+                @Html.Partial("_CommentLogs")
+            </div>
+        </div>
+    </div>
+</div>
+
+@if ((Model._userdata.Site.APM == true && Model._userdata.Site.CMMS == false) || (Model._userdata.Site.APM == true && Model._userdata.Site.CMMS == true))
+{
+    <div id="mySensorModal" class="modal fade" role="dialog">
+        <div class="modal-dialog modal-info">
+            <div class="modal-content" id="SensorModalContent">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" id="btnSensorClose">&times;</button>
+                    <h4 class="modal-title" id="btnSelectSensor">@Model.Loc.Where(a => a.ResourceId == "btnSelectSensor").FirstOrDefault().Value.ToString()</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="table-responsive">
+                        <table id="sensorSearchTable" class="eqpDtlTbl row-border custom-sort" style="width:100% !important;">
+                            <thead>
+                                <tr>
+                                    <th style="text-align:center;">
+                                        <input name="select_all" value="1" id="example-select-all-sensor" type="checkbox" />
+                                    </th>
+                                    <th>@Model.Loc.Where(a => a.ResourceId == "spnSensorName").FirstOrDefault().Value.ToString()</th>
+                                    <th>@Model.Loc.Where(a => a.ResourceId == "spnSensorID").FirstOrDefault().Value.ToString()</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="bttn_pagin">
+                        <div class="bttns">
+                            <button type="button" class="btn btn-blue" id="btnAddSensor"><i class="fa fa-plus faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "btnAddSensor").FirstOrDefault().Value.ToString()</button>
+                            <button type="button" class="btn btn-blue" id="btnCancelSensor" style="display:none"><i class="fa fa-close faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button>
+                        </div>
+                        <div style="clear:both;"></div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+}
+
+<div id="myEquipmentTreeModal" class="modal fade" role="dialog" style="padding-right:0;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            @if (Model._userdata.Site.ProcessSystemTree == true)
+            {
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title" id="hdrPlantLocation">@Model.Loc.Where(a => a.ResourceId == "hdrTreeLookupGlobal").FirstOrDefault().Value.ToString()</h4>
+                </div>
+            }
+            else
+            {
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title" id="hdrPlantLocation">@Model.Loc.Where(a => a.ResourceId == "spnGlobalEquipmentTreeLookup").FirstOrDefault().Value.ToString()</h4>
+                </div>
+            }
+            <div class="modal-body">
+                <div class="cntTree">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="printqrdetailscodemodalcontainer"></div>
+@Html.Partial("~/Views/Equipment/_EqpChildrenPopup.cshtml")
+
+@Html.HiddenFor(m => m.Mode)
+@Html.HiddenFor(m => m.EquipData.EquipmentId)
+@Html.HiddenFor(m => m.EquipData.ClientLookupId)
+@Html.HiddenFor(m => m.EquipData.Name)
+@Html.HiddenFor(m => m.EquipData.SerialNumber)
+@Html.HiddenFor(m => m.EquipData.Make)
+@Html.HiddenFor(m => m.EquipData.Model)
+@Html.HiddenFor(m => m.EquipData.Status)
+@Html.HiddenFor(m => m.EquipData.RemoveFromService)
+@Html.HiddenFor(m => m.EquipData.InactiveFlag, new { id = "EqpStatus" })
+@Html.HiddenFor(m => m._EquipmentSummaryModel.ClientOnPremise, new { id = "EquipmentSummaryModel_ClientOnPremise" })
+@Html.HiddenFor(m => m._userdata.DatabaseKey.Client.UseMultiStoreroom, new { id = "UseMultiStoreroom" })@*V2-1007*@
+
+@*V2-1115*@
+@Html.HiddenFor(m => m.EPMInvoiceImportInUse)
+@if (Model.EPMInvoiceImportInUse)
+{
+    for (int loop = 0; loop < Model.qRCodeModel.EquipmentIdsList.Count; loop++)
+    {
+        @Html.HiddenFor(m => m.qRCodeModel.EquipmentIdsList[loop])
+    }
+}
+else
+{
+    @Html.Partial("_EquipmentDetailsQRCode")
+}
+@*V2-1115*@
+<div id="woactiveadvsearchcontainer">
+    @Html.Partial("_WOActiveAdvanceSearch", Model)
+</div>
+<div id="wocompleteadvsearchcontainer">
+    @Html.Partial("_WOCompleteAdvanceSearch", Model)
+</div>
+<div id="partissueadvsearchcontainer">
+    @Html.Partial("_PartIssuesAdvanceSearch", Model)
+</div>
+
+<script type="text/javascript">
+    var InactiveFlag = '@Model.EquipData.InactiveFlag';
+    var x, i, j, selElmnt, a, b, c;
+    /*look for any elements with the class "new-custom-select":*/
+    x = document.getElementsByClassName("new-custom-select");
+    for (i = 0; i < x.length; i++) {
+        selElmnt = x[i].getElementsByTagName("select")[0];
+        /*for each element, create a new DIV that will act as the selected item:*/
+        a = document.createElement("DIV");
+        a.setAttribute("class", "select-selected");
+        a.innerHTML = selElmnt.options[selElmnt.selectedIndex].innerHTML;
+        x[i].appendChild(a);
+        /*for each element, create a new DIV that will contain the option list:*/
+        b = document.createElement("DIV");
+        b.setAttribute("class", "select-items select-hide");
+        for (j = 0; j < selElmnt.length; j++) {
+            /*for each option in the original select element,
+            create a new DIV that will act as an option item:*/
+            c = document.createElement("DIV");
+            c.innerHTML = selElmnt.options[j].innerHTML;
+            c.addEventListener("click", function (e) {
+                /*when an item is clicked, update the original select box,
+                and the selected item:*/
+                var y, i, k, s, h;
+                s = this.parentNode.parentNode.getElementsByTagName("select")[0];
+                h = this.parentNode.previousSibling;
+                for (i = 0; i < s.length; i++) {
+                    if (s.options[i].innerHTML == this.innerHTML) {
+                        s.selectedIndex = i;
+                        h.innerHTML = this.innerHTML;
+                        y = this.parentNode.getElementsByClassName("same-as-selected");
+                        for (k = 0; k < y.length; k++) {
+                            y[k].removeAttribute("class");
+                        }
+                        this.setAttribute("class", "same-as-selected");
+                        break;
+                    }
+                }
+                h.click();
+            });
+            b.appendChild(c);
+        }
+        x[i].appendChild(b);
+        a.addEventListener("click", function (e) {
+            /*when the select box is clicked, close any other select boxes,
+            and open/close the current select box:*/
+            e.stopPropagation();
+            closeAllSelect(this);
+            this.nextSibling.classList.toggle("select-hide");
+            this.classList.toggle("select-arrow-active");
+        });
+
+
+
+        // get first child
+        var ccd = b.childNodes;
+        console.log(ccd[0].setAttribute("class", "same-as-selected"));
+    }
+    function closeAllSelect(elmnt) {
+        /*a function that will close all select boxes in the document,
+        except the current select box:*/
+        var x, y, i, arrNo = [];
+        x = document.getElementsByClassName("select-items");
+        y = document.getElementsByClassName("select-selected");
+        for (i = 0; i < y.length; i++) {
+            if (elmnt == y[i]) {
+                arrNo.push(i)
+            } else {
+                y[i].classList.remove("select-arrow-active");
+            }
+        }
+        for (i = 0; i < x.length; i++) {
+            if (arrNo.indexOf(i)) {
+                x[i].classList.add("select-hide");
+            }
+        }
+    }
+    /*if the user clicks anywhere outside the select box,
+    then close all select boxes:*/
+    document.addEventListener("click", closeAllSelect);
+</script>
+
+<style type="text/css">
+    table.dataTable thead th, table.dataTable thead td {
+        border-bottom: 0px solid #fff;
+    }
+
+    .loader {
+        border: 5px solid #f3f3f3;
+        border-radius: 50%;
+        border-top: 5px solid #3498db;
+        width: 30px;
+        height: 30px;
+        -webkit-animation: spin 2s linear infinite; /* Safari */
+        animation: spin 2s linear infinite;
+    }
+    /* Safari */
+    @@-webkit-keyframes spin {
+        0% {
+            -webkit-transform: rotate(0deg);
+        }
+
+        100% {
+            -webkit-transform: rotate(360deg);
+        }
+    }
+
+    @@keyframes spin {
+        0% {
+            transform: rotate(0deg);
+        }
+
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+
+    .padAdjstNew {
+        padding: 0 10px 10px 10px;
+    }
+
+    .count-badge {
+        position: absolute;
+        right: 30px;
+        top: 7px;
+    }
+
+    /**************** Activity & Comments ****************/
+    @@media screen and (max-width: 567px) {
+        .filterDescription {
+            width: 100%;
+            float: none;
+        }
+    }
+
+    .filterDescription {
+        width: auto;
+        float: left;
+        font-size: 1.2rem;
+        color: #000;
+        font-weight: 500;
+        line-height: 33px;
+    }
+
+        .filterDescription a {
+            color: #36a3f7;
+            text-decoration: none !important;
+        }
+</style>
+
+@Html.Partial("_CreatedLastUpdatedModal")
+@if (Model.security.Equipment.Edit)
+{
+    @Html.Partial("_ChangeEquipmentIDModal")
+}
+@Html.Partial("_NotesLogDetailModal")
+@Html.Partial("_StatusDetailsLocalization")
+@if (Model.IsAssetAvailability && (Model.EquipData.AssetCategory == AssetCategoryConstant.Equipment ||
+                Model.EquipData.AssetCategory == AssetCategoryConstant.Location || Model.EquipData.AssetCategory == AssetCategoryConstant.RepairableSpare)) // V2-636
+{
+    if (Model.EquipData.RemoveFromService == false)
+    {
+        @Html.Partial("_AssetAvailabilityModalRemove")
+    }
+    else
+    {
+        @Html.Partial("_AssetAvailabilityModalUpdate")
+    }
+
+    @Html.Partial("_AssetAvailabilityLogPopup")
+}
+<div id="RepairableSpareAssetDiv"></div>
+@if (Model.security.Asset_RepairableSpare.Assignment || Model.security.Asset_RepairableSpare.Create)
+{
+    @Html.Partial("~/Views/Equipment/RepairableSpare/_RepairableSpareEquipmentPopup.cshtml")
+}
+@Html.Partial("~/Views/Equipment/AssetModelWizard/_AssetModelWizard.cshtml")
+<script>
+    //#region V2-808
+    $(document).ready(function () {
+
+        var _isLoggedInFromMobile = CheckLoggedInFromMob();
+        if (_isLoggedInFromMobile === true) {
+            $('#divfileAsset').remove();
+            $('#lifileAssetForMobile').show();
+        }
+        else {
+            $('#lifileAssetForMobile').remove();
+            $('#divfileAsset').show();
+        }
+    })
+    //#endregion
+</script>

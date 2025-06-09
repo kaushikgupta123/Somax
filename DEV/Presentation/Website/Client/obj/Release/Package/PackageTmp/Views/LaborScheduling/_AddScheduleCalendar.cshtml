@@ -1,0 +1,73 @@
+﻿@model Client.Models.NewLaborScheduling.NewLaborSchedulingVM
+@using (Ajax.BeginForm("AddScheduleCalendar", "LaborScheduling", new AjaxOptions { HttpMethod = "Post", OnSuccess = "AddScheduleCalendarOnSuccess", OnBegin = "AjaxBeginFormBegin", OnComplete = "AjaxBeginFormComplete", OnFailure = "AjaxBeginFormFaillure" }, new { id = "frmAddScheduleCalendar" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(m => m.AddSchedlingCalendarModal.ScheduleDate)
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close closeAddcheduleModal" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title">@Model.Loc.Where(a => a.ResourceId == "spnGlobalAddSchedule").FirstOrDefault().Value.ToString()</h4>
+        </div>
+        @Html.Partial("_ErrorDiv")
+        <div class="modal-body">
+            <div class="form-group" style="margin-bottom:0;">
+                <div class="bottomBlock">
+                    <div class="tabsArea nobg">
+                        <ul class="listView nobrd" style="border-bottom:0;">
+                            <li>
+                                <span class="label">@Html.LabelFor(m => m.AddSchedlingCalendarModal.WorkOrderID) : <small>*</small></span>
+                                <span class="inputText">
+                                    @Html.ValidationMessageFor(m => m.AddSchedlingCalendarModal.WorkOrderID, "", new { style = "display:none" })
+                                    @Html.DropDownListFor(m => m.AddSchedlingCalendarModal.WorkOrderID, Model.WorkOrderList, "--Select--", new { @class = "form-control search select2picker", style = "width:100%;" })
+                                </span>
+                            </li>
+                            <li style="height:auto;">
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnPersonnel").FirstOrDefault().Value.ToString() : <small>*</small></span>
+                                <span class="inputText" style="height:auto;">
+                                    @Html.ValidationMessageFor(m => m.AddSchedlingCalendarModal.Personnels, "", new { style = "display:none" })
+                                    @Html.DropDownListFor(m => m.AddSchedlingCalendarModal.Personnels, Model.Personnellist, new { @class = "form-control search select2picker", style = "width:100%;", id = "ddlPersonnel", name = "Personnels", multiple = "multiple" })
+                                </span>
+                                <div style="clear:both;"></div>
+                            </li>
+                            <li>
+                                <span class="label">@Html.LabelFor(m => m.AddSchedlingCalendarModal.Hours) : </span>
+                                <span class="inputText">
+                                    @Html.ValidationMessageFor(m => m.AddSchedlingCalendarModal.Hours, "", new { style = "display:none" })
+                                    @Html.TextBoxFor(m => m.AddSchedlingCalendarModal.Hours, new { @class = "form-control search decimalinput", autocomplete = "off" })
+                                </span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div style="clear:both;"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal-footer" style="padding:15px 25px !important;">
+            <div class="idBttns">
+                <div class="bttn_pagin">
+                    <div class="bttns2" style="margin:0;">
+                        <button type="submit" class="btn btn-blue mobBttn" style="cursor:pointer" value="save"><i class="fa fa-save faIcon"></i> &nbsp;@Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+                    </div>
+                    <div class="bttns" style="margin:0;"><button type="button" data-dismiss="modal" class="btn btn-blue mobBttn closeAddcheduleModal" id="btnCancel"><i class="fa fa-close faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button></div>
+
+                    <div style="clear:both;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+@*<style type="text/css">
+        .modal-open { overflow: hidden !important; }
+        .select2-container--default .select2-selection--multiple .select2-selection__rendered .select2-selection__choice { height: auto !important; }
+        .select2-container .select2-search--inline { height: auto !important; margin-bottom: 0 !important;}
+    </style>
+    <script>
+        $(function () {
+            $(document).find('form').find("#AddSchedlingCalendarModal_WorkOrderID").removeClass("input-validation-error");
+            $(document).find('form').find("#ddlPersonnel").removeClass("input-validation-error");
+            $(document).find('form').find("#AddSchedlingCalendarModal_Hours").removeClass("input-validation-error");
+        });
+    </script>*@
+
+

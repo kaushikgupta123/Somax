@@ -1,0 +1,238 @@
+﻿@model Client.Models.ProjectCosting.ProjectCostingVM
+<div class="row">
+    <div class="col-xl-12">
+        <div class="m-portlet__head">
+            <div class="m-portlet__head-caption">
+                <div class="m-portlet__head-title">
+                    <h3 class="m-portlet__head-text">
+                        @Model.Loc.Where(a => a.ResourceId == "spnGlobalProjectCosts").FirstOrDefault().Value.ToString()
+                    </h3>
+                </div>
+            </div>
+        </div>
+        <div class="m-portlet__body">
+            <div class="row">
+                <div class="col-xl-6">
+                    <div class="m-portlet m-portlet--full-height m-portlet--fit px-4 pb-4 pt-custom">
+                        <div class="bottomBlock">
+                            <div id="table-widget">
+                                <table class="widget-table table-striped">
+                                    
+                                    <tbody>
+                                        <!-- Rows will be added here by jQuery -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="col-xl-6 ">
+                    <div class="m-portlet m-portlet--full-height m-portlet--fit">
+                        <div class="m-portlet__head">
+                            <div class="m-portlet__head-caption">
+                                <div class="m-portlet__head-title">
+                                    <h3 class="m-portlet__head-text">
+                                        @Model.Loc.Where(a => a.ResourceId == "spnGlobalSpending").FirstOrDefault().Value.ToString()
+                                    </h3>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="m-portlet__body">
+                            <div class="tab-content">
+                                <div class="chartBox" style="position: relative; min-height: 300px; margin-top:0;">
+                                    <div class="lds-ellipsis lds-adjust SpendingAndRemainingLoader">
+                                        <div></div>
+                                        <div></div>
+                                        <div></div>
+                                        <div></div>
+                                    </div>
+
+                                    <div id="ProjectSpendingAndRemaining">
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="col-xl-12">
+        <div class="m-portlet__head">
+            <div class="m-portlet__head-caption">
+                <div class="m-portlet__head-title">
+                    <h3 class="m-portlet__head-text">
+                        @UtilityFunction.GetMessageFromResource("WorkOrders", LocalizeResourceSetConstants.SecurityProfileItemsDetails)
+                    </h3>
+                </div>
+            </div>
+        </div>
+        <div class="m-portlet__body">
+            <div class="tab-content"></div>
+            <div class="row">
+                <div class="col-xl-6">
+                    <div class="m-portlet m-portlet--full-height m-portlet--fit">
+                        <div class="m-portlet__head">
+                            <div class="m-portlet__head-caption">
+                                <div class="m-portlet__head-title">
+                                    <h3 class="m-portlet__head-text">
+                                        @Model.Loc.Where(a => a.ResourceId == "ProjectDetailsDashboardScheduleComplienceText").FirstOrDefault().Value.ToString()
+                                    </h3>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="m-portlet__body">
+                            <div class="tab-content">
+                                <div class="chartBox" style="position: relative; min-height: 300px; margin-top:0;">
+                                    <div class="lds-ellipsis lds-adjust ScheduleComplienceLoader">
+                                        <div></div>
+                                        <div></div>
+                                        <div></div>
+                                        <div></div>
+                                    </div>
+
+                                    <div id="WorkOrderScheduleComplience">
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="col-xl-6 rightWidgetArea">
+                    <div class="row">
+                        <div class="col-xl-5 col-md-6 complete">
+                            <div class="m-portlet m-portlet--fit">
+                                <div class="m-portlet__head">
+                                    <div class="m-portlet__head-caption">
+                                        <div class="m-portlet__head-title">
+                                            <h3 class="m-portlet__head-text">
+                                                @Model.Loc.Where(a => a.ResourceId == "GlobalComplete").FirstOrDefault().Value.ToString()
+                                            </h3>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="m-portlet__body">
+                                    <div class="tab-content">
+                                        <div class="chartBox">
+                                            <span class="chartCount" id="WorkOrderCompleteCount"></span>
+                                            <span class="chartCountText">@UtilityFunction.GetMessageFromResource("spnWorkOrderCount", LocalizeResourceSetConstants.WorkOrderPlanning)</span>
+                                            <div class="lds-ellipsis lds-adjust ScheduleComplienceCountLoader">
+                                                <div></div>
+                                                <div></div>
+                                                <div></div>
+                                                <div></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-xl-5 col-md-6 incomplete">
+                            <div class="m-portlet m-portlet--fit">
+                                <div class="m-portlet__head">
+                                    <div class="m-portlet__head-caption">
+                                        <div class="m-portlet__head-title">
+                                            <h3 class="m-portlet__head-text">
+                                                @Model.Loc.Where(a => a.ResourceId == "GlobalIncomplete").FirstOrDefault().Value.ToString()
+                                            </h3>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="m-portlet__body">
+                                    <div class="tab-content">
+                                        <div class="chartBox">
+                                            <span class="chartCount" id="WorkOrderInCompleteCount"></span>
+                                            <span class="chartCountText">@UtilityFunction.GetMessageFromResource("spnWorkOrderCount", LocalizeResourceSetConstants.WorkOrderPlanning)</span>
+                                            <div class="lds-ellipsis lds-adjust ScheduleComplienceCountLoader">
+                                                <div></div>
+                                                <div></div>
+                                                <div></div>
+                                                <div></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-xl-5 col-md-6 total">
+                            <div class="m-portlet m-portlet--fit">
+                                <div class="m-portlet__head">
+                                    <div class="m-portlet__head-caption">
+                                        <div class="m-portlet__head-title">
+                                            <h3 class="m-portlet__head-text">
+                                                @Model.Loc.Where(a => a.ResourceId == "GlobalTotal").FirstOrDefault().Value.ToString()
+                                            </h3>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="m-portlet__body">
+                                    <div class="tab-content">
+                                        <div class="chartBox">
+                                            <span class="chartCount" id="WorkOrderTotalCount"></span>
+                                            <span class="chartCountText">@UtilityFunction.GetMessageFromResource("spnWorkOrderCount", LocalizeResourceSetConstants.WorkOrderPlanning)</span>
+                                            <div class="lds-ellipsis lds-adjust ScheduleComplienceCountLoader">
+                                                <div></div>
+                                                <div></div>
+                                                <div></div>
+                                                <div></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+
+    .widget-table {
+        width: 100%;
+        border-collapse: collapse;
+        border-left: 1px solid #000;
+        border-top: 1px solid #000;
+        border-bottom: 1px solid #000;
+    }
+
+        .widget-table th, .widget-table td {
+            border-right: 1px solid #000;
+            padding: 8px;
+            text-align: left;
+        }
+
+        .widget-table th {
+            background-color: #f2f2f2;
+        }
+
+        .pt-custom {
+            padding-top: 48px;
+        }
+    @@media screen and (max-width: 1200px) {
+        .pt-custom {
+            padding-top: 1.5rem;
+        }
+    }
+    
+</style>
+
+

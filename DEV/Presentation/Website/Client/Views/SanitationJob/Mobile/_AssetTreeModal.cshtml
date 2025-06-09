@@ -1,0 +1,15 @@
+﻿@model Client.Models.Sanitation.SanitationVM
+<div class="slide-modal" id="commonSanitationTreeModal">
+    <div class="slide-modal-head ">
+        <a id="commonSanitationTreeModalHide" class="slide-back-btn"> <i class="fa fa-angle-left"></i> Back</a>
+        <div class="slide-back-title">
+            @Model.Loc.Where(a => a.ResourceId == "spnGlobalEquipmentTreeLookup").FirstOrDefault().Value.ToString()
+        </div>
+    </div>
+    <div class="slide-modal-body">
+        <div class="cntTree">
+        </div>
+    </div>
+    <div class="slide-modal-footer"></div>
+</div>
+

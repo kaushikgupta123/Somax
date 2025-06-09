@@ -1,0 +1,41 @@
+﻿<div id="activityModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Select Active Site</h4>
+            </div>
+            @Html.Partial("_ErrorDiv")
+            @using (Ajax.BeginForm("UpdateActiveSite", "ChangeActiveSite", null, new AjaxOptions { HttpMethod = "Post", OnSuccess = "UpdateChangeActiveSiteOnSuccess", OnBegin = "AjaxBeginFormBegin", OnComplete = "AjaxBeginFormComplete", OnFailure = "AjaxBeginFormFaillure" }, new { id = "frmchangeactivesite" }))
+            {
+                @Html.AntiForgeryToken()
+                <div class="modal-body">
+                    <ul class="listView siteField">
+                        <li style="border-bottom:none;">
+                            <span class="label"><label>Site <small>*</small></label></span>
+                            <span class="inputText">
+                                <select class="form-control search select2picker" data-val="true" data-val-required="Please select site" id="ChangeSiteSiteId" name="ChangeSiteSiteId" style="width:100%;"></select>
+                            </span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-blue mobBttn pull-right"><i class="fa fa-save faIcon"></i> &nbsp;Save</button>
+                    <button type="button" class="btn btn-default mobBttn pull-left" data-dismiss="modal"><i class="fa fa-times faIcon"></i> &nbsp;Cancel</button>
+                    <div style="clear:both;"></div>
+                </div>
+                <input type="hidden" name="ActiveSiteUpdateIndex" id="ActiveSiteUpdateIndex" />
+            }
+        </div>
+    </div>
+</div>
+<style type="text/css">
+    #activityModal { padding-right: 0 !important; }
+    #activityModal h4.modal-title { line-height: 32px; }
+    #activityModal .modal-footer { padding: 10px 25px !important; }
+    #activityModal .modal-dialog { max-width: 500px; }
+    ul.siteField li { border: none; height: 35px; margin-bottom: 0px; }
+    ul.siteField li span.label { height: 35px; line-height: 35px; width: 35%; }
+    ul.siteField li span.inputText { width: 65%; height: 35px; line-height: 35px; }
+    .ui-tooltip { z-index: 1151 !important; }
+</style>

@@ -1,0 +1,14 @@
+﻿@model Client.Models.Configuration.MaintenanceOnDemandLibrary.MaintenanceOnDemandVM
+@{
+    ViewBag.Title = "Somax-Config | Maintenance On-Demand";
+}
+@Styles.Render("~/Content/datatable")
+@section scripts {
+    @Scripts.Render("~/bundles/datatable")
+    <script src="~/Scripts/Pages/Configuration/MaintenanceOnDemandLibrary/MaintenanceOnDemandSearch.js"></script>
+}
+<div id="renderOnDemandLibrary">
+    @Html.Partial("~/Views/Configuration/MaintenanceOnDemandLibrary/MaintenanceOnDemandSearch.cshtml", Model)
+</div>
+
+

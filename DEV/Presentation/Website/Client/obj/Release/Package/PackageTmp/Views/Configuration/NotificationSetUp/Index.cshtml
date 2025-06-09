@@ -1,0 +1,13 @@
+﻿@model Client.Models.Configuration.NotificationSetUp.NotificationSetUpModel
+@{
+    ViewBag.Title = "Somax-Config | Notification Setup";
+}
+@Styles.Render("~/Content/datatable")
+@section scripts {
+
+@Scripts.Render("~/bundles/datatable")
+    <script src="~/Scripts/Pages/Configuration/NoficationSetUp/EditNotificationSetUp.js"></script>
+}
+<div id="renderNotificationAlert">
+    @Html.Partial("~/Views/Configuration/NotificationSetUp/_EditNotificationSetUp.cshtml", Model)
+</div>

@@ -1,0 +1,66 @@
+﻿@model Client.Models.EquipmentCombined
+<div id="AssignmentViewLogModal" class="modal fade dropdown-modal" role="dialog" style="display:none;">
+    <div class="modal-dialog partPopup">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title" id="hdrPopChildrenTitle">Repairable Spare Log records </h4>
+            </div>
+            <div class="modal-body">
+                <div id="tbldropdown" class="dropdown-content tbl-dropdown" style="display:block;">
+                    <div class="table-responsive dropTableOuter">
+                        <table id="AssignmentViewLogTable" class="stripe dropTable globalDropTable" style="width:100%;">
+                            <thead>
+                                <tr>
+                                  
+                                    <th>@Model.Loc.Where(a => a.ResourceId == "GlobalDate").FirstOrDefault().Value.ToString()</th>
+                                    <th>@Model.Loc.Where(a => a.ResourceId == "GlobalStatus").FirstOrDefault().Value.ToString()</th>
+                                    <th>@Model.Loc.Where(a => a.ResourceId == "spnPersonnel").FirstOrDefault().Value.ToString()</th>
+                                    <th>@Model.Loc.Where(a => a.ResourceId == "spnAssignedtoAssetId").FirstOrDefault().Value.ToString()</th>
+                                    <th>@Model.Loc.Where(a => a.ResourceId == "spnLocation").FirstOrDefault().Value.ToString()</th>
+                                    <th>@Model.Loc.Where(a => a.ResourceId == "spnParentId").FirstOrDefault().Value.ToString()</th>
+                                    <th>@Model._userdata.Site.AssetGroup1Name</th>
+                                    <th>@Model._userdata.Site.AssetGroup2Name</th>
+                                    <th>@Model._userdata.Site.AssetGroup3Name</th>
+
+                                </tr>
+                            </thead>
+                            <tfoot id="tblAssignmentLogfooter" style="display:none">
+                                <tr>
+                                    <th style="position:relative;">@Model.Loc.Where(a => a.ResourceId == "GlobalDate").FirstOrDefault().Value.ToString()</th>
+                                    <th style="position:relative;">@Model.Loc.Where(a => a.ResourceId == "GlobalStatus").FirstOrDefault().Value.ToString()</th>
+                                    <th style="position:relative;">@Model.Loc.Where(a => a.ResourceId == "spnPersonnel").FirstOrDefault().Value.ToString()</th>
+                                    <th style="position:relative;">@Model.Loc.Where(a => a.ResourceId == "spnAssignedtoAssetId").FirstOrDefault().Value.ToString()</th>
+                                    <th style="position:relative;">@Model.Loc.Where(a => a.ResourceId == "spnLocation").FirstOrDefault().Value.ToString()</th>
+                                    <th style="position:relative;">@Model.Loc.Where(a => a.ResourceId == "spnParentId").FirstOrDefault().Value.ToString()</th>
+                                    <th style="position:relative;">@Model._userdata.Site.AssetGroup1Name</th>
+                                    <th style="position:relative;">@Model._userdata.Site.AssetGroup2Name</th>
+                                    <th style="position:relative;">@Model._userdata.Site.AssetGroup3Name</th>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="padding:15px 25px !important;">
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+
+
+    $(function () {
+        $(document).find('.dtpicker').datepicker({
+            changeMonth: true,
+            changeYear: true,
+            "dateFormat": "mm/dd/yy",
+            autoclose: true
+        }).inputmask('mm/dd/yyyy');
+
+    });
+</script>
+

@@ -1,0 +1,42 @@
+﻿@model Client.Models.Work_Order.WorkOrderVM
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<body style="padding:0; margin:0; font-family: 'Roboto', sans-serif; font-size:14px; color:#737272;">
+    <table width="1000" border="0" cellspacing="0" cellpadding="0" align="center">
+        <tr>
+            <td align="left" valign="top" height="157">
+                    <table width="1000" border="0" cellspacing="0" cellpadding="0">
+                        <tr>
+                            <td width="557" height="157" align="left" valign="top" style="padding:0">
+                                <a href="#"><img src="@Model.workOrderModel.AzureImageURL" alt="" style="height:157px; width:auto;" /></a>
+                            </td>
+                            <td width="108" height="157" align="left" valign="top" style="padding:0;">
+                                <img src='@Url.Content("~/Content/images/angleBg.jpg")' alt="" style="height:157px; width:108px;" />
+                            </td>
+                            <td width="310" height="132" align="left" valign="top" style="background:#e4effd; padding:25px 0 0 25px;">
+                                <h2 style="padding:0; margin:0 0 10px 0; font-size:28px; color:#264a7c;font-weight:normal;">@Model.Loc.Where(a => a.ResourceId == "GlobalWorkOrder").FirstOrDefault().Value.ToString()</h2>
+                                <p style="padding:0; margin:0 0 7px 0; font-size:18px; color:#5d5d5d; font-weight:normal;">
+                                    @Model.Loc.Where(a => a.ResourceId == "globalCreateDate").FirstOrDefault().Value.ToString() :
+                                @if (Model.workOrderModel.CreateDate.HasValue && Model.workOrderModel.CreateDate.Value != default(DateTime))
+                                {
+                                    <span style="color:#ff8400;">
+                                        @Model.workOrderModel.CreateDate.Value.ToString("MM/dd/yyyy", CultureInfo.InvariantCulture)
+                                </span>
+                                }
+                                else
+                                {
+                                    <span style="color:#ff8400;"></span>
+                                }
+                            </p>
+                            <p style="padding:0; margin:0 0 7px 0; font-size:18px; color:#5d5d5d; font-weight:normal;">@Model.Loc.Where(a => a.ResourceId == "GlobalWorkOrder").FirstOrDefault().Value.ToString() : <span style="color:#ff8400;">@Model.workOrderModel.ClientLookupId</span></p>
+                        </td>
+                        </tr>
+                    </table>
+                </td>
+        </tr>
+    </table>
+</body>
+</html>

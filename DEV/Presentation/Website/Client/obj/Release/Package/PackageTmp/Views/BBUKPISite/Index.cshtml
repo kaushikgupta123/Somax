@@ -1,0 +1,146 @@
+﻿@model Client.Models.BBUKPISite.BBUKPISiteVM
+@{
+    ViewBag.Title = "Somax | BBU - KPI Site";
+}
+@Styles.Render("~/Content/dashboardStyle")
+@Styles.Render("~/Content/datatable")
+@Styles.Render("~/Content/daterangepickercustom")
+@*<link href="~/Scripts/dropzone/basic.min.css" rel="stylesheet" />
+    <link href="~/Scripts/dropzone/dropzone.min.css" rel="stylesheet" />*@
+<link href="~/Content/sidebar_custom.css" rel="stylesheet" />
+<link href="~/Scripts/Metronic/assets/demo/default/base/GlobalSearchGrid.css" rel="stylesheet" />
+@*<link href="~/Content/Wizard/Wizard.css" rel="stylesheet" />*@
+
+@section scripts {
+    @Scripts.Render("~/bundles/datatable")
+    @*@Scripts.Render("~/bundles/imagezoom")
+        @Scripts.Render("~/bundles/QRPrint")*@
+    @Scripts.Render("~/bundles/BBUKPISite")
+    @Scripts.Render("~/bundles/SomaxCkEditor")
+    @*   @Scripts.Render("//unpkg.com/@flatfile/adapter/build/dist/index.min.js")
+        @Scripts.Render("~/bundles/QRScanner")
+        @Scripts.Render("~/bundles/ImageCompressor")*@
+}
+
+
+<style type="text/css">
+    /*@@keyframes spin {
+        0% {
+            transform: rotate(0deg);
+        }
+
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+
+    .qrBox, .qrBox2 {
+        text-align: center;
+    }
+
+        .qrBox2 p {
+            padding: 0;
+            margin: 0;
+            font-weight: bold;
+        }
+
+        .qrBox p {
+            padding: 0 0 10px 0;
+            margin: 0;
+            font-weight: bold;
+        }
+
+    .secTitle {
+        font-size: 14px;
+        padding: 10px 0;
+        margin: 0 0 10px 0;
+        border-bottom: 1px solid #e9ecef;
+    }
+
+    .box1 {
+        margin-bottom: 15px;
+    }
+
+    .countBox {
+        width: 173px;
+        height: 36px;
+        margin: 0 auto;
+        border: 1px solid #ccc;
+        margin: 0 auto;
+    }
+
+    ul.levelSize {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+        ul.levelSize li {
+            border: 2px solid #ccc;
+            padding: 5px;
+            border-radius: 5px;
+            float: left;
+            width: 49%;
+            margin-right: 2%;
+        }
+
+            ul.levelSize li:last-child {
+                margin-right: 0;
+            }
+
+            ul.levelSize li:hover {
+                border: 2px solid #315a98;
+                padding: 5px;
+            }
+
+    .txtList {
+        float: left;
+    }
+
+        .txtList p {
+            padding: 0;
+            margin: 0;
+            line-height: 22px;
+        }
+
+            .txtList p.first {
+                color: #000;
+                font-weight: 400;
+            }
+
+    .rdoBtn {
+        float: left;
+        margin-right: 10px;
+        position: relative;
+        top: 4px;
+        margin-left: 5px;
+    }
+
+    .recommend {
+        margin-top: 20px;
+    }
+
+        .recommend p {
+            padding: 0 0 3px 0;
+            margin: 0;
+        }
+
+    .prevArea {
+        border: 1px solid #ccc;
+        height: 285px;
+        margin-bottom: 15px;
+    }
+
+    .codeArea {
+        border: 1px solid #ccc;
+        height: 75px;
+    }
+
+    .updateArea {
+        margin-top: 0;
+    }*/
+</style>
+
+<div id="BBUKPISiteContainer" class="wrap-two">
+    @Html.Partial("_BBUKPISiteSearch", Model)
+</div>

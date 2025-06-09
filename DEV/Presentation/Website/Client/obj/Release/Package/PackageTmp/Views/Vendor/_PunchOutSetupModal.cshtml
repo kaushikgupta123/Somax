@@ -1,0 +1,106 @@
+﻿@model Client.Models.VendorsVM
+
+@using (Ajax.BeginForm("PunchOutSetUp", "Vendor", new AjaxOptions { HttpMethod = "POST", OnBegin = "AjaxBeginFormBegin", OnSuccess = "PunchOutSetupSuccess", OnFailure = "AjaxBeginFormFaillure", OnComplete = "AjaxBeginFormComplete" }))
+{
+    @Html.AntiForgeryToken()
+    <div id="vendorpunchoutsetupmodal" class="modal fade" role="dialog" style="padding-right:0px !important;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">@Model.Loc.Where(a => a.ResourceId == "spnPunchOutSetUp").FirstOrDefault().Value.ToString()</h4>
+                </div>
+                <div class="modal-body">
+                    <ul class="listView nobrd" style="border-bottom:0;">
+                        <li>
+                            <span class="label"><label>@Model.Loc.Where(a => a.ResourceId == "spnUsePunchOut").FirstOrDefault().Value.ToString(): </label></span>
+                            <span class="inputText">
+                                @Html.CheckBoxFor(m => m.VendorPunchoutSetupModel.PunchoutIndicator, new { @class = "form-control m-input", @style = "color:black; width: auto; margin-top: 12px;" })
+                            </span>
+                        </li>
+                        <li>
+                            <span class="label"><label>@Model.Loc.Where(a => a.ResourceId == "spnVendorToDomain").FirstOrDefault().Value.ToString(): </label></span>
+                            <span class="inputText">
+                                @Html.DropDownListFor(m => m.VendorPunchoutSetupModel.VendorDomain, Model.VendorPunchoutSetupModel.VendorDomainList, "--Select--", new { @class = "form-control search select2picker", style = "width:100%;" })
+                            </span>
+                        </li>
+                        <li>
+                            <span class="label"><label>@Model.Loc.Where(a => a.ResourceId == "spnVendorToIdentity").FirstOrDefault().Value.ToString(): </label></span>
+                            <span class="inputText">
+                                @Html.TextBoxFor(m => m.VendorPunchoutSetupModel.VendorIdentity, new { @class = "form-control search m-input ", @style = "color:black", autocomplete = "off", maxlength = "31" })
+                            </span>
+                        </li>
+                        <li>
+                            <span class="label"><label>@Model.Loc.Where(a => a.ResourceId == "spnSharedSecret").FirstOrDefault().Value.ToString(): </label></span>
+                            <span class="inputText">
+                                @Html.TextBoxFor(m => m.VendorPunchoutSetupModel.SharedSecret, new { @class = "form-control search m-input ", @style = "color:black", autocomplete = "off", maxlength = "15" })
+                            </span>
+                        </li>
+                        <li>
+                            <span class="label"><label>@Model.Loc.Where(a => a.ResourceId == "spnSenderFromDomain").FirstOrDefault().Value.ToString(): </label></span>
+                            <span class="inputText">
+                                @Html.DropDownListFor(m => m.VendorPunchoutSetupModel.SenderDomain, Model.VendorPunchoutSetupModel.SenderDomainList, "--Select--", new { @class = "form-control search select2picker", style = "width:100%;" })
+                            </span>
+                        </li>
+                        <li>
+                            <span class="label"><label>@Model.Loc.Where(a => a.ResourceId == "spnSenderFromIdentity").FirstOrDefault().Value.ToString(): </label></span>
+                            <span class="inputText">
+                                @Html.TextBoxFor(m => m.VendorPunchoutSetupModel.SenderIdentity, new { @class = "form-control search m-input ", @style = "color:black", autocomplete = "off", maxlength = "31" })
+                            </span>
+                        </li>
+                        <li>
+                            <span class="label"><label>@Model.Loc.Where(a => a.ResourceId == "spnPunchoutURL").FirstOrDefault().Value.ToString(): </label></span>
+                            <span class="inputText">
+                                @Html.TextBoxFor(m => m.VendorPunchoutSetupModel.PunchoutURL, new { @class = "form-control search m-input ", @style = "color:black", autocomplete = "off" })
+                            </span>
+                        </li>
+                        <li class="sendPunchOrder">
+                            <span class="label"><label>@Model.Loc.Where(a => a.ResourceId == "spnAutomaticallySendPunchOutPO").FirstOrDefault().Value.ToString(): </label></span>
+                            <span class="inputText">
+                                @Html.CheckBoxFor(m => m.VendorPunchoutSetupModel.AutoSendPunchOutPO, new { @class = "form-control m-input",@style = "color:black; width: auto; margin-top: 12px;" })
+                            </span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="modal-footer" style="padding:15px 25px !important;">
+                    <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-close faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button>
+                    <button class="btn btn-blue" style="float:right;"><i class="fa fa-save faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+                    <div style="clear:both;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @Html.HiddenFor(m => m.VendorPunchoutSetupModel.VendorId)
+}
+
+<style type="text/css">
+    .ui-tooltip { z-index: 1151 !important; }
+    .errormessage { margin-bottom: 1px !important; }
+    ul.listView.nobrd li.sendPunchOrder { margin-bottom: 0; }
+    ul.listView.nobrd li.sendPunchOrder span.label { width: 60%; }
+    ul.listView.nobrd li.sendPunchOrder span.inputText { width: 40%; }
+
+    @@media screen and (max-width:1023px) {
+        ul.listView.nobrd li.sendPunchOrder span.label { width:65%; }
+        ul.listView.nobrd li.sendPunchOrder span.inputText { width: auto; }
+    }
+    @@media screen and (max-width:767px) {
+        ul.listView.nobrd li.sendPunchOrder span.label { width:78%; }
+        ul.listView.nobrd li.sendPunchOrder span.inputText { width: auto; }
+    }
+    @@media screen and (max-width:639px) {
+        ul.listView.nobrd li.sendPunchOrder span.label { width:90%; }
+        ul.listView.nobrd li.sendPunchOrder span.inputText { width: auto; }
+        ul.listView li#AutoSendPunchOutPO span.label { height: 40px !important;}
+        ul.listView li#AutoSendPunchOutPO span.inputText { height: 40px !important;}
+    }
+    @@media screen and (max-width:567px) {
+        ul.listView.nobrd li.sendPunchOrder span.label { width:90%; height:auto; line-height:normal; }
+        ul.listView.nobrd li.sendPunchOrder span.inputText { width: auto; height:auto; line-height:normal; }
+    }
+    @@media screen and (max-width:479px) {
+        ul.listView.nobrd li.sendPunchOrder { margin-top:10px; }
+    }
+</style>

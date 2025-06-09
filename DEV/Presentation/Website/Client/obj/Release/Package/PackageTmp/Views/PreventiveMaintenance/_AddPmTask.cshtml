@@ -1,0 +1,107 @@
+﻿@model Client.Models.PreventiveMaintenance.PrevMaintVM
+<div class="m-subheader">
+    <div class="new-m-subheader">
+        <div class="PageTitle">
+            <div class="align-items-center separator">
+                <h3 class="m-subheader__title ">
+                    @Model.Loc.Where(a => a.ResourceId == "spnTask").FirstOrDefault().Value.ToString()
+                </h3>
+            </div>
+        </div>
+
+        <div class="NewBreadcrumbArea">
+            <div class="newBreadcrumb">
+                <ul>
+                    <li><a href="/Dashboard/Dashboard">&nbsp;</a></li>
+                    <li><a href="/PreventiveMaintenance/Index?page=Maintenance_Preventive_Maintenance_Search">@Model.Loc.Where(a => a.ResourceId == "hdrPrevMaintSearch").FirstOrDefault().Value.ToString()</a></li>
+                    <li><a href="javascript:void(0)" id="brdpmtask" data-val="@Model.prevMaintTaskModel.PrevMaintMasterId">@Model.prevMaintTaskModel.PrevmaintClientlookUp</a></li>
+                    @if (Model.prevMaintTaskModel.PrevMaintTaskId == 0)
+                    {
+                        <li class="active">@Model.Loc.Where(a => a.ResourceId == "spnAddTask").FirstOrDefault().Value.ToString()</li>
+                    }
+                    else
+                    {
+                        <li class="active">@Model.Loc.Where(a => a.ResourceId == "spnEditTask").FirstOrDefault().Value.ToString()</li>
+                    }
+                </ul>
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+        <div style="clear:both;"></div>
+    </div>
+</div>
+
+@Html.Partial("_ErrorDiv")
+
+@using (Ajax.BeginForm("AddTasks", "PreventiveMaintenance", new AjaxOptions { HttpMethod = "Post", OnSuccess = "PmTaskAddOnSuccess", OnBegin = "AjaxBeginFormBegin", OnComplete = "AjaxBeginFormComplete", OnFailure = "AjaxBeginFormFaillure" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="row">
+        <div class="col-xl-12">
+            <div class="m-portlet newPort" id="m_portlet" style="padding:15px;">
+                <div class="bottomBlock">
+                    <div class="tabsArea nobg">
+                        <ul class="listView nobrd">
+
+                            <li style="height:auto;">
+                                <span class="label">@Html.LabelFor(m => m.prevMaintTaskModel.Description) : <small>*</small></span>
+                                <span class="inputText" style="height:auto;">
+                                    @Html.ValidationMessageFor(m => m.prevMaintTaskModel.Description, "", new { style = "display:none" })
+                                    @Html.TextAreaFor(m => m.prevMaintTaskModel.Description, new { @class = "form-control search", autocomplete = "off" })
+                                </span>
+                                <div style="clear:both;"></div>
+                            </li>
+                            <li>
+                                <span class="label">@Html.LabelFor(m => m.prevMaintTaskModel.TaskNumber) : </span>
+                                <span class="inputText">@Html.TextBoxFor(m => m.prevMaintTaskModel.TaskNumber, new { @class = "form-control search", autocomplete = "off" })</span>
+
+                            </li>
+                            <li>
+                                <span class="label">@Html.LabelFor(m => m.prevMaintTaskModel.ChargeType) : </span>
+                                <span class="inputText">
+                                    @Html.DropDownListFor(m => m.prevMaintTaskModel.ChargeType, Model.prevMaintTaskModel.ChargeTypeList, "--Select--", new { @class = "form-control search select2picker", style = "width:100%;" })
+                                </span>
+                            </li>
+                            <li>
+                                <span class="label">@Html.LabelFor(m => m.prevMaintTaskModel.ChargeToClientLookupId) : </span>
+                                <span class="inputText">
+                                   
+                                    @*<div class="dropdown dropTableOuter">*@
+                                        <div class="input-group">
+                                            @Html.TextBoxFor(m => m.prevMaintTaskModel.ChargeToClientLookupId, new { @class = "form-control search dropbtn readonly", id = "txtChargeTo", autocomplete = "off", @readonly = "readonly" })
+                                            @Html.HiddenFor(m => m.prevMaintTaskModel.ChargeToClientLookupId, new { id = "hdnChargeTo" })
+
+                                            <div class="input-group-btn">
+                                                <button class="btn btn-white btntxtInputGroup" type="button" id="openpmtaskchargetogrid">
+                                                    <i id="srcicon" class="fa fa-search"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    @*</div>*@
+                                </span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div style="clear:both;"></div>
+                    <div class="idBttns">
+                        <div class="bttn_pagin">
+                            <div class="bttns2">
+                                <button type="submit" class="btn btn-blue mobBttn"><i class="fa fa-save faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+                            </div>
+                            <div class="bttns">
+                                <div class="bttns"><button type="button" class="btn btn-blue mobBttn" id="btnpmtaskcancel"><i class="fa fa-close faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button></div>
+                            </div>
+                            <div style="clear:both;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @Html.Partial("~/Views/PreventiveMaintenance/_PrevMaintEquipementPopUp.cshtml")
+    @Html.Partial("~/Views/PreventiveMaintenance/_AddPMLocationPopUp.cshtml")
+    @Html.HiddenFor(m => m.prevMaintTaskModel.PrevMaintMasterId)
+    @Html.HiddenFor(m => m.prevMaintTaskModel.TaskNumber)
+    @Html.HiddenFor(m => m.prevMaintTaskModel.PrevMaintTaskId)
+    @Html.HiddenFor(m => m.prevMaintTaskModel.updatedindex)
+}

@@ -1,0 +1,370 @@
+﻿@model Client.Models.Sanitation.SanitationVM
+@{
+    string imageUrl = Model.sanitationJobModel.ImageURI;
+    if (Model.JobDetailsModel.ClientOnPremise)
+    {
+        imageUrl = UtilityFunction.PhotoBase64ImgSrc(Model.sanitationJobModel.ImageURI);
+    }
+    string statusclass = "";
+    switch (Model.JobDetailsModel.Status)
+    {
+        case SanitationJobConstant.Approved:
+            statusclass = "m-badge m-badge--yellow m-badge--wide";
+            break;
+        case SanitationJobConstant.Canceled:
+            statusclass = "m-badge m-badge--orange m-badge--wide";
+            break;
+        case SanitationJobConstant.Complete:
+            statusclass = "m-badge m-badge--teal m-badge--wide";
+            break;
+        case SanitationJobConstant.Denied:
+            statusclass = "m-badge m-badge--purple m-badge--wide";
+            break;
+        case SanitationJobConstant.Scheduled:
+            statusclass = "m-badge m-badge--grey m-badge--wide";
+            break;
+        case SanitationJobConstant.JobRequest:
+            statusclass = "m-badge m-badge--light-blue m-badge--wide";
+            break;
+        case SanitationJobConstant.Open:
+            statusclass = "m-badge m-badge--blue m-badge--wide";
+            break;
+        case SanitationJobConstant.Fail:
+            statusclass = "m-badge m-badge--red m-badge--wide";
+            break;
+        case SanitationJobConstant.Pass:
+            statusclass = "m-badge m-badge--green m-badge--wide";
+            break;
+        //case SanitationJobConstant.Request:
+        //    statusclass = "m-badge m-badge--green m-badge--wide";
+        //    break;
+        //case SanitationJobConstant.SourceType_FailedValidation:
+        //    statusclass = "m-badge m-badge--purple m-badge--wide";
+        //    break;
+        //case SanitationJobConstant.SanitationLabor_ChargeType_Primary:
+        //    statusclass = "m-badge m-badge--blue m-badge--wide";
+        //    break;
+        //case SanitationJobConstant.SanitationPlanning_CategoryTool:
+        //    statusclass = "m-badge m-badge--red m-badge--wide";
+        //    break;
+        //case SanitationJobConstant.SanitationPlanning_CategoryChemical:
+        //    statusclass = "m-badge  m-badge-grid-cell m-badge--wide";
+        //    break;
+        //case SanitationJobConstant.SanitationPlanning_Tool:
+        //    statusclass = "m-badge m-badge--yellow m-badge--wide";
+        //    break;
+        //case SanitationJobConstant.SanitationChemicalSupplies_Tool:
+        //    statusclass = "m-badge m-badge--orange m-badge--wide";
+        //    break;
+        //case SanitationJobConstant.SourceType_NewJob:
+        //    statusclass = "m-badge m-badge--green m-badge--wide";
+        //    break;
+        //case SanitationJobConstant.TaskCancel:
+        //    statusclass = "m-badge m-badge--purple m-badge--wide";
+        //    break;
+        //case SanitationJobConstant.TaskReOpen:
+        //    statusclass = "m-badge m-badge--blue m-badge--wide";
+        //    break;
+        //case SanitationJobConstant.SourceType_WorkBenchAdd:
+        //    statusclass = "m-badge m-badge--red m-badge--wide";
+        //    break;
+        //case SanitationJobConstant.SANIT_ON_DEMAND:
+        //    statusclass = "m-badge  m-badge-grid-cell m-badge--wide";
+        //    break;
+        default:
+            statusclass = "m-badge  m-badge-grid-cell m-badge--wide";
+            break;
+    }
+}
+<div class="col-xl-12">
+    <div class="m-portlet padAdjst" id="m_portlet" style="padding:5px;">
+        <div class="m-portlet__body  m-portlet__body--no-padding">
+            <div class="row m-row--col-separator-xl">
+                <div class="col-md-12">
+                    <div class="m-portlet cardRow" style="margin-bottom:0; border:0;">
+                        <div class="m-portlet__body gridList" style="padding:0;">
+                            <div class="summaryview">
+                                <div class="summarycardimgbox">
+                                    <div class="gridImgBox" style="width:100%;">
+                                        @if (!string.IsNullOrEmpty(imageUrl))
+                                        {
+                                            <img src="@imageUrl" id="EquipZoom" alt="Image" data-zoom-image="@imageUrl" style="width:100%; height:auto;" />
+                                        }
+                                        else
+                                        {
+                                            <img src="~/Scripts/ImageZoom/images/NoImage.jpg" id="EquipZoom" alt="Image" style="width:100%; height:auto;" />
+                                        }
+
+
+                                    </div>
+                                    <div style="clear:both;"></div>
+                                </div>
+                                <div class="summarycarddescriptionbox">
+                                    <div class="newDescription" style='line-height:17px;'>
+                                        <span class="orderId">
+                                            <span class="n-order-level">@(String.IsNullOrEmpty(Model.JobDetailsModel.ClientLookupId) ? "" : (Model.JobDetailsModel.ClientLookupId.Length > 21 ? (Model.JobDetailsModel.ClientLookupId.Substring(0, 21) + "...") : (Model.JobDetailsModel.ClientLookupId)))</span>
+                                            <small class='@statusclass n-order-val'>@UtilityFunction.GetMessageFromResource(Model.JobDetailsModel.Status, LocalizeResourceSetConstants.StatusDetails) </small>
+                                        </span>
+                                    </div>
+                                    <div class="gridStatus">
+                                        <span class="summaryviewcardspan">
+                                            <span class="cardsummarylabel">
+                                                @Model.Loc.Where(a => a.ResourceId == "spnShift").FirstOrDefault().Value.ToString() :
+                                            </span>
+                                            <span class="cardsummaryvalue">
+                                                @Model.JobDetailsModel.ShiftDesc
+                                            </span>
+                                            @*}*@
+                                        </span>
+                                        <span class="summaryviewcardspan">
+                                            <div class="newDescription" style='line-height:17px;'>
+                                                @if (!string.IsNullOrEmpty(Model.JobDetailsModel.Description))
+                                                {
+                                                    if (Model.JobDetailsModel.Description.Length > 50)
+                                                    {
+                                                        @Model.JobDetailsModel.Description.Substring(0, 50) <span data-des="@Model.JobDetailsModel.Description" style="color:#315a98;cursor:pointer" class="sjmoreaddescription">... More</span>
+                                                    }
+                                                    else
+                                                    {
+                                                        @Model.JobDetailsModel.Description
+                                                    }
+                                                }
+                                            </div>
+                                        </span>
+                                        <span class="summaryviewcardspan">
+                                            @Model.JobDetailsModel.ChargeTo_ClientLookupId &nbsp;
+                                            @Model.JobDetailsModel.ChargeTo_Name
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="summarycardlistbox">
+                                    <div class="gridStatus">
+                                        <span class="summaryviewcardspan">
+                                            <span class="cardsummarylabel">
+                                                @Model.Loc.Where(a => a.ResourceId == "spnScheduleDate").FirstOrDefault().Value.ToString() :
+                                            </span>
+                                            <span class="cardsummaryvalue">
+                                                @if (Model.JobDetailsModel.ScheduledDate.HasValue && Model.JobDetailsModel.ScheduledDate.Value != default(DateTime))
+                                                {
+                                                    @Model.JobDetailsModel.ScheduledDate.Value.ToString("MM/dd/yyyy", CultureInfo.InvariantCulture)
+                                                }
+                                            </span>
+                                        </span>
+                                        <span class="summaryviewcardspan">
+                                            <span class="cardsummarylabel">
+                                                @Model.Loc.Where(a => a.ResourceId == "spnAssigned").FirstOrDefault().Value.ToString() :
+                                            </span> <span class="cardsummaryvalue">
+                                                @Model.JobDetailsModel.Assigned
+                                            </span>
+                                        </span>
+                                        <span class="summaryviewcardspan">
+                                            <span class="cardsummarylabel">
+                                                @Model.Loc.Where(a => a.ResourceId == "spnGlobalCompleted").FirstOrDefault().Value.ToString() :
+                                            </span> <span class="cardsummaryvalue">
+                                                @if (Model.JobDetailsModel.CompleteDate.HasValue && Model.JobDetailsModel.CompleteDate.Value != default(DateTime))
+                                                {
+                                                    @Model.JobDetailsModel.CompleteDate.Value.ToString("MM/dd/yyyy", CultureInfo.InvariantCulture)
+                                                }
+                                            </span>
+                                        </span>
+                                        <span class="summaryviewcardspan">
+                                            <span class="cardsummarylabel">
+                                                @Model.Loc.Where(a => a.ResourceId == "GlobalPassed").FirstOrDefault().Value.ToString() :
+                                            </span> <span class="cardsummaryvalue">
+
+                                                @if (Model.JobDetailsModel.PassDate.HasValue && Model.JobDetailsModel.PassDate.Value != default(DateTime))
+                                                {
+                                                    @Model.JobDetailsModel.PassDate.Value.ToString("MM/dd/yyyy", CultureInfo.InvariantCulture)
+                                                }
+                                            </span>
+                                        </span>
+                                        <span class="summaryviewcardspan">
+                                            <span class="cardsummarylabel">
+                                                @Model.Loc.Where(a => a.ResourceId == "GlobalFailed").FirstOrDefault().Value.ToString() :
+                                            </span> <span class="cardsummaryvalue">
+
+                                                @if (Model.JobDetailsModel.FailDate.HasValue && Model.JobDetailsModel.FailDate.Value != default(DateTime))
+                                                {
+                                                    @Model.JobDetailsModel.FailDate.Value.ToString("MM/dd/yyyy", CultureInfo.InvariantCulture)
+                                                }
+                                            </span>
+                                        </span>
+                                    </div>
+                                </div>
+                                @if (Model.security.SanitationJob_Photos.Create)
+                                {
+
+                                    <div class="col-box-4 button-row">
+
+                                        <div class="img-radio bttns takePic">
+                                            <button class="btn btn-blue" title="Take Picture" style="padding: 0.65rem; float:right; width:100%">
+                                                <label for="add_photos" style="margin-bottom:0px !important;width:100%;"><i class="fa fa-camera"></i></label>
+                                                <input id="add_photos" style="display:none;" type="file" value="" accept="image/*" capture>
+                                            </button>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<style type="text/css">
+
+    .img-radio input[type=radio]:checked + .radio-label:before {
+        background-color: #0075ff;
+        border: 1px solid #0075ff;
+        box-shadow: inset 0 0 0 4px #f4f4f4;
+    }
+
+
+
+    .img-radio input[type=radio]:focus + .radio-label:before {
+        outline: none;
+        border-color: #3197EE;
+    }
+
+    .img-radio input[type=radio]:disabled + .radio-label:before {
+        box-shadow: inset 0 0 0 4px #f4f4f4;
+        border-color: #b4b4b4;
+        background: #b4b4b4;
+    }
+
+    .img-radio input[type=radio] + .radio-label:empty:before {
+        margin-right: 0;
+    }
+
+    @@media(max-width:1023px) {
+        .takePic {
+            float: none;
+            margin-top: 0;
+        }
+
+        .gridList button.btn-blue.wobtngrdcancel, .btn.btn-blue.complete {
+            width: 100% !important;
+        }
+    }
+    /*New */
+    .eq-data span {
+        display: inline-block;
+    }
+
+    .summaryviewcardspan {
+        display: flex !important;
+    }
+
+    .summaryview:first-child .col-box-1 {
+        width: 10%;
+    }
+
+    .summaryview .col-box-1 {
+        width: 50%;
+    }
+
+    .summaryview.col-box-2 {
+        width: 40%;
+    }
+
+    .cardsummarylabel {
+        width: 120px;
+    }
+
+    .cardsummaryvalue {
+        width: calc(100% - 130px);
+    }
+
+    .summaryview {
+        width: 100%;
+        display: flex;
+    }
+
+    .summarycardimgbox {
+        width: 20%;
+        padding: 0 0 0 15px;
+    }
+
+    .summarycarddescriptionbox {
+        width: 35%;
+        padding: 0 0 0 12px;
+    }
+
+        .summarycarddescriptionbox span, .summarycardlistbox span {
+            display: inline-block;
+        }
+
+    .summarycardlistbox {
+        width: 45%;
+        padding: 0 0 0 28px;
+    }
+
+
+    /*.fixedDiv2 {
+        position: relative;
+        left: 0;
+        right: 0;
+    }*/
+
+    .gridStatus span {
+        margin-bottom: 0px !important;
+    }
+
+    .cardsummaryvalue span {
+        display: inline-block !important;
+    }
+
+
+    @@media(max-width:640px) {
+        /*.summaryviewcardspan {
+            display: block !important;
+        }*/
+
+        .cardsummarylabel {
+            width: 100%;
+        }
+
+        .cardsummaryvalue {
+            width: 100%;
+        }
+    }
+
+    @@media(min-width:1024px) {
+        .gridImgBox img {
+            max-height: 235px;
+        }
+
+        .top-tab {
+            margin-top: 0px !important;
+        }
+    }
+    /*New */
+    .newDescription .n-order-level {
+        display: inline-block;
+        padding-right: 10px;
+    }
+
+    .summarycarddescriptionbox .gridStatus {
+        margin-bottom: 45px;
+        max-height: 99px;
+    }
+
+    @@media(max-width:600px) {
+        .newDescription .n-order-level {
+
+            max-width: 48px;
+            word-break: break-all;
+            line-height:12px;
+        }
+
+
+    .newDescription span.orderId {
+        display: flex;
+        align-items: baseline !important;
+        width: 200px !important;
+    }
+
+    }
+
+</style>

@@ -1,0 +1,86 @@
+﻿@model Client.Models.MasterSanitationSchedule.MasterScheduleVM
+
+<div class="m-subheader">
+    <div class="new-m-subheader">
+        <div class="PageTitle">
+            <div class="align-items-center separator">
+                <h3 class="m-subheader__title">
+                  @Model.Loc.Where(a => a.ResourceId == "spnMasterSanitationSchedule").FirstOrDefault().Value.ToString() 
+                </h3>
+            </div>
+        </div>
+
+        <div class="NewBreadcrumbArea">
+            <div class="newBreadcrumb">
+                <ul>
+                    <li><a href="/Dashboard/Dashboard">&nbsp;</a></li>
+                    <li><a href="/MasterSanitationSchedule/index?page=Sanitation_Master_Schedule_Search">@Model.Loc.Where(a => a.ResourceId == "spnMasterSanitationScheduleSearch").FirstOrDefault().Value.ToString()</a></li>
+                    <li><a href="javascript:void(0)" id="brdmsTools" data-val="@Model.MasterSanPlanningModel.SanitationMasterId">@Model.MasterSanPlanningModel.MasterSanitationDescription</a></li>
+                    @if (Model.MasterSanPlanningModel.SanitationPlanningId == 0)
+                    {
+                        <li class="active">@Model.Loc.Where(a => a.ResourceId == "spnAddTools").FirstOrDefault().Value.ToString()</li>
+                    }
+                    else
+                    {
+                        <li class="active">@Model.Loc.Where(a => a.ResourceId == "spnEditTools").FirstOrDefault().Value.ToString()</li>
+                    }
+                </ul>
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+        <div style="clear:both;"></div>
+    </div>
+</div>
+@Html.Partial("_ErrorDiv")
+<div class="row">
+    <div class="col-xl-12">
+        <div class="m-portlet newPort" id="m_portlet" style="padding:15px;">
+            <div class="bottomBlock">
+                @using (Ajax.BeginForm("AddEditTool", "MasterSanitationSchedule", new AjaxOptions { HttpMethod = "Post", OnSuccess = "MSScheduleToolAddEditOnSuccess", OnBegin = "AjaxBeginFormBegin", OnComplete = "AjaxBeginFormComplete", OnFailure = "AjaxBeginFormFaillure" }))
+                {
+                    @Html.AntiForgeryToken()
+                    <div class="tabsArea nobg">
+                        <ul class="listView nobrd">
+                            <li>
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnTool").FirstOrDefault().Value.ToString() :<small>*</small></span>
+                                <span class="inputText">
+                                    @Html.ValidationMessageFor(m => m.MasterSanPlanningModel.CategoryValue, "", new { style = "display:none" })
+                                    @Html.DropDownListFor(m => m.MasterSanPlanningModel.CategoryValue, Model.MasterSanPlanningModel.CategoryIdList, "--Select--", new { @class = "form-control search select2picker", style = "width:100%;" })
+                                </span>
+                            </li>
+                            <li style="height:auto;">
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnToolInstructions").FirstOrDefault().Value.ToString() :</span>
+                                <span class="inputText" style="height:auto;">
+                                    @Html.TextAreaFor(m => m.MasterSanPlanningModel.Instructions, new { @class = "form-control search", autocomplete = "off" })
+                                </span>
+                                <div style="clear:both;"></div>
+                            </li>
+                            <li>
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnQuantity").FirstOrDefault().Value.ToString() :</span>
+                                <span class="inputText">
+                                    @Html.ValidationMessageFor(m => m.MasterSanPlanningModel.Quantity, "", new { style = "display:none" })
+                                    @Html.TextBoxFor(m => m.MasterSanPlanningModel.Quantity, new { @class = "form-control search decimalinput", autocomplete = "off" })
+                                </span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div style="clear:both;"></div>
+
+                    <div class="idBttns">
+                        <div class="bttn_pagin">
+                            <div class="bttns2">
+                                <button type="submit" class="btn btn-blue mobBttn"><i class="fa fa-save faIcon"></i> &nbsp;@Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString() </button>
+                            </div>
+                            <div class="bttns"><button type="button" class="btn btn-blue mobBttn" id="btnToolsCancel"><i class="fa fa-close faIcon"></i> &nbsp;@Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString() </button></div>
+                            <div style="clear:both;"></div>
+                        </div>
+                    </div>
+                    @Html.HiddenFor(m=>m.MasterSanPlanningModel.SanitationMasterId)
+                    @Html.HiddenFor(m => m.MasterSanPlanningModel.SanitationPlanningId)
+                    @Html.HiddenFor(m => m.MasterSanPlanningModel.Description)
+                }
+
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,50 @@
+﻿@model Client.Models.FleetFuel.FleetFuelVM
+<nav id="sidebar">
+    <div id="dismiss">
+        <i class="fa fa-close"></i>
+    </div>
+    <div class="sidebar-header">
+        <h3><i class="fa fa-filter" style="position: relative; top: -2px;"></i>&nbsp; @Model.Loc.Where(a => a.ResourceId == "globalFilter").FirstOrDefault().Value.ToString() <span id="spnControlCounter">0</span></h3>
+        <button type="button" class="btn btn-blue filterSearch" id="btnFleetFuelDataAdvSrch"> @Model.Loc.Where(a => a.ResourceId == "GlobalApply").FirstOrDefault().Value.ToString()</button>
+    </div>
+    <div class="sidebar-content" id="advsearchsidebar">
+        <form action="#" method="post">
+            <div class="form-group">
+                <label for="EquipmentID" id="lblEquipmentID" name="EquipmentID">@Model.Loc.Where(a => a.ResourceId == "spnGlobalEquipmentId").FirstOrDefault().Value.ToString() </label>
+                <input type="text" class="form-control search adv-item" id="EquipmentID" autocomplete="off" style="color:#333;">
+            </div>
+            <div class="form-group">
+                <label for="Name" id="lblName">@Model.Loc.Where(a => a.ResourceId == "spnName").FirstOrDefault().Value.ToString() </label>
+                <input type="text" class="form-control search adv-item" id="Name" autocomplete="off" style="color:#333;">
+            </div>
+            <div class="form-group">
+                <label for="Make" id="lblMake">@Model.Loc.Where(a => a.ResourceId == "spnMake").FirstOrDefault().Value.ToString() </label>
+                <input type="text" class="form-control search adv-item" id="Make" autocomplete="off" style="color:#333;">
+            </div>
+            <div class="form-group">
+                <label for="ModelNumber" id="lblModel">@Model.Loc.Where(a => a.ResourceId == "GlobalModel").FirstOrDefault().Value.ToString() </label>
+                <input type="text" class="form-control search adv-item" id="ModelNumber" autocomplete="off" style="color:#333;">
+            </div>           
+            <div class="form-group">
+                <label for="VIN" id="lblVIN">@Model.Loc.Where(a => a.ResourceId == "spnVIN").FirstOrDefault().Value.ToString()  </label>
+                <input type="text" class="form-control search adv-item" id="VIN" autocomplete="off" style="color:#333;">
+            </div>
+            <div class="form-group">
+                <label for="dtgridadvsearchReadingDate">@Model.Loc.Where(a => a.ResourceId == "spnReadingDate").FirstOrDefault().Value.ToString():</label>
+                <!--V2-347-->
+                <select id="dtgridadvsearchReadingDate" style="width:100%;" class="form-control search adv-item select2picker has-dtrangepicker">
+                    <option value="">--Select--</option>
+                    @foreach (var item in Model.FleetFuelModel.DateRangeDropListForFFReadingdate)
+                    {
+                        <option value="@item.Value">@item.Text</option>
+                    }
+                </select>
+                <div style="padding:10px 0 0 10px; border-left: 1px dashed #b9c1c4;display:none;" class="range-timeperiod" id="ReadingDatetimeperiodcontainer">
+                    <label for="">@Model.Loc.Where(a => a.ResourceId == "spnGlobalTimePeriod").FirstOrDefault().Value.ToString() :</label>
+                    <input type="text" class="form-control search dtrangepicker" id="advreadingDatedaterange" autocomplete="off">
+                </div>
+            </div>
+          
+        </form>
+    </div>
+</nav>

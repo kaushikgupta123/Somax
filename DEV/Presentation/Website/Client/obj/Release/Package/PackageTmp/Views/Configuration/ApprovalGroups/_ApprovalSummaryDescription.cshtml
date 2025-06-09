@@ -1,0 +1,33 @@
+﻿@model Client.Models.Configuration.ApprovalGroups.ApprovalGroupsVM
+
+<div id="ApprovalGroupsDetaildesmodal" class="modal fade" role="dialog" data-backdrop="false" style="display: none;">
+    <div class="modal-dialog modal-info">     
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">@Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString()</h4>
+            </div>
+            <div class="modal-body" style="text-align:center;">
+                <span id="ApprovalGroupsDetaildesmodaltext"></span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    @@media(max-width:1280px){
+        #ApprovalGroupsDetaildesmodal {
+            top: -2%;
+            width: calc( 100% - 256px);
+            left: 256px;
+        }
+     }
+    @@media(max-width:1023px) {
+        #ApprovalGroupsDetaildesmodal {
+            top: -2%;
+            width: calc( 100% - 0px);
+            left: 0px;
+        }
+    }
+    
+</style>

@@ -1,0 +1,159 @@
+﻿@model Client.Models.NewLaborScheduling.NewLaborSchedulingVM
+@*<link href="~/Content/sidebar_custom.css" rel="stylesheet" />
+    <link href="~/Scripts/Metronic/assets/demo/default/base/style_newCustom.css" rel="stylesheet" />*@
+<div id="AvailableWorkModal" class="modal fade" role="dialog">
+    <div class="modal-dialog childrenPop" style="overflow:hidden;">
+        <div class="overlay2"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close btncancelschedule" data-dismiss="modal">&times;</button>
+                <div class="align-items-center">
+                    <h3 class="m-subheader__title ">
+                        @Model.Loc.Where(a => a.ResourceId == "spnAvailableWorkOrders").FirstOrDefault().Value.ToString()
+                    </h3>
+                </div>
+                <div style="clear:both;"></div>
+            </div>
+
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-xl-12">
+                        <div class="m-portlet" id="m_portlet" style="padding:15px; margin-bottom:0;">
+                            <div class="actionBar">
+                                <div class="pull-left">
+                                    <button type="button" class="btn btn-white navbar-btn" id="AvailablesidebarCollapse" title="Advance Search"><i class="fa fa-filter" style="font-size: 1.3rem;"></i></button>
+                                    <ul class="filter_apply globalFilterAdjusted">
+                                        <li class="textFilter"><span class="AWOfilteritemcount">0</span> @Model.Loc.Where(a => a.ResourceId == "globalFiltersAppiled").FirstOrDefault().Value.ToString()</li>
+                                        <li class="textClear" id="liClearAdvSearchFilterAVlLabAWO"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "globalClear").FirstOrDefault().Value.ToString()</a></li>
+                                    </ul>
+                                    <div style="clear:both;"></div>
+                                </div>
+                                <div style="clear:both;"></div>
+                                <div id="advsearchfilteritemsAWO"></div>
+                                <div style="clear:both;"></div>
+                            </div>
+                            <div style="clear:both;"></div>
+
+                            <div class="checkbox" style="color:#000;">
+                                <label><input type="checkbox" value="" id="AlreadyScheduledId" style="position:relative; top:3px;"> &nbsp; @Model.Loc.Where(a => a.ResourceId == "spnIncludeAlreadyScheduledWorkOrders").FirstOrDefault().Value.ToString()</label>
+                            </div>
+                            <div class="table-responsive">
+                                <table id="tblAvailGrid" class="eqpDtlTbl row-border custom-sort" style="width:100%;">
+                                    <thead>
+                                        <tr>
+                                            <th><input type="checkbox" value="" id="labavlidselectall"></th>
+                                            <th>@Model.Loc.Where(a => a.ResourceId == "spnGlobalWorkOrderID").FirstOrDefault().Value.ToString()</th>
+                                            <th>@Model.Loc.Where(a => a.ResourceId == "GlobalChargeTo").FirstOrDefault().Value.ToString()</th>
+                                            <th>@Model.Loc.Where(a => a.ResourceId == "spnChargeToName").FirstOrDefault().Value.ToString()</th>
+                                            <th>@Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString()</th>
+                                            <th>@Model.Loc.Where(a => a.ResourceId == "spnAssigned").FirstOrDefault().Value.ToString()</th>@*V2-984*@
+                                            <th>@Model.Loc.Where(a => a.ResourceId == "spnStatus").FirstOrDefault().Value.ToString()</th>
+                                            <th>@Model.Loc.Where(a => a.ResourceId == "spnPriority").FirstOrDefault().Value.ToString()</th>
+                                            <th>@Model.Loc.Where(a => a.ResourceId == "GlobalType").FirstOrDefault().Value.ToString()</th>
+                                            <th>@Model.Loc.Where(a => a.ResourceId == "spnRequiredDate").FirstOrDefault().Value.ToString()</th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="ApproveWOadvsearchcontainer">
+                        @Html.Partial("_AvailableWorkOrderAdvSearchCalendar")
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <div class="bttns" style="margin-top: 0;"><button type="button" class="btn btn-blue mobBttn btnLSAWOCancel" data-dismiss="modal"><i class="fa fa-close" style="margin-top:-3px;"></i> &nbsp;@Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button></div>
+                <div class="bttns2" style="margin-top: 0;"><button type="button" class="btn btn-blue mobBttn" data-toggle="" data-target="" id="btnLSAddAvailableWO"><i class="fa fa-plus" style="margin-top:-3px;"></i> &nbsp;@Model.Loc.Where(a => a.ResourceId == "globalAdd").FirstOrDefault().Value.ToString()</button></div>
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@Html.Partial("_AvailableWorkAssignModalCalendar")
+
+<style type="text/css">
+    /*#AvailableWork .dataTables_wrapper {
+        margin-bottom: 3px !important;
+    }*/
+    /*.bttns, .bttns2 { margin-top:0; }*/
+    /*#AvailableWork .modal .modal-content .modal-header,
+    #AvailableWork .modal .modal-content .modal-body,
+    #AvailableWork .modal .modal-content .modal-footer {
+        display: block;
+        padding: 15px !important;
+    }*/
+    /*.overlay2 { position: fixed; width: 100vw; height: 100vh; background: rgba(0, 0, 0, 0.6); z-index: 104; display: none; left: 0; top: 0; }*/
+
+
+    @@media(max-width:900px) {
+        .modal-body {
+            max-height: 50vh;
+            overflow-y: auto !important;
+        }
+
+    }
+
+
+    @@media only screen and (min-width: 820px) and (max-width: 1199px) {
+        .sidebar
+        {
+            height: calc(100% - 0px) !important;
+        }
+    }
+
+
+    @@media(max-width:700px) {
+        .modal-body {
+            max-height: 153px !important;
+            overflow-y: auto !important;
+        }
+        .actionBar div.pull-left ul.filter_apply.globalFilterAdjusted {
+            width: auto;
+            margin: 0px 0 0 0 !important;
+        }
+
+
+    }
+
+
+</style>
+<script>
+    
+    $(document).mouseup(function (e) {
+        var container = $("#ApproveWOadvsearchcontainer");
+        if (container.length > 0 && e.target.id != 'AvailablesidebarCollapse' && e.target.parentElement.id != 'AvailablesidebarCollapse'
+            && (!container.is(e.target) && container.has(e.target).length === 0) && !$("#AWORequiredDate").datepicker("widget").is(":visible")) {
+
+            var IsDdlvalids = 0;
+
+            if ($("#AWOStatus").val() != "") {
+                IsDdlvalids = 1;
+            }
+            if ($("#AWORequiredDate").val() != "") {
+                IsDdlvalids = 1;
+            }
+            if ($("#AWOPriority").val() != "") {
+                IsDdlvalids = 1;
+            }
+            if ($("#AWOAssigned").val() != "") {
+                IsDdlvalids = 1;
+            }
+
+            if ($("#AWOWOType").val() != "") {
+                IsDdlvalids = 1;
+            }
+            if ((IsDdlvalids == 0) || (IsDdlvalids == 1 && typeof $(e.target).attr('id') === 'undefined')) {
+                $('#ApproveWOadvsearchcontainer').find('.sidebar').removeClass('active');
+                $(document).find('.overlay2').fadeOut();
+            }
+
+        }
+
+    });
+
+
+    
+</script>

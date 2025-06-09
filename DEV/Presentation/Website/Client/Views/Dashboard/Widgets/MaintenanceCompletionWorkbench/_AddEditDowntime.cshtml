@@ -1,0 +1,89 @@
+﻿@model Client.Models.Dashboard.DashboardVM
+@using (Ajax.BeginForm("SaveDowntime", "Dashboard", new AjaxOptions { HttpMethod = "Post", OnSuccess = "DowntimeAddOnSuccess", OnBegin = "AjaxBeginFormBegin", OnComplete = "AjaxBeginFormComplete", OnFailure = "AjaxBeginFormFaillure" }, new { id = "frmDowntimeAdd" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(m => m.woDowntimeModel.DowntimeId)
+    @Html.HiddenFor(m => m.woDowntimeModel.WorkOrderId)
+    @Html.HiddenFor(m => m.woDowntimeModel.ChargeToId)
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close clearstate" data-dismiss="modal">&times;</button>
+            @if (ViewBag.Mode == "Add")
+            {
+                <h4 class="modal-title"> @Model.Loc.Where(a => a.ResourceId == "GlobalAddDowntime").FirstOrDefault().Value.ToString()</h4>
+            }
+            else
+            {
+        <h4 class="modal-title">@Model.Loc.Where(a => a.ResourceId == "globalDowntimeEdit").FirstOrDefault().Value.ToString()</h4>
+            }
+        </div>
+        @Html.Partial("_ErrorDiv")
+        <div class="modal-body">
+            <div class="form-group" style="margin-bottom:0;">
+                <div class="bottomBlock">
+                    <div class="tabsArea nobg">
+                        <ul class="listView nobrd" style="border-bottom:0;">
+
+
+                            <li style="margin-bottom:4px;">
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "GlobalDate").FirstOrDefault().Value.ToString() : <small>*</small></span>
+                                <span class="inputText">
+                                    @Html.ValidationMessageFor(m => m.woDowntimeModel.Downdate, "", new { style = "display:none" })
+                                    @Html.TextBoxFor(m => m.woDowntimeModel.Downdate, "{0:MM/dd/yyyy}", new { @class = "form-control search dtpicker", autocomplete = "off", @readonly = "readonly" })
+                                </span>
+                            </li>
+                            <li style="margin-bottom:4px;">
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "globalMinutes").FirstOrDefault().Value.ToString() : <small>*</small></span>
+                                <span class="inputText">
+                                    @Html.ValidationMessageFor(m => m.woDowntimeModel.MinutesDown, "", new { style = "display:none" })
+                                    @Html.TextBoxFor(m => m.woDowntimeModel.MinutesDown, new { @class = "form-control search decimalinput", autocomplete = "off" })
+                                </span>
+                            </li>
+                            <li style="margin-bottom:3px;">
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnReasonForDown").FirstOrDefault().Value.ToString() : <small>*</small></span>
+                                <span class="inputText">
+                                    @Html.ValidationMessageFor(m => m.woDowntimeModel.ReasonForDown, "", new { style = "display:none" })
+                                    @if (ViewBag.Mode == "Add")
+                                    {
+                                        @Html.DropDownListFor(m => m.woDowntimeModel.ReasonForDown, Model.woDowntimeModel.ReasonForDownList, "--Select--", new { @class = "form-control search select2picker", style = "width:100%;" })
+                                    }
+                                    else
+                                    {
+                                        @Html.DropDownListFor(m => m.woDowntimeModel.ReasonForDown, Model.woDowntimeModel.ReasonForDownList.Select(x => new SelectListItem { Text = x.Text, Value = x.Value, Selected = (x.Value == Model.woDowntimeModel.ReasonForDown.ToString()) }), "--Select--", new { @class = "form-control search select2picker", style = "width:100%;" })
+                                    }
+                                </span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div style="clear:both;"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal-footer" style="padding:15px 25px !important;">
+            <div class="idBttns">
+                <div class="bttn_pagin">
+                    <div class="bttns2" style="margin:0;">
+                        <button type="submit" class="btn btn-blue mobBttn" style="cursor:pointer" value="save"><i class="fa fa-save faIcon"></i> &nbsp;@Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+                    </div>
+                    <div class="bttns" style="margin:0;"><button type="button" data-dismiss="modal" class="btn btn-blue mobBttn clearstate" id="btnDowntimecancel"><i class="fa fa-close faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button></div>
+
+                    <div style="clear:both;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+}
+
+<script>
+    $(function () {
+        $(document).find('form').find("#woDowntimeModel_WorkOrderId").val($(document).find('#WorkOrderId').val());
+        $(document).find('form').find("#woDowntimeModel_ChargeToId").val($(document).find('#WoChargeToID').val());
+        $(document).find('form').find("#woDowntimeModel_ReasonForDown").removeClass("input-validation-error");
+        $(document).find('form').find("#woDowntimeModel_Downdate").removeClass("input-validation-error");
+        $(document).find('form').find("#woDowntimeModel_MinutesDown").removeClass("input-validation-error");
+    });
+</script>
+
+

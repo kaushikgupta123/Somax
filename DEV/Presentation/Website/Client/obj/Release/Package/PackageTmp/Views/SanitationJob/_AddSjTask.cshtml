@@ -1,0 +1,167 @@
+﻿@model Client.Models.Sanitation.SanitationVM
+<div class="m-subheader fixedDiv1">
+    <div class="new-m-subheader">
+        <div class="PageTitle">
+            <div class="align-items-center separator">
+                <h3 class="m-subheader__title ">
+                    @Model.Loc.Where(a => a.ResourceId == "spnSanitation").FirstOrDefault().Value.ToString()
+                </h3>
+            </div>
+        </div>
+
+        <div class="NewBreadcrumbArea">
+            <div class="newBreadcrumb">
+                <ul>
+                    <li><a href="/Dashboard/Dashboard">&nbsp;</a></li>
+                    <li><a href="/SanitationJob/Index?page=Sanitation_Jobs_Search">@Model.Loc.Where(a => a.ResourceId == "spnSanitaionJobSearch").FirstOrDefault().Value.ToString()</a></li>
+                    <li><a href="javascript:void(0)" id="brdsjtask" data-val="@Model.sanitationJobTaskModel.SanitationJobId">@Model.sanitationJobTaskModel.ClientLookupId</a></li>
+                    @if (Model.sanitationJobTaskModel.SanitationJobTaskId == 0)
+                    {
+                        <li class="active"><a href="#">@Model.Loc.Where(a => a.ResourceId == "spnAddTask").FirstOrDefault().Value.ToString()</a></li>
+                    }
+                    else
+                    {
+                        <li class="active">@Model.Loc.Where(a => a.ResourceId == "spnEditTask").FirstOrDefault().Value.ToString()</li>
+                    }
+                </ul>
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+        <div style="clear:both;"></div>
+    </div>
+</div>
+<div class="pushDiv1"></div>
+
+<div class="row fixedDiv2">
+    @Html.Partial("_SanitationJobSummary", Model)
+</div>
+<div class="pushDiv2 partsAdjust"></div>
+
+@Html.Partial("_ErrorDiv")
+@{
+    string shortDate = string.Empty;
+    if (Model.sanitationJobTaskModel.CompleteDate != null)
+    {
+        if (Model.sanitationJobTaskModel.CompleteDate != null && Model.sanitationJobTaskModel.CompleteDate == default(DateTime))
+        {
+            shortDate = null;
+        }
+        else
+        {
+            DateTime date = (DateTime)Model.sanitationJobTaskModel.CompleteDate;
+            shortDate = date.ToString("MM/dd/yyyy");
+        }
+    }
+
+}
+@using (Ajax.BeginForm("AddTasks", "SanitationJob", new AjaxOptions { HttpMethod = "Post", OnSuccess = "SjTaskAddOnSuccess", OnBegin = "AjaxBeginFormBegin", OnComplete = "AjaxBeginFormComplete", OnFailure = "AjaxBeginFormFaillure" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="row">
+        <div class="col-xl-12">
+            <div class="m-portlet newPort" id="m_portlet" style="padding:15px;">
+                <div class="bottomBlock">
+                    <div class="tabsArea nobg">
+                        <ul class="listView nobrd">
+                            @if (Model.sanitationJobTaskModel.SanitationJobTaskId == 0)
+                            {
+                                <li>
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnOrder").FirstOrDefault().Value.ToString() : <small>*</small></span>
+
+                                    <span class="inputText">
+                                        @Html.ValidationMessageFor(m => m.sanitationJobTaskModel.TaskId, "", new { style = "display:none" })
+                                        @Html.TextBoxFor(m => m.sanitationJobTaskModel.TaskId, new { @class = "form-control search", autocomplete = "off", maxlength = 3 })
+                                    </span>
+
+                                </li>
+
+                            }
+                            else
+                            {
+                                <li>
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnOrder").FirstOrDefault().Value.ToString() :</span>
+                                    <span class="inputText">@Html.TextBoxFor(m => m.sanitationJobTaskModel.TaskId, new { @class = "form-control search readonly", autocomplete = "off", @readonly = "readonly" })</span>
+
+                                </li>
+
+                            }
+                            <li>
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnChargeType").FirstOrDefault().Value.ToString() : </span>
+                                <span class="inputText">
+                                    @Html.TextBoxFor(m => m.sanitationJobTaskModel.ChargeType, new { @class = "form-control search readonly", autocomplete = "off", @readonly = "readonly" })
+                                </span>
+                            </li>
+                            <li>
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "GlobalChargeTo").FirstOrDefault().Value.ToString() : </span>
+                                <span class="inputText">
+                                    @Html.TextBoxFor(m => m.sanitationJobTaskModel.ChargeToClientLookupId, new { @class = "form-control search readonly", autocomplete = "off", @readonly = "readonly" })
+                                </span>
+                            </li>
+                            <li style="height:auto;">
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString() : <small>*</small></span>
+                                <span class="inputText" style="height:auto;">
+                                    @Html.ValidationMessageFor(m => m.sanitationJobTaskModel.Description, "", new { style = "display:none" })
+                                    @Html.TextAreaFor(m => m.sanitationJobTaskModel.Description, new { @class = "form-control search", autocomplete = "off" })
+                                </span>
+                                <div style="clear:both;"></div>
+                            </li>
+                            @*----------------inactive controls-------------------------*@
+                            <li>
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnStatus").FirstOrDefault().Value.ToString() : </span>
+                                <span class="inputText">@Html.TextBoxFor(m => m.sanitationJobTaskModel.Status, new { @class = "form-control search readonly", autocomplete = "off", @readonly = "readonly" })</span>
+
+                            </li>
+                            <li>
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnCompleteBy").FirstOrDefault().Value.ToString() : </span>
+                                <span class="inputText">@Html.TextBoxFor(m => m.sanitationJobTaskModel.CompleteBy, new { @class = "form-control search readonly", autocomplete = "off", @readonly = "readonly" })</span>
+
+                            </li>
+                            <li>
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnCompleteDate").FirstOrDefault().Value.ToString() : </span>
+
+                                <span class="inputText">
+                                    <input autocomplete="off" class="form-control search readonly valid" id="woTaskModel_CompleteDate" name="woTaskModel.CompleteDate" type="text" value=" @shortDate" disabled="disabled" />
+                                </span>
+
+                            </li>
+                            <li>
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnCancelReason").FirstOrDefault().Value.ToString() : </span>
+                                <span class="inputText">
+                                    @Html.TextBoxFor(m => m.sanitationJobTaskModel.CancelReason, new { @class = "form-control search", @disabled = "disabled", style = "width:100%;" })
+                                </span>
+
+                            </li>
+                            @*----------------end of inactive controls-------------------------*@
+                        </ul>
+                    </div>
+                    <div style="clear:both;"></div>
+
+                    <div class="idBttns">
+                        <div class="bttn_pagin">
+                            <div class="bttns2">
+                                <button type="submit" class="btn btn-blue mobBttn"><i class="fa fa-save faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+                            </div>
+
+                            <div class="bttns">
+                                <div class="bttns"><button type="button" class="btn btn-blue mobBttn" id="btnsjtaskcancel"><i class="fa fa-close faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button></div>
+                            </div>
+                            <div style="clear:both;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @Html.HiddenFor(m => m.sanitationJobTaskModel.SanitationJobId)
+    @Html.HiddenFor(m => m.sanitationJobTaskModel.TaskId)
+    @Html.HiddenFor(m => m.sanitationJobTaskModel.SanitationJobTaskId)
+    @Html.HiddenFor(m => m.sanitationJobTaskModel.CancelReason)
+    @Html.Partial("_SanitationJobSummaryDescriptionMore", Model) @*V2-988*@
+
+    if (Model.sanitationJobTaskModel.SanitationJobTaskId != 0)
+    {
+        @Html.HiddenFor(m => m.sanitationJobTaskModel.UpdateIndex)
+    }
+
+}

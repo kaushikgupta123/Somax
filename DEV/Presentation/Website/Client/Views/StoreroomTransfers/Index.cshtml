@@ -1,0 +1,69 @@
+﻿@model Client.Models.StoreroomTransfer.StoreroomTransferVM
+@{
+    ViewBag.Title = "Somax | Storeroom Transfer";
+}
+@Styles.Render("~/Content/dashboardStyle")
+@Styles.Render("~/Content/datatable")
+<link href="~/Content/sidebar_custom.css" rel="stylesheet" />
+<link href="~/Scripts/Metronic/assets/demo/default/base/GlobalSearchGrid.css" rel="stylesheet" />
+
+<div id="storeroomtransfer">
+    @if (ViewBag.IsIncomingPage == true)
+    {
+        @section scripts {
+            @Scripts.Render("~/bundles/datatable")
+            @Scripts.Render("~/bundles/StoreroomTransferIncomingTransfer")
+        }
+        @Styles.Render("~/Content/LaborSchedulingList")
+        @Html.Partial("_StoreroomTransfersIncomingSearch", Model)
+    }
+    else
+    {
+        @section scripts{
+            @Scripts.Render("~/bundles/datatable")
+            @Scripts.Render("~/bundles/StoreroomTransferOutgoingTransfer")
+        }
+        @Styles.Render("~/Content/LaborSchedulingList")
+        @Html.Partial("_StoreroomTransfersOutgoingSearch", Model)
+    }
+</div>
+<style>
+    .maskaction { /* create are mask */
+        position: fixed;
+        top: 0;
+        left: 0;
+        background: rgba(0,0,0,0.6);
+        z-index: 500;
+        width: 100%;
+        height: 100%;
+        display: none;
+        transition: all 0.3s;
+    }
+
+    .actionbtndiv { /* create are mask */
+        width: 180px;
+        /* margin: 0 auto; */
+        background: white;
+        /* color: black; */
+        padding: 10px;
+        position: sticky;
+        /*top: 40px;*/
+        right: 110px !important;
+        z-index: 1000;
+        /* display: none; */
+        border-radius: 3px;
+        /* box-shadow: 3px 3px 5px rgb(0 0 0 / 30%); */
+        /* transition: all 0.3s; */
+        display: block;
+        /*height:74px;*/
+        /*overflow:scroll;*/
+        /*margin-top:-40px;*/ 
+        margin-left: -45px;
+    }
+
+        .actionbtndiv .btn-blue {
+            width: 100%;
+            float: none;
+            margin-bottom: 2px;
+        }
+</style>

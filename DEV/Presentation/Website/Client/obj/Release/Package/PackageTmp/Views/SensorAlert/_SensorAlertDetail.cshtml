@@ -1,0 +1,113 @@
+﻿@model Client.Models.SensorAlert.SensorAlertVM
+<div class="m-subheader">
+    <div class="new-m-subheader">
+        <div class="PageTitle">
+            <div class="align-items-center separator">
+                <h3 class="m-subheader__title ">
+                    @Model.Loc.Where(a => a.ResourceId == "spnSensorAlertProcedures").FirstOrDefault().Value.ToString()
+                </h3>
+            </div>
+        </div>
+        <div class="NewBreadcrumbArea">
+            <div class="newBreadcrumb">
+                <ul>
+                    <li><a href="/Dashboard/Dashboard">&nbsp;</a></li>
+                    <li><a href="/SensorAlert/Index?page=Sensors_Alert_Procedures">@Model.Loc.Where(a => a.ResourceId == "spnSensorAlertProceduresSearch").FirstOrDefault().Value.ToString()</a></li>
+                    <li class="active">@Model.sensorAlertModel.ClientLookUpId</li>
+                </ul>
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+        <div class="ActionBttnArea">
+            @if (Model.security.Sensors.AlertProcedures)
+            {
+            <button type="button" class="btn btn-add addsensoralert pull-left"><i class="fa fa-plus"></i></button>
+            }
+            <div style="clear:both;"></div>
+        </div>
+        <div style="clear:both;"></div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-xl-3">
+        <div class="m-portlet">
+            <div class="sideMenuArea nobg">
+                <ul class="vtabs" id="detmaintab">
+                    <li class="active" id="saOverview"><a href="#Overview">&nbsp;@Model.Loc.Where(a => a.ResourceId == "spnAlertOverview").FirstOrDefault().Value.ToString()</a></li>
+                    <li id="litask" onclick="openCity(event, 'Tasks')"><a href="#Tasks">&nbsp; @Model.Loc.Where(a => a.ResourceId == "spnTasks").FirstOrDefault().Value.ToString()</a></li>
+                </ul>
+            </div>
+            <div class="selectTabs" id="selectTabs">
+                <select class="form-control" id="colorselector">
+                    <option value="Overview">@Model.Loc.Where(a => a.ResourceId == "spnAlertOverview").FirstOrDefault().Value.ToString()</option>
+                    <option value="Tasks">@Model.Loc.Where(a => a.ResourceId == "spnTasks").FirstOrDefault().Value.ToString()</option>
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-9">
+        <div class="row">
+            <div class="col-xl-12">
+                <div class="m-portlet" id="m_portlet" style="padding:15px;">
+                    <div class="bottomBlock">
+                        <div class="tabsArea nobg" id="Overview" style="display:block;">
+                            <div class="m-portlet__head" style="padding:0; height:2.5rem;">
+                                <div class="m-portlet__head-caption">
+                                    <div class="m-portlet__head-title">
+                                        <h3 class="m-portlet__head-text" style="vertical-align:top;">
+                                           @Model.Loc.Where(a => a.ResourceId == "spnAlertOverview").FirstOrDefault().Value.ToString()
+                                        </h3>
+                                    </div>
+                                </div>
+                            </div>
+                            <ul class="listView">
+                                <li>
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnOnDemandID").FirstOrDefault().Value.ToString(): </span>
+                                    <span class="inputText">@Model.sensorAlertModel.ClientLookUpId</span>
+                                </li>
+                                <li style="height:auto;">
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString() :</span>
+                                    <span class="inputText description-span">@Model.sensorAlertModel.Description</span>
+                                    <div style="clear:both;"></div>
+                                </li>
+                                <li>
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "GlobalType").FirstOrDefault().Value.ToString()  :</span>
+                                    <span class="inputText">@Model.sensorAlertModel.Type</span>
+                                </li>
+                                <li>
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "globalInActive").FirstOrDefault().Value.ToString()  : </span>
+                                    <span class="inputText">@Html.CheckBoxFor(m => m.sensorAlertModel.InactiveFlag, new { @class = "form-control m-input", @disabled = "disabled", @style = "color:black; width: auto; margin-top: 15px;" })</span>
+                                </li>
+                            </ul>
+                            <div class="editBttn">
+                                <button type="button" class="btn btn-blue" id="editSensorAlert"><i class="fa fa-pencil" style="margin-top:-3px;"></i> &nbsp;Edit</button>
+                            </div>
+                            <div style="clear:both;"></div>
+                        </div>
+                        <div class="tabsArea nobg" id="Tasks" style="display:none;">
+                            <div class="table-responsive">
+                                <table id="saTaskTable" class="eqpDtlTbl row-border custom-sort" style="width:100%;">
+                                    <thead>
+                                        <tr>
+                                            <th>@Model.Loc.Where(a => a.ResourceId == "spnOrder").FirstOrDefault().Value.ToString()</th>
+                                            <th>@Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString() </th>
+                                            <th width="17%" style="text-align:center !important;">@Model.Loc.Where(a => a.ResourceId == "globalAction").FirstOrDefault().Value.ToString() </th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                            <div class="bttn_pagin">
+                                <div class="bttns"><button type="button" class="btn btn-blue" data-toggle="" data-target="" id="btnAddTask"><i class="fa fa-plus faIcon"></i> &nbsp;@Model.Loc.Where(a => a.ResourceId == "spnAddTask").FirstOrDefault().Value.ToString()</button></div>
+                                <div style="clear:both;"></div>
+                            </div>
+                            <div style="clear:both;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@Html.HiddenFor(m => m.sensorAlertModel.SensorAlertProcedureId)
+@Html.HiddenFor(m => m.sensorAlertModel.ClientLookUpId)
+

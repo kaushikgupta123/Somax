@@ -1,0 +1,123 @@
+﻿@model Client.Models.Configuration.CategoryMaster.CategoryMasterVM
+
+<div class="m-subheader">
+    <div class="new-m-subheader">
+        <div class="PageTitle">
+            <div class="align-items-center separator">
+                <h3 class="m-subheader__title ">
+                    @Model.Loc.Where(a => a.ResourceId == "globalCategoryMaster").FirstOrDefault().Value.ToString()
+                </h3>
+            </div>
+        </div>
+
+        <div class="NewBreadcrumbArea">
+            <div class="newBreadcrumb">
+                <ul>
+                    <li><a href="/Configuration/Dashboard">&nbsp;</a></li>
+                    <li class="active">@Model.Loc.Where(a => a.ResourceId == "globalCategoryMaster").FirstOrDefault().Value.ToString()</li>
+                </ul>
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+
+        <div class="ActionBttnArea">
+            @if (Model.security.PartCategoryMaster.Create)
+            {
+                <button type="button" class="btn newBtn-add addNewCategoryMaster pull-left" title="Add Category Master">@Model.Loc.Where(a => a.ResourceId == "globalNewCategoryMaster").FirstOrDefault().Value.ToString()</button>
+            }
+            <div style="clear:both;"></div>
+        </div>
+        <div style="clear:both;"></div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xl-12">
+        <div class="m-portlet" id="m_portlet" style="padding:15px; margin-bottom:0;">
+            <div class="actionBar" style="display:none;" id="categoryMasterAction">
+                <div class="pull-left">
+                    <div class="ActiveInactiveDrop LoaderDrop">
+                        <select class="form-control search select2-not-search LoaderDrop" id="categoryMasterDropdown" name="categoryMasterDropdown">
+                            <option value="1">@Model.Loc.Where(a => a.ResourceId == "globalActive").FirstOrDefault().Value.ToString()</option>
+                            <option value="2">@Model.Loc.Where(a => a.ResourceId == "globalInActive").FirstOrDefault().Value.ToString()</option>
+                        </select>
+                    </div>
+                    @if (Model.security.PartCategoryMaster.Create)
+                    {
+                        <button type="button" class="btn btn-white navbar-btn" id="sidebarCollapse" title="Advance Search"><i class="fa fa-filter" style="font-size: 1.3rem;"></i></button>
+                    }
+                    <ul class="filter_apply">
+                        <li class="textFilter" id="liSelectCount">0 @Model.Loc.Where(a => a.ResourceId == "globalFiltersAppiled").FirstOrDefault().Value.ToString()</li>
+                        <li class="textClear" id="liClearAdvSearchFilter"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "globalClear").FirstOrDefault().Value.ToString() </a></li>
+                    </ul>
+                    <div style="clear:both;"></div>
+                </div>
+
+                <div class="pull-right">
+                    <button type="button" class="btn btn-white import-export" onclick="funcShowExportbtn()">@Model.Loc.Where(a => a.ResourceId == "spnExport").FirstOrDefault().Value.ToString()</button>
+                    <button type="button" class="btn btn-white" id="liCustomize" title="Customize" data-toggle="modal" data-target="#gridcolumncustomizemodal"><i class="fa fa-cog" style="font-size: 1.3rem;"></i></button>
+                    <div style="clear:both;"></div>
+                </div>
+                <div style="clear:both;"></div>
+                <div id="dvFilterSearchSelect2"></div>
+                <div style="clear:both;"></div>
+            </div>
+            <div style="clear:both;"></div>
+
+            <div id="Active" class="tabcontent" style="display:block;">
+                <div class="table-responsive">
+                    <table id="categoryMasterSearch" class="eqpDtlTbl row-border custom-sort" style="width:100%;">
+                        <thead>
+                            <tr>
+                                <th data-th-index="0">@Model.Loc.Where(a => a.ResourceId == "spnPartCategoryMasterId").FirstOrDefault().Value.ToString()</th>
+                                <th data-th-index="1">@Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString()</th>
+                                <th data-th-index="2" width="17%" style="text-align:center !important;">@Model.Loc.Where(a => a.ResourceId == "globalAction").FirstOrDefault().Value.ToString()</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<nav id="sidebar">
+    <div id="dismiss">
+        <i class="fa fa-close"></i>
+    </div>
+    <div class="sidebar-header">
+        <h3><i class="fa fa-filter" style="position: relative; top: -2px;"></i>&nbsp;@Model.Loc.Where(a => a.ResourceId == "globalFilter").FirstOrDefault().Value.ToString()<span id="spnControlCounter">0</span></h3>
+        <button type="button" class="btn btn-blue filterSearch" id="btnCategoryMasterDataAdvSrch"><i class="fa fa-search" style="margin-top:-3px;"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalSearch").FirstOrDefault().Value.ToString()</button>
+    </div>
+
+    <div class="sidebar-content" id="advsearchsidebar">
+        <form action="#" method="post">
+            <div class="form-group">
+                <label for="PartCategoryMasterId" id="lblPartCategory">@Model.Loc.Where(a => a.ResourceId == "spnPartCategoryMasterId").FirstOrDefault().Value.ToString():</label>
+                <input type="text" class="form-control adv-item search" autocomplete="off" id="PartCategoryMasterId" style="color:#333;">
+            </div>
+            <div class="form-group">
+                <label for="Description" id="lblDescription">@Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString():</label>
+                <input type="text" class="form-control adv-item  search" autocomplete="off" id="Description" style="color:#333;">
+            </div>
+        </form>
+    </div>
+</nav>
+@Html.Partial("_CustomizeGridSetup")
+@Html.Partial("_Export")
+<style type="text/css">
+    #popupExport {
+        right: 97px;
+    }
+
+    @@media only screen and (width:1360px) {
+        #popupExport {
+            right: 97px !important;
+        }
+    }
+
+    tbody tr.DTFC_NoData {
+        background-color: transparent !important;
+        text-align: center;
+    }
+</style>

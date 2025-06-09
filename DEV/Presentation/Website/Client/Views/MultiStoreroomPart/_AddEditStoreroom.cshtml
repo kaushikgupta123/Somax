@@ -1,0 +1,224 @@
+﻿@model Client.Models.MultiStoreroomPart.MultiStoreroomPartVM
+@using (Ajax.BeginForm("SaveStoreroom", "MultiStoreroomPart", new AjaxOptions { HttpMethod = "Post", OnSuccess = "StoreroomAddOnSuccess", OnBegin = "AjaxBeginFormBegin", OnComplete = "AjaxBeginFormComplete", OnFailure = "AjaxBeginFormFaillure" }, new { id = "frmStoreroomAdd" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close clearstate">&times;</button>
+            @if (ViewBag.Mode == "Add")
+            {
+                <h4 class="modal-title">@Model.Loc.Where(a => a.ResourceId == "spnAddStoreroom").FirstOrDefault().Value.ToString()</h4>
+            }
+            else
+            {
+                <h4 class="modal-title">@Model.Loc.Where(a => a.ResourceId == "spnEditStoreroom").FirstOrDefault().Value.ToString()</h4>
+            }
+        </div>
+        @Html.Partial("_ErrorDiv")
+        <div class="modal-body">
+            <div class="form-group" style="margin-bottom:0;">
+                <div class="bottomBlock">
+                    <div class="tabsArea nobg">
+                        <ul class="listView nobrd" style="border-bottom:0;">
+                            <li style="margin-bottom:3px;">
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnStoreroom").FirstOrDefault().Value.ToString(): <small>*</small></span>
+                                <span class="inputText">
+                                    @Html.ValidationMessageFor(m => m.StoreroomModel.StoreroomId, "", new { style = "display:none" })
+                                    @if (ViewBag.Mode == "Add")
+                                    {
+                                        @Html.DropDownListFor(m => m.StoreroomModel.StoreroomId, Model.StoreroomList, "--Select--", new { @class = "form-control search select2picker", style = "width:100%;" })
+                                    }
+                                    else
+                                    {
+                                        @Html.HiddenFor(m => m.StoreroomModel.Id)
+                                        @Html.DropDownList("StoreroomId", Model.StoreroomList.Select(x => new SelectListItem { Text = x.Text, Value = x.Value, Selected = (x.Value == Model.StoreroomModel.StoreroomId.ToString()) }), "--Select--", new { @class = "form-control search select2picker", style = "width:100%;", @disabled = true })
+                                    }
+                                </span>
+                            </li>
+
+                            <li style="margin-bottom:4px;">
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnSection1").FirstOrDefault().Value.ToString() :</span>
+                                <span class="inputText">
+                                    @Html.TextBoxFor(m => m.StoreroomModel.Section, new { @class = "form-control search", autocomplete = "off", maxlength = "31" })
+                                </span>
+                            </li>
+                            <li style="margin-bottom:4px;">
+                                <span class="label">
+                                    @Model.Loc.Where(a => a.ResourceId == "spnRow1").FirstOrDefault().Value.ToString()
+                                    :
+                                </span>
+                                <span class="inputText">
+                                    @Html.TextBoxFor(m => m.StoreroomModel.Row, new { @class = "form-control search", autocomplete = "off", maxlength = "31" })
+                                </span>
+                            </li>
+                            <li style="margin-bottom:4px;">
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnShelf1").FirstOrDefault().Value.ToString() :</span>
+                                <span class="inputText">
+                                    @Html.TextBoxFor(m => m.StoreroomModel.Shelf, new { @class = "form-control search", autocomplete = "off", maxlength = "31" })
+                                </span>
+                            </li>
+                            <li style="margin-bottom:4px;">
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnBin1").FirstOrDefault().Value.ToString() :</span>
+                                <span class="inputText">
+                                    @Html.TextBoxFor(m => m.StoreroomModel.Bin, new { @class = "form-control search", autocomplete = "off", maxlength = "31" })
+                                </span>
+                            </li>
+                            @if (ViewBag.Mode != "Add")
+                            {
+                                <li style="margin-bottom:4px;">
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnSection2").FirstOrDefault().Value.ToString() :</span>
+                                    <span class="inputText">
+                                        @Html.TextBoxFor(m => m.StoreroomModel.Section2, new { @class = "form-control search", autocomplete = "off", maxlength = "31" })
+                                    </span>
+                                </li>
+                                <li style="margin-bottom:4px;">
+                                    <span class="label">
+                                        @Model.Loc.Where(a => a.ResourceId == "spnRow2").FirstOrDefault().Value.ToString()
+                                        :
+                                    </span>
+                                    <span class="inputText">
+                                        @Html.TextBoxFor(m => m.StoreroomModel.Row2, new { @class = "form-control search", autocomplete = "off", maxlength = "31" })
+                                    </span>
+                                </li>
+                                <li style="margin-bottom:4px;">
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnShelf2").FirstOrDefault().Value.ToString() :</span>
+                                    <span class="inputText">
+                                        @Html.TextBoxFor(m => m.StoreroomModel.Shelf2, new { @class = "form-control search", autocomplete = "off", maxlength = "31" })
+                                    </span>
+                                </li>
+                                <li style="margin-bottom:4px;">
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnBin2").FirstOrDefault().Value.ToString() :</span>
+                                    <span class="inputText">
+                                        @Html.TextBoxFor(m => m.StoreroomModel.Bin2, new { @class = "form-control search", autocomplete = "off", maxlength = "31" })
+                                    </span>
+                                </li>
+                            }
+                            
+                            <li style="margin-bottom:4px;">
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "GlobalMaximumQuantity").FirstOrDefault().Value.ToString() :</span>
+                                <span class="inputText">
+                                    @Html.ValidationMessageFor(m => m.StoreroomModel.MaximumQuantity, "", new { style = "display:none" })
+                                    @Html.TextBoxFor(m => m.StoreroomModel.MaximumQuantity, new { @class = "form-control search m-input decimalinput", autocomplete = "off" })
+                                </span>
+                            </li>
+                            <li style="margin-bottom:4px;">
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "globalMinimumQuantity").FirstOrDefault().Value.ToString() :</span>
+                                <span class="inputText">
+                                    @Html.ValidationMessageFor(m => m.StoreroomModel.MinimumQuantity, "", new { style = "display:none" })
+                                    @Html.TextBoxFor(m => m.StoreroomModel.MinimumQuantity, new { @class = "form-control search m-input decimalinput", @style = "color:black", autocomplete = "off" })
+                                </span>
+                            </li>
+                            @if (ViewBag.Mode != "Add")
+                            {
+                                <li style="margin-bottom:4px;">
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnCritical").FirstOrDefault().Value.ToString() :</span>
+                                    <span class="inputText">
+                                        @Html.CheckBoxFor(m => m.StoreroomModel.Critical, new { autocomplete = "off" })
+                                    </span>
+                                </li>
+                            }
+                            <li style="margin-bottom:4px;">
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnCountFrequency").FirstOrDefault().Value.ToString() :</span>
+                                <span class="inputText">
+                                    @Html.TextBoxFor(m => m.StoreroomModel.CountFrequency, new { @class = "form-control search decimalinput", autocomplete = "off" })
+                                </span>
+                            </li>
+                            <li style="margin-bottom:4px;">
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnLastCounted").FirstOrDefault().Value.ToString() :</span>
+                                <span class="inputText">
+                                    @if (Model.StoreroomModel.Id == 0)
+                                    {
+                                        @Html.TextBoxFor(m => m.StoreroomModel.LastCounted, new { @class = "form-control search dtpicker", autocomplete = "off" })
+                                    }
+                                    else
+                                    {
+                                        @Html.TextBoxFor(m => m.StoreroomModel.LastCounted, "{0:MM/dd/yyyy}", new { @class = "form-control search dtpicker", autocomplete = "off" })
+
+                                    }
+                                </span>
+                            </li>
+                         
+
+                        </ul>
+                    </div>
+                    <div style="clear:both;"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal-footer" style="padding:15px 25px !important;">
+            <div class="idBttns">
+                <div class="bttn_pagin">
+                    <div class="bttns2" style="margin:0;">
+                        @if (ViewBag.Mode == "Add")
+                        {
+                            <button type="submit" class="btn btn-blue mobBttn" style="cursor:pointer" value="save"><i class="fa fa-save faIcon"></i> &nbsp;@Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+                        }
+                        else
+                        {
+                            <button type="submit" class="btn btn-blue mobBttn" style="cursor:pointer" value="save"><i class="fa fa-save faIcon"></i> &nbsp;@Model.Loc.Where(a => a.ResourceId == "globalUpdate").FirstOrDefault().Value.ToString()</button>
+                        }
+                    </div>
+                    <div class="bttns" style="margin:0;"><button type="button" data-dismiss="modal" class="btn btn-blue mobBttn clearstate" id="btnStoreroomcancel"><i class="fa fa-close faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button></div>
+
+                    <div style="clear:both;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @Html.HiddenFor(m => m.StoreroomModel.StoreroomId)
+    @Html.HiddenFor(m => m.StoreroomModel.PartStoreroomId)
+    @Html.HiddenFor(m => m.StoreroomModel.PartId)
+}
+@if (ViewBag.Mode != "Add")
+{
+
+    <div id="VendorTableModalPopup" class="modal fade dropdown-modal" role="dialog" style="display:none;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close VendorTableModalPopupclose">&times;</button>
+                    <h4 class="modal-title" id="hdrPopVendor">@UtilityFunction.GetMessageFromResource("spnSelectVendor", LocalizeResourceSetConstants.Global)</h4>
+                </div>
+                <div class="modal-body">
+                    <div id="tbldropdown" class="dropdown-content tbl-dropdown" style="display:block;">
+                        <div class="table-responsive dropTableOuter">
+                            <table id="tblVendorModalPopup" class="stripe dropTable globalDropTable tableWOBtn" style="width:100%;">
+                                <thead>
+                                    <tr>
+                                        <th>@UtilityFunction.GetMessageFromResource("spnVendorID", LocalizeResourceSetConstants.Global)</th>
+                                        <th>@UtilityFunction.GetMessageFromResource("spnName", LocalizeResourceSetConstants.Global)</th>
+                                    </tr>
+                                </thead>
+                                <tfoot id="tblVendorModalPopupFooter" style="display:none">
+                                    <tr>
+                                        <th style="position:relative;">@UtilityFunction.GetMessageFromResource("spnVendorID", LocalizeResourceSetConstants.Global)</th>
+                                        <th style="position:relative;">@UtilityFunction.GetMessageFromResource("spnName", LocalizeResourceSetConstants.Global)</th>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer" style="padding:15px 25px !important;">
+                    <div style="clear:both;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+}
+<style type="text/css">
+    .dropdown-modal .tbl-dropdown .dataTables_wrapper {
+        width: 100% !important;
+    }
+</style>
+<script>
+    $(function () {
+        $(document).find('form').find("#StoreroomModel_StoreroomId").removeClass("input-validation-error");
+    });
+
+</script>
+
+

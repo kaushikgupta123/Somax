@@ -1,0 +1,45 @@
+﻿@model Client.Models.ProjectCosting.ProjectCostingVM
+<nav id="sidebar">
+    <div id="dismiss">
+        <i class="fa fa-close"></i>
+    </div>
+    <div class="sidebar-header">
+        <h3><i class="fa fa-filter" style="position: relative; top: -2px;"></i>&nbsp; @Model.Loc.Where(a => a.ResourceId == "globalFilter").FirstOrDefault().Value.ToString() <span id="spnControlCounter">0</span></h3>
+        <button type="button" class="btn btn-blue filterSearch" id="btnProjectDataAdvSrch"> @Model.Loc.Where(a => a.ResourceId == "GlobalApply").FirstOrDefault().Value.ToString()</button>
+    </div>
+    <div class="sidebar-content" id="advsearchsidebarProj">
+        <form action="#" method="post">
+            <div class="form-group">
+                <label for="ProjectID" id="lblProjectID" name="ProjectID">@Model.Loc.Where(a => a.ResourceId == "spnProjectId").FirstOrDefault().Value.ToString() </label>
+                <input type="text" class="form-control search adv-item" id="ProjectID" autocomplete="off" style="color:#333;">
+            </div>
+            <div class="form-group">
+                <label for="Description" id="lblDescription">@Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString() </label>
+                <input type="text" class="form-control search adv-item" id="Description" autocomplete="off" style="color:#333;">
+            </div>
+            <div class="form-group">
+                <label for="gridadvsearchstatus" id="lblStatus">@Model.Loc.Where(a => a.ResourceId == "spnStatus").FirstOrDefault().Value.ToString() </label>
+                @Html.DropDownListFor(m => m.projectCostingModel.Status, Model.projectCostingModel.StatusList, new { @class = "form-control search adv-item select2picker", style = "width:100%;", @id = "gridadvsearchstatus", multiple = "multiple" })
+            </div>
+            <div class="form-group">
+                <label for="AssignedAssetGroup1" id="lblAssignedAssetGroup1">@Model.AssignedGroup1Label</label>
+                @Html.DropDownListFor(m => m.AssetGroup1Id, Model.AssignedGroup1List, "--Select--", new { @class = "form-control search adv-item select2picker", style = "width:100%;", id = "AssignedAssetGroup1" })
+            </div>
+            <div class="form-group">
+                <label for="AssignedAssetGroup2" id="lblAssignedAssetGroup2">@Model.AssignedGroup2Label</label>
+                @Html.DropDownListFor(m => m.AssetGroup2Id, Model.AssignedGroup2List, "--Select--", new { @class = "form-control search adv-item select2picker", style = "width:100%;", id = "AssignedAssetGroup2" })
+            </div>
+            <div class="form-group">
+                <label for="AssignedAssetGroup3" id="lblAssignedAssetGroup3">@Model.AssignedGroup3Label</label>
+                @Html.DropDownListFor(m => m.AssetGroup3Id, Model.AssignedGroup3List, "--Select--", new { @class = "form-control search adv-item select2picker", style = "width:100%;", id = "AssignedAssetGroup3" })
+            </div>
+
+        </form>
+    </div>
+</nav>
+
+<style>
+    .select2-container--default .select2-selection--single, .select2-container--default .select2-selection--multiple {
+        height: auto !important;
+    }
+</style>

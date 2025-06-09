@@ -1,0 +1,30 @@
+﻿@model Client.Models.PurchaseOrder.PurchaseOrderVM
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<body style="padding:0; margin:0; font-family: 'Roboto', sans-serif; font-size:14px; color:#737272;">
+    <table width="1000" border="0" cellspacing="0" cellpadding="0" align="center">
+        <tr>
+            <td align="left" valign="top" height="157">
+                <table width="1000" border="0" cellspacing="0" cellpadding="0">
+                    <tr>
+                        <td width="557" height="157" align="left" valign="top" style="padding:0">
+                            <a href="#"><img src="@Model.PurchaseOrderModel.AzureImageURL" alt="" style="height:157px; width:auto;" /></a>
+                        </td>
+                        <td width="108" height="157" align="left" valign="top" style="padding:0;"></td>
+                        <td width="310" height="132" align="left" valign="top" style="padding:25px 0 0 25px;">
+                            <h2 style="padding:0; margin:0 0 5px 0; font-size:24px; color:#264a7c; text-decoration:underline; font-weight:normal;">Standard Purchase Order #</h2>
+                            <p style="padding:0; margin:0 0 7px 0; font-size:16px; color:#5d5d5d; font-weight:normal;">Purchase Order : <span style="color:#ff8400;">@Model.PurchaseOrderModel.ClientLookupId</span></p>
+                            <p style="padding:0; margin:0 0 7px 0; font-size:16px; color:#5d5d5d; font-weight:normal;">Date Required : <span style="color:#ff8400;">@String.Format("{0:dd-MMM-yyyy}",Model.PurchaseOrderModel.Required)</span></p>
+                            <p style="padding:0; margin:0 0 7px 0; font-size:16px; color:#5d5d5d; font-weight:normal;">Revision : <span style="color:#ff8400;">@Model.PurchaseOrderModel.Revision</span></p>
+                          
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>

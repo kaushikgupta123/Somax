@@ -1,0 +1,42 @@
+﻿@using DataContracts
+@using Client.Controllers
+@{
+    BaseController baseController = new BaseController();
+    var _dictStatus = new Dictionary<string, string>();
+    var data = Session["userData"];
+    var userData = (UserData)data;
+
+    var StatusList = baseController.MsgLocalizeStatusDetails(userData);//new Utility.LoginCacheSet().MsgLocalizeDetails();
+    foreach (var item in StatusList)
+    {
+        if (_dictStatus.ContainsKey(item.ResourceId) == false)
+        {
+            _dictStatus.Add(item.ResourceId, item.Value);
+        }
+    }
+}
+
+<script type="text/javascript">
+    var _msgcollectionstatus = @Html.Raw(Json.Encode(_dictStatus));
+
+    function getStatusValue(val) {        
+        var returnval;
+        //$.each(_msgcollectionstatus, function (key, value)
+        //{
+        //    if (key == val)
+        //    {
+        //        returnval = value;
+        //    }
+        //});
+        for (var key in _msgcollectionstatus) {
+            if (key == val) {
+                returnval = _msgcollectionstatus[key];
+                break;
+            }
+        }
+        if (returnval != undefined)
+            return returnval;
+        else
+            return "";
+    }
+</script>

@@ -1,0 +1,274 @@
+﻿@charset "utf-8";
+/********** Global Search Grid CSS **********/
+.eqpDtlTbl tr th {
+	background-color: #ebe8f2 !important;
+}
+.eqpDtlTbl.dataTable thead th, table.dataTable thead td {
+    padding: 10px;
+    background-color: #ebe8f2 !important;
+    color: #575962 !important;
+    border-bottom: 1px solid #f4f3f8;
+    outline: 0 !important;
+    text-align: left !important;
+}
+table.dataTable thead .sorting_asc,
+table.dataTable thead .sorting_desc {
+    background-image: none !important;
+}
+.eqpDtlTbl.dataTable thead .sorting_asc {
+    background-image: url('../../../../Images/upArrow1.png') !important;
+    background-repeat: no-repeat;
+    background-position: center right;
+}
+.eqpDtlTbl.dataTable thead .sorting_desc {
+    background-image: url('../../../../Images/downArrow1.png') !important;
+    background-repeat: no-repeat;
+    background-position: center right;
+}
+.eqpDtlTbl tr th.select-checkbox {
+    text-align:center !important;
+}
+.dataTables_paginate ul.pagination > li.page-item > a.page-link {
+	border-radius: 50%;
+	border: none;
+	margin: 0 1px;
+	padding: 0;
+	width: 32px;
+	height: 32px;
+	text-align: center;
+	line-height: 32px;
+	outline: 0;
+	font-size: 12px;
+}
+.dataTables_paginate ul.pagination > li.page-item.active > a.page-link {
+	border-radius: 50%;
+	border: none;
+	outline: 0;
+}
+.dataTables_paginate ul.pagination > li.page-item {
+	height: auto !important;
+}
+.dataTables_wrapper .dataTables_length {
+	margin-right: 10px;
+	float: right;
+}
+.dataTables_length .select2-container--default .select2-selection--single .select2-selection__rendered,
+.dataTables_length .select2-container--default .select2-selection--single {
+    border-radius: 50px;
+    border: 1px solid #fff !important;
+    font-size: 12px;
+}
+.dataTables_length .select2-selection__rendered {
+	color: #575962 !important;
+	background-color: #ebe8f2 !important;
+}
+.dataTables_wrapper {
+	margin-bottom: 2px;
+}
+.eqpDtlTbl thead .sorting {
+    background-image: none !important;
+}
+/********** Global Action Bar CSS **********/
+.btn-white {
+	border-color: #b9c1c4 !important;
+}
+.newBtn-add:hover {
+	color: #fff;
+	background-color: #dd6b49;
+	border-color: #b92a00;
+}
+.actionBar {
+	padding-bottom: 11px;
+}
+.activeDiv {
+	position: relative;
+	float: left !important;
+	margin-left: auto;
+	margin-right: 10px;
+	z-index: 3;
+}
+.activeDiv.bootstrap-select:not([class*="col-"]):not([class*="form-control"]):not(.input-group-btn) {
+	width: 100px;
+	margin-right: 10px;
+}
+.activeDiv .bootstrap-select:not([class*="col-"]):not([class*="form-control"]):not(.input-group-btn) {
+	width: 100%;
+	margin-right: 0px;
+}
+.navbar-btn {
+	float: left;
+	margin-right: 10px !important;
+}
+.import-export {
+	float: left;
+	margin-right: 10px !important;
+}
+#shortDrop {
+	float: left !important;
+	margin-right: 10px !important;
+}
+.btn-blue {
+	color: #575962;
+	background-color: #fff;
+	border-color: #b9c1c4;
+}
+.btn-blue:hover {
+	color: #1a3967;
+	background-color: #fff;
+	border-color: #1a3967;
+}
+.btn-sort.show .btn-blue {
+	color: #1a3967;
+	background-color: #fff;
+	border-color: #1a3967;
+}
+.updateArea {
+    border-bottom: 0px solid #ebe8f2;
+    border-top: none;
+    padding:0 0 11px 0;
+    margin-top: 0px;
+    margin-bottom: 0px;
+    display: none;
+}
+.btn-blue:disabled {
+	color: #575962;
+	background-color: #fff;
+	border-color: #b9c1c4;
+	opacity: 0.65;
+}
+.tab button:hover,
+.tab button.active {
+    background-color: #e9ebee;
+    border: 1px solid #315a98;
+    color: #264a7c;
+}
+/********** Export Popup CSS **********/
+.dt-buttons .buttons-excel {
+    display: none;
+}
+#popupExport { /* we set all of the properties for are overlay */
+    width: 166px;
+    margin: 0 auto;
+    background: white;
+    color: black;
+    padding: 10px;
+    position: fixed;
+    top: 159px;
+    right: 80px !important;
+    z-index: 1000;
+    display: none;
+    border-radius: 3px;
+    box-shadow: 3px 3px 5px rgba(0,0,0,0.3);
+    transition: all 0.3s;
+}
+#mask { /* create are mask */
+    position: fixed;
+    top: 0;
+    left: 0;
+    background: rgba(0,0,0,0.6);
+    z-index: 500;
+    width: 100%;
+    height: 100%;
+    display: none;
+    transition: all 0.3s;
+}
+#popupExport:target, #popupExport:target + #mask { /* use :target to look for a link to the overlay then we find are mask */
+    display: block;
+    opacity: 1;
+    transition: all 0.3s;
+}
+#popupExport .btn-blue {
+    width: 100%;
+    float: none;
+    margin-bottom: 2px;
+}
+/********** Colvis Button CSS **********/
+.dt-button.buttons-columnVisibility {
+    font-family: 'Roboto', sans-serif;
+    text-align: left;
+    background: #fff !important;
+    box-shadow: none !important;
+    border-radius: 3px !important;
+    border: 1px solid #b9c1c4 !important;
+    font-size: 13px !important;
+    transition: 0.5s ease !important;
+}
+.dt-button.buttons-columnVisibility:hover,
+.dt-button.buttons-columnVisibility.active {
+    border: 1px solid #1a3967 !important;
+    color: #1a3967 !important;
+}
+.dt-button.buttons-columnVisibility span {
+    padding-left: 18px;
+}
+.dt-button.buttons-columnVisibility::before {
+    content: ' ';
+    border: 1px solid #905252;
+    border-radius: 3px;
+    width: 12px;
+    height: 12px;
+    position: absolute;
+    border: 1px solid black;
+    border-radius: 3px;
+    left: 10px;
+    top: 9px;
+}
+.dt-button.buttons-columnVisibility.active span::before {
+    content: '\2714';
+    width: 12px;
+    height: 12px;
+    position: absolute;
+    left: 12px;
+    top: 6px;
+    font-size: 11px !important;
+}
+.dt-button.buttons-colvisRestore {
+    text-align: center;
+    background: #fff !important;
+    box-shadow: none !important;
+    border-radius: 3px !important;
+    border: 1px solid #b9c1c4 !important;
+    font-size: 13px !important;
+    transition: 0.5s ease !important;
+}
+.dt-button.buttons-colvisRestore:hover {
+    border: 1px solid #1a3967 !important;
+    color: #1a3967 !important;
+}
+.buttons-colvis {
+    display: none !important;
+}
+div.dt-button-collection.two-column {
+    padding-bottom: 8px;
+}
+/********** Action Bar New CSS **********/
+.ActionSearchDrop {
+    width:225px;
+    float:left;
+    margin-right:10px;
+}
+.ActiveInactiveDrop {
+    width: 100px;
+    float: left;
+    margin-right: 10px;
+}
+.m-table tr th {
+    color: #212529 !important;
+}
+.m-loader.m-loader--light:before {
+    border-top-color: #315a98;
+    z-index: 1;
+}
+.tbl-row-hover {
+    background-color: #eceff1 !important;
+}
+#mytable th:first-child {
+    text-align: center !important;
+}
+.eqpDtlTbl.DTFC_Cloned th:last-child {
+    text-align: left !important;
+}
+/********** No data available not showing when we remove all columns from configuration **********/
+tbody tr.DTFC_NoData {
+    background-color: transparent !important;
+}

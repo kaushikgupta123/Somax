@@ -1,0 +1,147 @@
+﻿@model Client.Models.EquipmentCombined
+@{
+    var fieldLabel = "";
+    var fieldName = "";
+    object Value = null;
+}
+@foreach (var data in Model.UIConfigurationDetails)
+{
+    if (data.Section == true)
+    {
+        <li>
+            <span class="label"><strong>@data.SectionName</strong></span>
+        </li>
+        continue;
+    }
+    if (string.IsNullOrEmpty(data.ColumnName))
+    {
+        continue;
+    }
+    else if (!string.IsNullOrEmpty(data.ColumnName))
+    {
+        string colName = UtilityFunction.ReturnPropertyNameWithoutCaseComparison(data.ColumnName, Model.ViewEquipment);
+        if (string.IsNullOrEmpty(colName))
+        {
+            continue;
+        }
+        data.ColumnName = colName;
+    }
+
+    #region Column Name
+    fieldName = data.ColumnName;
+    if (data.ColumnName.ToLower() == "Purch_VendorId".ToLower())
+    {
+        fieldName = "Purch_VendorName";
+    }
+    else if (data.ColumnName.ToLower() == "Maint_VendorId".ToLower())
+    {
+        fieldName = "Maint_VendorName";
+    }
+    else if (data.ColumnName.ToLower() == "Material_AccountId".ToLower())
+    {
+        fieldName = "Material_AccountName";
+    }
+    else if (data.ColumnName.ToLower() == "Labor_AccountId".ToLower())
+    {
+        fieldName = "Labor_AccountName";
+    }
+    else if (data.ColumnName.ToLower() == "AssetGroup1".ToLower())
+    {
+        fieldName = "AssetGroup1Name";
+    }
+    else if (data.ColumnName.ToLower() == "AssetGroup2".ToLower())
+    {
+        fieldName = "AssetGroup2Name";
+    }
+    else if (data.ColumnName.ToLower() == "AssetGroup3".ToLower())
+    {
+        fieldName = "AssetGroup3Name";
+    }
+    else if (data.ColumnName.ToLower() == "ParentId".ToLower())
+    {
+        fieldName = "ParentIdName";
+    }
+    else if (data.ColumnName.ToLower() == "Select1".ToLower())
+    {
+        fieldName = "Select1Name";
+    }
+    else if (data.ColumnName.ToLower() == "Select2".ToLower())
+    {
+        fieldName = "Select2Name";
+    }
+    else if (data.ColumnName.ToLower() == "Select3".ToLower())
+    {
+        fieldName = "Select3Name";
+    }
+    else if (data.ColumnName.ToLower() == "Select4".ToLower())
+    {
+        fieldName = "Select4Name";
+    }
+    else if (data.ColumnName.ToLower() == "ElectricalParent".ToLower())
+    {
+        fieldName = "ElectricalParent_ClientLookupId";
+    }
+    #endregion
+
+    #region Value
+    Value = Model.ViewEquipment.GetType().GetProperty(fieldName).GetValue(Model.ViewEquipment);
+    if (Value == null)
+    {
+        Value = "";
+    }
+    if (data.ColumnName.ToLower() == "ClientLookupId".ToLower())
+    {
+        if (Value.ToString().Length > 12)
+        {
+            Value = Value.ToString().Substring(0, 12) + "...";
+        }
+    }   
+    else if (data.ColumnName.ToLower() == "AssetCategory".ToLower())
+    {
+        if (Value.ToString() != "")
+        {
+            if (Value.ToString() == "Equipment")
+            {
+                Value = UtilityFunction.GetMessageFromResource("txtequipment", LocalizeResourceSetConstants.Global);
+            }
+            else if (Value.ToString() == "Location")
+            {
+                Value = UtilityFunction.GetMessageFromResource("spnLocation", LocalizeResourceSetConstants.Global);
+
+            }
+            else if (Value.ToString() == "Vehicle")
+            {
+                Value = UtilityFunction.GetMessageFromResource("spnVehicle", LocalizeResourceSetConstants.EquipmentDetails);
+            }
+        }
+    }
+    #endregion
+
+    #region Label
+    fieldLabel = data.ColumnLabel;
+    if (data.ColumnName.ToLower() == "AssetGroup1".ToLower())
+    {
+        fieldLabel = Model._userdata.Site.AssetGroup1Name;
+    }
+    else if (data.ColumnName.ToLower() == "AssetGroup2".ToLower())
+    {
+        fieldLabel = Model._userdata.Site.AssetGroup2Name;
+    }
+    else if (data.ColumnName.ToLower() == "AssetGroup3".ToLower())
+    {
+        fieldLabel = Model._userdata.Site.AssetGroup3Name;
+    }
+    #endregion
+
+    <li style="height:auto;" class="dscrbtn">
+        @CustomHelperDynamic.ViewLabelAndDisplayValue(fieldLabel, Value.ToString(), data.ColumnType)
+    </li>
+}
+  <style>
+
+
+      ul.listView li span.inputText.description-span {
+          text-overflow: unset !important;
+      }
+
+    </style>

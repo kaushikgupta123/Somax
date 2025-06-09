@@ -1,0 +1,248 @@
+﻿@model Client.Models.VendorRequest.VendorRequestVM
+
+<div class="m-subheader">
+    <div class="new-m-subheader">
+        <div class="PageTitle">
+            <div class="align-items-center">
+                <h3 class="m-subheader__title" style="padding:0;">
+                    <span class="dropToggle" id="spnDropToggle">
+                        <img src="~/Images/toggleMenu.png" />
+                    </span>
+                    <span style="line-height:35px;" id="vendorsearchtitle">
+                    </span>
+                </h3>
+            </div>
+        </div>
+
+        <div class="ActionBttnArea">
+            @if (Model.security.Vendor_Create_Vendor_Request.Access)
+            {
+                <button type="button" class="btn newBtn-add addVendorRequest pull-left" title="Add Vendor Request">@Model.Loc.Where(a => a.ResourceId == "globalAddVendorRequest").FirstOrDefault().Value.ToString()</button>
+
+            }
+        </div>
+        <div style="clear:both;"></div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-xl-12">
+        <div class="m-portlet" id="m_portlet" style="padding:15px; margin-bottom:0;">
+            <div class="actionBar" id="ActionGridBar" style="display:none">
+                <div class="pull-left" style="position:relative;">
+                    <button type="button" class="btn btn-white navbar-btn" title="Search" id="SrchBttnNew"><i class="fa fa-search" style="font-size: 1.1rem;position: relative;top: -2px;left: -2px;"></i> @Model.Loc.Where(a => a.ResourceId == "globalSearch").FirstOrDefault().Value.ToString()</button>
+                    <button type="button" class="btn btn-white navbar-btn" id="sidebarCollapse" title="Advance Search"><i class="fa fa-filter" style="font-size: 1.3rem;"></i></button>
+                    <ul class="filter_apply globalFilterAdjusted clsgridreset">
+                        <li class="textClear" id="liResetGridClearBtn"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "globalClear").FirstOrDefault().Value.ToString()</a></li>
+                    </ul>
+                    <div style="clear:both;"></div>
+                    <div class="searchBttnDrop desktop" id="searchBttnNewDrop" style="display:none;">
+                        <div class="form-group" style="position:relative;">
+                            <i class="fa fa-search txtSearchClick" style="font-size: 1.1rem;position: absolute;top: 9px;left: 15px;"></i>
+                            <a href="javascript:void(0)" id="cancelText"><i class="fa fa-close" style="font-size: 1.1rem;position: absolute;top: 9px;right: 15px;"></i></a>
+                            <input type="text" id="txtColumnSearch" class="form-control search" placeholder="Search..." style="padding: 0.65rem 2.75rem;" autocomplete="off">
+                        </div>
+                        <div class="searchTips">
+                            <div class="titleText">@Model.Loc.Where(a => a.ResourceId == "GlobalSearchTips").FirstOrDefault().Value.ToString()</div>
+                            @if (Model.Loc.Any(a => a.ResourceId == SearchTipsType.VendorRequestSearchTips))
+                            {
+                                <div class="infoText">@Model.Loc.Where(a => a.ResourceId == SearchTipsType.VendorRequestSearchTips).FirstOrDefault().Value.ToString()</div>
+                            }
+                            else
+                            {
+                                <div class="infoText">@Model.Loc.Where(a => a.ResourceId == "VendorRequestSearchTips").FirstOrDefault().Value.ToString()</div>
+                            }
+
+                            <div style="clear:both;"></div>
+                        </div>
+
+                        <div class="searchInfo">
+                            <span class="recent">@Model.Loc.Where(a => a.ResourceId == "GlobalRecentlySearched").FirstOrDefault().Value.ToString()</span>
+                            <div class="searchList" id="wosearchList">
+                                <ul id="UlSearchList"></ul>
+                            </div>
+                            <span class="clear"><a href="javascript:void(0)" id="clearText">@Model.Loc.Where(a => a.ResourceId == "globalClear").FirstOrDefault().Value.ToString()</a></span>
+                            <div style="clear:both;"></div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="pull-right">
+                    <button type="button" class="btn btn-white import-export" disabled onclick="funcShowExportbtn()">@Model.Loc.Where(a => a.ResourceId == "spnExport").FirstOrDefault().Value.ToString()</button>
+                    <button type="button" class="btn btn-white" id="liCustomize" title="Customize" data-toggle="modal" data-target="#gridcolumncustomizemodal"><i class="fa fa-cog" style="font-size: 1.3rem;"></i></button>
+
+                    <div style="clear:both;"></div>
+                </div>
+                <div style="clear:both;"></div>
+                <div id="dvFilterSearchSelect2"></div>
+                <div style="clear:both;"></div>
+            </div>
+
+            <div id="Active" class="tabcontent" style="display:block;">
+                <div class="table-responsive">
+                    <table id="VendorRequestSearch" class="eqpDtlTbl row-border custom-sort" style="width:100%;">
+                        <thead>
+                            <tr>
+                                <th data-col="0" data-th-index="0">@Model.Loc.Where(a => a.ResourceId == "spnName").FirstOrDefault().Value.ToString()</th>
+                                <th data-col="1" data-th-index="1">@Model.Loc.Where(a => a.ResourceId == "GlobalCity").FirstOrDefault().Value.ToString()</th>
+                                <th data-col="2" data-th-index="2">@Model.Loc.Where(a => a.ResourceId == "GlobalState").FirstOrDefault().Value.ToString()</th>
+                                <th data-col="3" data-th-index="3">@Model.Loc.Where(a => a.ResourceId == "GlobalType").FirstOrDefault().Value.ToString()</th>
+                                <th data-col="4" data-th-index="4">@Model.Loc.Where(a => a.ResourceId == "spnStatus").FirstOrDefault().Value.ToString()</th>
+                                <td data-col="5" style="text-align:center !important">@Model.Loc.Where(a => a.ResourceId == "spnActions").FirstOrDefault().Value.ToString()</td>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@if (Convert.ToString(Session["MenuState"]) == "" || Convert.ToString(Session["MenuState"]) == "open")
+{
+    <div id="searcharea" class="slideToggleBar" style="display:none">
+        <div class="searchBoxArea">
+            <div class="form-group" style="margin-bottom:0; position:relative;">
+                <i class="fa fa-search" style="font-size: 1.1rem;position: absolute;top: 8px;left: 0px;"></i>
+                <input type="text" class="form-control searched" placeholder="Search for a view" id="vendorsearctxtbox">
+            </div>
+        </div>
+
+        <div class="searchList">
+            <ul id="vendorsearchListul">
+                @foreach (var item in Model.VendorRequestViewList)
+                {
+                    <li id="@item.Value" class="vendorsearchdrpbox"><a href="javascript:void(0)">@item.Text</a></li>
+                }
+            </ul>
+        </div>
+    </div>
+}
+else
+{
+    <div id="searcharea" class="slideToggleBar" style="display:none;left:81px !important;">
+        <div class="searchBoxArea">
+            <div class="form-group" style="margin-bottom:0; position:relative;">
+                <i class="fa fa-search" style="font-size: 1.1rem;position: absolute;top: 8px;left: 0px;"></i>
+                <input type="text" class="form-control searched" placeholder="Search for a view" id="vendorsearctxtbox">
+            </div>
+        </div>
+
+        <div class="searchList">
+            <ul id="vendorsearchListul">
+                @foreach (var item in Model.VendorRequestViewList)
+                {
+                    <li id="@item.Value" class="vendorsearchdrpbox"><a href="javascript:void(0)">@item.Text</a></li>
+                }
+            </ul>
+        </div>
+    </div>
+}
+@Html.HiddenFor(m => Model.security.Vendor_Approve_Vendor_Request.Access, new { id = "VendorRequestApprovalAccess" })
+@Html.HiddenFor(m => Model.security.Vendor_Create_Vendor_Request.Access, new { id = "VendorRequestCreateAccess" })
+
+@Html.Partial("_CustomizeGridSetup")
+@Html.Partial("_Export")
+@Html.Partial("~/Views/VendorRequest/_VendorRequestAdvSearch.cshtml")
+@Html.Partial("_StatusDetailsLocalization")
+<style type="text/css">
+    table.dataTable thead .sorting_desc:after {
+        opacity: 1 !important;
+    }
+
+    #VendorRequestSearch_wrapper .dt-buttons {
+        display: none;
+    }
+
+    @@media only screen and (max-width: 767px) and (min-width: 640px) {
+        .actionBar div.pull-right {
+            float: right;
+            margin-top: 0px;
+        }
+    }
+
+    @@media only screen and (max-width: 639px) and (min-width: 568px) {
+        .actionBar div.pull-right {
+            float: right;
+            margin-top: 0px;
+        }
+    }
+
+    @@media only screen and (max-width: 567px) and (min-width: 480px) {
+        #shortDrop {
+            margin-top: 0px;
+            margin-right: 10px !important;
+        }
+    }
+
+    @@media only screen and (width:414px) {
+        #shortDrop {
+            margin-top: 0 !important;
+            margin-right: 10px !important;
+        }
+    }
+
+    @@media only screen and (width:411px) {
+        #shortDrop {
+            margin-top: 0 !important;
+            margin-right: 10px !important;
+        }
+    }
+
+    @@media only screen and (max-width: 359px) and (min-width: 320px) {
+        #liCustomize {
+            margin-top: 0px !important;
+            margin-left: 0px !important;
+        }
+    }
+
+    .clsgridreset {
+        margin-top: 0px !important;
+    }
+
+        .clsgridreset li {
+            border-left: 1px solid #ccc;
+            border-right: 0px !important;
+            padding-left: 10px !important;
+        }
+</style>
+<style>
+    .maskaction { /* create are mask */
+        position: fixed;
+        top: 0;
+        left: 0;
+        background: rgba(0,0,0,0.6);
+        z-index: 500;
+        width: 100%;
+        height: 100%;
+        display: none;
+        transition: all 0.3s;
+    }
+
+    .actionbtndiv { /* create are mask */
+        width: 180px;
+        /* margin: 0 auto; */
+        background: white;
+        /* color: black; */
+        padding: 10px;
+        position: sticky;
+        /*top: 40px;*/
+        right: 110px !important;
+        z-index: 1000;
+        /* display: none; */
+        border-radius: 3px;
+        /* box-shadow: 3px 3px 5px rgb(0 0 0 / 30%); */
+        /* transition: all 0.3s; */
+        display: block;
+        /*height:74px;*/
+        /*overflow:scroll;*/
+        /*margin-top:-40px;*/
+        margin-left: -45px;
+    }
+
+        .actionbtndiv .btn-blue {
+            width: 100%;
+            float: none;
+            margin-bottom: 2px;
+        }
+</style>

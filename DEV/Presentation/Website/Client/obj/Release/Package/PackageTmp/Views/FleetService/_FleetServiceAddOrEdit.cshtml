@@ -1,0 +1,100 @@
+﻿@model Client.Models.FleetService.FleetServiceVM
+@using (Ajax.BeginForm("FleetServiceOrderAddOrEdit", "FleetService", new AjaxOptions { HttpMethod = "Post", OnSuccess = "FleetServiceAddOnSuccess", OnBegin = "AjaxBeginFormBegin", OnComplete = "AjaxBeginFormComplete", OnFailure = "AjaxBeginFormFaillure" }, new { enctype = "multipart/form-data", id = "fleetServiceform" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close clearerrdiv" data-dismiss="modal">&times;</button>
+            @if (Model.FleetServiceModel.Pagetype == "Add")
+            {
+                <h4 class="modal-title">@Model.Loc.Where(a => a.ResourceId == "spnServiceOrderAdd").FirstOrDefault().Value.ToString()</h4>
+            }
+            else
+            {
+                <h4 class="modal-title">@Model.Loc.Where(a => a.ResourceId == "spnServiceOrderEdit").FirstOrDefault().Value.ToString()</h4>
+            }
+        </div>
+        @Html.Partial("_ErrorDiv")
+        <div class="modal-body">
+            <div class="form-group" style="margin-bottom:0;">
+                <div class="bottomBlock">
+                    <div class="tabsArea nobg">
+                        <ul class="listView nobrd" style="border-bottom:0;">
+                            <li>
+                                <span class="label">@Html.LabelFor(m => m.FleetServiceModel.EquipmentClientLookupId) : <small>*</small></span>
+                                <span class="inputText">
+                                    <div class="dropdown dropTableOuter">
+                                        <div class="input-group">
+                                            @Html.ValidationMessageFor(m => m.FleetServiceModel.EquipmentClientLookupId, "", new { style = "display:none" })
+                                            @Html.TextBoxFor(m => m.FleetServiceModel.EquipmentClientLookupId, new { @class = "form-control search dropbtn readonly", autocomplete = "off", @readonly = "readonly" })
+                                            <div class="input-group-btn" id="divSearch">
+                                                <button class="btn btn-white btntxtInputGroup" type="button" id="opengrid">
+                                                    <i id="srcicon" class="fa fa-search"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </span>
+                            </li>
+
+                            <li>
+                                <span class="label">@Html.LabelFor(m => m.FleetServiceModel.Type): </span>
+                                <span class="inputText" >
+                                    @Html.DropDownListFor(m => m.FleetServiceModel.Type, Model.LookupTypeList, "--Select--", new { @class = "form-control search select2picker ", style = "width:100%;" })
+                                </span>
+                            </li>
+
+                            <li>
+                                <span class="label">@Html.LabelFor(m => m.FleetServiceModel.Shift): </span>
+                                <span class="inputText">
+                                    @Html.DropDownListFor(m => m.FleetServiceModel.Shift, Model.LookupShiftList, "--Select--", new { @class = "form-control search select2picker ", style = "width:100%;" })
+                                </span>
+                            </li>
+
+                            <li style="margin-bottom:0;height:auto">
+                                <span class="label">@Html.LabelFor(m => m.FleetServiceModel.Description):</span>
+                                <span class="inputText" style="height:auto">
+                                    @Html.ValidationMessageFor(m => m.FleetServiceModel.Description, "", new { style = "display:none" })
+                                    @Html.TextAreaFor(m => m.FleetServiceModel.Description, new { @class = "form-control search", autocomplete = "off" })
+                                </span>
+                                <div style="clear:both;"></div>
+                            </li>
+
+                        </ul>
+                    </div>
+                    <div style="clear:both;"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal-footer" style="padding:15px 25px !important;">
+            <div class="idBttns">
+                <div class="bttn_pagin">
+                    <div class="bttns2" style="margin:0;">
+                      @if (Model.FleetServiceModel.Pagetype == "Add")
+                      {
+                        <button type="submit" class="btn btn-white mobBttn" name="Command" id="btnSaveAnotherOpen" style="cursor:pointer" value="saveAdd"><i class="fa fa-save faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalSaveAndAdd").FirstOrDefault().Value.ToString()</button>
+                      }
+                        <button type="submit" class="btn btn-blue mobBttn" name="Command" style="cursor:pointer" value="save" id="btnFleetServiceSave"><i class="fa fa-save faIcon"></i> &nbsp;@Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+                    </div>
+                    <div class="bttns" style="margin:0;"><button type="button" data-dismiss="modal" class="btn btn-blue mobBttn" id="btnFleetServicecancel"><i class="fa fa-close faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button></div>
+
+                    <div style="clear:both;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    @Html.HiddenFor(m => m.FleetServiceModel.ServiceOrderId)
+    @Html.HiddenFor(m => m.FleetServiceModel.Pagetype)
+
+}
+
+<script>
+    $(function () {
+        $(document).find('form').find("#FleetServiceModel_ClientLookupId").removeClass("input-validation-error");
+        $(document).find('form').find("#FleetIssueModel_Description").removeClass("input-validation-error");
+    });
+</script>
+

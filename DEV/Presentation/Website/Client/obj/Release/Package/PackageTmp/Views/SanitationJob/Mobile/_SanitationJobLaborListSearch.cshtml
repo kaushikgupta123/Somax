@@ -1,0 +1,27 @@
+﻿@model Client.Models.Sanitation.SanitationVM
+<div class="row">
+    <div class="col-xl-12">
+        <div class="m-portlet" id="m_portlet" style="padding:15px;">
+            <div class="table-responsive">
+                <table id="SJLaborTable" class="eqpDtlTbl row-border custom-sort" style="width:100%;">
+                    <thead>
+                        <tr>
+                            <th>@Model.Loc.Where(a => a.ResourceId == "spnPersonnelID").FirstOrDefault().Value.ToString()</th>
+                            <th>@Model.Loc.Where(a => a.ResourceId == "spnDate").FirstOrDefault().Value.ToString()</th>
+                            <th>@Model.Loc.Where(a => a.ResourceId == "spnHours").FirstOrDefault().Value.ToString()</th>
+                            <th>@Model.Loc.Where(a => a.ResourceId == "spnValue").FirstOrDefault().Value.ToString()</th>
+                            <th width="17%" style="text-align:center !important;">@Model.Loc.Where(a => a.ResourceId == "globalAction").FirstOrDefault().Value.ToString()</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+
+            <div class="bttn_pagin">
+                <div class="bttns">
+                    <button mbsc-button data-color="success" type="button" id="btnAddSJLabor" class="btn btn-blue addLaborBttn"><i class="fa fa-plus faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "spnAddLabor").FirstOrDefault().Value.ToString()</button>
+                </div>
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+    </div>
+</div>

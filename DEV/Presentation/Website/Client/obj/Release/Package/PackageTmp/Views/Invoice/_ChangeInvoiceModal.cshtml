@@ -1,0 +1,57 @@
+﻿@model Client.Models.Invoice.InvoiceVM
+<div id="ChangeInvoice" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-info">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">@Model.Loc.Where(a => a.ResourceId == "spnInvChangeInvoice").FirstOrDefault().Value.ToString()</h4>
+            </div>
+            @Html.Partial("_ErrorDiv")
+            @using (Ajax.BeginForm("ChangeInvoiceOptions", "Invoice", new AjaxOptions { HttpMethod = "Post", OnSuccess = "ChangeInvoiceSuccess", OnBegin = "AjaxBeginFormBegin", OnFailure = "AjaxBeginFormFaillure" }))
+            {
+                @Html.AntiForgeryToken()
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="Line" id="lblLine">@Model.Loc.Where(a => a.ResourceId == "spnIdInvoice").FirstOrDefault().Value.ToString()<small>*</small></label>
+                        <span class="inputText">
+                            @Html.ValidationMessageFor(m => m.changeInvoiceModel.ClientLookupId, "", new { style = "display:none" })
+                            @Html.TextBoxFor(m => m.changeInvoiceModel.ClientLookupId, new { @class = "form-control search", autocomplete = "off", @maxlength = "31" })
+                        </span>
+                    </div>
+                </div>
+                <div class="modal-footer" style="padding:15px 25px !important;">
+                    <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-close faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button>
+                    <button type="submit" class="btn btn-blue" style="float:right;"><i class="fa fa-check faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalOK").FirstOrDefault().Value.ToString()</button>
+                    <div style="clear:both;"></div>
+                </div>
+                @Html.HiddenFor(m => m.changeInvoiceModel.invoiceId)
+                @Html.HiddenFor(m => m.changeInvoiceModel.oldClientLookupId)
+
+            }
+        </div>
+    </div>
+</div>
+<style type="text/css">
+    .ui-tooltip { z-index: 1151 !important; }
+    .errormessage { margin-bottom: 1px !important; }
+</style>
+<script>
+    $(document).ready(function () {
+        $('#changeInvoiceModel_ClientLookupId').val($('#changeInvoiceModel_oldClientLookupId').val());
+        $.validator.setDefaults({ ignore: null });
+        $.validator.unobtrusive.parse(document);
+        $('input, form').blur(function () {
+            $(this).valid();
+        });
+        $(".modal").on("hidden.bs.modal", function () {
+            $('.errormessage').html('').hide();
+            $("#ChangeInvoice").find('input[type = text]').each(function () {
+                $(this).val('');
+                if ($(this).hasClass('input-validation-error')) {
+                    $(this).removeClass('input-validation-error');
+                }
+            });
+            $('#changeInvoiceModel_ClientLookupId').val($('#changeInvoiceModel_oldClientLookupId').val());
+        });
+    });
+</script>

@@ -1,0 +1,105 @@
+﻿@model Client.Models.FleetService.FleetServiceVM
+@using (Ajax.BeginForm("SaveOthers", "FleetService", new AjaxOptions { HttpMethod = "Post", OnSuccess = "OthersAddOnSuccess", OnBegin = "AjaxBeginFormBegin", OnComplete = "AjaxBeginFormComplete", OnFailure = "AjaxBeginFormFaillure" }, new { id = "frmOtherAdd" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(m => m.ServiceOrderOthers.OtherCostsId, new { @id = "OtherCostsId", @Value = Model.ServiceOrderOthers.OtherCostsId })
+    @Html.HiddenFor(m => m.ServiceOrderOthers.ServiceOrderId, new { @id = "ServiceOrderId", @Value = Model.ServiceOrderOthers.ServiceOrderId })
+    @Html.HiddenFor(m => m.ServiceOrderOthers.ServiceOrderLineItemId, new { @id = "ServiceOrderLineItemId", @Value = Model.ServiceOrderOthers.ServiceOrderLineItemId })
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close clearerrdiv" data-dismiss="modal">&times;</button>
+            @if (ViewBag.Mode == "Add")
+            {
+                <h4 class="modal-title">@Model.Loc.Where(a => a.ResourceId == "spnAddOthers").FirstOrDefault().Value.ToString()</h4>
+            }
+            else
+            {
+                <h4 class="modal-title">@Model.Loc.Where(a => a.ResourceId == "spnEditOthers").FirstOrDefault().Value.ToString()</h4>
+            }
+        </div>
+        @Html.Partial("_ErrorDiv")
+        <div class="modal-body">
+            <div class="form-group" style="margin-bottom:0;">
+                <div class="bottomBlock">
+                    <div class="tabsArea nobg">
+                        <ul class="listView nobrd" style="border-bottom:0;">                                                        
+                            
+                            <li style="margin-bottom:4px;">
+                                <span class="label">@Html.LabelFor(m => m.ServiceOrderOthers.Source) :<small>*</small></span>
+                                <span class="inputText">
+                                    @Html.ValidationMessageFor(m => m.ServiceOrderOthers.Source, "", new { style = "display:none" })
+                                    @Html.DropDownListFor(m => m.ServiceOrderOthers.Source, Model.ServiceOrderOthers.SourceList, "--Select--", new { @class = "form-control search select2picker", style = "width:100%;" })
+                                </span>
+                            </li>
+
+                            <li style="margin-bottom:3px;">
+                                <span class="label">@Html.LabelFor(m => m.ServiceOrderOthers.VendorId) :</span>
+                                <span class="inputText">
+                                    <div class="dropdown dropTableOuter">
+                                        <div class="input-group">
+                                            @Html.ValidationMessageFor(m => m.ServiceOrderOthers.VendorClientLookupId, "", new { style = "display:none" })
+                                            @Html.TextBoxFor(m => m.ServiceOrderOthers.VendorClientLookupId, new { @id = "txtSoVendorId", @class = "form-control search dropbtn readonly", autocomplete = "off", @readonly = "readonly" })
+                                            @Html.HiddenFor(m => m.ServiceOrderOthers.VendorId, new { id = "hdnSoVendorId" })
+                                            <div class="input-group-btn">
+                                                <button class="btn btn-white btntxtInputGroup" type="button" id="sovopengrid">
+                                                    <i id="srcicon" class="fa fa-search"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </span>
+                            </li>
+                            <li style="margin-bottom:4px;height:auto">
+                                <span class="label">@Html.LabelFor(m => m.ServiceOrderOthers.Description):</span>
+                                <span class="inputText" style="height:auto">
+                                    @Html.ValidationMessageFor(m => m.ServiceOrderOthers.Description, "", new { style = "display:none" })
+                                    @Html.TextAreaFor(m => m.ServiceOrderOthers.Description, new { @class = "form-control search", autocomplete = "off"})
+                                </span>
+                                <div style="clear:both;"></div>
+                            </li> 
+                            <li style="margin-bottom:4px;">
+                                <span class="label"><span class="label">@Html.LabelFor(m => m.ServiceOrderOthers.UnitCost) : <small>*</small></span></span>
+                                <span class="inputText">
+                                    @Html.ValidationMessageFor(m => m.ServiceOrderOthers.UnitCost, "", new { style = "display:none" })
+                                    @Html.TextBoxFor(m => m.ServiceOrderOthers.UnitCost, new { @class = "form-control search decimalinput", autocomplete = "off" })
+                                </span>
+                            </li>
+                            <li style="margin-bottom:4px;">
+                                <span class="label"><span class="label">@Html.LabelFor(m => m.ServiceOrderOthers.Quantity) : <small>*</small></span></span>
+                                <span class="inputText">
+                                    @Html.ValidationMessageFor(m => m.ServiceOrderOthers.Quantity, "", new { style = "display:none" })
+                                    @Html.TextBoxFor(m => m.ServiceOrderOthers.Quantity, new { @class = "form-control search ", autocomplete = "off" })
+                                </span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div style="clear:both;"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal-footer" style="padding:15px 25px !important;">
+            <div class="idBttns">
+                <div class="bttn_pagin">
+                    <div class="bttns2" style="margin:0;">
+                        <button type="submit" class="btn btn-blue mobBttn" style="cursor:pointer" value="save"><i class="fa fa-save faIcon"></i> &nbsp;@Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+                    </div>
+                    <div class="bttns" style="margin:0;"><button type="button" data-dismiss="modal" class="btn btn-blue mobBttn clearerrdiv" id="btnOtherscancel"><i class="fa fa-close faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button></div>
+
+                    <div style="clear:both;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+}
+
+<script>
+    $(function () {
+        $(document).find('form').find("#ServiceOrderOthers_Source").removeClass("input-validation-error");
+        $(document).find('form').find("#ServiceOrderLabour_UnitCost").removeClass("input-validation-error");
+        $(document).find('form').find("#ServiceOrderLabour_Quantity").removeClass("input-validation-error");
+        
+    });
+</script>
+

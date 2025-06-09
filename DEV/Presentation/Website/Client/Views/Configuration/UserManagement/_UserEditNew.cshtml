@@ -1,0 +1,275 @@
+﻿@model Client.Models.Configuration.UserManagement.UserManagementVM
+@{
+    var userType = Model.userModels.UserType;
+    string PackageLevel = Model.userModels._userdata.DatabaseKey.Client.PackageLevel.ToUpper();
+    bool IsSuperUser = Model.userModels._userdata.DatabaseKey.User.IsSuperUser;
+}
+<script type="text/javascript">
+    $(function () {
+        var usertype = "@userType";
+        //UserTypeSelectForEdit(usertype);
+        UserTypeSelect(usertype);
+    });
+
+</script>
+<div class="m-subheader">
+    <div class="new-m-subheader">
+        <div class="PageTitle">
+            <div class="align-items-center separator">
+                <h3 class="m-subheader__title ">
+                    @Model.Loc.Where(a => a.ResourceId == "anchUserManagment").FirstOrDefault().Value.ToString()
+                </h3>
+            </div>
+        </div>
+        <div class="NewBreadcrumbArea">
+            <div class="newBreadcrumb">
+                <ul>
+                    <li><a href="/Configuration/Dashboard">&nbsp;</a></li>
+                    <li><a href="/UserManagement/Index?page=User_Management">@Model.Loc.Where(a => a.ResourceId == "UserManagementSearch").FirstOrDefault().Value.ToString()</a></li>
+                    <li><a href="javascript:void(0)" id="brdUser" data-val="@Model.userModels.UserInfoId">@Model.userModels.UserName</a></li>
+                    <li class="active">@Model.Loc.Where(a => a.ResourceId == "UserEdit").FirstOrDefault().Value.ToString()</li>
+                </ul>
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+        <div style="clear:both;"></div>
+    </div>
+</div>
+@Html.Partial("_ErrorDiv")
+@using (Ajax.BeginForm("UserEdit", "UserManagement", new AjaxOptions { HttpMethod = "Post", OnSuccess = "UserEditOnSuccess", OnBegin = "AjaxBeginFormBegin", OnComplete = "AjaxBeginFormComplete", OnFailure = "AjaxBeginFormFaillure" }, new { enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="row">
+        <div class="col-xl-3">
+            <div class="m-portlet">
+                <div class="sideMenuArea nobg">
+                    <ul class="vtabs" id="detmaintab">
+                        <li class="active" data-val="@Model.userModels.UserInfoId" id="btndetails"><a href="#Details" onclick="openCity(event, 'Details')">@Model.Loc.Where(a => a.ResourceId == "UserInforamtion").FirstOrDefault().Value.ToString()</a></li>
+                        <li id="useraddresstabedit"><a href="#Address" onclick="openCity(event, 'Address')">@Model.Loc.Where(a => a.ResourceId == "ContactInformation").FirstOrDefault().Value.ToString()</a></li>
+                        <!--V2-803-->
+                        <li id="userSingleSignOntabedit"><a href="#SingleSignOn" onclick="openCity(event, 'SingleSignOn')">@Model.Loc.Where(a => a.ResourceId == "SingleSignOnSetting").FirstOrDefault().Value.ToString()</a></li>
+                        <!--V2-803-->
+                    </ul>
+                </div>
+                <div class="selectTabs" id="selectTabs">
+                    <select class="form-control" id="colorselector">
+                        <option value="Details">@Model.Loc.Where(a => a.ResourceId == "UserInforamtion").FirstOrDefault().Value.ToString()</option>
+                        <option value="Address">@Model.Loc.Where(a => a.ResourceId == "ContactInformation").FirstOrDefault().Value.ToString()</option>
+                        <!--V2-803-->
+                        <option value="SingleSignOn">@Model.Loc.Where(a => a.ResourceId == "SingleSignOnSetting").FirstOrDefault().Value.ToString()</option>
+                        <!--V2-803-->
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-9">
+            <div class="row">
+                <div class="col-xl-12">
+                    <div class="m-portlet" id="m_portlet" style="padding:15px;">
+                        <div class="bottomBlock">
+                            <div class="tabsArea nobg" id="Details" style="display:block;">
+                                <ul class="listView nobrd">
+                                    <li>
+                                        <span class="label" id="spnUserAccess">User Access: </span>
+                                        <span class="inputText">
+                                            @Html.TextBoxFor(m => m.userModels.SecurityProfileName, new { @class = "form-control search m-input readonly", @style = "color:black", autocomplete = "off", @readonly = "readonly" })
+                                        </span>
+                                    </li>
+                                    @if (PackageLevel == UserTypeConstants.Enterprise.ToUpper() && IsSuperUser)
+                                    {
+                                        <li>
+                                            <span class="label" id="spnSite">@Model.Loc.Where(a => a.ResourceId == "spnSiteGlobal").FirstOrDefault().Value.ToString(): </span>
+                                            <span class="inputText">
+                                                @Html.TextBoxFor(m => m.userModels.SiteName, new { @class = "form-control search m-input readonly", @style = "color:black", autocomplete = "off", @readonly = "readonly" })
+                                                @*@Html.HiddenFor(m => m.userModels.SiteId)*@
+                                            </span>
+                                        </li>
+                                    }
+                                    <li>
+                                        <span class="label">@Html.LabelFor(m => m.userModels.UserName) :</span>
+                                        <span class="inputText">
+                                            @Html.TextBoxFor(m => m.userModels.UserName, new { @class = "form-control search m-input readonly cls-user-name", @style = "color:black", autocomplete = "off", @readonly = "readonly" })
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label">@Html.LabelFor(m => m.userModels.FirstName) : <small>*</small></span>
+                                        <span class="inputText">
+                                            @Html.ValidationMessageFor(m => m.userModels.FirstName, "", new { style = "display:none" })
+                                            @Html.TextBoxFor(m => m.userModels.FirstName, new { @class = "form-control search m-input", @style = "color:black", autocomplete = "off", maxlength = "63" })
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label">@Html.LabelFor(m => m.userModels.MiddleName) : <small id="MiddleNameValidShow"></small></span>
+                                        <span class="inputText">
+                                            @Html.TextBoxFor(m => m.userModels.MiddleName, new { @class = "form-control search m-input", @style = "color:black", autocomplete = "off", maxlength = "63" })
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label">@Html.LabelFor(m => m.userModels.LastName) : <small id="LastNameValidShow">*</small></span>
+                                        <span class="inputText">
+                                            @Html.ValidationMessageFor(m => m.userModels.LastName, "", new { style = "display:none" })
+                                            @Html.TextBoxFor(m => m.userModels.LastName, new { @class = "form-control search m-input", @style = "color:black", autocomplete = "off", maxlength = "63" })
+                                        </span>
+                                    </li>
+                                    @* start V2-877*@
+                                    <li>
+                                        <span class="label">@Html.LabelFor(m => m.userModels.EmployeeId) :</span>
+                                        <span class="inputText">
+                                            @Html.TextBoxFor(m => m.userModels.EmployeeId, new { @class = "form-control search m-input", @style = "color:black", autocomplete = "off", maxlength = "31" })
+                                        </span>
+                                    </li>
+                                    @* end V2-877*@
+                                    <li id="liCraft">
+                                        <span class="label">@Html.LabelFor(m => m.userModels.CraftId) : </span>
+                                        <span class="inputText">
+                                            @Html.DropDownListFor(m => m.userModels.CraftId, Model.userModels.LookupCraftList, "--Select--", new { @class = "form-control search select2picker", style = "width:100%;" })
+
+                                        </span>
+                                    </li>
+
+                                    <li>
+                                        <span class="label">@Html.LabelFor(m => m.userModels.Shift) : </span>
+                                        <span class="inputText">
+                                            @Html.DropDownListFor(m => m.userModels.Shift, Model.userModels.LookupShiftList, "--Select--", new { @class = "form-control search select2picker", style = "width:100%;" })
+                                        </span>
+                                    </li>
+
+                                    <li id="liEmail">
+                                        <span class="label">@Html.LabelFor(m => m.userModels.Email) : <small id="EmailValidShow">*</small></span>
+                                        <span class="inputText">
+                                            @Html.ValidationMessageFor(m => m.userModels.Email, "", new { style = "display:none" })
+                                            @Html.TextBoxFor(m => m.userModels.Email, new { @class = "form-control search m-input", @style = "color:black", autocomplete = "off", maxlength = "255", id = "Email" })
+                                        </span>
+                                    </li>
+                                    <li id="liBuyer">
+                                        <span class="label">@Html.LabelFor(m => m.userModels.Buyer) :</span>
+                                        <span class="inputText">
+                                            @Html.CheckBoxFor(m => m.userModels.Buyer, new { @class = "form-control m-input", @style = "color:black; width: auto; margin-top: 12px;" })
+                                        </span>
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <div class="tabsArea nobg" id="Address" style="display:none;">
+                                <ul class="listView nobrd">
+                                    <li>
+                                        <span class="label">@Html.LabelFor(m => m.userModels.Phone1) : </span>
+                                        <span class="inputText">
+                                            @Html.ValidationMessageFor(m => m.userModels.Phone1, "", new { style = "display:none" })
+                                            @Html.TextBoxFor(m => m.userModels.Phone1, new { @class = "form-control search", autocomplete = "off" })
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label">@Html.LabelFor(m => m.userModels.Phone2) : </span>
+                                        <span class="inputText">
+                                            @Html.ValidationMessageFor(m => m.userModels.Phone2, "", new { style = "display:none" })
+                                            @Html.TextBoxFor(m => m.userModels.Phone2, new { @class = "form-control search", autocomplete = "off" })
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label">@Html.LabelFor(m => m.userModels.Address1) :<small></small> </span>
+                                        <span class="inputText">
+
+                                            @Html.TextBoxFor(m => m.userModels.Address1, new { @class = "form-control search", autocomplete = "off" })
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label"> </span>
+                                        <span class="inputText">
+                                            @Html.TextBoxFor(m => m.userModels.Address2, new { @class = "form-control search", autocomplete = "off" })
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label"> </span>
+                                        <span class="inputText">
+                                            @Html.TextBoxFor(m => m.userModels.Address3, new { @class = "form-control search", autocomplete = "off" })
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label">@Html.LabelFor(m => m.userModels.AddressCity) : </span>
+                                        <span class="inputText">
+                                            @Html.TextBoxFor(m => m.userModels.AddressCity, new { @class = "form-control search", autocomplete = "off" })
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label">@Html.LabelFor(m => m.userModels.AddressState) : </span>
+                                        <span class="inputText">
+                                            @Html.TextBoxFor(m => m.userModels.AddressState, new { @class = "form-control search", autocomplete = "off" })
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label">@Html.LabelFor(m => m.userModels.AddressPostCode) : </span>
+                                        <span class="inputText">
+                                            @Html.TextBoxFor(m => m.userModels.AddressPostCode, new { @class = "form-control search", autocomplete = "off" })
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label">@Html.LabelFor(m => m.userModels.AddressCountry) : </span>
+                                        <span class="inputText">
+                                            @Html.TextBoxFor(m => m.userModels.AddressCountry, new { @class = "form-control search", autocomplete = "off" })
+                                        </span>
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <div class="tabsArea nobg" id="SingleSignOn" style="display:none;">
+                                <ul class="listView nobrd">
+                                    <li>
+                                        <span class="label">@Html.LabelFor(m => m.userModels.GMailId) : </span>
+                                        <span class="inputText">
+                                            @Html.ValidationMessageFor(m => m.userModels.GMailId, "", new { style = "display:none" })
+                                            @Html.TextBoxFor(m => m.userModels.GMailId, new { @class = "form-control search m-input", autocomplete = "off", maxlength = "67" })
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label">@Html.LabelFor(m => m.userModels.MicrosoftMailId) : </span>
+                                        <span class="inputText">
+                                            @Html.ValidationMessageFor(m => m.userModels.MicrosoftMailId, "", new { style = "display:none" })
+                                            @Html.TextBoxFor(m => m.userModels.MicrosoftMailId, new { @class = "form-control search m-input", autocomplete = "off", maxlength = "67" })
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label">@Html.LabelFor(m => m.userModels.WindowsADUserId) : </span>
+                                        <span class="inputText">
+                                            @Html.ValidationMessageFor(m => m.userModels.WindowsADUserId, "", new { style = "display:none" })
+                                            @Html.TextBoxFor(m => m.userModels.WindowsADUserId, new { @class = "form-control search m-input", autocomplete = "off", maxlength = "67" })
+                                        </span>
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <div style="clear:both;"></div>
+                            <div class="idBttns" id="idBttns">
+                                <div class="bttn_pagin">
+                                    <div class="bttns2">
+                                        @if (Model.userModels.SecurityBBUUser)
+                                        {
+                                            <button id="btnuserEdit" class="btn btn-blue mobBttn"><i class="fa fa-save faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+                                        }
+                                    </div>
+                                    <div class="bttns"><button type="button" class="btn btn-blue mobBttn" id="btneditcancel"><i class="fa fa-close faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button></div>
+                                    <div style="clear:both;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @Html.HiddenFor(m => m.userModels.Password)
+    @Html.HiddenFor(m => m.userModels.UserType, new { id = "UserType" })
+    @Html.HiddenFor(m => m.userModels.UserInfoId, new { id = "UserInfoId" })
+    @Html.HiddenFor(m => m.userModels.SecurityProfileId)
+    @Html.HiddenFor(m => m.userModels.UserType)
+    @*@Html.HiddenFor(m => m.userModels.SiteId)*@
+    @Html.HiddenFor(m => m.userModels.LoginSSOId)
+}
+
+
+<style type="text/css">
+    .errorClassUsr {
+        border: 1px solid red !important;
+    }
+</style>

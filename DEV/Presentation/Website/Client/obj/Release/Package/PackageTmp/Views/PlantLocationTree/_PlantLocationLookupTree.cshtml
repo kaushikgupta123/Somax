@@ -1,0 +1,330 @@
+﻿@model IEnumerable<Client.Models.PlantLocationTree.PlantLocationTreeModel>
+
+@{
+    var pl_id = ViewBag.EquipmentId != null ? Convert.ToInt32(Convert.ToString(ViewBag.EquipmentId)) : -1;
+    var dCount = 0; var lCount = 0; var sCount = 0;
+}
+<input type="text" id="txtSearch" placeholder="Search" title="" class="form-control search" style="color:black;">
+<table id="tblTree" class="table table-rsp jsTT">
+    <thead>
+
+    </thead>
+    <tbody>
+
+        @foreach (var item in Model)
+        {
+            if (item.NodeName == "Department")
+            {
+                if (dCount == 0)
+                {
+                    <tr>
+                        <td class="container"><b>@UtilityFunction.GetMessageFromResource("globalDepartment", LocalizeResourceSetConstants.Global)</b></td>
+                    </tr>
+                }
+                <tr data-tt-id="@item.NodeName" data-tt-parent-id=0 class="container">
+                    <td class="col-lg-3">
+                        @Html.DisplayFor(modelItem => item.ClientLookUpId)
+                    </td>
+                    <td class="col-lg-3">
+                        @Html.DisplayFor(modelItem => item.DepartmentDescription)
+                    <td class="col-lg-3">
+                        @if (pl_id != -1 && pl_id == item.EquipmentId)
+                    {
+                            <label class="container">
+                                <input type="radio" name="radio" class="radSelectPl" checked="checked" data-equipmentId="@item.EquipmentId" data-clientlookupid="@item.ClientLookUpId" data-description="@item.ClientLookUpId.Split('(')[1].Trim()">
+                                <span class="checkmark"></span>
+                            </label>
+                        }
+                        else
+                        {
+                            <label class="container" data-toggle="tooltip" title="Please select a Plant!">
+                                <input type="radio" data-toggle="tooltip" title="Please select a Plant!" name="radio" class="radSelectPl" data-equipmentId="@item.EquipmentId" data-clientlookupid="@item.ClientLookUpId" data-description="@item.ClientLookUpId.Split('(')[1].Trim()">
+                                <span class="checkmark" data-toggle="tooltip" title="Please select an option!"></span>
+                            </label>
+                        }
+                    </td>
+                </tr>
+                dCount++;
+            }
+            else if (item.NodeName == "Line")
+            {
+                if (lCount == 0)
+                {
+                    if (dCount == 0)
+                    {
+                        <tr>
+                            <td class="container"><b>@UtilityFunction.GetMessageFromResource("globalDepartment", LocalizeResourceSetConstants.Global)</b></td>
+                        </tr>
+                    }
+                    <tr>
+                        <td class="container" style="padding: 0.75rem 0.75rem 0.75rem 2rem;"><b>@UtilityFunction.GetMessageFromResource("globalLine", LocalizeResourceSetConstants.Global)</b></td>
+                    </tr>
+                }
+                <tr data-tt-id="@item.NodeName" data-tt-parent-id=1 class="container">
+                    <td class="col-lg-3" style="padding: 0.75rem 0.75rem 0.75rem 2rem;">
+                        @Html.DisplayFor(modelItem => item.ClientLookUpId)
+                    </td>
+                    <td class="col-lg-3">
+                        @Html.DisplayFor(modelItem => item.LineDescription)
+                    </td>
+                    <td class="col-lg-3">
+                        @if (pl_id != -1 && pl_id == item.EquipmentId)
+                    {
+                            <label class="container">
+                                <input type="radio" name="radio" class="radSelectPl" checked="checked" data-equipmentId="@item.EquipmentId" data-clientlookupid="@item.ClientLookUpId" data-description="@item.ClientLookUpId.Split('(')[1].Trim()">
+                                <span class="checkmark"></span>
+                            </label>
+                        }
+                        else
+                        {
+                            <label class="container" data-toggle="tooltip" title="Please select a Plant!">
+                                <input type="radio" data-toggle="tooltip" title="Please select a Plant!" name="radio" class="radSelectPl" data-equipmentId="@item.EquipmentId" data-clientlookupid="@item.ClientLookUpId" data-description="@item.ClientLookUpId.Split('(')[1].Trim()">
+                                <span class="checkmark" data-toggle="tooltip" title="Please select a Plant!"></span>
+                            </label>
+                        }
+                    </td>
+                </tr>
+                lCount++;
+            }
+            else if (item.NodeName == "System")
+            {
+                if (sCount == 0)
+                {
+                    if (dCount == 0)
+                    {
+                        <tr>
+                            <td class="container"><b>@UtilityFunction.GetMessageFromResource("globalDepartment", LocalizeResourceSetConstants.Global)</b></td>
+                        </tr>
+                    }
+                    if (lCount == 0)
+                    {
+                        <tr>
+                            <td class="container" style="padding: 0.75rem 0.75rem 0.75rem 2rem;"><b>@UtilityFunction.GetMessageFromResource("globalLine", LocalizeResourceSetConstants.Global)</b></td>
+                        </tr>
+                    }
+                    <tr>
+                        <td class="container" style="padding: 0.75rem 0.75rem 0.75rem 3rem;"><b>@UtilityFunction.GetMessageFromResource("globalSystem", LocalizeResourceSetConstants.Global)</b></td>
+                    </tr>
+                }
+                <tr data-tt-id="@item.NodeName" data-tt-parent-id=2 class="container">
+                    <td class="col-lg-3" style="padding: 0.75rem 0.75rem 0.75rem 3rem;">
+                        @Html.DisplayFor(modelItem => item.ClientLookUpId)
+                    </td>
+                    <td class="col-lg-3">
+                        @Html.DisplayFor(modelItem => item.SystemDescription)
+                    </td>
+                    <td class="col-lg-3">
+                        @if (pl_id != -1 && pl_id == item.EquipmentId)
+                    {
+                            <label class="container">
+                                <input type="radio" name="radio" class="radSelectPl" checked="checked" data-equipmentId="@item.EquipmentId" data-clientlookupid="@item.ClientLookUpId" data-description="@item.ClientLookUpId.Split('(')[1].Trim()">
+                                <span class="checkmark"></span>
+                            </label>
+                        }
+                        else
+                        {
+                            <label class="container" data-toggle="tooltip" title="Please select a Plant!">
+                                <input type="radio" data-toggle="tooltip" title="Please select a Plant!" name="radio" class="radSelectPl" data-equipmentId="@item.EquipmentId" data-clientlookupid="@item.ClientLookUpId" data-description="@item.ClientLookUpId.Split('(')[1].Trim()">
+                                <span class="checkmark" data-toggle="tooltip" title="Please select a Plant!"></span>
+                            </label>
+                        }
+                    </td>
+                </tr>
+                sCount++;
+            }
+        }
+    </tbody>
+</table>
+
+<style type="text/css">
+    /* The container */
+    label.container {
+        display: block;
+        position: relative;
+        padding-left: 35px;
+        margin-bottom: 12px;
+        cursor: pointer;
+        font-size: 22px;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+    }
+        /* Hide the browser's default radio button */
+        label.container input {
+            position: absolute;
+            opacity: 0;
+            cursor: pointer;
+        }
+    /* Create a custom radio button */
+    .checkmark {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 15px;
+        width: 15px;
+        background-color: #eee;
+        border-radius: 0;
+    }
+    /* On mouse-over, add a grey background color */
+    label.container:hover input ~ .checkmark {
+        background-color: #ccc;
+    }
+    /* When the radio button is checked, add a blue background */
+    label.container input:checked ~ .checkmark { /*background-color: #2196F3;*/
+    }
+    /* Create the indicator (the dot/circle - hidden when not checked) */
+    .checkmark:after {
+        content: "";
+        position: absolute;
+        display: none;
+    }
+    /* Show the indicator (dot/circle) when checked */
+    label.container input:checked ~ .checkmark:after {
+        display: block;
+    }
+    /* Style the indicator (dot/circle) */
+    label.container .checkmark:after {
+        content: "\2713";
+        font-size: 12px;
+        color: #1a3967;
+        font-weight: bold;
+        margin: -1px 0px 0px 3px;
+    }
+
+    tr[data-tt-parent-id="0"] {
+        color: #1a3967 !important;
+        font-weight: 400 !important;
+    }
+</style>
+
+<script type="text/javascript">
+    jQuery.expr[":"].containsNoCase = function (el, i, m) {
+        var search = m[3];
+        if (!search) return false;
+        return eval("/" + search + "/i").test($(el).text());
+    };
+    // execute the search
+    jQuery('#txtSearch').keyup(function () {
+        // only search when there are 3 or more characters in the textbox
+        if (jQuery('#txtSearch').val().trim().length > 0) {
+            // hide all rows
+            jQuery('#tblTree tr').hide();
+            // show the header row
+            jQuery('#tblTree tr:first').show();
+            // show the matching rows (using the containsNoCase from Rick Strahl)
+            jQuery('#tblTree tr td:containsNoCase(\'' + jQuery('#txtSearch').val().trim() + '\')').parent().show();
+            // show the cancel search image
+            jQuery('#imgSearch').show();
+        }
+        else if (jQuery('#txtSearch').val().length == 0) {
+            // if the user removed all of the text, reset the search
+            resetSearch();
+        }
+
+        // if there were no matching rows, tell the user
+        if (jQuery('#tblTree tr:visible').length == 1) {
+            // remove the norecords row if it already exists
+            jQuery('.norecords').remove();
+            // add the norecords row
+            jQuery('#tblTree').append('<tr class="norecords"><td colspan="5" class="Normal">No records were found</td></tr>');
+        }
+    });
+    function resetSearch() {
+        // clear the textbox
+        jQuery('#txtSearch').val('');
+        // show all table rows
+        jQuery('#tblTree tr').show();
+        // remove any no records rows
+        jQuery('.norecords').remove();
+        // remove the cancel search image
+        jQuery('#imgSearch').hide();
+        // make sure we re-focus on the textbox for usability
+        jQuery('#txtSearch').focus();
+    }
+</script>
+
+<style>
+    /* Style the caret/arrow */
+    .caret1, .caret2, .caret3 {
+        cursor: pointer;
+        user-select: none; /* Prevent text selection */
+    }
+
+        /* Create the caret/arrow with a unicode, and style it */
+        .caret1::before {
+            content: "\25B6";
+            color: black;
+            display: inline-block;
+            margin-right: 6px;
+        }
+
+        .caret2::before {
+            content: "\25B6";
+            color: black;
+            display: inline-block;
+            margin-right: 6px;
+        }
+
+        .caret3::before {
+            content: "\25B6";
+            color: black;
+            display: inline-block;
+            margin-right: 6px;
+        }
+
+    /* Rotate the caret/arrow icon when clicked on (using JavaScript) */
+    .caret-down::before {
+        transform: rotate(90deg);
+    }
+
+    /* Hide the nested list */
+    .nested {
+        display: none;
+    }
+
+    /* Show the nested list when the user clicks on the caret/arrow (with JavaScript) */
+    .active {
+        display: block;
+    }
+</style>
+<script>
+
+    $(document).on('click', '.caret1', function () {
+
+        if ($(document).find(".parentD.active").length > 0) {
+            $(document).find(".parentD").removeClass('active');
+        }
+        else
+        { $(document).find(".parentD").addClass('active'); }
+
+        // this.parentElement.querySelector(".nested").classList.toggle("active");
+        this.classList.toggle("caret-down");
+    });
+
+    $(document).on('click', '.caret2', function () {
+
+        if ($(document).find('.parentL.active').length > 0) {
+            $(document).find(".parentL").removeClass('active');
+        }
+        else
+        { $(document).find(".parentL").addClass('active'); }
+
+        // this.parentElement.querySelector(".nested").classList.toggle("active");
+        this.classList.toggle("caret-down");
+    });
+
+    $(document).on('click', '.caret3', function () {
+
+        if ($(document).find('.parentS.active').length > 0) {
+            $(document).find(".parentS").removeClass('active');
+        }
+        else
+        { $(document).find(".parentS").addClass('active'); }
+
+        // this.parentElement.querySelector(".nested").classList.toggle("active");
+        this.classList.toggle("caret-down");
+    });
+
+
+</script>

@@ -1,0 +1,210 @@
+﻿@model Client.Models.InventoryPartsIssue.InventoryPartsIssueVM
+
+<link href="~/Scripts/Metronic/assets/demo/default/base/style_newCustom.css" rel="stylesheet" />
+<div class="m-subheader">
+    <div class="new-m-subheader">
+        <div class="PageTitle">
+            <div class="align-items-center separator">
+                <h3 class="m-subheader__title ">
+                    @Model.Loc.Where(a => a.ResourceId == "spnPartIssue").FirstOrDefault().Value.ToString()
+                </h3>
+            </div>
+        </div>
+
+        <div class="NewBreadcrumbArea">
+            <div class="newBreadcrumb">
+                <ul>
+                    <li><a href="/Dashboard/Dashboard">&nbsp;</a></li>
+                    <li>@Model.Loc.Where(a => a.ResourceId == "spnPartIssue").FirstOrDefault().Value.ToString()</li>
+                </ul>
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+        <div style="clear:both;"></div>
+    </div>
+</div>
+
+<div class="m-portlet" id="m_portlet" style="padding:15px;">
+    <div class="row">
+       
+        <div class="col-xl-12">
+            @Html.Partial("_ErrorDiv")
+
+
+            @using (Ajax.BeginForm("SavePartsIssue", "InventoryPartsIssue", new AjaxOptions { HttpMethod = "Post", OnSuccess = "OnSuccessSavePartsIssue", OnBegin = "AjaxBeginFormBegin", OnFailure = "AjaxBeginFormFaillure" }))
+            {
+                @Html.AntiForgeryToken()
+                <div class="tabsArea nobg m-portlet newPort" id="Issuepart" style="display:block;">
+                    <ul class="listView nobrd rt-part tree-rt-adj inpt-full-adj">
+                        <li class="txtSrchArea txtSrch">
+                            <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnIssueTo").FirstOrDefault().Value.ToString(): <small>*</small></span>
+                            <span class="inputText ">
+                                @Html.DropDownListFor(m => m.partsIssue.selectedPersonnelId, Model.partsIssue.IssueToList, new { @class = "form-control search select2picker", style = "width:100%;" })
+                                @Html.ValidationMessageFor(m => m.partsIssue.PersonnelId, "", new { style = "display:none" })
+                            </span>
+                            <div style="clear:both;"></div>
+                        </li>
+                        <li class="txtSrchArea txtSrch">
+                            <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnChargeType").FirstOrDefault().Value.ToString(): <small>*</small></span>
+                            <span class="inputText ">
+                                @Html.DropDownListFor(m => m.partsIssue.ChargeType, Model.partsIssue.ChargeTypeList, "--Select--", new { @class = "form-control search select2picker", style = "width:100%;" })
+                                @Html.ValidationMessageFor(m => m.partsIssue.ChargeType, "", new { style = "display:none" })
+                            </span>
+                            <div style="clear:both;"></div>
+                        </li>
+                        <li style="position:relative;" class="search-feild">
+                            <span class="label">@Model.Loc.Where(a => a.ResourceId == "GlobalChargeTo").FirstOrDefault().Value.ToString(): <small>*</small></span>
+                            <div class="opt-btn-box">
+                                <span class="inputText wthAdjst2 tree-sub-adj">
+                                    <div class="dropdown dropTableOuter">
+                                        <div class="input-group">
+                                            @Html.ValidationMessageFor(m => m.partsIssue.ChargeToClientLookupId, "", new { style = "display:none" })
+                                            @Html.TextBoxFor(m => m.partsIssue.ChargeToClientLookupId, new { @class = "form-control search dropbtn readonly", id = "txtChargeToId", autocomplete = "off", @readonly = "readonly" })
+                                            @Html.HiddenFor(m => m.partsIssue.ChargeToId, new { id = "hdnChargeToId" })
+                                            @Html.Hidden("hdnId")
+                                            <div class="input-group-btn">
+                                                <button class="btn btn-white btntxtInputGroup" type="button" id="opengrid">
+                                                    <i id="srcicon" class="fa fa-search"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </span>
+                                @if (Model.userData.DatabaseKey.Client.AssetTree == true)
+                                {
+                                    <i class="fa fa-tree chargeTree adjust" id="imgChargeToTree" style="display:none;"></i>
+                                }
+                              
+                            </div>
+                        </li>
+                        @if (Model.partsIssue.MultiStoreroom)
+                        {
+                            <li class="txtSrchArea txtSrch">
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnStoreroom").FirstOrDefault().Value.ToString(): <small>*</small></span>
+                                <span class="inputText">
+                                    @Html.DropDownListFor(m => m.partsIssue.StoreroomId, Model.partsIssue.StoreroomList, "--Select--", new { @class = "form-control search select2picker ddlStoreroom", style = "width:100%;" })
+                                    @Html.ValidationMessageFor(m => m.partsIssue.StoreroomId, "", new { style = "display:none" })
+                                </span>
+                                <div style="clear:both;"></div>
+                            </li>
+                        }
+                        <li class="qr-part qr-rt-adj">
+                            <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnPartID").FirstOrDefault().Value.ToString(): <small>*</small></span>
+                            <div class="opt-btn-box">
+                                <span class="inputText wthAdjst2 tree-sub-adj" style="position:relative;">
+                                    <div class="dropdown dropTableOuter">
+                                        <div class="input-group">
+                                            @Html.ValidationMessageFor(m => m.partsIssue.PartClientLookupId, "", new { style = "display:none" })
+                                            @Html.TextBoxFor(m => m.partsIssue.PartClientLookupId, new { @class = "form-control search dropbtn readonly", id = "txtPartId", autocomplete = "off", @readonly = "readonly" })
+                                            @Html.HiddenFor(m => m.partsIssue.PartId, new { id = "hdnPartId" })
+
+                                            <div class="input-group-btn">
+                                                <button class="btn btn-white btntxtInputGroup" type="button" id="openpartgrid" data-multistoreroomvalue="@Model.partsIssue.MultiStoreroom">
+                                                    <i id="srcicon" class="fa fa-search"></i>
+                                                </button>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </span>
+                                <div class="input-group-btn qr-scr-adj">
+                                    <button type="button" class="btn btn-blue mobBttn" id="btnQrScanner"><i class="fa fa-qrcode"></i></button>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="txtSrchArea txtSrch">
+                            <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnQuantity").FirstOrDefault().Value.ToString(): <small>*</small></span>
+                            <span class="inputText inpt-rt-adj">
+                                @Html.ValidationMessageFor(m => m.partsIssue.Quantity, "", new { style = "display:none" })
+                                @Html.TextBoxFor(m => m.partsIssue.Quantity, new { @class = "form-control search decimalinput", autocomplete = "off" })
+                            </span>
+
+                        </li>
+
+                        <li class="txtSrchArea txtSrch">
+                            <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnLogComment").FirstOrDefault().Value.ToString():</span>
+                            <span class="inputText inpt-rt-adj">
+                                @Html.ValidationMessageFor(m => m.partsIssue.Comments, "", new { style = "display:none" })
+                                @Html.TextBoxFor(m => m.partsIssue.Comments, new { @class = "form-control search", autocomplete = "off", maxlength = "254" })
+                            </span>
+
+                        </li>
+                    </ul>
+                    <div style="clear:both;"></div>
+
+                    <div class="idBttns">
+                        <div class="bttn_pagin">
+
+                            <div class="bttns2">
+                                <button type="submit" class="btn btn-blue mobBttn" name="cmdBtn" value="btnIssueAndAddAnother" id="btnIssueAndAddAnother"><i class="fa fa-save faIcon"></i> @Model.Loc.Where(a => a.ResourceId == "spnIssueAndAddAnother").FirstOrDefault().Value.ToString()</button>
+                            </div>
+                            <div class="bttns2">
+                                <button type="submit" class="btn btn-blue mobBttn" name="cmdBtn" value="btnIssue" id="btnIssue"><i class="fa fa-save faIcon"></i> @Model.Loc.Where(a => a.ResourceId == "spnIssue").FirstOrDefault().Value.ToString()</button>
+                            </div>
+                            <div class="bttns"><button type="button" class="btn btn-blue mobBttn" id="btncancel"><i class="fa fa-close faIcon"></i>@Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button></div>
+                            <div style="clear:both;"></div>
+
+                        </div>
+                    </div>
+                </div>
+            }
+
+        </div>
+       
+    </div>
+</div>
+
+
+
+@Html.TextBoxFor(m => m.partsIssue.MultiStoreroom, new { id = "MultiStoreroom", style = "display:none" })
+@Html.Partial("~/Views/InventoryPartsIssue/_AddEquipmentPopUp.cshtml")
+@Html.Partial("~/Views/InventoryPartsIssue/_AddWOPopUp.cshtml")
+@Html.Partial("~/Views/InventoryPartsIssue/_AddPartPopUp.cshtml")
+<div id="inventoryCheckoutTreeModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title" id="hdrPlantLocation">@Model.Loc.Where(a => a.ResourceId == "spnEquipmentTreeLookup").FirstOrDefault().Value.ToString()</h4>
+            </div>
+            <div class="modal-body">
+                <div class="cntTree">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+
+    .closeMenu .chargeTree {
+        right: 260px;
+    }
+
+    .chargeTree.adjust {
+        right: 14px !important;
+    }
+
+    @@media(max-width: 767px) {
+        ul .listView.tree-rt-adj li span.inputText {
+            width: calc(100% - 0px) !important;
+        }
+
+            ul.listView.tree-rt-adj li span.inputText.wthAdjst2 {
+                width: calc(100% - 0px) !important;
+                margin-bottom: 10px;
+                left: 0px;
+            }
+
+        .chargeTree {
+            display: block;
+            position: static;
+            left: 0;
+            right: 0;
+            text-align: center;
+            border: #b9c1c4 1px solid;
+            border-radius: 0.25rem;
+            padding: 0.65rem 1rem;
+        }
+    }
+</style>

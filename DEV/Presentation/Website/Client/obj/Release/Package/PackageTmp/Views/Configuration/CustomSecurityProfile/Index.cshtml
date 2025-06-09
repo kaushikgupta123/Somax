@@ -1,0 +1,32 @@
+﻿@{
+    ViewBag.Title = "Somax-Config | Custom Security Profile";
+}
+
+@Styles.Render("~/Content/datatable")
+
+@section scripts {
+    @Scripts.Render("~/bundles/datatable")
+    <script src="~/Scripts/Pages/Configuration/CustomSecurityProfile/CustomSecurityProfile.js"></script>
+}
+<div id="renderCustomSecurityprofile">
+    @Html.Partial("~/Views/Configuration/CustomSecurityProfile/_CustomSecurityProfileSearch.cshtml")
+    @Html.Partial("~/Views/Configuration/CustomSecurityProfile/_CustomSecurityProfileAdvanceSearch.cshtml")
+</div>
+
+<!--Add Or Edit Modal -->
+<div id="CustomSecurityModalpopup" class="modal fade" role="dialog">
+    <div class="modal-dialog" id="CustomSecurityPopup">
+    </div>
+</div>
+
+<style type="text/css">
+    .modal-open { overflow: hidden !important; }
+    @@media only screen and (min-width: 320px) and (max-width: 359px) {
+        #shortDrop { margin-top: 0; margin-right: 0 !important; }
+        button.newAdd, .newBtn-update { float: none; }
+    }
+    @@media only screen and (min-width: 360px) and (max-width: 479px) {
+        #shortDrop { margin-top: 0; margin-right: 0 !important; }
+        button.newAdd, .newBtn-update { float: none; }
+    }
+</style>

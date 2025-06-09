@@ -1,0 +1,111 @@
+﻿@model Client.Models.PurchaseOrder.PurchaseOrderVM
+<div class="m-subheader fixedDiv1">
+    <div class="new-m-subheader">
+        <div class="PageTitle">
+            <div class="align-items-center separator">
+                <h3 class="m-subheader__title ">
+                    @Model.Loc.Where(a => a.ResourceId == "spnPOR").FirstOrDefault().Value.ToString()
+                </h3>
+            </div>
+        </div>
+
+        <div class="NewBreadcrumbArea">
+            <div class="newBreadcrumb">
+                <ul>
+                    <li><a href="/Dashboard/Dashboard">&nbsp;</a></li>
+                    <li><a href="/PurchaseOrderReceipt/Index?page=Procurement_Receipts">@Model.Loc.Where(a => a.ResourceId == "spnPORSearch").FirstOrDefault().Value.ToString()</a></li>
+                    <li><a href="javascript:void(0)" id="brdPO" data-val="@Model.PurchaseOrderModel.PurchaseOrderId">@Model.PurchaseOrderModel.ClientLookupId</a></li>
+                    <li class="active"><a href="#">@Model.Loc.Where(a => a.ResourceId == "spnRecPO").FirstOrDefault().Value.ToString()</a></li>
+                </ul>
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+        <div style="clear:both;"></div>
+    </div>
+</div>
+<div class="pushDiv1"></div>
+
+@Html.Partial("_ErrorDiv")
+@using (Ajax.BeginForm("AddPurchaseOrderReceiptHeader", "PurchaseOrderReceipt", new AjaxOptions { HttpMethod = "Post", OnSuccess = "PurchaseOrderReceiptAddOnSuccess", OnBegin = "AjaxBeginFormBegin", OnFailure = "AjaxBeginFormFaillure" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="row">
+        <div class="col-xl-12">
+            <div class="m-portlet newPort" id="m_portlet" style="padding:15px;">
+                <div class="bottomBlock">
+                    <div class="tabsArea nobg">
+                        <ul class="listView nobrd">
+                            <li>
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnPoComments").FirstOrDefault().Value.ToString() : </span>
+                                <span class="inputText">
+                                    @Html.TextBoxFor(m => m.purchaseOrderReceiptModel.Comments, new { @class = "form-control search", autocomplete = "off" })
+                                </span>
+                            </li>
+                            <li>
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnPoCarrier").FirstOrDefault().Value.ToString() : </span>
+                                <span class="inputText">
+                                    @Html.TextBoxFor(m => m.purchaseOrderReceiptModel.Carrier, new { @class = "form-control search ", autocomplete = "off" })
+                                </span>
+                            </li>
+                            <li>
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnPackingSlip").FirstOrDefault().Value.ToString(): </span>
+                                <span class="inputText" style="height:auto;">
+                                    @Html.TextBoxFor(m => m.purchaseOrderReceiptModel.PackingSlip, new { @class = "form-control search", autocomplete = "off" })
+                                </span>
+                            </li>
+                            <li>
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnFreightBill").FirstOrDefault().Value.ToString(): </span>
+                                <span class="inputText" style="height:auto;">
+                                    @Html.TextBoxFor(m => m.purchaseOrderReceiptModel.FreightBill, new { @class = "form-control search ", autocomplete = "off" })
+                                </span>
+                            </li>
+                            <li>
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnFreightAmt").FirstOrDefault().Value.ToString(): </span>
+                                <span class="inputText" style="height:auto;">
+                                    @Html.ValidationMessageFor(m => m.purchaseOrderReceiptModel.FreightAmount, "", new { style = "display:none" })
+                                    @Html.TextBoxFor(m => m.purchaseOrderReceiptModel.FreightAmount, new { @class = "form-control search", autocomplete = "off" })
+                                </span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div style="clear:both;"></div>
+                    <div class="tabsArea nobg">
+                        <h3 style="margin-top: 0.5rem;">@Model.Loc.Where(a => a.ResourceId == "spnReceiptProgress").FirstOrDefault().Value.ToString()</h3>
+                        <ul class="listView nobrd">
+                            <li>
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnItemsToRec").FirstOrDefault().Value.ToString(): </span>
+                                <span class="inputText">
+                                    @Html.TextBoxFor(m => m.purchaseOrderReceiptModel.NoOfItems, new { @class = "form-control search", autocomplete = "off" })
+                                </span>
+                            </li>
+                            <li>
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnItemsToIssue").FirstOrDefault().Value.ToString(): </span>
+                                <span class="inputText">
+                                    @Html.TextBoxFor(m => m.purchaseOrderReceiptModel.ItemsIssued, new { @class = "form-control search", autocomplete = "off" })
+                                </span>
+                            </li>
+                            <li>
+                                <span class="label">Print Receipt: </span>
+                                <span class="inputText"><input type="checkbox" id="chkPrint" name="chkPrint" value=""></span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="idBttns">
+                        <div class="bttn_pagin">
+                            <div class="bttns2">
+                                <button type="submit" class="btn btn-blue mobBttn"><i class="fa fa-save faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+                            </div>
+                            <div class="bttns">
+                                <button type="button" class="btn btn-blue mobBttn" id="btnsPORLcancel"><i class="fa fa-close faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button>
+                            </div>
+                            <div style="clear:both;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @Html.HiddenFor(m => m.purchaseOrderReceiptModel.PurchaseOrderId)
+    @Html.HiddenFor(m => m.purchaseOrderReceiptModel.POReceiptHeaderId)
+    @Html.HiddenFor(m => m.purchaseOrderReceiptModel.PrintReceiptCheck)
+}

@@ -1,0 +1,101 @@
+﻿@model Client.Models.MultiStoreroomPart.MultiStoreroomPartVM
+
+@{
+    ViewBag.Title = "Somax | Multi Storeroom Part";
+}
+@Styles.Render("~/Content/datatable")
+<link href="~/Scripts/dropzone/basic.min.css" rel="stylesheet" />
+<link href="~/Scripts/dropzone/dropzone.min.css" rel="stylesheet" />
+<link href="~/Content/sidebar_custom.css" rel="stylesheet" />
+<link href="~/Scripts/Metronic/assets/demo/default/base/GlobalSearchGrid.css" rel="stylesheet" />
+<link href="~/Scripts/Metronic/assets/demo/default/base/style_newCustom.css" rel="stylesheet" />
+
+@section scripts {
+
+    @Scripts.Render("~/bundles/WebCam")
+    @Scripts.Render("~/bundles/datatable")
+    @Scripts.Render("~/bundles/imagezoom")
+    @Scripts.Render("~/bundles/QRPrint")
+    @Scripts.Render("~/bundles/MultiStoreroomPart")
+    @Scripts.Render("~/bundles/SomaxCkEditor")
+    @Scripts.Render("//unpkg.com/@flatfile/adapter/build/dist/index.min.js")
+    @*V2-764*@
+    @Scripts.Render("~/bundles/QRScanner")
+    @Scripts.Render("~/bundles/ImageCompressor")
+
+}
+
+<div id="multistoreroompartcontainer">
+
+    @if (ViewBag.IsMultiStoreroomDetails == true)
+    {
+        @Html.Partial("_MultiStoreroomDetails", Model)
+    }
+    else if (ViewBag.IsPartDetailsFromNotification == true) //V2-1147
+    {
+        @Html.Partial("_MultiStoreroomDetails", Model)
+        @Html.Hidden("IsDetailFromNotification", true)
+
+    }
+    else if (ViewBag.IsAdd == true)
+    {
+        @*@Html.Partial("_MultiStoreroomPartsAddParts", Model)*@
+        @Html.Partial("_AddPartDynamic", Model)
+    }
+    else
+    {
+        @Html.Partial("_MultiStoreroomPartSearch")
+    }
+
+</div>
+
+<style>
+    .m-portlet {
+        box-shadow: 0px 1px 15px 1px rgb(244 243 247 / 8%);
+    }
+
+    .pushDiv2 {
+        height: 154px;
+    }
+
+    .partImage {
+        height: 120px;
+    }
+
+    @@media(max-width: 1199px) {
+        .row[class*="m-row--col-separator-"] > div:last-child {
+            border-bottom: 0 !important;
+        }
+
+        .summaryview {
+            padding: 5px 0px;
+        }
+    }
+
+    @@media(max-width: 960px) {
+        #m_portlet {
+            margin-top: 0px !important;
+        }
+
+        .row.summaryview {
+            width: 100% !important;
+        }
+
+            .row.summaryview .col-md-2 {
+                width: 40% !important;
+            }
+
+            .row.summaryview .col-md-4 {
+                width: 60% !important;
+            }
+    }
+
+    @@media(max-width: 590px) {
+        .ActionBttnArea {
+            width: 69% !important;
+            margin-left: 10px;
+        }
+    }
+</style>
+
+

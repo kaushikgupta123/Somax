@@ -1,0 +1,16 @@
+﻿@model Client.Models.Configuration.UIConfiguration.UiConfigurationVM
+@{
+    ViewBag.Title = "Somax | UI Configuration";
+}
+@Styles.Render("~/Content/datatable")
+@section scripts{
+@Scripts.Render("~/bundles/datatable")
+<script src="~/Scripts/Pages/Configuration/UIConfiguration/UiConfiguration.js"></script>
+   
+}
+
+
+<div id="uiconfigmaincontainer">
+    @Html.Partial("~/Views/Configuration/UIConfiguration/_UIConfiguration.cshtml", Model)
+</div>
+

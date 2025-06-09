@@ -1,0 +1,60 @@
+﻿
+@model Client.Models.WorkOrderPlanning.WorkOrderPlanningVM
+
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close WopcloseAddcheduleModal" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">@Model.Loc.Where(a => a.ResourceId == "spnGlobalSchedule").FirstOrDefault().Value.ToString()</h4>
+            </div>
+            @using (Ajax.BeginForm("AddScheduleWOP", "WorkOrderPlanning", new AjaxOptions { HttpMethod = "Post", OnSuccess = "WOPScheduleAddOnSuccess", OnBegin = "AjaxBeginFormBegin", OnComplete = "AjaxBeginFormComplete", OnFailure = "AjaxBeginFormFaillure" }))
+            {
+             @Html.AntiForgeryToken()
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="Line" id="lblLine">@Model.Loc.Where(a => a.ResourceId == "spnGlobalAssigned").FirstOrDefault().Value.ToString():<small>*</small></label>
+                
+                        @Html.ValidationMessageFor(m => m.WOPScheduleModel.PersonnelIds, "", new { style = "display:none" })
+                        @Html.DropDownListFor(m => m.WOPScheduleModel.PersonnelIds, Model.PersonnelList, new { @class = "form-control search select2picker", style = "width:100%;", id = "ddlUserWop", multiple = "multiple" })
+                    
+                </div>
+                <div class="form-group">
+                    <label for="Line" id="lblLine">@Model.Loc.Where(a => a.ResourceId == "spnGlobalSchedule").FirstOrDefault().Value.ToString():<small>*</small></label>
+                    @Html.ValidationMessageFor(m => m.WOPScheduleModel.Schedulestartdate, "", new { style = "display:none" })
+                    @Html.TextBoxFor(m => m.WOPScheduleModel.Schedulestartdate, "{0:MM/dd/yyyy}", new { @class = "form-control search dtpicker", autocomplete = "off", id = "Schedulestartdate" })
+                </div>
+            </div>
+            <div class="modal-footer" style="padding:15px 25px !important;">
+                <button type="button" class="btn btn-default mobBttn btncancelschedule" data-dismiss="modal"><i class="fa fa-close buttonIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button>
+                <button type="submit" class="btn btn-blue mobBttn" style="float:right;" id="btnSubmitWOP"><i class="fa fa-save faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+                <div style="clear:both;"></div>
+            </div>
+            @Html.HiddenFor(x => x.WOPScheduleModel.WOPStartDate, new { id = "WOPStartDate" })
+            @Html.HiddenFor(x => x.WOPScheduleModel.WOPEndDate, new { id = "WOPEndDate" })
+            @Html.HiddenFor(x => x.WOPScheduleModel.WorkOrderIds)
+            @Html.HiddenFor(x => x.WOPScheduleModel.WorkOrderPlanId)
+            
+        }
+        </div>
+   
+
+<style type="text/css">
+    #ui-datepicker-div.ui-datepicker.ui-widget.ui-widget-content {
+        z-index: 1153 !important;
+        top: 235px !important;
+    }
+
+</style>
+<style type="text/css">
+    .modal-open {
+        overflow: hidden !important;
+    }
+
+    .select2-container--default .select2-selection--multiple .select2-selection__rendered .select2-selection__choice {
+        height: auto !important;
+    }
+
+    .select2-container .select2-search--inline {
+        height: auto !important;
+        margin-bottom: 0 !important;
+    }
+</style>

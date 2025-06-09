@@ -1,0 +1,130 @@
+﻿@model Client.Models.Meters.MetersVM
+<div class="m-subheader">
+    <div class="new-m-subheader">
+        <div class="PageTitle">
+            <div class="align-items-center separator">
+                <h3 class="m-subheader__title ">
+                   @Model.Loc.Where(a => a.ResourceId == "Meter").FirstOrDefault().Value.ToString() 
+                </h3>
+            </div>
+        </div>
+        <div class="NewBreadcrumbArea">
+            <div class="newBreadcrumb">
+                <ul>
+                    <li><a href="/Dashboard/Dashboard">&nbsp;</a></li>
+                    <li><a href="/Meter/Index?page=Maintenance_Preventive_Maintenance_Meter">@Model.Loc.Where(a => a.ResourceId == "spnMeterSearch").FirstOrDefault().Value.ToString()</a></li>
+                    <li><a href="javascript:void(0)" id="brdmeter" data-val="@Model.Meters.MeterId">@Model.Meters.MeterClientLookUpId</a></li>
+                    <li class="active">@Model.Loc.Where(a => a.ResourceId == "spnEditMeter").FirstOrDefault().Value.ToString()</li>
+                </ul>
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+        <div style="clear:both;"></div>
+    </div>
+</div>
+@Html.Partial("_ErrorDiv")
+@using (Ajax.BeginForm("EditMeter", "Meter", new AjaxOptions { HttpMethod = "Post", OnSuccess = "MeterEditOnSuccess", OnBegin = "AjaxBeginFormBegin", OnComplete = "AjaxBeginFormComplete", OnFailure = "AjaxBeginFormFaillure" }, new { enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="row">
+        <div class="col-xl-3">
+            <div class="m-portlet">
+                <div class="sideMenuArea nobg">
+                    <ul class="vtabs" id="detmaintab">
+                        <li class="active" id="meterIdentification"><a href="#MIdentification">@Model.Loc.Where(a => a.ResourceId == "spnIdentification").FirstOrDefault().Value.ToString()</a></li>
+                        <li id="meterReading"><a href="#MReadings">@Model.Loc.Where(a => a.ResourceId == "spnReadings").FirstOrDefault().Value.ToString()</a></li>
+                    </ul>
+                </div>
+                <div class="selectTabs" id="selectTabs">
+                    <select class="form-control" id="colorselector">
+                        <option value="MIdentification">@Model.Loc.Where(a => a.ResourceId == "spnIdentification").FirstOrDefault().Value.ToString()</option>
+                        <option value="MReadings">@Model.Loc.Where(a => a.ResourceId == "spnReadings").FirstOrDefault().Value.ToString()</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-9">
+            <div class="row">
+                <div class="col-xl-12">
+                    <div class="m-portlet" id="m_portlet" style="padding:15px;">
+                        <div class="bottomBlock">
+                            <div class="tabsArea nobg" id="MIdentification" style="display:block;">
+                                <ul class="listView nobrd">
+                                    <li>
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnMeterID").FirstOrDefault().Value.ToString() : <small>*</small></span>
+                                        <span class="inputText">
+                                            @Html.TextBoxFor(m => m.Meters.MeterClientLookUpId, new { @class = "form-control search readonly", @readonly = "readonly", autocomplete = "off", maxlength = "31" })
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnName").FirstOrDefault().Value.ToString() : <small>*</small></span>
+                                        <span class="inputText">
+                                            @Html.ValidationMessageFor(m => m.Meters.MeterName, "", new { style = "display:none" })
+                                            @Html.TextBoxFor(m => m.Meters.MeterName, new { @class = "form-control search", autocomplete = "off", maxlength = "63" })
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnReadingUnits").FirstOrDefault().Value.ToString() : </span>
+                                        <span class="inputText">
+                                            @Html.DropDownListFor(m => m.Meters.ReadingUnits, Model.Meters.ReadingUnitsList, "--Select--", new { @class = "form-control search select2picker", style = "width:100%;" })
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnMaximumReading").FirstOrDefault().Value.ToString() : <small>*</small> </span>
+                                        <span class="inputText">
+                                            @Html.ValidationMessageFor(m => m.Meters.MaxReading, "", new { style = "display:none" })
+                                            @Html.TextBoxFor(m => m.Meters.MaxReading, new { @class = "form-control search decimalinput", autocomplete = "off" })
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "globalInActive").FirstOrDefault().Value.ToString(): </span>
+                                        <span class="inputText">
+                                            @Html.CheckBoxFor(m => m.Meters.InActive, new { @class = "form-control m-input readonly", @readonly = "readonly", @style = "color:black; width: auto; margin-top: 12px;" ,disabled="disabled"})
+                                        </span>
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <div class="tabsArea nobg" id="MReadings" style="display:none;">
+                                <ul class="listView nobrd">
+                                    <li>
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnCurrentReading").FirstOrDefault().Value.ToString() : <small></small></span>
+                                        <span class="inputText">
+                                            @Html.TextBoxFor(m => m.Meters.ReadingCurrent, new { @class = "form-control search readonly", @readonly = "readonly", autocomplete = "off" })
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnLifetimeReading").FirstOrDefault().Value.ToString() : <small></small></span>
+                                        <span class="inputText">
+                                            @Html.TextBoxFor(m => m.Meters.ReadingLife, new { @class = "form-control search readonly", @readonly = "readonly", autocomplete = "off"})
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnReadingDate").FirstOrDefault().Value.ToString() : <small></small></span>
+                                        <span class="inputText">
+                                            @Html.TextBoxFor(m => m.Meters.ReadingDate, new { @class = "form-control search readonly dtpicker", @readonly = "readonly", autocomplete = "off" })
+                                        </span>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div style="clear:both;"></div>
+                            <div class="idBttns" id="idBttns">
+                                <div class="bttn_pagin">
+                                    <div class="bttns2">
+                                        @if (Model.security.Meters.Edit)
+                                        {
+                                        <button type="submit" class="btn btn-blue mobBttn" name="Command" id="btnSave" style="cursor:pointer" value="save"><i class="fa fa-save faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+                                        }
+                                    </div>
+                                    <div class="bttns"><button type="button" class="btn btn-blue mobBttn" id="btneditcancel"><i class="fa fa-close faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button></div>
+                                    <div style="clear:both;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @Html.HiddenFor(m => m.Meters.MeterId)
+}

@@ -1,0 +1,372 @@
+﻿@model Client.Models.Parts.PartsVM
+
+@if (Model.PartModel.PartId != 0)
+{
+    <div class="m-subheader fixedDiv1">
+        <div class="new-m-subheader">
+            <div class="PageTitle">
+                <div class="align-items-center separator">
+                    <h3 class="m-subheader__title ">
+                        @Model.Loc.Where(a => a.ResourceId == "spnParts").FirstOrDefault().Value.ToString()
+                    </h3>
+                </div>
+            </div>
+
+            <div class="NewBreadcrumbArea">
+                <div class="newBreadcrumb">
+                    <ul>
+                        <li><a href="/Dashboard/Dashboard">&nbsp;</a></li>
+                        <li><a href="/Parts/Index?page=Inventory_Parts">@Model.Loc.Where(a => a.ResourceId == "spnPartSearch").FirstOrDefault().Value.ToString()</a></li>
+                        <li><a href="javascript:void(0)" id="brdpart" data-val="@Model.PartModel.PartId">@Model.PartModel.ClientLookupId</a></li>
+                        <li>@Model.Loc.Where(a => a.ResourceId == "spnEditPart").FirstOrDefault().Value.ToString()</li>
+                    </ul>
+                    <div style="clear:both;"></div>
+                </div>
+            </div>
+            <div style="clear:both;"></div>
+        </div>
+    </div>
+    <div class="pushDiv1"></div>
+}
+else
+{
+    <div class="m-subheader">
+        <div class="new-m-subheader">
+            <div class="PageTitle">
+                <div class="align-items-center separator">
+                    <h3 class="m-subheader__title ">
+                        @Model.Loc.Where(a => a.ResourceId == "spnParts").FirstOrDefault().Value.ToString()
+                    </h3>
+                </div>
+            </div>
+
+            <div class="NewBreadcrumbArea">
+                <div class="newBreadcrumb">
+                    <ul>
+                        <li><a href="/Dashboard/Dashboard">&nbsp;</a></li>
+                        <li><a href="/Parts/Index?page=Inventory_Parts">@Model.Loc.Where(a => a.ResourceId == "spnPartSearch").FirstOrDefault().Value.ToString()</a></li>
+                        <li class="active">@Model.Loc.Where(a => a.ResourceId == "spnAddPart").FirstOrDefault().Value.ToString()</li>
+                    </ul>
+                    <div style="clear:both;"></div>
+                </div>
+            </div>
+            <div style="clear:both;"></div>
+        </div>
+    </div>
+}
+
+@Html.Partial("_ErrorDiv")
+
+@if (Model.PartModel.PartId != 0)
+{
+    <div class="row fixedDiv2">
+        @Html.Partial("_PartSummary", Model)
+    </div>
+    <div class="pushDiv2 partsAdjust"></div>
+}
+
+@using (Ajax.BeginForm("AddParts", "Parts", new AjaxOptions { HttpMethod = "Post", OnSuccess = "PartsAddOnSuccess", OnBegin = "AjaxBeginFormBegin", OnComplete = "AjaxBeginFormComplete", OnFailure = "AjaxBeginFormFaillure" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="row">
+        <div class="col-xl-3">
+            <div class="m-portlet">
+                <div class="sideMenuArea nobg">
+                    <ul class="vtabs" id="detmaintab">
+                        <li class="active" id="identificationtab"><a href="#Identification">@Model.Loc.Where(a => a.ResourceId == "btnIdentification").FirstOrDefault().Value.ToString()</a></li>
+                        <li><a href="#Location" id="locationtab">@Model.Loc.Where(a => a.ResourceId == "spnLocation").FirstOrDefault().Value.ToString()</a></li>
+                        <li><a href="#QuantitiesCost" id="qcosttab">@Model.Loc.Where(a => a.ResourceId == "spnQuantitiesCost").FirstOrDefault().Value.ToString() </a></li>
+                    </ul>
+                </div>
+                <div class="selectTabs" id="selectTabs">
+                    <select class="form-control" id="colorselector">
+                        <option value="Identification">@Model.Loc.Where(a => a.ResourceId == "btnIdentification").FirstOrDefault().Value.ToString()</option>
+                        <option value="Location">@Model.Loc.Where(a => a.ResourceId == "spnLocation").FirstOrDefault().Value.ToString()</option>
+                        <option value="QuantitiesCost">@Model.Loc.Where(a => a.ResourceId == "spnQuantitiesCost").FirstOrDefault().Value.ToString()</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-9">
+            <div class="row">
+                <div class="col-xl-12" id="btnnblock">
+                    <div class="m-portlet" id="m_portlet" style="padding:15px;">
+                        <div class="bottomBlock">
+                            <div class="tabsArea nobg" id="Identification" style="display:block;">
+                                <ul class="listView nobrd">
+                                    <li>
+                                        <span class="label">@Html.LabelFor(m => m.PartModel.ClientLookupId) : <small>*</small></span>
+                                        <span class="inputText">
+                                            @if (Model.PartModel.PartId == 0)
+                                            {
+                                                @Html.ValidationMessageFor(m => m.PartModel.ClientLookupId, "", new { style = "display:none" })
+                                                @Html.TextBoxFor(m => m.PartModel.ClientLookupId, new { @class = "form-control search", autocomplete = "off" })
+
+                                            }
+                                            else
+                                            {
+                                                @Html.TextBoxFor(m => m.PartModel.ClientLookupId, new { @class = "form-control search readonly", @readonly = "readonly", autocomplete = "off" })
+                                            }
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label">@Html.LabelFor(m => m.PartModel.Description) : <small>*</small></span>
+                                        <span class="inputText">
+                                            @Html.ValidationMessageFor(m => m.PartModel.Description, "", new { style = "display:none" })
+                                            @Html.TextBoxFor(m => m.PartModel.Description, new { @class = "form-control search", autocomplete = "off" })
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label">@Html.LabelFor(m => m.PartModel.UPCCode) : </span>
+                                        <span class="inputText">
+                                            @Html.TextBoxFor(m => m.PartModel.UPCCode, new { @class = "form-control search", autocomplete = "off" })
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label">@Html.LabelFor(m => m.PartModel.AccountId) : </span>
+                                        <span class="inputText">
+                                            @Html.DropDownListFor(m => m.PartModel.AccountId, Model.PartModel.AccountList, "--Select--", new { @class = "form-control search select2picker", style = "width:100%;" })
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label">@Html.LabelFor(m => m.PartModel.StockType) : </span>
+                                        <span class="inputText">
+                                            @Html.DropDownListFor(m => m.PartModel.StockType, Model.PartModel.LookupStokeTypeList, "--Select--", new { @class = "form-control search select2picker", style = "width:100%;" })
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label">@Html.LabelFor(m => m.PartModel.IssueUnit) : <small>*</small></span>
+                                        <span class="inputText">
+                                            @Html.ValidationMessageFor(m => m.PartModel.IssueUnit, "", new { style = "display:none" })
+                                            @Html.DropDownListFor(m => m.PartModel.IssueUnit, Model.PartModel.LookupIssueUnitList, "--Select--", new { @class = "form-control search select2picker", style = "width:100%;" })
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label">@Html.LabelFor(m => m.PartModel.Manufacturer) : </span>
+                                        <span class="inputText">
+                                            @Html.TextBoxFor(m => m.PartModel.Manufacturer, new { @class = "form-control search", autocomplete = "off" })
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label">@Html.LabelFor(m => m.PartModel.ManufacturerID) : </span>
+                                        <span class="inputText">
+                                            @Html.TextBoxFor(m => m.PartModel.ManufacturerID, new { @class = "form-control search", autocomplete = "off" })
+                                        </span>
+                                    </li>
+                                    @*<li>
+                                            <span class="label">@Html.LabelFor(m => m.PartModel.InactiveFlag) : </span>
+                                            <span class="inputText">
+                                                @Html.CheckBoxFor(m => m.PartModel.InactiveFlag)
+                                            </span>
+                                        </li>*@
+                                    <li>
+                                        <span class="label">@Html.LabelFor(m => m.PartModel.CriticalFlag) : </span>
+                                        <span class="inputText">
+                                            @Html.CheckBoxFor(m => m.PartModel.CriticalFlag)
+                                        </span>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="tabsArea nobg" id="Location" style="display:none;">
+                                <ul class="listView nobrd">
+                                    <li>
+                                        <span class="label">@Html.LabelFor(m => m.PartModel.PlaceArea) : </span>
+                                        <span class="inputText">
+                                            @Html.TextBoxFor(m => m.PartModel.PlaceArea, new { @class = "form-control search", autocomplete = "off" })
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label">@Html.LabelFor(m => m.PartModel.Section) : </span>
+                                        <span class="inputText">
+                                            @Html.TextBoxFor(m => m.PartModel.Section, new { @class = "form-control search", autocomplete = "off" })
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label">@Html.LabelFor(m => m.PartModel.Row) : </span>
+                                        <span class="inputText">
+                                            @Html.TextBoxFor(m => m.PartModel.Row, new { @class = "form-control search", autocomplete = "off" })
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label">@Html.LabelFor(m => m.PartModel.Shelf) : </span>
+                                        <span class="inputText">
+                                            @Html.TextBoxFor(m => m.PartModel.Shelf, new { @class = "form-control search", autocomplete = "off" })
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label">@Html.LabelFor(m => m.PartModel.Bin) : </span>
+                                        <span class="inputText">
+                                            @Html.TextBoxFor(m => m.PartModel.Bin, new { @class = "form-control search", autocomplete = "off" })
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label">@Html.LabelFor(m => m.PartModel.CountFrequency) : </span>
+                                        <span class="inputText">
+                                            @Html.TextBoxFor(m => m.PartModel.CountFrequency, new { @class = "form-control search decimalinput", autocomplete = "off" })
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label">@Html.LabelFor(m => m.PartModel.LastCounted) : </span>
+                                        <span class="inputText">
+                                            @if (Model.PartModel.PartId == 0)
+                                            {
+                                                @Html.ValidationMessageFor(m => m.PartModel.LastCounted, "", new { style = "display:none" })
+                                                @Html.TextBoxFor(m => m.PartModel.LastCounted, new { @class = "form-control search dtpicker", autocomplete = "off" })
+                                            }
+                                            else
+                                            {
+                                                if (Model.PartModel.LastCounted != null && Model.PartModel.LastCounted != default(DateTime))
+                                                {
+                                                    @Html.TextBoxFor(m => m.PartModel.LastCounted, "{0:MM/dd/yyyy}", new { @class = "form-control search dtpicker readonly", @readonly = "readonly", autocomplete = "off" })
+                                                }
+                                                else
+                                                {
+                                                    <input type="text" class="form-control search readonly" readonly="readonly" />
+                                                }
+                                            }
+
+                                        </span>
+                                    </li>
+                                    @if (Model.PartModel.PartId != 0)
+                                    {
+                                        <li>
+                                            <span class="label">@Html.LabelFor(m => m.PartModel.PreviousId) : </span>
+                                            <span class="inputText">
+                                                @Html.TextBoxFor(m => m.PartModel.PreviousId, new { @class = "form-control search readonly", @readonly = "readonly", autocomplete = "off" })
+                                            </span>
+                                        </li>
+                                    }
+                                </ul>
+                            </div>
+                            <div class="tabsArea nobg" id="QuantitiesCost" style="display:none;">
+                                <ul class="listView nobrd">
+                                    <li>
+                                        <span class="label">@Html.LabelFor(m => m.PartModel.AverageCost) : </span>
+                                        <span class="inputText">
+                                            @Html.ValidationMessageFor(m => m.PartModel.AverageCost, "", new { style = "display:none" })
+                                            @Html.TextBoxFor(m => m.PartModel.AverageCost, new { @class = "form-control search decimalinput", autocomplete = "off" })
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label">@Html.LabelFor(m => m.PartModel.AppliedCost) : </span>
+                                        <span class="inputText">
+                                            @Html.ValidationMessageFor(m => m.PartModel.AppliedCost, "", new { style = "display:none" })
+                                            @Html.TextBoxFor(m => m.PartModel.AppliedCost, new { @class = "form-control search decimalinput", autocomplete = "off" })
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label">@Html.LabelFor(m => m.PartModel.LastPurchaseCost) : </span>
+                                        <span class="inputText">
+                                            @if (Model.PartModel.PartId == 0)
+                                            {
+                                                @Html.TextBoxFor(m => m.PartModel.LastPurchaseCost, new { @Value = "0.0000", @class = "form-control search decimalinput readonly", @readonly = "readonly", autocomplete = "off" })
+                                            }
+                                            else
+                                            {
+                                                @Html.TextBoxFor(m => m.PartModel.LastPurchaseCost, new { @class = "form-control search decimalinput readonly", @readonly = "readonly", autocomplete = "off" })
+                                            }
+
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label">@Html.LabelFor(m => m.PartModel.OnHandQuantity) : </span>
+                                        <span class="inputText">
+                                            @if (Model.PartModel.PartId == 0)
+                                            {
+                                                @Html.TextBoxFor(m => m.PartModel.OnHandQuantity, new { @Value = "0.0000", @class = "form-control search decimalinput", autocomplete = "off" })
+                                            }
+                                            else
+                                            {
+                                                @Html.TextBoxFor(m => m.PartModel.OnHandQuantity, new { @class = "form-control search decimalinput readonly", @readonly = "readonly", autocomplete = "off" })
+                                            }
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label">@Html.LabelFor(m => m.PartModel.OnOrderQuantity) : </span>
+                                        <span class="inputText">
+                                            @if (Model.PartModel.PartId == 0)
+                                            {
+                                                @Html.TextBoxFor(m => m.PartModel.OnOrderQuantity, new { @Value = "0.0000", @class = "form-control search decimalinput readonly", @readonly = "readonly", autocomplete = "off" })
+                                            }
+                                            else
+                                            {
+                                                @Html.TextBoxFor(m => m.PartModel.OnOrderQuantity, new { @class = "form-control search decimalinput readonly", @readonly = "readonly", autocomplete = "off" })
+                                            }
+
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label">@Html.LabelFor(m => m.PartModel.OnRequestQuantity) : </span>
+                                        <span class="inputText">
+                                            @if (Model.PartModel.PartId == 0)
+                                            {
+                                                @Html.TextBoxFor(m => m.PartModel.OnRequestQuantity, new { @Value = "0.0000", @class = "form-control search decimalinput readonly", @readonly = "readonly", autocomplete = "off" })
+                                            }
+                                            else
+                                            {
+                                                @Html.TextBoxFor(m => m.PartModel.OnRequestQuantity, new { @class = "form-control search decimalinput readonly", @readonly = "readonly", autocomplete = "off" })
+                                            }
+
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label">@Html.LabelFor(m => m.PartModel.Maximum) : </span>
+                                        <span class="inputText">
+                                            @Html.ValidationMessageFor(m => m.PartModel.Maximum, "", new { style = "display:none" })
+                                            @Html.TextBoxFor(m => m.PartModel.Maximum, new { @class = "form-control search decimalinput", autocomplete = "off" })
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label">@Html.LabelFor(m => m.PartModel.Minimum) : </span>
+                                        <span class="inputText">
+                                            @Html.ValidationMessageFor(m => m.PartModel.Minimum, "", new { style = "display:none" })
+                                            @Html.TextBoxFor(m => m.PartModel.Minimum, new { @class = "form-control search decimalinput", autocomplete = "off", id = "Minimum" })
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label">@Html.LabelFor(m => m.PartModel.AutoPurchaseFlag) : </span>
+                                        <span class="inputText">
+                                            @Html.CheckBoxFor(m => m.PartModel.AutoPurchaseFlag)
+                                        </span>
+                                    </li>
+                                    @if (Model.PartModel.PartId != 0)
+                                    {
+                                        <li>
+                                            <span class="label">@Html.LabelFor(m => m.PartModel.Consignment) : </span>
+                                            <span class="inputText">
+                                                @Html.CheckBoxFor(m => m.PartModel.Consignment)
+                                            </span>
+                                        </li>
+                                    }
+                                </ul>
+                            </div>
+                            <div class="idBttns">
+                                <div class="bttn_pagin">
+                                    <div class="bttns2">
+                                        @if (Model.PartModel.PartId == 0 && Model.security.Parts.Edit)
+                                        {
+                                            <button class="btn btn-white mobBttn" name="Command" value="saveAdd" id="btnSaveAnotherOpenPart"><i class="fa fa-save faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalSaveAndAdd").FirstOrDefault().Value.ToString()</button>
+                                        }
+                                        @if (Model.security.Parts.Edit)
+                                        {
+                                            <button class="btn btn-blue mobBttn" name="Command" value="save" id="btnSavePart"><i class="fa fa-save faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+                                        }
+                                    </div>
+                                    <div class="bttns"><button type="button" class="btn btn-blue mobBttn" id="btnCancelAddPart"><i class="fa fa-close faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button></div>
+
+                                    <div style="clear:both;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @Html.HiddenFor(m => m.PartModel.PartId)
+    if (Model.PartModel.PartId != 0)
+    {
+        @Html.HiddenFor(m => m.PartModel.InactiveFlag)
+    }
+}

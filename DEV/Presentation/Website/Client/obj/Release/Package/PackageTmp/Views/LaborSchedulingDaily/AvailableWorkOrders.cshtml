@@ -1,0 +1,86 @@
+﻿@model Client.Models.LaborScheduling.LaborSchedulingVM
+<div class="m-subheader">
+    <div class="new-m-subheader">
+        <div class="PageTitle">
+            <div class="align-items-center separator">
+                <h3 class="m-subheader__title ">
+                    @Model.Loc.Where(a => a.ResourceId == "spnDailyLaborScheduling").FirstOrDefault().Value.ToString()
+                </h3>
+            </div>
+        </div>
+
+        <div class="NewBreadcrumbArea">
+            <div class="newBreadcrumb">
+                <ul>
+                    <li><a href="/Dashboard/Dashboard">&nbsp;</a></li>
+                    <li class="active"><a href="/LaborSchedulingDaily/index?page=Maintenance_Work_Order_Labor_Scheduling"> @Model.Loc.Where(a => a.ResourceId == "spnDailyLaborScheduling").FirstOrDefault().Value.ToString()</a></li>
+                    <li class="active"> @Model.Loc.Where(a => a.ResourceId == "spnAvailableWorkOrders").FirstOrDefault().Value.ToString()</li>
+                </ul>
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+        <div style="clear:both;"></div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xl-12">
+        <div class="m-portlet" id="m_portlet" style="padding:15px;">
+            <div class="actionBar">
+                <div class="pull-left">
+                    <button type="button" class="btn btn-white navbar-btn" id="sidebarCollapse" title="Advance Search"><i class="fa fa-filter" style="font-size: 1.3rem;"></i></button>
+                    <ul class="filter_apply globalFilterAdjusted">
+                        <li class="textFilter"><span class="filteritemcount">0</span> @Model.Loc.Where(a => a.ResourceId == "globalFiltersAppiled").FirstOrDefault().Value.ToString()</li>
+                        <li class="textClear" id="liClearAdvSearchFilterAVlLab"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "globalClear").FirstOrDefault().Value.ToString()</a></li>
+                    </ul>
+                    <div style="clear:both;"></div>
+                </div>
+                <div style="clear:both;"></div>
+                <div id="advsearchfilteritems"></div>
+                <div style="clear:both;"></div>
+            </div>
+            <div style="clear:both;"></div>
+
+            <div class="checkbox" style="color:#000;">
+                <label><input type="checkbox" value="" id="AlreadyScheduledId" style="position:relative; top:3px;"> &nbsp; @Model.Loc.Where(a => a.ResourceId == "spnIncludeAlreadyScheduledWorkOrders").FirstOrDefault().Value.ToString()</label>
+            </div>
+            <div class="table-responsive">
+                <table id="tblAvailGrid" class="eqpDtlTbl row-border custom-sort" style="width:100%;">
+                    <thead>
+                        <tr>
+                            <th><input type="checkbox" value="" id="labavlidselectall"></th>
+                            <th>@Model.Loc.Where(a => a.ResourceId == "GlobalWorkOrder").FirstOrDefault().Value.ToString()</th>
+                            <th>@Model.Loc.Where(a => a.ResourceId == "GlobalChargeTo").FirstOrDefault().Value.ToString()</th>
+                            <th>@Model.Loc.Where(a => a.ResourceId == "spnChargeToName").FirstOrDefault().Value.ToString()</th>
+                            <th>@Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString()</th>
+                            <th>@Model.Loc.Where(a => a.ResourceId == "spnStatus").FirstOrDefault().Value.ToString()</th>
+                            <th>@Model.Loc.Where(a => a.ResourceId == "spnPriority").FirstOrDefault().Value.ToString()</th>
+                            <th>@Model.Loc.Where(a => a.ResourceId == "spnDownRequired").FirstOrDefault().Value.ToString()</th>
+                            <th>@Model.Loc.Where(a => a.ResourceId == "spnAssigned").FirstOrDefault().Value.ToString()</th>
+                            <th>@Model.Loc.Where(a => a.ResourceId == "spnWOType").FirstOrDefault().Value.ToString()</th>
+                            <th>@Model.Loc.Where(a => a.ResourceId == "spnStart").FirstOrDefault().Value.ToString()</th>
+                            <th style="text-align:right !important;">@Model.Loc.Where(a => a.ResourceId == "spnDuration").FirstOrDefault().Value.ToString()</th>
+                            <th>@Model.Loc.Where(a => a.ResourceId == "spnRequiredDate").FirstOrDefault().Value.ToString()</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+            <div class="bttn_pagin">
+                <div class="bttns"><button type="button" class="btn btn-blue mobBttn" data-toggle="" data-target="" id="btnAWOCancel"><i class="fa fa-close" style="margin-top:-3px;"></i> &nbsp;@Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button></div>
+                <div class="bttns2"><button type="button" class="btn btn-blue mobBttn" data-toggle="" data-target="" id="btnAddAvailableWO"><i class="fa fa-plus" style="margin-top:-3px;"></i> &nbsp;@Model.Loc.Where(a => a.ResourceId == "globalAdd").FirstOrDefault().Value.ToString()</button></div>
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="ApproveWOadvsearchcontainer">
+    @Html.Partial("_AvailableWorkOrdersAdvSearch")
+</div>
+@Html.TextBoxFor(x => x.LaborSchedulingModel.Date, "{0:MM/dd/yyyy}", new { @class = "dtpicker", style = "display: none;" })
+@Html.HiddenFor(x => x.LaborSchedulingModel.PersonnelId)
+
+<style type="text/css">
+    .dataTables_wrapper {
+         margin-bottom: 3px !important; 
+    }
+</style>

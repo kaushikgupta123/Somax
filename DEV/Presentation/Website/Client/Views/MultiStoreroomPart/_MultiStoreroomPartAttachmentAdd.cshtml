@@ -1,0 +1,115 @@
+﻿@model Client.Models.MultiStoreroomPart.MultiStoreroomPartVM
+<div class="m-subheader">
+    <div class="new-m-subheader">
+        <div class="PageTitle">
+            <div class="align-items-center separator">
+                <h3 class="m-subheader__title ">
+                    @Model.Loc.Where(a => a.ResourceId == "globalAttachment").FirstOrDefault().Value.ToString()
+                </h3>
+            </div>
+        </div>
+
+        <div class="NewBreadcrumbArea">
+            <div class="newBreadcrumb">
+                <ul>
+                    <li><a href="/Dashboard/Dashboard">&nbsp;</a></li>
+                    <li><a href="/MultiStoreroomPart/Index?page=Inventory_MultiStoreroom_Part">@Model.Loc.Where(a => a.ResourceId == "spnPartSearch").FirstOrDefault().Value.ToString()</a></li>
+                    <li><a href="javascript:void(0)" id="brdpart" data-val="@Model.MultiStoreroomPartModel.PartId">@Model.MultiStoreroomPartModel.ClientLookupId</a></li>
+                    <li class="active">@Model.Loc.Where(a => a.ResourceId == "globalAddAttachment").FirstOrDefault().Value.ToString()</li>
+                </ul>
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+        <div style="clear:both;"></div>
+    </div>
+</div>
+
+<div class="row fixedDiv2">
+    @Html.Partial("_MultiStoreroomPartSummary", Model)
+</div>
+<div class="pushDiv2 partsAdjust"></div>
+@Html.Partial("_ErrorDiv")
+<form id="frmmspattachmentadd" name="frmmspattachmentadd" method="post" enctype="multipart/form-data">
+    @Html.AntiForgeryToken()
+    <div class="row">
+        <div class="col-xl-12">
+            <div class="m-portlet newPort" id="m_portlet" style="padding:15px;">
+                <div class="bottomBlock">
+                    <div class="tabsArea nobg">
+                        @if (Model.AttachmentModel.AttachmentId != 0)
+                        {
+                            <h3>@Model.Loc.Where(a => a.ResourceId == "VendorUpdateAttachment").FirstOrDefault().Value.ToString()</h3>
+                        }
+                        else
+                        {
+                            <h3>@Model.Loc.Where(a => a.ResourceId == "globalAddAttachment").FirstOrDefault().Value.ToString()</h3>
+                        }
+                        <ul class="listView nobrd">
+                            <li>
+                                <span class="label">@Html.LabelFor(m => m.AttachmentModel.Subject) : </span>
+                                <span class="inputText">
+                                    @Html.TextBoxFor(m => m.AttachmentModel.Subject, new { @class = "form-control search", autocomplete = "off" })
+                                    @Html.ValidationMessageFor(m => m.AttachmentModel.Subject, "", new { style = "display:none" })
+                                </span>
+                            </li>
+                            <li>
+                                <span class="label">@Html.LabelFor(m => m.AttachmentModel.FileContent) : <small>*</small></span>
+                                <span class="inputText fileT">
+                                    @Html.SomaxAttachmentFileFor(m => m.AttachmentModel.FileContent, new { autocomplete = "off", @class = "attfile" })
+                                    @Html.ValidationMessageFor(m => m.AttachmentModel.FileContent, "", new { style = "display:none" })
+                                </span>
+                            </li>
+
+                        </ul>
+                    </div>
+                    <div style="clear:both;"></div>
+                    <div class="idBttns">
+                        <div class="bttn_pagin">
+                            <div class="bttns2">
+                                <button class="btn btn-blue mobBttn"><i class="fa fa-save faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+                            </div>
+                            <div class="bttns"><button type="button" class="btn btn-blue mobBttn" id="btnMSPattpachmentcancel"><i class="fa fa-close faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button></div>
+
+                            <div style="clear:both;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @Html.HiddenFor(m => m.AttachmentModel.PartId)
+    @Html.HiddenFor(m => m.AttachmentModel.AttachmentId)
+    <!-- #region Show full description -->
+    @Html.Partial("~/Views/MultiStoreroomPart/_MultiStoreroomPartSummaryDescription.cshtml")
+    <!-- #endregion -->
+</form>
+
+<script type="text/javascript">
+    $("form").submit(function (e) {
+        e.preventDefault();
+        var form = document.querySelector('#frmmspattachmentadd');
+        if (!$('form').valid()) {
+            return;
+        }
+        var data = new FormData(form);
+        $.ajax({
+            type: "POST",
+            url: "/MultiStoreroomPart/AddMSPAttachment",
+            data: data,
+            processData: false,
+            contentType: false,
+            beforeSend: function () {
+                ShowLoader();
+            },
+            success: function (data) {
+                AttachmentMSPAddOnSuccess(data);
+            },
+            complete: function () {
+                CloseLoader();
+            },
+            error: function (xhr) {
+                console.log(xhr);
+            }
+        });
+    });
+</script>

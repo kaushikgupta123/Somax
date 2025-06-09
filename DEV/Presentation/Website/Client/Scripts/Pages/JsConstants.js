@@ -1,0 +1,25 @@
+﻿let statusCode = {
+    Approved: "Approved",
+    AwaitApproval: "AwaitApproval",
+    Canceled: "Canceled",
+    Cancel: "Cancel",
+    Complete: "Complete",
+    Denied: "Denied",
+    Fail: "Fail",
+    JobRequest: "JobRequest",
+    Open: "Open",
+    Order: "Order",
+    Pass: "Passed",
+    Partial: "Partial",
+    Resubmit: "Resubmit",
+    Scheduled: "Scheduled",
+    Void: "Void",
+    WorkRequest: "WorkRequest",
+    Processed: "Processed",
+    AuthorizedToPay: "AuthorizedToPay",
+    Paid: "Paid",
+    Extracted: "Extracted",
+    Planning: "Planning",
+    Consolidated: "Consolidated"
+};
+Object.freeze(statusCode)

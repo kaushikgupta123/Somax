@@ -1,0 +1,364 @@
+﻿@model Client.Models.Configuration.VendorMaster.VendorMasterVM
+@{
+    string hColumnList = "";
+    string reqColumnList = "";
+    string disablColumnList = "";
+    if (Model.hiddenColumnList != null && Model.hiddenColumnList.Count > 0)
+    {
+        foreach (var item in Model.hiddenColumnList)
+        {
+            hColumnList = hColumnList + item + ",";
+        }
+    }
+    if (Model.requiredColumnList != null && Model.requiredColumnList.Count > 0)
+    {
+        foreach (var item in Model.requiredColumnList)
+        {
+            reqColumnList = reqColumnList + item + ",";
+        }
+    }
+    if (Model.disabledColumnList != null && Model.disabledColumnList.Count > 0)
+    {
+        foreach (var item in Model.disabledColumnList)
+        {
+            disablColumnList = disablColumnList + item + ",";
+        }
+    }
+}
+<script type="text/javascript">
+    $(function () {
+        $(document).find('#UiconfigInactiveFlag').attr('disabled', 'disabled');
+        $(document).find('#UiconfigRemitUseBusiness').attr('disabled', 'disabled');
+        var v = "@hColumnList";
+        var str = v.split(",");
+        if (str != null && str != "") {
+            $.each(str, function (i, jvalue) {
+                var elementId = '#li' + jvalue;
+                $(document).find(elementId).hide();
+            });
+        }
+        var rq = "@reqColumnList";
+        var arr = rq.split(",");
+        if (arr!=null && arr!="")
+        {
+            $.each(arr, function (i, jvalue) {
+                var reqElementId = '#r' + jvalue;
+                if ($(reqElementId).length)
+                {
+                    $(document).find(reqElementId).css('visibility', 'visible');
+                }
+            });
+        }
+        var dq = "@disablColumnList";
+        var amr = dq.split(",");
+        if (amr != null && amr != "") {
+            $.each(amr, function (i, jvalue) {
+                var reqElementId = '#' + 'vendorMasterModel_' + jvalue;
+                if ($(reqElementId).length) {
+                    if ($(reqElementId).prop('type') == 'text') {
+                        $(document).find(reqElementId).attr('readonly', 'readonly').addClass('readonly');
+                    }
+                    //else if ($(reqElementId).prop('type') == 'select-one') {
+                    else {
+                        $(document).find(reqElementId).attr('disabled', 'disabled');
+                        if (reqElementId == '#vendorMasterModel_InactiveFlag')
+                        {
+                            $(document).find('#UiconfigInactiveFlag').removeAttr('disabled');
+                        }
+                        if (reqElementId == '#vendorMasterModel_RemitUseBusiness') {
+                            $(document).find('#UiconfigRemitUseBusiness').removeAttr('disabled');
+                        }
+                    }
+                }
+            });
+        }
+    });
+</script>
+
+<div class="m-subheader">
+    <div class="new-m-subheader">
+        <div class="PageTitle">
+            <div class="align-items-center separator">
+                <h3 class="m-subheader__title ">
+                    @Model.Loc.Where(a => a.ResourceId == "spnVendorMaster").FirstOrDefault().Value.ToString()
+                </h3>
+            </div>
+        </div>
+
+        <div class="NewBreadcrumbArea">
+            <div class="newBreadcrumb">
+                <ul>
+                    <li><a href="/Configuration/Dashboard">&nbsp;</a></li>
+                    <li><a href="/VendorMaster/Index?page=Masters_Vendor_Vendor_Master">@Model.Loc.Where(a => a.ResourceId == "spnVendorMasterSearch").FirstOrDefault().Value.ToString()</a></li>
+                    <li><a href="javascript:void(0)" id="brdVendor" data-val="@Model.vendorMasterModel.VendorMasterId">@Model.vendorMasterModel.ClientLookupId</a></li>
+                    <li class="active">@Model.Loc.Where(a => a.ResourceId == "spnEditVendorMaster").FirstOrDefault().Value.ToString()</li>
+                </ul>
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+        <div style="clear:both;"></div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xl-3">
+        <div class="m-portlet">
+            <div class="sideMenuArea nobg">
+                <ul class="vtabs" id="detmaintab">
+                    <li class="active" id="requesttab"><a href="#RequestCharge"><i class=""></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "spnDetails").FirstOrDefault().Value.ToString()</a></li>
+                    <li><a href="#StatusCompletion" id="statustab"><i class=""></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "spnAddress").FirstOrDefault().Value.ToString()</a></li>
+                </ul>
+            </div>
+
+            <div class="selectTabs" id="selectTabs">
+                <select class="form-control" id="colorselector">
+                    <option value="RequestCharge">@Model.Loc.Where(a => a.ResourceId == "spnDetails").FirstOrDefault().Value.ToString()</option>
+                    <option value="StatusCompletion">@Model.Loc.Where(a => a.ResourceId == "spnAddress").FirstOrDefault().Value.ToString()</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-9">
+        @Html.Partial("_ErrorDiv")
+        @using (Ajax.BeginForm("SaveVendorMaster", "VendorMaster", new AjaxOptions { HttpMethod = "Post", OnSuccess = "OnVendorMasterAddOnSuccess", OnBegin = "AjaxBeginFormBegin", OnComplete = "AjaxBeginFormComplete", OnFailure = "AjaxBeginFormFaillure" }))
+        {
+            @Html.AntiForgeryToken()
+            <div class="row">
+                <div class="col-xl-12" id="btnnblock">
+                    <div class="m-portlet" id="m_portlet" style="padding:15px;">
+                        <div class="bottomBlock">
+                            <div class="tabsArea nobg" id="RequestCharge" style="display:block;">
+                                <ul class="listView nobrd">
+                                    <li>
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnVendorID").FirstOrDefault().Value.ToString() : <small>*</small></span>
+                                        <span class="inputText">
+                                            @Html.TextBoxFor(m => m.vendorMasterModel.ClientLookupId, new { @class = "form-control search readonly", @readonly = "readonly", autocomplete = "off" })
+                                        </span>
+                                    </li>
+                                    <li id="liInactiveFlag">
+                                        @*<span class="label">@Model.Loc.Where(a => a.ResourceId == "globalInActive").FirstOrDefault().Value.ToString() :<small id="rInactiveFlag" style="visibility:hidden;">*</small> </span>*@
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "globalInActive").FirstOrDefault().Value.ToString() : </span>
+                                        <span class="inputText">
+                                            @Html.HiddenFor(m => m.vendorMasterModel.InactiveFlag, new { id = "UiconfigInactiveFlag" })
+                                            @Html.CheckBoxFor(m => m.vendorMasterModel.InactiveFlag, new { @class = "form-control m-input", @style = "color:black; width: auto; margin-top: 12px;" })
+                                        </span>
+                                    </li>
+                                    <li style="height:auto;">
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnName").FirstOrDefault().Value.ToString() : <small>*</small></span>
+                                        <span class="inputText" style="height:auto;">
+                                            @Html.ValidationMessageFor(m => m.vendorMasterModel.Name, "", new { style = "display:none" })
+                                            @Html.TextAreaFor(m => m.vendorMasterModel.Name, new { @class = "form-control search", style = "resize:none;", autocomplete = "off", maxlength = "255" })
+                                        </span>
+                                        <div style="clear:both;"></div>
+                                    </li>
+                                    <li id="liPhoneNumber">
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnPhoneNumber").FirstOrDefault().Value.ToString() :<small id="rPhoneNumber" style="visibility:hidden;">*</small> </span>
+                                        <span class="inputText">
+                                            @Html.ValidationMessageFor(m => m.vendorMasterModel.PhoneNumber, "", new { style = "display:none" })
+                                            @Html.TextBoxFor(m => m.vendorMasterModel.PhoneNumber, new { @class = "form-control search", autocomplete = "off", maxlength = "31" })
+                                        </span>
+                                    </li>
+                                    <li id="liFaxNumber">
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnFaxNumber").FirstOrDefault().Value.ToString() :<small id="rFaxNumber" style="visibility:hidden;">*</small></span>
+                                        <span class="inputText">
+                                            @Html.ValidationMessageFor(m => m.vendorMasterModel.FaxNumber, "", new { style = "display:none" })
+                                            @Html.TextBoxFor(m => m.vendorMasterModel.FaxNumber, new { @class = "form-control search", autocomplete = "off", maxlength = "31" })
+                                        </span>
+                                    </li>
+                                    <li id="liEmailAddress">
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnEmail").FirstOrDefault().Value.ToString() :<small id="rEmailAddress" style="visibility:hidden;">*</small></span>
+                                        <span class="inputText">
+                                            @Html.ValidationMessageFor(m => m.vendorMasterModel.EmailAddress, "", new { style = "display:none" })
+                                            @Html.TextBoxFor(m => m.vendorMasterModel.EmailAddress, new { @class = "form-control search", autocomplete = "off", maxlength = "63" })
+                                        </span>
+                                    </li>
+                                    <li id="liTerms">
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnTerms").FirstOrDefault().Value.ToString() :<small id="rTerms" style="visibility:hidden;">*</small> </span>
+                                        <span class="inputText">
+                                            @Html.ValidationMessageFor(m => m.vendorMasterModel.Terms, "", new { style = "display:none" })
+                                            @Html.DropDownListFor(m => m.vendorMasterModel.Terms, Model.vendorMasterModel.TermsList, "--Select--", new { @class = "form-control search select2picker", style = "width:100%;" })
+                                        </span>
+                                    </li>
+                                    <li id="liFOBCode">
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnFOB").FirstOrDefault().Value.ToString() :<small id="rFOBCode" style="visibility:hidden;">*</small> </span>
+                                        <span class="inputText">
+                                            @Html.ValidationMessageFor(m => m.vendorMasterModel.FOBCode, "", new { style = "display:none" })
+                                            @Html.DropDownListFor(m => m.vendorMasterModel.FOBCode, Model.vendorMasterModel.FobCodeList, "--Select--", new { @class = "form-control search select2picker", style = "width:100%;" })
+                                        </span>
+                                    </li>
+                                    <li id="liType">
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "GlobalType").FirstOrDefault().Value.ToString() :<small id="rType" style="visibility:hidden;">*</small> </span>
+                                        <span class="inputText">
+                                            @Html.ValidationMessageFor(m => m.vendorMasterModel.Type, "", new { style = "display:none" })
+                                            @Html.DropDownListFor(m => m.vendorMasterModel.Type, Model.vendorMasterModel.TypeList, "--Select--", new { @class = "form-control search select2picker", style = "width:100%;" })
+                                        </span>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="tabsArea nobg" id="StatusCompletion" style="display:none;">
+                                <div class="m-portlet__head" style="padding:0; height:2.5rem; margin-bottom:10px;">
+                                    <div class="m-portlet__head-caption">
+                                        <div class="m-portlet__head-title">
+                                            <h3>@Model.Loc.Where(a => a.ResourceId == "spnBusinessAddress").FirstOrDefault().Value.ToString()</h3>
+                                        </div>
+                                    </div>
+                                </div>
+                                <ul class="listView nobrd" style="border-bottom:0px;">
+                                    <li id="liAddress1">
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnAddressLine1").FirstOrDefault().Value.ToString() :<small id="rAddress1" style="visibility:hidden;">*</small></span>
+                                        <span class="inputText">
+                                            @Html.ValidationMessageFor(m => m.vendorMasterModel.Address1, "", new { style = "display:none" })
+                                            @Html.TextBoxFor(m => m.vendorMasterModel.Address1, new { @class = "form-control search", autocomplete = "off", maxlength = "63" })
+                                        </span>
+                                    </li>
+                                    <li id="liAddress2">
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnAddressLine2").FirstOrDefault().Value.ToString() :<small id="rAddress2" style="visibility:hidden;">*</small></span>
+                                        <span class="inputText">
+                                            @Html.ValidationMessageFor(m => m.vendorMasterModel.Address2, "", new { style = "display:none" })
+                                            @Html.TextBoxFor(m => m.vendorMasterModel.Address2, new { @class = "form-control search", autocomplete = "off", maxlength = "63" })
+                                        </span>
+                                    </li>
+                                    <li id="liAddress3">
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnAddressLine3").FirstOrDefault().Value.ToString() :<small id="rAddress3" style="visibility:hidden;">*</small></span>
+                                        <span class="inputText">
+                                            @Html.ValidationMessageFor(m => m.vendorMasterModel.Address3, "", new { style = "display:none" })
+                                            @Html.TextBoxFor(m => m.vendorMasterModel.Address3, new { @class = "form-control search", autocomplete = "off", maxlength = "63" })
+                                        </span>
+                                    </li>
+                                    <li id="liAddressCity">
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "GlobalCity").FirstOrDefault().Value.ToString() :<small id="rAddressCity" style="visibility:hidden;">*</small></span>
+                                        <span class="inputText">
+                                            @Html.ValidationMessageFor(m => m.vendorMasterModel.AddressCity, "", new { style = "display:none" })
+                                            @Html.TextBoxFor(m => m.vendorMasterModel.AddressCity, new { @class = "form-control search", autocomplete = "off", maxlength = "31" })
+                                        </span>
+                                    </li>
+                                    <li id="liAddressState">
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "GlobalState").FirstOrDefault().Value.ToString() :<small id="rAddressState" style="visibility:hidden;">*</small></span>
+                                        <span class="inputText">
+                                            @Html.ValidationMessageFor(m => m.vendorMasterModel.AddressState, "", new { style = "display:none" })
+                                            @Html.TextBoxFor(m => m.vendorMasterModel.AddressState, new { @class = "form-control search", autocomplete = "off", maxlength = "63" })
+                                        </span>
+                                    </li>
+                                    <li id="liAddressPostCode">
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnPostalCode").FirstOrDefault().Value.ToString() :<small id="rAddressPostCode" style="visibility:hidden;">*</small></span>
+                                        <span class="inputText">
+                                            @Html.ValidationMessageFor(m => m.vendorMasterModel.AddressPostCode, "", new { style = "display:none" })
+                                            @Html.TextBoxFor(m => m.vendorMasterModel.AddressPostCode, new { @class = "form-control search", autocomplete = "off", maxlength = "31" })
+                                        </span>
+                                    </li>
+                                    <li id="liAddressCountry">
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnCountry").FirstOrDefault().Value.ToString() :<small id="rAddressCountry" style="visibility:hidden;">*</small></span>
+                                        <span class="inputText">
+                                            @Html.ValidationMessageFor(m => m.vendorMasterModel.AddressCountry, "", new { style = "display:none" })
+                                            @Html.TextBoxFor(m => m.vendorMasterModel.AddressCountry, new { @class = "form-control search", autocomplete = "off", maxlength = "63" })
+                                        </span>
+                                    </li>
+                                </ul>
+                                <br />
+                                <div class="m-portlet__head" style="padding:0; height:2.5rem; margin-bottom:10px;">
+                                    <div class="m-portlet__head-caption">
+                                        <div class="m-portlet__head-title">
+                                            <h3>@Model.Loc.Where(a => a.ResourceId == "spnRemitAddress").FirstOrDefault().Value.ToString()</h3>
+                                        </div>
+                                    </div>
+                                </div>
+                                <ul class="listView nobrd">
+                                    <li id="liRemitUseBusiness">
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnRemitUseBusiness").FirstOrDefault().Value.ToString() :<small id="rRemitUseBusiness" style="visibility:hidden;">*</small> </span>
+                                        <span class="inputText">
+                                            @Html.HiddenFor(m => m.vendorMasterModel.RemitUseBusiness, new { id = "UiconfigRemitUseBusiness" })
+                                            @Html.CheckBoxFor(m => m.vendorMasterModel.RemitUseBusiness, new { @class = "form-control m-input", @style = "color:black; width: auto; margin-top: 12px;" })
+                                        </span>
+                                    </li>
+                                    <li id="liRemitAddress1">
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnAddressLine1").FirstOrDefault().Value.ToString() :<small id="rRemitAddress1" style="visibility:hidden;">*</small></span>
+                                        <span class="inputText">
+                                            @Html.ValidationMessageFor(m => m.vendorMasterModel.RemitAddress1, "", new { style = "display:none" })
+                                            @Html.TextBoxFor(m => m.vendorMasterModel.RemitAddress1, new { @class = "form-control search", autocomplete = "off", maxlength = "63" })
+                                        </span>
+                                    </li>
+                                    <li id="liRemitAddress2">
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnAddressLine2").FirstOrDefault().Value.ToString() :<small id="rRemitAddress2" style="visibility:hidden;">*</small></span>
+                                        <span class="inputText">
+                                            @Html.ValidationMessageFor(m => m.vendorMasterModel.RemitAddress2, "", new { style = "display:none" })
+                                            @Html.TextBoxFor(m => m.vendorMasterModel.RemitAddress2, new { @class = "form-control search", autocomplete = "off", maxlength = "63" })
+                                        </span>
+                                    </li>
+                                    <li id="liRemitAddress3">
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnAddressLine2").FirstOrDefault().Value.ToString() :<small id="rRemitAddress3" style="visibility:hidden;">*</small></span>
+                                        <span class="inputText">
+                                            @Html.ValidationMessageFor(m => m.vendorMasterModel.RemitAddress3, "", new { style = "display:none" })
+                                            @Html.TextBoxFor(m => m.vendorMasterModel.RemitAddress3, new { @class = "form-control search", autocomplete = "off", maxlength = "63" })
+                                        </span>
+                                    </li>
+                                    <li id="liRemitAddressCity">
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "GlobalCity").FirstOrDefault().Value.ToString() :<small id="rRemitAddressCity" style="visibility:hidden;">*</small></span>
+                                        <span class="inputText">
+                                            @Html.ValidationMessageFor(m => m.vendorMasterModel.RemitAddressCity, "", new { style = "display:none" })
+                                            @Html.TextBoxFor(m => m.vendorMasterModel.RemitAddressCity, new { @class = "form-control search", autocomplete = "off", maxlength = "63" })
+                                        </span>
+                                    </li>
+                                    <li id="liRemitAddressState">
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "GlobalState").FirstOrDefault().Value.ToString() :<small id="rRemitAddressState" style="visibility:hidden;">*</small></span>
+                                        <span class="inputText">
+                                            @Html.ValidationMessageFor(m => m.vendorMasterModel.RemitAddressState, "", new { style = "display:none" })
+                                            @Html.TextBoxFor(m => m.vendorMasterModel.RemitAddressState, new { @class = "form-control search", autocomplete = "off", maxlength = "63" })
+                                        </span>
+                                    </li>
+                                    <li id="liRemitAddressPostCode">
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnPostalCode").FirstOrDefault().Value.ToString():<small id="rRemitAddressPostCode" style="visibility:hidden;">*</small></span>
+                                        <span class="inputText">
+                                            @Html.ValidationMessageFor(m => m.vendorMasterModel.RemitAddressPostCode, "", new { style = "display:none" })
+                                            @Html.TextBoxFor(m => m.vendorMasterModel.RemitAddressPostCode, new { @class = "form-control search", autocomplete = "off", maxlength = "31" })
+                                        </span>
+                                    </li>
+                                    <li id="liRemitAddressCountry">
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnCountry").FirstOrDefault().Value.ToString() :<small id="rRemitAddressCountry" style="visibility:hidden;">*</small></span>
+                                        <span class="inputText">
+                                            @Html.ValidationMessageFor(m => m.vendorMasterModel.RemitAddressCountry, "", new { style = "display:none" })
+                                            @Html.TextBoxFor(m => m.vendorMasterModel.RemitAddressCountry, new { @class = "form-control search", autocomplete = "off", maxlength = "63" })
+                                        </span>
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <div style="clear:both;"></div>
+                            <div class="idBttns">
+                                <div class="bttn_pagin">
+                                    <div class="bttns2">
+                                        <button type="submit" class="btn btn-blue mobBttn" name="Command" value="save" id="btnSaveWO"><i class="fa fa-save faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+                                    </div>
+                                    <div class="bttns">
+                                        <button type="button" class="btn btn-blue mobBttn" id="btnCancelEditVendor" data-val="@Model.vendorMasterModel.VendorMasterId"><i class="fa fa-close faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button>
+                                    </div>
+                                    <div style="clear:both;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @Html.HiddenFor(m => m.vendorMasterModel.VendorMasterId)
+            @Html.HiddenFor(m => m.vendorMasterModel.UpdateIndex)
+            @Html.HiddenFor(m => m.vendorMasterModel.IsExternal, new { id = "IsExternal" })
+            @Html.HiddenFor(m => m.vendorMasterModel.ViewName, new { id = "ViewName" })
+            @Html.HiddenFor(m => m.vendorMasterModel.Terms, new { id = "UiconfigTerms" })
+            @Html.HiddenFor(m => m.vendorMasterModel.FOBCode, new { id = "UiconfigFOBCode" })
+            @Html.HiddenFor(m => m.vendorMasterModel.Type, new { id = "UiconfigType" })
+        }
+    </div>
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        if ($('#vendorMasterModel_RemitUseBusiness').val() == "true") {
+            $('#vendorMasterModel_RemitAddress1').attr("disabled", true);
+            $('#vendorMasterModel_RemitAddress2').attr("disabled", true);
+            $('#vendorMasterModel_RemitAddress3').attr("disabled", true);
+            $('#vendorMasterModel_RemitAddressCity').attr("disabled", true);
+            $('#vendorMasterModel_RemitAddressState').attr("disabled", true);
+            $('#vendorMasterModel_RemitAddressPostCode').attr("disabled", true);
+            $('#vendorMasterModel_RemitAddressCountry').attr("disabled", true);
+        }
+    });
+</script>

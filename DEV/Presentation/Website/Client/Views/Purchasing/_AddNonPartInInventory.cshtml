@@ -1,0 +1,191 @@
+﻿@model Client.Models.PurchaseOrder.PurchaseOrderVM
+
+@{
+    string hColumnList = "";
+    string reqColumnList = "";
+    string disablColumnList = "";
+    if (Model.lineItem.hiddenColumnList != null && Model.lineItem.hiddenColumnList.Count > 0)
+    {
+        foreach (var item in Model.lineItem.hiddenColumnList)
+        {
+            hColumnList = hColumnList + item + ",";
+        }
+    }
+    if (Model.lineItem.requiredColumnList != null && Model.lineItem.requiredColumnList.Count > 0)
+    {
+        foreach (var item in Model.lineItem.requiredColumnList)
+        {
+            reqColumnList = reqColumnList + item + ",";
+        }
+    }
+    if (Model.lineItem.disabledColumnList != null && Model.lineItem.disabledColumnList.Count > 0)
+    {
+        foreach (var item in Model.lineItem.disabledColumnList)
+        {
+            disablColumnList = disablColumnList + item + ",";
+        }
+    }
+}
+<script type="text/javascript">
+    $(function () {
+        var v = "@hColumnList";
+        var str = v.split(",");
+        if (str != null && str != "") {
+            $.each(str, function (i, jvalue) {
+                var elementId = '#li' + jvalue;
+                $(document).find(elementId).hide();
+            });
+        }
+      var rq = "@reqColumnList";
+        var arr = rq.split(",");
+        if (arr!=null && arr!="")
+        {
+            $.each(arr, function (i, jvalue) {
+                var reqElementId = '#r' + jvalue;
+                if ($(reqElementId).length)
+                {
+                    $(document).find(reqElementId).css('visibility', 'visible');
+                }
+            });
+        }
+        var dq = "@disablColumnList";
+        var amr = dq.split(",");
+        if (amr != null && amr != "") {
+            $.each(amr, function (i, jvalue) {
+                var reqElementId = '#' +'lineItem_'+ jvalue;
+                if ($(reqElementId).length) {
+                    if ($(reqElementId).prop('type') == 'text') {
+                        $(document).find(reqElementId).attr('readonly', 'readonly').addClass('readonly');
+                    }
+                    //else if ($(reqElementId).prop('type') == 'select-one') {
+                    else {
+                        $(document).find(reqElementId).attr('disabled', 'disabled');
+                    }
+                }
+            });
+        }
+    });
+</script>
+<div class="m-subheader">
+    <div class="new-m-subheader">
+        <div class="PageTitle">
+            <div class="align-items-center separator">
+                <h3 class="m-subheader__title ">
+                    @Model.Loc.Where(a => a.ResourceId == "spnPoPurchaseOrder").FirstOrDefault().Value.ToString()
+                </h3>
+            </div>
+        </div>
+
+        <div class="NewBreadcrumbArea">
+            <div class="newBreadcrumb">
+                <ul>
+                    <li><a href="/Dashboard/Dashboard">&nbsp;</a></li>
+                    <li><a href="/Purchasing/Index?page=Procurement_Orders">@Model.Loc.Where(a => a.ResourceId == "spnPoPurchasingSearch").FirstOrDefault().Value.ToString()</a></li>
+                    <li><a href="javascript:void(0)" id="brdPO" data-val="@Model.lineItem.PurchaseOrderId">@Model.lineItem.PurchaseOrder_ClientLookupId</a></li>
+                    <li class="active">@Model.Loc.Where(a => a.ResourceId == "spnPoPartnotinInventory_Describewhatyouneed").FirstOrDefault().Value.ToString() </li>
+                </ul>
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+        <div style="clear:both;"></div>
+    </div>
+</div>
+@Html.Partial("_ErrorDiv")
+@using (Ajax.BeginForm("AddPartNonInInventory", "Purchasing", new AjaxOptions { HttpMethod = "Post", OnSuccess = "AddPartNonInInventoryOnSuccess", OnBegin = "AjaxBeginFormBegin", OnComplete = "AjaxBeginFormComplete", OnFailure = "AjaxBeginFormFaillure" }, new { id = "frmPOPartNotInInventoryId" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="row">
+        <div class="col-xl-12">
+            <div class="m-portlet newPort" id="m_portlet" style="padding:15px;">
+                <div class="bottomBlock">
+                    <div class="tabsArea nobg">
+                        <ul class="listView nobrd">                           
+                            <li  id="liDescription">
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString() :<small id="rDescription" style="visibility:hidden;">*</small> </span>
+                                <span class="inputText">
+                                    @Html.ValidationMessageFor(m => m.lineItem.Description, "", new { style = "display:none" })
+                                    @Html.TextBoxFor(m => m.lineItem.Description, new { @class = "form-control search", autocomplete = "off" })
+                                </span>
+                            </li>
+                            <li >
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnPoOrderQty").FirstOrDefault().Value.ToString() :<small>*</small> </span>
+                                <span class="inputText">
+                                    @Html.ValidationMessageFor(m => m.lineItem.OrderQuantity, "", new { style = "display:none" })
+                                    @Html.TextBoxFor(m => m.lineItem.OrderQuantity, new { @class = "form-control search", autocomplete = "off", maxlength = "16" })
+                                </span>
+                            </li>
+                            <li >
+                                <span class="label">Purchase UOM : <small>*</small></span>
+                                <span class="inputText">
+                                    @Html.ValidationMessageFor(m => m.lineItem.PurchaseUOM, "", new { style = "display:none" })
+                                    @Html.DropDownListFor(m => m.lineItem.PurchaseUOM, Model.lineItem.UOMList, "--Select--", new { @class = "form-control search select2picker" })                                   
+                                </span>
+                            </li>
+                            <li >
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnUnitCost").FirstOrDefault().Value.ToString() : <small>*</small></span>
+                                <span class="inputText">
+                                    @Html.ValidationMessageFor(m => m.lineItem.UnitCost, "", new { style = "display:none" })
+                                    @Html.TextBoxFor(m => m.lineItem.UnitCost, new { @class = "form-control search", @Value = "0", autocomplete = "off", maxlength = "16" })
+                                </span>
+                            </li>                      
+                                 <li>
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnChargeType").FirstOrDefault().Value.ToString() : <small>*</small></span>
+                                    <span class="inputText">
+                                        @Html.ValidationMessageFor(m => m.lineItem.ChargeType, "", new { style = "display:none" })
+                                        @Html.DropDownListFor(m => m.lineItem.ChargeType, Model.lineItem.ChargeTypeList, "--Select--", new { @class = "form-control search select2picker" })                                      
+                                    </span>
+                                </li>
+                                <li>
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "GlobalChargeTo").FirstOrDefault().Value.ToString()  : <small>*</small></span>
+                                    <span class="inputText" style="position:relative;">
+                                        <div class="dropdown dropTableOuter">
+                                            <div class="input-group">
+                                               @Html.ValidationMessageFor(m => m.lineItem.ChargeToClientLookupIdToShow, "", new { style = "display:none" })
+                                                @Html.TextBoxFor(m => m.lineItem.ChargeToClientLookupIdToShow, new { @class = "form-control search dropbtn readonly", id = "txtChargeToId", autocomplete = "off", @readonly = "readonly" })
+                                                @Html.HiddenFor(m=>m.lineItem.ChargeToId,new { id="hdnChargeToId"})
+                                                <div class="input-group-btn">
+                                                    <button class="btn btn-white btntxtInputGroup" type="button" id="opengrid">
+                                                        <i id="srcicon" class="fa fa-search"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </span>
+                                </li>
+
+                            <li id="liAccountId">
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnPoAccount").FirstOrDefault().Value.ToString() :<small id="rAccountId" style="visibility:hidden;">*</small>  </span>
+                                <span class="inputText">
+                                    @Html.ValidationMessageFor(m => m.lineItem.AccountId, "", new { style = "display:none" })
+                                    @Html.DropDownListFor(m => m.lineItem.AccountId, Model.lineItem.AccountList, "--Select--", new { @class = "form-control search select2picker", style = "width:100%;" })
+                                </span>
+                            </li>                          
+                        </ul>
+                    </div>
+                    <div style="clear:both;"></div>
+                    <div class="idBttns">
+                        <div class="bttn_pagin">
+                            <div class="bttns2">
+                                <button type="submit" class="btn btn-blue mobBttn" name="Command" value="save" id="btnPOPartNotInventorySave"><i class="fa fa-save faIcon"></i> &nbsp;@Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+                            </div>
+                            <div class="bttns"><button type="button" class="btn btn-blue mobBttn" id="btnpoNonPartIncancel"><i class="fa fa-close faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button></div>
+                            <div style="clear:both;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @Html.HiddenFor(m => m.lineItem.PurchaseOrderId)
+    @Html.HiddenFor(m => m.lineItem.UpdateIndex)
+    @Html.HiddenFor(m => m.lineItem.PartId, new { id = "PartId" })
+    @Html.HiddenFor(m => m.lineItem.ViewName,new { id = "ViewName" }) 
+    @Html.Partial("~/Views/Purchasing/_AddAccountId.cshtml")
+    @Html.Partial("~/Views/Purchasing/_AddEquipmentId.cshtml")
+    @Html.Partial("~/Views/Purchasing/_AddWorkOrderId.cshtml")
+
+}
+
+<script src="~/Scripts/Pages/Purchasing/poaccount-grid-dropdown.js"></script>
+<script src="~/Scripts/Pages/Purchasing/poequipment-grid-dropdown.js"></script>
+<script src="~/Scripts/Pages/Purchasing/poworkorder-grid-dropdown.js"></script>

@@ -1,0 +1,65 @@
+﻿@model Client.Models.WorkOrderPlanning.WorkOrderPlanningVM
+
+<div class="actionBar" style="display:block" id="lsGridAction">
+    <div class="pull-left" style="position:relative;">
+        <div class="assignedBlock" style="display:none">
+            <form>
+                <label>@Model.Loc.Where(a => a.ResourceId == "spnGlobalAssigned").FirstOrDefault().Value.ToString() : </label>
+                @{
+                    List<SelectListItem> selectListItems = Model.PersonnelList.ToList();
+                    selectListItems.Insert(0, (new SelectListItem { Text = "Select All", Value = "" }));
+                }
+
+                @Html.DropDownList("PersonnelIds", selectListItems, new { @class = "form-control search", style = "width:100%;", id = "ddlUser", multiple = "multiple" })
+            </form>
+        </div>
+        <div style="clear:both;"></div>
+    </div>
+
+    <div class="pull-right">        
+        <button type="button" class="btn btn-white availableWork" id="btnAvailableWorkRL" style="margin-right: 0px !important;"><i class="fa fa-check"></i> @Model.Loc.Where(a => a.ResourceId == "spnAvailableWork").FirstOrDefault().Value.ToString()</button>
+        <div style="clear:both;"></div>
+    </div>
+
+    <div style="clear:both;"></div>
+    <div id="advsearchfilteritems"></div>
+    <div style="clear:both;"></div>
+</div>
+<div style="clear:both;"></div>
+
+<div class="row" style="position:relative;">
+    <div class="calenderoverlay" style='display:none;'></div>
+    <div id='calendarloader' style='display:none;'>
+        <img src='~/Content/Images/image_1197421.gif' />
+    </div>
+    <div class="col-xl-2">
+        <div class="table-responsive" style="overflow-x: hidden;">
+            <table id='PersonnelList' class="eqpDtlTbl row-border custom-sort tblMain tblDefaultSort dataTable no-footer" style="width:100%;">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>@Model.Loc.Where(a => a.ResourceId == "spnName").FirstOrDefault().Value.ToString()</th>
+                        <th style="text-align:right !important;">@Model.Loc.Where(a => a.ResourceId == "spnGlobalEstHrs").FirstOrDefault().Value.ToString()</th>
+                    </tr>
+                </thead>
+                <tbody style="visibility:hidden;"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="col-xl-10">
+        <form>
+            <div id='m_calendar'></div>
+        </form>
+    </div>
+</div>
+<div id="AddScheduleResourceCalendar" class="modal fade" role="dialog">
+    <div class="modal-dialog" id="AddScheduleResourceCalendarPopUp">
+    </div>
+</div>
+<div id="EditScheduleResourceCalendar" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-info" id="EditScheduleResourceCalendarPopUp">
+    </div>
+</div>
+
+<div id="AvailableWorkRL"></div>

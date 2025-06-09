@@ -1,0 +1,77 @@
+﻿@model Client.Models.Dashboard.DashboardVM
+
+<div class="slide-modal" id="cancelModalDetailsPage">
+    <div class="slide-modal-head">
+        <a  class="slide-back-btn cancelModalDetailsPageHide"> <i class="fa fa-angle-left"></i> Back</a>
+        <div class="slide-back-title">
+            @Model.Loc.Where(a => a.ResourceId == "spnCancelJob").FirstOrDefault().Value.ToString()
+        </div>
+    </div>
+
+    <div class="slide-modal-body">
+        <div mbsc-page class="demo-responsive">
+            <div style="height:100%">
+                <div mbsc-form class="mbsc-form-grid">
+                    <div class="mbsc-grid">
+                        <div class="mbsc-row">
+                            <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                <label>
+                                    @Model.Loc.Where(a => a.ResourceId == "spnCancelReason").FirstOrDefault().Value.ToString()
+                                    @*@Html.DropDownListFor(m => m.WoEmergencyDescribeModel.Type, Model.WoEmergencyDescribeModel.TypeList, "--Select--", new
+                                        {
+                                            @class = "form-control search select2picker",
+                                            @style = "width:100%;",
+                                            @mbsc_input = "true",
+                                            @data_label = Model.Loc.Where(a => a.ResourceId == "spnCancelReason").FirstOrDefault().Value.ToString(),
+                                            @data_input_style = "box",
+                                            @data_label_style = "floating",
+                                            @placeholder = Model.Loc.Where(a => a.ResourceId == "spnCancelReason").FirstOrDefault().Value.ToString(),
+                                        })*@
+                                    @Html.DropDownListFor(m => m.CancelReasonWo, Model.CancelReasonListWo, "--Select--", new {
+                                        @class = "form-control search mobiscrollselect",
+                                        style = "width:100%;",
+                                        id = "txtCancelReasonSelect",
+                                        @mbsc_dropdown = "true",
+                                        @data_label = Model.Loc.Where(a => a.ResourceId == "spnCancelReason").FirstOrDefault().Value.ToString(),
+                                        @data_input_style = "box",
+                                        @data_label_style = "floating",
+                                        @placeholder = Model.Loc.Where(a => a.ResourceId == "spnCancelReason").FirstOrDefault().Value.ToString(),
+                                    })
+                                    @*@Html.DropDownListFor(m => m.WoRequestModel.Type, Model.WoRequestModel.TypeList, "--Select--", new { @class = "form-control search select2picker", style = "width:100%;" })*@
+                                </label>
+                            </div>
+                       
+                            <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                <label>
+                                    @Model.Loc.Where(a => a.ResourceId == "spnCancelComments").FirstOrDefault().Value.ToString() :
+                                    <textarea class="form-control search" id="txtcancelcomments" mbsc-textarea style="resize:none;"
+                                              data-label-style="floating"
+                                              placeholder=@Model.Loc.Where(a => a.ResourceId == "spnCancelComments").FirstOrDefault().Value.ToString()
+                                              data-input-style="box">
+                                </textarea>
+                                    @*@Html.TextAreaFor(m => m.WoEmergencyDescribeModel.Description, new { @class = "form-control search", style = "resize:none;", autocomplete = "off", @mbsc_textarea = "true", @data_label_style = "floating", @placeholder = Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString(), @data_input_style = "box" })*@
+                                </label>
+                            </div>
+                       
+                                <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                    <div class="design-box">
+                                        <div class="mbsc-button-group-block">
+                                            <button type="button" class="btn btn-default mobBttn cancelModalDetailsPageHide"><i class="fa fa-close buttonIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                    <div class="design-box">
+                                        <div class="mbsc-button-group-block">
+                                            <button data-color="success" type="button" class="btn btn-blue mobBttn" id="cancelWorkOrderJob"><i class="fa fa-save buttonIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+            </div>
+        </div>
+    </div>
+    <div class="slide-modal-footer"></div>
+</div>

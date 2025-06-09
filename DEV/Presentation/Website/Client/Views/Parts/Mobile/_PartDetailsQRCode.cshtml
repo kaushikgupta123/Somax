@@ -1,0 +1,94 @@
+﻿@model Client.Models.Parts.PartsVM
+@using (Ajax.BeginForm("SetPartIdlist", "Parts", new AjaxOptions { HttpMethod = "Post", OnSuccess = "PartsQROnSuccess", OnBegin = "AjaxBeginFormBegin", OnComplete = "AjaxBeginFormComplete", OnFailure = "AjaxBeginFormFaillure" }))
+{
+    @Html.AntiForgeryToken()
+    for (int loop = 0; loop < Model.qRCodeModel.PartIdsList.Count; loop++)
+    {
+        @Html.HiddenFor(m => m.qRCodeModel.PartIdsList[loop])
+    }
+    <div class="slide-modal" id="printDetailsPartQrCodeModal">
+        <div class="slide-modal-head ">
+            <a class="slide-back-btn closePrintQRModalCancel"> <i class="fa fa-angle-left"></i> Back</a>
+            <div class="slide-back-title">
+                @Model.Loc.Where(a => a.ResourceId == "globalPrintLabels").FirstOrDefault().Value.ToString()
+            </div>
+        </div>
+        <div class="slide-modal-body">
+            <div mbsc-page class="demo-responsive">
+                <div style="height:100%">
+                    <div mbsc-form class="mbsc-form-grid">
+                        <div class="mbsc-grid">
+                            <div class="mbsc-row">
+                                <div class="col-12  my-2 mb-2">
+                                    <label>
+                                        @Model.Loc.Where(a => a.ResourceId == "globalSmallQRCode").FirstOrDefault().Value.ToString()
+                                        <input type="radio" name="optradio" value="SmallLabel" id="SmallLabel" checked="checked">
+                                    </label>
+                                </div>
+                                <div class="col-12  my-2 mb-2">
+                                    <label>
+                                        @Model.Loc.Where(a => a.ResourceId == "globalLargeQRCode").FirstOrDefault().Value.ToString()
+                                        <input type="radio" name="optradio" value="LargeLabel" id="LargeLabel">
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="mbsc-row">
+                                <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                    <div class="mbsc-button-group-block">
+                                        <button mbsc-button data-color="success" type="button" class="btn btn-blue mobBttn closePrintQRModalCancel printqmrodalcss"><i class="fa fa-close faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button>
+                                    </div>
+                                </div>
+                                <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                    <div class="mbsc-button-group-block">
+                                        <button type="submit" class="btn btn-blue mobBttn" id="btnPrintRotativaQr"><i class="fa fa-print faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalPrint").FirstOrDefault().Value.ToString()</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="slide-modal-footer"></div>
+    </div>
+
+}
+
+<style type="text/css">
+    p {
+        margin: 0;
+    }
+
+    .descriptionArea {
+        position: relative;
+        left: -15px;
+    }
+
+    .descriptionArea2 {
+        position: relative;
+        left: -20px;
+    }
+
+    p.qrDescription {
+        margin: 0;
+        padding: 0 0 1px 0;
+        width: 120px;
+        word-break: break-all;
+    }
+
+    p.qrDescription2 {
+        margin: 0;
+        padding: 0 0 0px 0;
+        width: 240px;
+        word-break: break-all;
+    }
+
+    @@media(max-width:767px) {
+        #printqmrodalcss .printqmrodalcss {
+            margin-bottom: 10px !important;
+        }
+    }
+</style>
+
+
+

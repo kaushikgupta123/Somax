@@ -1,0 +1,31 @@
+﻿@model Client.Models.Dashboard.DashboardVM
+
+<div class="m-portlet m-portlet--full-height m-portlet--fit">
+    <div class="m-portlet__head">
+        <div class="m-portlet__head-caption">
+            <div class="m-portlet__head-title">
+                <h3 class="m-portlet__head-text">
+                    @Model.Loc.Where(a => a.ResourceId == "spnOverduePMsbySite").FirstOrDefault().Value.ToString()
+                </h3>
+            </div>
+        </div>
+    </div>
+
+    <div class="m-portlet__body">
+        <div class="tab-content">
+            <div class="sparklineArea">
+                <div class="chartBox" style="position:relative;">
+                    <div class="lds-ellipsis lds-adjust" id="overduepmschartloader">
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                    </div>
+                    <div class="cntNoData"><h5>@Model.Loc.Where(a => a.ResourceId == "globalDataNotFound").FirstOrDefault().Value.ToString()</h5></div>
+                    <canvas id="m_chart_OverDueWorkorder_Hr"></canvas>
+                    <div class="clear"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

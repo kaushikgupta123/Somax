@@ -1,0 +1,32 @@
+﻿@model Client.Models.NewLaborScheduling.NewLaborSchedulingVM
+
+<div id="ReassignModal" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-info">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close btnReassigncancelmod" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Reassign</h4>
+            </div>
+            @using (Ajax.BeginForm("Reassign", "LaborScheduling", new AjaxOptions { HttpMethod = "Post", OnSuccess = "ReassignOnSuccess", OnBegin = "AjaxBeginFormBegin", OnComplete = "AjaxBeginFormComplete", OnFailure = "AjaxBeginFormFaillure" }))
+            {
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="Line" id="lblLine">@Model.Loc.Where(a => a.ResourceId == "spnGlobalAssigned").FirstOrDefault().Value.ToString():<small>*</small></label>
+                        @if (Model.reassignModel.Personnellist != null)
+                        {
+                            @Html.ValidationMessageFor(m => m.reassignModel.PersonnelId, "", new { style = "display:none" })
+                            @Html.DropDownListFor(m => m.reassignModel.PersonnelId, Model.reassignModel.Personnellist, new { @class = "form-control search select2picker", style = "width:100%;", id = "ddlReassUser" })
+                        }
+                    </div>                   
+                </div>
+                <div class="modal-footer" style="padding:15px 25px !important;">
+                    <button type="button" class="btn btn-default mobBttn btnAssigncancelmod" data-dismiss="modal"><i class="fa fa-close buttonIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button>
+                    <button type="submit" class="btn btn-blue mobBttn" style="float:right;"><i class="fa fa-save faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+                    <div style="clear:both;"></div>
+                </div>
+                @Html.HiddenFor(x => x.reassignModel.WorkOrderSchedIds)
+            }
+        </div>
+    </div>
+</div>
+

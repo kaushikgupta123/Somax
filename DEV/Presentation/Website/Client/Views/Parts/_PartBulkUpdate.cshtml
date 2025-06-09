@@ -1,0 +1,61 @@
+﻿@model Client.Models.Parts.PartsVM
+<nav id="PartBulksidebar" class="Bulksidebar">
+  <div id="dismiss">
+    <i class="fa fa-close"></i>
+  </div>
+  <div class="sidebar-header">
+    <h3>@Model.Loc.Where(a => a.ResourceId == "globalBulkUpdate").FirstOrDefault().Value.ToString()</h3>
+  </div>
+  @Html.Partial("_ErrorDiv")
+  @using (Ajax.BeginForm("PartBulkUpdate", "Parts", new AjaxOptions { HttpMethod = "Post", OnSuccess = "BulkUploadOnSuccess", OnBegin = "AjaxBeginFormBegin", OnComplete = "AjaxBeginFormComplete", OnFailure = "AjaxBeginFormFaillure" }))
+  {
+    @Html.AntiForgeryToken()
+    <div class="sidebar-content">
+      @{bool isBBU = Model.userData.DatabaseKey.Client.ClientId == 4 || Model.userData.DatabaseKey.Client.ClientId == 6;}
+      <div class="form-group">
+        <label for="buStockType">@Model.Loc.Where(a => a.ResourceId == "spnStockType").FirstOrDefault().Value.ToString() :</label>
+        @Html.DropDownListFor(m => m.partBulkUpdateModel.StockType, Model.partBulkUpdateModel.LookupStokeTypeList, "--Select--", new { @class = "form-control search select2picker", id = "buStockType", style = "width:100%;" })
+      </div>
+      <div class="form-group">
+        @if (!isBBU)
+        {
+          <div class="form-group" style="margin-bottom:0;">
+            <label for="buIssueUnit">@Model.Loc.Where(a => a.ResourceId == "spnIssueUnit").FirstOrDefault().Value.ToString() :</label>
+            @Html.DropDownListFor(m => m.partBulkUpdateModel.IssueUnit, Model.partBulkUpdateModel.LookupIssueUnitList, "--Select--", new { @class = "form-control search select2picker", id = "buIssueUnit", style = "width:100%;" })
+          </div>
+        }
+      </div>
+      <div class="form-group">
+        @if (!isBBU)
+        {
+          <label for="Section">@Model.Loc.Where(a => a.ResourceId == "spnManufacturer").FirstOrDefault().Value.ToString() :</label>
+          @Html.TextBoxFor(m => m.partBulkUpdateModel.Manufacturer, new { @class = "form-control search", autocomplete = "off" })
+        }
+        </div>
+      <div class="form-group">
+        @if (!isBBU)
+        {
+          <label for="Quantity">@Model.Loc.Where(a => a.ResourceId == "spnManufacturerID").FirstOrDefault().Value.ToString() :</label>
+          @Html.TextBoxFor(m => m.partBulkUpdateModel.ManufacturerID, new { @class = "form-control search", autocomplete = "off" })
+        }
+        </div>
+      <div class="form-group" style="margin-bottom:0;">
+        @if (!isBBU)
+        {
+          <label for="buAccount">@Model.Loc.Where(a => a.ResourceId == "spnAccount").FirstOrDefault().Value.ToString() :</label>
+          @Html.DropDownListFor(m => m.partBulkUpdateModel.Account_ClientLookupId, Model.partBulkUpdateModel.AccountList, "--Select--", new { @class = "form-control search select2picker ", id = "buAccount", style = "width:100%;" })
+        }
+        </div>
+    </div>
+    <div class="sidebar-header" style="border-top: 1px solid #b8c2c4; border-bottom: 0px solid #b8c2c4;">
+      <button class="btn btn-blue mobBttn" style="float:right;" name="Command" value="save" id="btnSaveBulkUpdate"><i class="fa fa-save faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+      <div style="clear:both;"></div>
+    </div>
+
+    @Html.HiddenFor(m => m.partBulkUpdateModel.PartIdList)
+  }
+</nav>
+<style type="text/css">
+    .errormessage { margin: 10px 20px; }
+    .errormessage .alert { margin-bottom: 0px !important; }
+</style>

@@ -1,0 +1,81 @@
+﻿@model Client.Models.Configuration.Account.AccountConfigVM
+@{Layout=null;}
+
+<div class="m-subheader">
+    <div class="new-m-subheader">
+        <div class="PageTitle">
+            <div class="align-items-center separator">
+                <h3 class="m-subheader__title ">
+                    @Model.Loc.Where(a => a.ResourceId == "spnAccount").FirstOrDefault().Value.ToString()
+                </h3>
+            </div>
+        </div>
+
+        <div class="NewBreadcrumbArea">
+            <div class="newBreadcrumb">
+                <ul>
+                    <li><a href="/Configuration/Dashboard">&nbsp;</a></li>
+                    <li><a href="/Account/Index?page=Account">@Model.Loc.Where(a => a.ResourceId == "spnAccountSearch").FirstOrDefault().Value.ToString()</a></li>
+                    <li><a href="javascript:void(0)" id="brdumnotes" data-val="@Model.noteModel.AccountID">@Model.noteModel.ClientLookupId</a></li>
+                            
+                    @if (Model.noteModel.NotesId == 0)
+                    {
+                        <li class="active">@Model.Loc.Where(a => a.ResourceId == "spnGlobalNotesAdd").FirstOrDefault().Value.ToString()</li>
+                    }
+                    else
+                    {
+                        <li class="active">@Model.Loc.Where(a => a.ResourceId == "spnGlobalNotesUpdate").FirstOrDefault().Value.ToString()</li>
+                    }
+                </ul>
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+        <div style="clear:both;"></div>
+    </div>
+</div>
+@using (Ajax.BeginForm("AddOrEditNotes", "Account", new AjaxOptions { HttpMethod = "Post", OnSuccess = "AddOnSuccessNotes", OnBegin = "AjaxBeginFormBegin", OnComplete = "AjaxBeginFormComplete", OnFailure = "AjaxBeginFormFaillure" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="row">
+        <div class="col-xl-12">
+            <div class="m-portlet newPort" id="m_portlet" style="padding:15px;">
+                <div class="bottomBlock">
+                    <div class="tabsArea nobg">
+                        <ul class="listView nobrd">
+                            <li>
+                                <span class="label">
+                                    <label for="notesAccount">@Model.Loc.Where(a => a.ResourceId == "globalSubject").FirstOrDefault().Value.ToString()</label> :
+                                </span>
+                                <span class="inputText">
+                                    @Html.TextBoxFor(m => m.noteModel.Subject, new { @class = "form-control search ", autocomplete = "off", maxlength = "255" })
+                                </span>
+                            </li>
+                            <li style="height:auto;">
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "noteContent").FirstOrDefault().Value.ToString() : <small>*</small></span>
+                                <span class="inputText" style="height:auto;">
+                                    @Html.ValidationMessageFor(m => m.noteModel.Content, "", new { style = "display:none" })
+                                    @Html.TextAreaFor(m => m.noteModel.Content, new { @class = "form-control search", style = "resize:none;", autocomplete = "off", maxlength = "4000" })
+                                </span>
+                                <div style="clear:both;"></div>
+                            </li>
+                        </ul>
+                    </div>
+                    <div style="clear:both;"></div>
+
+                    <div class="bttn_pagin">
+                        <div class="bttns2">
+                            <button type="submit" class="btn btn-blue mobBttn"><i class="fa fa-save faIcon"></i> &nbsp;@Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+                        </div>
+                        <div class="bttns"><button type="button" class="btn btn-blue mobBttn" id="btnumnotescancel"><i class="fa fa-close faIcon"></i> &nbsp;@Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button></div>
+                        <div style="clear:both;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @Html.HiddenFor(m => m.noteModel.NotesId)
+    @Html.HiddenFor(m => m.noteModel.AccountID)
+    @Html.HiddenFor(m => m.noteModel.Type)
+    @Html.HiddenFor(m => m.noteModel.ClientLookupId)
+    @Html.HiddenFor(m => m.noteModel.UpdateIndex)
+}

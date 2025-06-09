@@ -1,0 +1,262 @@
+﻿@model Client.Models.Configuration.VendorMaster.VendorMasterVM
+@using Client.Models.Common
+@{
+    bool VendorMasterImportInUse = false;
+    bool VendorMasterImportSwitch1 = false;
+    var InterfacePropData = (List<InterfacePropModel>)Session["InterfacePropData"];
+    if (InterfacePropData != null && InterfacePropData.Count > 0)
+    {
+        VendorMasterImportInUse = InterfacePropData.Where(x => x.InterfaceType == InterfacePropConstants.VendorMasterImport).Select(x => x.InUse).FirstOrDefault();
+        VendorMasterImportSwitch1 = InterfacePropData.Where(x => x.InterfaceType == InterfacePropConstants.VendorMasterImport).Select(x => x.Switch1).FirstOrDefault();
+    }
+    string hColumnList = "";
+    if (Model.hiddenColumnList != null && Model.hiddenColumnList.Count > 0)
+    {
+        foreach (var item in Model.hiddenColumnList)
+        {
+            hColumnList = hColumnList + item + ",";
+        }
+        hColumnList = hColumnList.Remove(hColumnList.Length - 1);
+    }
+}
+
+<script type="text/javascript">
+    $(function () {
+        var v = "@hColumnList";
+        var str = v.split(",");
+        if (str != null && str != "") {
+            $.each(str, function (i, jvalue) {
+                var elementId = '#li' + jvalue;
+                $(document).find(elementId).hide();
+            });
+        }
+    });
+</script>
+<div class="m-subheader">
+    <div class="new-m-subheader">
+        <div class="PageTitle">
+            <div class="align-items-center separator">
+                <h3 class="m-subheader__title ">
+                    @Model.Loc.Where(a => a.ResourceId == "spnVendorMaster").FirstOrDefault().Value.ToString()
+                </h3>
+            </div>
+        </div>
+        <div class="NewBreadcrumbArea">
+            <div class="newBreadcrumb">
+                <ul>
+                    <li><a href="/Configuration/Dashboard">&nbsp;</a></li>
+                    <li><a href="/VendorMaster/Index?page=Masters_Vendor_Vendor_Master">@Model.Loc.Where(a => a.ResourceId == "spnVendorMasterSearch").FirstOrDefault().Value.ToString()</a></li>
+                    <li class="active">@Model.vendorMasterModel.ClientLookupId</li>
+                </ul>
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+        <div class="ActionBttnArea">
+            <div class="actionDiv pull-left">
+                <div class="btn-group bootstrap-select m-datatable__pager-size dropup show selectDrop actionNewDrop" style="margin-right:0;">
+                    <div class="btn-group bootstrap-select m-datatable__pager-size" style="width: 100%;">
+                        <button type="button" class="btn dropdown-toggle bs-placeholder btn-default" data-toggle="dropdown" role="button" title=""><span class="filter-option pull-left">@Model.Loc.Where(a => a.ResourceId == "globalAction").FirstOrDefault().Value.ToString()</span>&nbsp;<span class="bs-caret"><span class="caret"></span></span></button>
+                        <div class="dropdown-menu open" role="combobox">
+                            <ul class="dropdown-menu inner" role="listbox" aria-expanded="false">
+                                @if (!Model.vendorMasterModel.IsExternal)
+                                {
+                                    <li data-toggle="modal" data-target="#changeVendorIdPage"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnChangeVendorId").FirstOrDefault().Value.ToString()</a></li>
+                                }
+                                <li data-toggle="modal" id="btncreatedlastupdated"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnCreatedLastUpdated").FirstOrDefault().Value.ToString()</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @if (Model.security.VendorMaster.Create && VendorMasterImportInUse && VendorMasterImportSwitch1)
+            {
+                <button type="button" class="btn newBtn-add pull-left innerBtn addPlusbtnVendor" title="Add Vendor"><i class="fa fa-plus"></i></button>
+            }
+            <div style="clear:both;"></div>
+        </div>
+        <div style="clear:both;"></div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xl-3">
+        <div class="m-portlet">
+            <div class="sideMenuArea">
+                <ul class="vtabs" id="detmaintab">
+                    <li class="active" id="liEquipmentMaster"><a href="#Overview">@Model.Loc.Where(a => a.ResourceId == "spnVendorMasterOverview").FirstOrDefault().Value.ToString()</a></li>
+                    <li id="onDemamdTask" onclick="openCity(event, 'Preventive')"><a href="#Preventive">@Model.Loc.Where(a => a.ResourceId == "spnAddress").FirstOrDefault().Value.ToString()</a></li>
+                </ul>
+            </div>
+            <div class="selectTabs" id="selectTabs">
+                <select class="form-control" id="colorselector">
+                    <option value="Overview">@Model.Loc.Where(a => a.ResourceId == "spnVendorMasterOverview").FirstOrDefault().Value.ToString()</option>
+                    <option value="Preventive">@Model.Loc.Where(a => a.ResourceId == "spnAddress").FirstOrDefault().Value.ToString()</option>
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-9">
+        <div class="row">
+            <div class="col-xl-12" id="btnnblock">
+                <div class="m-portlet" id="m_portlet" style="padding:15px;">
+                    <div class="bottomBlock">
+                        <div class="tabsArea nobg" id="Overview" style="display:block;">
+                            <ul class="listView">
+                                <li id="liClientLookupId">
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnVendorID").FirstOrDefault().Value.ToString() :</span>
+                                    <span class="inputText" id="vendorMasterModel_ClientLookupId">@Model.vendorMasterModel.ClientLookupId</span>
+                                </li>
+                                <li id="liName">
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnName").FirstOrDefault().Value.ToString() :</span>
+                                    <span class="inputText">@Model.vendorMasterModel.Name</span>
+                                </li>
+                                <li id="liPhoneNumber">
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnPhoneNumber").FirstOrDefault().Value.ToString() :</span>
+                                    <span class="inputText">@Model.vendorMasterModel.PhoneNumber</span>
+                                </li>
+                                <li id="liFaxNumber">
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnFaxNumber").FirstOrDefault().Value.ToString() :</span>
+                                    <span class="inputText">@Model.vendorMasterModel.FaxNumber</span>
+                                </li>
+                                <li id="liEmailAddress">
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnEmail").FirstOrDefault().Value.ToString() :</span>
+                                    <span class="inputText">@Model.vendorMasterModel.EmailAddress</span>
+                                </li>
+                                <li id="liTerms">
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnTerms").FirstOrDefault().Value.ToString() :</span>
+                                    <span class="inputText">@Model.vendorMasterModel.Terms</span>
+                                </li>
+                                <li id="liFOBCode">
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnFOB").FirstOrDefault().Value.ToString() :</span>
+                                    <span class="inputText">@Model.vendorMasterModel.FOBCode</span>
+                                </li>
+                                <li id="liType">
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "GlobalType").FirstOrDefault().Value.ToString() :</span>
+                                    <span class="inputText">@Model.vendorMasterModel.Type</span>
+                                </li>
+                                <li id="liInactiveFlag">
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "globalInActive").FirstOrDefault().Value.ToString() :</span>
+                                    <span class="inputText">
+                                        @if (Model.vendorMasterModel.InactiveFlag)
+                                        {
+                                            <input type="checkbox" onclick="return false" class="form-control m-input readonly" readonly="readonly" checked="checked" style="color:black; width: auto; margin-top: 12px;" />
+                                        }
+                                        else
+                                        {
+                                            <input type="checkbox" onclick="return false" class="form-control m-input readonly" readonly="readonly" style="color:black; width: auto; margin-top: 12px;" />
+                                        }
+                                    </span>
+                                </li>
+                                <li id="liIsExternal">
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnExternal").FirstOrDefault().Value.ToString() : </span>
+                                    <span class="inputText">
+                                        @Html.CheckBoxFor(m => m.vendorMasterModel.IsExternal, new { @class = "form-control m-input", @style = "color:black; width: auto; margin-top: 12px;", onclick = "return false" })
+                                    </span>
+                                </li>
+                            </ul>
+                            <div class="editBttn">
+                                @if (Model.security.VendorMaster.Edit)
+                                {
+                                    <button type="button" class="btn btn-blue btnEditVendorMaster" name="Command" value="update"><i class="fa fa-pencil" style="margin-top:-3px;"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalEdit").FirstOrDefault().Value.ToString()</button>
+                                }
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="tabsArea nobg" id="Preventive" style="display:none;">
+                        <div class="m-portlet__head" style="padding:0; height:2.5rem;">
+                            <div class="m-portlet__head-caption">
+                                <div class="m-portlet__head-title">
+                                    <h3 class="m-portlet__head-text" style="vertical-align:top;">
+                                        @Model.Loc.Where(a => a.ResourceId == "spnBusinessAddress").FirstOrDefault().Value.ToString()
+                                    </h3>
+                                </div>
+                            </div>
+                        </div>
+                        <ul class="listView">
+                            <li id="liAddress1">
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnAddress").FirstOrDefault().Value.ToString() :</span>
+                                <span class="inputText">@Model.vendorMasterModel.Address1</span>
+                            </li>
+                            <li id="liAddressCity">
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "GlobalCity").FirstOrDefault().Value.ToString() :</span>
+                                <span class="inputText">@Model.vendorMasterModel.AddressCity</span>
+                            </li>
+                            <li id="liAddressState">
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "GlobalState").FirstOrDefault().Value.ToString() :</span>
+                                <span class="inputText">@Model.vendorMasterModel.AddressState</span>
+                            </li>
+                            <li id="liAddressPostCode">
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnPostalCode").FirstOrDefault().Value.ToString() :</span>
+                                <span class="inputText">@Model.vendorMasterModel.AddressPostCode</span>
+                            </li>
+                            <li id="liAddressCountry">
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnCountry").FirstOrDefault().Value.ToString() :</span>
+                                <span class="inputText">@Model.vendorMasterModel.AddressCountry</span>
+                            </li>
+                        </ul>
+                        <br />
+                        <div class="m-portlet__head" style="padding:0; height:2.5rem;">
+                            <div class="m-portlet__head-caption">
+                                <div class="m-portlet__head-title">
+                                    <h3 class="m-portlet__head-text" style="vertical-align:top;">
+                                        @Model.Loc.Where(a => a.ResourceId == "spnRemitAddress").FirstOrDefault().Value.ToString()
+                                    </h3>
+                                </div>
+                            </div>
+                        </div>
+                        <ul class="listView">
+                            <li id="liRemitUseBusiness">
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnRemitUseBusiness").FirstOrDefault().Value.ToString() :</span>
+                                <span class="inputText">
+                                    @if (Model.vendorMasterModel.RemitUseBusiness)
+                                    {
+                                        <input type="checkbox" class="form-control m-input readonly" readonly="readonly" checked="checked" style="color:black; width: auto; margin-top: 12px;" disabled="disabled" />
+                                    }
+                                    else
+                                    {
+                                        <input type="checkbox" class="form-control m-input readonly" readonly="readonly" style="color:black; width: auto; margin-top: 12px;" disabled="disabled" />
+                                    }
+                                </span>
+
+                            </li>
+                            <li id="liRemitAddress1">
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnAddress").FirstOrDefault().Value.ToString() :</span>
+                                <span class="inputText">@Model.vendorMasterModel.RemitAddress1</span>
+                            </li>
+                            <li id="liRemitAddressCity">
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "GlobalCity").FirstOrDefault().Value.ToString() :</span>
+                                <span class="inputText">@Model.vendorMasterModel.RemitAddressCity</span>
+                            </li>
+                            <li id="liRemitAddressState">
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "GlobalState").FirstOrDefault().Value.ToString() :</span>
+                                <span class="inputText">@Model.vendorMasterModel.RemitAddressState</span>
+                            </li>
+                            <li id="liRemitAddressPostCode">
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnPostalCode").FirstOrDefault().Value.ToString() :</span>
+                                <span class="inputText">@Model.vendorMasterModel.RemitAddressPostCode</span>
+                            </li>
+                            <li id="liRemitAddressCountry">
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnCountry").FirstOrDefault().Value.ToString() :</span>
+                                <span class="inputText">@Model.vendorMasterModel.RemitAddressCountry</span>
+                            </li>
+                        </ul>
+                        <div class="editBttn">
+                            @if (Model.security.VendorMaster.Edit)
+                            {
+                                <button type="button" class="btn btn-blue btnEditVendorMaster" name="Command" value="update"><i class="fa fa-pencil" style="margin-top:-3px;"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalEdit").FirstOrDefault().Value.ToString()</button>
+                            }
+                        </div>
+                        <div style="clear:both;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@Html.HiddenFor(m => m.changeVendorModel.VendorMasterId)
+@if (!Model.vendorMasterModel.IsExternal)
+{
+    @Html.Partial("~/Views/Configuration/VendorMaster/_ChangeVendorModal.cshtml")
+}
+@Html.Partial("~/Views/Configuration/VendorMaster/_CreatedandLastUpdated.cshtml")

@@ -1,0 +1,52 @@
+﻿@model Client.Models.IoTEvent.IoTEventVM
+<nav id="sidebar">
+    <div id="dismiss">
+        <i class="fa fa-close"></i>
+    </div>
+    <div class="sidebar-header">
+        <h3><i class="fa fa-filter" style="position: relative; top: -2px;"></i> &nbsp;@Model.Loc.Where(a => a.ResourceId == "globalFilter").FirstOrDefault().Value.ToString() <span class="filteritemcount">0</span></h3>
+        <button type="button" class="btn btn-blue filterSearch" id="btnDataIoTAdvSearchiotEvent"><i class="fa fa-search" style="margin-top:-3px;"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "GlobalApply").FirstOrDefault().Value.ToString()</button>
+    </div>
+    <div class="sidebar-content" id="advsearchsidebar">
+        <form action="#" method="post">
+            <div class="form-group">
+                <label for="txtSource">@Model.Loc.Where(a => a.ResourceId == "spnSource").FirstOrDefault().Value.ToString() :</label>
+                <input type="text" class="form-control search adv-item" id="txtSource" autocomplete="off">
+            </div>
+            <div class="form-group">
+                <label for="txtType">@Model.Loc.Where(a => a.ResourceId == "GlobalType").FirstOrDefault().Value.ToString() :</label>
+                @Html.DropDownListFor(m => m.ioTEventModel.EventType, Model.ioTEventModel.EventTypeList, "--Select--", new { @class = "form-control search adv-item select2picker", @id = "txtType" })
+            </div>
+            <div class="form-group">
+                <label for="txtAssetId">@Model.Loc.Where(a => a.ResourceId == "spnGlobalEquipmentId").FirstOrDefault().Value.ToString()  :</label>
+                <input type="text" class="form-control search adv-item" id="txtAssetId" autocomplete="off">
+            </div>
+            <div class="form-group">
+                <label for="txtStatus">@Model.Loc.Where(a => a.ResourceId == "spnStatus").FirstOrDefault().Value.ToString() :</label>
+                @Html.DropDownListFor(m => m.ioTEventModel.Status, Model.ioTEventModel.EventStatusList, "--Select--", new { @class = "form-control search adv-item select2picker", @id = "txtStatus" })
+            </div>
+            <div class="form-group">
+                <label for="txtDisposition">@Model.Loc.Where(a => a.ResourceId == "spnDisposition").FirstOrDefault().Value.ToString() :</label>
+                @Html.DropDownListFor(m => m.ioTEventModel.Disposition, Model.ioTEventModel.EventDispositionList, "--Select--", new { @class = "form-control search adv-item select2picker", @id = "txtDisposition" })
+            </div>
+            <div class="form-group">
+                <label for="txtWorkOrder">@Model.Loc.Where(a => a.ResourceId == "GlobalWorkOrder").FirstOrDefault().Value.ToString() :</label>
+                <input type="text" class="form-control search adv-item" id="txtWorkOrder" autocomplete="off">
+            </div>
+            <div class="form-group">
+                <label for="txtFaultCode">@Model.Loc.Where(a => a.ResourceId == "spnFaultCode").FirstOrDefault().Value.ToString() :</label>
+                <input type="text" class="form-control search adv-item" id="txtFaultCode" autocomplete="off">
+            </div>
+            <div class="form-group">
+                <label for="txtCreated">@Model.Loc.Where(a => a.ResourceId == "spnCreated").FirstOrDefault().Value.ToString() :</label>
+                <input type="text" class="form-control search adv-item dtpicker" id="txtCreated" autocomplete="off">
+            </div>
+            <div class="form-group">
+                <label for="txtIoTDeviceID">@Model.Loc.Where(a => a.ResourceId == "spnIoTDeviceID").FirstOrDefault().Value.ToString() :</label>
+                <input type="text" class="form-control search adv-item" id="txtIoTDeviceID" autocomplete="off">
+            </div>
+        </form>
+    </div>
+</nav>
+
+

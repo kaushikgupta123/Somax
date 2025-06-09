@@ -1,0 +1,42 @@
+﻿@model Client.Models.Dashboard.DashboardVM
+
+<div class="m-portlet padAdjst" id="m_portlet">
+    <div class="m-portlet__body  m-portlet__body--no-padding">
+        <div class="row m-row--col-separator-xl">
+            <div class="col-md-12 col-lg-6 col-xl-4">
+                <div class="m-widget24">
+                    <div class="bgBox" style="background:#e48988;color: #fff !important;">
+                        <h2 class="iconTitle" id="hdrOpenWorkOrder" style="font-size:1.2rem; text-transform:none;">
+                            @Model.Loc.Where(a => a.ResourceId == "spnOpenJobs").FirstOrDefault().Value.ToString()
+                        </h2>
+                        <span class="newCount" id="OpenJobsCount"></span>
+                        <div style="clear:both;"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12 col-lg-6 col-xl-4">
+                <div class="m-widget24">
+                    <div class="bgBox" style="background: #716aca;color: #fff !important;">
+                        <h2 class="iconTitle" id="hdrWorkRequests" style="font-size:1.2rem; text-transform:none;">
+                            @Model.Loc.Where(a => a.ResourceId == "spnRequests").FirstOrDefault().Value.ToString()
+                        </h2>
+                        <span class="newCount" id="RequestCount"></span>
+                        <div style="clear:both;"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12 col-lg-6 col-xl-4">
+                <div class="m-widget24">
+                    <div class="bgBox" style="background: #34bdcd;color: #fff !important;">
+                        <h2 class="iconTitle" id="hdrOverduePM" style="font-size:1.2rem; text-transform:none;">
+                            @Model.Loc.Where(a => a.ResourceId == "spnOverdueJobs").FirstOrDefault().Value.ToString()
+                        </h2>
+                        <span class="newCount" id="OverDueJobsCount"></span>
+                        <div style="clear:both;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

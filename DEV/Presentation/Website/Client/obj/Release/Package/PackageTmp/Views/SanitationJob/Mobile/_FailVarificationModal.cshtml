@@ -1,0 +1,86 @@
+﻿
+@model Client.Models.Sanitation.SanitationVM
+
+@using (Ajax.BeginForm("FailVarificationSanitationJob_Mobile", "SanitationJob", new AjaxOptions { HttpMethod = "POST", OnBegin = "AjaxBeginFormBegin", OnSuccess = "SanitationJobFailVarificationOnSuccess_Mobile", OnFailure = "AjaxBeginFormFaillure", OnComplete = "AjaxBeginFormComplete" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="slide-modal-head">
+        <a class="slide-back-btn FailSJclearstate"> <i class="fa fa-angle-left"></i> Back</a>
+        <div class="slide-back-title">
+            @Model.Loc.Where(a => a.ResourceId == "SpanSanitationVerificationFail").FirstOrDefault().Value.ToString()
+        </div>
+    </div>
+    @Html.Partial("_ErrorDiv")
+    <div class="slide-modal-body">
+        <div mbsc-page class="demo-responsive">
+            <div style="height:100%">
+                <div mbsc-form class="mbsc-form-grid">
+                    <div class="mbsc-grid">
+                        <div class="mbsc-row">
+                            <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                <label>
+                                    @Model.Loc.Where(a => a.ResourceId == "spnReasonFailed").FirstOrDefault().Value.ToString()
+                                    @Html.DropDownListFor(m => m.failVarificationModel.FailReason, Model.failVarificationModel.FailReasonList, "—Select—", new
+                               {
+                                   id = "txtfailReasonSelect",
+                                   @class = "form-control search mobiscrollselect",
+                                   @style = "width:100%;",
+                                   @mbsc_dropdown = "true",
+                                   @data_label = Model.Loc.Where(a => a.ResourceId == "spnReasonFailed").FirstOrDefault().Value.ToString(),
+                                   @data_input_style = "box",
+                                   @data_label_style = "floating",
+                                   @placeholder = Model.Loc.Where(a => a.ResourceId == "spnReasonFailed").FirstOrDefault().Value.ToString()
+                               })
+                                </label>
+                                @Html.ValidationMessageFor(m => m.failVarificationModel.FailReason, "", new { })
+                            </div>
+                            <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                <label>
+                                    @Model.Loc.Where(a => a.ResourceId == "spnFailComment").FirstOrDefault().Value.ToString()
+                                    @Html.TextBoxFor(m => m.failVarificationModel.Comments, new
+                                    {
+                                        @class = "form-control search",
+                                        @mbsc_input = "true",
+                                        @data_label_style = "floating",
+                                   @placeholder = Model.Loc.Where(a => a.ResourceId == "spnFailComment").FirstOrDefault().Value.ToString(),
+                                        @data_input_style = "box",
+                                        autocomplete = "off"
+                                    })
+                                </label>
+                                @Html.ValidationMessageFor(m => m.failVarificationModel.Comments, "", new { })
+                            </div>
+                        </div>
+                        <div class="mbsc-row">
+                            <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                <div class="design-box">
+                                    <div class="mbsc-button-group-block">
+                                        <button mbsc-button data-color="success" type="button" class="btn btn-blue mobBttn FailSJclearstate" id="failModalSatinationJob"><i class="fa fa-close faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                <div class="design-box">
+                                    <div class="mbsc-button-group-block">
+                                        <button data-color="success" type="submit" class="btn btn-blue mobBttn" style="cursor:pointer" value="save"><i class="fa fa-save faIcon"></i> &nbsp;@Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="slide-modal-footer"></div>
+
+    @Html.HiddenFor(m => m.failVarificationModel.SanitationJobId)
+}
+
+
+<script>
+    $(function () {
+        $(document).find('form').find("#sfailVarificationModel_FailReason").removeClass("input-validation-error");
+
+    });
+</script>
+

@@ -1,0 +1,149 @@
+﻿@model Client.Models.MasterSanitationSchedule.MasterScheduleVM
+<div id="genJobModal" class="modal fade" role="dialog">
+    <div class="modal-dialog partPopup">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">@Model.Loc.Where(a => a.ResourceId == "spnSanitationJobGeneration").FirstOrDefault().Value.ToString() </h4>
+            </div>
+            @Html.Partial("_ErrorDiv")
+            @using (Ajax.BeginForm("JobGenerationProcess", "MasterSanitationSchedule", new AjaxOptions { HttpMethod = "Post", OnSuccess = "GenerationProcessOnSuccess", OnBegin = "AjaxBeginFormBegin", OnComplete = "AjaxBeginFormComplete", OnFailure = "AjaxBeginFormFaillure" }))
+
+            {
+                @Html.AntiForgeryToken()
+                <div class="modal-body">
+                    <p>@Model.Loc.Where(a => a.ResourceId == "spnsanitationjobgenerationprocess").FirstOrDefault().Value.ToString() </p>
+                    <div class="row">
+                        <div class="col-lg-2">
+                            <label class="m-radio m-radio--bold m-radio--state-success">
+                                <input type="radio" name="radio_1" value="OnDemand" checked>
+                                @Model.Loc.Where(a => a.ResourceId == "spnOnDemand").FirstOrDefault().Value.ToString()
+                                <span></span>
+                            </label>
+                        </div>
+                        <div class="col-lg-2">
+                            <label class="m-radio m-radio--bold m-radio--state-success">
+                                <input type="radio" name="radio_1" value="Calendar">
+                                @Model.Loc.Where(a => a.ResourceId == "spnCalendar").FirstOrDefault().Value.ToString()
+                                <span></span>
+                            </label>
+                        </div>
+                        <div class="col-lg-8"></div>
+                        <div style="clear:both;"></div>
+
+                        <div class="col-lg-6 OnDemandDiv">
+                            <ul class="listView siteField">
+                                <li style="border-bottom:none;">
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnOnDemandGroup").FirstOrDefault().Value.ToString()</span>
+                                    <span class="inputText">
+                                        @Html.ValidationMessageFor(m => m.sanitationJobGenerationModel.OnDemandGroup, "", new { style = "display:none" })
+                                        @Html.DropDownListFor(m => m.sanitationJobGenerationModel.OnDemandGroup, Enumerable.Empty<SelectListItem>(), new { @class = "form-control search select2picker", style = "width:100%;" })
+                                    </span>
+
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="col-lg-6 OnDemandDiv">
+                            <ul class="listView siteField">
+                                <li style="border-bottom:none;">
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnOnDemandDate").FirstOrDefault().Value.ToString()</span>
+                                    <span class="inputText">
+                                        @Html.ValidationMessageFor(m => m.sanitationJobGenerationModel.ScheduledDate, "", new { style = "display:none" })
+                                        @Html.TextBoxFor(m => m.sanitationJobGenerationModel.ScheduledDate, "{0:MM/dd/yyyy}", new { @class = "form-control search dtpicker", autocomplete = "off" })
+                                    </span>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="OnDemandDiv" style="clear:both;"></div>
+
+                        <div class="col-lg-12 CalendarDiv">
+                            <p>@Model.Loc.Where(a => a.ResourceId == "spnScheduleSanitationJobsSeven").FirstOrDefault().Value.ToString()</p>
+                        </div>
+                        <div style="clear:both;"></div>
+
+                        <div class="col-lg-12">
+                            <label class="m-checkbox m-checkbox--bold m-checkbox--state-success" style="color:#212529;">
+                                @Html.CheckBoxFor(model => model.sanitationJobGenerationModel.IsPrint)
+                                @Model.Loc.Where(a => a.ResourceId == "spnPrintGeneratedSanitationJobs").FirstOrDefault().Value.ToString()
+                                <span></span>
+                            </label>
+                        </div>
+                        <div style="clear:both;"></div>
+
+                        <div class="col-lg-6">
+                            <ul class="listView listInfo">
+                                <li style="border-bottom:none;">
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnSanitationMasters").FirstOrDefault().Value.ToString() :</span>
+                                    <span class="inputText">0</span>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="col-lg-6">
+                            <ul class="listView listInfo">
+                                <li style="border-bottom:none;">
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnSanitationJobsCreated").FirstOrDefault().Value.ToString():</span>
+                                    <span class="inputText">0</span>
+                                </li>
+                            </ul>
+                        </div>
+                        <div style="clear:both;"></div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-blue mobBttn pull-right"><i class="fa fa-save faIcon"></i> &nbsp;@Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString() </button>
+                    <button type="button" class="btn btn-default mobBttn pull-left" data-dismiss="modal"><i class="fa fa-times faIcon"></i> &nbsp;@Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button>
+                    <div style="clear:both;"></div>
+                </div>
+                @Html.HiddenFor(m => m.sanitationJobGenerationModel.RadioButton, new { @id = "RadioButton" })
+            }
+            <div style="clear:both;"></div>
+        </div>
+        <div style="clear:both;"></div>
+    </div>
+</div>
+<style type="text/css">
+    #genJobModal { padding-left: 0 !important; }
+    #genJobModal .modal-footer { padding: 10px 25px !important; }
+    #genJobModal h4.modal-title { line-height: 32px; }
+    ul.siteField { padding: 10px 0 15px 0; }
+    ul.siteField li span.label { height: 35px; line-height: 35px; width: 35%; }
+    ul.listInfo li span.label { width: 40%; }
+    ul.listInfo li span.inputText { width: 60%; }
+    .CalendarDiv { padding:10px 10px 5px 10px; }
+    .ui-tooltip { z-index: 1151 !important; }
+</style>
+@section Scripts{
+    <script>
+        $(document).find('.dtpicker').datepicker({
+            changeMonth: true,
+            changeYear: true,
+            "dateFormat": "mm/dd/yy",
+            autoclose: true
+        }).inputmask('mm/dd/yyyy');
+
+        $(document).ready(function () {
+            //$(document).find('.select2picker').select2({});
+            //$.validator.setDefaults({ ignore: null });
+            //$.validator.unobtrusive.parse(document);
+            //$('input, form').blur(function () {
+            //    $(this).valid();
+            //});
+            //$(document).find("#genJobModal").on("hidden.bs.modal", function () {
+            //    $('.errormessage').html('').hide();
+            //
+            //    $("#genJobModal").find("select").each(function () {
+            //        $(this).val('').trigger('change');
+            //        if ($(this).hasClass('input-validation-error')) {
+            //            $(this).removeClass('input-validation-error');
+            //        }
+            //    });
+            //    $("#genJobModal").find('input[type = text]').each(function () {
+            //        $(this).val('');
+            //        if ($(this).hasClass('input-validation-error')) {
+            //            $(this).removeClass('input-validation-error');
+            //        }
+            //    });
+            //});
+        });
+    </script>
+}

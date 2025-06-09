@@ -1,0 +1,95 @@
+﻿@model Client.Models.Configuration.ManufacturerMaster.ManufacturerMasterVM
+<div class="m-subheader">
+    <div class="new-m-subheader">
+        <div class="PageTitle">
+            <div class="align-items-center separator">
+                <h3 class="m-subheader__title ">
+                    @Model.Loc.Where(a => a.ResourceId == "globalManufacturerMaster").FirstOrDefault().Value.ToString()
+                </h3>
+            </div>
+        </div>
+        <div class="NewBreadcrumbArea">
+            <div class="newBreadcrumb">
+                <ul>
+                    <li><a href="/Configuration/Dashboard">&nbsp;</a></li>
+                    <li><a href="/ManufacturerMaster/Index?page=Manufacturer_Master">@Model.Loc.Where(a => a.ResourceId == "globalSearchManufacturerMaster").FirstOrDefault().Value.ToString()</a></li>
+                    @if (Model.manufacturerModel.ManufacturerID == 0)
+                    {
+                        <li class="active">@Model.Loc.Where(a => a.ResourceId == "globalAddManufacturerMaster").FirstOrDefault().Value.ToString()</li>
+                    }
+                    else
+                    {
+                        <li class="active">@Model.Loc.Where(a => a.ResourceId == "globalEditManufacturerMaster").FirstOrDefault().Value.ToString()</li>
+                    }
+                </ul>
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+        <div style="clear:both;"></div>
+    </div>
+</div>
+
+@Html.Partial("_ErrorDiv")
+@using (Ajax.BeginForm("AddOrEditManMaster", "ManufacturerMaster", new AjaxOptions { HttpMethod = "Post", OnSuccess = "ManMasterAddOnSuccess", OnBegin = "AjaxBeginFormBegin", OnComplete = "AjaxBeginFormComplete", OnFailure = "AjaxBeginFormFaillure" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="row">
+        <div class="col-xl-12">
+            <div id="btnnblock">
+                <div class="m-portlet" id="m_portlet" style="padding:15px;">
+                    <div class="bottomBlock">
+                        <div class="tabsArea nobg" id="RequestCharge" style="display:block;">
+                            <ul class="listView nobrd">
+                                <li>
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnManufacturerID").FirstOrDefault().Value.ToString(): <small>*</small></span>
+                                    <span class="inputText">
+                                        @if (Model.manufacturerModel.ManufacturerID == 0)
+                                        {
+                                            @Html.ValidationMessageFor(m => m.manufacturerModel.ClientLookupId, "", new { style = "display:none" })
+                                            @Html.TextBoxFor(m => m.manufacturerModel.ClientLookupId, new { @class = "form-control search", autocomplete = "off", maxlength = "31" })
+                                        }
+                                        else
+                                        {
+                                            @Html.ValidationMessageFor(m => m.manufacturerModel.ClientLookupId, "", new { style = "display:none" })
+                                            @Html.TextBoxFor(m => m.manufacturerModel.ClientLookupId, new { @class = "form-control search readonly", @readonly = "readonly" })
+                                        }
+                                    </span>
+                                </li>
+                                <li>
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnName").FirstOrDefault().Value.ToString() : <small>*</small></span>
+                                    <span class="inputText">
+                                        @Html.ValidationMessageFor(m => m.manufacturerModel.Name, "", new { style = "display:none" })
+                                        @Html.TextBoxFor(m => m.manufacturerModel.Name, new { @class = "form-control search", autocomplete = "off", maxlength = "63" })
+                                    </span>
+                                </li>
+                                <li>
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "globalInActive").FirstOrDefault().Value.ToString() : </span>
+                                    <span class="inputText">
+                                        @Html.CheckBoxFor(x => x.manufacturerModel.Inactive)
+                                    </span>
+                                </li>
+                            </ul>
+                        </div>
+                        <div style="clear:both;"></div>
+                        <div class="idBttns">
+                            <div class="bttn_pagin">
+                                <div class="bttns2">
+                                    @if (Model.manufacturerModel.ManufacturerID == 0)
+                                    {
+                                        <button class="btn btn-blue mobBttn" name="Command" value="saveAdd" id="btnSaveAddMM"><i class="fa fa-save faIcon"></i> &nbsp;@Model.Loc.Where(a => a.ResourceId == "globalSaveAndAdd").FirstOrDefault().Value.ToString()</button>
+                                    }
+                                    <button class="btn btn-blue mobBttn" name="Command" value="save" id="btnSaveMM"><i class="fa fa-save faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+                                </div>
+                                <div class="bttns">
+                                    <button type="button" class="btn btn-blue mobBttn" id="btnCancelAddMM"><i class="fa fa-close faIcon"></i> &nbsp;@Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button>
+                                </div>
+                                <div style="clear:both;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @Html.HiddenFor(m => m.manufacturerModel.ManufacturerID)
+}

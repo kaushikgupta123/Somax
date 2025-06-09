@@ -1,0 +1,117 @@
+﻿@model Client.Models.PurchaseRequest.PurchaseRequestVM
+<div class="overlay2"></div>
+<div class="modal-content">
+    <div class="modal-header">
+        <button type="button" class="close btnconsolidateclose" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title" id="hdrConsolidateTitle">@Model.Loc.Where(a => a.ResourceId == "spnConsolidate").FirstOrDefault().Value.ToString()</h4>
+    </div>
+    <div class="modal-body">
+        <div class="row">
+            <div class="col-xl-12">
+                <div class="m-portlet" id="m_portlet" style="padding:15px; margin-bottom:0;">
+                    <div class="actionBar">
+                        <div class="pull-left">
+                            <button type="button" class="btn btn-white navbar-btn" id="ConsolidateidebarCollapse" title="Advance Search"><i class="fa fa-filter" style="font-size: 1.3rem;"></i></button>
+                            <ul class="filter_apply globalFilterAdjusted">
+                                <li class="textFilter" id="liSelectCountConsolidate"><span class="Consolidatefilteritemcount">0</span>&nbsp;@Model.Loc.Where(a => a.ResourceId == "globalFiltersAppiled").FirstOrDefault().Value.ToString() </li>
+                                <li class="textClear" id="ConsolidateClearAdvSearchFilter"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "globalClear").FirstOrDefault().Value.ToString()</a></li>
+                            </ul>
+                            <div style="clear:both;"></div>
+                        </div>
+                        <div style="clear:both;"></div>
+                        <div id="Consolidatesearchfilteritems"></div>
+                        <div style="clear:both;"></div>
+                    </div>
+                    <div style="clear:both;"></div>
+                    <div class="table-responsive dropTableOuter clsconsolidate">
+                        <table id="ConsolidateTable" class="eqpDtlTbl row-border custom-sort" style="width:100%;">
+                            <thead>
+                                <tr>
+                                    <th><input type="checkbox" id="prconsolidateselectall"></th>
+                                    <th>@Model.Loc.Where(a => a.ResourceId == "spnPartID").FirstOrDefault().Value.ToString()</th>
+                                    <th>@Model.Loc.Where(a => a.ResourceId == "spnPartDescription").FirstOrDefault().Value.ToString()</th>
+                                    <th>@Model.Loc.Where(a => a.ResourceId == "spnOrderQnt").FirstOrDefault().Value.ToString()</th>
+                                    <th>@Model.Loc.Where(a => a.ResourceId == "spnPRUnit").FirstOrDefault().Value.ToString()</th>
+                                    <th>@Model.Loc.Where(a => a.ResourceId == "spnCost").FirstOrDefault().Value.ToString()</th>
+                                    <th>@Model.Loc.Where(a => a.ResourceId == "spnVendorID").FirstOrDefault().Value.ToString()</th>
+                                    <th>@Model.Loc.Where(a => a.ResourceId == "GlobalVendorName").FirstOrDefault().Value.ToString()</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div id="Consolidateadvsearchcontainer">
+                @Html.Partial("_ConsolidateAdvanceSearch", Model)
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer" style="padding:15px 25px !important;">
+        <button type="button" class="btn btn-default btnconsolidateclose" data-dismiss="modal"><i class="fa fa-close faIcon"></i> &nbsp; @UtilityFunction.GetMessageFromResource("globalCancel", LocalizeResourceSetConstants.Global)</button>
+        <button type="button" class="btn btn-blue" style="float:right;" id="btnPRConsolidateProcess" disabled> &nbsp;@UtilityFunction.GetMessageFromResource("spnProcess", LocalizeResourceSetConstants.Global) </button>
+        <div style="clear:both;"></div>
+    </div>
+</div>
+
+<style>
+    .clsconsolidate {
+        max-height:300px;
+    }
+    @@media(max-width:900px) {
+        .modal-body {
+            overflow-y: auto !important;
+        }
+        #ConsolidateModalpopup .modal-body {
+            max-height: 350px !important;
+        }
+        .clsconsolidate {
+            max-height: 140px;
+        }
+    }
+
+    @@media(max-width:820px) {
+        .clsconsolidate {
+            max-height: 240px;
+        }
+    }
+
+    @@media(max-width:700px) {
+        .modal-body {
+            max-height: 153px !important;
+            overflow-y: auto !important;
+        }
+
+        .actionBar div.pull-left ul.filter_apply.globalFilterAdjusted {
+            width: auto;
+            margin: 0px 0 0 0 !important;
+        }
+
+        #ConsolidateTable .actionBar div.pull-left .navbar-btn, .btn.btn-white.navbar-btn.filter-st, #ConsolidateidebarCollapse {
+            margin-top: 0px !important;
+            height: 36px;
+        }
+        #ConsolidateModalpopup .modal-body {
+            max-height: 215px !important;
+        }
+    }
+
+    @@media(max-width:480px) {
+        #ConsolidateModalpopup .modal-body {
+            max-height: 350px !important;
+        }
+ 
+    }
+</style>
+<script>
+    $(document).mouseup(function (e) {
+        var container = $("#Consolidateadvsearchcontainer");
+        if (container.length > 0 && e.target.id != 'ConsolidateidebarCollapse' && e.target.parentElement.id != 'ConsolidateidebarCollapse'
+            && (!container.is(e.target) && container.has(e.target).length === 0)) {
+
+            $('#Consolidateadvsearchcontainer').find('.sidebar').removeClass('active');
+            $(document).find('.overlay2').fadeOut();
+
+        }
+
+    });
+</script>

@@ -1,0 +1,218 @@
+﻿@model Client.Models.Configuration.StoreroomSetup.StoreroomSetupVM
+<link href="~/Scripts/Metronic/assets/demo/default/base/style_newCustom.css" rel="stylesheet" />
+
+<div class="m-subheader fixedDiv1">
+    <div class="new-m-subheader">
+        <div class="PageTitle">
+            <div class="align-items-center separator breadcrumb-box">
+                <h3 class="m-subheader__title" style="padding:0;">
+                    <span class="dropToggle" id="spnDropToggle">
+                        <img src="~/Images/toggleMenu.png" />
+                    </span>
+                    <span style="line-height:35px;" id="Storeroomsearchtitle">
+                        @Model.Loc.Where(a => a.ResourceId == "spnStoreroom").FirstOrDefault().Value.ToString()  
+                    </span>
+                </h3>
+            </div>
+        </div>
+
+        <div class="NewBreadcrumbArea">
+            <div class="newBreadcrumb">
+                <ul>
+                    <li><a href="/Configuration/Dashboard">&nbsp;</a></li>
+                    <li class="active">@Model.Loc.Where(a => a.ResourceId == "spnStoreroomSearch").FirstOrDefault().Value.ToString()</li>
+                </ul>
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+
+        <div class="ActionBttnArea">
+            <button type="button" id="addStoreroomFromIndex" class="btn newBtn-add pull-left" title="New Storeroom">@Model.Loc.Where(a => a.ResourceId == "spnNewStoreroom").FirstOrDefault().Value.ToString()</button>
+            <div style="clear:both;"></div>
+        </div>
+        <div style="clear:both;"></div>
+    </div>
+</div>
+<div class="pushDiv1"></div>
+
+<div class="row">
+    <div class="col-xl-12">
+        <div class="m-portlet" id="m_portlet" style="padding:15px; margin-bottom:0;">
+            <div class="actionBar" style="display:none" id="StoreroomGridAction">
+                <div class="pull-left spaceAdjust">
+
+                    <div class="ActionSearchDrop LoaderDrop">
+                        @Html.DropDownListFor(m => m.SiteName, Model.SiteList, "--Select All--", new { @class = "form-control search adv-item select2picker LoaderDrop", id = "ddlsitename", style = "width:100%;" })
+                    </div>
+
+                    <div class="pull-left" style="position:relative;">
+                        <button type="button" class="btn btn-white navbar-btn" title="Search" id="SrchBttnNew"><i class="fa fa-search" style="font-size: 1.1rem;position: relative;top: -2px;left: -2px;"></i> Search</button>
+                        <div style="clear:both;"></div>
+                        <div class="searchBttnDrop desktop" id="searchBttnNewDrop" style="display:none;">
+                            <div class="form-group" style="position:relative;">
+                                <i class="fa fa-search txtSearchClick" style="font-size: 1.1rem;position: absolute;top: 9px;left: 15px;"></i>
+                                <a href="javascript:void(0)" id="cancelText"><i class="fa fa-close" style="font-size: 1.1rem;position: absolute;top: 9px;right: 15px;"></i></a>
+                                <input type="text" id="txtColumnSearch" class="form-control search" placeholder="Search..." style="padding: 0.65rem 2.75rem;" autocomplete="off">
+                            </div>
+
+                            <div class="searchTips">
+                                <div class="titleText">@Model.Loc.Where(a => a.ResourceId == "spnSearchTips").FirstOrDefault().Value.ToString()</div>
+                                <div class="infoText">@Model.Loc.Where(a => a.ResourceId == SearchTipsType.StoreroomSearchTips).FirstOrDefault().Value.ToString()</div>
+                                <div style="clear:both;"></div>
+                            </div>
+
+                            <div class="searchInfo">
+                                <span class="recent">@Model.Loc.Where(a => a.ResourceId == "GlobalRecentlySearched").FirstOrDefault().Value.ToString()</span>
+                                <div class="searchList" id="wosearchList">
+                                    <ul id="UlSearchList"></ul>
+                                </div>
+                                <span class="clear"><a href="javascript:void(0)" id="clearText">@Model.Loc.Where(a => a.ResourceId == "globalClear").FirstOrDefault().Value.ToString()</a></span>
+                                <div style="clear:both;"></div>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+
+                    <button type="button" class="btn btn-white navbar-btn" id="sidebarCollapse" title="Advance Search"><i class="fa fa-filter" style="font-size: 1.3rem;"></i></button>
+
+                    <ul class="filter_apply globalFilterAdjusted">
+                        <li class="textFilter"><span class="filteritemcount">0</span>&nbsp;@Model.Loc.Where(a => a.ResourceId == "globalFiltersAppiled").FirstOrDefault().Value.ToString()</li>
+                        <li class="textClear" id="liClearAdvSearchFilter"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "globalClear").FirstOrDefault().Value.ToString()</a></li>
+                    </ul>
+                    <div style="clear:both;"></div>
+                </div>
+                <div class="pull-right singleBttn">
+                    <button type="button" class="btn btn-white import-export" style="margin-right:0 !important;" disabled onclick="funcShowExportbtn()">@Model.Loc.Where(a => a.ResourceId == "spnExport").FirstOrDefault().Value.ToString()</button>
+                    <div style="clear:both;"></div>
+                </div>
+                <div style="clear:both;"></div>
+                <div id="advsearchfilteritems"></div>
+                <div style="clear:both;"></div>
+            </div>
+            <div style="clear:both;"></div>
+
+            <div id="Active" class="tabcontent" style="display:block;">
+
+                <div class="table-responsive">
+                    <table id="StoreroomSearchTBL" class="eqpDtlTbl row-border custom-sort" style="width:100%;">
+                        <thead>
+                            <tr>
+
+                                <th class="ClientLookupId" data-th-index="0">@Model.Loc.Where(a => a.ResourceId == "spnName").FirstOrDefault().Value.ToString()</th>
+                                <th class="Name" data-th-index="1">@Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString()</th>
+                                <th class="SiteName" data-th-index="2">@Model.Loc.Where(a => a.ResourceId == "spnSiteGlobal").FirstOrDefault().Value.ToString()</th>
+                                <th class="InactiveFlag" data-th-index="3" width="5%">@Model.Loc.Where(a => a.ResourceId == "globalInActive").FirstOrDefault().Value.ToString()</th>
+
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@Html.Partial("_Export")
+
+
+
+@*--------start activiv/inactive*@
+
+@if (Convert.ToString(Session["MenuState"]) == "" || Convert.ToString(Session["MenuState"]) == "open")
+{
+    <div id="searcharea" class="slideToggleBar" style="display:none">
+        <div class="searchBoxArea">
+            <div class="form-group" style="margin-bottom:0; position:relative;">
+                <i class="fa fa-search" style="font-size: 1.1rem;position: absolute;top: 8px;left: 0px;"></i>
+                <input type="text" class="form-control searched" placeholder="Search for a view" id="storeroomsearchtxtbox">
+            </div>
+        </div>
+
+        <div class="searchList">
+            <ul id="storeroomsearchListul">
+                @foreach (var item in Model.InactiveFlagList)
+                {
+                   <li id="@item.Value" class="storeroomsearchdrpbox"><a href="javascript:void(0)">@item.Text</a></li>                    
+                }
+            </ul>
+        </div>
+    </div>
+}
+else
+{
+    <div id="searcharea" class="slideToggleBar" style="display:none;left:81px !important;">
+        <div class="searchBoxArea">
+            <div class="form-group" style="margin-bottom:0; position:relative;">
+                <i class="fa fa-search" style="font-size: 1.1rem;position: absolute;top: 8px;left: 0px;"></i>
+                <input type="text" class="form-control searched" placeholder="Search for a view" id="storeroomsearchtxtbox">
+            </div>
+        </div>
+
+        <div class="searchList">
+            <ul id="storeroomsearchListul">
+                @foreach (var item in Model.InactiveFlagList)
+                {
+                    <li id="@item.Value" class="storeroomsearchdrpbox"><a href="javascript:void(0)">@item.Text</a></li>
+                }
+            </ul>
+        </div>
+    </div>
+}
+
+@*--------End activiv/inactive*@
+
+<style type="text/css">
+    #popupExport {
+        right: 30px !important;
+    }
+
+    @@media only screen and (width:1360px) {
+        #popupExport {
+            right: 46px !important;
+        }
+    }
+
+    .separator.breadcrumb-box {
+        padding-right: 15px;
+    }
+
+    @@media (max-width: 1023px) {
+        #vendorsearchcontainer h3.m-subheader__title, .m-subheader .m-subheader__title {
+            padding: 0px !important;
+        }
+        .new-m-subheader {
+            display: flex;
+        }
+
+        .NewBreadcrumbArea {
+            width: calc(100% - 215px);
+        }
+    }
+
+        @@media (max-width: 500px) {
+            .m-subheader.fixedDiv1 .new-m-subheader {
+                display: flex;
+                justify-content: inherit;
+                align-items: center;
+                flex-wrap: wrap;
+            }
+            .NewBreadcrumbArea {
+                width: calc(100% - 100px);
+            }
+
+            .ActionSearchDrop {
+                width: 100%;
+                margin-bottom: 15px;
+            }
+
+            .actionBar div.pull-left ul.filter_apply.globalFilterAdjusted {
+                margin:0px !important;
+            }
+        }
+
+
+</style>
+@Html.Partial("_CustomizeGridSetup")
+@Html.Partial("~/Views/Configuration/StoreroomSetup/_StoreroomAdvancedSearch.cshtml")

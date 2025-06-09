@@ -1,0 +1,212 @@
+﻿@model Client.Models.Devices.DeviceVM
+
+<link href="~/Scripts/Metronic/assets/demo/default/base/style_newCustom.css" rel="stylesheet" />
+@if (Model.DeviceAPMCMMSModel.IoTDeviceId != 0)
+{
+    <div class="m-subheader fixedDiv1">
+        <div class="new-m-subheader">
+            <div class="PageTitle">
+                <div class="align-items-center separator">
+                    <h3 class="m-subheader__title ">
+                        @Model.Loc.Where(a => a.ResourceId == "spnDevice").FirstOrDefault().Value.ToString()
+                    </h3>
+                </div>
+            </div>
+
+            <div class="NewBreadcrumbArea">
+                <div class="newBreadcrumb">
+                    <ul>
+                        <li><a href="/Dashboard/Dashboard">&nbsp;</a></li>
+                        <li><a href="/Devices/Index?page=Monitoring_Device_Search">@Model.Loc.Where(a => a.ResourceId == "spnDeviceSearch").FirstOrDefault().Value.ToString()</a></li>
+                        <li><a href="javascript:void(0)" id="brdDevice" data-val="@Model.DeviceAPMCMMSModel.IoTDeviceId">@Model.DeviceAPMCMMSModel.ClientLookupID</a></li>
+                        <li>@Model.Loc.Where(a => a.ResourceId == "spnEditDevice").FirstOrDefault().Value.ToString()</li>
+                    </ul>
+                    <div style="clear:both;"></div>
+                </div>
+            </div>
+            <div style="clear:both;"></div>
+        </div>
+    </div>
+    <div class="pushDiv1"></div>
+}
+else
+{
+    <div class="m-subheader">
+        <div class="new-m-subheader">
+            <div class="PageTitle">
+                <div class="align-items-center separator">
+                    <h3 class="m-subheader__title ">
+                        @Model.Loc.Where(a => a.ResourceId == "spnDevice").FirstOrDefault().Value.ToString()
+                    </h3>
+                </div>
+            </div>
+
+            <div class="NewBreadcrumbArea">
+                <div class="newBreadcrumb">
+                    <ul>
+                        <li><a href="/Dashboard/Dashboard">&nbsp;</a></li>
+                        <li><a href="/Devices/Index?page=Monitoring_Device_Search">@Model.Loc.Where(a => a.ResourceId == "spnDeviceSearch").FirstOrDefault().Value.ToString()</a></li>
+                        <li class="active">@Model.Loc.Where(a => a.ResourceId == "spnAddDevice").FirstOrDefault().Value.ToString()</li>
+                    </ul>
+                    <div style="clear:both;"></div>
+                </div>
+            </div>
+            <div style="clear:both;"></div>
+        </div>
+    </div>
+}
+
+@Html.Partial("_ErrorDiv")
+
+@using (Ajax.BeginForm("AddDeviceAPMCMMS", "Devices", new AjaxOptions { HttpMethod = "Post", OnSuccess = "DeviceAddOnSuccess", OnBegin = "AjaxBeginFormBegin", OnComplete = "AjaxBeginFormComplete", OnFailure = "AjaxBeginFormFaillure" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="row">
+
+        <div class="col-xl-12">
+            <div class="row">
+                <div class="col-xl-12" id="btnnblock">
+                    <div class="m-portlet" id="m_portlet" style="padding:15px;">
+                        <div class="bottomBlock">
+                            <div class="tabsArea nobg" id="Identification" style="display:block;">
+                                <ul class="listView nobrd">
+                                    @if (Model.DeviceAPMCMMSModel.IoTDeviceId != 0)
+                                    {
+                                        <li>
+                                            <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnName").FirstOrDefault().Value.ToString() : <small>*</small></span>
+                                            <span class="inputText">
+                                                @Html.ValidationMessageFor(m => m.DeviceAPMCMMSModel.Name, "", new { style = "display:none" })
+                                                @Html.TextBoxFor(m => m.DeviceAPMCMMSModel.Name, new { @class = "form-control search", autocomplete = "off", maxlength = 63 })
+                                            </span>
+                                        </li>
+                                    }
+                                    @if (Model.DeviceAPMCMMSModel.IoTDeviceId == 0)
+                                    {
+                                        <li>
+                                            <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnSOMAXMeter").FirstOrDefault().Value.ToString() : <small>*</small></span>
+                                            <span class="inputText">
+                                                <div class="dropdown dropTableOuter">
+                                                    <div class="input-group">
+                                                        @Html.ValidationMessageFor(m => m.DeviceAPMCMMSModel.Meter_ClientLookupId, "", new { style = "display:none" })
+                                                        @Html.TextBoxFor(m => m.DeviceAPMCMMSModel.Meter_ClientLookupId, new
+                                                   {
+                                                       @class = "form-control search dropbtn readonly",
+                                                       @readonly = "readonly",
+                                                       autocomplete = "off",
+                                                       style = "display:block;"
+                                                   })
+                                                        @Html.TextBoxFor(m => m.DeviceAPMCMMSModel.CMMSMeterId, new
+                                                   {
+                                                       @class = "form-control search dropbtn readonly",
+                                                       @readonly = "readonly",
+                                                       autocomplete = "off",
+                                                       style = "display:none;"
+                                                   })
+                                                        @if (Model.DeviceAPMCMMSModel.Meter_ClientLookupId == "" || Model.DeviceAPMCMMSModel.Meter_ClientLookupId == null)
+                                                        {
+                                                            <div class="input-group-btn">
+                                                                <button class="btn btn-white btntxtInputGroup ClearMeterModalPopupGridData" type="button" data-textfield="DeviceAPMCMMSModel_Meter_ClientLookupId"
+                                                                        data-valuefield="DeviceAPMCMMSModel_CMMSMeterId" style="display:none;">
+                                                                    <i id="srcicon" class="fa fa-close"></i>
+                                                                </button>
+                                                            </div>
+                                                        }
+                                                        else
+                                                        {
+                                                            <div class="input-group-btn">
+                                                                <button class="btn btn-white btntxtInputGroup ClearMeterModalPopupGridData" type="button" data-textfield="DeviceAPMCMMSModel_Meter_ClientLookupId"
+                                                                        data-valuefield="DeviceAPMCMMSModel_CMMSMeterId" style="display:block;">
+                                                                    <i id="srcicon" class="fa fa-close"></i>
+                                                                </button>
+                                                            </div>
+                                                        }
+                                                        <div class="input-group-btn">
+                                                            <button class="btn btn-white btntxtInputGroup OpenMeterModalPopupGrid" type="button" data-textfield="DeviceAPMCMMSModel_Meter_ClientLookupId"
+                                                                    data-valuefield="DeviceAPMCMMSModel_CMMSMeterId">
+                                                                <i id="srcicon" class="fa fa-search"></i>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </span>
+                                        </li>
+                                    }
+                                    <li>
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnAsset").FirstOrDefault().Value.ToString() : <small>*</small></span>
+                                        <span class="inputText">
+                                            <div class="dropdown dropTableOuter">
+                                                <div class="input-group">
+                                                    @Html.ValidationMessageFor(m => m.DeviceAPMCMMSModel.Equipment_ClientLookupId, "", new { style = "display:none" })
+                                                    @Html.TextBoxFor(m => m.DeviceAPMCMMSModel.Equipment_ClientLookupId, new
+                                               {
+                                                   @class = "form-control search dropbtn readonly",
+                                                   @readonly = "readonly",
+                                                   autocomplete = "off",
+                                                   style = "display:block;"
+                                               })
+                                                    @Html.TextBoxFor(m => m.DeviceAPMCMMSModel.EquipmentId, new
+                                                    {
+                                                        @class = "form-control search dropbtn readonly",
+                                                        @readonly = "readonly",
+                                                        autocomplete = "off",
+                                                        style = "display:none;"
+                                                    })
+                                                    @if (Model.DeviceAPMCMMSModel.Equipment_ClientLookupId == "" || Model.DeviceAPMCMMSModel.Equipment_ClientLookupId == null)
+                                                    {
+                                                        <div class="input-group-btn">
+                                                            <button class="btn btn-white btntxtInputGroup ClearAssetModalPopupGridData" type="button" data-textfield="DeviceAPMCMMSModel_Equipment_ClientLookupId"
+                                                                    data-valuefield="DeviceAPMCMMSModel_EquipmentId" style="display:none;">
+                                                                <i id="srcicon" class="fa fa-close"></i>
+                                                            </button>
+                                                        </div>
+                                                    }
+                                                    else
+                                                    {
+                                                        <div class="input-group-btn">
+                                                            <button class="btn btn-white btntxtInputGroup ClearAssetModalPopupGridData" type="button" data-textfield="DeviceAPMCMMSModel_Equipment_ClientLookupId"
+                                                                    data-valuefield="DeviceAPMCMMSModel_EquipmentId" style="display:block;">
+                                                                <i id="srcicon" class="fa fa-close"></i>
+                                                            </button>
+                                                        </div>
+                                                    }
+                                                    <div class="input-group-btn">
+                                                        <button class="btn btn-white btntxtInputGroup OpenAssetModalPopupGrid" type="button" data-textfield="DeviceAPMCMMSModel_Equipment_ClientLookupId"
+                                                                data-valuefield="DeviceAPMCMMSModel_EquipmentId">
+                                                            <i id="srcicon" class="fa fa-search"></i>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </span>
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <div class="idBttns">
+                                <div class="bttn_pagin">
+                                    <div class="bttns2">
+
+                                        @if (Model.DeviceAPMCMMSModel.IoTDeviceId == 0)
+                                        {
+                                            <button class="btn btn-white mobBttn" name="Command" value="saveAdd" id="btnSaveAnotherOpenDevice"><i class="fa fa-save faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalSaveAndAdd").FirstOrDefault().Value.ToString()</button>
+                                        }
+                                        <button class="btn btn-blue mobBttn" name="Command" value="save" id="btnSaveDevice"><i class="fa fa-save faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+                                    </div>
+                                    <div class="bttns"><button type="button" class="btn btn-blue mobBttn" id="btnCancelAddDevices"><i class="fa fa-close faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button></div>
+
+                                    <div style="clear:both;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @Html.HiddenFor(m => m.DeviceAPMCMMSModel.IoTDeviceId, new { id = "IoTDeviceId" })
+    @Html.HiddenFor(m => m.DeviceAPMCMMSModel.Mode, new { id = "Mode" })
+    @Html.HiddenFor(m => m.DeviceAPMCMMSModel.SensorId, new { id = "SensorId" })
+}
+
+@Html.Partial("~/Views/Devices/_MeterPopupLookup.cshtml")
+@Html.Partial("~/Views/Devices/_DeviceAssetPopUp.cshtml")

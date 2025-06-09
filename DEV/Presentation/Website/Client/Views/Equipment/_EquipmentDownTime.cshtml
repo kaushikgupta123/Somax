@@ -1,0 +1,36 @@
+﻿@model Client.Models.EquipmentCombined
+<div class="m-portlet m-portlet--full-height m-portlet--fit">
+    <div class="m-portlet__head">
+        <div class="m-portlet__head-caption">
+            <div class="m-portlet__head-title">
+                <h3 class="m-portlet__head-text">
+                    @Model.Loc.Where(a => a.ResourceId == "spnAssetDownTime").FirstOrDefault().Value.ToString()
+                </h3>
+            </div>
+        </div>
+    </div>
+    <div class="m-portlet__body">
+        <div class="tab-content">
+            <div class="dateRangeDrop">
+                <div class="new-custom-select">
+                    @Html.DropDownListFor(m => m.equipDropdown, new SelectList(Model.equipmentDownTimeDateList, "Value", "Text"), null, new { id = "equipDtDropdown", @class = "selectpicker m-datatable__pager-size" })
+                </div>
+                <div style="clear:both; height:15px;"></div>
+            </div>
+
+            <div class="chartBox" style="position:relative">
+                <div class="lds-ellipsis lds-adjust" id="equipmentdowntimechartloader">
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                </div>
+                <div style="width:100%;">
+                    <div class="cntNoData" style="text-align:center;"><h5>@Model.Loc.Where(a => a.ResourceId == "globalDataNotFound").FirstOrDefault().Value.ToString()</h5></div>
+                    <canvas id="chartdiv"></canvas>
+                </div>
+                <div class="clear"></div>
+            </div>
+        </div>
+    </div>
+</div>

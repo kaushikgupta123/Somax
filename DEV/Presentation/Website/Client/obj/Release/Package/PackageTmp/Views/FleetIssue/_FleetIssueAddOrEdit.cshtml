@@ -1,0 +1,168 @@
+﻿@model Client.Models.FleetIssue.FleetIssueVM
+    @using (Ajax.BeginForm("FleetIssueAddOrEdit", "FleetIssue", new AjaxOptions { HttpMethod = "Post", OnSuccess = "FleetIssueAddOnSuccess", OnBegin = "AjaxBeginFormBegin", OnComplete = "AjaxBeginFormComplete", OnFailure = "AjaxBeginFormFaillure" }, new { enctype = "multipart/form-data", id = "fleetIssueform" }))
+    {
+        @Html.AntiForgeryToken()
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close clearerrdiv" id="CloseFleetIssuePopup" data-dismiss="modal">&times;</button>
+                @if (Model.FleetIssueModel.Pagetype == "Add")
+                {
+                    <h4 class="modal-title">@Model.Loc.Where(a => a.ResourceId == "spnAddIssue").FirstOrDefault().Value.ToString()</h4>
+                }
+                else
+                {
+                    <h4 class="modal-title">@Model.Loc.Where(a => a.ResourceId == "spnEditIssue").FirstOrDefault().Value.ToString()</h4>
+                }
+            </div>
+            @Html.Partial("_ErrorDiv")
+            <div class="modal-body">
+                <div class="form-group" style="margin-bottom:0;">
+                    <div class="bottomBlock">
+                        <div class="tabsArea nobg">
+                            <ul class="listView nobrd" style="border-bottom:0;">
+                                <li>
+                                    <span class="label">@Html.LabelFor(m => m.FleetIssueModel.ClientLookupId) : <small>*</small></span>
+                                    <span class="inputText">
+                                        <div class="dropdown dropTableOuter">
+                                            <div class="input-group">
+                                                @Html.ValidationMessageFor(m => m.FleetIssueModel.ClientLookupId, "", new { style = "display:none" })
+                                                @Html.TextBoxFor(m => m.FleetIssueModel.ClientLookupId, new { @class = "form-control search dropbtn readonly", autocomplete = "off", @readonly = "readonly" })
+                                                <div class="input-group-btn" id="divSearch">
+                                                    <button class="btn btn-white btntxtInputGroup" type="button" id="opengrid">
+                                                        <i id="srcicon" class="fa fa-search"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </span>
+                                </li>
+                                <li>
+                                    <span class="label" id="spnDate">@Html.LabelFor(m => m.FleetIssueModel.RecordDate) : <small>*</small></span>
+                                    <span class="inputText">
+                                        @Html.ValidationMessageFor(m => m.FleetIssueModel.RecordDate, "", new { style = "display:none" })
+                                        @Html.TextBoxFor(m => m.FleetIssueModel.RecordDate, "{0:MM/dd/yyyy}", new { @class = "form-control search dtpickerNew", autocomplete = "off" })
+                                        @Html.ValidationMessageFor(m => m.FleetIssueModel.RecordTime, "", new { style = "display:none" })
+                                        @Html.TextBoxFor(m => m.FleetIssueModel.RecordTime, new {  @class = "form-control search timerId", autocomplete = "off" })
+                                    </span>                                  
+                                </li>
+                                <li>
+                                    <span class="label">@Html.LabelFor(m => m.FleetIssueModel.DriverName) : </span>
+                                    <span class="inputText">
+                                        @Html.TextBoxFor(m => m.FleetIssueModel.DriverName, new { @class = "form-control search resetText", autocomplete = "off" })
+                                    </span>
+                                </li>
+                                <li style="height:auto">
+                                    <span class="label">@Html.LabelFor(m => m.FleetIssueModel.Description): <small>*</small></span>
+                                    <span class="inputText" style="height:auto">
+                                        @Html.ValidationMessageFor(m => m.FleetIssueModel.Description, "", new { style = "display:none" })
+                                        @Html.TextAreaFor(m => m.FleetIssueModel.Description, new { @class = "form-control search", autocomplete = "off" })
+                                    </span>
+                                    <div style="clear:both;"></div>
+                                </li>                               
+                                <li style="margin-bottom:0;">
+                                    <span class="label">@Html.LabelFor(m => m.FleetIssueModel.DefectsIds): </span>
+                                    <span class="inputText">
+                                        @Html.DropDownListFor(m => m.FleetIssueModel.DefectsIds, Model.LookupDefectsList, new { @class = "form-control search select2picker", style = "width:100%;", multiple = "multiple" })
+                                    </span>
+                                </li>
+                            </ul>
+                        </div>
+                        <div style="clear:both;"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer" style="padding:15px 25px !important;">
+                <div class="idBttns">
+                    <div class="bttn_pagin">
+                        <div class="bttns2" style="margin:0;">
+                            <button type="submit" class="btn btn-blue mobBttn" name="Command" style="cursor:pointer" value="save" id="btnFleetIssueRecord"><i class="fa fa-save faIcon"></i> &nbsp;@Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+                        </div>
+                        <div class="bttns" style="margin:0;"><button type="button" class="btn btn-blue mobBttn" id="btnFleetIssuecancel"><i class="fa fa-close faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button></div>
+
+                        <div style="clear:both;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @Html.HiddenFor(m => m.FleetIssueModel.EquipmentID)
+        @Html.HiddenFor(m => m.FleetIssueModel.FleetIssuesId)
+        @Html.HiddenFor(m => m.FleetIssueModel.Pagetype)
+
+    }
+
+
+    <style type="text/css">
+        .dtpickerNew {
+            width: 120px;
+            float: left;
+        }
+
+        .timerId {
+            width: 120px;
+            float: left;
+        }
+
+        .ui-datepicker-trigger {
+            float: left;
+            margin-left: -3px;
+            margin-right: 10px;
+        }
+
+        .errorMsgBlk {
+            background-color: #d86564;
+            font-size: 13px;
+            color: #fff;
+            font-weight: 400;
+            line-height: 37px;
+            padding: 0 10px;
+        }
+
+        ul.listView.nobrd li ul.select2-selection__rendered li {
+            border-bottom: 0px !important;
+            height: auto !important;
+            margin-bottom: 0 !important;
+        }
+    </style>
+<style type="text/css">
+    .dtpickerNew { /*width: 120px;*/ width: 100px; float: left; }
+    .timerId { /*width: 100px;*/ width: 90px; float: left; }
+    .ui-datepicker-trigger { float: left; margin-left: -3px; margin-right: 10px; }
+    .errorMsgBlk { background-color: #d86564; font-size: 13px; color: #fff; font-weight: 400; line-height: 37px; padding: 0 10px; }
+    .bootstrap-timepicker-widget.dropdown-menu.open { z-index: 1152; }
+    @@media screen and (max-width: 639px) {
+        .ui-datepicker-trigger { height: 34px; }
+    }
+</style>
+    <script>
+        $(function () {        
+
+            $(".dtpickerNew").datepicker({
+                "dateFormat": "mm/dd/yy",
+                autoclose: true,
+                changeMonth: true,
+                changeYear: true,
+                showOn: 'button',
+                buttonImageOnly: true,
+                buttonImage: '/Images/calender.png'
+            }).inputmask('mm/dd/yyyy');
+     if ('@Model.FleetIssueModel.Pagetype' === "Add") {
+         $('.dtpickerNew').datepicker('setDate', new Date());
+            }
+        var timerVal = moment().format('hh:mm A');
+        $('.timerId').timepicker(
+            {
+               template: 'dropdown',
+                minuteStep: 1,
+                // secondStep: 1,
+                showMeridian: true,
+                defaultTime: timerVal
+            });
+    });
+    $(function () {
+        $(document).find('form').find("#FleetIssueModel_ClientLookupId").removeClass("input-validation-error");
+        $(document).find('form').find("#FleetIssueModel_Description").removeClass("input-validation-error");
+    });
+    </script>
+

@@ -1,0 +1,41 @@
+﻿
+<div id="PartCategoryMasterTableModalPopup" class="modal fade dropdown-modal" role="dialog" style="display:none;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" onclick="$('#PartCategoryMasterTableModalPopup').modal('hide');">&times;</button>
+                <h4 class="modal-title" id="hdrPopPartCategoryMaster">@UtilityFunction.GetMessageFromResource("spnSelect", LocalizeResourceSetConstants.Global) @UtilityFunction.GetMessageFromResource("globalCategoryMaster", LocalizeResourceSetConstants.Global) </h4>
+            </div>
+            <div class="modal-body">
+                <div id="tbldropdown" class="dropdown-content tbl-dropdown" style="display:block;">
+                    <div class="table-responsive dropTableOuter">
+                        <table id="tblPartCategoryMasterModalPopup" class="stripe dropTable globalDropTable tableWOBtn" style="width:100%;">
+                            <thead>
+                                <tr>
+                                    <th>@UtilityFunction.GetMessageFromResource("spnPartCategoryMasterId", LocalizeResourceSetConstants.Global)</th>
+                                    <th>@UtilityFunction.GetMessageFromResource("spnDescription", LocalizeResourceSetConstants.Global)</th>
+                                </tr>
+                            </thead>
+                            <tfoot id="tblPartCategoryMasterModalPopupFooter" style="display:none">
+                                <tr>
+                                    <th style="position:relative;">@UtilityFunction.GetMessageFromResource("spnPartCategoryMasterId", LocalizeResourceSetConstants.Global)</th>
+                                    <th style="position:relative;">@UtilityFunction.GetMessageFromResource("spnDescription", LocalizeResourceSetConstants.Global)</th>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="padding:15px 25px !important;">
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style type="text/css">
+    .dropdown-modal .tbl-dropdown .dataTables_wrapper {
+        width: 100% !important;
+    }
+    /*.dropdown-modal .dropdown-content { height: 230px !important; }*/
+</style>

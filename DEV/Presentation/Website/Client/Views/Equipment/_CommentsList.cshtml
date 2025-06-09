@@ -1,0 +1,50 @@
+﻿@model Client.Models.EquipmentCombined
+@{
+    var userdata = Session["userData"];
+    DataContracts.UserData userData = new DataContracts.UserData();
+    userData = (DataContracts.UserData)userdata;
+}
+@foreach (var item in Model.NotesList)
+{
+    <div class="kt-notes__item">
+        <div class="kt-notes__media">
+            <h3 class="kt-notes__user kt-font-brand kt-font-boldest comment-header-item">
+                @item.PersonnelInitial
+            </h3>
+        </div>
+        <div class="kt-notes__content">
+            <div class="kt-notes__section">
+                <div class="kt-notes__info">
+                    <a href="javascript:void(0)" class="kt-notes__title">
+                        @item.OwnerName
+                    </a>
+                    <span class="kt-notes__desc">
+                        @item.CreateDate.ToString("MMMM dd, yyyy h:mm tt")
+                    </span>
+                </div>
+            </div>
+            <span class="kt-notes__body">
+                @{
+                    string origialContent = item.Content;
+                    string FinalContent = UtilityFunction.GetModifiedContactChipContent(Model.userMentionDatas, item.Content);
+                    <span class="originalContent" style="display:none">@Html.Raw(origialContent)</span>                                     
+                }
+                    @Html.Raw(@FinalContent)
+            </span>
+         
+            @if (userData.DatabaseKey.User.UserInfoId == item.OwnerId)
+            {
+                <div class="ckeditorarea" style="display:none"></div>
+            }
+            @if (userData.DatabaseKey.User.UserInfoId == item.OwnerId && userData.Security.Equipment.Edit)
+            {
+                <div class="commenteditdelearea">
+                    <a href="javascript:void(0);" class="editcomments" id="@item.NotesId"><i class="fa fa-pencil" style="margin-top:-3px;font-size: .91rem;"></i> &nbsp;@Model.Loc.Where(a => a.ResourceId == "globalEdit").FirstOrDefault().Value.ToString()&nbsp;<span style="color:#000 !important;">|</span></a>
+                    <a href="javascript:void(0);" class="deletecomments" id="@item.NotesId"><i class="fa fa-trash" style="font-size: .91rem;"></i>&nbsp;@Model.Loc.Where(a => a.ResourceId == "globalDelete").FirstOrDefault().Value.ToString()</a>
+                </div>
+            }
+        </div>
+        <input type="hidden" class="hdnupdatedindex" value="@item.UpdateIndex" />
+    </div>
+}
+<link href="~/Content/contactchip.css" rel="stylesheet" />

@@ -1,0 +1,32 @@
+﻿@model Client.Models.FleetService.FleetServiceVM
+<div id="AssignedUsersModal" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-info">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">@Model.Loc.Where(a => a.ResourceId == "spnGlobalScheduled").FirstOrDefault().Value.ToString()</h4>
+            </div>
+
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="Line" id="lblLine">@Model.Loc.Where(a => a.ResourceId == "spnGlobalAssigned").FirstOrDefault().Value.ToString():</label>
+                    @if (Model.PersonnelList != null)
+                    {
+                        @Html.DropDownListFor(m => m.PersonnelId, Model.PersonnelList, new { @class = "form-control search select2picker", style = "width:100%;", id = "ddlUserSelect", multiple = "multiple" })
+                    }
+                </div>
+            </div>
+            <div class="modal-footer" style="padding:15px 25px !important;">
+                <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-close buttonIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button>
+                <button type="button" class="btn btn-blue" style="float:right;" id="btnAssignedUsers" disabled="disabled"><i class="fa fa-save buttonIcon"></i> &nbsp;  @Model.Loc.Where(a => a.ResourceId == "globalOK").FirstOrDefault().Value.ToString()</button>
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<style>
+    #AssignedUsersModal .select2-container--default .select2-selection--multiple {
+        min-height: 34px !important;
+        height: auto;
+    }
+</style>

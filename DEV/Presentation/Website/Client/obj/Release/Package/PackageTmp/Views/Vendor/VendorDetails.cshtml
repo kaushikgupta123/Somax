@@ -1,0 +1,738 @@
+﻿@model Client.Models.VendorsVM
+@{
+    ViewBag.Title = "Somax | VendorDetails";
+}
+@{
+    string hColumnList = "";
+    if (Model.hiddenColumnList != null && Model.hiddenColumnList.Count > 0)
+    {
+        foreach (var item in Model.hiddenColumnList)
+        {
+            hColumnList = hColumnList + item + ",";
+        }
+        hColumnList = hColumnList.Remove(hColumnList.Length - 1);
+    }
+}
+
+<script type="text/javascript">
+    $(function () {
+        var v = "@hColumnList";
+        var str = v.split(",");
+        if (str != null && str != "") {
+            $.each(str, function (i, jvalue) {
+                var elementId = '#' + jvalue;
+                $(document).find(elementId).hide();
+            });
+        }
+    });
+</script>
+<link href="~/Scripts/Metronic/assets/demo/default/base/style_newCustom.css" rel="stylesheet" />
+<div class="m-subheader fixedDiv1">
+    <div class="new-m-subheader">
+        <div class="filterDescription">
+            <a href="javascript:void(0)" id="linkToSearch"><span id="spnlinkToSearch"></span></a>
+            - @Model.vendors.ClientLookupId
+        </div>
+        <div class="ActionBttnArea">
+            <div class="actionDiv vendordetailsactions" id="ad1">
+                <button type="button" class="btn btn-white import-export vendorpartspopup" style="display:none" disabled onclick="funcShowExportbtn()">@Model.Loc.Where(a => a.ResourceId == "spnExport").FirstOrDefault().Value.ToString()</button>
+
+                <div class="btn-group bootstrap-select m-datatable__pager-size dropup show selectDrop actionNewDrop">
+                    <div class="btn-group bootstrap-select m-datatable__pager-size" style="width:100%;">
+                        @if (!Model.vendors.IsExternal)
+                        {
+                            <button type="button" class="btn dropdown-toggle bs-placeholder btn-default actiondropdownbtn" data-toggle="dropdown" role="button" title=""><span class="filter-option pull-left">@Model.Loc.Where(a => a.ResourceId == "globalAction").FirstOrDefault().Value.ToString()</span>&nbsp;<span class="bs-caret"><span class="caret"></span></span></button>
+                            <div class="dropdown-menu open" role="combobox">
+                                @if (Model.security.Vendors.Delete || Model.security.Vendors.ChangeClientLookupId || Model.security.Vendors.Edit)
+                                {
+                                    <ul class="dropdown-menu inner" role="listbox" aria-expanded="false">
+                                        @if (Model.vendors.InactiveFlag == true && Model.security.Vendors.Delete)
+                                        {
+                                            <li id="actinctivatevendor"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnGlobalActivate").FirstOrDefault().Value.ToString()</a></li>
+                                        }
+                                        @if (Model.vendors.InactiveFlag == false && Model.security.Vendors.Delete)
+                                        {
+                                            <li id="actinctivatevendor"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnGlobalInactivate").FirstOrDefault().Value.ToString()</a></li>
+                                        }
+                                        @if (Model.security.Vendors.ChangeClientLookupId && Model.vendors.VendorMasterId == 0)
+                                        {
+                                            <li data-toggle="modal" id="optchangevendorid"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnChangeVendorId").FirstOrDefault().Value.ToString()</a></li>
+                                        }
+                                        @if (Model.vendors.IsSitePunchOut && Model.vendors.VendorConfigurePunchOutSecurity)
+                                        {
+                                            <li data-toggle="modal" id="openpunchoutmodal"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnPunchOutConfiguration").FirstOrDefault().Value.ToString()</a></li>
+                                        }
+                                        @if (Model.security.Vendors.Edit && Model.vendors.EmailConfigurationCriteriaOnInterfaceProp)
+                                        {
+                                            <li data-toggle="modal" id="openemailconfigurationmodal"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnEmailConfiguration").FirstOrDefault().Value.ToString() @*Email Configuration*@</a></li>
+                                        }
+                                    </ul>
+                                }
+                            </div>
+                        }
+                        @if (Model.vendors.IsExternal)
+                        {
+                            if (Model.security.Vendors.Edit || (Model.vendors.IsSitePunchOut && Model.vendors.VendorConfigurePunchOutSecurity))
+                            {
+                                <ul class="dropdown-menu inner" role="listbox" aria-expanded="false">
+                                    @if (Model.security.Vendors.Edit)
+                                    {
+                                        <li data-toggle="modal" id="openemailconfigurationmodal"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnEmailConfiguration").FirstOrDefault().Value.ToString() @*Email Configuration*@</a></li>
+                                    }
+                                    @if (Model.vendors.IsSitePunchOut && Model.vendors.VendorConfigurePunchOutSecurity)
+                                    {
+                                        <li data-toggle="modal" id="openpunchoutmodal"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnPunchOutConfiguration").FirstOrDefault().Value.ToString()</a></li>
+                                    }
+                                </ul>
+
+                            }
+                        }
+                    </div>
+                </div>
+
+                @if (Model.security.Vendors.Create && !Model.OracleVendorMasterImport)
+                {
+                    <button id="AddVendor" type="button" class="btn btn-add addvendor" title="Add Vendor"><i class="fa fa-plus"></i></button>
+                }
+            </div>
+
+
+            <div style="clear:both;"></div>
+        </div>
+        <div style="clear:both;"></div>
+    </div>
+</div>
+
+<div class="pushDiv1"></div>
+
+<div class="row">
+    <div class="col-xl-3">
+        <div class="m-portlet">
+            <div class="sideMenuArea nobg">
+                <ul class="vtabs" id="detmaintab">
+                    <li class="active" id="livendor"><a href="#Vendor" onclick="openCity(event, 'HideExport')">@Model.Loc.Where(a => a.ResourceId == "VendorOverView").FirstOrDefault().Value.ToString()</a></li>
+                    <li id="licontact"><a href="#Contact" onclick="openCity(event, 'Contact')">@Model.Loc.Where(a => a.ResourceId == "VendorContact").FirstOrDefault().Value.ToString()</a></li>
+                    <li id="linotes"><a href="#Notes" onclick="openCity(event, 'Notes')">@Model.Loc.Where(a => a.ResourceId == "spnGlobalNote").FirstOrDefault().Value.ToString()</a></li>
+                    <li id="liattachment" style="position:relative;">
+                        <a href="#Attachment" onclick="openCity(event, 'Attachment')">@Model.Loc.Where(a => a.ResourceId == "spnAttachments").FirstOrDefault().Value.ToString()</a>
+                        @if (Model.attachmentCount > 0)
+                        {
+                            <span class="m-badge m-badge--danger count-badge" id="vendorAttachmentCount">@Model.attachmentCount</span>
+                        }
+                    </li>
+                    <li id="liparts"><a href="#PartsContainer" onclick="openCity(event, 'PartsContainer')">@Model.Loc.Where(a => a.ResourceId == "VendorParts").FirstOrDefault().Value.ToString()</a></li>
+                    @if (Model.security.Vendor_Insurance.Access)
+                    {
+                        <li id="liinsurance"><a href="#Insurance" onclick="openCity(event, 'Insurance')">@Model.Loc.Where(a => a.ResourceId == "spnInsurance").FirstOrDefault().Value.ToString()</a></li>
+                    }
+                    @if (Model.security.Vendor_AssetMgt.Access)
+                    {
+                        <li id="liassetmanagement"><a href="#AssetManagement" onclick="openCity(event, 'AssetManagement')">@Model.Loc.Where(a => a.ResourceId == "spnAssetMgt").FirstOrDefault().Value.ToString()</a></li>
+                    }
+                </ul>
+            </div>
+
+            <div class="selectTabs ddltextalign" id="selectTabs">
+                <select class="form-control" id="colorselector">
+                    <option value="Vendor">@Model.Loc.Where(a => a.ResourceId == "VendorOverView").FirstOrDefault().Value.ToString()</option>
+                    <option value="Contact">@Model.Loc.Where(a => a.ResourceId == "VendorContact").FirstOrDefault().Value.ToString()</option>
+                    <option value="Notes">@Model.Loc.Where(a => a.ResourceId == "spnGlobalNote").FirstOrDefault().Value.ToString()</option>
+                    <option value="Attachment">@Model.Loc.Where(a => a.ResourceId == "globalAttachment").FirstOrDefault().Value.ToString()</option>
+                    <option value="PartsContainer">@Model.Loc.Where(a => a.ResourceId == "VendorParts").FirstOrDefault().Value.ToString()</option>
+                    <option value="Insurance">@Model.Loc.Where(a => a.ResourceId == "spnInsurance").FirstOrDefault().Value.ToString()</option>
+                    <option value="AssetManagement">@*@Model.Loc.Where(a => a.ResourceId == "spnInsurance").FirstOrDefault().Value.ToString()*@Asset Management</option>
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-9">
+        <div class="row">
+            <div class="col-xl-12">
+                <div class="m-portlet" id="m_portlet" style="padding:15px;">
+                    <div class="bottomBlock">
+                        <div class="tabsArea nobg" id="Vendor" style="display:block;">
+                            @*<div class="tab">
+                                    <button class="tablinks active" id="btndetails" onclick="openCity(event, 'Details')">@Model.Loc.Where(a => a.ResourceId == "spnDetails").FirstOrDefault().Value.ToString()</button>
+                                    <button class="tablinks" onclick="openCity(event, 'Address')">@Model.Loc.Where(a => a.ResourceId == "VendorAddress").FirstOrDefault().Value.ToString()</button>
+                                  @if (Model.vendors.IsSitePunchOut && Model.vendors.VendorConfigurePunchOutSecurity)
+                                  {
+                                    <button class="tablinks" onclick="openCity(event, 'PunchOutSetup')">@Model.Loc.Where(a => a.ResourceId == "spnPunchOutSetUp").FirstOrDefault().Value.ToString()</button>
+                                  }
+                                </div>
+                                <div class="selectTab">
+                                    <select class="form-control search" id="tabselector">
+                                        <option value="Details">@Model.Loc.Where(a => a.ResourceId == "spnDetails").FirstOrDefault().Value.ToString()</option>
+                                        <option value="Address">@Model.Loc.Where(a => a.ResourceId == "VendorAddress").FirstOrDefault().Value.ToString()</option>
+                                    @if (Model.vendors.IsSitePunchOut && Model.vendors.VendorConfigurePunchOutSecurity)
+                                    {
+                                        <option value="PunchOutSetup">@Model.Loc.Where(a => a.ResourceId == "spnPunchOutSetUp").FirstOrDefault().Value.ToString()</option>
+                                    }
+                                    </select>
+                                </div>
+                                <div id="Details" class="tabcontent2" style="display:block;">
+                                    <ul class="listView">
+                                        <li id="ClientLookupId">
+                                            <span class="label">@Html.LabelFor(m => m.vendors.VendorId) : </span>
+                                            <span class="inputText">@Model.vendors.ClientLookupId</span>
+                                        </li>
+                                        <li id="Name">
+                                            <span class="label">@Html.LabelFor(m => m.vendors.Name) :</span>
+                                            <span class="inputText">@Model.vendors.Name</span>
+                                        </li>
+                                        <li id="CustomerAccount">
+                                            <span class="label">@Html.LabelFor(m => m.vendors.CustomerAccount) : <small></small></span>
+                                            <span class="inputText">@Model.vendors.CustomerAccount</span>
+                                        </li>
+                                        <li id="Email">
+                                            <span class="label">@Html.LabelFor(m => m.vendors.Email) : <small></small></span>
+                                            <span class="inputText">@Model.vendors.Email</span>
+                                        </li>
+                                        <li id="Website">
+                                            <span class="label">@Html.LabelFor(m => m.vendors.Website) : <small></small></span>
+                                            <span class="inputText">@Model.vendors.Website</span>
+                                        </li>
+                                        <li id="FOBCode">
+                                            <span class="label">@Html.LabelFor(m => m.vendors.FOBCode) : <small></small></span>
+                                            <span class="inputText">@Model.vendors.FOBCode</span>
+                                        </li>
+                                        <li id="PhoneNumber">
+                                            <span class="label">@Html.LabelFor(m => m.vendors.PhoneNumber) : <small></small></span>
+                                            <span class="inputText">@Model.vendors.PhoneNumber</span>
+                                        </li>
+                                        <li id="Fax">
+                                            <span class="label">@Html.LabelFor(m => m.vendors.Fax) : <small></small></span>
+                                            <span class="inputText">@Model.vendors.Fax</span>
+                                        </li>
+                                        <li id="Terms">
+                                            <span class="label">@Html.LabelFor(m => m.vendors.Terms) : <small></small></span>
+                                            <span class="inputText">@Model.vendors.Terms</span>
+                                        </li>
+                                        <li id="Type">
+                                            <span class="label">@Html.LabelFor(m => m.vendors.Type) : <small></small></span>
+                                            <span class="inputText">@Model.vendors.Type</span>
+                                        </li>
+                                        <li id="InactiveFlag">
+                                            <span class="label">@Html.LabelFor(m => m.vendors.InactiveFlag) : </span>
+                                            <span class="inputText">
+                                                @Html.CheckBoxFor(m => m.vendors.InactiveFlag, new { @class = "form-control m-input", @style = "color:black; width: auto; margin-top: 12px;", onclick = "return false" })
+                                            </span>
+                                        </li>
+
+                                        @if (Model.udata.DatabaseKey.Client.ClientId == 4 || Model.udata.DatabaseKey.Client.ClientId == 6 && Model.udata.Site.UseVendorMaster && Model.vendors.ExVendorStat == true)
+                                        {
+                                        <li id="AutoEmailPO">
+                                            <span class="label">@Html.LabelFor(m => m.vendors.AutoEmailPO) : </span>
+                                            <span class="inputText">
+                                                @Html.CheckBoxFor(m => m.vendors.AutoEmailPO, new { @class = "form-control m-input", @style = "color:black; width: auto; margin-top: 12px;", onclick = "return false" })
+                                            </span>
+                                        </li>
+                                        }
+                                        <li id="IsExternal">
+                                            <span class="label">@Html.LabelFor(m => m.vendors.IsExternal) : </span>
+                                            <span class="inputText">
+                                                @Html.CheckBoxFor(m => m.vendors.IsExternal, new { @class = "form-control m-input", @style = "color:black; width: auto; margin-top: 12px;", onclick = "return false" })
+                                            </span>
+                                        </li>
+                                    </ul>
+                                </div>
+
+                                <div id="Address" class="tabcontent2">
+                                    <h2 class="adresTitle">@Model.Loc.Where(a => a.ResourceId == "BusinessAddress").FirstOrDefault().Value.ToString()</h2>
+                                    <ul class="listView">
+                                        <li id="Address1">
+                                            <span class="label">@Html.LabelFor(m => m.vendors.Address1) : </span>
+                                            <span class="inputText">@Model.vendors.Address1</span>
+                                        </li>
+                                        @if (!string.IsNullOrEmpty(Model.vendors.Address2))
+                                        {
+                                        <li id="Address2">
+                                            <span class="label"></span>
+                                            <span class="inputText">@Model.vendors.Address2</span>
+                                        </li>
+                                        }
+                                        @if (!string.IsNullOrEmpty(Model.vendors.Address3))
+                                        {
+                                        <li id="Address3">
+                                            <span class="label"></span>
+                                            <span class="inputText">@Model.vendors.Address3</span>
+                                        </li>
+                                        }
+                                        <li id="AddressCity">
+                                            <span class="label">@Html.LabelFor(m => m.vendors.AddressCity) : </span>
+                                            <span class="inputText">@Model.vendors.AddressCity</span>
+                                        </li>
+                                        <li id="AddressState">
+                                            <span class="label">@Html.LabelFor(m => m.vendors.AddressState) : </span>
+                                            <span class="inputText description">@Model.vendors.AddressState</span>
+                                        </li>
+                                        <li id="PostalCode">
+                                            <span class="label">@Html.LabelFor(m => m.vendors.PostalCode) : </span>
+                                            <span class="inputText description">@Model.vendors.PostalCode</span>
+                                        </li>
+                                        <li id="Country">
+                                            <span class="label">@Html.LabelFor(m => m.vendors.Country) : </span>
+                                            <span class="inputText description">@Model.vendors.Country</span>
+                                        </li>
+                                    </ul>
+                                    <h2 class="adresTitle">@Model.Loc.Where(a => a.ResourceId == "VendorRemitToAddress").FirstOrDefault().Value.ToString()</h2>
+                                    <ul class="listView">
+                                        <li id="RemitAddress1">
+                                            <span class="label">@Html.LabelFor(m => m.vendors.RemitAddress1) : </span>
+                                            <span class="inputText">@Model.vendors.RemitAddress1</span>
+                                        </li>
+                                        @if (!string.IsNullOrEmpty(Model.vendors.RemitAddress2))
+                                        {
+                                        <li id="RemitAddress2">
+                                            <span class="label"></span>
+                                            <span class="inputText">@Model.vendors.RemitAddress2</span>
+                                        </li>
+                                        }
+                                        @if (!string.IsNullOrEmpty(Model.vendors.RemitAddress3))
+                                        {
+                                        <li id="RemitAddress3">
+                                            <span class="label"></span>
+                                            <span class="inputText">@Model.vendors.RemitAddress3</span>
+                                        </li>
+                                        }
+                                        <li id="RemitAddressCity">
+                                            <span class="label">@Html.LabelFor(m => m.vendors.RemitAddressCity) : </span>
+                                            <span class="inputText">@Model.vendors.RemitAddressCity</span>
+                                        </li>
+                                        <li id="RemitAddressState">
+                                            <span class="label">@Html.LabelFor(m => m.vendors.RemitAddressState) : </span>
+                                            <span class="inputText description">@Model.vendors.RemitAddressState</span>
+                                        </li>
+                                        <li id="RemitPostalCode">
+                                            <span class="label">@Html.LabelFor(m => m.vendors.RemitPostalCode) : </span>
+                                            <span class="inputText description">@Model.vendors.RemitPostalCode</span>
+                                        </li>
+                                        <li id="RemitCountry">
+                                            <span class="label">@Html.LabelFor(m => m.vendors.RemitCountry) : </span>
+                                            <span class="inputText description">@Model.vendors.RemitCountry</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                                @if (Model.vendors.IsSitePunchOut && Model.vendors.VendorConfigurePunchOutSecurity)
+                                {
+                                    <div id="PunchOutSetup" class="tabcontent2">
+                                        <ul class="listView">
+                                            <li id="PunchoutIndicator">
+                                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnUsePunchOut").FirstOrDefault().Value.ToString(): </span>
+                                                <span class="inputText">
+                                                    @Html.CheckBoxFor(m => m.vendors.PunchoutIndicator, new { @class = "form-control m-input", @style = "color:black; width: auto; margin-top: 12px;", onclick = "return false" })
+                                                </span>
+                                            </li>
+                                            <li id="VendorDomain">
+                                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnVendorToDomain").FirstOrDefault().Value.ToString(): <small></small></span>
+                                                <span class="inputText">@Model.vendors.VendorDomain</span>
+                                            </li>
+                                            <li id="VendorIdentity">
+                                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnVendorToIdentity").FirstOrDefault().Value.ToString(): <small></small></span>
+                                                <span class="inputText">@Model.vendors.VendorIdentity</span>
+                                            </li>
+                                            <li id="SharedSecret">
+                                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnSharedSecret").FirstOrDefault().Value.ToString(): <small></small></span>
+                                                <span class="inputText">@Model.vendors.SharedSecret</span>
+                                            </li>
+                                            <li id="SenderDomain">
+                                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnSenderFromDomain").FirstOrDefault().Value.ToString() : <small></small></span>
+                                                <span class="inputText">@Model.vendors.SenderDomain</span>
+                                            </li>
+                                            <li id="SenderIdentity">
+                                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnSenderFromIdentity").FirstOrDefault().Value.ToString() : <small></small></span>
+                                                <span class="inputText">@Model.VendorPunchoutSetupModel.SenderIdentity</span>
+                                            </li>
+                                            <li id="PunchoutURL">
+                                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnPunchoutURL").FirstOrDefault().Value.ToString() : <small></small></span>
+                                                <span class="inputText">@Model.vendors.PunchoutURL</span>
+                                            </li>
+                                            <li id="AutoSendPunchOutPO">
+                                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnAutomaticallySendPunchOutPO").FirstOrDefault().Value.ToString() : </span>
+                                                <span class="inputText">
+                                                    @Html.CheckBoxFor(m => m.vendors.AutoSendPunchOutPO, new { @class = "form-control m-input", @style = "color:black; width: auto; position:relative; top: 16px;", onclick = "return false" })
+                                                </span>
+                                            </li>
+                                            <li id="SendPunchoutPOURL">
+                                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnSendPunchoutPOURL").FirstOrDefault().Value.ToString() : <small></small></span>
+                                                <span class="inputText">@Model.vendors.SendPunchoutPOURL</span>
+                                            </li>
+                                            <li id="SendPunchoutPOEmail">
+                                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnSendPunchoutPOEmail").FirstOrDefault().Value.ToString() : <small></small></span>
+                                                <span class="inputText">@Model.vendors.SendPunchoutPOEmail</span>
+                                            </li>
+                                        </ul>
+
+                                    </div>
+                                }*@
+                            <div>
+                                <ul class="listView">
+                                    @Html.Partial("~/Views/Vendor/_ViewVendorDynamic.cshtml", Model)
+                                </ul>
+                            </div>
+
+                            <div class="editBttn">
+                                @if (Model.security.Vendors.Edit && !Model.vendors.IsExternal)
+                                {
+                                    <button type="button" class="btn btn-blue" id="editvendor"><i class="fa fa-pencil" style="margin-top:-3px;"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalEdit").FirstOrDefault().Value.ToString()</button>
+                                }
+                            </div>
+                        </div>
+                        <div class="tabsArea nobg" id="Contact" style="display:none;">
+                            <div class="table-responsive">
+                                <table id="contactTable" class="eqpDtlTbl row-border custom-sort" style="width:100%;">
+                                    <thead>
+                                        <tr>
+                                            <th width="33%">@Model.Loc.Where(a => a.ResourceId == "spnName").FirstOrDefault().Value.ToString()</th>
+                                            <th width="33%">@Model.Loc.Where(a => a.ResourceId == "VendorContactOffice").FirstOrDefault().Value.ToString()</th>
+                                            <th width="19%">@Model.Loc.Where(a => a.ResourceId == "VendorContactEmail1").FirstOrDefault().Value.ToString()</th>
+                                            <th width="15%">@Model.Loc.Where(a => a.ResourceId == "globalOwner").FirstOrDefault().Value.ToString()</th>
+                                            <th width="17%" style="text-align:center !important;">@Model.Loc.Where(a => a.ResourceId == "globalAction").FirstOrDefault().Value.ToString()</th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                            <div class="bttn_pagin">
+                                <div class="bttns"><button type="button" class="btn btn-blue" data-toggle="" data-target="" id="btnAddContact"><i class="fa fa-plus faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "VendorAddContact").FirstOrDefault().Value.ToString()</button></div>
+                                <div style="clear:both;"></div>
+                            </div>
+                            <div style="clear:both;"></div>
+                        </div>
+
+                        <div class="tabsArea nobg" id="Notes" style="display:none;">
+                            <div class="table-responsive">
+                                <table id="notesTable" class="eqpDtlTbl row-border custom-sort" style="width:100%;">
+                                    <thead>
+                                        <tr>
+                                            <th width="33%">@Model.Loc.Where(a => a.ResourceId == "globalSubject").FirstOrDefault().Value.ToString()</th>
+                                            <th width="33%">@Model.Loc.Where(a => a.ResourceId == "globalOwner").FirstOrDefault().Value.ToString()</th>
+                                            <th width="19%">@Model.Loc.Where(a => a.ResourceId == "globalModifyDate").FirstOrDefault().Value.ToString()</th>
+                                            <th width="17%" style="text-align:center !important;">@Model.Loc.Where(a => a.ResourceId == "globalAction").FirstOrDefault().Value.ToString()</th>
+                                        </tr>
+                                    </thead>
+
+                                </table>
+                            </div>
+                            <div class="bttn_pagin">
+                                <div class="bttns"><button type="button" class="btn btn-blue" data-toggle="" data-target="" id="btnAddNote"><i class="fa fa-plus faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "VendorAddNote").FirstOrDefault().Value.ToString()</button></div>
+                                <div style="clear:both;"></div>
+                            </div>
+                            <div style="clear:both;"></div>
+                        </div>
+
+                        <div class="tabsArea nobg" id="Attachment" style="display:none;">
+                            <div class="table-responsive">
+                                <table id="attachTable" class="eqpDtlTbl row-border custom-sort" style="width:100%;">
+                                    <thead>
+                                        <tr>
+                                            <th>@Model.Loc.Where(a => a.ResourceId == "globalSubject").FirstOrDefault().Value.ToString()</th>
+                                            <th>@Model.Loc.Where(a => a.ResourceId == "globalFileName").FirstOrDefault().Value.ToString()</th>
+                                            <th>@Model.Loc.Where(a => a.ResourceId == "globalFileSize").FirstOrDefault().Value.ToString()</th>
+                                            <th>@Model.Loc.Where(a => a.ResourceId == "globalOwner").FirstOrDefault().Value.ToString()</th>
+                                            <th>@Model.Loc.Where(a => a.ResourceId == "globalCreateDate").FirstOrDefault().Value.ToString()</th>
+                                            <th width="17%" style="text-align:center !important;">@Model.Loc.Where(a => a.ResourceId == "globalAction").FirstOrDefault().Value.ToString()</th>
+                                        </tr>
+                                    </thead>
+
+                                </table>
+                            </div>
+                            <div class="bttn_pagin">
+                                <div class="bttns"><button type="button" class="btn btn-blue" data-toggle="" data-target="" id="btnAddAttachment"><i class="fa fa-plus faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalAddAttachment").FirstOrDefault().Value.ToString()</button></div>
+                                <div style="clear:both;"></div>
+                            </div>
+                            <div style="clear:both;"></div>
+                        </div>
+                        <div class="tabsArea nobg" id="PartsContainer" style="display:none;">
+                            <div class="table-responsive">
+                                <table id="partsTable" class="eqpDtlTbl row-border custom-sort" style="width:100%;">
+                                    <thead>
+                                        <tr>
+                                            <th data-col="0" data-th-index="0">@Model.Loc.Where(a => a.ResourceId == "spnPartID").FirstOrDefault().Value.ToString()</th>
+                                            <th data-col="1" data-th-index="1">@Model.Loc.Where(a => a.ResourceId == "VendorPartDescription").FirstOrDefault().Value.ToString()</th>
+                                            <th data-col="2" data-th-index="2">@Model.Loc.Where(a => a.ResourceId == "VendorPartCatNum").FirstOrDefault().Value.ToString()</th>
+                                            <th data-col="3" data-th-index="3">@Model.Loc.Where(a => a.ResourceId == "spnManufacturer").FirstOrDefault().Value.ToString()</th>
+                                            <th data-col="4" data-th-index="4">@Model.Loc.Where(a => a.ResourceId == "spnManufacturerID").FirstOrDefault().Value.ToString()</th>
+                                            <th data-col="5" data-th-index="5">@Model.Loc.Where(a => a.ResourceId == "spnOrderQnt").FirstOrDefault().Value.ToString()</th>
+                                            <th data-col="6" data-th-index="6">@Model.Loc.Where(a => a.ResourceId == "VendorPartUnit").FirstOrDefault().Value.ToString()</th>
+                                            <th data-col="7" data-th-index="7">@Model.Loc.Where(a => a.ResourceId == "VendorPartPrice").FirstOrDefault().Value.ToString()</th>
+                                            <th width="20%" style="text-align:center !important;">@Model.Loc.Where(a => a.ResourceId == "globalAction").FirstOrDefault().Value.ToString()</th>
+                                        </tr>
+                                    </thead>
+
+                                </table>
+                            </div>
+                            <div class="bttn_pagin">
+                                <div class="bttns"><button type="button" class="btn btn-blue" data-toggle="" data-target="" id="btnAddParts" style="display:none;"><i class="fa fa-plus faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "VendorAddParts").FirstOrDefault().Value.ToString()</button></div>
+                                <div style="clear:both;"></div>
+                            </div>
+                            <div style="clear:both;"></div>
+                        </div>
+                        @if (Model.security.Vendor_Insurance.Access)
+                        {
+                            <div class="tabsArea nobg" id="Insurance" style="display:none;">
+                                <div id="VendorInsuranceWidget">
+                                </div>
+                                <div class="table-responsive">
+                                    <table id="vendorInsuranceTable" class="eqpDtlTbl row-border custom-sort" style="width:100%;">
+                                        <thead>
+                                            <tr>
+                                                <th data-col="0" data-th-index="0">@Model.Loc.Where(a => a.ResourceId == "spnCompany").FirstOrDefault().Value.ToString()</th>
+                                                <th data-col="1" data-th-index="1">@Model.Loc.Where(a => a.ResourceId == "spnContact").FirstOrDefault().Value.ToString()</th>
+                                                <th data-col="2" data-th-index="2">@Model.Loc.Where(a => a.ResourceId == "spnExpireDate").FirstOrDefault().Value.ToString()</th>
+                                                <th data-col="3" data-th-index="3">@Model.Loc.Where(a => a.ResourceId == "spnAmount").FirstOrDefault().Value.ToString()</th>
+                                                <th width="20%" style="text-align:center !important;">@Model.Loc.Where(a => a.ResourceId == "globalAction").FirstOrDefault().Value.ToString()</th>
+                                            </tr>
+                                        </thead>
+
+                                    </table>
+                                </div>
+                                @if (Model.security.Vendor_Insurance.Create)
+                                {
+                                    <div class="bttn_pagin">
+                                        <div class="bttns"><button type="button" class="btn btn-blue addVendorInsurance" data-toggle="" data-target="" id="btnAddVendorInsurance" style="display:none;"><i class="fa fa-plus faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "spnAddInsurance").FirstOrDefault().Value.ToString()</button></div>
+                                        <div style="clear:both;"></div>
+                                    </div>
+                                }
+                                <div style="clear:both;"></div>
+                            </div>
+                        }
+                        @*V2-933*@
+                        @if (Model.security.Vendor_AssetMgt.Access)
+                        {
+                            <div class="tabsArea nobg" id="AssetManagement" style="display:none;">
+                                <div id="VendorAssetManagementWidget">
+                                </div>
+                                <div class="table-responsive">
+                                    <table id="vendorAssetManagementTable" class="eqpDtlTbl row-border custom-sort" style="width:100%;">
+                                        <thead>
+                                            <tr>
+                                                <th data-col="0" data-th-index="0">@Model.Loc.Where(a => a.ResourceId == "spnCompany").FirstOrDefault().Value.ToString()</th>
+                                                <th data-col="1" data-th-index="1">@Model.Loc.Where(a => a.ResourceId == "spnContact").FirstOrDefault().Value.ToString()</th>
+                                                <th data-col="2" data-th-index="2">@Model.Loc.Where(a => a.ResourceId == "spnContract").FirstOrDefault().Value.ToString()</th>
+                                                <th data-col="3" data-th-index="3">@Model.Loc.Where(a => a.ResourceId == "spnExpireDate").FirstOrDefault().Value.ToString()</th>
+                                                <th width="20%" style="text-align:center !important;">@Model.Loc.Where(a => a.ResourceId == "globalAction").FirstOrDefault().Value.ToString()</th>
+                                            </tr>
+                                        </thead>
+
+                                    </table>
+                                </div>
+                                @if (Model.security.Vendor_AssetMgt.Create)
+                                {
+                                    <div class="bttn_pagin">
+                                        <div class="bttns"><button type="button" class="btn btn-blue addVendorAssetManagement" data-toggle="" data-target="" id="btnAddVendorAssetManagement" style="display:none;"><i class="fa fa-plus faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "spnAddAssetManagement").FirstOrDefault().Value.ToString()</button></div>
+                                        <div style="clear:both;"></div>
+                                    </div>
+                                }
+                                <div style="clear:both;"></div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@Html.Partial("_Export")
+@Html.HiddenFor(m => m.vendors.VendorId)
+@Html.HiddenFor(m => m.vendors.ClientLookupId)
+@Html.HiddenFor(m => m.vendors.InactiveFlag, new { id = "vendorhiddeninactiveflag" })
+@Html.HiddenFor(m => m.UseVendorMaster, new { id = "usevendormaster" })
+@Html.HiddenFor(m => m.VendorMaster_AllowLocal, new { id = "vendormasterallowlocal" })
+@Html.Partial("~/Views/Vendor/_AddVendorPopup.cshtml")
+@if (Model.security.Vendors.ChangeClientLookupId && Model.vendors.VendorMasterId == 0)
+{
+    @Html.Partial("~/Views/Vendor/_ChangeVendorIDModal.cshtml")
+}
+@if (Model.vendors.IsSitePunchOut && Model.vendors.VendorConfigurePunchOutSecurity)
+{
+    @Html.Partial("_PunchOutSetupModal")
+}
+@if (Model.security.Vendors.Edit && Model.vendors.EmailConfigurationCriteriaOnInterfaceProp)
+{
+    @Html.Partial("_EmailConfigurationSetupModal")
+}
+
+@Html.HiddenFor(m => m.security.Vendor_Insurance.Create, new { id = "hdnvendorinsuranceaddsecurity" })
+@Html.HiddenFor(m => m.security.Vendor_Insurance.Edit, new { id = "hdnvendorinsuranceeditsecurity" })
+@Html.HiddenFor(m => m.security.Vendor_Insurance.Delete, new { id = "hdnvendorinsurancedelsecurity" })
+@*V2-933*@
+@Html.HiddenFor(m => m.security.Vendor_AssetMgt.Create, new { id = "hdnvendorassetmgtaddsecurity" })
+@Html.HiddenFor(m => m.security.Vendor_AssetMgt.Edit, new { id = "hdnvendorassetmgteditsecurity" })
+@Html.HiddenFor(m => m.security.Vendor_AssetMgt.Delete, new { id = "hdnvendorassetmgtdelsecurity" })
+<div id="AddVendorInsuranceModalpopup" class="modal fade" role="dialog">
+    <div class="modal-dialog" id="VendorInsurancePopUp">
+    </div>
+</div>
+<div id="AddVendorAssetMgtModalpopup" class="modal fade" role="dialog">
+    <div class="modal-dialog" id="VendorAssetMgtPopUp">
+    </div>
+</div>
+<script type="text/javascript">
+    var Sec_Part_Vendor_XRef = '@ViewBag.Sec_Part_Vendor_XRef';
+</script>
+<style type="text/css">
+
+
+    #popupExport {
+        top: 111px !important;
+        right: 253px !important;
+    }
+
+    .filterDescription {
+        width: auto;
+        float: left;
+        font-size: 1.2rem;
+        color: #000;
+        font-weight: 500;
+        line-height: 33px;
+    }
+
+        .filterDescription a {
+            color: #36a3f7;
+            text-decoration: none !important;
+        }
+
+    .modal-open {
+        overflow: hidden !important;
+    }
+
+    ul.listView li#AutoSendPunchOutPO span.label {
+        width: 60%;
+    }
+
+    ul.listView li#AutoSendPunchOutPO span.inputText {
+        width: 40%;
+    }
+
+    ul.listView li#SendPunchoutPOEmail span.label {
+        width: 42%;
+    }
+
+    ul.listView li#SendPunchoutPOEmail span.inputText {
+        width: 58%;
+    }
+
+    .vendordetailsactions {
+        display: flex;
+        margin: 0px;
+    }
+
+        .vendordetailsactions .actionNewDrop {
+            margin-right: 10px;
+        }
+
+
+
+    @@media screen and (max-width:1023px) {
+        ul .listView li#AutoSendPunchOutPO span.label {
+            width: 65%;
+        }
+
+        ul.listView li#AutoSendPunchOutPO span.inputText {
+            width: auto;
+        }
+    }
+
+    @@media screen and (max-width:767px) {
+        ul.listView li#AutoSendPunchOutPO span.label {
+            width: 78%;
+        }
+
+        ul.listView li#AutoSendPunchOutPO span.inputText {
+            width: auto;
+        }
+
+        .ddltextalign .form-control {
+            padding: 8px 35px 8px 11px;
+            appearance: none;
+            position: relative;
+            z-index: 1;
+            background-color: transparent;
+        }
+
+        .ddltextalign::after {
+            font-family: "LineAwesome";
+            text-decoration: inherit;
+            text-rendering: optimizeLegibility;
+            text-transform: none;
+            -moz-osx-font-smoothing: grayscale;
+            -webkit-font-smoothing: antialiased;
+            font-smoothing: antialiased;
+            content: "";
+            border: 0;
+            top: 50%;
+            margin-top: 0px;
+            margin-top: -19px;
+            font-size: 0.85rem;
+            right: 1.85rem;
+            display: inline-block;
+            position: absolute;
+            opacity: 0.6;
+            z-index: 1;
+        }
+
+        .no-margin {
+            margin-top: 0px !important;
+            margin-bottom: 0px !important;
+        }
+    }
+
+    @@media screen and (max-width:639px) {
+        ul.listView li#AutoSendPunchOutPO span.label {
+            width: 90%;
+        }
+
+        ul.listView li#AutoSendPunchOutPO span.inputText {
+            width: auto;
+        }
+
+       
+    }
+
+    @@media screen and (max-width:567px) {
+        ul.listView li#AutoSendPunchOutPO span.label {
+            width: 90%;
+            height: auto;
+            line-height: normal;
+        }
+
+        ul.listView li#AutoSendPunchOutPO span.inputText {
+            width: auto;
+            height: auto;
+            line-height: normal;
+        }
+
+        .filterDescription {
+            width: 200px;
+        }
+
+        .ActionBttnArea {
+            width: calc(100% - 200px);
+            display: flex;
+            align-items: center;
+            justify-content: end;
+        }
+    }
+
+    @@media screen and (max-width:479px) {
+        ul.listView li#AutoSendPunchOutPO {
+            margin-top: 10px;
+        }
+
+        .actionNewDrop {
+            width: 100% !important;
+        }
+
+        .filterDescription {
+            width: 100% !important;
+        }
+
+        .actionDiv {
+            width: 100% !important;
+        }
+
+        .m-subheader.fixedDiv1 .new-m-subheader {
+            display: block;
+        }
+    }
+</style>

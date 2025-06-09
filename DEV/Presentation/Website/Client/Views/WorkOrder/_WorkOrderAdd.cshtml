@@ -1,0 +1,482 @@
+﻿@model Client.Models.Work_Order.WorkOrderVM
+
+<style>
+    #imgChargeToTreeLineItem {
+        display: block !important;
+    }
+</style>
+@if (Model.workOrderModel.WorkOrderId != 0)
+{
+    <div class="m-subheader fixedDiv1">
+        <div class="new-m-subheader">
+            <div class="filterDescription">
+                <a href="javascript:void(0)" id="linkToSearch"><span id="spnlinkToSearch"></span></a> &nbsp;
+                - &nbsp;<a href="javascript:void(0)" id="brdworkorder" data-val="@Model.workOrderModel.WorkOrderId">@Model.workOrderModel.ClientLookupId</a> &nbsp;
+                - &nbsp; @Model.Loc.Where(a => a.ResourceId == "spnWorkOrderEdit").FirstOrDefault().Value.ToString()
+            </div>
+            <div style="clear:both;"></div>
+        </div>
+    </div>
+}
+else
+{
+    <div class="m-subheader fixedDiv1">
+        <div class="new-m-subheader">
+            <div class="filterDescription">
+                <a href="javascript:void(0)" id="linkToSearch"><span>@Model.Loc.Where(a => a.ResourceId == "GlobalWorkOrder").FirstOrDefault().Value.ToString()</span></a>&nbsp;
+                - &nbsp;@Model.Loc.Where(a => a.ResourceId == "spnAddWorkorder").FirstOrDefault().Value.ToString()
+            </div>
+            <div style="clear:both;"></div>
+        </div>
+    </div>
+}
+<div class="pushDiv1"></div>
+@Html.Partial("_ErrorDiv")
+@if (Model.workOrderModel.WorkOrderId != 0)
+{
+    <div class="row fixedDiv2">
+        @Html.Partial("_WorkOrderSummary", Model)
+    </div>
+    <div class="pushDiv2 WOScheduleAdjust"></div>
+}
+@using (Ajax.BeginForm("AddWorkOrders", "WorkOrder", new AjaxOptions { HttpMethod = "Post", OnSuccess = "WorksOrderAddOnSuccess", OnBegin = "AjaxBeginFormBegin", OnComplete = "AjaxBeginFormComplete", OnFailure = "AjaxBeginFormFaillure" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="row">
+        @if (Model.workOrderModel.WorkOrderId != 0)
+        {
+            <div class="col-xl-3">
+                <div class="m-portlet">
+                    <div class="sideMenuArea nobg">
+                        <ul class="vtabs" id="detmaintab">
+                            <li class="active" id="requesttab"><a href="#RequestCharge">@Model.Loc.Where(a => a.ResourceId == "spnRequestandChargeTo").FirstOrDefault().Value.ToString()</a></li>
+                            <li><a href="#StatusCompletion" id="statustab">@Model.Loc.Where(a => a.ResourceId == "spnStatusandCompletion").FirstOrDefault().Value.ToString()</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="selectTabs" id="selectTabs">
+                        <select class="form-control" id="colorselector">
+                            <option value="RequestCharge">@Model.Loc.Where(a => a.ResourceId == "spnRequestandChargeTo").FirstOrDefault().Value.ToString()</option>
+                            <option value="StatusCompletion">@Model.Loc.Where(a => a.ResourceId == "spnStatusandCompletion").FirstOrDefault().Value.ToString()</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-9">
+                <div class="row">
+                    <div class="col-xl-12" id="btnnblock">
+                        <div class="m-portlet" id="m_portlet" style="padding:15px;">
+                            <div class="bottomBlock">
+                                <div class="tabsArea nobg" id="RequestCharge" style="display:block;">
+                                    <ul class="listView nobrd">
+                                        <li>
+                                            <span class="label">@Html.LabelFor(m => m.workOrderModel.ClientLookupId) : <small>*</small></span>
+                                            <span class="inputText">
+                                                @Html.TextBoxFor(m => m.workOrderModel.ClientLookupId, new { @class = "form-control search readonly", @readonly = "readonly", autocomplete = "off" })
+                                            </span>
+                                        </li>
+                                        <li>
+                                            <span class="label">@Html.LabelFor(m => m.workOrderModel.Status) : <small>*</small></span>
+                                            <span class="inputText">
+                                                <input type="text" class="form-control search readonly" readonly="readonly" value="@UtilityFunction.GetMessageFromResource(Model.workOrderModel.Status, LocalizeResourceSetConstants.StatusDetails)" />
+                                            </span>
+                                        </li>
+                                        <li>
+                                            <span class="label">@Html.LabelFor(m => m.workOrderModel.Shift) : </span>
+                                            <span class="inputText">
+                                                @Html.DropDownListFor(m => m.workOrderModel.Shift, Model.workOrderModel.ShiftList, "--Select--", new { @class = "form-control search select2picker", style = "width:100%;" })
+                                            </span>
+                                        </li>
+                                        <li>
+                                            <span class="label">@Html.LabelFor(m => m.workOrderModel.Type) : </span>
+                                            @if (Model.workOrderModel.SourceType == WorkOrderSourceTypes.PreventiveMaint)
+                                            {
+                                                <span class="inputText">
+                                                    @Html.TextBoxFor(m => m.workOrderModel.Type, new { @class = "form-control search readonly", @readonly = "readonly", autocomplete = "off" })
+                                                </span>
+                                            }
+
+                                            else
+                                            {
+                                                <span class="inputText">
+                                                    @Html.DropDownListFor(m => m.workOrderModel.Type, Model.workOrderModel.TypeList, "--Select--", new { @class = "form-control search select2picker", style = "width:100%;" })
+                                                </span>
+                                            }
+
+                                        </li>
+                                        <li style="height:auto;">
+                                            <span class="label">@Html.LabelFor(m => m.workOrderModel.Description) : <small>*</small></span>
+                                            <span class="inputText" style="height:auto;">
+                                                @Html.ValidationMessageFor(m => m.workOrderModel.Description, "", new { style = "display:none" })
+                                                @Html.TextAreaFor(m => m.workOrderModel.Description, new { @class = "form-control search", style = "resize:none;", rows = "3", autocomplete = "off" })
+                                            </span>
+                                            <div style="clear:both;"></div>
+                                        </li>
+                                        <li>
+                                            <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnDownRequired").FirstOrDefault().Value.ToString() :</span>
+                                            <span class="inputText">
+                                                @Html.CheckBoxFor(m => m.workOrderModel.DownRequired, new { @class = "form-control m-input", @style = "color:black; width: auto; margin-top: 12px;" })
+                                            </span>
+                                        </li>
+                                        <li>
+                                            <span class="label">@Html.LabelFor(m => m.workOrderModel.Priority) : </span>
+                                            <span class="inputText">
+                                                @Html.DropDownListFor(m => m.workOrderModel.Priority, Model.workOrderModel.PriorityList, "--Select--", new { @class = "form-control search select2picker", style = "width:100%;" })
+                                            </span>
+                                        </li>
+                                        <li>
+                                            <span class="label">@Html.LabelFor(m => m.workOrderModel.Labor_AccountId) : </span>
+                                            <span class="inputText">
+                                                @Html.DropDownListFor(m => m.workOrderModel.Labor_AccountId, Model.workOrderModel.AccountLookUpList, "--Select--", new { @class = "form-control search select2picker", style = "width:100%;" })
+                                            </span>
+                                        </li>
+                                        @*commented for v2-608*@
+                                        @*<li>
+                                                <span class="label">@Html.LabelFor(m => m.workOrderModel.ChargeType) : </span>
+                                                <span class="inputText">
+                                                    @Html.DropDownListFor(m => m.workOrderModel.ChargeType, Model.workOrderModel.ChargeTypeList, "--Select--", new { @class = "form-control search select2picker", style = "width:100%;" })
+                                                </span>
+                                            </li>*@
+                                        <li style="position:relative;">
+                                            <span class="label">@Model.Loc.Where(a => a.ResourceId == "GlobalChargeTo").FirstOrDefault().Value.ToString(): @*<small>*</small>*@</span>
+                                            <span class="inputText wthAdjstNew">
+                                                <div class="dropdown dropTableOuter">
+                                                    <div class="input-group">
+                                                        @Html.TextBoxFor(m => m.workOrderModel.ChargeToClientLookupId, new { @class = "form-control search dropbtn readonly", id = "txtChargeTo", autocomplete = "off", @readonly = "readonly" })
+                                                        @Html.HiddenFor(m => m.workOrderModel.ChargeToId, new { id = "hdnChargeTo" })
+                                                        <div class="input-group-btn">
+                                                            <button class="btn btn-white btntxtInputGroup" type="button" id="openwogrid">
+                                                                <i id="srcicon" class="fa fa-search"></i>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </span>
+                                            @if (Model._userdata.DatabaseKey.Client.AssetTree == true)
+                                            {
+                                                @*commented for v2-608*@
+                                                @*if (Model.workOrderModel.ChargeType != null && Model.workOrderModel.ChargeType.Equals("Equipment"))
+                                                    {
+                                                        <i class="fa fa-tree chargeTree TreeAdjustNew2" id="imgChargeToTreeLineItem" style="display:block;"></i>
+                                                    }
+                                                    else
+                                                    {
+                                                        <i class="fa fa-tree chargeTree" id="imgChargeToTreeLineItem" style="display:none;"></i>
+                                                    }*@
+                                                <i class="fa fa-tree chargeTree TreeAdjustNew2" id="imgChargeToTreeLineItem" style="display:block;"></i>
+                                            }
+                                            <div style="clear:both;"></div>
+                                        </li>
+                                        <li>
+                                            <span class="label">@Html.LabelFor(m => m.workOrderModel.ChargeTo_Name) : </span>
+                                            <span class="inputText"> @Html.TextBoxFor(m => m.workOrderModel.ChargeTo_Name, new { @class = "form-control search readonly", @readonly = "readonly", autocomplete = "off" })</span>
+                                        </li>
+                                        <li>
+                                            <span class="label">@Html.LabelFor(m => m.workOrderModel.RequiredDate) : </span>
+                                            <span class="inputText">
+                                                @Html.ValidationMessageFor(m => m.workOrderModel.RequiredDate, "", new { style = "display:none" })
+                                                @Html.TextBoxFor(m => m.workOrderModel.RequiredDate, "{0:MM/dd/yyyy}", new { @class = "form-control search dtpicker_2 ", @readonly = "readonly", autocomplete = "off" })
+                                            </span>
+                                        </li>
+                                        <li>
+                                            <span class="label">@Html.LabelFor(m => m.workOrderModel.Createby) : </span>
+                                            <span class="inputText">
+                                                @Html.TextBoxFor(m => m.workOrderModel.CreateBy_PersonnelName, new { @class = "form-control search readonly", @readonly = "readonly", autocomplete = "off" })
+                                            </span>
+                                        </li>
+                                        <li>
+                                            <span class="label">@Html.LabelFor(m => m.workOrderModel.CreateDate) : </span>
+                                            <span class="inputText">
+                                                @Html.TextBoxFor(m => m.workOrderModel.CreateDate, "{0:MM/dd/yyyy}", new { @class = "form-control search dtpicker readonly", @readonly = "readonly", autocomplete = "off" })
+
+                                            </span>
+                                        </li>
+                                        <li>
+                                            <span class="label">@Html.LabelFor(m => m.workOrderModel.SourceType) : </span>
+                                            <span class="inputText">@Html.TextBoxFor(m => m.workOrderModel.SourceType, new { @class = "form-control search readonly", @readonly = "readonly", autocomplete = "off" })</span>
+                                        </li>
+                                        <li>
+                                            <span class="label">@Html.LabelFor(m => m.workOrderModel.RequestorName): </span>
+                                            <span class="inputText">
+                                                @Html.TextBoxFor(m => m.workOrderModel.RequestorName, new { @class = "form-control search readonly", @readonly = "readonly", autocomplete = "off" })
+                                            </span>
+                                        </li>
+                                        <li>
+                                            <span class="label">@Html.LabelFor(m => m.workOrderModel.RequestorPhone): </span>
+                                            <span class="inputText">
+                                                @Html.TextBoxFor(m => m.workOrderModel.RequestorPhone, new { @class = "form-control search readonly", @readonly = "readonly", autocomplete = "off" })
+                                            </span>
+                                        </li>
+                                        <li>
+                                            <span class="label">@Html.LabelFor(m => m.workOrderModel.RequestorEmail): </span>
+                                            <span class="inputText">
+                                                @Html.TextBoxFor(m => m.workOrderModel.RequestorEmail, new { @class = "form-control search readonly", @readonly = "readonly", autocomplete = "off" })
+                                            </span>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="tabsArea nobg" id="StatusCompletion" style="display:none;">
+                                    <ul class="listView nobrd">
+                                        <li>
+                                            <span class="label">@Html.LabelFor(m => m.workOrderModel.ScheduledStartDate) : </span>
+                                            <span class="inputText">
+                                                @if (Model.workOrderModel.ScheduledStartDate.HasValue && Model.workOrderModel.ScheduledStartDate.Value != default(DateTime))
+                                                {
+                                                    @Html.TextBoxFor(m => m.workOrderModel.ScheduledStartDate, "{0:MM/dd/yyyy}", new { @class = "form-control search dtpicker readonly", @readonly = "readonly", autocomplete = "off" })
+                                                }
+                                                else
+                                                {
+                                                    <input type="text" class="form-control search readonly" readonly="readonly" />
+                                                }
+                                            </span>
+                                        </li>
+                                        <li>
+                                            <span class="label">@Html.LabelFor(m => m.workOrderModel.ScheduledDuration) : </span>
+                                            <span class="inputText">
+                                                @Html.ValidationMessageFor(m => m.workOrderModel.ScheduledDuration, "", new { style = "display:none" })
+                                                @Html.TextBoxFor(m => m.workOrderModel.ScheduledDuration, new { @class = "form-control search decimalinput", autocomplete = "off" })
+                                            </span>
+                                        </li>
+                                        <li>
+                                            <span class="label">@Html.LabelFor(m => m.workOrderModel.FailureCode) : </span>
+                                            <span class="inputText">
+                                                @Html.DropDownListFor(m => m.workOrderModel.FailureCode, Model.workOrderModel.FailureList, "--Select--", new { @class = "form-control search select2picker", style = "width:100%;" })
+                                            </span>
+                                        </li>
+                                        <li>
+                                            <span class="label">@Html.LabelFor(m => m.workOrderModel.ActualFinishDate) : </span>
+                                            <span class="inputText">
+                                                @if (Model.workOrderModel.ActualFinishDate.HasValue && Model.workOrderModel.ActualFinishDate.Value != default(DateTime))
+                                                {
+                                                    @Html.TextBoxFor(m => m.workOrderModel.ActualFinishDate, "{0:MM/dd/yyyy}", new { @class = "form-control search dtpicker readonly", @readonly = true, autocomplete = "off" })
+                                                }
+                                                else
+                                                {
+                                                    <input type="text" class="form-control search readonly" readonly />
+                                                }
+                                            </span>
+                                        </li>
+                                        <li>
+                                            <span class="label">@Html.LabelFor(m => m.workOrderModel.ActualDuration) : </span>
+                                            <span class="inputText">
+                                                @Html.ValidationMessageFor(m => m.workOrderModel.ActualDuration, "", new { style = "display:none" })
+                                                @Html.TextBoxFor(m => m.workOrderModel.ActualDuration, new { @class = "form-control search decimalinput", autocomplete = "off", maxlength = "9" })
+                                            </span>
+                                        </li>
+                                        <li>
+                                            <span class="label">@Html.LabelFor(m => m.workOrderModel.CompleteBy_PersonnelId) : </span>
+                                            <span class="inputText">
+                                                @Html.TextBoxFor(m => m.workOrderModel.CompleteBy, new { @class = "form-control search readonly", @readonly = "readonly", autocomplete = "off" })
+                                            </span>
+                                        </li>
+                                    </ul>
+                                </div>
+
+                                <div style="clear:both;"></div>
+                                <div class="idBttns">
+                                    <div class="bttn_pagin">
+                                        <div class="bttns2">
+                                            @if (Model.security.WorkOrders.Edit)
+                                            {
+                                                <button class="btn btn-blue mobBttn" name="Command" value="save" id="btnSaveWO"><i class="fa fa-save faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+                                            }
+                                        </div>
+                                        <div class="bttns">
+                                            <button type="button" class="btn btn-blue mobBttn" id="btnCancelAddWO"><i class="fa fa-close faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button>
+                                        </div>
+                                        <div style="clear:both;"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="col-xl-12">
+                <div id="btnnblock">
+                    <div class="m-portlet" id="m_portlet" style="padding:15px;">
+                        <div class="bottomBlock">
+                            <div class="tabsArea nobg" id="RequestCharge" style="display:block;">
+                                <ul class="listView nobrd">
+                                    <li>
+                                        <span class="label">@Html.LabelFor(m => m.workOrderModel.Type) : </span>
+
+                                        <span class="inputText">
+                                            @Html.DropDownListFor(m => m.workOrderModel.Type, Model.workOrderModel.TypeList, "--Select--", new { @class = "form-control search select2picker", style = "width:100%;" })
+                                        </span>
+                                    </li>
+                                    <li style="height:auto;">
+                                        <span class="label">@Html.LabelFor(m => m.workOrderModel.Description) : <small>*</small></span>
+                                        <span class="inputText" style="height:auto;">
+                                            @Html.ValidationMessageFor(m => m.workOrderModel.Description, "", new { style = "display:none" })
+                                            @Html.TextAreaFor(m => m.workOrderModel.Description, new { @class = "form-control search", style = "resize:none;", autocomplete = "off", rows = "3" })
+                                        </span>
+                                        <div style="clear:both;"></div>
+                                    </li>
+                                    <li>
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnDownRequired").FirstOrDefault().Value.ToString() :</span>
+                                        <span class="inputText">
+                                            @Html.CheckBoxFor(m => m.workOrderModel.DownRequired, new { @class = "form-control m-input", @style = "color:black; width: auto; margin-top: 12px;" })
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label">@Html.LabelFor(m => m.workOrderModel.Priority) : </span>
+                                        <span class="inputText">
+                                            @Html.DropDownListFor(m => m.workOrderModel.Priority, Model.workOrderModel.PriorityList, "--Select--", new { @class = "form-control search select2picker", style = "width:100%;" })
+                                        </span>
+                                    </li>
+                                    @*commented for v2-608*@
+                                    @*<li>
+                                            <span class="label">@Html.LabelFor(m => m.workOrderModel.ChargeType) : </span>
+                                            <span class="inputText">
+                                                @Html.DropDownListFor(m => m.workOrderModel.ChargeType, Model.workOrderModel.ChargeTypeList, "--Select--", new { @class = "form-control search select2picker", style = "width:100%;" })
+                                            </span>
+                                        </li>*@
+                                    <li style="position:relative;">
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "GlobalChargeTo").FirstOrDefault().Value.ToString(): </span>
+                                        <span class="inputText wthAdjstNew2">
+                                            <div class="dropdown dropTableOuter">
+                                                <div class="input-group">
+                                                    @Html.TextBoxFor(m => m.workOrderModel.ChargeToClientLookupId, new { @class = "form-control search dropbtn readonly", id = "txtChargeTo", autocomplete = "off", @readonly = "readonly" })
+                                                    @Html.HiddenFor(m => m.workOrderModel.ChargeToClientLookupId, new { id = "hdnChargeTo" })
+
+                                                    <div class="input-group-btn">
+                                                        <button class="btn btn-white btntxtInputGroup" type="button" id="openwogrid">
+                                                            <i id="srcicon" class="fa fa-search"></i>
+                                                        </button>
+                                                    </div>
+                                                    <div class="input-group-btn">
+                                                        &nbsp;&nbsp;<button type="button" class="btn btn-blue mobBttn" onclick="QrScannerEquipment('txtChargeTo','hdnChargeTo')"><i class="fa fa-qrcode" style="margin-top:-2px;"></i></button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </span>
+                                        @if (Model._userdata.DatabaseKey.Client.AssetTree == true)
+                                        {
+                                            <i class="fa fa-tree chargeTree TreeAdjustNew" id="imgChargeToTreeLineItem" style="display:none;"></i>
+                                        }
+                                        <div style="clear:both;"></div>
+                                    </li>
+                                    <li>
+                                        <span class="label">@Html.LabelFor(m => m.workOrderModel.RequiredDate) : </span>
+                                        <span class="inputText">
+                                            @Html.ValidationMessageFor(m => m.workOrderModel.RequiredDate, "", new { style = "display:none" })
+                                            @Html.TextBoxFor(m => m.workOrderModel.RequiredDate, "{0:MM/dd/yyyy}", new { @class = "form-control search dtpicker_3", @readonly = "readonly", autocomplete = "off" })
+                                        </span>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div style="clear:both;"></div>
+                            <div class="idBttns">
+                                <div class="bttn_pagin">
+                                    <div class="bttns2">
+                                        @if (Model.workOrderModel.WorkOrderId == 0 && Model.security.WorkOrders.Create)
+                                        {
+                                            <button class="btn btn-white mobBttn" name="Command" value="saveAdd" id="btnSaveAnotherOpenWO"><i class="fa fa-save faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalSaveAndAdd").FirstOrDefault().Value.ToString()</button>
+                                        }
+                                        @if (Model.security.WorkOrders.Edit)
+                                        {
+                                            <button class="btn btn-blue mobBttn" name="Command" value="save" id="btnSaveWO"><i class="fa fa-save faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+                                        }
+                                    </div>
+                                    <div class="bttns">
+                                        <button type="button" class="btn btn-blue mobBttn" id="btnCancelAddWO"><i class="fa fa-close faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button>
+                                    </div>
+                                    <div style="clear:both;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+    @Html.HiddenFor(m => m.workOrderModel.WorkOrderId)
+    @Html.HiddenFor(m => m.workOrderModel.PlantLocation, new { id = "WOPlantLocation" })
+    @Html.HiddenFor(m => m.workOrderModel.Status)
+    if (Model.workOrderModel.CompleteBy_PersonnelId != 0)
+    {
+        @Html.HiddenFor(m => m.workOrderModel.CompleteBy_PersonnelId)
+    }
+    @Html.Partial("~/Views/WorkOrder/_EmergencyOnDemandEquipmentPopUp.cshtml")
+    @Html.Partial("~/Views/WorkOrder/_AddWOLocationPopUp.cshtml")
+    @Html.Partial("~/Views/Shared/QR/_QrCodeReaderModal.cshtml")
+}
+@if (Model.workOrderModel.WorkOrderId != 0)
+{
+    @Html.Partial("_CompleteModal")
+    @Html.Partial("_CancelModal")
+    @Html.Partial("_ScheduleModal")
+}
+
+@if (Model._userdata.DatabaseKey.Client.AssetTree == true)
+{
+    <div id="woEquipTreeModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title" id="hdrPlantLocation">@Model.Loc.Where(a => a.ResourceId == "spnGlobalEquipmentTreeLookup").FirstOrDefault().Value.ToString()</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="cntTree">
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+}
+@Html.Partial("_WOSummaryDescription", Model)
+<link href="~/Scripts/Metronic/assets/demo/default/base/style_newCustom.css" rel="stylesheet" />
+<style type="text/css">
+    .chargeTree {
+        right: 0px;
+    }
+
+    .inputText.wthAdjstNew {
+        width: 67% !important;
+    }
+
+    .inputText.wthAdjstNew2 {
+        width: 68% !important;
+    }
+
+    .pushDiv2.WOScheduleAdjust {
+        height: 161px !important;
+    }
+
+    .gridList:hover {
+        background: #fff;
+    }
+
+    .row[class*="m-row--col-separator-"] > div:last-child {
+        border-bottom: 0px solid #ebedf2;
+    }
+
+    .filterDescription {
+        width: auto;
+        float: left;
+        font-size: 1.2rem;
+        color: #000;
+        font-weight: 500;
+        line-height: 33px;
+    }
+
+        .filterDescription a {
+            color: #36a3f7;
+            text-decoration: none !important;
+        }
+
+    @@media only screen and (min-width: 568px) and (max-width: 639px) {
+        .inputText.wthAdjstNew, .inputText.wthAdjstNew2 {
+            width: 65% !important;
+        }
+    }
+</style>
+
+
+

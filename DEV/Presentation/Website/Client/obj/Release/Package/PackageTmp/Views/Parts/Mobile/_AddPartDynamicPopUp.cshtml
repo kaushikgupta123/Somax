@@ -1,0 +1,177 @@
+﻿@model Client.Models.Parts.PartsVM
+@{
+    var AttachedModelName = "AddPart";
+    var fieldName = "";
+    var fieldId = "";
+    var EmptyLookupList = new List<SelectListItem> { new SelectListItem { } };
+}
+
+<link href="~/Scripts/Metronic/assets/demo/default/base/style_newCustom.css" rel="stylesheet" />
+<link rel="stylesheet" href="~/Scripts/mobile/css/mobiscroll.jquery.min.css">
+<link href="~/Scripts/mobile/css/mobile-style.css" rel="stylesheet" />
+
+@using (Ajax.BeginForm("AddPartsDynamic", "Parts", new AjaxOptions { HttpMethod = "Post", OnSuccess = "PartsAddOnSuccess", OnBegin = "AjaxBeginFormBegin", OnComplete = "AjaxBeginFormComplete", OnFailure = "AjaxBeginFormFaillure" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="slide-modal" id="AddPartModalDialog">
+        <div class="slide-modal-head">
+            <a class="slide-back-btn btnCancelAddPart"> <i class="fa fa-angle-left"></i> Back</a>
+            <div class="slide-back-title">
+                @Model.Loc.Where(a => a.ResourceId == "spnAddPart").FirstOrDefault().Value.ToString()
+            </div>
+        </div>
+        @Html.Partial("_ErrorDiv")
+        <div class="slide-modal-body">
+            <div mbsc-page class="demo-responsive">
+                <div style="height:100%">
+                    <div mbsc-form class="mbsc-form-grid">
+                        <div class="mbsc-grid">
+                            <div class="mbsc-row" style="padding:10px;">
+                                @foreach (var data in Model.UIConfigurationDetails)
+                                {
+                                    if (data.Section == true)
+                                    {
+                                        <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                            <label>
+                                                <span class="label px-4 d-flex mb-2"><strong>@data.SectionName</strong></span>
+                                            </label>
+                                        </div>
+                                        continue;
+                                    }
+                                    if (string.IsNullOrEmpty(data.ColumnName))
+                                    {
+                                        continue;
+                                    }
+                                    else if (!string.IsNullOrEmpty(data.ColumnName))
+                                    {
+                                        if (Model.AddPart.GetType().GetProperty(data.ColumnName) == null)
+                                        {
+                                            continue;
+                                        }
+                                    }
+                                    fieldName = AttachedModelName + "." + data.ColumnName;
+                                    fieldId = data.ColumnName;
+
+                                    if (data.SystemRequired == true)
+                                    {
+                                        data.Required = true;
+                                    }
+                                    if (data.LookupType.ToLower() == DataDictionaryLookupTypeConstant.LookupList.ToLower() &&
+                                                                                     !string.IsNullOrEmpty(data.LookupName))
+                                    {
+                                        var LookUpList = Model.AllRequiredLookUplist
+                                                        .Where(x => x.lookupname == data.LookupName)
+                                                        .Select(x => new SelectListItem { Text = x.text, Value = x.value })
+                                                        .ToList();
+
+                                        <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                            @*@CustomHelperDynamic.GetLabel(data.ColumnLabel, data.Required)*@
+                                            <label>
+                                                @data.ColumnLabel
+
+                                                @if (LookUpList != null && LookUpList.Count() > 0)
+                                                {
+                                                    @Html.DropDownList(fieldName, LookUpList, "--Select--", new
+                                                    {
+                                                        id = fieldId,
+                                                        @class = "form-control search mobiscrollselect",
+                                                        style = "width:100%;",
+                                                        @mbsc_dropdown = "true",
+                                                        @data_label = data.ColumnLabel,
+                                                        @data_input_style = "box",
+                                                        @data_label_style = "floating",
+                                                        @placeholder = data.ColumnLabel
+                                                    })
+                                                }
+                                                else
+                                                {
+                                                    @Html.DropDownList(fieldName, EmptyLookupList, "--Select--", new
+                                                    {
+                                                        id = fieldId,
+                                                        @class = "form-control search mobiscrollselect",
+                                                        style = "width:100%;",
+                                                        @mbsc_dropdown = "true",
+                                                        @data_label = data.ColumnLabel,
+                                                        @data_input_style = "box",
+                                                        @data_label_style = "floating",
+                                                        @placeholder = data.ColumnLabel
+                                                    })
+                                                }
+                                            </label>
+                                            @Html.ValidationMessage(fieldName, new { })
+                                        </div>
+                                    }
+                                    else if (data.ColumnName.ToLower() == "AccountId".ToLower())
+                                    {
+                                        string TextFieldName = "", TextFieldId = "";
+                                        TextFieldId = "AccountClientLookupId";
+                                        TextFieldName = AttachedModelName + "." + TextFieldId;
+
+                                        <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                            <label>
+                                                @data.ColumnLabel :
+
+                                                @Html.DropDownList(fieldName, Model.AccountList, "--Select--", new
+                                                    {
+                                                        id = fieldId,
+                                                        @class = "form-control search mobiscrollselect",
+                                                        style = "width:100%;",
+                                                        @mbsc_dropdown = "true",
+                                                        @data_label = data.ColumnLabel,
+                                                        @data_input_style = "box",
+                                                        @data_label_style = "floating",
+                                                        @placeholder = data.ColumnLabel
+                                                    })
+                                            </label>
+                                            @Html.ValidationMessage(fieldName, new { })
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+
+                                            <label id="label-wrap">
+                                                @data.ColumnLabel :
+
+                                                @Html.UIConfigControl_Mobiscroll(fieldName, fieldId, data.ColumnType.ToLower(), data.MaxLength, data.ViewOnly, null, data.ColumnLabel)
+                                            </label>
+                                            @CustomHelperDynamic.GetCountMessageLabelMobile(data.MaxLength, data.ViewOnly, "")
+                                            @Html.ValidationMessage(fieldName, new { })
+                                        </div>
+                                    }
+                                }
+                            </div>
+                            <div class="mbsc-row">
+                                <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                    <div class=" design-box">
+                                        <div class="mbsc-button-group-block">
+                                            <button mbsc-button data-color="success" type="button" class="btn btn-blue mobBttn btnCancelAddPart"><i class="fa fa-close faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                    <div class="mbsc-button-group-block">
+                                        <div class=" design-box">
+                                            <button mbsc-button data-color="success" type="submit" class="btn btn-white mobBttn" name="Command" id="btnSaveAnotherOpen" style="cursor:pointer" value="saveAdd"><i class="fa fa-save faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalSaveAndAdd").FirstOrDefault().Value.ToString()</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mbsc-col-12 mbsc-col-md-12 mbsc-col-lg-12">
+                                    <div class="mbsc-button-group-block">
+                                        <div class=" design-box">
+
+                                            <button mbsc-button data-color="success" type="submit" class="btn btn-blue mobBttn" name="Command" value="save"><i class="fa fa-save faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="slide-modal-footer"></div>
+    </div>
+}
+

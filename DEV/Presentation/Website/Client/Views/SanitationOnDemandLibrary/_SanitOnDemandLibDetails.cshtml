@@ -1,0 +1,116 @@
+﻿@model Client.Models.Configuration.SanitationOnDemandLibrary.SanitationOnDemandLibVM
+<div class="m-subheader">
+    <div class="new-m-subheader">
+        <div class="PageTitle">
+            <div class="align-items-center separator">
+                <h3 class="m-subheader__title ">
+                   @Model.Loc.Where(a => a.ResourceId == "spnLibraries").FirstOrDefault().Value.ToString() 
+                </h3>
+            </div>
+        </div>
+        <div class="NewBreadcrumbArea">
+            <div class="newBreadcrumb">
+                <ul>
+                    <li><a href="/Configuration/Dashboard">&nbsp;</a></li>
+                    <li><a href="/SanitationOnDemandLibrary/Index?page=Sanitation_Jobs_Sanitation_-_On_Demand">@Model.Loc.Where(a => a.ResourceId == "spnSanitationOnDemandProcSrch").FirstOrDefault().Value.ToString()</a></li>
+                    <li class="active">@Model.sanitationOnDemandLibModel.ClientLookUpId</li>
+                </ul>
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+        @if (Model.sanitationOnDemandSecurityModel.ShowAddBtn)
+        {
+            <div class="ActionBttnArea">
+                <button id="addSanitOnDemandLibrary" type="button" class="btn btn-add addSanitOnDemandLibrary pull-left" title="Add Sanitation On-demand"><i class="fa fa-plus"></i></button>
+            </div>
+        }
+        <div style="clear:both;"></div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-xl-3">
+        <div class="m-portlet">
+            <div class="sideMenuArea nobg">
+                <ul class="vtabs" id="detmaintab">
+                    <li class="active" id="liSanitOnDemandLibrary"><a href="#Overview">@Model.Loc.Where(a => a.ResourceId == "spnOverview").FirstOrDefault().Value.ToString()</a></li>
+                    <li id="litask" onclick="openCity(event, 'Task')"><a href="#Task">@Model.Loc.Where(a => a.ResourceId == "spnTasks").FirstOrDefault().Value.ToString()</a></li>
+                </ul>
+            </div>
+            <div class="selectTabs" id="selectTabs">
+                <select class="form-control" id="colorselector">
+                    <option value="Overview">@Model.Loc.Where(a => a.ResourceId == "spnOverview").FirstOrDefault().Value.ToString()</option>
+                    <option value="Task">@Model.Loc.Where(a => a.ResourceId == "spnTasks").FirstOrDefault().Value.ToString()</option>
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-9">
+        <div class="row">
+            <div class="col-xl-12">
+                <div class="m-portlet" id="m_portlet" style="padding:15px;">
+                    <div class="bottomBlock">
+                        <div class="tabsArea nobg" id="Overview" style="display:block;">
+                            <div class="selectTab">
+                                <select class="form-control search" id="tabselector">
+                                    <option value="Details">@Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</option>
+                                </select>
+                            </div>
+                            <div id="Details" class="tabcontent2" style="display:block;">
+                                <ul class="listView">
+                                    <li>
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnOnDemandID").FirstOrDefault().Value.ToString(): </span>
+                                        <span class="inputText">@Model.sanitationOnDemandLibModel.ClientLookUpId</span>
+                                    </li>
+                                    <li style="height:auto;">
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString() :</span>
+                                        <span class="inputText description-span">@Model.sanitationOnDemandLibModel.Description</span>
+                                        <div style="clear:both;"></div>
+                                    </li>
+                                    <li>
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "GlobalType").FirstOrDefault().Value.ToString():</span>
+                                        <span class="inputText">@Model.sanitationOnDemandLibModel.Type</span>
+                                    </li>
+                                    <li>
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "globalInactiveFlag").FirstOrDefault().Value.ToString():</span>
+                                        <span class="inputText">@Html.CheckBoxFor(m => m.sanitationOnDemandLibModel.InactiveFlag, new { @class = "form-control m-input", @disabled = "disabled", @style = "color:black; width: auto; margin-top: 12px;" })</span>
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <div class="editBttn">
+                                @if (Model.sanitationOnDemandSecurityModel.ShowEditButton == true)
+                                {
+                                    <button type="button" class="btn btn-blue" id="editSODL"><i class="fa fa-pencil" style="margin-top:-3px;"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalEdit").FirstOrDefault().Value.ToString()</button>
+                                }
+                            </div>
+
+                        </div>
+                        <div class="tabsArea nobg" id="Task" style="display:none;">
+                            <div class="table-responsive">
+                                <table id="sanitTaskTable" class="eqpDtlTbl row-border custom-sort" style="width:100%;">
+                                    <thead>
+                                        <tr>
+                                            <th style="width:33%;">@Model.Loc.Where(a => a.ResourceId == "spnTaskID").FirstOrDefault().Value.ToString()</th>
+                                            <th style="width:33%;">@Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString()</th>
+                                            <th width="17%" style="text-align:center !important;">@Model.Loc.Where(a => a.ResourceId == "globalAction").FirstOrDefault().Value.ToString()</th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                            <div class="bttn_pagin">
+                                <div class="bttns"><button type="button" class="btn btn-blue" data-toggle="" data-target="" id="btnAddTask" style="display:none;"><i class="fa fa-plus faIcon"></i> &nbsp;@Model.Loc.Where(a => a.ResourceId == "spnAddTask").FirstOrDefault().Value.ToString()</button></div>
+                                <div style="clear:both;"></div>
+                            </div>
+                            <div style="clear:both;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@Html.HiddenFor(m => m.sanitationOnDemandLibModel.SanOnDemandMasterId)
+@Html.HiddenFor(m => m.sanitationOnDemandLibModel.ClientLookUpId)
+@Html.HiddenFor(m => m.sanitOnDemandLibTaskModel.TaskId)
+
+

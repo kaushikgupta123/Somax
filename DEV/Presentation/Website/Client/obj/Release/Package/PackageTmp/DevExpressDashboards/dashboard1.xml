@@ -1,0 +1,190 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Dashboard>
+  <Title Text="Work Order Status" />
+  <DataSources>
+    <ObjectDataSource Name="Analytics WO Status Data Source" ComponentName="objectDataSource1" DataId="Analytics WO Data Source Data Id" />
+    <ObjectDataSource Name="Analytics WO Model Data Source" ComponentName="objectDataSource2" DataId="Analytics WO Data Source Data Id" />
+  </DataSources>
+  <Parameters>
+    <Parameter Name="Created" Value="Last 7 Days">
+      <StaticListLookUpSettings>
+        <Values>
+          <Value>Last 7 Days</Value>
+          <Value>Last 30 Days</Value>
+          <Value>Last 60 Days</Value>
+          <Value>Last 90 Days</Value>
+          <Value>Last 180 Days</Value>
+        </Values>
+      </StaticListLookUpSettings>
+    </Parameter>
+  </Parameters>
+  <Items>
+    <Card ComponentName="cardDashboardItem1" Name="" DataSource="objectDataSource1">
+      <DataItems>
+        <Measure DataMember="StatusCount" DefaultId="DataItem0" />
+        <Dimension DataMember="Status" DefaultId="DataItem1" />
+      </DataItems>
+      <SeriesDimensions>
+        <SeriesDimension DefaultId="DataItem1" />
+      </SeriesDimensions>
+      <Card>
+        <ActualValue DefaultId="DataItem0" />
+        <AbsoluteVariationNumericFormat />
+        <PercentVariationNumericFormat />
+        <PercentOfTargetNumericFormat />
+        <LayoutTemplate MinWidth="100" Type="Lightweight">
+          <MainValue Visible="true" ValueType="Title" DimensionIndex="0" />
+          <SubValue Visible="true" ValueType="ActualValue" DimensionIndex="0" />
+          <BottomValue Visible="false" ValueType="Subtitle" DimensionIndex="0" />
+          <DeltaIndicator Visible="false" />
+          <Sparkline Visible="false" />
+        </LayoutTemplate>
+      </Card>
+    </Card>
+    <Pie ComponentName="pieDashboardItem1" Name="" DataSource="objectDataSource2">
+      <DataItems>
+        <Measure DataMember="Status" Name="Work Orders by Status" SummaryType="Count" DefaultId="DataItem0" />
+        <Dimension DataMember="Status" DefaultId="DataItem1" />
+      </DataItems>
+      <Arguments>
+        <Argument DefaultId="DataItem1" />
+      </Arguments>
+      <Values>
+        <Value DefaultId="DataItem0" />
+      </Values>
+    </Pie>
+    <Chart ComponentName="chartDashboardItem1" Name="Work Orders by Type" DataSource="objectDataSource2">
+      <DataItems>
+        <Measure DataMember="Status" SummaryType="Count" DefaultId="DataItem0" />
+        <Dimension DataMember="Type" DefaultId="DataItem3" />
+        <Dimension DataMember="CompleteStatus" DefaultId="DataItem1" />
+      </DataItems>
+      <SeriesDimensions>
+        <SeriesDimension DefaultId="DataItem1" />
+      </SeriesDimensions>
+      <Arguments>
+        <Argument DefaultId="DataItem3" />
+      </Arguments>
+      <Panes>
+        <Pane Name="Pane 1">
+          <AxisY Title="Work Order Count" />
+          <Series>
+            <Simple SeriesType="StackedBar">
+              <Value DefaultId="DataItem0" />
+            </Simple>
+          </Series>
+        </Pane>
+      </Panes>
+    </Chart>
+    <Pie ComponentName="pieDashboardItem2" Name="Pies 1" ShowCaption="false" DataSource="objectDataSource2">
+      <DataItems>
+        <Measure DataMember="ClientLookupId" Name="Work Orders by Source" SummaryType="Count" DefaultId="DataItem0" />
+        <Dimension DataMember="SourceType" DefaultId="DataItem1" />
+      </DataItems>
+      <Arguments>
+        <Argument DefaultId="DataItem1" />
+      </Arguments>
+      <Values>
+        <Value DefaultId="DataItem0" />
+      </Values>
+    </Pie>
+    <Pie ComponentName="pieDashboardItem3" Name="Pies 2" ShowCaption="false" DataSource="objectDataSource2" PieType="Donut">
+      <DataItems>
+        <Measure DataMember="ClientLookupId" Name="Preventive Maintenance Completion" SummaryType="Count" DefaultId="DataItem0" />
+        <Dimension DataMember="PrevMaintCompleteStatus" DefaultId="DataItem1" />
+      </DataItems>
+      <Arguments>
+        <Argument DefaultId="DataItem1" />
+      </Arguments>
+      <Values>
+        <Value DefaultId="DataItem0" />
+      </Values>
+    </Pie>
+    <Pie ComponentName="pieDashboardItem4" Name="Pies 3" ShowCaption="false" DataSource="objectDataSource2">
+      <DataItems>
+        <Measure DataMember="ClientLookupId" Name="Work Orders by Priority" SummaryType="Count" DefaultId="DataItem0" />
+        <Dimension DataMember="Priority" DefaultId="DataItem1" />
+      </DataItems>
+      <Arguments>
+        <Argument DefaultId="DataItem1" />
+      </Arguments>
+      <Values>
+        <Value DefaultId="DataItem0" />
+      </Values>
+    </Pie>
+    <Chart ComponentName="chartDashboardItem2" Name="Labor Hours by Type" DataSource="objectDataSource2">
+      <DataItems>
+        <Dimension DataMember="Type" DefaultId="DataItem0" />
+        <Measure DataMember="LaborHours" DefaultId="DataItem1">
+          <NumericFormat FormatType="General" />
+        </Measure>
+      </DataItems>
+      <Arguments>
+        <Argument DefaultId="DataItem0" />
+      </Arguments>
+      <Panes>
+        <Pane Name="Pane 1">
+          <AxisY Title="Hours" />
+          <Series>
+            <Simple Name="Hours">
+              <Value DefaultId="DataItem1" />
+            </Simple>
+          </Series>
+        </Pane>
+      </Panes>
+      <ChartLegend Visible="false" />
+    </Chart>
+    <Chart ComponentName="chartDashboardItem3" Name="Costs by Type" DataSource="objectDataSource2">
+      <DataItems>
+        <Dimension DataMember="Type" DefaultId="DataItem0" />
+        <Measure DataMember="TotalCosts" DefaultId="DataItem4" />
+        <Dimension DataMember="MaterialCosts" DefaultId="DataItem3" />
+        <Dimension DataMember="LaborCosts" DefaultId="DataItem5" />
+        <Dimension DataMember="TotalCosts" DefaultId="DataItem6" />
+      </DataItems>
+      <SeriesDimensions>
+        <SeriesDimension DefaultId="DataItem3" />
+        <SeriesDimension DefaultId="DataItem5" />
+        <SeriesDimension DefaultId="DataItem6" />
+      </SeriesDimensions>
+      <Arguments>
+        <Argument DefaultId="DataItem0" />
+      </Arguments>
+      <Panes>
+        <Pane Name="Pane 1">
+          <AxisY Title="Costs" />
+          <Series>
+            <Simple>
+              <Value DefaultId="DataItem4" />
+            </Simple>
+          </Series>
+        </Pane>
+      </Panes>
+    </Chart>
+  </Items>
+  <LayoutOptions>
+    <Height Mode="Fixed" Value="1600" />
+  </LayoutOptions>
+  <LayoutTree>
+    <LayoutGroup Orientation="Vertical">
+      <LayoutGroup Weight="0.711842105263158">
+        <LayoutItem DashboardItem="cardDashboardItem1" />
+        <LayoutItem DashboardItem="pieDashboardItem1" />
+      </LayoutGroup>
+      <LayoutGroup Weight="0.73552631578947336">
+        <LayoutItem DashboardItem="chartDashboardItem1" />
+        <LayoutItem DashboardItem="pieDashboardItem2" />
+      </LayoutGroup>
+      <LayoutGroup Weight="1.5526315789473686">
+        <LayoutGroup Orientation="Vertical">
+          <LayoutItem DashboardItem="pieDashboardItem3" />
+          <LayoutItem DashboardItem="chartDashboardItem2" />
+        </LayoutGroup>
+        <LayoutGroup Orientation="Vertical">
+          <LayoutItem DashboardItem="pieDashboardItem4" />
+          <LayoutItem DashboardItem="chartDashboardItem3" />
+        </LayoutGroup>
+      </LayoutGroup>
+    </LayoutGroup>
+  </LayoutTree>
+</Dashboard>

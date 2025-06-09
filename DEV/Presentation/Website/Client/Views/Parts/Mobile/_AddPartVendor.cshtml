@@ -1,0 +1,218 @@
+﻿@model Client.Models.Parts.PartsVM
+
+
+<div class="slide-modal-head">
+    <a class="slide-back-btn btnpvendorcancel_Mobile"> <i class="fa fa-angle-left"></i> Back</a>
+    <div class="slide-back-title">
+        @if (Model.partsVendorModel.PartVendorXrefId != 0)
+        {
+            @Model.Loc.Where(a => a.ResourceId == "hdrVendorEdit").FirstOrDefault().Value.ToString()
+        }
+        else
+        {
+            @Model.Loc.Where(a => a.ResourceId == "spnVendorAdd").FirstOrDefault().Value.ToString()
+        }
+    </div>
+</div>
+
+@Html.Partial("_ErrorDiv")
+
+@using (Ajax.BeginForm("PartsVedndorAdd", "Parts", new AjaxOptions { HttpMethod = "Post", OnSuccess = "PartsVendorAddOnSuccess", OnBegin = "AjaxBeginFormBegin", OnComplete = "AjaxBeginFormComplete", OnFailure = "AjaxBeginFormFaillure" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.Partial("_ErrorDiv")
+    <div class="slide-modal-body" style="overflow-y: auto; height: 100vh;">
+        <div mbsc-page class="demo-responsive">
+            <div style="height:100%">
+                <div mbsc-form class="mbsc-form-grid">
+                    <div class="mbsc-grid">
+                        <div class="mbsc-row">
+                            <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                <label>
+                                    @Model.Loc.Where(a => a.ResourceId == "hdrVendors").FirstOrDefault().Value.ToString()
+                                    @Html.TextBoxFor(m => m.partsVendorModel.VendorClientLookupId, "{0:MM/dd/yyyy}", new
+                                    {
+                                   @class = "form-control search readonly",
+                                   @mbsc_input = "true",
+                                   @data_label_style = "floating",
+                                   @data_input_style = "box",
+                                   autocomplete = "off",
+                                   @readonly = "readonly"
+                               })
+                                </label>
+                                @Html.ValidationMessageFor(m => m.partsVendorModel.VendorClientLookupId, "", new { })
+                            </div>
+                            <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                <div class=" design-box">
+                                    <div class="input-group-btn">
+                                        <button class="btn btn-white btntxtInputGroup mobBttn" type="button" id="openvendorgrid">
+                                            <i id="srcicon" class="fa fa-search"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                <label>
+                                    @Model.Loc.Where(a => a.ResourceId == "GlobalCatalogNumber").FirstOrDefault().Value.ToString()
+                                    @Html.TextBoxFor(m => m.partsVendorModel.CatalogNumber, new
+                                    {
+                                   @class = "form-control search",
+                                   @mbsc_input = "true",
+                                   @data_label_style = "floating",
+                                   @data_input_style = "box",
+                                   autocomplete = "off"
+                               })
+                                </label>
+                            </div>
+                            <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                <label>
+                                    @Model.Loc.Where(a => a.ResourceId == "spnManufacturer").FirstOrDefault().Value.ToString()
+                                    @Html.TextBoxFor(m => m.partsVendorModel.Manufacturer, new
+                                    {
+                                   @class = "form-control search",
+                                   @mbsc_input = "true",
+                                   @data_label_style = "floating",
+                                   @data_input_style = "box",
+                                   autocomplete = "off"
+                               })
+                                </label>
+                            </div>
+                            <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                <label>
+                                    @Model.Loc.Where(a => a.ResourceId == "spnManufacturerID").FirstOrDefault().Value.ToString()
+                                    @Html.TextBoxFor(m => m.partsVendorModel.ManufacturerID, new
+                                    {
+                                   @class = "form-control search",
+                                   @mbsc_input = "true",
+                                   @data_label_style = "floating",
+                                   @data_input_style = "box",
+                                   autocomplete = "off"
+                               })
+                                </label>
+                            </div>
+                            <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                <label>
+                                    @Model.Loc.Where(a => a.ResourceId == "spnOrderQnt").FirstOrDefault().Value.ToString()
+                                    @Html.TextBoxFor(m => m.partsVendorModel.OrderQuantity, new
+                                    {
+                                   @class = "form-control search orderquantityinput",
+                                   @mbsc_input = "true",
+                                   @data_label_style = "floating",
+                                   @data_input_style = "box",
+                                   autocomplete = "off"
+                               })
+                                </label>
+                                @Html.ValidationMessageFor(m => m.partsVendorModel.OrderQuantity, "", new { })
+                            </div>
+                            <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                <label>
+                                    @Model.Loc.Where(a => a.ResourceId == "spnOrderUnit").FirstOrDefault().Value.ToString()
+                                    @Html.DropDownListFor(m => m.partsVendorModel.OrderUnit, Model.partsVendorModel.OrderUnitList, "--Select--", new
+                                    {
+                                   @class = "form-control search mobiscrollselect",
+                                   @style = "width:100%;",
+                                   @mbsc_dropdown = "true",
+                                   @data_label = Model.Loc.Where(a => a.ResourceId == "spnOrderUnit").FirstOrDefault().Value.ToString(),
+                                   @data_input_style = "box",
+                                   @data_label_style = "floating",
+                                   @placeholder = Model.Loc.Where(a => a.ResourceId == "spnOrderUnit").FirstOrDefault().Value.ToString(),
+
+                               })
+                                </label>
+                                @Html.ValidationMessageFor(m => m.partsVendorModel.OrderUnit, "", new { })
+                            </div>
+                            <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                @Html.HiddenFor(m => m.partsVendorModel.DefaultPricevalue, new { @id = "DefaultPricevalue" })
+                                <label>
+                                    @Model.Loc.Where(a => a.ResourceId == "spnPrice").FirstOrDefault().Value.ToString()
+                                    @Html.TextBoxFor(m => m.partsVendorModel.Price, new
+                                    {
+                                   @class = "form-control search decimalinput",
+                                   @mbsc_input = "true",
+                                   @data_label_style = "floating",
+                                   @data_input_style = "box",
+                                   autocomplete = "off"
+                               })
+                                </label>
+                                @Html.ValidationMessageFor(m => m.partsVendorModel.Price, "", new { })
+                            </div>
+                               
+                            <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                @Html.HiddenFor(m => m.partsVendorModel.DefaultissueOrdervalue, new { @id = "DefaultissueOrdervalue" })
+                                <label>
+                                    @Model.Loc.Where(a => a.ResourceId == "IssueOrder").FirstOrDefault().Value.ToString()
+                                    @Html.TextBoxFor(m => m.partsVendorModel.IssueOrder, new
+                                    {
+                                   @class = "form-control search issueorderdecimalinput",
+                                   @mbsc_input = "true",
+                                   @data_label_style = "floating",
+                                   @data_input_style = "box",
+                                   autocomplete = "off"
+                               })
+                                </label>
+                                @Html.ValidationMessageFor(m => m.partsVendorModel.IssueOrder, "", new { })
+                            </div>
+                            <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                <label>
+                                    @Model.Loc.Where(a => a.ResourceId == "UOMConvRequired").FirstOrDefault().Value.ToString()
+                                    @Html.CheckBoxFor(m => m.partsVendorModel.UOMConvRequired, new
+                               {
+                                   @class = "form-control",
+                                   @mbsc_checkbox = "true",
+                                   @data_label_style = "floating",
+                                   @data_input_style = "box",
+                                   @type = "checkbox",
+                                   autocomplete = "off",
+                                   @checked = Model.partsVendorModel.UOMConvRequired
+
+                               })
+                                </label>
+                            </div>
+
+                            <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                <div class="design-box">
+
+                                    <div class="mbsc-button-group-block">
+                                        <button type="button" class="btn btn-blue mobBttn btnpvendorcancel_Mobile"><i class="fa fa-close faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                <div class="design-box">
+                                    <div class="mbsc-button-group-block">
+                                        <button data-color="success" type="submit" class="btn btn-blue mobBttn" name="SaveType" value="Job_Demand"><i class="fa fa-save faIcon"></i> &nbsp;@Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    @Html.HiddenFor(m => m.partsVendorModel.PartId)
+    @Html.HiddenFor(m => m.partsVendorModel.PartVendorXrefId)
+}
+<div class="slide-modal" id="VendorTableModalPopup_Mobile">
+    <div class="slide-modal-head">
+        <a class="slide-back-btn" id="VendorTableModalPopupHide_Mobile"> <i class="fa fa-angle-left"></i> Back</a>
+        <div class="slide-back-title">
+            @Model.Loc.Where(a => a.ResourceId == "spnSelectVendor").FirstOrDefault().Value.ToString()
+        </div>
+    </div>
+    <div class="slide-modal-body">
+        <div class="form-group" style="position:relative;">
+            <i class="fa fa-search txtSearchClickComp" style="font-size: 1.1rem;position: absolute;top: 9px;left: 15px;"></i>
+            <a href="javascript:void(0)"><i class="fa fa-close clearTextBoxValue" data-txtboxid="txtVendorSearch_Mobile" style="font-size: 1.1rem;position: absolute;top: 9px;right: 15px;"></i></a>
+            <input type="search" id="txtVendorSearch_Mobile" class="form-control search unsortable" placeholder="Search..." style="padding: 0.65rem 2.75rem;" autocomplete="off">
+        </div>
+        <div id="DivVendorSearchScrollViewModal"></div>
+    </div>
+</div>
+<style type="text/css">
+    .ui-tooltip.ui-tooltip1 {
+        z-index: 98 !important;
+    }
+</style>

@@ -1,0 +1,39 @@
+﻿@model Client.Models.EquipmentCombined
+
+<nav class="sidebar">
+    <div class="dismiss">
+        <i class="fa fa-close"></i>
+    </div>
+
+    <div class="sidebar-header">
+        <h3><i class="fa fa-filter" style="position: relative; top: -2px;"></i> @Model.Loc.Where(a => a.ResourceId == "spnFilters").FirstOrDefault().Value.ToString()<span class="woactivefilteritemcount">0</span></h3>
+        <button type="button" class="btn btn-blue filterSearch" id="btnWOActiveDataAdvSrch"><i class="fa fa-search" style="margin-top:-3px;"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalSearch").FirstOrDefault().Value.ToString()</button>
+    </div>
+
+    <div class="sidebar-content" id="advsearchsidebarWoActive">
+        <div class="form-group">
+            <label for="wgridActiveadvsearchWorkOrderId">@Model.Loc.Where(a => a.ResourceId == "GlobalWorkOrder").FirstOrDefault().Value.ToString() :</label>
+            <input type="text" class="form-control search adv-item" autocomplete="off" id="wgridActiveadvsearchWorkOrderId">
+        </div>
+        <div class="form-group">
+            <label for="wgridActiveadvsearchDescription">@Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString() :</label>
+            <input type="text" class="form-control search adv-item" autocomplete="off" id="wgridActiveadvsearchDescription">
+        </div>
+        <div class="form-group">
+            <label for="wgridActiveadvsearchWorkAssigned">@Model.Loc.Where(a => a.ResourceId == "GlobalWorkAssigned").FirstOrDefault().Value.ToString() :</label>
+            <input type="text" class="form-control search adv-item" autocomplete="off" id="wgridActiveadvsearchWorkAssigned">
+        </div>
+        <div class="form-group">
+            <label for="wgridActiveadvsearchStatus">@Model.Loc.Where(a => a.ResourceId == "GlobalStatus").FirstOrDefault().Value.ToString() :</label>
+            <select id="wgridActiveadvsearchStatus" style="width:100%;" class="form-control search adv-item select2picker"></select>
+        </div>
+        <div class="form-group">
+            <label for="wgridActiveadvsearchType">@Model.Loc.Where(a => a.ResourceId == "GlobalType").FirstOrDefault().Value.ToString() :</label>
+            <input type="text" class="form-control search adv-item" autocomplete="off" id="wgridActiveadvsearchType">
+        </div>
+        <div class="form-group">
+            <label for="wgridActiveadvsearchCreateDate">@Model.Loc.Where(a => a.ResourceId == "globalCreateDate").FirstOrDefault().Value.ToString() :</label>
+            <input type="text" class="form-control search adv-item dtpicker" autocomplete="off" id="wgridActiveadvsearchCreateDate">
+        </div>
+    </div>
+</nav>

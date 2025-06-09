@@ -1,0 +1,69 @@
+﻿@model Client.Models.WorkOrderPlanning.WorkOrderPlanningVM
+@using (Ajax.BeginForm("EditScheduleCalendar", "LaborScheduling", new AjaxOptions { HttpMethod = "Post", OnSuccess = "EditScheduleCalendarOnSuccess", OnBegin = "AjaxBeginFormBegin", OnComplete = "AjaxBeginFormComplete", OnFailure = "AjaxBeginFormFaillure" }, new { id = "frmEditScheduleCalendar" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(m => m.ResourceCalendarEditScheduleModel.WorkOrderID)
+    @Html.HiddenFor(m => m.ResourceCalendarEditScheduleModel.WorkOrderScheduledID)
+    @Html.HiddenFor(m => m.ResourceCalendarEditScheduleModel.ClientLookupId)
+    @Html.HiddenFor(m => m.ResourceCalendarEditScheduleModel.Description)
+    @Html.HiddenFor(m => m.ResourceCalendarEditScheduleModel.PersonnelName)
+    @Html.HiddenFor(m => m.ResourceCalendarEditScheduleModel.WorkOrderPlanStartDate, new { id = "WorkOrderPlanStartDate" })
+    @Html.HiddenFor(m => m.ResourceCalendarEditScheduleModel.WorkOrderPlanEndDate, new { id = "WorkOrderPlanEndDate" })
+    @*@Html.HiddenFor(m => m.AddSchedlingCalendarModal.Personnels)*@
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close closeEditcheduleModal" data-dismiss="modal">&times;</button>
+            <button type="button" class="close iconTrash RemoveSchedule" style="right: 90px; top: 6px; padding: 1rem 0.5rem; color: red;" data-workorderid="@Model.ResourceCalendarEditScheduleModel.WorkOrderID"
+                    data-workorderscheduledid="@Model.ResourceCalendarEditScheduleModel.WorkOrderScheduledID">
+                <i class="fa fa-trash faIcon"></i>
+            </button>
+            <button type="submit" class="close iconSave" style="cursor: pointer; right: 63px; top: 6px; padding: 1rem 0.5rem; color: green;" value="save"><i class="fa fa-save faIcon"></i></button>
+            <h4 class="modal-title">@Model.Loc.Where(a => a.ResourceId == "spnGlobalEditSchedule").FirstOrDefault().Value.ToString()</h4>
+        </div>
+        @Html.Partial("_ErrorDiv")
+        <div class="modal-body">
+            <div class="form-group" style="margin-bottom:0;">
+                <div class="bottomBlock">
+                    <div class="tabsArea nobg">
+                        <ul class="listView nobrd" style="border-bottom:0;">
+                            <li class="common" style="height: auto; line-height: normal;">
+                                <span class="inputText descriptionaddschedule" style="font-size: 1.12rem; font-weight: 500; width: 100% !important; height: auto !important; float: none !important; line-height: 18px;">
+                                    <i id="PersonnelColor" class="fa fa-square faIcon"></i>
+                                    @Html.DisplayFor(m => m.ResourceCalendarEditScheduleModel.ClientLookupId, new { })
+                                    @Html.DisplayFor(m => m.ResourceCalendarEditScheduleModel.Description)
+                                </span>
+                            </li>
+                            <li>
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnScheduledDate").FirstOrDefault().Value.ToString() : </span>
+                                <span class="inputText">
+                                    @Html.ValidationMessageFor(m => m.ResourceCalendarEditScheduleModel.ScheduleDate, "", new { style = "display:none" })
+                                    @Html.TextBoxFor(m => m.ResourceCalendarEditScheduleModel.ScheduleDate, "{0:MM/dd/yyyy}", new { @class = "form-control search dtpicker", autocomplete = "off" })
+                                </span>
+                            </li>
+                            <li class="common" style="height: 18px;">
+                                <span class="inputText" style="height: 18px; line-height: 18px;">
+                                    @Html.DisplayFor(m => m.ResourceCalendarEditScheduleModel.PersonnelName)
+                                </span>
+                            </li>
+                            <li>
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnGlobalEstimateHrs").FirstOrDefault().Value.ToString() : </span>
+                                <span class="inputText">
+                                    @Html.ValidationMessageFor(m => m.ResourceCalendarEditScheduleModel.Hours, "", new { style = "display:none" })
+                                    @Html.TextBoxFor(m => m.ResourceCalendarEditScheduleModel.Hours, new { @class = "form-control search decimalinput", autocomplete = "off" })
+                                </span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div style="clear:both;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+<style type="text/css">
+    
+    #ui-datepicker-div.ui-datepicker.ui-widget.ui-widget-content {
+        z-index: 1153 !important;
+        top: 156px !important;
+    }
+</style>

@@ -1,0 +1,48 @@
+﻿@model Client.Models.Dashboard.DashboardVM
+@{ 
+    var woSourceDurationList = UtilityFunction.WoSourceDatesList();
+    if (woSourceDurationList != null)
+    {
+        Model.WoSourceList = woSourceDurationList.Select(x => new SelectListItem { Text = x.text, Value = x.value.ToString() });
+    }
+}
+<div class="m-portlet m-portlet--full-height m-portlet--fit">
+    <div class="m-portlet__head">
+        <div class="m-portlet__head-caption">
+            <div class="m-portlet__head-title">
+                <h3 class="m-portlet__head-text">
+                    @Model.Loc.Where(a => a.ResourceId == "spnWorkOrderSource").FirstOrDefault().Value.ToString()
+                </h3>
+            </div>
+        </div>
+
+    </div>
+    <div class="m-portlet__body" style="">
+        <div class="tab-content">
+            <div class="dateRangeDrop">
+                <div class="btn-group bootstrap-select m-datatable__pager-size dropup show selectDrop">
+                    @Html.DropDownListFor(m => m.WoSource, new SelectList(Model.WoSourceList, "Value", "Text"), null, new { id = "WOSourceDropdown", @class = "selectpicker m-datatable__pager-size" })
+                </div>
+                <div style="clear:both; height:15px;"></div>
+            </div>
+            <div class="chartBox row" id="wordersource" style="position:relative">
+                <div class="lds-ellipsis lds-adjust" id="workordersourcechartloader">
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                </div>
+                <div class="cntNoData"><h5>@Model.Loc.Where(a => a.ResourceId == "globalDataNotFound").FirstOrDefault().Value.ToString()</h5></div>
+                <div class="chartcontainer">
+                    <canvas id="m_chart_WO_SRC"></canvas>
+                </div>
+                <div class="legendcontainer">
+                    <div id="m_chart_WO_SRC-legend" class="chart-legend"></div>
+                </div>
+                <div class="clear"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+

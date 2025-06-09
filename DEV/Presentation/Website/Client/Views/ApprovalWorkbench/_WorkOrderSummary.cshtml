@@ -1,0 +1,28 @@
+﻿@model Client.Models.Work_Order.WorkOrderVM
+
+<div class="col-xl-12">
+    <div class="m-portlet padAdjst AppSrchs" id="m_portlet">
+        <div class="m-portlet__body  m-portlet__body--no-padding">
+            <div class="row m-row--col-separator-xl">
+                <div class="col-md-12 col-lg-6 col-xl-6">
+                    <div class="m-widget24 imageBox">
+                        <div class="imgThumbs appImg">
+                            @if (!string.IsNullOrEmpty(Model.workOrderSummaryModel.ImageUrl))
+                            {
+                                <img src="@Model.workOrderSummaryModel.ImageUrl" id="EquipZoom" alt="Image" data-zoom-image="@Model.workOrderSummaryModel.ImageUrl" />
+                            }
+                            else
+                            {
+                                <img src="~/Scripts/ImageZoom/images/NoImage.jpg" id="EquipZoom" alt="Image" data-zoom-image="/Scripts/ImageZoom/images/NoImage.jpg" />
+                            }
+                        </div>
+                        <div class="imgInfo partsImgInfo">
+                            <span>Work Order Id : @(String.IsNullOrEmpty(Model.workOrderSummaryModel.WorkOrder_ClientLookupId) ? "" : (Model.workOrderSummaryModel.WorkOrder_ClientLookupId.Length > 12 ? (Model.workOrderSummaryModel.WorkOrder_ClientLookupId.Substring(0, 12) + "...") : (Model.workOrderSummaryModel.WorkOrder_ClientLookupId)))</span>
+                        </div>
+                        <div style="clear:both;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

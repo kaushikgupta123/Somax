@@ -1,0 +1,114 @@
+﻿@model Client.Models.Sanitation.SanitationVM
+
+@using (Ajax.BeginForm("Addassignment", "SanitationJob", new AjaxOptions { HttpMethod = "Post", OnSuccess = "SJAssignmentAddOnSuccess", OnBegin = "AjaxBeginFormBegin", OnComplete = "AjaxBeginFormComplete", OnFailure = "AjaxBeginFormFaillure" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="slide-modal-head">
+        <a class="slide-back-btn SJAssignmentclearstate"> <i class="fa fa-angle-left"></i> Back</a>
+
+        @if (Model.assignmentModel.SanitationJobScheduleId == 0)
+        {
+            <div class="slide-back-title">
+                @Model.Loc.Where(a => a.ResourceId == "spnAddAssignment").FirstOrDefault().Value.ToString()
+            </div>
+        }
+        else
+        {
+            <div class="slide-back-title">
+                @Model.Loc.Where(a => a.ResourceId == "spnUpdateAssignment").FirstOrDefault().Value.ToString()
+            </div>
+        }
+
+    </div>
+    @Html.Partial("_ErrorDiv")
+    <div class="slide-modal-body">
+        <div mbsc-page class="demo-responsive">
+            <div style="height:100%">
+                <div mbsc-form class="mbsc-form-grid">
+                    <div class="mbsc-grid">
+                        <div class="mbsc-row">
+                            <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                <label>
+                                    @Model.Loc.Where(a => a.ResourceId == "spnPersonnelID").FirstOrDefault().Value.ToString()
+
+                                    @Html.DropDownListFor(m => m.assignmentModel.PersonnelId, Model.assignmentModel.PersonnelIdList, "--Select--", new
+                               {
+                                   @class = "form-control search mobiscrollselect",
+                                   @style = "width:100%;",
+                                   @mbsc_dropdown = "true",
+                                   @data_label = Model.Loc.Where(a => a.ResourceId == "spnPersonnelID").FirstOrDefault().Value.ToString(),
+                                   @data_input_style = "box",
+                                   @data_label_style = "floating",
+                                   @placeholder = Model.Loc.Where(a => a.ResourceId == "spnPersonnelID").FirstOrDefault().Value.ToString()
+                               })
+                                </label>
+                                @Html.ValidationMessageFor(m => m.assignmentModel.PersonnelId, "", new { })
+                            </div>
+                            <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                <label>
+                                    @Model.Loc.Where(a => a.ResourceId == "spnScheduledStartDate").FirstOrDefault().Value.ToString()
+                                    @Html.TextBoxFor(m => m.assignmentModel.ScheduledStartDate, "{0:MM/dd/yyyy}", new
+                                    {
+                                   @class = "form-control search",
+                                   @mbsc_input = "true",
+                                   @data_label_style = "floating",
+                                   @placeholder = Model.Loc.Where(a => a.ResourceId == "spnScheduledStartDate").FirstOrDefault().Value.ToString(),
+                                   @data_input_style = "box",
+                                   autocomplete = "off"
+                               })
+                                </label>
+                                @Html.ValidationMessageFor(m => m.assignmentModel.ScheduledStartDate, "", new { })
+                            </div>
+                            <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                <label>
+                                    @Model.Loc.Where(a => a.ResourceId == "spnScheduledHours").FirstOrDefault().Value.ToString()
+                                    @Html.TextBoxFor(m => m.assignmentModel.ScheduledHours, new
+                                    {
+                                        @class = "form-control search decimalinput",
+                                        @mbsc_input = "true",
+                                        @data_label_style = "floating",
+                                   @placeholder = Model.Loc.Where(a => a.ResourceId == "spnScheduledHours").FirstOrDefault().Value.ToString(),
+                                        @data_input_style = "box",
+                                        autocomplete = "off"
+                                    })
+                                </label>
+                                @Html.ValidationMessageFor(m => m.assignmentModel.ScheduledHours, "", new { })
+                            </div>
+                        </div>
+                        <div class="mbsc-row">
+                            <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                <div class="design-box">
+                                    <div class="mbsc-button-group-block">
+                                        <button mbsc-button data-color="success" type="button" class="btn btn-blue mobBttn SJAssignmentclearstate" id="btnSJAssignmentcancel"><i class="fa fa-close faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                <div class="design-box">
+                                    <div class="mbsc-button-group-block">
+                                        <button data-color="success" type="submit" class="btn btn-blue mobBttn" style="cursor:pointer" value="save"><i class="fa fa-save faIcon"></i> &nbsp;@Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="slide-modal-footer"></div>
+
+    @Html.HiddenFor(m => m.assignmentModel.SanitationJobId)
+    @Html.HiddenFor(m => m.assignmentModel.SanitationJobScheduleId)
+    @Html.HiddenFor(m => m.assignmentModel.UpdateIndex)
+}
+
+
+<script>
+    $(function () {
+        $(document).find('form').find("#assignmentModel_PersonnelId").removeClass("input-validation-error");
+        $(document).find('form').find("#assignmentModel_ScheduledStartDate").removeClass("input-validation-error");
+        $(document).find('form').find("#assignmentModel_ScheduledHours").removeClass("input-validation-error");
+
+    });
+</script>

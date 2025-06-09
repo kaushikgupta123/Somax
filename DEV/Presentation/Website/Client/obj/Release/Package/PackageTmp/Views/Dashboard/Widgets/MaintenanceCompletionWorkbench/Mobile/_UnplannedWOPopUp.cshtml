@@ -1,0 +1,45 @@
+﻿@model Client.Models.Dashboard.DashboardVM
+
+<div class="slide-modal" id="UnplannedWo_Mobile">
+    <div class="slide-modal-head ">
+        <a id="hideUnplannedWoPopup_Mobile" class="slide-back-btn"> <i class="fa fa-angle-left"></i> Back</a>
+        <div class="slide-back-title">
+            @Model.Loc.Where(a => a.ResourceId == "spnAddNewUnPlanedWorkOrder").FirstOrDefault().Value.ToString()
+        </div>
+    </div>
+
+    <div class="slide-modal-body">
+        <div mbsc-page class="demo-responsive">
+            <div style="height:100%">
+                <div mbsc-form class="mbsc-form-grid">
+                    <div class="mbsc-grid">
+                        <div class="mbsc-row">
+                            @*For V2-735*@
+                            @if (Model._userdata.Site.MaintOnDemand)
+                            {
+                                <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                    <div class="design-box">
+                                        <div class="mbsc-button-group-block">
+                                            <button mbsc-button data-color="success" type="button" class="btn btn-blue btnRqst mobBttn" id="emergencyOnDemandPopUpPageID">@Model.Loc.Where(a => a.ResourceId == "spnUseOn_DemandProcedure").FirstOrDefault().Value.ToString()</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+
+                            <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                <div class="design-box">
+                                    <div class="mbsc-button-group-block">
+                                        <button mbsc-button data-color="success" type="button" class="btn btn-blue btnRqst mobBttn" id="emergencyDescribePopUpPageID">@Model.Loc.Where(a => a.ResourceId == "spnDescribeWhatYouNeed").FirstOrDefault().Value.ToString()</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="slide-modal-footer"></div>
+</div>
+

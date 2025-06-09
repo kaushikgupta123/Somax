@@ -1,0 +1,49 @@
+﻿@model Client.Models.Devices.DeviceVM
+
+@using (Ajax.BeginForm("SelectDeviceCatagory", "Devices", new AjaxOptions { HttpMethod = "Post", OnSuccess = "SelctDeviceCatagoryOnSuccess", OnBegin = "AjaxBeginFormBegin", OnComplete = "AjaxBeginFormComplete", OnFailure = "AjaxBeginFormFaillure" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close clearstate" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title">@Model.Loc.Where(a => a.ResourceId == "spnChooseDeviceCategory").FirstOrDefault().Value.ToString()</h4>
+        </div>
+        @Html.Partial("_ErrorDiv")
+        <div class="modal-body">
+            <div class="form-group" style="margin-bottom:0;">
+                <div class="bottomBlock">
+                    <div class="tabsArea nobg">
+                        <ul class="listView nobrd" style="border-bottom:0;">
+                            <li style="height:auto;">
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnDeviceCategory").FirstOrDefault().Value.ToString() : <small>*</small></span>
+                                <span class="inputText">
+                                    @Html.ValidationMessageFor(m => m.DeviceCategoryModel.DeviceCategory, "", new { style = "display:none" })
+                                    @Html.DropDownListFor(m => m.DeviceCategoryModel.DeviceCategory, Model.DeviceCategoryModel.DeviceCategoryList, "--Select--", new { @class = "form-control search select2picker", style = "width:100%;" })
+                                </span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div style="clear:both;"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal-footer" style="padding:15px 25px !important;">
+            <div class="idBttns">
+                <div class="bttn_pagin">
+                    <div class="bttns2" style="margin:0;">
+                        <button type="submit" class="btn btn-blue mobBttn" style="cursor:pointer" value="save" id="btnSubmitDeviceCategory"><i class="fa fa-check faIcon"></i> &nbsp;@Model.Loc.Where(a => a.ResourceId == "globalSubmit").FirstOrDefault().Value.ToString()</button>
+                    </div>
+                    <div class="bttns" style="margin:0;"><button type="button" data-dismiss="modal" class="btn btn-blue mobBttn clearstate" id="btnSubmitDeviceCategorycancel"><i class="fa fa-close faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button></div>
+
+                    <div style="clear:both;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+
+
+    @Scripts.Render("~/bundles/PREditPopUp")
+

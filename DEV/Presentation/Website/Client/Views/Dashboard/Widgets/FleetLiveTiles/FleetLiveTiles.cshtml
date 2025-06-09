@@ -1,0 +1,77 @@
+﻿@model Client.Models.Dashboard.DashboardVM
+
+<div class="m-portlet padAdjst" id="m_portlet">
+    <div class="m-portlet__body  m-portlet__body--no-padding">
+        <div class="row m-row--col-separator-xl">
+            <div class="col-md-12 col-lg-6 col-xl-3">
+                <div class="sparklineArea">
+                    <div class="redBoxFleetOnly">
+                        <div class="lds-ellipsis lds-adjust spline-loader" id="openserviceordspchartloader">
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                        </div>
+                        <h2 id="OpenServiceOrderCount" class="hoverClass"></h2>
+                        <h3 class="hoverClass" id="openServiceOrderCountText">@Model.Loc.Where(a => a.ResourceId == "spnOpenServiceOrders").FirstOrDefault().Value.ToString()</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12 col-lg-6 col-xl-3">
+                <div class="sparklineArea">
+                    <div class="purpleBoxFleetOnly">
+                        <div class="lds-ellipsis lds-adjust spline-loader" id="openissuesspchartloader">
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                        </div>
+                        <h2 id="OpenFleetIssuesCount" class="hoverClass"></h2>
+                        <h3 class="hoverClass" id="openFleetIssuesCountText">@Model.Loc.Where(a => a.ResourceId == "spnOpenIssues").FirstOrDefault().Value.ToString()</h3>
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-md-12 col-lg-6 col-xl-3">
+                <div class="sparklineArea">
+                    <div class="greenBoxFleetOnly">
+                        <div class="lds-ellipsis lds-adjust spline-loader" id="openpastduespchartloader">
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                        </div>
+                        <h2 id="PastDueServiceCount" class="hoverClass"></h2>
+                        <h3 class="hoverClass" id="pastDueServiceCountText">@Model.Loc.Where(a => a.ResourceId == "spnPastDueService").FirstOrDefault().Value.ToString()</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12 col-lg-6 col-xl-3">
+                <div class="sparklineArea">
+                    <div class="forthBox">
+                        <div class="lds-ellipsis lds-adjust spline-loader" id="lowpartspchartloader">
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                        </div>
+                        @if (Model.PartSecurity)
+                        {
+                            <h2 id="lowPartsCount" class="hoverClass"></h2>
+                            <h3 class="hoverClass" id="lowPartstxt">@Model.Loc.Where(a => a.ResourceId == "spnLowParts").FirstOrDefault().Value.ToString()</h3>
+                        }
+                        else
+                        {
+                            <h2 id="lowPartsCountInactive"></h2>
+                            <h3>@Model.Loc.Where(a => a.ResourceId == "spnLowParts").FirstOrDefault().Value.ToString()</h3>
+                        }
+                        <div class="sparklineGraph">
+                            <canvas id="myChart_LowParts" class="sparklinecanvas"></canvas>
+                            <div class="clear"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

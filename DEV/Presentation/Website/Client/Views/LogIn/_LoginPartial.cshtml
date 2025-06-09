@@ -1,0 +1,356 @@
+﻿@using Client.Models.Account
+@model SomaxMVC.Models.UserInfoDetails
+@{
+    Layout = null;
+    if (Model.FailureMessage != null || Model.FailureMessage == string.Empty)
+    {
+        <script type="text/javascript">
+            window.onload = function () {
+                $('#errormsg').text('@Model.FailureMessage');
+                $('#errormsg').css('display', 'block');
+            };
+        </script>
+    }
+    var ActionName = "LogIn";
+    var LoginUsingWindowsAD = System.Configuration.ConfigurationManager.AppSettings["LoginUsingWindowsAD"];
+    if (LoginUsingWindowsAD != null && Convert.ToBoolean(LoginUsingWindowsAD))
+    {
+        ActionName = "LoginUsingWindowsAD";
+    }
+}
+
+
+<h2>@Model.localization.Where(t => t.ResourceId == "m-login__title").FirstOrDefault().Value</h2>
+@using (Html.BeginForm(ActionName, "LogIn", FormMethod.Post, new { @class = "m-login__form m-form", @id = "signInForm" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(model => model.IsLoggedInFromMobile)
+    @Html.HiddenFor(model => model.IsSOMAXAdmin)
+    @Html.HiddenFor(model => model.UserInfoId)
+    @Html.HiddenFor(model => model.ClientUserInfoListId)
+    <div class="login-box">
+
+        <div class="form-group m-form__group adjust form__group">
+            @Html.TextBoxFor(model => model.UserName, new { @class = "form-control m-input UserName form__field", @placeholder = "", @autocomplete = "off", @id = "UserName", @name = "username" })
+            <label for="UserName" class="form__label" style="color:#fff !important;">@Model.localization.Where(t => t.ResourceId == "UserName").FirstOrDefault().Value</label>
+        </div>
+        <div class="form-group m-form__group form__group">
+            @Html.PasswordFor(model => model.Password, new { @class = "form-control m-input Password form__field", @placeholder ="", @autocomplete = "off", @id = "Password", @name = "Password", @value = @Model.Password })
+            <label for="Password" class="form__label pass-lable" style="color:#fff !important;">@Model.localization.Where(t => t.ResourceId == "PasswordId").FirstOrDefault().Value</label>
+            <a href="javascript:void(0)" class="password_eyes"><i id="Eye" class="fa fa-eye-slash"></i></a>
+            <div id="errormsg" style="padding:10px 0; text-align:center; color:red; display:none;"></div>
+        </div>
+    </div>
+    <div class="row m-login__form-sub">
+        <div class="col m--align-center">
+            <label class="m-checkbox m-checkbox--focus">
+                @Html.CheckBoxFor(m => m.RememberMe)
+                Remember My ID
+                <span></span>
+            </label>
+        </div>
+    </div>
+    <div class="m-login__form-action">
+        <button id="m_login_signin_submit" class="btn btn-focus m-btn m-btn--pill m-btn--custom m-btn--air">
+            @Model.localization.Where(t => t.ResourceId == "m-login__title").FirstOrDefault().Value
+        </button>
+    </div>
+    if (ActionName == "LogIn")
+    {
+        <div class="col m--align-center">
+            <a href="javascript:;" id="m_login_forget_password" class="m-link">
+                @Model.localization.Where(t => t.ResourceId == "m_login_forget_password").FirstOrDefault().Value
+            </a>
+        </div>
+    }
+    @Html.HiddenFor(t => t.ReturnUrl)
+    if (!string.IsNullOrEmpty(ViewBag.SystemUnderMaintenanceMessage))
+    {
+        <div class="alertboxme">
+            <p class="alert-title">
+                <i class="fa fa-exclamation-circle"></i>&nbsp; @ViewBag.SystemUnderMaintenanceMessage
+            </p>
+        </div>
+    }
+}
+@if (ActionName == "LogIn")
+{
+    using (Html.BeginForm("ExternalLogin", "Login", new ExternalLoginListViewModel { ReturnUrl = ViewBag.ReturnUrl }))
+    {
+        @Html.AntiForgeryToken()
+        @Html.HiddenFor(model => model.IsLoggedInFromMobile, new { @id = "ExternalIsLoggedInFromMobile" })
+        <div class="col m--align-center">
+            <button type="submit" class="btn btn-white social-btn" name="provider" value="Google" title="Continue with Google"><i class="fa fa-google" style="font-size: 1.1rem;position: relative;top: -2px;left: -10px;"></i> Continue with Google</button>
+            <button type="submit" class="btn btn-white social-btn nospace" name="provider" value="Microsoft" title="Continue with Microsoft"><i class="fa fa-windows" style="font-size: 1.1rem;position: relative;top: -2px;left: -10px;"></i> Continue with Microsoft</button>
+        </div>
+    }
+}
+@if (Model.IsSOMAXAdmin == true)
+{
+    /*V2-911 Popup*/
+
+    <div id="ClientUserInfoListTableModalPopup" class="modal fade dropdown-modal" role="dialog" style="display:none;" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog partPopup">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="popUpHeadertitle">@UtilityFunction.GetMessageFromResource("globalChooseClientSite", LocalizeResourceSetConstants.Global) </h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div id="tbldropdown" class="dropdown-content tbl-dropdown" style="display:block;">
+                        <div class="table-responsive dropTableOuter">
+                            <table id="tblClientUserInfoListTableModalPopup" class="stripe dropTable globalDropTable" style="width:100%;">
+                                <thead>
+                                    <tr>
+                                        <th>@UtilityFunction.GetMessageFromResource("spnID", LocalizeResourceSetConstants.Global)</th>
+                                        <th>@UtilityFunction.GetMessageFromResource("spnClientGlobal", LocalizeResourceSetConstants.Global)</th>
+                                        <th>@UtilityFunction.GetMessageFromResource("spnSiteGlobal", LocalizeResourceSetConstants.Global)</th>
+                                        <th>@UtilityFunction.GetMessageFromResource("spnClientId", LocalizeResourceSetConstants.ClientDetails)</th>
+                                        <th>@UtilityFunction.GetMessageFromResource("globalSiteID", LocalizeResourceSetConstants.Global)</th>
+
+                                    </tr>
+                                </thead>
+                                <tfoot id="tblClientUserInfoListTableModalPopupfooter" style="display:none">
+                                    <tr>
+                                        <th style="position:relative;"></th>
+                                        <th style="position:relative;"></th>
+                                        <th style="position:relative;"></th>
+                                        <th style="position:relative;"></th>
+                                        <th style="position:relative;"></th>
+
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer" style="padding:15px 25px !important;">
+                    <div style="clear:both;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+}
+<style type="text/css">
+    .alertboxme {
+        font-family: Roboto;
+        display: block;
+        position: relative;
+        border-radius: 6px;
+        font-size: 1rem;
+        padding: 15px;
+        margin-top: 1.5rem;
+        background-color: #f64e60;
+        color: #fff;
+        transition: height .5s ease-in,opacity .5s ease-in;
+        word-wrap: break-word;
+        word-break: break-word;
+    }
+
+        .alertboxme p {
+            margin-top: 10px;
+            margin-bottom: 0;
+            word-wrap: break-word;
+        }
+
+            .alertboxme p.alert-title {
+                padding: 0;
+                margin: 0;
+                font-size: 15px;
+            }
+
+    a.popClosedBoxMe {
+        position: absolute;
+        right: 15px;
+        color: #fff;
+        font-weight: 300;
+    }
+
+  
+
+    a.password_eyes {
+        position: absolute;
+        right:6px;
+        top: 22px;
+        color: #fff;
+        cursor: pointer;
+        z-index: 9;
+    }
+
+    .social-btn {
+        width: 75%;
+        margin: 20px 0 10px 0;
+    }
+
+        .social-btn:hover {
+            background: #285392;
+            color: #fff;
+        }
+
+        .social-btn.nospace {
+            margin: 0;
+        }
+</style>
+
+<style type="text/css">
+    .partPopup {
+        max-width: 100%;
+    }
+
+    .dropdown-content {
+        max-height: 600px !important;
+        overflow: auto;
+    }
+
+    .dataTables_wrapper.no-footer .dataTables_scrollBody {
+        border-bottom: 1px solid #ddd !important;
+    }
+
+    .custom-sort thead .sorting {
+        background-image: none !important;
+    }
+
+    .dataTables_wrapper .dataTables_info {
+        clear: none;
+        padding-top: 1em;
+        margin-right: 10px;
+    }
+
+    .dataTables_wrapper .dataTables_paginate {
+        padding-top: 0.55em;
+        float: left;
+    }
+
+    .dataTables_wrapper .dataTables_length {
+        display: none;
+        padding-top: 0.55em !important;
+        float: right;
+    }
+
+    .dataTables_length span.select2 {
+        width: 60px !important;
+    }
+
+    .dataTables_wrapper .dataTables_length select {
+        color: #000;
+    }
+
+    table.dataTable.nowrap th, table.dataTable.nowrap td {
+        outline: 0 !important;
+    }
+
+    .dataTables_wrapper .dataTables_processing {
+        padding-top: 0px !important;
+        margin-left: 0px !important;
+        width: auto !important;
+    }
+
+
+    @* region V2-987 *@
+
+    input::-ms-reveal,
+    input::-ms-clear {
+        display: none;
+    }
+    .login-box .form__group {
+        position: relative;
+        padding: 15px 0 0;
+        margin-top: 10px;
+    }
+
+    .login-box .form__field {
+        font-family: inherit;
+        width:100%;
+        border-radius: 5px;
+        border: 1px solid #3d516e;
+        outline: 0;
+        font-size: 14px;
+        color: #fff;
+        padding: 10px;
+        background: transparent;
+        transition: border-color 0.2s;
+    }
+
+        .login-box .form__field::-moz-placeholder {
+            color: transparent;
+        }
+
+        .login-box .form__field:-ms-input-placeholder {
+            color: transparent;
+        }
+
+        .login-box .form__field::placeholder {
+            color: transparent;
+        }
+
+        .login-box .form__field:-moz-placeholder-shown ~ .form__label {
+            font-size: 16px;
+            cursor: text;
+            top: 20px;
+            text-align:center;
+        }
+
+        .login-box .form__field:-ms-input-placeholder ~ .form__label {
+            font-size: 16px;
+            cursor: text;
+            top: 15px;
+            text-align: center;
+        }
+
+        .login-box .form__field:placeholder-shown ~ .form__label {
+            font-size: 14px;
+            cursor: text;
+            width: 100%;
+            top: 20px;
+            left: 0px;
+            color: #fff !important;
+            text-align: center;
+        }
+
+        .login-box label,
+        .login-box .form__field:focus ~ .form__label, .login-box input:-webkit-autofill:focus ~ .form__label {
+            position: absolute;
+            width: 100%;
+            top: -2px;
+            left: 0;
+            display: block;
+            transition: 0.2s;
+            font-size: 12px;
+            color: #3d516e;
+            padding: 0 5px;
+            text-align: center;
+        }
+
+    .login-box .form__group {
+        position: relative;
+    }
+
+    .login-box label {
+        width: 100%;
+        text-align: center;
+        top: 0px;
+        position: absolute;
+    }
+
+        /*.login-box .form__field:focus ~ .form__label.pass-lable {
+            margin-left: -50px !important;
+        }*/
+
+    .login-box .form-group input[type="text"], .login-box .form-group input[type="password"] {
+        padding: 25px 0 12px !important;
+        text-align: center;
+        appearance:none;
+    }
+
+    .login-box .form__field:focus ~ .form__label {
+        color: #fff;
+        background: #0c264a;
+        text-align: center;
+    }
+
+        .login-box .form__field:focus {
+            border: 1px solid #fff;
+        }
+    @* region V2-987 end*@
+</style>

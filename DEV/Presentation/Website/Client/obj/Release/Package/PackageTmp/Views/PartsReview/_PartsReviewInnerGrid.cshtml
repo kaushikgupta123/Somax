@@ -1,0 +1,50 @@
+﻿@model Client.Models.PartsManagement.PartsReview.PartsReviewVM
+
+@{
+    Layout = null;
+}
+<table id="" dt-options="dtOptions" class="PartsReviewInnerTable childtable" style="width:100%">
+    <thead>
+        <tr>
+            <th>@Model.Loc.Where(a => a.ResourceId == "spnSiteGlobal").FirstOrDefault().Value.ToString()</th>
+            <th>@Model.Loc.Where(a => a.ResourceId == "spnPartID").FirstOrDefault().Value.ToString()</th>
+            <th>@Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString()</th>
+            <th>@Model.Loc.Where(a => a.ResourceId == "spnQtyOnHand").FirstOrDefault().Value.ToString()</th>
+            <th>@Model.Loc.Where(a => a.ResourceId == "spnQtyOnOrder").FirstOrDefault().Value.ToString()</th>
+            <th>@Model.Loc.Where(a => a.ResourceId == "spnLastPurchase").FirstOrDefault().Value.ToString()</th>
+            <th>@Model.Loc.Where(a => a.ResourceId == "spnLastCost").FirstOrDefault().Value.ToString()</th>
+            <th>@Model.Loc.Where(a => a.ResourceId == "spnLastPurchaseFrom").FirstOrDefault().Value.ToString()</th>
+            <th>@Model.Loc.Where(a => a.ResourceId == "globalInactiveFlag").FirstOrDefault().Value.ToString()</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model.reviewSiteModelList.Count > 0)
+        {
+            foreach (var pro in Model.reviewSiteModelList)
+            {
+                <tr>
+                    <td>@pro.SiteName</td>
+                    <td>@pro.ClientLookupId</td>
+                    <td>@(pro.Description)</td>
+                    <td>@Math.Round(pro.QtyOnHand, 2)</td>
+                    <td>@Math.Round(pro.QtyOnOrder, 2)</td>
+                    @if (pro.LastPurchaseDate.HasValue)
+                    {
+                        <td>@pro.LastPurchaseDate.Value.ToString("MM/dd/yyyy")</td>
+                    }
+                    else
+                    {
+                        <td></td>
+                    }
+                    <td>@Math.Round(pro.LastPurchaseCost, 2)</td>
+                    <td>@pro.LastPurchaseVendor</td>
+                    <td>@pro.InactiveFlag</td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+<style type="text/css">
+    .childtable tr th { background: #4da5fe; color: #fff !important; white-space: nowrap !important; text-align: center !important; font-weight: 400 !important; }
+    .PartsReviewInnerTable { border: 1px solid #ebe8f2 !important; }
+</style>

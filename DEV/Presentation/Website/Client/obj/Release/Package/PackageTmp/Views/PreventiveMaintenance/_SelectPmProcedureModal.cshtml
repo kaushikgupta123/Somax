@@ -1,0 +1,60 @@
+﻿<div id="selectPmProcedureModal" class="modal fade dropdown-modal" role="dialog" style="display:none;">
+    <div class="modal-dialog childrenPop">
+        <div class="modal-content" id="ChildrenModalContent">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title" id="hdrPopChildrenTitle">@UtilityFunction.GetMessageFromResource("spnSelectAPMProcedure", LocalizeResourceSetConstants.PrevMaintDetails)</h4>
+            </div>
+            <div class="modal-body">
+                <div>@Html.Partial("_ErrorDiv")</div>
+                <div class="table-responsive">
+                    <div id="tbldropdown" class="dropdown-content tbl-dropdown" style="display:block;">
+                        <div class="table-responsive dropTableOuter">
+                            <table id="procSelectTable" class="stripe dropTable globalDropTable" style="width:100%;">
+                                <thead>
+                                    <tr>
+                                        <th class="selectAlls" style="max-width: 10px; width: 10px; min-width: 10px !important;"><input name="select_all" value="1" id="example-select-all" type="radio" /></th>
+                                        <th>@UtilityFunction.GetMessageFromResource("spnPMMasterID", LocalizeResourceSetConstants.Global)</th>
+                                        <th>@UtilityFunction.GetMessageFromResource("spnDescription", LocalizeResourceSetConstants.PrevMaintDetails)</th>
+                                        <th>@UtilityFunction.GetMessageFromResource("spnJobDuration", LocalizeResourceSetConstants.PrevMaintDetails)</th>
+                                        <th>@UtilityFunction.GetMessageFromResource("spnFrequencyType", LocalizeResourceSetConstants.Global)</th>
+                                        <th>@UtilityFunction.GetMessageFromResource("spnFrequency", LocalizeResourceSetConstants.Global)</th>
+                                    </tr>
+                                </thead>
+                                <tfoot id="procSelectTablefooter" style="display:none">
+                                    <tr>
+                                        <th><input type="hidden"></th>
+                                        <th style="position:relative;">@UtilityFunction.GetMessageFromResource("spnPMMasterID", LocalizeResourceSetConstants.Global)</th>
+                                        <th style="position:relative;">@UtilityFunction.GetMessageFromResource("spnDescription", LocalizeResourceSetConstants.PrevMaintDetails)</th>
+                                        <th style="position:relative;">@UtilityFunction.GetMessageFromResource("spnJobDuration", LocalizeResourceSetConstants.PrevMaintDetails)</th>
+                                        <th style="position:relative;">@UtilityFunction.GetMessageFromResource("spnFrequencyType", LocalizeResourceSetConstants.Global)</th>
+                                        <th style="position:relative;">@UtilityFunction.GetMessageFromResource("spnFrequency", LocalizeResourceSetConstants.Global)</th>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="padding:15px 25px !important;">
+                <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-close faIcon"></i> &nbsp; @UtilityFunction.GetMessageFromResource("globalCancel", LocalizeResourceSetConstants.Global)</button>
+                <button type="button" class="btn btn-blue" style="float:right;" id="btnAddPmMaster"><i class="fa fa-plus faIcon"></i> &nbsp; @UtilityFunction.GetMessageFromResource("globalAdd", LocalizeResourceSetConstants.Global)</button>
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<style type="text/css">
+    th.selectAlls input[type="radio"],
+    th.selectAlls input[type="checkbox"] { display: none; }
+    .modal-content {
+        max-width: auto !important;
+    }
+
+    .modal-dialog {
+        max-width: 850px !important;
+    }
+    .modal-info {
+        max-width: 550px !important;
+    }
+</style>

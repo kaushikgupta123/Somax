@@ -1,0 +1,136 @@
+﻿@model Client.Models.FleetAsset.FleetAssetVM
+@{ Layout = null;}
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Somax | Fleet Asset QR Code</title>
+    <link rel="shortcut icon" href="~/Scripts/Metronic/assets/login/demo/default/media/img/logo/favicon.png" />
+    <style type="text/css">
+        p {
+            margin: 0;
+            padding: 0;
+            text-align: left;
+        }
+
+        div {
+            margin: 0;
+            padding: 0;
+            text-align: left;
+        }
+
+        p.qrDescription {
+            width: 120px;
+            word-break: break-all;
+        }
+
+        p.qrDescription2 {
+            width: 280px;
+            word-break: break-all;
+        }
+    </style>
+</head>
+
+<body style="padding:0; margin:0; font-family: 'Roboto', sans-serif; font-size:12px; color:#737272;">
+    @{
+        bool SmallQR = ViewBag.SmallQR;
+
+        string EquipmentIdSmall = "", NameSmall = "", SerialSmall = "";
+        string EquipmentIdLarge = "", NameLarge = "", SerialLarge = "", MakeLarge = "", ModelLarge = "";
+
+
+        string[] splitArray;
+
+        for (int i = 0; i < Model.qRCodeModel.EquipmentIdsList.Count; i++)
+        {
+            splitArray = Model.qRCodeModel.EquipmentIdsList[i].Split(new string[] { "][" }, StringSplitOptions.None);
+            var imgSource = UtilityFunction.QrGenerate(splitArray[0]);
+        <div border="0" cellspacing="0" cellpadding="0" style="overflow:hidden;margin:0;padding:0;">
+            @if (SmallQR == true)
+            {
+                EquipmentIdSmall = "";
+                NameSmall = "";
+                SerialSmall = "";
+
+
+                EquipmentIdSmall = splitArray[0];
+                EquipmentIdSmall = EquipmentIdSmall.Length > 11 ? EquipmentIdSmall.Substring(0, 11) + ".." : EquipmentIdSmall;
+
+                NameSmall = splitArray[1];
+                NameSmall = NameSmall.Length > 23 ? NameSmall.Substring(0, 23) + ".." : NameSmall;
+
+                SerialSmall = splitArray[2];
+                SerialSmall = SerialSmall.Length > 11 ? SerialSmall.Substring(0, 11) + ".." : SerialSmall;
+
+
+                <div style="page-break-after:always;">
+                    <div class="rows" style="color: #000; font-weight: 400; font-size:12px;">
+                        <div class="row">
+                            <div style="float:left;">
+                                <img src="@imgSource" width="100" height="100" />
+                            </div>
+                            <div style='float: left; padding-top: 10px; width:140px'>
+                                <p>@EquipmentIdSmall</p>
+                                <p style="padding-top:5px;" class="qrDescription">@NameSmall</p>
+                                <p style="padding-top:5px;">
+                                    <span style='float: left; color: #000; font-weight: 400; font-size: 11px;'>Serial# : @SerialSmall</span>
+                                </p>
+                            </div>
+                            <div class="clear"></div>
+                        </div>
+                    </div>
+                </div>
+            }
+            else
+            {
+                EquipmentIdLarge = "";
+                NameLarge = "";
+                SerialLarge = "";
+                MakeLarge = "";
+                ModelLarge = "";
+
+                EquipmentIdLarge = splitArray[0];
+                EquipmentIdLarge = EquipmentIdLarge.Length > 24 ? EquipmentIdLarge.Substring(0, 24) + ".." : EquipmentIdLarge;
+
+                NameLarge = splitArray[1];
+                NameLarge = NameLarge.Length > 24 ? NameLarge.Substring(0, 24) + ".." : NameLarge;
+
+                SerialLarge = splitArray[2];
+                SerialLarge = SerialLarge.Length > 19 ? SerialLarge.Substring(0, 19) + ".." : SerialLarge;
+
+                MakeLarge = splitArray[3];
+                MakeLarge = MakeLarge.Length > 19 ? MakeLarge.Substring(0, 19) + ".." : MakeLarge;
+
+                ModelLarge = splitArray[4];
+                ModelLarge = ModelLarge.Length > 19 ? ModelLarge.Substring(0, 19) + ".." : ModelLarge;
+
+                <div style="page-break-after: always;">
+                    <div class="rows" style="color: #000; font-weight: 400; font-size:12px;">
+                        <div class="row">
+                            <div style="float: left; position: relative; width:116px; ">
+                                <img class="roll" src="@imgSource" width="116" height="116" />
+                            </div>
+                            <div style="float: left; position: relative; padding-top: 10px; width:280px;">
+                                <p style="color: #000; font-weight: 400; font-size: 12px;">@EquipmentIdLarge</p>
+                                <p style="padding-top: 3px; color: #000; font-weight: 400; font-size: 12px;" class="qrDescription2">@NameLarge</p>
+                                <p style="padding-top: 3px; color: #000; font-weight: 400; font-size: 12px;">
+                                    Serial#:  <span style='color: #000; font-weight: 400; font-size: 12px;'>
+                                        @SerialLarge
+                                </span>
+                            </p>
+                            <p style="padding-top: 3px; color: #000; font-weight: 400; font-size: 12px;">
+                                @MakeLarge
+                            </p>
+                            <p style="padding-top: 3px; color: #000; font-weight: 400; font-size: 12px;">@ModelLarge</p>
+                        </div>
+                        <div class='clear'></div>
+                    </div>
+                </div>
+            </div>
+
+        }
+        </div>
+        }
+    }
+</body>
+</html>

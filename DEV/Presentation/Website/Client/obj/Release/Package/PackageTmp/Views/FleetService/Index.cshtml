@@ -1,0 +1,109 @@
+﻿@model Client.Models.FleetService.FleetServiceVM
+@{
+    /**/
+
+    ViewBag.Title = "Somax | Fleet Service";
+}
+@Styles.Render("~/Content/dashboardStyle")
+@Styles.Render("~/Content/datatable")
+<link href="~/Scripts/dropzone/basic.min.css" rel="stylesheet" />
+<link href="~/Scripts/dropzone/dropzone.min.css" rel="stylesheet" />
+<link href="~/Content/sidebar_custom.css" rel="stylesheet" />
+<link href="~/Scripts/Metronic/assets/demo/default/base/GlobalSearchGrid.css" rel="stylesheet" />
+<link href="~/Scripts/Metronic/assets/demo/default/base/style_fleet.css" rel="stylesheet" />
+@Styles.Render("~/Content/daterangepickercustom")
+@*@Styles.Render("~/Content/datatable")
+    <link href="~/Scripts/dropzone/basic.min.css" rel="stylesheet" />
+    <link href="~/Scripts/dropzone/dropzone.min.css" rel="stylesheet" />
+    <link href="~/Content/sidebar_custom.css" rel="stylesheet" />
+    <link href="~/Scripts/Metronic/assets/demo/default/base/GlobalSearchGrid.css" rel="stylesheet" />
+    @Styles.Render("~/Content/daterangepickercustom")*@
+
+@section scripts {
+    @Scripts.Render("~/bundles/datatable")
+    @Scripts.Render("~/bundles/imagezoom")
+    @Scripts.Render("~/bundles/FleetService")
+    @Scripts.Render("~/bundles/SomaxCkEditor")
+
+    <script type="text/javascript">
+        com_github_culmat_jsTreeTable.register(this);
+        $(document).ready(function () {
+            // SetControls();
+            $.validator.unobtrusive.parse(document);
+            $('.select2picker, form').change(function () {
+                var areaddescribedby = $(this).attr('aria-describedby');
+                if ($(this).parents().find('.sidebar-content').attr('id') != "advsearchsidebar") {
+                    if ($(this).valid()) {
+                        if (typeof areaddescribedby !== 'undefined') {
+                            $('#' + areaddescribedby).hide();
+                        }
+                    }
+                    else {
+                        if (typeof areaddescribedby !== 'undefined') {
+                            $('#' + areaddescribedby).show();
+                        }
+                    }
+                }
+            });
+            $(document).find('.select2picker').select2({});
+        })
+    </script>
+    <script type="text/javascript">
+        com_github_culmat_jsTreeTable.register(this);
+    </script>
+}
+
+    <div id="fleetservicemaincontainer">
+        @if (Model.IsRedirectFromAsset == true)
+        {
+            //code for redirect
+        }
+        else
+        {
+            @Html.Partial("_FleetServiceSearch")
+        }
+        @Html.HiddenFor(m => m.IsRedirectFromAsset, new { id = "IsRedirectFromAsset" })
+        @Html.HiddenFor(m => m.SOId, new { id = "SOId" })
+    </div>
+<style>
+    .dtpickerNew { /*width: 120px;*/
+        width: 95px;
+        float: left;
+    }
+
+    .timerId { /*width: 100px;*/
+        width: 90px;
+        float: left;
+    }
+
+    .modal-open {
+        overflow: hidden !important;
+    }
+
+    .ui-datepicker-trigger {
+        float: left;
+        margin-left: -3px;
+        margin-right: 10px;
+    }
+
+    ul.listView.nobrd li ul.select2-selection__rendered li {
+        border-bottom: 0px !important;
+        height: auto !important;
+        margin-bottom: 0 !important;
+    }
+
+    .errorMsgBlk {
+        background-color: #d86564;
+        font-size: 13px;
+        color: #fff;
+        font-weight: 400;
+        line-height: 37px;
+        padding: 0 10px;
+    }
+
+    @@media screen and (max-width: 639px) {
+        .ui-datepicker-trigger {
+            height: 34px;
+        }
+    }
+</style>

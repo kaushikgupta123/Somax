@@ -1,0 +1,104 @@
+﻿@model Client.Models.Dashboard.DashboardVM
+
+<link href="~/Scripts/Metronic/assets/demo/default/base/style_newCustom.css" rel="stylesheet" />
+<link href="~/Content/Dashboard/MaintenanceCompletionWorkbench.css" rel="stylesheet" />
+@{
+    var CompletionUserHoursList = UtilityFunction.GetGroupingDataForCompletionWorkbench();
+    if (CompletionUserHoursList != null)
+    {
+        Model.CompletionHoursList = CompletionUserHoursList.Select(x => new SelectListItem { Text = x.text, Value = x.value.ToString() });
+    }
+}
+
+@if (Model.security.MaintenanceCompletionWorkbenchWidget_Complete.Access)
+{
+    <div class="m-portlet m-portlet--full-height m-portlet--fit">
+        <div class="m-portlet__head">
+            <div class="m-portlet__head-caption">
+                <div class="m-portlet__head-title">
+                    <h3 class="m-portlet__head-text">
+                        @Model.Loc.Where(a => a.ResourceId == "spnCompletionWorkbench").FirstOrDefault().Value.ToString()
+                    </h3>
+                </div>
+            </div>
+        </div>
+
+        <div class="m-portlet__body">
+            <div class="tab-content">
+                <div class="dateRangeDrop" id="complitionView">
+                    <label style="float:left;padding:6px 5px 4px 2px"><strong>@Model.Loc.Where(a => a.ResourceId == "spnView").FirstOrDefault().Value.ToString() :</strong> </label>
+                    <div class="btn-group bootstrap-select m-datatable__pager-size dropup show selectDrop">
+
+                        @Html.DropDownListFor(m => m.CompletionUserHours, new SelectList(Model.CompletionHoursList, "Value", "Text"), null, new { id = "MaintenanceCompDropdown", @class = "selectpicker" })
+
+                    </div>
+                    <button type="button" class="btn btn-white navbar-btn" title="@Model.Loc.Where(a => a.ResourceId == "globalSearch").FirstOrDefault().Value.ToString()" id="WoCompSrchBttn"><i class="fa fa-search" style="font-size: 1.1rem;position: relative;top: -2px;left: -2px;"></i> @Model.Loc.Where(a => a.ResourceId == "globalSearch").FirstOrDefault().Value.ToString()</button>
+                    <button type="button" class="btn btn-white navbar-btn" title="@Model.Loc.Where(a => a.ResourceId == "spnResetGrid").FirstOrDefault().Value.ToString()" id="btnResetGrid">@Model.Loc.Where(a => a.ResourceId == "spnResetGrid").FirstOrDefault().Value.ToString()</button>
+
+                    <div style="clear:both;"></div>
+                    <div class="searchBttnDrop desktop" id="compsearchBttnNewDrop" style="display:none;">
+                        <div class="form-group" style="position:relative;">
+                            <i class="fa fa-search txtSearchClickComp" style="font-size: 1.1rem;position: absolute;top: 9px;left: 15px;"></i>
+                            <a href="javascript:void(0)" id="cancelText"><i class="fa fa-close" style="font-size: 1.1rem;position: absolute;top: 9px;right: 15px;"></i></a>
+                            <input type="text" id="txtColumnCompSearch" class="form-control search unsortable" placeholder="@Model.Loc.Where(a => a.ResourceId == "globalSearch").FirstOrDefault().Value.ToString()..." style="padding: 0.65rem 2.75rem;" autocomplete="off">
+                        </div>
+                        <div class="searchTips">
+                            <div class="titleText">@Model.Loc.Where(a => a.ResourceId == "spnSearchTips").FirstOrDefault().Value.ToString()</div>
+                            <div class="infoText">@Model.Loc.Where(a => a.ResourceId == "spnCompletionWorkbenchSearchTipsVal").FirstOrDefault().Value.ToString()</div>
+                            <div style="clear:both;"></div>
+                        </div>
+
+                        <div class="searchInfo">
+                            <span class="recent">
+                                @Model.Loc.Where(a => a.ResourceId == "GlobalRecentlySearched").FirstOrDefault().Value.ToString()
+                            </span>
+                            <div class="searchList" id="wosearchList">
+                                <ul id="UlSearchList"></ul>
+                            </div>
+                            <span class="clear">
+                                <a href="javascript:void(0)" id="clearText">
+                                    @Model.Loc.Where(a => a.ResourceId == "globalClear").FirstOrDefault().Value.ToString()
+                                </a>
+                            </span>
+                            <div style="clear:both;"></div>
+                        </div>
+
+                    </div>
+
+
+                    <div id="searchfilteritems"></div>
+                    <div style="clear:both;"></div>
+                </div>
+
+                <div class="pull-left" style="position:relative;">
+
+                </div>
+                <div style="clear:both; height:10px;"></div>
+                <div style="clear:both;"></div>
+                <div class="table-responsive">
+                    <table id="tblMaintenanceCompletionWorkbench" class="eqpDtlTbl row-border custom-sort tblMain tblDefaultSort" style="width:100%;">
+                        <thead>
+                            <tr>
+                                <th data-col="0" data-th-index="0">@Model.Loc.Where(a => a.ResourceId == "spnGlobalWorkOrderID").FirstOrDefault().Value.ToString()</th>
+                                <th data-col="1" data-th-index="1">@Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString()</th>
+                                <th data-col="2" data-th-index="2">@Model.Loc.Where(a => a.ResourceId == "spnAssetID").FirstOrDefault().Value.ToString()</th>
+                                <th data-col="3" data-th-index="3">@Model.Loc.Where(a => a.ResourceId == "spnAssetName").FirstOrDefault().Value.ToString()</th>
+                                <th data-col="4" data-th-index="4">@Model.Loc.Where(a => a.ResourceId == "spnStatus").FirstOrDefault().Value.ToString()</th>
+                                <th data-col="5" data-th-index="5">@Model.Loc.Where(a => a.ResourceId == "GlobalType").FirstOrDefault().Value.ToString()</th>
+                                <th data-col="6" data-th-index="6">@Model.Loc.Where(a => a.ResourceId == "spnCreated").FirstOrDefault().Value.ToString()</th>
+                                <th data-col="7" data-th-index="7">@Model.Loc.Where(a => a.ResourceId == "spnPriority").FirstOrDefault().Value.ToString()</th>
+                                <th data-col="8" data-th-index="8">@Model.Loc.Where(a => a.ResourceId == "spnGlobalScheduled").FirstOrDefault().Value.ToString()</th>
+                                <th data-col="9" data-th-index="8">@Model.Loc.Where(a => a.ResourceId == "spnRequired").FirstOrDefault().Value.ToString()</th>
+                                <th data-col="10" data-th-index="9">@Model.Loc.Where(a => a.ResourceId == "spnGlobalCompleted").FirstOrDefault().Value.ToString()</th>
+                            </tr>
+                        </thead>
+                    </table>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    @Html.Partial("_StatusDetailsLocalization")
+}
+
+

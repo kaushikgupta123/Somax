@@ -1,0 +1,110 @@
+﻿@model Client.Models.Parts.PartsVM
+@{
+    string imageUrl = Model.partSummaryModel.PartImageUrl;
+    if (Model.partSummaryModel.ClientOnPremise)
+    {
+        imageUrl = UtilityFunction.PhotoBase64ImgSrc(Model.partSummaryModel.PartImageUrl);
+    }
+
+}
+
+<div class="col-xl-12">
+    <div class="m-portlet padAdjst" id="m_portlet">
+        <div class="m-portlet__body  m-portlet__body--no-padding">
+            <div class="row m-row--col-separator-xl">
+                <div class="col-md-12 col-lg-6 col-xl-3">
+                    <div class="m-widget24 imageBox">
+                        <div class="imgThumbs partsImg">
+                            @if (!string.IsNullOrEmpty(imageUrl))
+                            {
+                                <img src="@imageUrl" id="EquipZoom" alt="Image" data-zoom-image="@imageUrl" />
+                            }
+                            else
+                            {
+                                <img src="~/Scripts/ImageZoom/images/NoImage.jpg" id="EquipZoom" alt="Image" data-zoom-image="/Scripts/ImageZoom/images/NoImage.jpg" />
+                            }
+                        </div>
+                        <div class="imgInfo partsImgInfo" style="position:relative; height:65px;">
+                          
+                                <span>ID : @(String.IsNullOrEmpty(Model.partSummaryModel.ClientLookupId) ? "" : (Model.partSummaryModel.ClientLookupId.Length > 21 ? (Model.partSummaryModel.ClientLookupId.Substring(0, 21) + "...") : (Model.partSummaryModel.ClientLookupId)))</span>
+                                @if (Model.partSummaryModel.InactiveFlag == true)
+                                {
+                                    <span class="introTags">@Model.Loc.Where(a => a.ResourceId == "globalInActive").FirstOrDefault().Value.ToString()</span>
+                                }
+                          
+                            <h5 data-toggle="tooltip">
+                                @if (!string.IsNullOrEmpty(Model.partSummaryModel.Description))
+                                {
+                                    if (Model.partSummaryModel.Description.Length > 55)
+                                    {
+                                        @Model.partSummaryModel.Description.Substring(0, 55) <span data-des="@Model.partSummaryModel.Description" style="color:#315a98;cursor:pointer" id="partmoreaddescription">... More</span>
+                                    }
+                                    else
+                                    {
+                                        @Model.partSummaryModel.Description
+                                    }
+                                }
+
+                            </h5>
+                        </div>
+
+                        <div style="clear:both;"></div>
+                    </div>
+                </div>
+
+                <div class="col-md-12 col-lg-6 col-xl-3">
+                    <div class="m-widget24">
+                        <div class="bgBox partsBox" style="background:#5cb85c;">
+                            <h2 class="iconTitle partsTitle" id="hdrOpenWorkOrder">@Model.Loc.Where(a => a.ResourceId == "spnOnHandQuantity").FirstOrDefault().Value.ToString()</h2>
+                            <span class="newCount partsCount">@string.Format("{0:N2}", @Model.partSummaryModel.OnHandQuantity)</span>
+                            <div style="clear:both;"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-12 col-lg-6 col-xl-3">
+                    <div class="m-widget24">
+                        <div class="bgBox partsBox" style="background:#d9534f;">
+                            <h2 class="iconTitle partsTitle" id="hdrWorkRequests">@Model.Loc.Where(a => a.ResourceId == "spnOnOrderQuantity").FirstOrDefault().Value.ToString()</h2>
+                            <span class="newCount partsCount">@string.Format("{0:N2}", @Model.partSummaryModel.OnOrderQuantity)</span>
+                            <div style="clear:both;"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-12 col-lg-6 col-xl-3">
+                    <div class="m-widget24">
+                        <div class="bgBox partsBox" style="background:#f0ad4e;">
+                            <h2 class="iconTitle partsTitle" id="hdrOverduePM">@Model.Loc.Where(a => a.ResourceId == "spnOnRequestQuantity").FirstOrDefault().Value.ToString()</h2>
+                            <span class="newCount partsCount">@string.Format("{0:N2}", @Model.partSummaryModel.OnRequestQuantity)</span>
+                            <div style="clear:both;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .partsImgInfo h5{
+        font-size:11px;
+    }
+    #renderparts div.partsImgInfo .introTags {
+        left: 90px !important;
+        bottom: -3px !important;
+    }
+    @@media(max-width:1200px) {
+        #renderparts div.partsImgInfo .introTags {
+            left:115px !important;
+        }
+    }
+    @@media(max-width:600px) {
+        .filterDescription {
+            max-width: 180px;
+            word-break: break-all;
+            padding-right: 10px;
+            line-height: 20px;
+        }
+    }
+</style>

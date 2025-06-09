@@ -1,0 +1,23 @@
+﻿@using DevExpress.XtraReports.Web.WebDocumentViewer
+@model IEnumerable<Client.Models.PurchaseOrder.PurchaseOrderReceiptDevExpressPrintModel>
+@{
+    ViewBag.Title = "Somax | Purchase Order Receipt Print";
+    Layout = "~/Views/Shared/_ReportLayout.cshtml";
+}
+@section scripts{
+    
+}
+@{
+    var PrintTemplate = new Client.DevExpressReport.PurchaseOrderReceiptPrintTemplate();
+    PrintTemplate.DataSource = Model;
+    var xtraReports = new DevExpress.XtraReports.Web.CachedReportSourceWeb(PrintTemplate);
+}
+@Html.DevExpress().WebDocumentViewer(settings =>
+{
+    settings.Name = "WebDocumentViewer";
+    settings.SettingsProgressBar.Position = ProgressBarPosition.TopRight;
+    settings.SettingsProgressBar.KeepOnVisibleArea = true;
+    settings.ClientSideEvents.CustomizeExportOptions = "onCustomizeExportOptions";
+    settings.ClientSideEvents.CustomizeMenuActions = "onCustomizeMenuActions";
+    settings.ClientSideEvents.BeforeRender = "onCustomizeBeforeRender";
+}).Bind(xtraReports).GetHtml()

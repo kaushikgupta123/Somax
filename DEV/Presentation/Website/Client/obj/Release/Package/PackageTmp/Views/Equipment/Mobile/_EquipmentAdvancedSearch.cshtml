@@ -1,0 +1,239 @@
+﻿@model Client.Models.EquipmentCombined
+<div class="slide-modal" id="sidebar">
+    <div class="slide-modal-head">
+        <a class="slide-back-btn EqpDataAdvSrchclearstate"> <i class="fa fa-angle-left"></i> Back</a>
+        <div class="slide-back-title">
+            @Model.Loc.Where(a => a.ResourceId == "globalFilter").FirstOrDefault().Value.ToString()
+            <span id="spnControlCounter">0</span>
+        </div>
+        <a id="btnEqpDataAdvSrch" class="slide-back-btn right"> @Model.Loc.Where(a => a.ResourceId == "GlobalApply").FirstOrDefault().Value.ToString()</a>
+
+    </div>
+    <div class="slide-modal-body">
+        <div mbsc-page class="demo-responsive">
+            <div style="height:100%">
+                <div mbsc-form class="mbsc-form-grid">
+                    <div class="mbsc-grid">
+                        <form action="#" method="post">
+                            <div class="mbsc-row" id="advsearchsidebar">
+                                <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                    <label>
+                                        @Model.Loc.Where(a => a.ResourceId == "spnGlobalEquipmentId").FirstOrDefault().Value.ToString()
+                                        @Html.TextBoxFor(m => m.EquipModel.ClientLookupId, new
+                                   {
+                                       @class = "form-control search adv-item",
+                                       @mbsc_input = "true",
+                                       @data_label_style = "floating",
+                                       @placeholder = Model.Loc.Where(a => a.ResourceId == "spnGlobalEquipmentId").FirstOrDefault().Value.ToString(),
+                                       @data_input_style = "box",
+                                       autocomplete = "off",
+                                       id = "EquipmentID"
+                                   })
+                                    </label>
+                                </div>
+                                <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                    <label>
+                                        @Model.Loc.Where(a => a.ResourceId == "spnName").FirstOrDefault().Value.ToString()
+                                        @Html.TextBoxFor(m => m.EquipModel.Name, new
+                                   {
+                                       @class = "form-control search adv-item",
+                                       @mbsc_input = "true",
+                                       @data_label_style = "floating",
+                                       @placeholder = Model.Loc.Where(a => a.ResourceId == "spnName").FirstOrDefault().Value.ToString(),
+                                       @data_input_style = "box",
+                                       autocomplete = "off",
+                                       id = "Name"
+                                   })
+                                    </label>
+                                </div>
+                                <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                    <label>
+                                        @Model.Loc.Where(a => a.ResourceId == "spnLocation").FirstOrDefault().Value.ToString()
+                                        @Html.TextBoxFor(m => m.EquipModel.Location, new
+                                   {
+                                       @class = "form-control search adv-item",
+                                       @mbsc_input = "true",
+                                       @data_label_style = "floating",
+                                       @placeholder = Model.Loc.Where(a => a.ResourceId == "spnName").FirstOrDefault().Value.ToString(),
+                                       @data_input_style = "box",
+                                       autocomplete = "off",
+                                       id = "Location"
+                                   })
+                                    </label>
+                                </div>
+                                <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                    <label>
+                                        @Model.EquipModel.AssetGroup1Name
+                                        @Html.DropDownListFor(m => m.EquipModel.AssetGroup1Id, Model.EquipModel.AssetGroup1List, "--Select--", new
+                                   {
+                                       @class = "form-control search adv-item mobiscrollselect",
+                                       @style = "width:100%;",
+                                       @mbsc_dropdown = "true",
+                                       @data_label = Model.EquipModel.AssetGroup1Name,
+                                       @data_input_style = "box",
+                                       @data_label_style = "floating",
+                                       @placeholder = Model.EquipModel.AssetGroup1Name,
+                                       id = "AssetGroup1Id"
+                                   })
+                                    </label>
+                                </div>
+                                <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                    <label>
+                                        @Model.EquipModel.AssetGroup2Name
+                                        @Html.DropDownListFor(m => m.EquipModel.AssetGroup2Id, Model.EquipModel.AssetGroup2List, "--Select--", new
+                                   {
+                                       @class = "form-control search adv-item mobiscrollselect",
+                                       @style = "width:100%;",
+                                       @mbsc_dropdown = "true",
+                                       @data_label = Model.EquipModel.AssetGroup2Name,
+                                       @data_input_style = "box",
+                                       @data_label_style = "floating",
+                                       @placeholder = Model.EquipModel.AssetGroup2Name,
+                                       id = "AssetGroup2Id"
+                                   })
+                                    </label>
+                                </div>
+                                <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                    <label>
+                                        @Model.EquipModel.AssetGroup3Name
+                                        @Html.DropDownListFor(m => m.EquipModel.AssetGroup3Id, Model.EquipModel.AssetGroup3List, "--Select--", new
+                                   {
+                                       @class = "form-control search adv-item mobiscrollselect",
+                                       @style = "width:100%;",
+                                       @mbsc_dropdown = "true",
+                                       @data_label = Model.EquipModel.AssetGroup3Name,
+                                       @data_input_style = "box",
+                                       @data_label_style = "floating",
+                                       @placeholder = Model.EquipModel.AssetGroup3Name,
+                                       id = "AssetGroup3Id"
+                                   })
+                                    </label>
+                                </div>
+                                <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                    <label>
+                                        @Model.Loc.Where(a => a.ResourceId == "spnSerialNo").FirstOrDefault().Value.ToString()
+                                        @Html.TextBoxFor(m => m.EquipModel.SerialNumber, new
+                                   {
+                                       @class = "form-control search adv-item",
+                                       @mbsc_input = "true",
+                                       @data_label_style = "floating",
+                                       @placeholder = Model.Loc.Where(a => a.ResourceId == "spnName").FirstOrDefault().Value.ToString(),
+                                       @data_input_style = "box",
+                                       autocomplete = "off",
+                                       id = "SerialNumber"
+                                   })
+                                    </label>
+                                </div>
+                                <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                    <label>
+                                        @Model.Loc.Where(a => a.ResourceId == "GlobalType").FirstOrDefault().Value.ToString()
+                                        @Html.DropDownListFor(m => m.EquipModel.Type, Model.LookupTypeList, "--Select--", new
+                                   {
+                                       @class = "form-control search adv-item mobiscrollselect",
+                                       @style = "width:100%;",
+                                       @mbsc_dropdown = "true",
+                                       @data_label = Model.Loc.Where(a => a.ResourceId == "GlobalType").FirstOrDefault().Value.ToString(),
+                                       @data_input_style = "box",
+                                       @data_label_style = "floating",
+                                       @placeholder = Model.Loc.Where(a => a.ResourceId == "GlobalType").FirstOrDefault().Value.ToString(),
+                                       id = "ddlType"
+                                   })
+                                    </label>
+                                </div>
+                                <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                    <label>
+                                        @Model.Loc.Where(a => a.ResourceId == "spnMake").FirstOrDefault().Value.ToString()
+                                        @Html.TextBoxFor(m => m.EquipModel.Make, new
+                                   {
+                                       @class = "form-control search adv-item",
+                                       @mbsc_input = "true",
+                                       @data_label_style = "floating",
+                                       @placeholder = Model.Loc.Where(a => a.ResourceId == "spnName").FirstOrDefault().Value.ToString(),
+                                       @data_input_style = "box",
+                                       autocomplete = "off",
+                                       id = "Make"
+                                   })
+                                    </label>
+                                </div>
+                                <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                    <label>
+                                        @Model.Loc.Where(a => a.ResourceId == "spnModelNo").FirstOrDefault().Value.ToString()
+                                        @Html.TextBoxFor(m => m.EquipModel.ModelNumber, new
+                                   {
+                                       @class = "form-control search adv-item",
+                                       @mbsc_input = "true",
+                                       @data_label_style = "floating",
+                                       @placeholder = Model.Loc.Where(a => a.ResourceId == "spnName").FirstOrDefault().Value.ToString(),
+                                       @data_input_style = "box",
+                                       autocomplete = "off",
+                                       id = "ModelNumber"
+                                   })
+                                    </label>
+                                </div>
+                                <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                    <label>
+                                        @Model.Loc.Where(a => a.ResourceId == "spnAccount").FirstOrDefault().Value.ToString()
+                                        @Html.DropDownListFor(m => m.EquipModel.Account, Model.EquipModel.AccountList, "--Select--", new
+                                   {
+                                       @class = "form-control search adv-item mobiscrollselect",
+                                       @style = "width:100%;",
+                                       @mbsc_dropdown = "true",
+                                       @data_label = Model.Loc.Where(a => a.ResourceId == "spnAccount").FirstOrDefault().Value.ToString(),
+                                       @data_input_style = "box",
+                                       @data_label_style = "floating",
+                                       @placeholder = Model.Loc.Where(a => a.ResourceId == "spnAccount").FirstOrDefault().Value.ToString(),
+                                       id = "AccountSearchId"
+                                   })
+                                    </label>
+                                </div>
+                                <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                    <label>
+                                        @Model.Loc.Where(a => a.ResourceId == "spnAssetNo").FirstOrDefault().Value.ToString()
+                                        @Html.TextBoxFor(m => m.EquipModel.AssetNumber, new
+                                   {
+                                       @class = "form-control search adv-item",
+                                       @mbsc_input = "true",
+                                       @data_label_style = "floating",
+                                       @placeholder = Model.Loc.Where(a => a.ResourceId == "spnName").FirstOrDefault().Value.ToString(),
+                                       @data_input_style = "box",
+                                       autocomplete = "off",
+                                       id = "AssetsNumber"
+                                   })
+                                    </label>
+                                </div>
+                                <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                    <label>
+                                        @Model.Loc.Where(a => a.ResourceId == "spnAvailability").FirstOrDefault().Value.ToString()
+                                        @Html.DropDownListFor(m => m.EquipModel.AssetAvailability, Model.LookupAssetAvailability, "--Select--", new
+                                   {
+                                       @class = "form-control search adv-item mobiscrollselect",
+                                       @style = "width:100%;",
+                                       @mbsc_dropdown = "true",
+                                       @data_label = Model.Loc.Where(a => a.ResourceId == "spnAvailability").FirstOrDefault().Value.ToString(),
+                                       @data_input_style = "box",
+                                       @data_label_style = "floating",
+                                       @placeholder = Model.Loc.Where(a => a.ResourceId == "spnAvailability").FirstOrDefault().Value.ToString(),
+                                       id = "ddlassetAvailability"
+                                   })
+                                    </label>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="slide-modal-footer"></div>
+</div>
+<style>
+    #sidebar.slide-modal.slide-active {
+        left: auto !important;
+        right: 0 !important;
+    }
+
+    .slide-back-btn.right {
+        left: auto;
+        right: 12px;
+    }
+</style>

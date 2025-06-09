@@ -1,0 +1,194 @@
+﻿@model Client.Models.PartIssue.PartIssueVM
+@using (Ajax.BeginForm("ValiDateControlls", "PartIssue", new AjaxOptions { HttpMethod = "Post", OnSuccess = "ItemAddToGridSuccess", OnBegin = "AjaxBeginFormBegin", OnFailure = "AjaxBeginFormFaillure" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="tabsArea nobg m-portlet newPort" id="Issuepart" style="display:block;">
+        <ul class="listView nobrd rt-part tree-rt-adj inpt-full-adj">
+            <li class="qr-part qr-rt-adj">
+                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnIssueTo").FirstOrDefault().Value.ToString(): <small>*</small></span>
+                <div class="opt-btn-box">
+                    <span class="inputText wthAdjst2 tree-sub-adj" style="position:relative;">
+                        <div class="dropdown dropTableOuter">
+                            <div class="input-group">
+                                @Html.ValidationMessageFor(m => m.partIssueModel.ClientLookupId, "", new { style = "display:none" })
+                                @Html.TextBoxFor(m => m.partIssueModel.ClientLookupId, new { @class = "form-control search dropbtn readonly", id = "txtIssueToId", autocomplete = "off", @readonly = "readonly" })
+                                @Html.HiddenFor(m => m.partIssueModel.PersonnelId, new { id = "hdnIssueToId" })
+
+                                <div class="input-group-btn">
+                                    <button class="btn btn-white btntxtInputGroup" type="button" id="OpenPersonnelModalPopupGrid">
+                                        <i id="srcicon" class="fa fa-search"></i>
+                                    </button>
+
+                                </div>
+                            </div>
+                        </div>
+                    </span>
+                    <div class="input-group-btn qr-scr-adj">
+                        <button type="button" class="btn btn-blue mobBttn btnQrScanner" id="btnIssueToQrScanner"><i class="fa fa-qrcode"></i></button>
+                    </div>
+                </div>
+            </li>
+            <li class="txtSrchArea txtSrch">
+                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnChargeType").FirstOrDefault().Value.ToString(): <small>*</small></span>
+                <span class="inputText ">
+                    @Html.DropDownListFor(m => m.partIssueModel.ChargeType, Model.partIssueModel.ChargeTypeList, "--Select--", new { @class = "form-control search select2picker", style = "width:100%;" })
+                    @Html.ValidationMessageFor(m => m.partIssueModel.ChargeType, "", new { style = "display:none" })
+                </span>
+                <div style="clear:both;"></div>
+            </li>
+            <li style="position:relative;" class="search-feild">
+                <span class="label">@Model.Loc.Where(a => a.ResourceId == "GlobalChargeTo").FirstOrDefault().Value.ToString(): <small>*</small></span>
+                <div class="opt-btn-box">
+                    <span class="inputText wthAdjst2 tree-sub-adj">
+                        <div class="dropdown dropTableOuter">
+                            <div class="input-group">
+                                @Html.ValidationMessageFor(m => m.partIssueModel.ChargeToClientLookupId, "", new { style = "display:none" })
+                                @Html.TextBoxFor(m => m.partIssueModel.ChargeToClientLookupId, new { @class = "form-control search dropbtn readonly", id = "txtChargeToId", autocomplete = "off", @readonly = "readonly" })
+                                @Html.HiddenFor(m => m.partIssueModel.ChargeToId, new { id = "hdnChargeToId" })
+                                @Html.Hidden("hdnId")
+                                <div class="input-group-btn">
+                                    <button class="btn btn-white btntxtInputGroup" type="button" id="opengrid">
+                                        <i id="srcicon" class="fa fa-search"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </span>
+                    @if (Model.userData.DatabaseKey.Client.AssetTree == true)
+                    {
+                        <i class="fa fa-tree chargeTree adjust" id="imgChargeToTree" style="display:none;"></i>
+                    }
+                    <div class="input-group-btn qr-scr-adj btnWorkOrderQrScannerCls" style="display:none;">
+                        <button type="button" class="btn btn-blue mobBttn btnQrScanner" id="btnWorkOrderQrScanner"><i class="fa fa-qrcode"></i></button>
+                    </div>
+                    <div class="input-group-btn qr-scr-adj btnEquipmentQrScannerCls" style="display:none;">
+                        <button type="button" class="btn btn-blue mobBttn btnQrScanner" id="btnEquipmentQrScanner"><i class="fa fa-qrcode"></i></button>
+                    </div>
+                </div>
+            </li>
+            @if (Model.partIssueModel.MultiStoreroom)
+            {
+                <li class="txtSrchArea txtSrch">
+                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnStoreroom").FirstOrDefault().Value.ToString(): <small>*</small></span>
+                    <span class="inputText">
+                        @Html.DropDownListFor(m => m.partIssueModel.StoreroomId, Model.partIssueModel.StoreroomList, "--Select--", new { @class = "form-control search select2picker ddlStoreroom", style = "width:100%;" })
+                        @Html.ValidationMessageFor(m => m.partIssueModel.StoreroomId, "", new { style = "display:none" })
+                    </span>
+                    <div style="clear:both;"></div>
+                </li>
+            }
+            <li class="qr-part qr-rt-adj">
+                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnPartID").FirstOrDefault().Value.ToString(): <small>*</small></span>
+                <div class="opt-btn-box">
+                    <span class="inputText wthAdjst2 tree-sub-adj" style="position:relative;">
+                        <div class="dropdown dropTableOuter">
+                            <div class="input-group">
+                                @Html.ValidationMessageFor(m => m.partIssueModel.PartClientLookupId, "", new { style = "display:none" })
+                                @Html.TextBoxFor(m => m.partIssueModel.PartClientLookupId, new { @class = "form-control search dropbtn readonly", id = "txtPartId", autocomplete = "off", @readonly = "readonly" })
+                                @Html.HiddenFor(m => m.partIssueModel.PartId, new { id = "hdnPartId" })
+
+                                <div class="input-group-btn">
+                                    <button class="btn btn-white btntxtInputGroup" type="button" id="openpartgrid" data-multistoreroomvalue="@Model.partIssueModel.MultiStoreroom">
+                                        <i id="srcicon" class="fa fa-search"></i>
+                                    </button>
+
+                                </div>
+                            </div>
+                        </div>
+                    </span>
+                    <div class="input-group-btn qr-scr-adj">
+                        <button type="button" class="btn btn-blue mobBttn" id="btnQrScanner"><i class="fa fa-qrcode"></i></button>
+                    </div>
+                </div>
+            </li>
+            <li class="txtSrchArea txtSrch">
+                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnQuantity").FirstOrDefault().Value.ToString(): <small>*</small></span>
+                <span class="inputText inpt-rt-adj">
+                    @Html.ValidationMessageFor(m => m.partIssueModel.Quantity, "", new { style = "display:none" })
+                    @Html.TextBoxFor(m => m.partIssueModel.Quantity, new { @class = "form-control search decimalinput", @Value = "1", autocomplete = "off" })
+                </span>
+
+            </li>
+
+            <li class="txtSrchArea txtSrch">
+                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnLogComment").FirstOrDefault().Value.ToString():</span>
+                <span class="inputText inpt-rt-adj">
+                    @Html.ValidationMessageFor(m => m.partIssueModel.Comments, "", new { style = "display:none" })
+                    @Html.TextBoxFor(m => m.partIssueModel.Comments, new { @class = "form-control search", autocomplete = "off", maxlength = "254" })
+                </span>
+
+            </li>
+        </ul>
+        <div style="clear:both;"></div>
+        <div class="bttn_pagin">
+            <div class="bttns2">
+                <button type="submit" class="btn btn-blue mobBttn" id="btnAddToGrid" style="cursor:pointer" value="save"><i class="fa fa-save faIcon"></i> &nbsp;@Model.Loc.Where(a => a.ResourceId == "globalAdd").FirstOrDefault().Value.ToString()</button>
+            </div>
+            <div class="bttns"><button type="button" class="btn btn-blue mobBttn" id="btnClearIssuePartAllItems"><i class="fa fa-close faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalClear").FirstOrDefault().Value.ToString()</button></div>
+            <div style="clear:both;"></div>
+        </div>
+    </div>
+}
+<div id="finselectcontainer" style="display:none; margin-top:15px;">
+    <div class="table-responsive" id="dvInventorySelectTable" style="display:none;">
+        <table id="inventorySelectTable" class="eqpDtlTbl row-border custom-sort" style="width:100%;">
+            <thead>
+                <tr>
+                    <th>@Model.Loc.Where(a => a.ResourceId == "spnIssueTo").FirstOrDefault().Value.ToString()</th>
+                    <th>@Model.Loc.Where(a => a.ResourceId == "spnChargeType").FirstOrDefault().Value.ToString()</th>
+                    <th>@Model.Loc.Where(a => a.ResourceId == "GlobalChargeTo").FirstOrDefault().Value.ToString()</th>
+                    <th>@Model.Loc.Where(a => a.ResourceId == "spnStoreroom").FirstOrDefault().Value.ToString()</th>
+                    <th>@Model.Loc.Where(a => a.ResourceId == "spnPartID").FirstOrDefault().Value.ToString()</th>
+                    <th>@Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString()</th>
+                    <th>@Model.Loc.Where(a => a.ResourceId == "spnQuantity").FirstOrDefault().Value.ToString()</th>
+                    <th>@Model.Loc.Where(a => a.ResourceId == "spnErrorMessage").FirstOrDefault().Value.ToString()</th>
+                    <th width="17%" style="text-align:center !important;">@Model.Loc.Where(a => a.ResourceId == "globalAction").FirstOrDefault().Value.ToString()</th>
+                    <th>@Model.Loc.Where(a => a.ResourceId == "spnGlobalStoreRoomId").FirstOrDefault().Value.ToString()</th>
+                    <th>@Model.Loc.Where(a => a.ResourceId == "spnGlobalChargeToId").FirstOrDefault().Value.ToString()</th>
+                    <th>@Model.Loc.Where(a => a.ResourceId == "spnGlobalPartId").FirstOrDefault().Value.ToString()</th>
+                    <th>@Model.Loc.Where(a => a.ResourceId == "spnLogComment").FirstOrDefault().Value.ToString()</th>
+                    <th>@Model.Loc.Where(a => a.ResourceId == "spnGlobalStoreRoomId").FirstOrDefault().Value.ToString()</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+    <div style="clear:both;"></div>
+    <div class="idBttns" id="dvIdBttns" style="display:none;">
+    
+        <div class="bttn_pagin">
+            <div class="bttns2">
+                <button type="button" class="btn btn-blue mobBttn" id="btnConfirmAllItems"><i class="fa fa-check faIcon"></i>@Model.Loc.Where(a => a.ResourceId == "spnIssue").FirstOrDefault().Value.ToString()</button>
+            </div>
+            <div class="bttns"><button type="button" class="btn btn-blue mobBttn" id="btnCancelIssuePartAllItems" >
+    <i class="fa fa-sign-out"></i>@UtilityFunction.GetMessageFromResource("spnLogout", LocalizeResourceSetConstants.Menu)
+</button></div>
+            <div style="clear:both;"></div>
+        </div>
+    </div>
+</div>
+@Html.TextBoxFor(m => m.partIssueModel.MultiStoreroom, new { id = "MultiStoreroom", style = "display:none" })
+@Html.HiddenFor(m => m.partIssueModel.StoreroomId, new { id = "StoreroomId", style = "display:none" })
+@Html.Partial("~/Views/PartIssue/_PersonnelPopupLookUp.cshtml")
+<div id="partIssueTreeModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title" id="hdrPlantLocation">@Model.Loc.Where(a => a.ResourceId == "spnEquipmentTreeLookup").FirstOrDefault().Value.ToString()</h4>
+            </div>
+            <div class="modal-body">
+                <div class="cntTree">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<style>
+    @@media only screen and (min-width: 768px) {
+        ul.listView.tree-rt-adj li.search-feild .inputText.wthAdjst2.tree-sub-adj {
+            left: 0px !important;
+            width: calc(100% - 90px) !important;
+        }
+    }
+</style>
+

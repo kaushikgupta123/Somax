@@ -1,0 +1,146 @@
+﻿@model Client.Models.Approval.ApprovalVM
+
+@{
+    var fieldLabel = "";
+    var fieldName = "";
+    object Value = null;
+    const string constVendor = "Vendor";
+}
+<div class="col-xl-12"><h5><b>Purchase Request Details - <span id="txtPRclientlookup"></span></b></h5></div>
+
+<div class="col-xl-8">
+    <div class="m-portlet" id="m_portlet" style="padding:10px;">
+        <div>
+            <ul class="listView clsoverview">
+                @foreach (var data in Model.UIConfigurationDetails)
+                {
+                    if (data.Section == true)
+                    {
+                        <li>
+                            <span class="label"><strong>@data.SectionName</strong></span>
+                        </li>
+                        continue;
+                    }
+                    if (string.IsNullOrEmpty(data.ColumnName))
+                    {
+                        continue;
+                    }
+                    else if (!string.IsNullOrEmpty(data.ColumnName))
+                    {
+                        string colName = UtilityFunction.ReturnPropertyNameWithoutCaseComparison(data.ColumnName, Model.ViewPurchaseRequest);
+                        if (string.IsNullOrEmpty(colName))
+                        {
+                            continue;
+                        }
+                        data.ColumnName = colName;
+                    }
+
+                    fieldLabel = data.ColumnLabel;
+
+                    #region Column Name
+                    fieldName = data.ColumnName;
+
+
+                    if (data.ColumnName.ToLower() == "Select1".ToLower())
+                    {
+                        fieldName = "Select1Name";
+                    }
+                    else if (data.ColumnName.ToLower() == "Select2".ToLower())
+                    {
+                        fieldName = "Select2Name";
+                    }
+                    else if (data.ColumnName.ToLower() == "Select3".ToLower())
+                    {
+                        fieldName = "Select3Name";
+                    }
+                    else if (data.ColumnName.ToLower() == "Select4".ToLower())
+                    {
+                        fieldName = "Select4Name";
+                    }
+
+                    #endregion
+
+
+                    Value = Model.ViewPurchaseRequest.GetType().GetProperty(fieldName).GetValue(Model.ViewPurchaseRequest);
+                    if (data.ColumnName.ToLower() == "ApprovedBy_PersonnelId".ToLower())
+                    {
+                        Value = Model.ViewPurchaseRequest.GetType().GetProperty("Approved_PersonnelName").GetValue(Model.ViewPurchaseRequest);
+                    }
+                    if (data.ColumnName.ToLower() == "ProcessBy_PersonnelId".ToLower())
+                    {
+                        Value = Model.ViewPurchaseRequest.GetType().GetProperty("Processed_PersonnelName").GetValue(Model.ViewPurchaseRequest);
+                    }
+                    if (data.ColumnName.ToLower() == "CreatedBy_PersonnelId".ToLower())
+                    {
+                        Value = Model.ViewPurchaseRequest.GetType().GetProperty("Creator_PersonnelName").GetValue(Model.ViewPurchaseRequest);
+                    }
+                    if (data.ColumnName.ToLower() == "PurchaseOrderId".ToLower())
+                    {
+                        Value = Model.ViewPurchaseRequest.GetType().GetProperty("PurchaseOrderClientLookupId").GetValue(Model.ViewPurchaseRequest);
+                    }
+                    if (data.ColumnName.ToLower() == "StoreroomId".ToLower() && Model.udata.DatabaseKey.Client.UseMultiStoreroom == true)
+                    {
+                        Value = Model.ViewPurchaseRequest.GetType().GetProperty("StoreroomName").GetValue(Model.ViewPurchaseRequest);
+                    }
+                    if (data.ColumnName.ToLower() == "StoreroomId".ToLower() && Model.udata.DatabaseKey.Client.UseMultiStoreroom == false)
+                    {
+                        continue;
+                    }
+                    if (Value == null)
+                    {
+                        Value = "";
+                    }
+
+                    if (data.LookupType == DataDictionaryLookupTypeConstant.Table && data.LookupName.ToLower() == constVendor.ToLower())
+                    {
+                        string vendorClientLookupId = "", vendorNameVal = "", vendorNameLbl;
+                        vendorClientLookupId = Model.ViewPurchaseRequest.GetType().GetProperty("VendorClientLookupId").GetValue(Model.ViewPurchaseRequest).ToString();
+                        vendorNameLbl = @Model.Loc.Where(a => a.ResourceId == "spnWrVendorName").FirstOrDefault().Value.ToString();
+                        vendorNameVal = Model.ViewPurchaseRequest.GetType().GetProperty("VendorName").GetValue(Model.ViewPurchaseRequest).ToString();
+
+                        <li style="height:auto;" class="dscrbtn">
+                            @CustomHelperDynamic.ViewLabelAndDisplayValue(fieldLabel, vendorClientLookupId, data.ColumnType)
+                        </li>
+                        <li style="height:auto;" class="dscrbtn">
+                            @CustomHelperDynamic.ViewLabelAndDisplayValue(vendorNameLbl, vendorNameVal, data.ColumnType)
+                        </li>
+                        continue;
+                    }
+                    <li style="height:auto;" class="dscrbtn">
+                        @CustomHelperDynamic.ViewLabelAndDisplayValue(fieldLabel, Value.ToString(), data.ColumnType)
+                    </li>
+                }
+
+
+            </ul>
+        </div>
+    </div>
+</div>
+<div class="col-xl-4">
+    <div id="tskBttns">
+        <div class="bttns">
+            <button type="button" class="btn btn-blue" style="margin-right:10px" id="btnPurchaserequestApprove"><i class="fa fa-check faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalApprove").FirstOrDefault().Value.ToString()</button>
+        </div>
+    </div>
+    <div class="bttns">
+        <button type="button" class="btn btn-blue" style="margin-right:10px" id="btnPurchaserequestDeny"><i class="fa fa-close faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalDeny").FirstOrDefault().Value.ToString()</button>
+    </div>
+    <div class="bttns">
+        <button type="button" class="btn btn-blue" data-toggle="modal" data-target="#returnTorequesterModal" style="margin-right:10px" id="btnPurchaserequestReturntoRequestor"><i class="fa fa-undo faIcon"></i> &nbsp; Return to Requestor @*@Model.Loc.Where(a => a.ResourceId == "globalDeny").FirstOrDefault().Value.ToString()*@</button>
+    </div>
+</div>
+<div class="col-xl-12">
+    <div class="m-portlet" id="m_portlet" style="padding:10px;">
+        <div class="col-xl-12"><h5><b>Line Item</b></h5></div>
+        @Html.Partial("~/Views/Approval/PurchaseRequest/_PurchaseRequestLineItem.cshtml", Model)
+    </div>
+</div>
+
+@Html.Hidden("PurchaseRequestId", "", new { @id = "hdnPurchaseRequestId" })
+@Html.Hidden("ClientLookupId", "", new { @id = "hdnClientLookupId" })
+@Html.Hidden("ApprovalGroupId", "", new { @id = "hdnApprovalGroupId" })
+<div id="MultiLevelApproverListModalpopup" class="modal fade" role="dialog">
+    <div class="modal-dialog" id="MultiLevelApproverListPopUp">
+    </div>
+</div>
+@Html.Partial("~/Views/Approval/PurchaseRequest/_ReturnTorequesterModal.cshtml", Model)

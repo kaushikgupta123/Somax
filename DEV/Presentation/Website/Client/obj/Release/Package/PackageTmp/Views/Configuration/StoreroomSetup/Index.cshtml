@@ -1,0 +1,32 @@
+﻿
+@{
+    ViewBag.Title = "Somax-Config | Storeroom Setup";
+}
+
+@section scripts {
+    @Scripts.Render("~/bundles/datatable")
+    @Scripts.Render("~/bundles/StoreroomSetup")
+}
+@Styles.Render("~/Content/datatable")
+<link href="~/Scripts/Metronic/assets/demo/default/base/style_newCustom.css" rel="stylesheet" />
+<div id="renderStoreroomSetup">
+    @Html.Partial("~/Views/Configuration/StoreroomSetup/_StoreroomSetupSearch.cshtml")
+</div>
+
+
+<style>
+
+    @@media(max-width: 950px) {
+
+        .separator.breadcrumb-box {
+            padding-right: 15px;
+            min-width: 100px;
+            margin-right: 15px;
+            border-right: 1px solid #ccc;
+        }
+    }
+
+/*    .NewBreadcrumbArea {
+        width: calc(100% - 133px);
+    }*/
+</style>

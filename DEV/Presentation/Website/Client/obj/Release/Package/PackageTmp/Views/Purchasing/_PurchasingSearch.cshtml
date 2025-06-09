@@ -1,0 +1,378 @@
+﻿@model Client.Models.PurchaseOrder.PurchaseOrderVM
+@using Client.Models.Common
+<link href="~/Scripts/Metronic/assets/demo/default/base/style_newCustom.css" rel="stylesheet" />
+@{
+    bool PurchaseOrderImportInUse = false;
+    bool PurchaseOrderImportSwitch1 = false;
+    var InterfacePropData = (List<InterfacePropModel>)Session["InterfacePropData"];
+    if (InterfacePropData != null && InterfacePropData.Count > 0)
+    {
+        PurchaseOrderImportInUse = InterfacePropData.Where(x => x.InterfaceType == InterfacePropConstants.PurchaseOrderImport).Select(x => x.InUse).FirstOrDefault();
+        PurchaseOrderImportSwitch1 = InterfacePropData.Where(x => x.InterfaceType == InterfacePropConstants.PurchaseOrderImport).Select(x => x.Switch1).FirstOrDefault();
+    }
+
+}
+@if (Convert.ToString(Session["MenuState"]) == "" || Convert.ToString(Session["MenuState"]) == "open")
+{
+    <div class="m-subheader fixedDiv1">
+        <div class="new-m-subheader">
+            <div class="PageTitle">
+                <div class="align-items-center">
+                    <h3 class="m-subheader__title" style="padding:0;">
+                        <span class="dropToggle" id="spnDropToggle">
+                            <img src="~/Images/toggleMenu.png" />
+                        </span>
+                        <span style="line-height:35px;" id="posearchtitle">
+                            @Model.Loc.Where(a => a.ResourceId == "spnPoPurchaseOrder").FirstOrDefault().Value.ToString()
+                        </span>
+                    </h3>
+                </div>
+            </div>
+            @if (!Model.OraclePOImportInUse)
+            {
+                if (PurchaseOrderImportInUse)
+                {
+                    if (Model.security.Purchasing.Create && PurchaseOrderImportSwitch1)
+                    {
+                        <div class="ActionBttnArea">
+                            <button type="button" class="btn newBtn-add AddPO pull-left" title="Add Purchase Order">@Model.Loc.Where(a => a.ResourceId == "spnNewPurchaseOrder").FirstOrDefault().Value.ToString()</button>
+                            <div style="clear:both;"></div>
+                        </div>
+                    }
+                }
+                else
+                {
+                    if (Model.security.Purchasing.Create)
+                    {
+                        <div class="ActionBttnArea">
+                            <button type="button" class="btn newBtn-add AddPO pull-left" title="Add Purchase Order">@Model.Loc.Where(a => a.ResourceId == "spnNewPurchaseOrder").FirstOrDefault().Value.ToString()</button>
+                            <div style="clear:both;"></div>
+                        </div>
+                    }
+                }
+            }
+            <div style="clear:both;"></div>
+        </div>
+    </div>
+}
+else
+{
+    <div class="m-subheader fixedDiv1 fixupperpannel2">
+        <div class="new-m-subheader">
+            <div class="PageTitle">
+                <div class="align-items-center">
+                    <h3 class="m-subheader__title" style="padding:0;">
+                        <span class="dropToggle" id="spnDropToggle">
+                            <img src="~/Images/toggleMenu.png" />
+                        </span>
+                        <span style="line-height:35px;" id="posearchtitle">
+                            @Model.Loc.Where(a => a.ResourceId == "spnPoPurchaseOrder").FirstOrDefault().Value.ToString()
+                        </span>
+                    </h3>
+                </div>
+            </div>
+            @if (!Model.OraclePOImportInUse)
+            {
+                if (PurchaseOrderImportInUse)
+                {
+                    if (Model.security.Purchasing.Create && PurchaseOrderImportSwitch1)
+                    {
+                        <div class="ActionBttnArea">
+                            <button type="button" class="btn newBtn-add AddPO pull-left" title="Add Purchase Order">@Model.Loc.Where(a => a.ResourceId == "spnNewPurchaseOrder").FirstOrDefault().Value.ToString()</button>
+                            <div style="clear:both;"></div>
+                        </div>
+                    }
+                }
+                else
+                {
+                    if (Model.security.Purchasing.Create)
+                    {
+                        <div class="ActionBttnArea">
+                            <button type="button" class="btn newBtn-add AddPO pull-left" title="Add Purchase Order">@Model.Loc.Where(a => a.ResourceId == "spnNewPurchaseOrder").FirstOrDefault().Value.ToString()</button>
+                            <div style="clear:both;"></div>
+                        </div>
+                    }
+                }
+            }
+            <div style="clear:both;"></div>
+        </div>
+    </div>
+}
+<div class="pushDiv1"></div>
+<div class="row">
+    <div class="col-xl-12">
+        <div class="m-portlet" id="m_portlet" style="padding:15px;">
+            <div class="actionBar" style="display:none" id="POGridAction">
+                <div class="pull-left" style="position:relative;">
+                    <button type="button" class="btn btn-white navbar-btn" title="Search" id="SrchBttnNew"><i class="fa fa-search" style="font-size: 1.1rem;position: relative;top: -2px;left: -2px;"></i> Search</button>
+                    <button type="button" class="btn btn-white navbar-btn" id="sidebarCollapse" title="Advance Search"><i class="fa fa-filter" style="font-size: 1.3rem;"></i></button>
+                    <ul class="filter_apply globalFilterAdjusted clsgridreset">
+                        <li class="textClear" id="liResetGridClearBtn"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "globalClear").FirstOrDefault().Value.ToString()</a></li>
+                    </ul>
+                    <div style="clear:both;"></div>
+                    <div class="searchBttnDrop desktop" id="searchBttnNewDrop" style="display:none;">
+                        <div class="form-group" style="position:relative;">
+                            <i class="fa fa-search txtSearchClick" style="font-size: 1.1rem;position: absolute;top: 9px;left: 15px;"></i>
+                            <a href="javascript:void(0)" id="cancelText"><i class="fa fa-close" style="font-size: 1.1rem;position: absolute;top: 9px;right: 15px;"></i></a>
+                            <input type="text" id="txtColumnSearch" class="form-control search" placeholder="Search..." style="padding: 0.65rem 2.75rem;" autocomplete="off">
+                        </div>
+
+                        <div class="searchTips">
+                            <div class="titleText">Search Tips</div>
+                            @if (Model.Loc.Any(a => a.ResourceId == SearchTipsType.PurchaseOrderSearchTips))
+                            {
+                                <div class="infoText">@Model.Loc.Where(a => a.ResourceId == SearchTipsType.PurchaseOrderSearchTips).FirstOrDefault().Value.ToString()</div>
+                            }
+                            else
+                            {
+                                <div class="infoText">Search for Purchase Requests by Purchase Order ID, Vendor ID, Vendor Name, Part ID, and Line Item Description.</div>
+                            }
+
+                            <div style="clear:both;"></div>
+                        </div>
+                        <div class="searchInfo">
+                            <span class="recent">@Model.Loc.Where(a => a.ResourceId == "GlobalRecentlySearched").FirstOrDefault().Value.ToString()</span>
+                            <div class="searchList" id="wosearchList">
+                                <ul id="UlSearchList"></ul>
+                            </div>
+                            <span class="clear"><a href="javascript:void(0)" id="clearText">@Model.Loc.Where(a => a.ResourceId == "globalClear").FirstOrDefault().Value.ToString()</a></span>
+                            <div style="clear:both;"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pull-right marAdjst">
+                    <button type="button" class="btn btn-white import-export" disabled onclick="funcShowExportbtn()">@Model.Loc.Where(a => a.ResourceId == "spnExport").FirstOrDefault().Value.ToString()</button>
+                    <button type="button" class="btn btn-white" id="liCustomize" title="Customize" data-toggle="modal" data-target="#gridcolumncustomizemodal"><i class="fa fa-cog" style="font-size: 1.3rem;"></i></button>
+                    <div style="clear:both;"></div>
+                </div>
+                <div style="clear:both;"></div>
+                <div id="advsearchfilteritems"></div>
+                <div style="clear:both;"></div>
+            </div>
+
+            <div class="updateArea">
+                <div class="pull-left">
+                    <ul class="filter_apply2">
+                        <li><span class="itemcount">0</span>&nbsp;@Model.Loc.Where(a => a.ResourceId == "globalItemsSelected").FirstOrDefault().Value.ToString()</li>
+                    </ul>
+                    <button type="button" class="btn btn-blue" title="Print Labels" id="PrintPOCheckList" disabled="disabled" style="float:left;"><i class="fa fa-print" style="margin-top:-3px;"></i></button>
+                </div>
+
+                <div style="clear:both;"></div>
+            </div>
+            <div style="clear:both;"></div>
+
+            <div id="Active" class="tabcontent" style="display:block;">
+                <div class="table-responsive">
+                    <table id="PurchaseOrderSearch" class="eqpDtlTbl row-border custom-sort tblMain hover haschild tblDefaultSort" style="width:100%;">
+                        <thead>
+                            <tr>
+                                <th style="width:20px;"></th>
+                                <th></th>
+                                <th id="thPurchaseOrder" data-col="2" class="th-PurchaseOrder ClientLookupId" data-th-index="0" data-th-prop="ClientLookupId">@Model.Loc.Where(a => a.ResourceId == "spnPoPurchaseOrder").FirstOrDefault().Value.ToString()</th>
+                                <th id="thPurchaseOrderStatus" data-col="3" class="Status" data-th-index="1" data-th-prop="Status">@Model.Loc.Where(a => a.ResourceId == "spnPoStatus").FirstOrDefault().Value.ToString()</th>
+                                <th id="thPurchaseOrderVendor" data-col="4" class="VendorClientLookupId" data-th-index="2" data-th-prop="VendorClientLookupId">@Model.Loc.Where(a => a.ResourceId == "spnPoVendor").FirstOrDefault().Value.ToString()</th>
+                                <th id="thPurchaseOrderVendorName" data-col="5" class="VendorName" data-th-index="3" data-th-prop="VendorName">@Model.Loc.Where(a => a.ResourceId == "spnPoVendorName").FirstOrDefault().Value.ToString()</th>
+                                <th data-th-index="4" data-col="6" class="CreateDate" data-th-prop="CreateDateString">@Model.Loc.Where(a => a.ResourceId == "spnPoCreate").FirstOrDefault().Value.ToString()</th>
+                                <th data-th-index="5" data-col="7" class="Attention" data-th-prop="Attention">@Model.Loc.Where(a => a.ResourceId == "spnPoAttention").FirstOrDefault().Value.ToString()</th>
+                                <th data-th-index="6" data-col="8" class="VendorPhoneNumber" data-th-prop="VendorPhoneNumber">@Model.Loc.Where(a => a.ResourceId == "spnPoPhoneNumber").FirstOrDefault().Value.ToString()</th>
+                                <th data-th-index="7" data-col="9" class="CompleteDate" data-th-prop="CompleteDateString">@Model.Loc.Where(a => a.ResourceId == "spnPoComplete").FirstOrDefault().Value.ToString()</th>
+                                <th data-th-index="8" data-col="10" class="Reason" data-th-prop="Reason">@Model.Loc.Where(a => a.ResourceId == "spnPoReason").FirstOrDefault().Value.ToString()</th>
+                                <th data-th-index="9" data-col="11" class="Buyer_PersonnelName" data-th-prop="Buyer_PersonnelName">@Model.Loc.Where(a => a.ResourceId == "spnPoBuyer").FirstOrDefault().Value.ToString()</th>
+                                <th data-th-index="10" data-col="12" class="TotalCost" style="text-align:right !important;" data-th-prop="TotalCost">@Model.Loc.Where(a => a.ResourceId == "spnPoTotalCost").FirstOrDefault().Value.ToString()</th>
+                                <th data-th-index="11" data-col="13" class="Required" data-th-prop="RequiredDateString">@Model.Loc.Where(a => a.ResourceId == "spnRequiredDate").FirstOrDefault().Value.ToString()</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@Html.Partial("_CustomizeGridSetup")
+@Html.Partial("_Export")
+@Html.Partial("_StatusDetailsLocalization")
+
+@if (Convert.ToString(Session["MenuState"]) == "" || Convert.ToString(Session["MenuState"]) == "open")
+{
+    <div id="searcharea" class="slideToggleBar" style="display:none">
+        <div class="searchBoxArea">
+            <div class="form-group" style="margin-bottom:0; position:relative;">
+                <i class="fa fa-search" style="font-size: 1.1rem;position: absolute;top: 8px;left: 0px;"></i>
+                <input type="text" class="form-control searched" placeholder="Search for a view" id="posearctxtbox">
+            </div>
+        </div>
+
+        <div class="searchList">
+            <ul id="posearchListul">
+                @foreach (var item in Model.PurchaseOrderModel.ScheduleWorkList)
+                {
+                    <li id="@item.Value" class="posearchdrpbox"><a href="javascript:void(0)">@item.Text</a></li>
+                }
+            </ul>
+        </div>
+    </div>
+}
+else
+{
+    <div id="searcharea" class="slideToggleBar" style="display:none;left:81px !important;">
+        <div class="searchBoxArea">
+            <div class="form-group" style="margin-bottom:0; position:relative;">
+                <i class="fa fa-search" style="font-size: 1.1rem;position: absolute;top: 8px;left: 0px;"></i>
+                <input type="text" class="form-control searched" placeholder="Search for a view" id="posearctxtbox">
+            </div>
+        </div>
+        <div class="searchList">
+            <ul id="posearchListul">
+
+                @foreach (var item in Model.PurchaseOrderModel.ScheduleWorkList)
+                {
+                    <li id="@item.Value" class="posearchdrpbox"><a href="javascript:void(0)">@item.Text</a></li>
+                }
+
+            </ul>
+        </div>
+    </div>
+}
+
+
+<nav class="sidebar">
+    <div class="dismiss">
+        <i class="fa fa-close"></i>
+    </div>
+    <div class="sidebar-header">
+        <h3><i class="fa fa-filter" style="position: relative; top: -2px;"></i> @Model.Loc.Where(a => a.ResourceId == "spnPoFilters").FirstOrDefault().Value.ToString() <span class="filteritemcount">0</span></h3>
+        <button type="button" id="btnPODataAdvSrch" class="btn btn-blue filterSearch">@Model.Loc.Where(a => a.ResourceId == "GlobalApply").FirstOrDefault().Value.ToString()</button>
+    </div>
+    <div class="sidebar-content" id="advsearchsidebar">
+        <div class="form-group PO-ClientLookupId">
+            <label for="PurchaseOrder">@Model.Loc.Where(a => a.ResourceId == "spnPoPurchaseOrder").FirstOrDefault().Value.ToString() :</label>
+            <input type="text" class="form-control search adv-item" id="PurchaseOrder" autocomplete="off">
+        </div>
+        <div class="form-group PO-Status">
+            <label for="Status">@Model.Loc.Where(a => a.ResourceId == "spnPoStatus").FirstOrDefault().Value.ToString() :</label>
+            @Html.DropDownListFor(m => m.PurchaseOrderModel.StatusList, Model.PurchaseOrderModel.StatusList, "--Select--", new { @class = "form-control search adv-item select2picker", style = "width:100%;", id = "Status" })
+        </div>
+        <div class="form-group PO-VendorClientLookupId">
+            <label for="VendorClientLookupId">@Model.Loc.Where(a => a.ResourceId == "spnPoVendor").FirstOrDefault().Value.ToString() :</label>
+            <input type="text" class="form-control search adv-item" id="VendorClientLookupId" autocomplete="off">
+        </div>
+        <div class="form-group PO-VendorName">
+            <label for="VendorName">@Model.Loc.Where(a => a.ResourceId == "spnPoVendorName").FirstOrDefault().Value.ToString() :</label>
+            <input type="text" class="form-control search adv-item" id="VendorName" autocomplete="off">
+        </div>
+        <div class="form-group PO-CreateDate">
+            <label for="CreateDate">@Model.Loc.Where(a => a.ResourceId == "spnPoCreate").FirstOrDefault().Value.ToString() :</label>
+            <select style="width:100%;" class="form-control search adv-item select2picker" id="CreateDate">
+                <option value="">--Select--</option>
+                @foreach (var item in Model.PurchaseOrderModel.DateRangeDropList)
+                {
+                    <option value="@item.Value">@item.Text</option>
+                }
+            </select>
+            <div style="padding:10px 0 0 10px; border-left: 1px dashed #b9c1c4;display:none;" id="Createtimeperiodcontainer">
+                <label for="">@Model.Loc.Where(a => a.ResourceId == "spnGlobalTimePeriod").FirstOrDefault().Value.ToString() :</label>
+                <input type="text" class="form-control search dtrangepicker" id="advcreatedaterange" autocomplete="off">
+            </div>
+        </div>
+
+        <div class="form-group PO-Attention">
+            <label for="Attention">@Model.Loc.Where(a => a.ResourceId == "spnPoAttention").FirstOrDefault().Value.ToString() :</label>
+            <input type="text" class="form-control search adv-item" id="Attention" autocomplete="off">
+        </div>
+        <div class="form-group PO-VendorPhoneNumber">
+            <label for="VendorPhoneNumber">@Model.Loc.Where(a => a.ResourceId == "spnPoPhoneNumber").FirstOrDefault().Value.ToString() :</label>
+            <input type="text" class="form-control search adv-item" id="VendorPhoneNumber" autocomplete="off">
+        </div>
+        <div class="form-group PO-CompleteDate">
+            <label for="CompleteDate">@Model.Loc.Where(a => a.ResourceId == "spnPoComplete").FirstOrDefault().Value.ToString() :</label>
+            @Html.DropDownListFor(m => m.PurchaseOrderModel.DateRangeDropList, Model.PurchaseOrderModel.DateRangeDropList, "--Select--", new { @class = "form-control search adv-item select2picker", style = "width:100%;", id = "CompleteDate" })
+
+            <div style="padding:10px 0 0 10px; border-left: 1px dashed #b9c1c4;" id="comptimeperiodcontainer">
+                <label for="">@Model.Loc.Where(a => a.ResourceId == "spnGlobalTimePeriod").FirstOrDefault().Value.ToString() :</label>
+                <input type="text" class="form-control search dtrangepicker adv-item" id="advcompletedaterange" autocomplete="off">
+            </div>
+        </div>
+
+
+
+        <div class="form-group PO-Reason">
+            <label for="Reason">@Model.Loc.Where(a => a.ResourceId == "spnPoReason").FirstOrDefault().Value.ToString() :</label>
+            <input type="text" class="form-control search adv-item" id="Reason" autocomplete="off">
+        </div>
+        <div class="form-group PO-Buyer_PersonnelName">
+            <label for="BuyerPersonnelName">@Model.Loc.Where(a => a.ResourceId == "spnPoBuyer").FirstOrDefault().Value.ToString() :</label>
+            <input type="text" class="form-control search adv-item" id="BuyerPersonnelName" autocomplete="off">
+        </div>
+        <div class="form-group PO-TotalCost">
+            <label for="TotalCost">@Model.Loc.Where(a => a.ResourceId == "spnPoTotalCost").FirstOrDefault().Value.ToString() :</label>
+            <input type="text" class="form-control search adv-item decimalinput" id="TotalCost" autocomplete="off">
+        </div>
+        <div class="form-group PO-Required">
+            <label for="Required">@Model.Loc.Where(a => a.ResourceId == "spnRequiredDate").FirstOrDefault().Value.ToString() :</label>
+            <input type="text" class="form-control search adv-item dtpicker" id="Required" autocomplete="off" readonly>
+        </div>
+    </div>
+</nav>
+@Html.Partial("_DateRangeModal")
+@Html.Partial("_DateRangeModalForCreateDate")
+@Html.HiddenFor(m => m.udata.DatabaseKey.Client.ClientId, new { @id = "ClientIdForPrint" })
+<style type="text/css">
+
+    #PurchaseOrderSearch_wrapper .dt-buttons {
+        display: none;
+    }
+
+    @@media only screen and (max-width: 767px) and (min-width: 640px) {
+        .actionBar div.pull-right {
+            float: right;
+            margin-top: 0px;
+        }
+    }
+
+    @@media only screen and (max-width: 639px) and (min-width: 568px) {
+        .actionBar div.pull-right {
+            float: right;
+            margin-top: 0px;
+        }
+    }
+
+    @@media only screen and (max-width: 567px) and (min-width: 480px) {
+        #shortDrop {
+            margin-top: 0px;
+            margin-right: 10px !important;
+        }
+    }
+
+    @@media only screen and (width:414px) {
+        #shortDrop {
+            margin-top: 0 !important;
+            margin-right: 10px !important;
+        }
+    }
+
+    @@media only screen and (width:411px) {
+        #shortDrop {
+            margin-top: 0 !important;
+            margin-right: 10px !important;
+        }
+    }
+
+    @@media only screen and (max-width: 359px) and (min-width: 320px) {
+        #liCustomize {
+            margin-top: 0px !important;
+            margin-left: 0px !important;
+        }
+    }
+
+    .clsgridreset {
+        margin-top: 0px !important;
+    }
+
+        .clsgridreset li {
+            border-left: 1px solid #ccc;
+            border-right: 0px !important;
+            padding-left: 10px !important;
+        }
+</style>

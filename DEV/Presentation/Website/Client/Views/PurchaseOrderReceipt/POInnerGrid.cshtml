@@ -1,0 +1,103 @@
+﻿@model Client.Models.PurchaseOrder.PurchaseOrderVM
+@{
+    Layout = null;
+}
+<table id="" dt-options="dtOptions" class="tblLineItemHistory-child childtable" style="width:100%">
+    <thead>
+        <tr>
+            <th></th>
+            <th>@Model.Loc.Where(a => a.ResourceId == "spnReceiptNumber").FirstOrDefault().Value.ToString()</th>
+            <th>@Model.Loc.Where(a => a.ResourceId == "spnReceivedBy").FirstOrDefault().Value.ToString()</th>
+            <th>@Model.Loc.Where(a => a.ResourceId == "spnReceivedDate").FirstOrDefault().Value.ToString()</th>
+            <th>@Model.Loc.Where(a => a.ResourceId == "spnPackingSlip").FirstOrDefault().Value.ToString()</th>
+            <th>@Model.Loc.Where(a => a.ResourceId == "spnFreightBill").FirstOrDefault().Value.ToString()</th>
+            <th style="text-align:right !important">@Model.Loc.Where(a => a.ResourceId == "spnFreightAmt").FirstOrDefault().Value.ToString()</th>
+            <th style="text-align:right !important">@Model.Loc.Where(a => a.ResourceId == "spnQuantityReceived").FirstOrDefault().Value.ToString()</th>
+            <th>@Model.Loc.Where(a => a.ResourceId == "spnPoComments").FirstOrDefault().Value.ToString()</th>
+            <th>@Model.Loc.Where(a => a.ResourceId == "spnReversed").FirstOrDefault().Value.ToString()</th>
+            <th>@Model.Loc.Where(a => a.ResourceId == "spnReversalComments").FirstOrDefault().Value.ToString()</th>
+            <th>@Model.Loc.Where(a => a.ResourceId == "spnExternalReceipt").FirstOrDefault().Value.ToString()</th>
+            <th style="text-align:right !important">@Model.Loc.Where(a => a.ResourceId == "spnTransaction").FirstOrDefault().Value.ToString()</th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model.LineItemList.Count > 0)
+        {
+            foreach (var pro in Model.LineItemList)
+            {
+                <tr>
+                    <td>
+                        @if (pro.IsPurchasingEdit)
+                        {
+                            if (!pro.Reversed)
+                            {
+                                <a class="link binddataClass" href="javascript:void(0)" data-toggle="modal" data-target="#reverseModal"
+                                   data-todo='{"ReceiptNumber":@pro.ReceiptNumber,"POReceiptItemId":@pro.POReceiptItemId,"POReceiptHeaderId":@pro.POReceiptHeaderId,"PurchaseOrderLineItemId":@pro.PurchaseOrderLineItemId,"ReceiveBy_PersonnelID":@pro.ReceiveBy_PersonnelID,"QuantityReceived":@pro.QuantityReceived,"UOMConversion":@pro.UOMConversion,"ChargeType":"@pro.ChargeType","ChargeToId":@pro.ChargeToId}'>@Model.Loc.Where(a => a.ResourceId == "spnReverse").FirstOrDefault().Value.ToString()</a>
+                            }
+                            else
+                            {
+                                <a class="nolink" href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnReverse").FirstOrDefault().Value.ToString()</a>
+                            }
+                        }
+                    </td>
+                    <td>@pro.ReceiptNumber</td>
+                    <td>@pro.ReceiveBy_PersonnelName</td>
+                    <td>@(pro.strReceiveDate)</td>
+                    <td>@pro.PackingSlip</td>
+                    <td>@pro.FreightBill</td>
+                    <td>@pro.FreightAmount</td>
+                    <td>@Math.Round(pro.QuantityReceived, 2)</td>
+                    <td>@pro.Comments</td>
+                    <td><input type="checkbox" checked="@pro.Reversed" onclick="return false;"></td>
+                    <td>@pro.ReversedComments</td>
+                    <td>@pro.ExReceiptNo</td>
+                    <td>@pro.ExReceiptTxnId</td>
+                    <td>@pro.POReceiptItemId</td>
+                    <td>@pro.POReceiptHeaderId</td>
+                    <td>@pro.PurchaseOrderLineItemId</td>
+                    <td>@pro.ReceiveBy_PersonnelID</td>
+                    <td>@(pro.ReceiveDate)</td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+<style type="text/css">
+    .childtable tr th {
+        background: #4da5fe;
+        color: #fff !important;
+        white-space: nowrap !important;
+        text-align: center !important;
+        font-weight: 400 !important;
+    }
+
+    .link {
+        color: #235ddd;
+    }
+
+        .link:hover {
+            color: #32bf0e;
+        }
+
+    .nolink {
+        pointer-events: none;
+        color: #91a0a0;
+    }
+
+    table.dataTable thead .sorting {
+        padding-right: 15px;
+    }
+
+    table.dataTable thead .sorting_asc {
+        padding-right: 15px;
+    }
+
+    table.dataTable.display tbody tr:first-child td {
+        width: 1%;
+    }
+</style>

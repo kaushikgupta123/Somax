@@ -1,0 +1,258 @@
+﻿@model Client.Models.PreventiveMaintenance.PrevMaintVM
+
+@using (Ajax.BeginForm("AddMRPartNotInInventory", "PreventiveMaintenance", new AjaxOptions { HttpMethod = "Post", OnSuccess = "MRPartNotInInventoryAddOnSuccess", OnBegin = "AjaxBeginFormBegin", OnComplete = "AjaxBeginFormComplete", OnFailure = "AjaxBeginFormFaillure" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close clearstate" data-dismiss="modal">&times;</button>
+            @if (Model.estimatePart.EstimatedCostsId == 0)
+            {
+                <h4 class="modal-title">@Model.Loc.Where(a => a.ResourceId == "spnAddMaterialRequest").FirstOrDefault().Value.ToString()</h4>
+            }
+            else
+            {
+                <h4 class="modal-title">@Model.Loc.Where(a => a.ResourceId == "spnEditMaterialRequest").FirstOrDefault().Value.ToString()</h4>
+            }
+        </div>
+        @Html.Partial("_ErrorDiv")
+        <div class="modal-body">
+            <div class="form-group" style="margin-bottom:0;">
+                <div class="bottomBlock">
+                    <div class="tabsArea nobg">
+                        <ul class="listView nobrd" style="border-bottom:0;">
+                            <li style="margin-bottom:3px;">
+                                <span class="label">@Html.LabelFor(m => m.estimatePart.Description): <small>*</small></span>
+                                <span class="inputText">
+                                    @Html.ValidationMessageFor(m => m.estimatePart.Description, "", new { style = "display:none" })
+                                    @Html.TextBoxFor(m => m.estimatePart.Description, new { @class = "form-control search", autocomplete = "off" })
+                                </span>
+                            </li>
+
+                            <li style="margin-bottom:4px;">
+                                <span class="label">@Html.LabelFor(m => m.estimatePart.Quantity) : <small>*</small></span>
+                                <span class="inputText">
+                                    @Html.ValidationMessageFor(m => m.estimatePart.Quantity, "", new { style = "display:none" })
+                                    @Html.TextBoxFor(m => m.estimatePart.Quantity, new { @class = "form-control search decimalinput", autocomplete = "off" })
+                                </span>
+                            </li>
+                            <li style="margin-bottom:4px;">
+                                <span class="label">@Html.LabelFor(m => m.estimatePart.UnitCost) :</span>
+                                <span class="inputText">
+                                    @Html.ValidationMessageFor(m => m.estimatePart.UnitCost, "", new { style = "display:none" })
+                                    @Html.TextBoxFor(m => m.estimatePart.UnitCost, new { @class = "form-control search decimalinput", autocomplete = "off" })
+                                </span>
+                            </li>
+                            <li style="height:auto;">
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnUnitofMeasure").FirstOrDefault().Value.ToString() :</span>
+                                <span class="inputText">
+                                    @Html.DropDownListFor(m => m.estimatePart.Unit, Model.UnitOfmesureListWo, "--Select--", new { @class = "form-control search select2picker", style = "width:100%;", @id = "Unit" })
+                                </span>
+                            </li>
+                            <li>
+                                <span class="label">
+                                    @Html.LabelFor(m => m.estimatePart.AccountClientLookupId) :
+                                </span>
+                                <span class="inputText">
+                                    <div class="dropdown dropTableOuter">
+                                        <div class="input-group">
+                                            @Html.TextBoxFor(m => m.estimatePart.AccountClientLookupId, "", new
+                                       {
+                                           @class = "form-control search dropbtn readonly",
+                                           @readonly = "readonly",
+                                           autocomplete = "off",
+                                           style = "display:block;"
+                                       })
+                                            @Html.TextBoxFor(m => m.estimatePart.AccountId, new
+                                       {
+                                           @class = "form-control search dropbtn readonly",
+                                           @readonly = "readonly",
+                                           autocomplete = "off",
+                                           style = "display:none;"
+                                       })
+                                            @if (string.IsNullOrEmpty(Model.estimatePart.AccountClientLookupId))
+                                            {
+                                                <div class="input-group-btn">
+                                                    <button class="btn btn-white btntxtInputGroup ClearAccountModalPopupGridData" type="button" data-textfield="estimatePart_AccountClientLookupId"
+                                                            data-valuefield="estimatePart_AccountId" style="display:none;">
+                                                        <i id="srcicon" class="fa fa-close"></i>
+                                                    </button>
+                                                </div>
+                                            }
+                                            else
+                                            {
+                                                <div class="input-group-btn">
+                                                    <button class="btn btn-white btntxtInputGroup ClearAccountModalPopupGridData" type="button" data-textfield="estimatePart_AccountClientLookupId"
+                                                            data-valuefield="estimatePart_AccountId" style="display:block;">
+                                                        <i id="srcicon" class="fa fa-close"></i>
+                                                    </button>
+                                                </div>
+                                            }
+                                            <div class="input-group-btn">
+                                                <button class="btn btn-white btntxtInputGroup OpenAccountModalPopupGrid" type="button" data-textfield="estimatePart_AccountClientLookupId"
+                                                        data-valuefield="estimatePart_AccountId">
+                                                    <i id="srcicon" class="fa fa-search"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </span>
+                            </li>
+                            <li>
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnVendor").FirstOrDefault().Value.ToString() : </span>
+                                <span class="inputText">
+                                    <div class="dropdown dropTableOuter">
+                                        <div class="input-group">
+                                            @Html.TextBoxFor(m => m.estimatePart.VendorClientLookupId, "", new
+                                            {
+                                                @class = "form-control search dropbtn readonly",
+                                                @readonly = "readonly",
+                                                autocomplete = "off",
+                                                style = "display:block;"
+                                            })
+                                            @Html.TextBoxFor(m => m.estimatePart.VendorId, new
+                                            {
+                                                @class = "form-control search dropbtn readonly",
+                                                @readonly = "readonly",
+                                                autocomplete = "off",
+                                                style = "display:none;"
+                                            })
+                                            @if (string.IsNullOrEmpty(Model.estimatePart.VendorClientLookupId))
+                                            {
+                                                <div class="input-group-btn">
+                                                    <button class="btn btn-white btntxtInputGroup ClearVendorModalPopupGridData" type="button" data-textfield="estimatePart_VendorClientLookupId"
+                                                            data-valuefield="estimatePart_VendorId" style="display:none;">
+                                                        <i id="srcicon" class="fa fa-close"></i>
+                                                    </button>
+                                                </div>
+                                            }
+                                            else
+                                            {
+                                                <div class="input-group-btn">
+                                                    <button class="btn btn-white btntxtInputGroup ClearVendorModalPopupGridData" type="button" data-textfield="estimatePart_VendorClientLookupId"
+                                                            data-valuefield="estimatePart_VendorId" style="display:block;">
+                                                        <i id="srcicon" class="fa fa-close"></i>
+                                                    </button>
+                                                </div>
+                                            }
+                                            <div class="input-group-btn">
+                                                <button class="btn btn-white btntxtInputGroup OpenVendorModalPopupGrid" type="button" data-textfield="estimatePart_VendorClientLookupId"
+                                                        data-valuefield="estimatePart_VendorId">
+                                                    <i id="srcicon" class="fa fa-search"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </span>
+                            </li>
+                            
+                        </ul>
+                    </div>
+                    <div style="clear:both;"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal-footer" style="padding:15px 25px !important;">
+            <div class="idBttns">
+                <div class="bttn_pagin">
+                    <div class="bttns2" style="margin:0;">
+                        <button type="submit" class="btn btn-blue mobBttn" style="cursor:pointer" value="save"><i class="fa fa-save faIcon"></i> &nbsp;@Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+                    </div>
+                    <div class="bttns" style="margin:0;"><button type="button" data-dismiss="modal" class="btn btn-blue mobBttn clearstate"><i class="fa fa-close faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button></div>
+
+                    <div style="clear:both;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @Html.HiddenFor(m => m.estimatePart.PrevMaintMasterId)
+    @Html.HiddenFor(m => m.estimatePart.ClientLookupId)
+    if (Model.estimatePart.EstimatedCostsId != 0)
+    {
+        @Html.HiddenFor(m => m.estimatePart.EstimatedCostsId)
+    }
+}
+@Html.Partial("~/Views/Shared/LookupTypeTablePopup/_AccountPopupLookup.cshtml") 
+@Html.Partial("~/Views/Shared/LookupTypeTablePopup/_VendorPopup.cshtml")
+@Html.HiddenFor(m => m.estimatePart.ShoppingCart, new { id = "ShoppingCart" }) 
+
+<link href="~/Scripts/Metronic/assets/demo/default/base/style_newCustom.css" rel="stylesheet" />
+<style type="text/css">
+    .pushDiv2.WOScheduleAdjust {
+        height: 161px !important;
+    }
+
+    .gridList:hover {
+        background: #fff;
+    }
+
+    .row[class*="m-row--col-separator-"] > div:last-child {
+        border-bottom: 0px solid #ebedf2;
+    }
+
+    .filterDescription {
+        padding-left: 12px;
+        width: auto;
+        float: left;
+        font-size: 1.2rem;
+        color: #000;
+        font-weight: 500;
+        line-height: 33px;
+    }
+
+    .filterDescription a {
+        color: #36a3f7;
+        text-decoration: none !important;
+    }
+
+    #AccountTableModalPopup.dropdown-modal.modal.show .partPopup {
+        max-width: 100%!important;
+        margin: 0;
+        z-index: 20;
+    }
+
+    #PartCategoryMasterTableModalPopup .modal-dialog,
+    #VendorTableModalPopup .modal-dialog {
+        max-width: 100% !important;
+        margin: 0;
+        z-index: 20;
+    }
+
+    #AccountTableModalPopup.dropdown-modal.modal.show .dropdown-content,
+    #VendorTableModalPopup.dropdown-modal.modal.show .dropdown-content,
+    #PartCategoryMasterTableModalPopup.dropdown-modal.modal.show .dropdown-content {
+        height: 394px;
+    }
+
+    #AddPartNotInInventoryModalpopup.modal.show .modal-content .modal-body {
+        overflow: hidden;
+        overflow-y: auto;
+    }
+
+    @@media only screen and (min-width: 768px) and (max-width: 1080px) {
+        #AccountTableModalPopup.dropdown-modal.modal.show .dropdown-content,
+        #VendorTableModalPopup.dropdown-modal.modal.show .dropdown-content,
+        #PartCategoryMasterTableModalPopup.dropdown-modal.modal.show .dropdown-content {
+            height: 375px !important;
+        }
+    }
+
+    @@media (max-width: 501px) {
+        #AccountTableModalPopup.dropdown-modal.modal.show .partPopup,
+        #VendorTableModalPopup.dropdown-modal.modal.show .modal-dialog,
+        #PartCategoryMasterTableModalPopup.dropdown-modal.modal.show .modal-dialog,
+        #AccountTableModalPopup.dropdown-modal.modal.show .modal-content,
+        #VendorTableModalPopup.dropdown-modal.modal.show .modal-content,
+        #PartCategoryMasterTableModalPopup.dropdown-modal.modal.show .modal-content,
+        #AccountTableModalPopup.dropdown-modal.modal.show .modal-content .modal-body,
+        #VendorTableModalPopup.dropdown-modal.modal.show .modal-content .modal-body,
+        #PartCategoryMasterTableModalPopup.dropdown-modal.modal.show .modal-content .modal-body,
+        #AccountTableModalPopup.dropdown-modal.modal.show .dropdown-content,
+        #VendorTableModalPopup.dropdown-modal.modal.show .dropdown-content,
+        #PartCategoryMasterTableModalPopup.dropdown-modal.modal.show .dropdown-content {
+            height: 100% !important;
+        }
+    }
+</style>

@@ -1,0 +1,39 @@
+﻿@model Client.Models.Dashboard.DashboardVM
+
+<div class="row">
+    <div class="col-xl-12">
+        <div class="m-portlet" id="m_portlet" style="padding:15px;">
+            <div id="WOCompletionWorkbenchPartsListid" class="tabcontentRL" style="display:none;">
+                @if (Model.security.MaintenanceCompletionWorkbenchWidget_PartIssue.Access)
+                {
+
+                    <button type="button" class="btn btn-blue" style="float: right; margin: 0 4px 7px 0px;display:none" id="BtnReturnPartsDashboard"><i class="fa fa-undo" style="margin-top:-3px;"></i> &nbsp;@Model.Loc.Where(a => a.ResourceId == "spnGlobalReturnParts").FirstOrDefault().Value.ToString()</button>
+                    <button type="button" class="btn btn-blue" style="float: right; margin: 0 4px 7px 0px;" id="AddPartsIssue"><i class="fa fa-plus" style="margin-top:-3px;"></i> &nbsp;@Model.Loc.Where(a => a.ResourceId == "spnIssuePart").FirstOrDefault().Value.ToString()</button>
+                }
+                <div class="table-responsive">
+                    <table id="partsListSearchTable" class="eqpDtlTbl row-border custom-sort" style="width:100%;">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th>@Model.Loc.Where(a => a.ResourceId == "spnPart").FirstOrDefault().Value.ToString()</th>
+                                <th>@Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString()</th>
+                                <th style="text-align:right !important;">@Model.Loc.Where(a => a.ResourceId == "spnTransactionQty").FirstOrDefault().Value.ToString()</th>
+                                <th style="text-align:right !important;">@Model.Loc.Where(a => a.ResourceId == "spnCost").FirstOrDefault().Value.ToString()</th>
+                                <th style="text-align:right !important;">@Model.Loc.Where(a => a.ResourceId == "spnTotalCost").FirstOrDefault().Value.ToString()</th>
+                                <th>@Model.Loc.Where(a => a.ResourceId == "spnUnitofMeasure").FirstOrDefault().Value.ToString()</th>
+                                <th>@Model.Loc.Where(a => a.ResourceId == "spnTranDate").FirstOrDefault().Value.ToString()</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+                <div class="bttn_pagin">
+                    <div class="bttns"><button type="button" class="btn btn-blue" data-toggle="" data-target="" id="btnAddParts" style="display:none;"><i class="fa fa-plus"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "spnAddParts").FirstOrDefault().Value.ToString()</button></div>
+                    <div style="clear:both;"></div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<div id="divAddParts"></div>
+@*@Html.Partial("~/Views/Dashboard/Widgets/MaintenanceCompletionWorkbench/Mobile/_AddPartIssue.cshtml")*@

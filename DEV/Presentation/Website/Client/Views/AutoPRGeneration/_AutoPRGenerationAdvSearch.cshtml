@@ -1,0 +1,42 @@
+﻿@model Client.Models.AutoPRGenerationVM
+<nav class="sidebar">
+    <div class="dismiss">
+        <i class="fa fa-close"></i>
+    </div>
+    <div class="sidebar-header">
+        <h3><i class="fa fa-filter" style="position: relative; top: -2px;"></i> @Model.Loc.Where(a => a.ResourceId == "globalFilter").FirstOrDefault().Value.ToString()<span class="filteritemcount">0</span></h3>
+        <button type="button" class="btn btn-blue filterSearch" id="btnAutoPRGenDataAdvSrch"><i class="fa fa-search" style="margin-top:-3px;"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalSearch").FirstOrDefault().Value.ToString()</button>
+    </div>
+    <div class="sidebar-content" id="advsearchsidebarAutoPRGenerated">
+        <div class="form-group">
+            <label for="APRGPartClientLookupId">@Model.Loc.Where(a => a.ResourceId == "spnPartID").FirstOrDefault().Value.ToString() :</label>
+            <input type="text" class="form-control search adv-item" id="APRGPartClientLookupId">
+        </div>
+        <div class="form-group">
+            <label for="APRGDescription">@Model.Loc.Where(a => a.ResourceId == "spnPartDescription").FirstOrDefault().Value.ToString() :</label>
+            <input type="text" class="form-control search  adv-item" id="APRGDescription">
+        </div>
+        <div class="form-group">
+            <label for="APRGQtyToOrder">@Model.Loc.Where(a => a.ResourceId == "spnOrderQnt").FirstOrDefault().Value.ToString() :</label>
+            <input type="number" class="form-control search  adv-item" id="APRGQtyToOrder">
+        </div>
+        <div class="form-group">
+            <label for="APRGUnitofMeasure">@Model.Loc.Where(a => a.ResourceId == "spnPRUnit").FirstOrDefault().Value.ToString() :</label>
+            <input type="text" class="form-control search  adv-item" id="APRGUnitofMeasure">
+        </div>
+        <div class="form-group">
+            <label for="APRGLastPurchaseCost">@Model.Loc.Where(a => a.ResourceId == "spnCost").FirstOrDefault().Value.ToString() :</label>
+            <input type="text" class="form-control search  adv-item  decimalinput" id="APRGLastPurchaseCost">
+        </div>
+        <div class="form-group">
+            <label for="APRGVendorClientLookupId">@Model.Loc.Where(a => a.ResourceId == "spnVendorID").FirstOrDefault().Value.ToString() :</label>
+            <input type="text" class="form-control search  adv-item" id="APRGVendorClientLookupId">
+        </div>
+        <div class="form-group">
+            <label for="APRGVendorName">@Model.Loc.Where(a => a.ResourceId == "spnVendorName").FirstOrDefault().Value.ToString() :</label>
+            <input type="text" class="form-control search  adv-item" id="APRGVendorName">
+        </div>
+    </div>
+</nav>
+
+

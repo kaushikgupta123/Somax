@@ -1,0 +1,90 @@
+﻿@model Client.Models.WorkOrderPlanning.WorkOrderPlanningVM
+@*<link href="~/Content/sidebar_custom.css" rel="stylesheet" />
+    <link href="~/Scripts/Metronic/assets/demo/default/base/style_newCustom.css" rel="stylesheet" />*@
+<div id="AvailableWorkRLModal" class="modal fade" role="dialog">
+    <div class="modal-dialog childrenPop" style="overflow:hidden;">
+        <div class="overlay2"></div>
+        <div class="modal-content" style="min-height:600px;">
+            <div class="modal-header">
+                <button type="button" class="close btnRLAWOClose" data-dismiss="modal">&times;</button>
+                <div class="align-items-center">
+                    <h3 class="m-subheader__title ">
+                        @Model.Loc.Where(a => a.ResourceId == "spnAvailableWorkOrders").FirstOrDefault().Value.ToString()
+                    </h3>
+                </div>
+                <div style="clear:both;"></div>
+            </div>
+
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-xl-12">
+                        <div class="m-portlet" id="m_portlet" style="padding:15px; margin-bottom:0;">
+                            <div class="actionBar">
+                                <div class="pull-left">
+                                    <button type="button" class="btn btn-white navbar-btn" id="AvailablesidebarCollapseRL" title="@Model.Loc.Where(a => a.ResourceId == "globalAdvSearch").FirstOrDefault().Value.ToString()"><i class="fa fa-filter" style="font-size: 1.3rem;"></i></button>
+                                    <ul class="filter_apply globalFilterAdjusted">
+                                        <li class="textFilter"><span class="AWOfilteritemcountRL">0</span> @Model.Loc.Where(a => a.ResourceId == "globalFiltersAppiled").FirstOrDefault().Value.ToString()</li>
+                                        <li class="textClear" id="liClearAdvSearchFilterAVlRLAWO"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "globalClear").FirstOrDefault().Value.ToString()</a></li>
+                                    </ul>
+                                    <div style="clear:both;"></div>
+                                </div>
+                                <div style="clear:both;"></div>
+                                <div id="advsearchfilteritemsAWORL"></div>
+                                <div style="clear:both;"></div>
+                            </div>
+                            <div style="clear:both;"></div>
+
+                            @*<div class="checkbox" style="color:#000;">
+                                <label><input type="checkbox" value="" id="AlreadyScheduledRLId" style="position:relative; top:3px;"> &nbsp; @Model.Loc.Where(a => a.ResourceId == "spnIncludeAlreadyScheduledWorkOrders").FirstOrDefault().Value.ToString()</label>
+                            </div>*@
+                            <div class="table-responsive">
+                                <table id="tblAvailGridRL" class="eqpDtlTbl row-border custom-sort" style="width:100%;">
+                                    <thead>
+                                        <tr>
+                                            <th><input type="checkbox" value="" id="RLavlidselectall"></th>
+                                            <th>@Model.Loc.Where(a => a.ResourceId == "spnGlobalWorkOrderID").FirstOrDefault().Value.ToString()</th>
+                                            <th>@Model.Loc.Where(a => a.ResourceId == "GlobalChargeTo").FirstOrDefault().Value.ToString()</th>
+                                            <th>@Model.Loc.Where(a => a.ResourceId == "spnChargeToName").FirstOrDefault().Value.ToString()</th>
+                                            <th>@Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString()</th>
+                                            <th>@Model.Loc.Where(a => a.ResourceId == "spnStatus").FirstOrDefault().Value.ToString()</th>
+                                            <th>@Model.Loc.Where(a => a.ResourceId == "spnPriority").FirstOrDefault().Value.ToString()</th>
+                                            <th>@Model.Loc.Where(a => a.ResourceId == "GlobalType").FirstOrDefault().Value.ToString()</th>
+                                            @*<th>@Model.Loc.Where(a => a.ResourceId == "spnRequiredDate").FirstOrDefault().Value.ToString()</th>*@
+                                            <th>Required</th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="ApproveWORLadvsearchcontainer">
+                        @Html.Partial("AvailableWork/_AvailableWorkOrderAdvSearch")
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <div class="bttns" style="margin-top: 0;"><button type="button" class="btn btn-blue mobBttn" data-dismiss="modal" id="btnRLAWOCancel"><i class="fa fa-close" style="margin-top:-3px;"></i> &nbsp;@Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button></div>
+                <div class="bttns2" style="margin-top: 0;"><button type="button" class="btn btn-blue mobBttn" data-toggle="" data-target="" id="btnRLAddAvailableWO"><i class="fa fa-plus" style="margin-top:-3px;"></i> &nbsp;@Model.Loc.Where(a => a.ResourceId == "globalAdd").FirstOrDefault().Value.ToString()</button></div>
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@Html.Partial("~/Views/WorkOrderPlanning/AvailableWork/_AvailableWorkAssignModal.cshtml", Model)
+
+<script>
+    $(document).mouseup(function (e) {
+        var container = $("#ApproveWORLadvsearchcontainer");
+        // if the target of the click isn't the container nor a descendant of the container
+        if (container.length > 0 && e.target.id != 'AvailablesidebarCollapseRL' && e.target.parentElement.id != 'AvailablesidebarCollapseRL'
+            && (!container.is(e.target) && container.has(e.target).length === 0)) {
+            //container.hide();
+            $('#ApproveWORLadvsearchcontainer').find('.sidebar').removeClass('active');
+            $(document).find('.overlay2').fadeOut();
+        }
+    });
+
+</script>

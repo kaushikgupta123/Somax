@@ -1,0 +1,56 @@
+﻿@model Client.Models.PartsManagement.PartsManagementRequest.PartsManagementRequestVM
+
+<div class="new-m-subheader">
+  <div class="PageTitle">
+    <div class="align-items-center separator">
+      <h3 class="m-subheader__title ">
+        @Model.Loc.Where(a => a.ResourceId == "spnPartMasterRequest").FirstOrDefault().Value.ToString()
+      </h3>
+    </div>
+  </div>
+
+  <div class="NewBreadcrumbArea">
+    <div class="newBreadcrumb">
+      <ul>
+        <li><a href="/Dashboard/Dashboard">&nbsp;</a></li>
+        <li class="active">@Model.Loc.Where(a => a.ResourceId == "spnPartMasterRequestSearch").FirstOrDefault().Value.ToString() </li>
+      </ul>
+      <div style="clear:both;"></div>
+    </div>
+  </div>
+  @if (Model.PmMenuVisibility)
+  {
+    <div class="ActionBttnArea">
+      <div class="actionDiv pull-left" style="margin-right:0;">
+        <div class="btn-group bootstrap-select m-datatable__pager-size dropup show selectDrop actionNewDrop">
+          <div class="btn-group bootstrap-select m-datatable__pager-size" style="width: 100%;">
+            <button type="button" class="btn dropdown-toggle bs-placeholder btn-default" data-toggle="dropdown" role="button" title=""><span class="filter-option pull-left">@Model.Loc.Where(a => a.ResourceId == "globalAction").FirstOrDefault().Value.ToString()</span>&nbsp;<span class="bs-caret"><span class="caret"></span></span></button>
+            <div class="dropdown-menu open" role="combobox">
+              <ul class="dropdown-menu inner" role="listbox" aria-expanded="false">
+                <li class="localPart">
+                  <a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnLocalPartManagement").FirstOrDefault().Value.ToString() <i class="fa fa-angle-left" aria-hidden="true"></i></a>
+                  <ul class="actionSubmenu menuLocalPart">
+                    <li><a href="javascript:void(0)" id="optAssignPartMaster">@Model.Loc.Where(a => a.ResourceId == "spnAssignPartMastertLocalBakery").FirstOrDefault().Value.ToString() </a></li>
+                    <li><a href="javascript:void(0)" id="optReplacePartMaster">@Model.Loc.Where(a => a.ResourceId == "spnReplacePartwithExistinPartMaster").FirstOrDefault().Value.ToString() </a></li>
+                    <li><a href="javascript:void(0)" id="optInactivePartMaster">@Model.Loc.Where(a => a.ResourceId == "spnInactivatePart").FirstOrDefault().Value.ToString() </a></li>
+                    <li><a href="javascript:void(0)" id="optReplaceSXPartMaster">@Model.Loc.Where(a => a.ResourceId == "spnReplaceSXPartwithExistingPartMaster").FirstOrDefault().Value.ToString() </a></li>
+                  </ul>
+                </li>
+                <li class="enterpricePart">
+                  <a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnEnterpricePartManagement").FirstOrDefault().Value.ToString() <i class="fa fa-angle-left" aria-hidden="true"></i></a>
+                  <ul class="actionSubmenu menuEnterpricePart">
+                    <li><a href="javascript:void(0)" id="optAddNewPartMaster">@Model.Loc.Where(a => a.ResourceId == "spnAddNewPartMaster").FirstOrDefault().Value.ToString() </a></li>
+                    <li><a href="javascript:void(0)" id="optReplacePartWithNewPartMaster">@Model.Loc.Where(a => a.ResourceId == "spnReplacePartwithNewPartMaster").FirstOrDefault().Value.ToString()</a></li>
+                    <li><a href="javascript:void(0)" id="optReplacePartWithExistingPartMaster">@Model.Loc.Where(a => a.ResourceId == "spnReplaceSXPartwithNewPartMaster").FirstOrDefault().Value.ToString()</a></li>
+                  </ul>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div style="clear:both;"></div>
+    </div>
+  }
+  <div style="clear:both;"></div>
+</div>

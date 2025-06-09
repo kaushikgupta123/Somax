@@ -1,0 +1,227 @@
+﻿@model Client.Models.PurchaseOrder.PurchaseOrderVM
+@{int i = 0;}
+@foreach (var item in Model.qRCodeModel.PartIdsList)
+{
+    var c = Model.qRCodeModel.PartIdsList.Count;
+    <div id="@("inputdata" + i)" class="QRrcode" height="50px" style="text-align:left" title="@item">
+    </div>
+    i++;
+}
+<div id="printPartQrCodeModal" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-info">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">@Model.Loc.Where(a => a.ResourceId == "globalPrintLabels").FirstOrDefault().Value.ToString()</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-lg-12 col-sm-12">
+                        <h5 class="secTitle">@Model.Loc.Where(a => a.ResourceId == "spnChooseLblSixe").FirstOrDefault().Value.ToString()</h5>
+                        <ul class="levelSize">
+                            <li>
+                                <div class="radio rdoBtn"><input type="radio" name="optradio" value="SmallLabel" id="SmallLabel" checked="checked"></div>
+                                <div class="txtList">
+                                    <p class="first">@Model.Loc.Where(a => a.ResourceId == "globalSmallQRCode").FirstOrDefault().Value.ToString()</p>
+                                </div>
+                                <div style="clear:both;"></div>
+                            </li>
+                            <li>
+                                <div class="radio rdoBtn"><input type="radio" name="optradio" value="LargeLabel" id="LargeLabel"></div>
+                                <div class="txtList">
+                                    <p class="first">@Model.Loc.Where(a => a.ResourceId == "globalLargeQRCode").FirstOrDefault().Value.ToString()</p>
+                                </div>
+                                <div style="clear:both;"></div>
+                            </li>
+                        </ul>
+                    </div>
+                    <div style="clear:both;"></div>
+                </div>
+            </div>
+            <div class="modal-footer" style="padding:15px 25px !important;">
+                <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-close faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button>
+                <button type="button" onclick="printPDF()" class="btn btn-blue" style="float:right;" id="btnGenerateQr"><i class="fa fa-print faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalPrint").FirstOrDefault().Value.ToString()</button>
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<div style="width:auto;height:0;overflow:hidden;">
+    <div id="show_imagesSmall" style="width:600px; margin:0 auto;padding-left:100px">
+    </div>
+    <div id="show_imagesLarge" class="row" style="width:600px; margin:0 auto;padding-left:100px">
+    </div>
+</div>
+
+<script type="text/javascript">
+    //#region QR-Code
+    var i = 1;
+    var j = 1;
+    var yGroup = [];
+    var xGroup = [];
+    var Tcount = $('.QRrcode').length;
+    var lastdivId = '';
+    var lastdivInnerId = '';
+    lastdivId = "show_imagesLarge" + Tcount;
+    lastdivInnerId = "show_imagesLargeInner2" + Tcount;
+    $(document).find(".QRrcode").each(function () {
+        var title = $(this).attr('title');
+        var x = $("#show_imagesSmall");
+        var y = $("#show_imagesLarge");
+        $.ajax({
+            type: 'POST',
+            url: '/PurchaseOrderReceipt/QrGenerate',
+            data: { value: title },
+            success: function (data) {
+                var innerX;
+                innerX = $('<div/>')
+                    .attr("id", "show_imagesSmall" + i)
+                    .attr("style", "padding-left:5px;color:#000; font-weight:400;")
+                    .addClass("rows");
+
+                xGroup.push("show_imagesSmall" + i);
+                var PartIdSmall = data.value.split('][')[0];
+                PartIdSmall = PartIdSmall.length > 12 ? PartIdSmall.substring(0, 12) + "..." : PartIdSmall;
+
+                var DescriptionSmall = data.value.split('][')[1];
+                DescriptionSmall = DescriptionSmall.length > 24 ? DescriptionSmall.substring(0, 24) + "..." : DescriptionSmall;
+
+                var LocationSmall = data.value.split('][')[2];
+                LocationSmall = LocationSmall.length > 13 ? LocationSmall.substring(0, 13) + "..." : LocationSmall;
+
+                innerX.append("<div class='row'><div class='col-lg-2 col-sm-2' id='show_imagesInner1" + i + "'><img class='roll' src='" + data.QRCodeImagePath + "' width='80' height='80' /></div><div class='col-lg-10 col-sm-10 descriptionArea' style='padding-left: 25px; margin-top: 7px;' ><p style='margin:0; padding:0 0 1px 0;'> " + PartIdSmall + "</p><p class='qrDescription'>" + DescriptionSmall + "</p><p style='margin:0; padding:0;'><span style='display:block;'>" + LocationSmall + "</span></p></div><div class='clear'></div></div>");
+                x.append(innerX);
+                ++i;
+                var innerY;
+                innerY = $('<div/>')
+                    .attr("id", "show_imagesLarge" + j)
+                    .attr("style", "padding-left:0px; color:#000; font-weight:400;")
+                    .addClass("rows");
+
+                yGroup.push("show_imagesLarge" + j);
+
+                var PartIdLarge = data.value.split('][')[0];
+                PartIdLarge = PartIdLarge.length > 26 ? PartIdLarge.substring(0, 26) + "..." : PartIdLarge;
+
+                var DescriptionLarge = data.value.split('][')[1];
+                DescriptionLarge = DescriptionLarge.length > 62 ? DescriptionLarge.substring(0, 62) + "..." : DescriptionLarge;
+
+                var LocationLarge = data.value.split('][')[2];
+                LocationLarge = LocationLarge.length > 26 ? LocationLarge.substring(0, 26) + "..." : LocationLarge;
+
+                var MinimumLarge = data.value.split('][')[3];
+                MinimumLarge = MinimumLarge.length > 5 ? MinimumLarge.substring(0,5) + "..." : MinimumLarge;
+
+                var MaximumLarge = data.value.split('][')[4];
+                MaximumLarge = MaximumLarge.length > 5 ? MaximumLarge.substring(0, 5) + "..." : MaximumLarge;
+
+                var ManufacturerLarge = data.value.split('][')[5];
+                ManufacturerLarge = ManufacturerLarge.length > 16 ? ManufacturerLarge.substring(0, 16) + "..." : ManufacturerLarge;
+                innerY.append("<div class='row'><div class='col-lg-2 col-sm-2' id='show_imagesInner2" + j + "' ><img class='roll' src='" + data.QRCodeImagePath + "' width='100' height='100' /></div><div class='col-lg-10 col-sm-10 descriptionArea2' style='padding-left: 70px;  margin-top: 2px;'  id='show_imagesLargeInner2" + j + "'><p> " + PartIdLarge + "</p><p class='qrDescription2'>" + DescriptionLarge + "</p><p > " + LocationLarge + "</p><p >Minimum :" + MinimumLarge + "   Maximum :" + MaximumLarge + "</p><p >Manufacturer :" + ManufacturerLarge + "</p></div><div class='clear'></div></div>");
+                y.append(innerY);
+                ++j;
+                if ($('#' + lastdivId).find('#' + lastdivInnerId + ':contains("Location")').length > 0) {
+                    $('#btnGenerateQr').removeAttr("disabled");
+                    CloseLoader();
+                }
+            }
+        });
+
+    });
+    function printPDF() {
+        ShowLoader();
+        $('#btnGenerateQr').prop("disabled", "disabled");
+        if (document.getElementById("SmallLabel").checked == true) {
+            var doc = new jsPDF('l', 'pt', [155, 80]);
+            var count = $('#show_imagesSmall .rows').length;
+            $('#show_imagesSmall .rows').each(function (i, v) {
+                html2canvas(document.querySelector("#" + $(this).prop('id'))).then(canvas => {
+                    var imgData = canvas.toDataURL(
+                        'image/png');
+                    var imgWidth = 210;
+                    var pageHeight = 295;
+                    var width = doc.internal.pageSize.width;
+                    var height = doc.internal.pageSize.height;
+                    var imgHeight = canvas.height * imgWidth / canvas.width;
+                    var heightLeft = imgHeight;
+                    var position = 0;
+                    doc.addImage(imgData, 'JPEG', 0, 0);
+                    if (!--count) {                       
+                        var url = URL.createObjectURL(doc.output("blob"));
+                        window.open(url, "_blank");   
+                        $('#printQrcode').prop("disabled", "disabled");
+                        $('.itemQRcount').text(0);
+                        $('.itemcount').text(0);
+                        $('#printPartQrCodeModal').modal('hide');
+                        CloseLoader();
+                        partToQR = [];
+                        PartToClientLookupIdQRcode = [];
+                    } else {
+                        doc.addPage();
+                    }
+                });
+            });
+        }
+        else if (document.getElementById("LargeLabel").checked == true) {
+            var doc = new jsPDF('l', 'pt', [252, 87.50]);
+            var count = $('#show_imagesLarge .rows').length;
+            $('#show_imagesLarge .rows').each(function (i, v) {
+                html2canvas(document.querySelector("#" + $(this).prop('id'))).then(canvas => {
+                    var imgData = canvas.toDataURL(
+                        'image/png');
+                    var imgWidth = 210;
+                    var pageHeight = 295;
+                    var width = doc.internal.pageSize.width;
+                    var height = doc.internal.pageSize.height;
+                    var imgHeight = canvas.height * imgWidth / canvas.width;
+                    var heightLeft = imgHeight;
+                    var position = 0;
+                    doc.addImage(imgData, 'JPEG', 0, 0);
+                    if (!--count) {
+                        var url = URL.createObjectURL(doc.output("blob"));
+                        window.open(url, "_blank");   
+                        $('#printQrcode').prop("disabled", "disabled");
+                        $('.itemQRcount').text(0);
+                        $('.itemcount').text(0);
+                        $('#printPartQrCodeModal').modal('hide');
+                        CloseLoader();
+                        partToQR = [];
+                        PartToClientLookupIdQRcode = [];
+                    } else {
+                        doc.addPage();
+                    }
+                });
+            });
+        }
+    }
+//#endregion
+</script>
+<style type="text/css">
+    p {
+        margin: 0;
+    }
+
+    .descriptionArea {
+        position: relative;
+        left: -15px;
+    }
+
+    .descriptionArea2 {
+        position: relative;
+        left: -20px;
+    }
+
+    p.qrDescription {
+        margin: 0;
+        padding: 0 0 1px 0;
+        width: 100px;
+        word-break: break-all;
+    }
+
+    p.qrDescription2 {
+        margin: 0;
+        padding: 0 0 1px 0;
+        width: 200px;
+        word-break: break-all;
+    }
+</style>

@@ -1,0 +1,123 @@
+﻿@model Client.Models.Configuration.UserManagement.UserManagementVM
+<nav id="sidebar">
+    <div id="dismiss">
+        <i class="fa fa-close"></i>
+    </div>
+    <div class="sidebar-header">
+        <h3><i class="fa fa-filter" style="position: relative; top: -2px;"></i>&nbsp;Filters <span class="filteritemcount">0</span></h3>
+        <button type="button" class="btn btn-blue filterSearch" id="btnuserDataAdvSrch">
+            @Model.Loc.Where(a => a.ResourceId == "GlobalApply").FirstOrDefault().Value.ToString()
+        </button>
+    </div>
+    <div class="sidebar-content" id="advsearchsidebar">
+        <div class="form-group">
+            <label for="UserName">@Model.Loc.Where(a => a.ResourceId == "spnUserName").FirstOrDefault().Value.ToString() :</label>
+            <input type="text" class="form-control search adv-item" id="UserName" autocomplete="off">
+        </div>
+        <div class="form-group">
+            <label for="LastName">@Model.Loc.Where(a => a.ResourceId == "spnLastName").FirstOrDefault().Value.ToString() :</label>
+            <input type="text" class="form-control search adv-item" id="LastName" autocomplete="off">
+        </div>
+        <div class="form-group">
+            <label for="FirstName">@Model.Loc.Where(a => a.ResourceId == "spnFirstName").FirstOrDefault().Value.ToString() :</label>
+            <input type="text" class="form-control search adv-item" id="FirstName" autocomplete="off">
+        </div>
+        <div class="form-group">
+            <label for="Email">@Model.Loc.Where(a => a.ResourceId == "spnEmail").FirstOrDefault().Value.ToString() :</label>
+            <input type="text" class="form-control search adv-item" id="Email" autocomplete="off">
+        </div>
+        <div class="form-group">
+            <label for="EmployeeId">@Model.Loc.Where(a => a.ResourceId == "spnGlobalEmployeeId").FirstOrDefault().Value.ToString() :</label>
+            <input type="text" class="form-control search adv-item" id="EmployeeId" autocomplete="off">
+        </div>
+        <div class="form-group">
+            <label for="CraftId">@Model.Loc.Where(a => a.ResourceId == "spnCraft").FirstOrDefault().Value.ToString() :</label>
+            @{
+                if (Model.userModels.LookupCraftList != null)
+                {
+                    @Html.DropDownList("CraftId", (List<SelectListItem>)Model.userModels.LookupCraftList, "--Select--", new { @class = "form-control search adv-item select2picker" })
+                }
+                else
+                {
+                    @Html.DropDownList("CraftId", null, "--Select--", new { @class = "form-control search adv-item select2picker" })
+                }
+            }
+        </div>
+        <div class="form-group">
+            <label for="SecurityProfileId">@Model.Loc.Where(a => a.ResourceId == "spnSecurityProfile").FirstOrDefault().Value.ToString() :</label>
+            @{
+                if (Model.userModels.SecurityProfileIdList != null)
+                {
+                    @Html.DropDownList("SecurityProfileId", Model.userModels.SecurityProfileIdList, new { @class = "form-control search adv-item select2picker", multiple = "multiple" })
+                }
+                else
+                {
+                    @Html.DropDownList("SecurityProfileId", null, new { @class = "form-control search adv-item select2picker", multiple = "multiple" })
+                }
+            }
+        </div>
+        <div class="form-group">
+            <label for="UserType">@Model.Loc.Where(a => a.ResourceId == "spnUserType").FirstOrDefault().Value.ToString() :</label>
+            @{
+                if (Model.userModels.UserTypeList != null)
+                {
+                    @Html.DropDownList("UserType", Model.userModels.UserTypeList, new { @class = "form-control search adv-item select2picker", multiple = "multiple" })
+                }
+                else
+                {
+                    @Html.DropDownList("UserType", null, new { @class = "form-control search adv-item select2picker", multiple = "multiple" })
+                }
+            }
+        </div>
+        <div class="form-group">
+            <label for="Shift">@Model.Loc.Where(a => a.ResourceId == "spnShift").FirstOrDefault().Value.ToString() :</label>
+            @{
+                if (Model.userModels.ShiftList != null)
+                {
+                    @Html.DropDownList("Shift", Model.userModels.ShiftList, new { @class = "form-control search adv-item select2picker", multiple = "multiple" })
+                }
+                else
+                {
+                    @Html.DropDownList("Shift", null, new { @class = "form-control search adv-item select2picker", multiple = "multiple" })
+                }
+            }
+        </div>
+        <div class="form-group">
+            <label for="IsActive">@Model.Loc.Where(a => a.ResourceId == "spnIsActive").FirstOrDefault().Value.ToString() :</label>
+            @{
+                if (Model.userModels.IsActiveList != null)
+                {
+                    @Html.DropDownList("IsActive", Model.userModels.IsActiveList, "--Select--", new { @class = "form-control search adv-item select2picker" })
+                }
+                else
+                {
+                    @Html.DropDownList("IsActive", null, "--Select--", new { @class = "form-control search adv-item select2picker" })
+                }
+            }
+        </div>
+        @{
+            if (Model.PackageLevel.ToUpper() == PackageLevelConstant.Enterprise && Model.IsSuperUser)
+            {
+                <div class="form-group">
+                            <label for="Sites">@Model.Loc.Where(a => a.ResourceId == "spnSiteGlobal").FirstOrDefault().Value.ToString() :</label>
+                    @{
+                        if (Model.SiteList != null)
+                        {
+                            @Html.DropDownList("Sites", Model.SiteList, new { @class = "form-control search adv-item select2picker", multiple = "multiple" })
+                        }
+                        else
+                        {
+                            @Html.DropDownList("Sites", null, new { @class = "form-control search adv-item select2picker", multiple = "multiple" })
+                        }
+                    }
+                </div>
+            }
+        }
+    </div>
+</nav>
+<style>
+    .select2-container--default .select2-selection--multiple {
+        height: auto !important;
+        min-height: 34px;
+    }
+</style>

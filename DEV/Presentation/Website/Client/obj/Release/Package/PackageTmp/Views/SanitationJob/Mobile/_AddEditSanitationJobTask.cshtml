@@ -1,0 +1,201 @@
+﻿@model Client.Models.Sanitation.SanitationVM
+@{
+    string shortDate = string.Empty;
+    if (Model.sanitationJobTaskModel.CompleteDate != null)
+    {
+        if (Model.sanitationJobTaskModel.CompleteDate != null && Model.sanitationJobTaskModel.CompleteDate == default(DateTime))
+        {
+            Model.sanitationJobTaskModel.CompleteDate = null;
+        }
+    }
+
+}
+<div class="slide-modal-head">
+    <a class="slide-back-btn sjAddEditTaskCancel"> <i class="fa fa-angle-left"></i> Back</a>
+    <div class="slide-back-title">
+        @if (Model.sanitationJobTaskModel.SanitationJobTaskId == 0)
+        {
+            @Model.Loc.Where(a => a.ResourceId == "spnAddTask").FirstOrDefault().Value.ToString()
+        }
+        else
+        {
+            @Model.Loc.Where(a => a.ResourceId == "spnEditTask").FirstOrDefault().Value.ToString()
+        }
+    </div>
+</div>
+@using (Ajax.BeginForm("AddTasksMbl", "SanitationJob", new AjaxOptions { HttpMethod = "Post", OnSuccess = "SjTaskAddEditOnSuccessMbl", OnBegin = "AjaxBeginFormBegin", OnComplete = "AjaxBeginFormComplete", OnFailure = "AjaxBeginFormFaillure" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.Partial("_ErrorDiv")
+    <div class="slide-modal-body" style="overflow-y: auto; height: 100vh;">
+        <div mbsc-page class="demo-responsive">
+            <div style="height:100%">
+                <div mbsc-form class="mbsc-form-grid">
+                    <div class="mbsc-grid">
+                        <div class="mbsc-row">
+                            <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                <label>
+                                    @Model.Loc.Where(a => a.ResourceId == "spnOrder").FirstOrDefault().Value.ToString()
+                                    @if (Model.sanitationJobTaskModel.SanitationJobTaskId == 0)
+                                    {
+                                        @Html.TextBoxFor(m => m.sanitationJobTaskModel.TaskId, new
+                                   {
+                                       @class = "form-control search",
+                                       @mbsc_input = "true",
+                                       @data_label_style = "floating",
+                                       @placeholder = Model.Loc.Where(a => a.ResourceId == "spnOrder").FirstOrDefault().Value.ToString(),
+                                       @data_input_style = "box",
+                                       autocomplete = "off",
+                                       maxlength = 3
+                                   })
+                                    }
+                                    else
+                                    {
+                                        @Html.TextBoxFor(m => m.sanitationJobTaskModel.TaskId, new
+                                        {
+                                       @class = "form-control search",
+                                       @mbsc_input = "true",
+                                       @data_label_style = "floating",
+                                       @data_input_style = "box",
+                                       autocomplete = "off",
+                                       @readonly = true
+                                        })
+                                    }
+                                </label>
+                                @Html.ValidationMessageFor(m => m.sanitationJobTaskModel.TaskId, "", new { })
+                            </div>
+                            <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                <label>
+                                    @Model.Loc.Where(a => a.ResourceId == "spnChargeType").FirstOrDefault().Value.ToString()
+                                    @Html.TextBoxFor(m => m.sanitationJobTaskModel.ChargeType, new
+                               {
+                                   @class = "form-control search",
+                                   @mbsc_input = "true",
+                                   @data_label_style = "floating",
+                                   @data_input_style = "box",
+                                   @readonly = true
+                               })
+                                </label>
+                            </div>
+                            <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                <label>
+                                    @Model.Loc.Where(a => a.ResourceId == "GlobalChargeTo").FirstOrDefault().Value.ToString()
+                                    @Html.TextBoxFor(m => m.sanitationJobTaskModel.ChargeToClientLookupId, new
+                               {
+                                   @class = "form-control search",
+                                   @mbsc_input = "true",
+                                   @data_label_style = "floating",
+                                   @data_input_style = "box",
+                                   autocomplete = "off",
+                                   @readonly = true
+                               })
+                                </label>
+                            </div>
+                            <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                <label>
+                                    @Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString()
+
+                                    @Html.TextAreaFor(m => m.sanitationJobTaskModel.Description, new
+                               {
+                                   @class = "form-control search",
+                                   style = "resize:none;",
+                                   autocomplete = "off",
+                                   @mbsc_textarea = "true",
+                                   @data_label_style = "floating",
+                                   @placeholder = Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString(),
+                                   @data_input_style = "box"
+                               })
+                                </label>
+                                @Html.ValidationMessageFor(m => m.sanitationJobTaskModel.Description, "", new { })
+                            </div>
+                            <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                <label>
+                                    @Model.Loc.Where(a => a.ResourceId == "spnStatus").FirstOrDefault().Value.ToString()
+                                    @Html.TextBoxFor(m => m.sanitationJobTaskModel.Status, new
+                               {
+                                   @class = "form-control search",
+                                   @mbsc_input = "true",
+                                   @data_label_style = "floating",
+                                   @data_input_style = "box",
+                                   autocomplete = "off",
+                                   @readonly = true
+                               })
+                                </label>
+                            </div>
+                            <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                <label>
+                                    @Model.Loc.Where(a => a.ResourceId == "spnCompleteBy").FirstOrDefault().Value.ToString()
+                                    @Html.TextBoxFor(m => m.sanitationJobTaskModel.CompleteBy, new
+                               {
+                                   @class = "form-control search",
+                                   @mbsc_input = "true",
+                                   @data_label_style = "floating",
+                                   @data_input_style = "box",
+                                   @readonly = true
+                               })
+                                </label>
+                            </div>
+                            <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                <label>
+                                    @Model.Loc.Where(a => a.ResourceId == "spnCompleteDate").FirstOrDefault().Value.ToString()
+                                    @Html.TextBoxFor(m=>m.sanitationJobTaskModel.CompleteDate,  "{0:MM/dd/yyyy}",new
+                                        {
+                                            @class = "form-control search",
+                                            @mbsc_input = "true",
+                                            @data_label_style = "floating",
+                                            @data_input_style = "box",
+                                            autocomplete = "off",
+                                            @readonly = true,
+                                            @disabled = true
+                                        })
+                                </label>
+                            </div>
+                            <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                <label>
+                                    @Model.Loc.Where(a => a.ResourceId == "spnCancelReason").FirstOrDefault().Value.ToString()
+                                    @Html.TextBoxFor(m => m.sanitationJobTaskModel.CancelReason, new
+                               {
+                                   @class = "form-control search",
+                                   @mbsc_input = "true",
+                                   @data_label_style = "floating",
+                                   @data_input_style = "box",
+                                   @readonly = true,
+                                   @disabled = true
+                               })
+                                </label>
+                            </div>
+
+                        </div>
+                        <div class="mbsc-row">
+                            <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                <div class="design-box">
+                                    <div class="mbsc-button-group-block">
+                                        <button mbsc-button data-color="success" type="button" class="btn btn-blue mobBttn sjAddEditTaskCancel" id="btnSJtaskscancel"><i class="fa fa-close faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                <div class="design-box">
+                                    <div class="mbsc-button-group-block">
+                                        <button data-color="success" type="submit" class="btn btn-blue mobBttn" style="cursor:pointer" value="save"><i class="fa fa-save faIcon"></i> &nbsp;@Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="slide-modal-footer"></div>
+    @Html.HiddenFor(m => m.sanitationJobTaskModel.SanitationJobId)
+    @Html.HiddenFor(m => m.sanitationJobTaskModel.TaskId)
+    @Html.HiddenFor(m => m.sanitationJobTaskModel.SanitationJobTaskId)
+    @Html.HiddenFor(m => m.sanitationJobTaskModel.CancelReason)
+
+
+    if (Model.sanitationJobTaskModel.SanitationJobTaskId != 0)
+    {
+        @Html.HiddenFor(m => m.sanitationJobTaskModel.UpdateIndex)
+    }
+}

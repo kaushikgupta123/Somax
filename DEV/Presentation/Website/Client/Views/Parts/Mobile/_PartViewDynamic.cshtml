@@ -1,0 +1,157 @@
+﻿@model Client.Models.Parts.PartsVM
+@{
+    var fieldLabel = "";
+    var fieldName = "";
+    object Value = null;
+}
+<div class="row">
+    <div class="col-xl-12">
+        <div class="m-portlet" id="m_portlet" style="padding:15px;">
+            <ul class="listView">
+                @foreach (var data in Model.UIConfigurationDetails)
+                {
+                    if (data.Section == true)
+                    {
+                        <li>
+                            <span class="label"><strong>@data.SectionName</strong></span>
+                        </li>
+                        continue;
+                    }
+                    if (string.IsNullOrEmpty(data.ColumnName))
+                    {
+                        continue;
+                    }
+                    else if (!string.IsNullOrEmpty(data.ColumnName))
+                    {
+                        if (Model.ViewPart.GetType().GetProperty(data.ColumnName) == null)
+                        {
+                            continue;
+                        }
+                    }
+
+                    #region Column Name
+                    fieldName = data.ColumnName;
+                    if (data.ColumnName.ToLower() == "AccountId".ToLower())
+                    {
+                        fieldName = "AccountClientLookupId";
+                    }
+                    else if (data.ColumnName.ToLower() == "Select1".ToLower())
+                    {
+                        fieldName = "Select1Name";
+                    }
+                    else if (data.ColumnName.ToLower() == "Select2".ToLower())
+                    {
+                        fieldName = "Select2Name";
+                    }
+                    else if (data.ColumnName.ToLower() == "Select3".ToLower())
+                    {
+                        fieldName = "Select3Name";
+                    }
+                    else if (data.ColumnName.ToLower() == "Select4".ToLower())
+                    {
+                        fieldName = "Select4Name";
+                    }
+                    else if (data.ColumnName.ToLower() == "PartVendorId".ToLower())
+                    {
+                        fieldName = "VendorClientLookupIdVendorName";
+                    }
+                    #endregion
+
+                    #region Value
+                    Value = Model.ViewPart.GetType().GetProperty(fieldName).GetValue(Model.ViewPart);
+                    if (Value == null)
+                    {
+                        Value = "";
+                    }
+
+                    if (data.ColumnName.ToLower() == "ClientLookupId".ToLower())
+                    {
+                        if (Value.ToString().Length > 12)
+                        {
+                            Value = Value.ToString().Substring(0, 12) + "...";
+                        }
+                    }
+
+                    if (data.ColumnName.ToLower() == "AverageCost".ToLower())
+                    {
+                        Value = string.Format("{0:N2}", Value);
+                    }
+                    else if (data.ColumnName.ToLower() == "AppliedCost".ToLower())
+                    {
+                        Value = string.Format("{0:N2}", Value);
+                    }
+                    else if (data.ColumnName.ToLower() == "LastPurchaseCost".ToLower())
+                    {
+                        Value = string.Format("{0:N2}", Value);
+                    }
+                    else if (data.ColumnName.ToLower() == "QtyOnHand".ToLower())
+                    {
+                        Value = string.Format("{0:N2}", Value);
+                    }
+                    else if (data.ColumnName.ToLower() == "QtyOnOrder".ToLower())
+                    {
+                        Value = string.Format("{0:N2}", Value);
+                    }
+                    else if (data.ColumnName.ToLower() == "QtyOnRequest".ToLower())
+                    {
+                        Value = string.Format("{0:N2}", Value);
+                    }
+                    else if (data.ColumnName.ToLower() == "QtyMaximum".ToLower())
+                    {
+                        Value = string.Format("{0:N1}", Value);
+                    }
+                    else if (data.ColumnName.ToLower() == "QtyReorderLevel".ToLower())
+                    {
+                        Value = string.Format("{0:N1}", Value);
+                    }
+
+                    #endregion
+
+                    #region Label
+                    fieldLabel = data.ColumnLabel;
+
+                    #endregion
+
+                    <li style="height:auto;" class="dscrbtn respons-box">
+                        @CustomHelperDynamic.ViewLabelAndDisplayValue(fieldLabel, Value.ToString(), data.ColumnType)
+                    </li>
+                }
+                @if (Model.security.Parts.Edit)
+                {
+                    <div class="editBttn">
+                        <button type="button" class="btn btn-blue" style="float: right; margin: 0 4px 7px 0px;" id="editparts"><i class="fa fa-pencil" style="margin-top:-3px;"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalEdit").FirstOrDefault().Value.ToString()</button>
+                        <div style="clear:both;"></div>
+                    </div>
+                }
+            </ul>
+        </div>
+    </div>
+</div>
+<style>
+
+    @@media(max-width:767px) {
+        ul.listView li.respons-box {
+            display: flex;
+            align-items: center;
+            flex-wrap: inherit !important;
+        }
+
+
+
+            ul.listView li.respons-box .label {
+                width: 120px !important;
+            }
+
+            ul.listView li.respons-box .label {
+                width: 120px !important;
+                padding: 0px;
+            }
+
+            ul.listView li.respons-box .description-span {
+                width: calc(100% - 120px) !important;
+                padding-top: 10px !important;
+                display: flex;
+                /*align-items: center;*/
+            }
+    }
+</style>

@@ -1,0 +1,105 @@
+﻿@model Client.Models.Configuration.Account.AccountConfigVM
+
+<div class="m-subheader">
+    <div class="new-m-subheader">
+        <div class="PageTitle">
+            <div class="align-items-center separator">
+                <h3 class="m-subheader__title ">
+                    @Model.Loc.Where(a => a.ResourceId == "spnAccount").FirstOrDefault().Value.ToString()
+                </h3>
+            </div>
+        </div>
+
+        <div class="NewBreadcrumbArea">
+            <div class="newBreadcrumb">
+                <ul>
+                    <li><a href="/Configuration/Dashboard">&nbsp;</a></li>
+                    <li><a href="/Account/Index?page=Account">@Model.Loc.Where(a => a.ResourceId == "spnAccountSearch").FirstOrDefault().Value.ToString()</a></li>
+                    @if (Model.accountDetails.AccountId > 0 && Model.accountDetails.IsAddFromDetails == false)
+                    {
+                        <li><a href="javascript:void(0)" id="brdAccount" data-val="@Model.accountDetails.AccountId">@Model.accountDetails.ClientLookupId</a></li>
+                        <li class="active">@Model.Loc.Where(a => a.ResourceId == "spnEditAccount").FirstOrDefault().Value.ToString() </li>
+                    }
+                    else
+                    {
+                        <li class="active">@Model.Loc.Where(a => a.ResourceId == "spnAddAccount").FirstOrDefault().Value.ToString()</li>
+                    }
+                </ul>
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+        <div style="clear:both;"></div>
+    </div>
+</div>
+@Html.Partial("_ErrorDiv")
+@using (Ajax.BeginForm("SaveAccount", "Account", new AjaxOptions { HttpMethod = "Post", OnSuccess = "OnAccountAddOnSuccess", OnBegin = "AjaxBeginFormBegin", OnComplete = "AjaxBeginFormComplete", OnFailure = "AjaxBeginFormFaillure" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="row">
+        <div class="col-xl-12">
+            <div class="m-portlet newPort" id="m_portlet" style="padding:15px;">
+                <div class="bottomBlock">
+                    <div class="tabsArea nobg">
+                        <ul class="listView nobrd">
+
+                         @if (Model._userdata.DatabaseKey.Client.PackageLevel.ToUpper() == PackageLevelConstant.Enterprise.ToUpper() && Model._userdata.DatabaseKey.User.IsSuperUser == true)
+                            {   
+                            <li>
+                                <span class="label">
+                                    <label for="notesSiteName">@Model.Loc.Where(a => a.ResourceId == "spnSiteGlobal").FirstOrDefault().Value.ToString() :</label>
+                                </span>
+                                <span class="inputText">
+                                    @Html.TextBoxFor(m => m.accountDetails.SiteName, new { @class = "form-control search readonly", @readonly = "readonly", autocomplete = "off" })
+                                </span>
+                            </li>
+                         }
+                            <li >
+                                <span class="label">
+                                    <label for="notesAccount">@Model.Loc.Where(a => a.ResourceId == "spnAccount").FirstOrDefault().Value.ToString() </label> : <small>*</small>
+                                </span>
+                                <span class="inputText">
+
+                                    @if (Model.accountDetails.AccountId > 0 && Model.accountDetails.IsAddFromDetails == false)
+                                    {
+                                        @Html.TextBoxFor(m => m.accountDetails.ClientLookupId, new { @class = "form-control search readonly", @readonly = "readonly", autocomplete = "off" })
+                                    }
+                                    else
+                                    {
+                                        @Html.ValidationMessageFor(m => m.accountDetails.ClientLookupId, "", new { style = "display:none" })
+                                        @Html.TextBoxFor(m => m.accountDetails.ClientLookupId, new { @class = "form-control search", autocomplete = "off", maxlength = "31" })
+                                    }
+                                </span>
+                            </li>
+                            <li >
+                                <span class="label">
+                                    <label for="notesName">@Model.Loc.Where(a => a.ResourceId == "spnName").FirstOrDefault().Value.ToString() </label> : <small>*</small>
+                                </span>
+                                <span class="inputText">
+                                    @Html.ValidationMessageFor(m => m.accountDetails.Name, "", new { style = "display:none" })
+                                    @Html.TextBoxFor(m => m.accountDetails.Name, new { @class = "form-control search", autocomplete = "off", maxlength = "63" })
+                                </span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div style="clear:both;"></div>
+                    <div class="bttn_pagin">
+                        <div class="bttns2">
+                            @if (Model.accountDetails.IsAddFromDetails == true)
+                            {
+                                <button class="btn btn-white mobBttn" name="Command" value="saveAdd" id="btnSaveAnotherOpenPO"><i class="fa fa-save faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalSaveAndAdd").FirstOrDefault().Value.ToString()</button>
+                            }
+                            <button type="submit" class="btn btn-blue mobBttn" name="Command" value="save"><i class="fa fa-save faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+                        </div>
+                        <div class="bttns" id="btnCancelAccount"><button type="button" class="btn btn-blue mobBttn"><i class="fa fa-close faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button></div>
+                        <div style="clear:both;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @Html.HiddenFor(m => m.accountDetails.AccountId)
+    @Html.HiddenFor(m => m.accountDetails.IsAddFromIndex)
+    @Html.HiddenFor(m => m.accountDetails.IsAddFromDetails)
+    @Html.HiddenFor(m => m.accountDetails.UpdateIndex)
+
+}

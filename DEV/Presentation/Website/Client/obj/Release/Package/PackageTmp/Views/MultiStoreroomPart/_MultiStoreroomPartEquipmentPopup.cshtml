@@ -1,0 +1,46 @@
+﻿@model Client.Models.MultiStoreroomPart.MultiStoreroomPartVM
+<div id="mspEquipModal" class="modal fade dropdown-modal" role="dialog" style="display:none;">
+    <div class="modal-dialog partPopup">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title" id="hdrPopVendor">@Model.Loc.Where(a => a.ResourceId == "spnSelectEquipment").FirstOrDefault().Value.ToString()</h4>
+            </div>
+            <div class="modal-body">
+                <div id="tbldropdown" class="dropdown-content tbl-dropdown" style="display:block;">
+                    <div class="table-responsive dropTableOuter">
+                        <table id="MSPEquipPopupTable" class="stripe dropTable globalDropTable" style="width:100%;">
+                            <thead>
+                                <tr>
+                                    <th>@Model.Loc.Where(a => a.ResourceId == "spnGlobalEquipmentId").FirstOrDefault().Value.ToString()</th>
+                                    <th>@Model.Loc.Where(a => a.ResourceId == "spnName").FirstOrDefault().Value.ToString()</th>
+                                    <th>@Model.Loc.Where(a => a.ResourceId == "spnModel").FirstOrDefault().Value.ToString()</th>
+                                    <th>@Model.Loc.Where(a => a.ResourceId == "GlobalType").FirstOrDefault().Value.ToString()</th>
+                                    <th>@Model.Loc.Where(a => a.ResourceId == "spnSerialNumber").FirstOrDefault().Value.ToString()</th>
+                                </tr>
+                            </thead>
+                            <tfoot id="tblmspeqpfooter" style="display:none">
+                                <tr>
+                                    <th style="position:relative;">@Model.Loc.Where(a => a.ResourceId == "spnSelectVendor").FirstOrDefault().Value.ToString()</th>
+                                    <th style="position:relative;">@Model.Loc.Where(a => a.ResourceId == "spnName").FirstOrDefault().Value.ToString()</th>
+                                    <th style="position:relative;">@Model.Loc.Where(a => a.ResourceId == "spnModel").FirstOrDefault().Value.ToString()</th>
+                                    <th style="position:relative;">@Model.Loc.Where(a => a.ResourceId == "GlobalType").FirstOrDefault().Value.ToString()</th>
+                                    <th style="position:relative;">@Model.Loc.Where(a => a.ResourceId == "spnSerialNumber").FirstOrDefault().Value.ToString()</th>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="padding:15px 25px !important;">
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style type="text/css">
+    .dropdown-modal .tbl-dropdown .dataTables_wrapper {
+        width: 100% !important;
+    }
+</style>

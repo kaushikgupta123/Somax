@@ -1,0 +1,87 @@
+﻿@model Client.Models.PartLookup.PartLookupVM
+<div class="pushDiv1"></div>
+
+<div class="row">
+    <div class="col-xl-12">
+        <div class="m-portlet" id="m_portlet" style="padding:15px;">
+            <div class="actionBar" style="padding-bottom:0;">
+                <div class="pull-left" style="position:relative;">
+                    <div class="searchArea"><input type="text" class="form-control search" id="txtsearch" autocomplete="off" placeholder="Search Here..."><i class="fa fa-search" aria-hidden="true" id="icon-search"></i></div>
+                    <button type="button" class="btn btn-white navbar-btn" title="Process" id="btnprocess"><i class="fa fa-check" style="font-size: 1.1rem; position: relative; top: -2px;"></i>&nbsp; @Model.Loc.Where(a => a.ResourceId == "spnPLProcess").FirstOrDefault().Value.ToString()</button>
+                    <button type="button" class="btn btn-white cartIcon" id="sidebarCollapse" title="Add To Cart">
+                        <i class="fa fa-shopping-cart"></i>
+                        <span class="m-badge m-badge--danger cartBadges">0</span>
+                    </button>
+                    <div style="clear:both;"></div>
+                    <div class="searchTips">
+                        <div class="titleText">@Model.Loc.Where(a => a.ResourceId == "spnSearchTips").FirstOrDefault().Value.ToString()</div>
+                        <div class="infoText">@Model.Loc.Where(a => a.ResourceId == "PartLookUpSearchTips").FirstOrDefault().Value.ToString()</div>
+                        <div style="clear:both;"></div>
+                    </div>
+                </div>
+
+                <div class="pull-right">
+                    <div class="dropdown btn-sort" id="layoutDrop">
+                        <button class="btn btn-blue dropdown-toggle" type="button" id="layoutsortmenu" data-toggle="dropdown">@Model.Loc.Where(a => a.ResourceId == "GlobalCardLayout").FirstOrDefault().Value.ToString()</button>
+                        <ul class="dropdown-menu" role="menu" aria-labelledby="layoutsortmenu">
+                            <li role="presentation" id="tableviewliLayout" data-col="1"><a tabindex="-1" href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "GlobalTableView").FirstOrDefault().Value.ToString()</a></li>
+                            <li role="presentation" id="cardviewliLayout" data-col="0"><a tabindex="-1" href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "GlobalCardView").FirstOrDefault().Value.ToString()</a></li>
+                        </ul>
+                    </div>
+                    <div class="dropdown btn-sort" id="shortDrop" style="margin-right:0 !important;">
+                        <button class="btn btn-blue dropdown-toggle" type="button" id="btnsortmenu" data-toggle="dropdown">@Model.Loc.Where(a => a.ResourceId == "GlobalSorting").FirstOrDefault().Value.ToString() : </button>
+                        <ul class="dropdown-menu" role="menu" aria-labelledby="btnsortmenu">
+                            <li role="presentation" class="srtWOcolumn" data-col="1"><a role="menuitem" tabindex="-1" href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnPartID").FirstOrDefault().Value.ToString()</a></li>
+                            <li role="presentation" class="srtWOcolumn" data-col="2"><a role="menuitem" tabindex="-1" href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString()</a></li>
+                            <li role="presentation" class="srtWOcolumn" data-col="3"><a role="menuitem" tabindex="-1" href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnManufacturer").FirstOrDefault().Value.ToString()</a></li>
+                            <li style="border-top:1px solid #ccc; margin: 0 10px;"></li>
+                            <li role="presentation" data-mode="asc" class="srtWOorder"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "globalAscending").FirstOrDefault().Value.ToString()</a></li>
+                            <li role="presentation" data-mode="desc" class="srtWOorder"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "globalDescending").FirstOrDefault().Value.ToString()</a></li>
+                        </ul>
+                    </div>
+                    <div style="clear:both;"></div>
+                </div>
+                <div style="clear:both;"></div>
+
+                <div class="updateArea" style="display:none;">
+                    <div class="pull-left">
+                        <ul class="filter_apply2">
+                            <li><span class="chkitemcount">0</span> @Model.Loc.Where(a => a.ResourceId == "globalItemsSelected").FirstOrDefault().Value.ToString() </li>
+                        </ul>
+
+                    </div>
+                    <div class="pull-right">
+                        <div style="float:right;"><button type="button" class="btn btn-info btn-cart btn-AllAddToCart" style="display:none" id="btnAllAddToCart" data-Alladdtocart-id="Alladdtocart-id" title="@Model.Loc.Where(a => a.ResourceId == "spnAddToCart").FirstOrDefault().Value.ToString()"><span class="glyphicon glyphicon-shopping-cart"></span> @Model.Loc.Where(a => a.ResourceId == "spnAddToCart").FirstOrDefault().Value.ToString()</button></div>
+
+                    </div>
+                    <div style="clear:both;"></div>
+                </div>
+
+
+                <div id="searchfilteritems" style="display:none;">
+                    <span class="label label-primary tagTo" id="spnsearchbtn"></span>
+                </div>
+                <div style="clear:both;"></div>
+            </div>
+
+            <!--Table View Start-->
+            <div id="tableView" style="padding-top:11px;display:none;" class="tabcontent">
+                <div class="table-responsive">
+                    <table id="tblpartlookup" class="eqpDtlTbl row-border custom-sort tblMain" style="width:100%;">
+                        <thead>
+                            <tr>
+                                <th style="width:20px;" class="select-checkbox dt-body-center" data-dt-row="0" data-dt-column="0"></th>
+                                <th>@Model.Loc.Where(a => a.ResourceId == "spnPart").FirstOrDefault().Value.ToString()</th>
+                                <th @*style="width:300px;"*@>@Model.Loc.Where(a => a.ResourceId == "spnManufacturer").FirstOrDefault().Value.ToString()</th>
+                                <th style="text-align:right !important;">@Model.Loc.Where(a => a.ResourceId == "spnPLPrice").FirstOrDefault().Value.ToString()</th>
+                                <th style="width:240px !important; text-align:center !important;">@Model.Loc.Where(a => a.ResourceId == "spnActions").FirstOrDefault().Value.ToString()</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+            <!--Table View End-->
+            <div id="ActiveCard" class="tabcontent" style="padding-top:11px;display:block;"></div>
+        </div>
+    </div>
+</div>

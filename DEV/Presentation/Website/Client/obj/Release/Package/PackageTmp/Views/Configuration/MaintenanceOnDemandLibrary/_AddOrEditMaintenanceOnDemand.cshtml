@@ -1,0 +1,101 @@
+﻿@model Client.Models.Configuration.MaintenanceOnDemandLibrary.MaintenanceOnDemandVM
+<div class="m-subheader">
+    <div class="new-m-subheader">
+        <div class="PageTitle">
+            <div class="align-items-center separator">
+                <h3 class="m-subheader__title ">
+                    @Model.Loc.Where(a => a.ResourceId == "spnLibraries").FirstOrDefault().Value.ToString()
+                </h3>
+            </div>
+        </div>
+        <div class="NewBreadcrumbArea">
+            <div class="newBreadcrumb">
+                <ul>
+                    <li><a href="/Configuration/Dashboard">&nbsp;</a></li>
+                    <li>
+                        <a href="/MaintenanceOnDemandLibrary/index?page=Libraries_Maintenance_OnDemand">
+                            @Model.Loc.Where(a => a.ResourceId == "spnMaintenanceOnDemandSearch").FirstOrDefault().Value.ToString()
+                        </a>
+                    </li>
+                    @if (Model.maintenanceOnDemanModel.MaintOnDemandMasterId == 0)
+                    {
+                        <li class="active"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnAddMaintenanceOnDemand").FirstOrDefault().Value.ToString()</a></li>
+                    }
+                    else
+                    {
+
+                        <li><a href="javascript:void(0)" id="brdondemand" data-val="@Model.maintenanceOnDemanModel.MaintOnDemandMasterId">@Model.maintenanceOnDemanModel.ClientLookUpId</a></li>
+                        <li class="active">@Model.Loc.Where(a => a.ResourceId == "spnUpdateMaintenanceOnDemand").FirstOrDefault().Value.ToString()</li>
+                    }
+                </ul>
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+        <div style="clear:both;"></div>
+    </div>
+</div>
+@Html.Partial("_ErrorDiv")
+@using (Ajax.BeginForm("AddOndemand", "MaintenanceOnDemandLibrary", new AjaxOptions { HttpMethod = "Post", OnSuccess = "OnDemandAddOnSuccess", OnBegin = "AjaxBeginFormBegin", OnComplete = "AjaxBeginFormComplete", OnFailure = "AjaxBeginFormFaillure" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="row">
+        <div class="col-xl-12">
+            <div class="m-portlet newPort" id="m_portlet" style="padding:15px;">
+                <div class="bottomBlock">
+                    <div class="tabsArea nobg">
+                        <ul class="listView nobrd">
+                            <li>
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnOnDemandID").FirstOrDefault().Value.ToString() :<small>*</small></span>
+                                <span class="inputText">
+                                    @if (Model.maintenanceOnDemanModel.MaintOnDemandMasterId != 0)
+                                    {
+                                        @Html.TextBoxFor(m => m.maintenanceOnDemanModel.ClientLookUpId, new { @class = "form-control search readonly", @readonly = "readonly" })
+                                    }
+                                    else
+                                    {
+                                        @Html.ValidationMessageFor(m => m.maintenanceOnDemanModel.ClientLookUpId, "", new { style = "display:none" })
+                                        @Html.TextBoxFor(m => m.maintenanceOnDemanModel.ClientLookUpId, new { @class = "form-control search", autocomplete = "off", maxlength = "31" })
+                                    }
+                                </span>
+                            </li>
+                            <li style="height:auto;">
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString() : <small>*</small></span>
+                                <span class="inputText" style="height:auto;">
+                                    @Html.ValidationMessageFor(m => m.maintenanceOnDemanModel.Description, "", new { style = "display:none" })
+                                    @Html.TextAreaFor(m => m.maintenanceOnDemanModel.Description, new { @class = "form-control search", style = "resize:none;", autocomplete = "off", maxlength = "255" })
+                                </span>
+                                <div style="clear:both;"></div>
+                            </li>
+                            <li>
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "GlobalType").FirstOrDefault().Value.ToString(): </span>
+                                <span class="inputText">
+                                    @Html.ValidationMessageFor(m => m.maintenanceOnDemanModel.Type, "", new { style = "display:none" })
+                                    @Html.DropDownListFor(m => m.maintenanceOnDemanModel.Type, Model.maintenanceOnDemanModel.TypeList, "--Select--", new { @class = "form-control search select2picker", style = "width:100%;" })
+                                </span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div style="clear:both;"></div>
+                    <div class="idBttns">
+                        <div class="bttn_pagin">
+                            <div class="bttns2">
+                                @if (Model.maintenanceOnDemanModel.MaintOnDemandMasterId == 0)
+                                {
+                                    <button class="btn btn-white mobBttn" name="Command" value="saveAdd" id="btnSaveAnotherOpenPO"><i class="fa fa-save faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalSaveAndAdd").FirstOrDefault().Value.ToString()</button>
+                                }
+                                <button type="submit" class="btn btn-blue mobBttn" name="Command" value="save"><i class="fa fa-save faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+                            </div>
+                            <div class="bttns" id="btnCancelOndemand"><button type="button" class="btn btn-blue mobBttn"><i class="fa fa-close faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button></div>
+                            <div style="clear:both;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    if (Model.maintenanceOnDemanModel.MaintOnDemandMasterId != 0)
+    {
+        @Html.HiddenFor(m => m.maintenanceOnDemanModel.MaintOnDemandMasterId)
+    }
+    @Html.HiddenFor(m => m.maintenanceOnDemanModel.MasterIdForCancel)
+}

@@ -1,0 +1,244 @@
+﻿@model Client.Models.BBUKPIEnterprise.BBUKPIEnterpriseVM
+
+<link href="~/Scripts/Metronic/assets/demo/default/base/style_newCustom.css" rel="stylesheet" />
+@if (Convert.ToString(Session["MenuState"]) == "" || Convert.ToString(Session["MenuState"]) == "open")
+{
+    <div class="m-subheader fixedDiv1">
+        <div class="new-m-subheader">
+            <div class="PageTitle">
+                <div class="align-items-center">
+                    <h3 class="m-subheader__title" style="padding:0;">
+                        <span class="dropToggle" id="spnDropToggle">
+                            <img src="~/Images/toggleMenu.png" />
+                        </span>
+                        <span style="line-height:35px;" id="bbuenterprisesearchtitle">
+                        </span>
+                    </h3>
+                </div>
+            </div>
+            <div style="clear:both;"></div>
+        </div>
+    </div>
+}
+else
+{ <div class="m-subheader fixedDiv1 fixupperpannel2">
+        <div class="new-m-subheader">
+            <div class="PageTitle">
+                <div class="align-items-center">
+                    <h3 class="m-subheader__title" style="padding:0;">
+                        <span class="dropToggle" id="spnDropToggle">
+                            <img src="~/Images/toggleMenu.png" />
+                        </span>
+                        <span style="line-height:35px;" id="bbuenterprisesearchtitle">
+                        </span>
+                    </h3>
+                </div>
+            </div>
+            <div style="clear:both;"></div>
+        </div>
+    </div>
+}
+
+<div class="pushDiv1"></div>
+<div class="row">
+    <div class="col-xl-12">
+        <div class="m-portlet" id="m_portlet" style="padding:15px; margin-bottom:0;">
+            <div class="actionBar" style="display:none" id="BBUKPIEnterpriseGridAction">
+                <div class="ent-row">
+                    <div class="ent-col sitesBlock">
+                        <form>
+                            <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnSiteGlobal").FirstOrDefault().Value.ToString() :</span>
+                            @{
+                                List<SelectListItem> selectListItems = Model.SiteList.ToList();
+                                selectListItems.Insert(0, (new SelectListItem { Text = "Select All", Value = "" }));
+                            }
+
+                            @Html.DropDownList("Sites", selectListItems, new { @class = "form-control search adv-item", style = "width:100%;", id = "ddlSites", multiple = "multiple" })
+                        </form>
+                    </div>
+                    <div class="ent-col yearweekBlock">
+                        <form>
+                            <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnYearAndWeek").FirstOrDefault().Value.ToString() :</span>
+                            @{
+                                List<SelectListItem> yearweekselectListItems = Model.YearWeekList.ToList();
+                                yearweekselectListItems.Insert(0, (new SelectListItem { Text = "Select All", Value = "" }));
+                            }
+
+                            @Html.DropDownList("YearWeeks", yearweekselectListItems, new { @class = "form-control search adv-item", style = "width:100%;", id = "ddlYearWeeks", multiple = "multiple" })
+                        </form>
+                    </div>
+                    <div class="ent-btn-col">
+                        <br />
+                        <button type="button" class="btn btn-white import-export" disabled onclick="funcShowExportbtn()">@Model.Loc.Where(a => a.ResourceId == "spnExport").FirstOrDefault().Value.ToString()</button>
+                    </div>
+                </div>
+
+                <div id="advsearchfilteritems"></div>
+                <div style="clear:both;"></div>
+            </div>
+
+            <div style="clear:both;"></div>
+
+            <div id="Active" class="tabcontent" style="display:block;">
+                <div class="table-responsive">
+                    <table id="bbukpienterpriseSearch" class="eqpDtlTbl row-border custom-sort tblMain tblDefaultSort" style="width:100%;">
+                        <thead>
+                            <tr>
+                                <th data-col="0" data-th-index="0">@Model.Loc.Where(a => a.ResourceId == "spnYear").FirstOrDefault().Value.ToString()</th>
+                                <th data-col="1" data-th-index="1">@Model.Loc.Where(a => a.ResourceId == "spnWeekNumber").FirstOrDefault().Value.ToString()</th>
+                                <th data-col="2" data-th-index="2">@Model.Loc.Where(a => a.ResourceId == "spnWeekStart").FirstOrDefault().Value.ToString()</th>
+                                <th data-col="3" data-th-index="3">@Model.Loc.Where(a => a.ResourceId == "spnWeekEnd").FirstOrDefault().Value.ToString()</th>
+                                <th data-col="4" data-th-index="4">@Model.Loc.Where(a => a.ResourceId == "spnCreated").FirstOrDefault().Value.ToString()</th>
+                                <th data-col="5" data-th-index="5" style="text-align:right !important;">@Model.Loc.Where(a => a.ResourceId == "spnOntimePMpercentageCompletion").FirstOrDefault().Value.ToString()</th>
+                                <th data-col="6" data-th-index="6" style="text-align:right !important;">@Model.Loc.Where(a => a.ResourceId == "spnWOBacklogCount").FirstOrDefault().Value.ToString()</th>
+                                <th data-col="7" data-th-index="7" style="text-align:right !important;">@Model.Loc.Where(a => a.ResourceId == "spnCycleCountAccuracyPercentage").FirstOrDefault().Value.ToString()</th>
+
+                                <th data-col="8" data-th-index="8" style="display:none;">@Model.Loc.Where(a => a.ResourceId == "spnCountPMfollowUp").FirstOrDefault().Value.ToString()</th>
+                                <th data-col="9" data-th-index="9" style="display:none;"># @Model.Loc.Where(a => a.ResourceId == "spnActiveMechanicUsers").FirstOrDefault().Value.ToString()</th>
+                                <th data-col="10" data-th-index="10" style="display:none;">@Model.Loc.Where(a => a.ResourceId == "spnRCPS_EventsOnEquipBreakdown").FirstOrDefault().Value.ToString()</th>
+                                <th data-col="11" data-th-index="11" style="display:none;">@Model.Loc.Where(a => a.ResourceId == "spnTTR_Events").FirstOrDefault().Value.ToString()</th>
+                                <th data-col="12" data-th-index="12" style="display:none;">@Model.Loc.Where(a => a.ResourceId == "spnInventoryDollarValueOverMax").FirstOrDefault().Value.ToString()</th>
+                                <th data-col="13" data-th-index="13" style="display:none;">@Model.Loc.Where(a => a.ResourceId == "spnCycleCountProgressPercentage").FirstOrDefault().Value.ToString()</th>
+                                <th data-col="14" data-th-index="14" style="display:none;">@Model.Loc.Where(a => a.ResourceId == "spnWeeklyHoursOfEVTraining").FirstOrDefault().Value.ToString()</th>
+                                <th data-col="15" data-th-index="15" style="display:none;">@Model.Loc.Where(a => a.ResourceId == "spnSiteGlobal").FirstOrDefault().Value.ToString()</th>
+
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+            <div style="display:none;">
+                
+                    <table id="bbukpienterpriseSearchForExport">
+                        <thead>
+                            <tr>
+                                <th data-col="0" data-th-index="0">@Model.Loc.Where(a => a.ResourceId == "spnYear").FirstOrDefault().Value.ToString()</th>
+                                <th data-col="1" data-th-index="1">@Model.Loc.Where(a => a.ResourceId == "spnWeekNumber").FirstOrDefault().Value.ToString()</th>
+                                <th data-col="2" data-th-index="2">@Model.Loc.Where(a => a.ResourceId == "spnSiteGlobal").FirstOrDefault().Value.ToString()</th>
+                                <th data-col="3" data-th-index="3">@Model.Loc.Where(a => a.ResourceId == "spnCreated").FirstOrDefault().Value.ToString()</th>
+                                <th data-col="4" data-th-index="4">@Model.Loc.Where(a => a.ResourceId == "spnOntimePMpercentageCompletion").FirstOrDefault().Value.ToString()</th>
+                                <th data-col="5" data-th-index="5">@Model.Loc.Where(a => a.ResourceId == "spnCountPMfollowUp").FirstOrDefault().Value.ToString()</th>
+                                <th data-col="6" data-th-index="6"># @Model.Loc.Where(a => a.ResourceId == "spnActiveMechanicUsers").FirstOrDefault().Value.ToString()</th>
+                                <th data-col="7" data-th-index="7">@Model.Loc.Where(a => a.ResourceId == "spnWOBacklogCount").FirstOrDefault().Value.ToString()</th>
+                                <th data-col="8" data-th-index="8">@Model.Loc.Where(a => a.ResourceId == "spnRCPS_EventsOnEquipBreakdown").FirstOrDefault().Value.ToString()</th>
+                                <th data-col="9" data-th-index="9">@Model.Loc.Where(a => a.ResourceId == "spnTTR_Events").FirstOrDefault().Value.ToString()</th>
+                                <th data-col="10" data-th-index="10">@Model.Loc.Where(a => a.ResourceId == "spnInventoryDollarValueOverMax").FirstOrDefault().Value.ToString()</th>
+                                <th data-col="11" data-th-index="11">@Model.Loc.Where(a => a.ResourceId == "spnCycleCountAccuracyPercentage").FirstOrDefault().Value.ToString()</th>
+                                <th data-col="12" data-th-index="12">@Model.Loc.Where(a => a.ResourceId == "spnCycleCountProgressPercentage").FirstOrDefault().Value.ToString()</th>
+                                <th data-col="13" data-th-index="13">@Model.Loc.Where(a => a.ResourceId == "spnWeeklyHoursOfEVTraining").FirstOrDefault().Value.ToString()</th>
+                                <th data-col="14" data-th-index="14">@Model.Loc.Where(a => a.ResourceId == "spnWeekStart").FirstOrDefault().Value.ToString()</th>
+                                <th data-col="15" data-th-index="15">@Model.Loc.Where(a => a.ResourceId == "spnWeekEnd").FirstOrDefault().Value.ToString()</th>
+
+                            </tr>
+                        </thead>
+                    </table>
+                
+            </div>
+        </div>
+    </div>
+</div>
+@Html.Partial("_CustomizeGridSetup")
+@Html.Partial("_Export")
+
+
+@if (Convert.ToString(Session["MenuState"]) == "" || Convert.ToString(Session["MenuState"]) == "open")
+{
+    <div id="searcharea" class="slideToggleBar" style="display:none;">
+        <div class="searchBoxArea">
+            <div class="form-group" style="margin-bottom:0; position:relative;">
+                <i class="fa fa-search" style="font-size: 1.1rem;position: absolute;top: 8px;left: 0px;"></i>
+                <input type="text" class="form-control searched" placeholder="Search for a view" id="bbuenterprisesearctxtbox">
+            </div>
+        </div>
+
+        <div class="searchList">
+            <ul id="bbuenterprisesearchListul">
+                @foreach (var item in Model.CustomQueryDisplayList)
+                {
+                    <li id="@item.Value" class="bbuenterprisesearchdrpbox"><a href="javascript:void(0)">@item.Text</a></li>
+                }
+            </ul>
+        </div>
+    </div>
+}
+else
+{
+    <div id="searcharea" class="slideToggleBar" style="display:none;left:81px !important;">
+        <div class="searchBoxArea">
+            <div class="form-group" style="margin-bottom:0; position:relative;">
+                <i class="fa fa-search" style="font-size: 1.1rem;position: absolute;top: 8px;left: 0px;"></i>
+                <input type="text" class="form-control searched" placeholder="Search for a view" id="bbuenterprisesearctxtbox">
+            </div>
+        </div>
+        <div class="searchList">
+            <ul id="bbuenterprisesearchListul">
+                @foreach (var item in Model.CustomQueryDisplayList)
+                {
+                    <li id="@item.Value" class="bbuenterprisesearchdrpbox"><a href="javascript:void(0)">@item.Text</a></li>
+                }
+            </ul>
+        </div>
+    </div>
+}
+
+@Html.Partial("_DateRangeModalForEnterpriseCreateDate")
+@Html.Partial("_DateRangeModalForEnterpriseSubmitDate")
+
+<style>
+    .select2-container--default .select2-selection--single, .select2-container--default .select2-selection--multiple {
+        height: auto !important;
+    }
+    .select2-container--default.select2-container--focus .select2-selection--multiple {
+        border: solid #c7c7c7 1px;
+    }
+    .ent-row {
+        display:flex;
+        flex-wrap:wrap;
+        width:100%;
+        margin:0 -15px;
+    }
+    .ent-col {
+        width: 47%;
+        padding:0 15px;
+    }
+    .ent-btn-col {
+        padding: 0 15px;
+        width: 6%;
+    }
+    .ent-btn-col .import-export {
+        margin-right:0px;
+    }
+
+    #bbukpienterpriseSearch tr td {
+        display: none;
+    }
+
+    #bbukpienterpriseSearch tr td:nth-child(1), #bbukpienterpriseSearch tr td:nth-child(2), #bbukpienterpriseSearch tr td:nth-child(3), #bbukpienterpriseSearch tr td:nth-child(4), #bbukpienterpriseSearch tr td:nth-child(5), #bbukpienterpriseSearch tr td:nth-child(6), #bbukpienterpriseSearch tr td:nth-child(7), #bbukpienterpriseSearch tr td:nth-child(8) {
+        display: table-cell !important;
+        /*text-align:center !important;*/
+    }
+
+    @@media(max-width:1200px) {
+        .ent-col {
+            width: 46%;
+        }
+    }
+    @@media(max-width:1100px) {
+        .ent-col {
+            width: 45%;
+        }
+    }
+    @@media(max-width:767px) {
+        .ent-col, .ent-btn-col {
+            width: 100%;
+            padding:0px;
+            margin-bottom: 10px;
+        }
+        .ent-row {
+            margin:0px;
+        }
+        .ent-btn-col .import-export {
+            width: 100%;
+        }
+    }
+</style>

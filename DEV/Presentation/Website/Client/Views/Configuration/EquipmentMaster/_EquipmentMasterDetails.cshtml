@@ -1,0 +1,130 @@
+﻿@model Client.Models.Configuration.EquipmentMaster.EquipmentMasterVM
+<div class="m-subheader">
+    <div class="new-m-subheader">
+        <div class="PageTitle">
+            <div class="align-items-center separator">
+                <h3 class="m-subheader__title ">
+                    @Model.Loc.Where(a => a.ResourceId == "spnEquipmentMaster").FirstOrDefault().Value.ToString()
+                </h3>
+            </div>
+        </div>
+        <div class="NewBreadcrumbArea">
+            <div class="newBreadcrumb">
+                <ul>
+                    <li><a href="/Configuration/Dashboard">&nbsp;</a></li>
+                    <li>
+                        <a href="/EquipmentMaster/index?page=Masters_Assets">
+                            @Model.Loc.Where(a => a.ResourceId == "spnEquipmentMasterSearch").FirstOrDefault().Value.ToString()
+                        </a>
+                    </li>
+                    <li class="active">@Model.EquipmentMasterModel.Name</li>
+                </ul>
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+        <div class="ActionBttnArea">
+            @if (Model.security.EquipmentMaster.Edit)
+            {
+                <button type="button" class="btn newBtn-add AddEqpMaster pull-left" title="Add Equipment Master"><i class="fa fa-plus"></i></button>
+            }
+            <div style="clear:both;"></div>
+        </div>
+        <div style="clear:both;"></div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xl-3">
+        <div class="m-portlet">
+            <div class="sideMenuArea">
+                <ul class="vtabs" id="detmaintab">
+                    <li class="active" id="liEquipmentMaster"><a href="#Overview">@Model.Loc.Where(a => a.ResourceId == "spnEquipmentMasterOverview").FirstOrDefault().Value.ToString()</a></li>
+                    <li id="PM" onclick="openCity(event, 'Preventive')"><a href="#Preventive">@Model.Loc.Where(a => a.ResourceId == "spnPreventiveMaintenance").FirstOrDefault().Value.ToString()</a></li>
+                </ul>
+            </div>
+            <div class="selectTabs" id="selectTabs">
+                <select class="form-control" id="colorselector">
+                    <option value="Overview">@Model.Loc.Where(a => a.ResourceId == "spnEquipmentMasterOverview").FirstOrDefault().Value.ToString()</option>
+                    <option value="Preventive">@Model.Loc.Where(a => a.ResourceId == "spnPreventiveMaintenance").FirstOrDefault().Value.ToString()</option>
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-9">
+        <div class="row">
+            <div class="col-xl-12" id="btnnblock">
+                <div class="m-portlet" id="m_portlet" style="padding:15px;">
+                    <div class="bottomBlock">
+                        <div class="tabsArea nobg" id="Overview" style="display:block;">
+
+                            <ul class="listView">
+                                <li>
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnName").FirstOrDefault().Value.ToString()  :</span>
+                                    <span class="inputText">@Model.EquipmentMasterModel.Name</span>
+                                </li>
+                                <li>
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnMake").FirstOrDefault().Value.ToString()  :</span>
+                                    <span class="inputText">@Model.EquipmentMasterModel.Make</span>
+                                </li>
+                                <li>
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnModel").FirstOrDefault().Value.ToString()  :</span>
+                                    <span class="inputText">@Model.EquipmentMasterModel.Model</span>
+                                </li>
+                                <li>
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "GlobalType").FirstOrDefault().Value.ToString()  :</span>
+                                    <span class="inputText">@Model.EquipmentMasterModel.Type</span>
+                                </li>
+                                <li>
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "globalInActive").FirstOrDefault().Value.ToString()  :</span>
+                                    <span class="inputText">
+                                        @if (Model.EquipmentMasterModel.InactiveFlag)
+                                        {
+                                            <input type="checkbox" class="form-control m-input readonly" readonly="readonly" checked="checked" style="color:black; width: auto; margin-top: 12px;" disabled="disabled" />
+                                        }
+                                        else
+                                        {
+                                            <input type="checkbox" class="form-control m-input readonly" readonly="readonly" style="color:black; width: auto; margin-top: 12px;" disabled="disabled" />
+                                        }
+                                    </span>
+                                </li>
+                            </ul>
+                            <div class="editBttn">
+                                @if (Model.security.EquipmentMaster.Edit)
+                                {
+                                    <button type="button" class="btn btn-blue" id="btnEditEqMaster" name="Command" value="update"><i class="fa fa-pencil" style="margin-top:-3px;"></i>&nbsp;@Model.Loc.Where(a => a.ResourceId == "globalEdit").FirstOrDefault().Value.ToString()</button>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tabsArea nobg" id="Preventive" style="display:none;">
+                        <div class="table-responsive">
+                            <table id="pmTable" class="eqpDtlTbl row-border custom-sort" style="width:100%;">
+                                <thead>
+                                    <tr>
+                                        <th>@Model.Loc.Where(a => a.ResourceId == "spnPMMasterID").FirstOrDefault().Value.ToString()</th>
+                                        <th>@Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString()</th>
+                                        <th>@Model.Loc.Where(a => a.ResourceId == "spnFrequency").FirstOrDefault().Value.ToString()</th>
+                                        <th>@Model.Loc.Where(a => a.ResourceId == "spnFrequencyType").FirstOrDefault().Value.ToString()</th>
+                                        <th style="text-align: center !important;">@Model.Loc.Where(a => a.ResourceId == "globalAction").FirstOrDefault().Value.ToString()</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                        <div class="bttns">
+                            <button type="button" class="btn btn-blue" id="btnAddPreventive" style="display:none;"><i class="fa fa-plus faIcon"></i>&nbsp;@Model.Loc.Where(a => a.ResourceId == "spnAddPreventive").FirstOrDefault().Value.ToString()</button>
+                        </div>
+                        <div style="clear:both;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div style="clear:both;"></div>
+@Html.HiddenFor(m => m.EquipmentMasterModel.EquipmentMasterId)
+@Html.HiddenFor(m => m.EquipmentMasterModel.Name)
+@Html.HiddenFor(m => m.EquipmentMasterModel.Type)
+@Html.HiddenFor(m => m.EquipmentMasterModel.Make)
+@Html.HiddenFor(m => m.EquipmentMasterModel.Model)
+@Html.HiddenFor(m => m.EquipmentMasterModel.InactiveFlag)
+@Html.HiddenFor(m => m.EquipmentMasterModel.UpdateIndex)

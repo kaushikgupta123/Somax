@@ -1,0 +1,308 @@
+﻿@model Client.Models.WorkOrderPlanning.WorkOrderPlanningVM
+<div class="row">
+    <div class="col-xl-6">
+        <div class="m-portlet m-portlet--full-height m-portlet--fit">
+            <div class="m-portlet__head">
+                <div class="m-portlet__head-caption">
+                    <div class="m-portlet__head-title">
+                        <h3 class="m-portlet__head-text">
+                            @Model.Loc.Where(a => a.ResourceId == "WorkOrderPlanningDashboardScheduleComplienceText").FirstOrDefault().Value.ToString()
+                        </h3>
+                    </div>
+                </div>
+            </div>
+
+            <div class="m-portlet__body">
+                <div class="tab-content">
+                    <div class="chartBox" style="position: relative; min-height: 300px; margin-top:0;">
+                        <div class="lds-ellipsis lds-adjust" id="scheduleComplienceloader">
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                        </div>
+
+                        <div id="scheduleComplience">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-6 rightWidgetArea">
+        <div class="row">
+            <div class="col-xl-5 col-md-6 planed">
+                <div class="m-portlet m-portlet--fit">
+                    <div class="m-portlet__head">
+                        <div class="m-portlet__head-caption">
+                            <div class="m-portlet__head-title">
+                                <h3 class="m-portlet__head-text">
+                                    @Model.Loc.Where(a => a.ResourceId == "WorkOrderPlanningDashboardPlannedText").FirstOrDefault().Value.ToString()
+                                </h3>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="m-portlet__body">
+                        <div class="tab-content">
+                            <div class="chartBox">
+                                <span class="chartCount" id="WOLineItemPlannedCount"></span>
+                                <span class="chartCountText">@Model.Loc.Where(a => a.ResourceId == "spnWorkOrderCount").FirstOrDefault().Value.ToString()</span>
+                                <div class="lds-ellipsis lds-adjust Schedule-Compliance-loader">
+                                    <div></div>
+                                    <div></div>
+                                    <div></div>
+                                    <div></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xl-5 col-md-6 incomplete">
+                <div class="m-portlet m-portlet--fit">
+                    <div class="m-portlet__head">
+                        <div class="m-portlet__head-caption">
+                            <div class="m-portlet__head-title">
+                                <h3 class="m-portlet__head-text">
+                                    @Model.Loc.Where(a => a.ResourceId == "GlobalIncomplete").FirstOrDefault().Value.ToString()
+                                </h3>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="m-portlet__body">
+                        <div class="tab-content">
+                            <div class="chartBox">
+                                <span class="chartCount" id="WOLineItemInCompleteCount"></span>
+                                <span class="chartCountText">@Model.Loc.Where(a => a.ResourceId == "spnWorkOrderCount").FirstOrDefault().Value.ToString()</span>
+                                <div class="lds-ellipsis lds-adjust Schedule-Compliance-loader">
+                                    <div></div>
+                                    <div></div>
+                                    <div></div>
+                                    <div></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-xl-5 col-md-6 complete">
+                <div class="m-portlet m-portlet--fit">
+                    <div class="m-portlet__head">
+                        <div class="m-portlet__head-caption">
+                            <div class="m-portlet__head-title">
+                                <h3 class="m-portlet__head-text">
+                                    @Model.Loc.Where(a => a.ResourceId == "GlobalComplete").FirstOrDefault().Value.ToString()
+                                </h3>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="m-portlet__body">
+                        <div class="tab-content">
+                            <div class="chartBox">
+                                <span class="chartCount" id="WOLineItemCompleteCount"></span>
+                                <span class="chartCountText">@Model.Loc.Where(a => a.ResourceId == "spnWorkOrderCount").FirstOrDefault().Value.ToString()</span>
+                                <div class="lds-ellipsis lds-adjust Schedule-Compliance-loader">
+                                    <div></div>
+                                    <div></div>
+                                    <div></div>
+                                    <div></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xl-5 col-md-6 breakIn">
+                <div class="m-portlet m-portlet--fit">
+                    <div class="m-portlet__head">
+                        <div class="m-portlet__head-caption">
+                            <div class="m-portlet__head-title">
+                                <h3 class="m-portlet__head-text">
+                                    @Model.Loc.Where(a => a.ResourceId == "WorkOrderPlanningDashboardBreakInText").FirstOrDefault().Value.ToString()
+                                </h3>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="m-portlet__body">
+                        <div class="tab-content">
+                            <div class="chartBox">
+                                <span class="chartCount" id="WOLineItemBreakInCount"></span>
+                                <span class="chartCountText">@Model.Loc.Where(a => a.ResourceId == "spnWorkOrderCount").FirstOrDefault().Value.ToString()</span>
+                                <div class="lds-ellipsis lds-adjust Schedule-Compliance-loader">
+                                    <div></div>
+                                    <div></div>
+                                    <div></div>
+                                    <div></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-6">
+        <div class="m-portlet m-portlet--fit">
+            <div class="m-portlet__head">
+                <div class="m-portlet__head-caption">
+                    <div class="m-portlet__head-title">
+                        <h3 class="m-portlet__head-text">
+                            @Model.Loc.Where(a => a.ResourceId == "WorkOrderPlanningDashboardWorkOrdersByTypeText").FirstOrDefault().Value.ToString()
+                        </h3>
+                    </div>
+                </div>
+            </div>
+
+            <div class="m-portlet__body">
+                <div class="tab-content">
+                    <div class="chartBox" style="position: relative; min-height: 300px; margin-top: 0;">
+                        <div class="lds-ellipsis lds-adjust" id="WorkOrderByTypeloader">
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                        </div>
+                        <div id="WorkOrderByType"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-6">
+        <div class="m-portlet m-portlet--fit">
+            <div class="m-portlet__head">
+                <div class="m-portlet__head-caption">
+                    <div class="m-portlet__head-title">
+                        <h3 class="m-portlet__head-text">
+                            @Model.Loc.Where(a => a.ResourceId == "WorkOrderPlanningDashboardWorkOrdersByAssignedText").FirstOrDefault().Value.ToString()
+                        </h3>
+                    </div>
+                </div>
+            </div>
+
+            <div class="m-portlet__body">
+                <div class="tab-content">
+
+                    <div class="chartBox" style="position: relative; min-height: 300px; margin-top: 0;">
+                        <div class="lds-ellipsis lds-adjust" id="WorkOrderByAssignedloader">
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                        </div>
+                        <div id="WorkOrderByAssigned">
+
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-6 rightWidgetArea">
+        <div class="row">
+            <div class="col-xl-5 col-md-6 estHrs">
+                <div class="m-portlet m-portlet--fit">
+                    <div class="m-portlet__head">
+                        <div class="m-portlet__head-caption">
+                            <div class="m-portlet__head-title">
+                                <h3 class="m-portlet__head-text">
+                                    @Model.Loc.Where(a => a.ResourceId == "WorkOrderPlanningDashboardEstimatedHourText").FirstOrDefault().Value.ToString()
+                                </h3>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="m-portlet__body">
+                        <div class="tab-content">
+                            <div class="chartBox">                                
+                                <span id="WOLineItemPlannedEstimatedHours" class="chartCount"></span>
+                                <div class="lds-ellipsis lds-adjust hours-count-loader">
+                                    <div></div>
+                                    <div></div>
+                                    <div></div>
+                                    <div></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-xl-5 col-md-6 actHrs">
+                <div class="m-portlet m-portlet--fit">
+                    <div class="m-portlet__head">
+                        <div class="m-portlet__head-caption">
+                            <div class="m-portlet__head-title">
+                                <h3 class="m-portlet__head-text">
+                                    @Model.Loc.Where(a => a.ResourceId == "WorkOrderPlanningDashboardActualHourText").FirstOrDefault().Value.ToString()
+                                </h3>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="m-portlet__body">
+                        <div class="tab-content">
+                            <div class="chartBox">
+                                <span id="WOLineItemPlannedActualHours" class="chartCount"></span>
+                                <div class="lds-ellipsis lds-adjust hours-count-loader">
+                                    <div></div>
+                                    <div></div>
+                                    <div></div>
+                                    <div></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-6">
+        <div class="m-portlet m-portlet--full-height m-portlet--fit">
+            <div class="m-portlet__head">
+                <div class="m-portlet__head-caption">
+                    <div class="m-portlet__head-title">
+                        <h3 class="m-portlet__head-text">
+                            @Model.Loc.Where(a => a.ResourceId == "WorkOrderPlanningDashboardHoursByAssignedText").FirstOrDefault().Value.ToString()
+                        </h3>
+                    </div>
+                </div>
+            </div>
+
+            <div class="m-portlet__body">
+                <div class="tab-content">
+                    <div class="chartBox" style="position: relative; min-height: 300px; margin-top: 0;">
+                        <div class="lds-ellipsis lds-adjust" id="workOrderByHoursloader">
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                        </div>
+                        <div id="workOrderByHours">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

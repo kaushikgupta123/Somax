@@ -1,0 +1,84 @@
+﻿@model Client.Models.Dashboard.DashboardVM
+@{
+    ViewBag.Title = "Somax | Dashboard";
+}
+@Styles.Render("~/Content/datatable")
+@Styles.Render("~/Content/dashboardStyle")
+@section scripts{
+    <script src="~/Scripts/Pages/dashboard/DashboardFleetOnly.js"></script>
+    @Scripts.Render("~/bundles/datatable")
+}
+<div class="m-subheader ">
+    <div class="d-flex align-items-center">
+        <div class="mr-auto">
+            <h3 class="m-subheader__title ">Dashboard</h3>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xl-12">
+        <div class="m-portlet padAdjst" id="m_portlet">
+            <div class="m-portlet__body  m-portlet__body--no-padding">
+                <div class="row m-row--col-separator-xl">
+                    <div class="col-md-12 col-lg-6 col-xl-3">                      
+                        <div class="sparklineArea">
+                            <div class="redBoxFleetOnly">
+                                <div class="lds-ellipsis lds-adjust spline-loader" id="openserviceordspchartloader">
+                                    <div></div>
+                                    <div></div>
+                                    <div></div>
+                                    <div></div>
+                                </div>
+                                <h2 id="OpenServiceOrderCount" class="hoverClass"></h2>
+                                <h3 class="hoverClass" id="openServiceOrderCountText">@Model.Loc.Where(a => a.ResourceId == "spnOpenServiceOrders").FirstOrDefault().Value.ToString()</h3>                               
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12 col-lg-6 col-xl-3">
+                        <div class="sparklineArea">
+                            <div class="purpleBoxFleetOnly">
+                                <div class="lds-ellipsis lds-adjust spline-loader" id="openissuesspchartloader">
+                                    <div></div>
+                                    <div></div>
+                                    <div></div>
+                                    <div></div>
+                                </div>
+                                <h2 id="OpenFleetIssuesCount" class="hoverClass"></h2>
+                                <h3 class="hoverClass" id="openFleetIssuesCountText">@Model.Loc.Where(a => a.ResourceId == "spnOpenIssues").FirstOrDefault().Value.ToString()</h3>
+                            </div>
+                        </div>
+                       
+                    </div>
+                    <div class="col-md-12 col-lg-6 col-xl-3">
+                        <div class="sparklineArea">
+                            <div class="greenBoxFleetOnly">
+                                <div class="lds-ellipsis lds-adjust spline-loader" id="openpastduespchartloader">
+                                    <div></div>
+                                    <div></div>
+                                    <div></div>
+                                    <div></div>
+                                </div>
+                                <h2 id="PastDueServiceCount" class="hoverClass"></h2>
+                                <h3 class="hoverClass" id="pastDueServiceCountText">@Model.Loc.Where(a => a.ResourceId == "spnPastDueService").FirstOrDefault().Value.ToString()</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12 col-lg-6 col-xl-3">                       
+                        @Html.Partial("_LowPartsSpChart")
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="row">
+    <div class="col-xl-6">
+        @Html.Partial("_SOLaborHours")
+    </div>
+    <div class="col-xl-6">
+            @Html.Partial("_ServiceOrderBacklogWidget")
+    </div>
+</div>

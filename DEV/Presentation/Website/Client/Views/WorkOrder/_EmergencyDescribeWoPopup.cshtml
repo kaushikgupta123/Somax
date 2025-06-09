@@ -1,0 +1,162 @@
+﻿@model Client.Models.Work_Order.WorkOrderVM
+<style>
+    #imgChargeToTree {
+        display: block !important
+    }
+</style>
+<div class="m-subheader fixedDiv1">
+    <div class="new-m-subheader">
+        <div class="PageTitle">
+            <div class="align-items-center separator">
+                <h3 class="m-subheader__title ">
+                    @Model.Loc.Where(a => a.ResourceId == "spnAddNewUnPlanedWorkOrder").FirstOrDefault().Value.ToString()
+                </h3>
+            </div>
+        </div>
+
+        <div class="NewBreadcrumbArea">
+            <div class="newBreadcrumb">
+                <ul>
+                    <li><a href="/Dashboard/Dashboard">&nbsp;</a></li>
+                    <li><a href="/WorkOrder/Index?page=Maintenance_WorkOrder_Search">@Model.Loc.Where(a => a.ResourceId == "spnWorkOrderSearch").FirstOrDefault().Value.ToString()</a></li>
+                    <li><a href="javascript:void(0)" id="brdworkorder" data-val="@Model.woEmergencyDescribeModel.WorkOrderId">@Model.woEmergencyDescribeModel.ClientLookupId</a></li>
+                </ul>
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+        <div style="clear:both;"></div>
+    </div>
+</div>
+<div class="pushDiv1"></div>
+
+@Html.Partial("_ErrorDiv")
+<div class="row">
+    <div class="col-xl-12">
+        <div class="m-portlet newPort" id="m_portlet" style="padding:15px;">
+            <div class="bottomBlock" style="margin-bottom:15px;">
+                @using (Ajax.BeginForm("SaveEmergencyDescribe", "WorkOrder", new AjaxOptions { HttpMethod = "Post", OnSuccess = "WorksEmergencyOnSuccess", OnBegin = "AjaxBeginFormBegin", OnComplete = "AjaxBeginFormComplete", OnFailure = "AjaxBeginFormFaillure" }))
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.Hidden("hdnChargeTo")
+                    <div class="tabsArea nobg">
+                        <ul class="listView nobrd list-module rt-part">
+                            <li class="txtSrchArea txtSrch">
+                                <span class="label">@Html.LabelFor(m => m.woEmergencyDescribeModel.Type):</span>
+                                <span class="inputText wthAdjst">
+                                    @Html.DropDownListFor(m => m.woEmergencyDescribeModel.Type, Model.woEmergencyDescribeModel.TypeList, "--Select--", new { @class = "form-control search select2picker", style = "width:100%;" })
+                                </span>
+                            </li>
+                            <li class="tree-option">
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "GlobalChargeTo").FirstOrDefault().Value.ToString():<small>*</small></span>
+                                <span class="inputText wthAdjst">
+                                    <div class="dropdown dropTableOuter">
+                                        <div class="input-group">
+                                            @Html.ValidationMessageFor(m => m.woEmergencyDescribeModel.ChargeToClientLookupId, "", new { style = "display:none" })
+                                            @Html.TextBoxFor(m => m.woEmergencyDescribeModel.ChargeToClientLookupId, new { @class = "form-control search dropbtn readonly", id = "txtChargeTo", autocomplete = "off", @readonly = "readonly" })
+                                            <div class="input-group-btn">
+
+                                                <button class="btn btn-white btntxtInputGroup" type="button" id="opendescribewogrid">
+                                                    <i id="srcicon" class="fa fa-search"></i>
+                                                </button>
+
+                                            </div>
+                                            <div class="input-group-btn qr-scan-gp m-left">
+                                                <button type="button" class="btn btn-blue mobBttn" onclick="QrScannerEquipment('txtChargeTo','')"><i class="fa fa-qrcode" style="margin-top:-2px;"></i></button>
+                                            </div>
+                                            <div class="treebox">
+                                                @if (Model._userdata.DatabaseKey.Client.AssetTree == true)
+                                                {
+                                                    <i class="fa fa-tree chargeTree" id="imgChargeToTree"></i>
+                                                }
+                                            </div>
+                                        </div>
+                                    </div>
+                                </span>
+                                
+                            </li>
+                            <li style="height:auto;">
+                                <span class="label">@Html.LabelFor(m => m.woEmergencyDescribeModel.Description): <small>*</small></span>
+                                <span class="inputText wthAdjst" style="height:auto;">
+                                    @Html.ValidationMessageFor(m => m.woEmergencyDescribeModel.Description, "", new { style = "display:none" })
+                                    @Html.TextAreaFor(m => m.woEmergencyDescribeModel.Description, new { @class = "form-control search", style = "resize:none;", autocomplete = "off" })
+                                </span>
+                                <div style="clear:both;"></div>
+                            </li>
+                        </ul>
+                    </div>
+                    <div style="clear:both;"></div>
+                    <div class="idBttns">
+                        <div class="bttn_pagin">
+                            <div class="bttns2">
+                                <button type="submit" class="btn btn-blue mobBttn" name="SaveType" value="Request_Demand"><i class="fa fa-save faIcon"></i> &nbsp;@Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+                            </div>
+
+                            <div class="bttns"><button type="button" class="btn btn-blue mobBttn btnCancelDataval" data-val="@Model.woEmergencyDescribeModel.WorkOrderId"><i class="fa fa-close faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button></div>
+                            <div style="clear:both;"></div>
+                        </div>
+                    </div>
+                    @Html.Partial("~/Views/WorkOrder/_EmergencyOnDemandEquipmentPopUp.cshtml")
+                    @Html.Partial("~/Views/WorkOrder/_AddWOLocationPopUp.cshtml")
+                    @Html.Partial("~/Views/Shared/QR/_QrCodeReaderModal.cshtml")
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div id="commonWOTreeModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title" id="hdrPlantLocation">@Model.Loc.Where(a => a.ResourceId == "spnGlobalEquipmentTreeLookup").FirstOrDefault().Value.ToString()</h4>
+            </div>
+            <div class="modal-body">
+                <div class="cntTree">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<style type="text/css">
+    .list-module li {
+        width: 100% !important;
+    }
+
+        .list-module li .mobBttn {
+            margin-top: 1px !important;
+        }
+
+        .list-module li span.wthAdjst {
+            width: calc(100% - 225px) !important;
+        }
+
+    .list-module .input-group {
+        align-items: center !important;
+    }
+
+    .list-module .chargeTree {
+        position: relative !important;
+        left: auto !important;
+        top: 7px !important;
+        right: -14px !important;
+    }
+
+    .list-module .treebox {
+        width: 37px;
+        height: 33px;
+    }
+
+    ul.listView.list-module li span.label {
+        width: 225px !important;
+    }
+</style>
+<script>
+    $(document).ready(function () {
+        $(document).find('.select2picker').select2({});
+    });
+</script>
+
+
+

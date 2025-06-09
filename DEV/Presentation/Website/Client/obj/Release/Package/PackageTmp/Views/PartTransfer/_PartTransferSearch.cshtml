@@ -1,0 +1,110 @@
+﻿@model Client.Models.PartTransfer.PartTransferVM
+@if (Convert.ToString(Session["MenuState"]) == "" || Convert.ToString(Session["MenuState"]) == "open")
+{
+    <div class="m-subheader fixedDiv1">
+        <div class="new-m-subheader">
+            <div class="PageTitle">
+                <div class="align-items-center separator">
+                    <h3 class="m-subheader__title">
+                        @Model.Loc.Where(a => a.ResourceId == "spnPartTransfer").FirstOrDefault().Value.ToString()
+                    </h3>
+                </div>
+            </div>
+            <div class="NewBreadcrumbArea">
+                <div class="newBreadcrumb">
+                    <ul>
+                        <li><a href="/Dashboard/Dashboard">&nbsp;</a></li>
+                        <li class="active">@Model.Loc.Where(a => a.ResourceId == "spnPartTransferSearch").FirstOrDefault().Value.ToString()</li>
+                    </ul>
+                    <div style="clear:both;"></div>
+                </div>
+            </div>
+            <div style="clear:both;"></div>
+        </div>
+    </div>
+}
+else
+{
+    <div class="m-subheader fixedDiv1 fixupperpannel2">
+        <div class="new-m-subheader">
+            <div class="PageTitle">
+                <div class="align-items-center separator">
+                    <h3 class="m-subheader__title">
+                        @Model.Loc.Where(a => a.ResourceId == "spnPartTransfer").FirstOrDefault().Value.ToString()
+                    </h3>
+                </div>
+            </div>
+            <div class="NewBreadcrumbArea">
+                <div class="newBreadcrumb">
+                    <ul>
+                        <li><a href="/Dashboard/Dashboard">&nbsp;</a></li>
+                        <li class="active">@Model.Loc.Where(a => a.ResourceId == "spnPartTransferSearch").FirstOrDefault().Value.ToString()</li>
+                    </ul>
+                    <div style="clear:both;"></div>
+                </div>
+            </div>
+            <div style="clear:both;"></div>
+        </div>
+    </div>
+}
+<div class="pushDiv1"></div>
+<div class="row">
+    <div class="col-xl-12">
+        <div class="m-portlet" id="m_portlet" style="padding:15px;">
+            <div class="actionBar" style="display:none" id="parttransferAction">
+                <div class="pull-left">
+                    <div class="ActionSearchDrop LoaderDrop">
+                        @Html.DropDownListFor(m => m.scheduleList, new SelectList(Model.scheduleList, "Text", "Value"), null, new { @class = "form-control search select2picker LoaderDrop", @id = "SearchTextDropID", style = "width:100%;" })
+                    </div>
+                    <button type="button" class="btn btn-white navbar-btn" id="sidebarCollapse" title="Advance Search"><i class="fa fa-filter" style="font-size: 1.3rem;"></i></button>
+                    <ul class="filter_apply filterAdjustWhenDropdown">
+                        <li class="textFilter"><span class="filteritemcount">0</span>&nbsp;@Model.Loc.Where(a => a.ResourceId == "globalFiltersAppiled").FirstOrDefault().Value.ToString()</li>
+                        <li class="textClear" id="liClearAdvSearchFilter"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "globalClear").FirstOrDefault().Value.ToString()</a></li>
+                    </ul>
+                    <div style="clear:both;"></div>
+                </div>
+
+                <div class="pull-right">
+                    <button type="button" class="btn btn-white import-export" disabled onclick="funcShowExportbtn()">@Model.Loc.Where(a => a.ResourceId == "spnExport").FirstOrDefault().Value.ToString()</button>
+                    <button type="button" class="btn btn-white" id="liCustomize" title="Customize" data-toggle="modal" data-target="#gridcolumncustomizemodal"><i class="fa fa-cog" style="font-size: 1.3rem;"></i></button>
+                    <div style="clear:both;"></div>
+                </div>
+                <div style="clear:both;"></div>
+                <div id="advsearchfilteritems"></div>
+                <div style="clear:both;"></div>
+            </div>
+
+            <div id="Active" class="tabcontent" style="display:block;">
+                <div class="table-responsive">
+                    <table id="partTransferSearchTable" class="eqpDtlTbl row-border custom-sort" style="width:100%;">
+                        <thead>
+                            <tr>
+                                <th data-th-index="0" id="thEventId">@Model.Loc.Where(a => a.ResourceId == "spnTransferID").FirstOrDefault().Value.ToString()</th>
+                                <th data-th-index="1" id="thSource">@Model.Loc.Where(a => a.ResourceId == "spnRequestSite").FirstOrDefault().Value.ToString()</th>
+                                <th data-th-index="2">@Model.Loc.Where(a => a.ResourceId == "spnRequestPartID").FirstOrDefault().Value.ToString()</th>
+                                <th data-th-index="3" id="thStatus">@Model.Loc.Where(a => a.ResourceId == "spnQuantity").FirstOrDefault().Value.ToString()</th>
+                                <th data-th-index="4">@Model.Loc.Where(a => a.ResourceId == "spnStatus").FirstOrDefault().Value.ToString()</th>
+                                <th data-th-index="5">@Model.Loc.Where(a => a.ResourceId == "spnRequestDescription").FirstOrDefault().Value.ToString()</th>
+                                <th data-th-index="6">@Model.Loc.Where(a => a.ResourceId == "spnIssueSite").FirstOrDefault().Value.ToString()</th>
+                                <th data-th-index="7">@Model.Loc.Where(a => a.ResourceId == "spnIssuePartID").FirstOrDefault().Value.ToString()</th>
+                                <th data-th-index="8">@Model.Loc.Where(a => a.ResourceId == "GlobalReason").FirstOrDefault().Value.ToString()</th>
+                                <th data-th-index="9">@Model.Loc.Where(a => a.ResourceId == "spnLastEvent").FirstOrDefault().Value.ToString()</th>
+                                <th data-th-index="10">@Model.Loc.Where(a => a.ResourceId == "spnLastEventDate").FirstOrDefault().Value.ToString()</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+@Html.Partial("_CustomizeGridSetup")
+@Html.Partial("_Export")
+@Html.Partial("_StatusDetailsLocalization")
+@Html.Partial("_PartTransferAdvancedSearch")
+<style type="text/css">
+    .dataTables_wrapper.no-footer .dataTables_scrollBody { border-bottom: none !important; }    
+</style>

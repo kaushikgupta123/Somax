@@ -1,0 +1,242 @@
+﻿@model Client.Models.BusinessIntelligenceVM
+
+<div class="tabsArea nobg" id="RPFavorites" style="display: block;">
+    <div class="m-portlet" id="m_portlet" style="padding:10px;">
+        @if (Model.ReportLists.Count > 0)
+        {
+            <ul class="RightList">
+                @foreach (var item in Model.ReportLists)
+                {
+                    if (item.IsFavorite)
+                    {
+                        if (item.IsUserReport)
+                        {
+                            <li class="lifavorites" id="@item.ReportListingId" data-favorite="@item.ReportFavoritesId" data-isprompt="@item.IncludePrompt" data-IsUserReport="@item.IsUserReport" data-isdevexpressrpt="@item.DevExpressRpt" data-reportname="@item.DevExpressRptName">
+                                <a class="rates current"></a>
+                                <div class="TabDetails reportitem" style="position:relative;">
+                                    <span class="boxes  @item.SaveType">@item.SaveType</span>
+                                    <div style="clear:both;"></div>
+                                    <h2 class="report-name">@item.ReportName</h2>
+                                    <h3>@item.Description</h3>                                                                                                
+                                    @if (Model.security.Create_Public_Reports.Access && item.SaveType == ReportTypeConstants.Public)
+                                    {
+                                        <button type="button" class="btn btn-white threeDot" onClick="ShowDot(this)" data-id="@item.ReportListingId" title="">
+                                            <i class="fa fa-ellipsis-v" style="font-size: 1.3rem;"></i>
+                                        </button>
+                                        <div id="Action_@item.ReportListingId" class="threeDotDrop">
+                                            <a  class="change-report" onClick="EditReportPublic(this)" data-id="@item.ReportListingId">Edit</a>
+                                            <a class="change-report" onClick="DeleteUserReport(this)" data-id="@item.ReportListingId">Delete</a>
+                                        </div>
+                                    }
+                                    else if (Model.security.Create_Site_Reports.Access && item.SaveType == ReportTypeConstants.Site)
+                                    {
+                                        <button type="button" class="btn btn-white threeDot" onClick="ShowDot(this)" data-id="@item.ReportListingId" title="">
+                                            <i class="fa fa-ellipsis-v" style="font-size: 1.3rem;"></i>
+                                        </button>
+                                        <div id="Action_@item.ReportListingId" class="threeDotDrop">
+
+                                            @if (Model.security.Create_Public_Reports.Access)
+                                            {
+                                                <a class="change-report" onClick="EditReportPublic(this)" data-id="@item.ReportListingId">Edit</a>
+                                            }
+                                            else
+                                            {
+                                                <a class="change-report" onClick="EditReportSite(this)" data-id="@item.ReportListingId">Edit</a>
+                                            }
+                                           
+                                            <a  class="change-report" onClick="DeleteUserReport(this)" data-id="@item.ReportListingId">Delete</a>
+                                        </div>
+                                    }
+                                    else if (Model.security.Create_Private_Reports.Access && item.SaveType == ReportTypeConstants.Private)
+                                    {
+                                        <button type="button" class="btn btn-white threeDot" onClick="ShowDot(this)" data-id="@item.ReportListingId" title="">
+                                            <i class="fa fa-ellipsis-v" style="font-size: 1.3rem;"></i>
+                                        </button>
+                                        <div id="Action_@item.ReportListingId" class="threeDotDrop">
+                                            @if (Model.security.Create_Public_Reports.Access)
+                                            {
+                                                <a class="change-report" onClick="EditReportPublic(this)" data-id="@item.ReportListingId">Edit</a>
+                                            }
+                                            else if (Model.security.Create_Site_Reports.Access)
+                                            {
+                                                <a class="change-report" onClick="EditReportSite(this)" data-id="@item.ReportListingId">Edit</a>
+                                            }
+                                            else
+                                            {
+                                                <a class="change-report"  onClick="EditReportPrivate(this)" data-id="@item.ReportListingId">Edit</a>
+                                            }
+                                            
+                                            <a class="change-report" onClick="DeleteUserReport(this)" data-id="@item.ReportListingId">Delete</a>
+                                        </div>
+
+                                    }
+
+                                </div>
+                                <div style="clear:both;"></div>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="lifavorites" id="@item.ReportListingId" data-favorite="@item.ReportFavoritesId" data-isprompt="@item.IncludePrompt" data-IsUserReport="@item.IsUserReport" data-isdevexpressrpt="@item.DevExpressRpt" data-reportname="@item.DevExpressRptName">
+                                <a class="rates current"></a>
+                                <div class="TabDetails reportitem">
+                                    <h2 class="report-name">@item.ReportName</h2>
+                                    <h3>@item.Description</h3>
+                                </div>
+                                <div style="clear:both;"></div>
+                            </li>
+                        }
+                    }
+                    else
+                    {
+
+                        if (item.IsUserReport)
+                        {
+                            <li class="linotfavorites" id="@item.ReportListingId" data-favorite="@item.ReportFavoritesId" data-isprompt="@item.IncludePrompt" data-IsUserReport="@item.IsUserReport" data-isdevexpressrpt="@item.DevExpressRpt" data-reportname="@item.DevExpressRptName">
+                                <a class="rates notcurrent"></a>
+                                <div class="TabDetails reportitem" style="position:relative;">
+                                    <span class="boxes  @item.SaveType">@item.SaveType</span>
+                                    <div style="clear:both;"></div>
+                                    <h2 class="report-name">@item.ReportName</h2>
+                                    <h3>@item.Description</h3>
+                                    
+                                    @if (Model.security.Create_Public_Reports.Access && item.SaveType == ReportTypeConstants.Public)
+                                    {
+                                        <button type="button" class="btn btn-white threeDot" onClick="ShowDot(this)" data-id="@item.ReportListingId" title="">
+                                            <i class="fa fa-ellipsis-v" style="font-size: 1.3rem;"></i>
+                                        </button>
+                                        <div id="Action_@item.ReportListingId" class="threeDotDrop">
+                                            <a class="change-report" onClick="EditReportPublic(this)" data-id="@item.ReportListingId">Edit</a>
+                                            <a class="change-report" onClick="DeleteUserReport(this)" data-id="@item.ReportListingId">Delete</a>
+                                        </div>
+                                    }
+                                    else if (Model.security.Create_Site_Reports.Access && item.SaveType == ReportTypeConstants.Site)
+                                    {
+                                        <button type="button" class="btn btn-white threeDot" onClick="ShowDot(this)" data-id="@item.ReportListingId" title="">
+                                            <i class="fa fa-ellipsis-v" style="font-size: 1.3rem;"></i>
+                                        </button>
+                                        <div id="Action_@item.ReportListingId" class="threeDotDrop">
+
+                                            @if (Model.security.Create_Public_Reports.Access)
+                                            {
+                                                <a  class="change-report" onClick="EditReportPublic(this)" data-id="@item.ReportListingId">Edit</a>
+                                            }
+                                            else
+                                            {
+                                                <a  class="change-report" onClick="EditReportSite(this)" data-id="@item.ReportListingId">Edit</a>
+                                            }
+
+                                            <a class="change-report" onClick="DeleteUserReport(this)" data-id="@item.ReportListingId">Delete</a>
+                                        </div>
+                                    }
+                                    else if (Model.security.Create_Private_Reports.Access && item.SaveType == ReportTypeConstants.Private)
+                                    {
+                                        <button type="button" class="btn btn-white threeDot" onClick="ShowDot(this)" data-id="@item.ReportListingId" title="">
+                                            <i class="fa fa-ellipsis-v" style="font-size: 1.3rem;"></i>
+                                        </button>
+                                        <div id="Action_@item.ReportListingId" class="threeDotDrop">
+                                            @if (Model.security.Create_Public_Reports.Access)
+                                            {
+                                                <a class="change-report" onClick="EditReportPublic(this)" data-id="@item.ReportListingId">Edit</a>
+                                            }
+                                            else if (Model.security.Create_Site_Reports.Access)
+                                            {
+                                                <a class="change-report" onClick="EditReportSite(this)" data-id="@item.ReportListingId">Edit</a>
+                                            }
+                                            else
+                                            {
+                                                <a  class="change-report" onClick="EditReportPrivate(this)" data-id="@item.ReportListingId">Edit</a>
+                                            }
+
+                                            <a class="change-report"  onClick="DeleteUserReport(this)" data-id="@item.ReportListingId">Delete</a>
+                                        </div>
+
+                                    }
+                                </div>
+                                <div style="clear:both;"></div>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="linotfavorites" id="@item.ReportListingId" data-favorite="@item.ReportFavoritesId" data-isprompt="@item.IncludePrompt" data-IsUserReport="@item.IsUserReport" data-isdevexpressrpt="@item.DevExpressRpt" data-reportname="@item.DevExpressRptName">
+                                <a class="rates notcurrent"></a>
+                                <div class="TabDetails reportitem">
+                                    <h2 class="report-name">@item.ReportName</h2>
+                                    <h3>@item.Description</h3>
+                                </div>
+                                <div style="clear:both;"></div>
+                            </li>
+                        }
+
+                    }
+                }
+
+
+            </ul>
+        }
+        else
+        {
+            <div id="norecords">@Model.Loc.Where(a => a.ResourceId == "spnNoReportsFound").FirstOrDefault().Value.ToString()</div>
+        }
+    </div>
+</div>
+
+<div id="promptModalcontainer"></div>
+
+<style type="text/css">
+    .boxes {
+        padding: 2px 10px;
+        font-size: 11px;
+        color: #fff;
+        display: block;
+        width: auto;
+        float: left;
+        margin-left: -10px;
+        margin-top: -10px;
+        margin-bottom: 5px;
+    }
+    .Private {
+        background: #0c7cba;
+    }
+    .Site {
+        background: #ef8d22;
+    }
+    .Public {
+        background: #7ab648;
+    }
+    .threeDot {
+        position: absolute;
+        right: 10px;
+        top: 10px;
+        padding: 7px 10px;
+    }
+    .threeDotDrop {
+        position: absolute;
+        right: 10px;
+        top: 41px;
+        background: #fff;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        display:none;
+        z-index:1
+    }
+    .threeDotDrop a {
+        display:block;
+        padding:6px 10px;
+        border-bottom:1px solid #ccc;
+        text-decoration:none;
+    }
+    .threeDotDrop a:last-child {
+        border-bottom: 0px solid #ccc;
+    }
+    ul.listView.nobrd li span.inputText input[type="radio"] {
+        margin-right: 5px;
+        margin-left: 10px;
+        position: relative;
+        top: 2px;
+    }
+
+        ul.listView.nobrd li span.inputText input[type="radio"]:first-child {
+            margin-left: 0;
+        }
+</style>

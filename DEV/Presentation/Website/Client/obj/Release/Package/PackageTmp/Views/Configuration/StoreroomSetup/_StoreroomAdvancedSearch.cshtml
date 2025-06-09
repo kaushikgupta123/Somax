@@ -1,0 +1,25 @@
+﻿@model Client.Models.Configuration.StoreroomSetup.StoreroomSetupVM
+<nav id="sidebar">
+    <div id="dismiss">
+        <i class="fa fa-close"></i>
+    </div>
+    <div class="sidebar-header">
+        <h3><i class="fa fa-filter" style="position: relative; top: -2px;"></i>&nbsp;@Model.Loc.Where(a => a.ResourceId == "globalFilter").FirstOrDefault().Value.ToString() &nbsp;<span class="filteritemcount">0</span></h3>
+
+        <button type="button" class="btn btn-blue filterSearch" id="btnStoreroomDataAdvSrch">
+            <i class="fa fa-search" style="margin-top:-3px;"></i> &nbsp;@Model.Loc.Where(a => a.ResourceId == "globalSearch").FirstOrDefault().Value.ToString()
+        </button>
+    </div>
+    <div class="sidebar-content" id="advsearchsidebar">
+        <form action="#" method="post">
+            <div class="form-group acc-Name">
+                <label for="txtName">@Model.Loc.Where(a => a.ResourceId == "spnName").FirstOrDefault().Value.ToString() :</label>
+                <input type="text" class="form-control search adv-item" id="txtName" autocomplete="off">
+            </div>
+            <div class="form-group acc-Name">
+                <label for="txtDescription">@Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString() :</label>
+                <input type="text" class="form-control search adv-item" id="txtDescription" autocomplete="off">
+            </div>
+        </form>
+    </div>
+</nav>

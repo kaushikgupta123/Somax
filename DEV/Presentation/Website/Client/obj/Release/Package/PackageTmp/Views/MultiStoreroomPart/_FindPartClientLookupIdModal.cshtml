@@ -1,0 +1,50 @@
+﻿@model Client.Models.MultiStoreroomPart.MultiStoreroomPartVM
+<div class="modal-content">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">@Model.Loc.Where(a => a.ResourceId == "spnFindPart").FirstOrDefault().Value.ToString() </h4>
+    </div>
+    @Html.Partial("_ErrorDiv")
+    @using (Ajax.BeginForm("FindPartClientLookupIdForFindPart", "MultiStoreroomPart", new AjaxOptions { HttpMethod = "Post", OnSuccess = "ValidationFindPartOnSuccess", OnBegin = "AjaxBeginFormBegin", OnFailure = "AjaxBeginFormFaillure" }))
+    {
+        @Html.AntiForgeryToken()
+        <div class="modal-body">
+            <div class="m-portlet newPort" id="m_portlet" style="padding:0; margin:0;">
+                <div class="bottomBlock">
+                    <div>
+                        <ul class="listViewPart">
+                           
+                            <li>
+                                
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnPartID").FirstOrDefault().Value.ToString() : <small>*</small></span>
+                                <span class="inputText">
+                                    @Html.ValidationMessageFor(m => m.multiStoreroomPartClientLookupIdModel.PartClientLookupId, "", new { style = "display:none" })
+                                    @Html.TextBoxFor(m => m.multiStoreroomPartClientLookupIdModel.PartClientLookupId, new { @class = "form-control search", autocomplete = "off" })
+                                </span>
+                            </li>
+                        </ul>
+                        <div style="clear:both;"></div>
+                    </div>
+                    <div style="clear:both;"></div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer" style="padding:15px 25px !important;">
+            <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-close faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button>
+            <button class="btn btn-blue mobBttn" style="float:right;"><i class="fa fa-search faIcon"></i> &nbsp;@Model.Loc.Where(a => a.ResourceId == "spnFind").FirstOrDefault().Value.ToString()</button>
+            <div style="clear:both;"></div>
+        </div>
+    }
+</div>
+
+<style type="text/css">
+    ul.listViewPart li span.label,
+    ul.listViewPart li span.inputText {
+        height: 34px;
+        line-height: 34px;
+    }
+
+    ul.listViewPart li {
+        height: 34px;
+    }
+</style>

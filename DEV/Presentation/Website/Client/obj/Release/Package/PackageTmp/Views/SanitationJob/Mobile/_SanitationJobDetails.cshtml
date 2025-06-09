@@ -1,0 +1,725 @@
+﻿@model Client.Models.Sanitation.SanitationVM
+@using Client.CustomValidation
+@{
+    ViewBag.Title = "Somax | SanitationDetails";
+    var addSanit = Model.security.Sanitation.Create;
+    var cancelSanit = Model.security.Sanitation.Edit && Model.JobDetailsModel.Status != SanitationJobConstant.Canceled && Model.JobDetailsModel.Status != SanitationJobConstant.Complete && Model.JobDetailsModel.Status != SanitationJobConstant.Pass && Model.JobDetailsModel.Status != SanitationJobConstant.Fail;
+}
+<link href="~/Scripts/Metronic/assets/demo/default/base/style_newCustom.css" rel="stylesheet" />
+<link href="~/Content/Dashboard/MaintenanceCompletionWorkbench.css" rel="stylesheet" />
+@Styles.Render("~/Content/somaxcommentsection")
+<link href="~/Content/Wizard/Wizard.css" rel="stylesheet" />
+
+<!-- mobiscroll form-->
+<link rel="stylesheet" href="~/Scripts/mobile/css/mobiscroll.jquery.min.css">
+<!-- mobiscroll form-->
+<link href="~/Scripts/mobile/css/mobile-style.css" rel="stylesheet" />
+<link href="~/Scripts/mobile/css/mobile-dashboard-style.css" rel="stylesheet" />
+<script src="~/Scripts/treeTable.js"></script>
+<script type="text/javascript">
+    com_github_culmat_jsTreeTable.register(this);
+</script>
+<div class="m-subheader fixedDiv1">
+    <div class="new-m-subheader">
+        <div class="filterDescription">
+            <a href="javascript:void(0)" id="linkToSearch"><span id="spnlinkToSearch"></span></a>
+            - @Model.JobDetailsModel.ClientLookupId
+        </div>
+        <!--#region ActionBttnArea-->
+        <div class="ActionBttnArea">
+            @if (addSanit && !Model.JobDetailsModel.ExternalSanitation && cancelSanit)
+            {
+                <div class="actionDiv pull-left" id="ad1" style="margin-right:0px !important; ">
+                    <div class="btn-group bootstrap-select m-datatable__pager-size dropup show selectDrop actionNewDrop" style="margin-right:0px;">
+                        <div class="btn-group bootstrap-select m-datatable__pager-size" style="width: 100%;">
+                            <button type="button" class="btn dropdown-toggle bs-placeholder btn-default" data-toggle="dropdown" role="button" title=""><span class="filter-option pull-left">@Model.Loc.Where(a => a.ResourceId == "globalAction").FirstOrDefault().Value.ToString()</span>&nbsp;<span class="bs-caret"><span class="caret"></span></span></button>
+                            <div class="dropdown-menu open" role="combobox">
+                                <ul class="dropdown-menu inner" role="listbox" aria-expanded="false">
+                                    <li id="AddSanitationRequestBtn_Mobile"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnAddSanitationRequest").FirstOrDefault().Value.ToString()</a></li>
+                                    <li id="AddSanitationJobBtn_Mobile"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnAddSanitationJob").FirstOrDefault().Value.ToString()</a></li>
+                                    @*V2-1055 AddWork Request Btn*@
+                                    @if (Model.userData.Site.Sanitation == true && Model.userData.Site.CMMS == true && Model.security.SanitationJob_AddMaintenanceWorkRequest.Access == true)
+                                    {
+                                        <li><a id="AddWorkRequestBtn_Mobile" href="javascript:void(0);">@Model.Loc.Where(a => a.ResourceId == "spnAddWorkRequest").FirstOrDefault().Value.ToString()</a></li>
+                                    }
+                                    <li data-toggle="modal" id="cancelModalCall"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</a></li>
+                                    @*V2-912 Approve Complete Pass Fail*@
+                                    @if (Model.security.SanitationJob_Approve.Access == true && Model.JobDetailsModel.Status == SanitationJobConstant.JobRequest)
+                                    {
+                                        <li data-toggle="modal" id="SanitationJobApprove_Mobile"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "globalApprove").FirstOrDefault().Value.ToString()</a></li>
+
+                                    }
+                                    @if (Model.security.SanitationJob_Complete.Access == true && (Model.JobDetailsModel.Status == SanitationJobConstant.Approved || Model.JobDetailsModel.Status == SanitationJobConstant.Scheduled))
+                                    {
+                                        <li data-toggle="modal" id="SanitationJobComplete_Mobile"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "GlobalComplete").FirstOrDefault().Value.ToString()</a></li>
+
+                                    }
+                                    @if (Model.security.SanitationJob_Complete.Access == true && (Model.JobDetailsModel.Status == SanitationJobConstant.Complete))
+                                    {
+                                        <li data-toggle="modal" id="SanitationJobPass_Mobile"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnPass").FirstOrDefault().Value.ToString()</a></li>
+
+                                    }
+                                    @if (Model.security.SanitationJob_Complete.Access == true && (Model.JobDetailsModel.Status == SanitationJobConstant.Complete))
+                                    {
+                                        <li data-toggle="modal" id="FailModalCall_Mobile"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnFail").FirstOrDefault().Value.ToString()</a></li>
+
+                                    }
+                                    @*V2-912*@
+                                    @if (Model.security.SanitationJob_Photos.Create)
+                                    {
+                                        <li id="liAddimageForMobile">
+                                            <div class="bttns" style="margin-left:15px">
+                                                <label for="files" class=""><i class=""></i>@Model.Loc.Where(a => a.ResourceId == "spnAddPhotos").FirstOrDefault().Value.ToString()</label>
+                                                <input id="files" accept=".jpeg,.jpg,.png,.JPEG,.JPG,.PNG" style="display: none;" type="file" value="">
+                                            </div>
+                                        </li>
+                                    }
+                                </ul>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            }
+            else if (addSanit && !Model.JobDetailsModel.ExternalSanitation)
+            {
+                <div class="actionDiv pull-left" id="ad1" style="margin-right:0px !important; ">
+                    <div class="btn-group bootstrap-select m-datatable__pager-size dropup show selectDrop actionNewDrop" style="margin-right:0px;">
+                        <div class="btn-group bootstrap-select m-datatable__pager-size" style="width: 100%;">
+                            <button type="button" class="btn dropdown-toggle bs-placeholder btn-default" data-toggle="dropdown" role="button" title=""><span class="filter-option pull-left">@Model.Loc.Where(a => a.ResourceId == "globalAction").FirstOrDefault().Value.ToString()</span>&nbsp;<span class="bs-caret"><span class="caret"></span></span></button>
+                            <div class="dropdown-menu open" role="combobox">
+                                <ul class="dropdown-menu inner" role="listbox" aria-expanded="false">
+                                    <li id="AddSanitationRequestBtn_Mobile"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnAddSanitationRequest").FirstOrDefault().Value.ToString()</a></li>
+                                    <li id="AddSanitationJobBtn_Mobile"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnAddSanitationJob").FirstOrDefault().Value.ToString()</a></li>
+                                    @*V2-1055 AddWork Request Btn*@
+                                    @if (Model.userData.Site.Sanitation == true && Model.userData.Site.CMMS == true && Model.security.SanitationJob_AddMaintenanceWorkRequest.Access == true)
+                                    {
+                                        <li><a id="AddWorkRequestBtn_Mobile" href="javascript:void(0);">@Model.Loc.Where(a => a.ResourceId == "spnAddWorkRequest").FirstOrDefault().Value.ToString()</a></li>
+                                    }
+                                    @*V2-912 Approve Complete Pass Fail*@
+                                    @if (Model.security.SanitationJob_Approve.Access == true && Model.JobDetailsModel.Status == SanitationJobConstant.JobRequest)
+                                    {
+                                        <li data-toggle="modal" id="SanitationJobApprove_Mobile"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "globalApprove").FirstOrDefault().Value.ToString()</a></li>
+
+                                    }
+                                    @if (Model.security.SanitationJob_Complete.Access == true && (Model.JobDetailsModel.Status == SanitationJobConstant.Approved || Model.JobDetailsModel.Status == SanitationJobConstant.Scheduled))
+                                    {
+                                        <li data-toggle="modal" id="SanitationJobComplete_Mobile"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "GlobalComplete").FirstOrDefault().Value.ToString()</a></li>
+
+                                    }
+                                    @if (Model.security.SanitationJob_Complete.Access == true && (Model.JobDetailsModel.Status == SanitationJobConstant.Complete))
+                                    {
+                                        <li data-toggle="modal" id="SanitationJobPass_Mobile"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnPass").FirstOrDefault().Value.ToString()</a></li>
+
+                                    }
+                                    @if (Model.security.SanitationJob_Complete.Access == true && (Model.JobDetailsModel.Status == SanitationJobConstant.Complete))
+                                    {
+                                        <li data-toggle="modal" id="FailModalCall_Mobile"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnFail").FirstOrDefault().Value.ToString()</a></li>
+
+                                    }
+                                    @*V2-912*@
+                                    @if (Model.security.SanitationJob_Photos.Create)
+                                    {
+                                        <li id="liAddimageForMobile">
+                                            <div class="bttns" style="margin-left:15px">
+                                                <label for="files" class=""><i class=""></i>@Model.Loc.Where(a => a.ResourceId == "spnAddPhotos").FirstOrDefault().Value.ToString()</label>
+                                                <input id="files" accept=".jpeg,.jpg,.png,.JPEG,.JPG,.PNG" style="display: none;" type="file" value="">
+                                            </div>
+                                        </li>
+                                    }
+                                </ul>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            }
+            else if (cancelSanit && !Model.JobDetailsModel.ExternalSanitation)
+            {
+                <div class="actionDiv pull-left" id="ad1" style="margin-right:0px !important; ">
+                    <div class="btn-group bootstrap-select m-datatable__pager-size dropup show selectDrop actionNewDrop" style="margin-right:0px;">
+                        <div class="btn-group bootstrap-select m-datatable__pager-size" style="width: 100%;">
+                            <button type="button" class="btn dropdown-toggle bs-placeholder btn-default" data-toggle="dropdown" role="button" title=""><span class="filter-option pull-left">@Model.Loc.Where(a => a.ResourceId == "globalAction").FirstOrDefault().Value.ToString()</span>&nbsp;<span class="bs-caret"><span class="caret"></span></span></button>
+                            <div class="dropdown-menu open" role="combobox">
+                                <ul class="dropdown-menu inner" role="listbox" aria-expanded="false">
+                                    <li data-toggle="modal" id="cancelModalCall"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</a></li>
+                                    @*V2-1055 AddWork Request Btn*@
+                                    @if (Model.userData.Site.Sanitation == true && Model.userData.Site.CMMS == true && Model.security.SanitationJob_AddMaintenanceWorkRequest.Access == true)
+                                    {
+                                        <li><a id="AddWorkRequestBtn_Mobile" href="javascript:void(0);">@Model.Loc.Where(a => a.ResourceId == "spnAddWorkRequest").FirstOrDefault().Value.ToString()</a></li>
+                                    }
+                                    @*V2-912 Approve Complete Pass Fail*@
+                                    @if (Model.security.SanitationJob_Approve.Access == true && Model.JobDetailsModel.Status == SanitationJobConstant.JobRequest)
+                                    {
+                                        <li data-toggle="modal" id="SanitationJobApprove_Mobile"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "globalApprove").FirstOrDefault().Value.ToString()</a></li>
+
+                                    }
+                                    @if (Model.security.SanitationJob_Complete.Access == true && (Model.JobDetailsModel.Status == SanitationJobConstant.Approved || Model.JobDetailsModel.Status == SanitationJobConstant.Scheduled))
+                                    {
+                                        <li data-toggle="modal" id="SanitationJobComplete_Mobile"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "GlobalComplete").FirstOrDefault().Value.ToString()</a></li>
+
+                                    }
+                                    @if (Model.security.SanitationJob_Complete.Access == true && (Model.JobDetailsModel.Status == SanitationJobConstant.Complete))
+                                    {
+                                        <li data-toggle="modal" id="SanitationJobPass_Mobile"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnPass").FirstOrDefault().Value.ToString()</a></li>
+
+                                    }
+                                    @if (Model.security.SanitationJob_Complete.Access == true && (Model.JobDetailsModel.Status == SanitationJobConstant.Complete))
+                                    {
+                                        <li data-toggle="modal" id="FailModalCall_Mobile"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnFail").FirstOrDefault().Value.ToString()</a></li>
+
+                                    }
+                                    @*V2-912*@
+                                    @if (Model.security.SanitationJob_Photos.Create)
+                                    {
+                                        <li id="liAddimageForMobile">
+                                            <div class="bttns" style="margin-left:15px">
+                                                <label for="files" class=""><i class=""></i>@Model.Loc.Where(a => a.ResourceId == "spnAddPhotos").FirstOrDefault().Value.ToString()</label>
+                                                <input id="files" accept=".jpeg,.jpg,.png,.JPEG,.JPG,.PNG" style="display: none;" type="file" value="">
+                                            </div>
+                                        </li>
+                                    }
+                                </ul>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="actionDiv pull-left" id="ad1" style="margin-right:0;">
+                    <div class="btn-group bootstrap-select m-datatable__pager-size dropup show selectDrop actionNewDrop">
+                        <div class="btn-group bootstrap-select m-datatable__pager-size" style="width:100%;">
+                            <button type="button" class="btn dropdown-toggle bs-placeholder btn-default" data-toggle="dropdown" role="button" title=""><span class="filter-option pull-left">@Model.Loc.Where(a => a.ResourceId == "globalAction").FirstOrDefault().Value.ToString()</span>&nbsp;<span class="bs-caret"><span class="caret"></span></span></button>
+                            <div class="dropdown-menu open" role="combobox">
+                                <ul class="dropdown-menu inner" role="listbox" aria-expanded="false">
+                                    @*V2-912 Approve Complete Pass Fail*@
+                                    @if (Model.security.SanitationJob_Approve.Access == true && Model.JobDetailsModel.Status == SanitationJobConstant.JobRequest)
+                                    {
+                                        <li data-toggle="modal" id="SanitationJobApprove_Mobile"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "globalApprove").FirstOrDefault().Value.ToString()</a></li>
+
+                                    }
+                                    @if (Model.security.SanitationJob_Complete.Access == true && (Model.JobDetailsModel.Status == SanitationJobConstant.Approved || Model.JobDetailsModel.Status == SanitationJobConstant.Scheduled))
+                                    {
+                                        <li data-toggle="modal" id="SanitationJobComplete_Mobile"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "GlobalComplete").FirstOrDefault().Value.ToString()</a></li>
+
+                                    }
+                                    @if (Model.security.SanitationJob_Complete.Access == true && (Model.JobDetailsModel.Status == SanitationJobConstant.Complete))
+                                    {
+                                        <li data-toggle="modal" id="SanitationJobPass_Mobile"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnPass").FirstOrDefault().Value.ToString()</a></li>
+
+                                    }
+                                    @if (Model.security.SanitationJob_Complete.Access == true && (Model.JobDetailsModel.Status == SanitationJobConstant.Complete))
+                                    {
+                                        <li data-toggle="modal" id="FailModalCall_Mobile"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnFail").FirstOrDefault().Value.ToString()</a></li>
+
+                                    }
+                                    @*V2-912*@
+                                    @if (Model.security.SanitationJob_Photos.Create)
+                                    {
+                                        <li id="liAddimageForMobile">
+                                            <div class="bttns" style="margin-left:15px">
+                                                <label for="files" class=""><i class=""></i>@Model.Loc.Where(a => a.ResourceId == "spnAddPhotos").FirstOrDefault().Value.ToString()</label>
+                                                <input id="files" accept=".jpeg,.jpg,.png,.JPEG,.JPG,.PNG" style="display: none;" type="file" value="">
+                                            </div>
+                                        </li>
+                                    }
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+
+        <div style="clear:both;"></div>
+    </div>
+    <!--#endregion-->
+</div>
+<div class="pushDiv1"></div>
+<div class="fixedDiv2 row">
+    @Html.Partial("Mobile/_SanitationJobSummary", Model)
+</div>
+
+<div class="row" style="padding-top:250px;">
+    <div class="col-xl-12">
+        <div class="m-portlet top-tab" id="m_portlet" style="padding:15px;">
+            <ul class="no-border-bottom tab-nav" id="tabscroll">
+                <li data-selected="true">  <button data-tab="Overview" class="tablinks wo-det-tab active">@Model.Loc.Where(a => a.ResourceId == "spnDetails").FirstOrDefault().Value.ToString()</button> </li>
+                @if (Model.security.SanitationJob_Photos.Access)
+                {
+                    <li>
+                        <button data-tab="Photos" class="tablinks wo-det-tab">@Model.Loc.Where(a => a.ResourceId == "spnPhotos").FirstOrDefault().Value.ToString()</button>
+                    </li>
+                }
+                <li>
+                    <button data-tab="SJTools" class="tablinks wo-det-tab">@Model.Loc.Where(a => a.ResourceId == "spnTools").FirstOrDefault().Value.ToString()</button>
+                </li>
+                <li>
+                    <button data-tab="SJChemicalSupplies" class="tablinks wo-det-tab">@Model.Loc.Where(a => a.ResourceId == "spnChemical").FirstOrDefault().Value.ToString() &amp; @Model.Loc.Where(a => a.ResourceId == "spnSupplies").FirstOrDefault().Value.ToString()</button>
+                </li>
+                <li>
+                    <button data-tab="SJAssignments" class="tablinks wo-det-tab">@Model.Loc.Where(a => a.ResourceId == "spnAssignments").FirstOrDefault().Value.ToString()</button>
+                </li>
+                @*V2-983*@
+                @if (!Model.JobDetailsModel.ExternalSanitation)
+                {
+                    <li>
+                        <button data-tab="SJTask" class="tablinks wo-det-tab">@Model.Loc.Where(a => a.ResourceId == "spnTasks").FirstOrDefault().Value.ToString()</button>
+                    </li>
+                    @*V2-1118 Start*@
+                    <li>
+                        <button data-tab="SJLabor" class="tablinks wo-det-tab">@Model.Loc.Where(a => a.ResourceId == "spnLabour").FirstOrDefault().Value.ToString()</button>
+                    </li>
+                    <li>
+                        <button data-tab="SJNotes" class="tablinks wo-det-tab">@Model.Loc.Where(a => a.ResourceId == "spnGlobalNote").FirstOrDefault().Value.ToString()</button>
+                    </li>
+                    @*V2-1118 End*@
+                }
+            </ul>
+        </div>
+
+        <div class="md-apps-tab md-apps-tab-sel tabcontent" id="Overview">
+            <div class="row">
+                <div class="col-xl-12">
+                    <div class="m-portlet" id="m_portlet" style="padding:15px;">
+                        <ul class="listView">
+                            <li style="height:auto;" class="dscrbtn respons-box">
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnGlobalJobID").FirstOrDefault().Value.ToString() :</span>
+                                <span class="inputText description-span" style="line-height:26px;">@Model.JobDetailsModel.ClientLookupId</span>
+                                <div style="clear:both;"></div>
+                            </li>
+                            <li style="height:auto;" class="dscrbtn respons-box">
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString() :</span>
+                                <span class="inputText description-span" style="line-height:26px;">@Model.JobDetailsModel.Description</span>
+                                <div style="clear:both;"></div>
+                            </li>
+                            <li style="height:auto;" class="dscrbtn respons-box">
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "GlobalChargeTo").FirstOrDefault().Value.ToString() :</span>
+                                <span class="inputText description-span" style="line-height:26px;">@Model.JobDetailsModel.ChargeToId_string</span>
+                                <div style="clear:both;"></div>
+                            </li>
+                            <li style="height:auto;" class="dscrbtn respons-box">
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnChargeToName").FirstOrDefault().Value.ToString() :</span>
+                                <span class="inputText description-span" style="line-height:26px;">@Model.JobDetailsModel.ChargeTo_Name</span>
+                                <div style="clear:both;"></div>
+                            </li>
+                            <li style="height:auto;" class="dscrbtn respons-box">
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnStatus").FirstOrDefault().Value.ToString() :</span>
+                                <span class="inputText description-span" style="line-height:26px;">@Model.JobDetailsModel.Status</span>
+                                <div style="clear:both;"></div>
+                            </li>
+                            <li style="height:auto;" class="dscrbtn respons-box">
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnAssigned").FirstOrDefault().Value.ToString() :</span>
+                                <span class="inputText description-span" style="line-height:26px;">@Model.JobDetailsModel.Assigned</span>
+                                <div style="clear:both;"></div>
+                            </li>
+                            <li style="height:auto;" class="dscrbtn respons-box">
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnScheduleDate").FirstOrDefault().Value.ToString() :</span>
+                                @if (Model.JobDetailsModel.ScheduledDate.HasValue && Model.JobDetailsModel.ScheduledDate.Value != default(DateTime))
+                                {
+                                    <span class="inputText description-span" style="line-height:26px;">@Model.JobDetailsModel.ScheduledDate.Value.ToString("MM/dd/yyyy", CultureInfo.InvariantCulture)</span>
+                                }
+                                else
+                                {
+                                    <span class="inputText description-span" style="line-height:26px;"></span>
+                                }
+                            </li>
+                            <li style="height:auto;" class="dscrbtn respons-box">
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnScheduledDuration").FirstOrDefault().Value.ToString() :</span>
+                                <span class="inputText description-span" style="line-height:26px;">@Model.JobDetailsModel.ScheduledDuration</span>
+                            </li>
+                            <li style="height:auto;" class="dscrbtn respons-box">
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnShift").FirstOrDefault().Value.ToString() :</span>
+                                <span class="inputText description-span" style="line-height:26px;">@Model.JobDetailsModel.ShiftDesc</span>
+                                <div style="clear:both;"></div>
+                            </li>
+                            <li style="height:auto;" class="dscrbtn respons-box">
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnDownRequired").FirstOrDefault().Value.ToString() :</span>
+                                <span class="inputText">
+                                    @Html.CheckBoxFor(m => m.JobDetailsModel.DownRequired, new { @disabled = "disabled" })
+                                </span>
+                                <div style="clear:both;"></div>
+                            </li>
+                            <li style="height:auto;" class="dscrbtn respons-box">
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "GlobalSourceType").FirstOrDefault().Value.ToString() :</span>
+                                <span class="inputText description-span" style="line-height:26px;">@Model.JobDetailsModel.SourceType</span>
+                                <div style="clear:both;"></div>
+                            </li>
+                            <li style="height:auto;" class="dscrbtn respons-box">
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "GlobalSourceID").FirstOrDefault().Value.ToString()  :</span>
+                                <span class="inputText description-span" style="line-height:26px;">@Model.JobDetailsModel.SourceIDClientLookUpId</span>
+                                <div style="clear:both;"></div>
+                            </li>
+                            <li style="height:auto;" class="dscrbtn respons-box">
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "GlobalSanitationMasterId").FirstOrDefault().Value.ToString()   :</span>
+                                <span class="inputText description-span" style="line-height:26px;">@Model.JobDetailsModel.SanitationMasterId</span>
+                                <div style="clear:both;"></div>
+                            </li>
+                            <li style="height:auto;" class="dscrbtn respons-box">
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnGlobalCompleted").FirstOrDefault().Value.ToString() :</span>
+                                @if (Model.JobDetailsModel.CompleteDate.HasValue && Model.JobDetailsModel.CompleteDate.Value != default(DateTime))
+                                {
+                                    <span class="inputText description-span" style="line-height:26px;">@Model.JobDetailsModel.CompleteDate.Value.ToString("MM/dd/yyyy", CultureInfo.InvariantCulture)</span>
+                                }
+                                else
+                                {
+                                    <span class="inputText description-span" style="line-height:26px;"></span>
+                                }
+                            </li>
+                            <li style="height:auto;" class="dscrbtn respons-box">
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnCompleteBy").FirstOrDefault().Value.ToString() :</span>
+                                <span class="inputText description-span" style="line-height:26px;">@Model.JobDetailsModel.CompleteBy</span>
+                            </li>
+                            <li style="height:auto;" class="dscrbtn respons-box">
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnActualDuration").FirstOrDefault().Value.ToString() :</span>
+                                <span class="inputText description-span" style="line-height:26px;">@Model.JobDetailsModel.ActualDuration</span>
+                            </li>
+                            <li style="height:auto;" class="dscrbtn respons-box">
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnCompleteComments").FirstOrDefault().Value.ToString() :</span>
+                                <span class="inputText description-span" style="line-height:26px;">@Model.JobDetailsModel.CompleteComments</span>
+                                <div style="clear:both"></div>
+                            </li>
+                            <li style="height:auto;" class="dscrbtn respons-box">
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "GlobalPassed").FirstOrDefault().Value.ToString() :</span>
+                                @if (Model.JobDetailsModel.PassDate.HasValue && Model.JobDetailsModel.PassDate.Value != default(DateTime))
+                                {
+                                    <span class="inputText description-span" style="line-height:26px;">@Model.JobDetailsModel.PassDate.Value.ToString("MM/dd/yyyy", CultureInfo.InvariantCulture)</span>
+                                }
+                                else
+                                {
+                                    <span class="inputText description-span" style="line-height:26px;"></span>
+                                }
+                            </li>
+                            <li style="height:auto;" class="dscrbtn respons-box">
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "GlobalPassBy").FirstOrDefault().Value.ToString() :</span>
+                                <span class="inputText description-span" style="line-height:26px;">@Model.JobDetailsModel.PassBy</span>
+                            </li>
+                            <li style="height:auto;" class="dscrbtn respons-box">
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "GlobalFailed").FirstOrDefault().Value.ToString()  :</span>
+                                @if (Model.JobDetailsModel.FailDate.HasValue && Model.JobDetailsModel.FailDate.Value != default(DateTime))
+                                {
+                                    <span class="inputText description-span" style="line-height:26px;">@Model.JobDetailsModel.FailDate.Value.ToString("MM/dd/yyyy", CultureInfo.InvariantCulture)</span>
+                                }
+                                else
+                                {
+                                    <span class="inputText description-span" style="line-height:26px;"></span>
+                                }
+                            </li>
+                            <li style="height:auto;" class="dscrbtn respons-box">
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "GlobalFailBy").FirstOrDefault().Value.ToString() :</span>
+                                <span class="inputText description-span" style="line-height:26px;">@Model.JobDetailsModel.FailBy</span>
+                            </li>
+                            <li style="height:auto;" class="dscrbtn respons-box">
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "GlobalFailReason").FirstOrDefault().Value.ToString()  :</span>
+                                <span class="inputText description-span" style="line-height:26px;">@Model.JobDetailsModel.FailReason</span>
+                            </li>
+                            <li style="height:auto;" class="dscrbtn respons-box">
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnFailComment").FirstOrDefault().Value.ToString()  :</span>
+                                <span class="inputText description-span" style="line-height:26px;">@Model.JobDetailsModel.FailComment</span>
+                            </li>
+                            <li style="height:auto;" class="dscrbtn respons-box">
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnCreated").FirstOrDefault().Value.ToString()  :</span>
+                                @if (Model.JobDetailsModel.CreateDate.HasValue && Model.JobDetailsModel.CreateDate.Value != default(DateTime))
+                                {
+                                    <span class="inputText description-span" style="line-height:26px;">@Model.JobDetailsModel.CreateDate.Value.ToString("MM/dd/yyyy", CultureInfo.InvariantCulture)</span>
+                                }
+                                else
+                                {
+                                    <span class="inputText description-span" style="line-height:26px;"></span>
+                                }
+                            </li>
+                            <li style="height:auto;" class="dscrbtn respons-box">
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnSanitationCreateBy").FirstOrDefault().Value.ToString() :</span>
+                                <span class="inputText description-span" style="line-height:26px;">@Model.JobDetailsModel.CreateBy</span>
+                                <div style="clear:both;"></div>
+                            </li>
+                            @if (Model.security.SanitationJob.Edit && !Model.JobDetailsModel.ExternalSanitation)
+                            {
+                                <div class="editBttn">
+                                    <button type="button" class="btn btn-blue" style="float: right; margin: 0 4px 7px 0px;" id="editsanitation"><i class="fa fa-pencil" style="margin-top:-3px;"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalEdit").FirstOrDefault().Value.ToString()</button>
+                                    <div style="clear:both;"></div>
+                                </div>
+                            }
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @if (Model.security.SanitationJob_Photos.Access)
+        {
+            <div class="md-apps-tab tabcontent" id="Photos"></div>
+        }
+        <div class="md-apps-tab tabcontent" id="SJTools"></div>
+        <div class="md-apps-tab tabcontent" id="SJChemicalSupplies"></div>
+        <div class="md-apps-tab tabcontent" id="SJAssignments"></div>
+        @if (!Model.JobDetailsModel.ExternalSanitation)
+        {
+            <div class="md-apps-tab tabcontent" id="SJTask"></div> @*V2-983*@
+            <div class="md-apps-tab tabcontent" id="SJLabor"></div> @*V2-1118*@
+            <div class="md-apps-tab tabcontent" id="SJNotes"></div> @*V2-1118*@
+        }
+    </div>
+
+
+</div>
+@if (Model.security.SanitationJob.Edit && !Model.JobDetailsModel.ExternalSanitation)
+{
+    <div id="EditSanitationPopUp">
+    </div>
+}
+
+@Html.HiddenFor(m => m.JobDetailsModel.SanitationJobId)
+@Html.HiddenFor(m => m.sanitationJobSearchModel.SanitationJobId)
+@Html.HiddenFor(m => m.JobDetailsModel.ClientLookupId)
+@Html.HiddenFor(m => m.JobDetailsModel.ChargeTo_ClientLookupId)
+@Html.HiddenFor(m => m.JobDetailsModel.ChargeType)
+@Html.HiddenFor(m => m.JobDetailsModel.ClientOnPremise)
+@Html.HiddenFor(m => m.JobDetailsModel.ChargeToId, new { id = "SJChargeToId" })
+
+<!-- Modal -->
+@Html.Partial("Mobile/_SanitationSummaryDescription")
+@if (addSanit)
+{
+    @Html.Partial("~/Views/SanitationJob/Mobile/_SanitationRequestModal.cshtml")
+    @Html.Partial("~/Views/SanitationJob/Mobile/_SanitationJobModal.cshtml")
+}
+@if (cancelSanit && !Model.JobDetailsModel.ExternalSanitation)
+{
+    <div id="cancelModalDetailsPage" class="slide-modal">
+        @Html.Partial("~/Views/SanitationJob/Mobile/_CancelModal.cshtml")
+    </div>
+}
+<!-- V2-983 -->
+@Html.Partial("_StatusDetailsLocalization")
+@Html.Partial("~/Views/SanitationJob/Mobile/_TaskCancleModal.cshtml")
+
+<div class="slide-modal">
+    <div id="SJTaskModalpopup">
+        <div id="SJTaskPopUp">
+        </div>
+    </div>
+</div>
+
+<!-- V2-983 -->
+@if (Model.security.SanitationJob_Photos.Access)
+{
+    <div id="OpenImgActionPopup" class="slide-modal">
+        @Html.Hidden("AttachmentId", "", new { @id = "imgAttachmentId" })
+        @Html.Hidden("AttachmentURL", "", new { @id = "imgAttachmentURL" })
+        <div class="slide-modal-head">
+            <a class="slide-back-btn actionpopupmobileback"> <i class="fa fa-angle-left"></i> Back</a>
+            <div class="slide-back-title">
+                @Model.Loc.Where(a => a.ResourceId == "globalAction").FirstOrDefault().Value.ToString()
+            </div>
+        </div>
+        <div class="slide-modal-body">
+            <div mbsc-page class="demo-responsive">
+                <div style="height:100%;margin-top:10px;">
+                    <div mbsc-form class="mbsc-form-grid">
+                        <div class="mbsc-grid">
+                            <div class="mbsc-row">
+                                @if (Model.security.SanitationJob_Photos.Access)
+                                {
+                                    <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                        <div class="design-box">
+                                            <div class="mbsc-button-group-block">
+                                                <button mbsc-button data-color="success" type="button" class="btn btn-blue mobBttn mbsc-btn selectidOpen">@Model.Loc.Where(a => a.ResourceId == "GlobalOpen").FirstOrDefault().Value.ToString()</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                                @if (Model.security.SanitationJob_Photos.Edit)
+                                {
+                                    <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                        <div class="design-box">
+                                            <div class="mbsc-button-group-block">
+                                                <button mbsc-button data-color="success" type="button" class="btn btn-blue btnRqst mobBttn mbsc-btn" id="selectidSetAsDefault">@Model.Loc.Where(a => a.ResourceId == "spnSetDefault").FirstOrDefault().Value.ToString()</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                                @if (Model.security.SanitationJob_Photos.Delete)
+                                {
+                                    <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                        <div class="design-box">
+                                            <div class="mbsc-button-group-block">
+                                                <button mbsc-button data-color="success" type="button" class="btn btn-blue btnRqst mobBttn mbsc-btn" id="selectidDelete">@Model.Loc.Where(a => a.ResourceId == "globalDelete").FirstOrDefault().Value.ToString()</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="slide-modal-footer"></div>
+    </div>
+
+    <div id="ShowImgPopup" class="slide-modal">
+        <div class="slide-modal-head">
+            <a class="slide-back-btn openimgback"> <i class="fa fa-angle-left"></i> Back</a>
+            <div class="slide-back-title">
+                @Model.Loc.Where(a => a.ResourceId == "spnImagePreview").FirstOrDefault().Value.ToString()
+            </div>
+        </div>
+        <div class="slide-modal-body">
+            <div mbsc-page class="demo-responsive">
+                <div style="height:100%;margin-top:10px;">
+                    <div mbsc-form class="mbsc-form-grid">
+                        <div class="mbsc-grid">
+                            <div class="mbsc-row">
+                                <div class="mbsc-col-12 mbsc-col-md-12 mbsc-col-lg-12">
+                                    <img id="SelectedImg" src="" style="width: 100%; padding:1rem" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="slide-modal-footer"></div>
+    </div>
+}
+
+<div class="slide-modal">
+    <div id="AddSJToolModalpopup">
+        <div id="SJToolPopUp">
+        </div>
+    </div>
+</div>
+<div class="slide-modal">
+    <div id="AddSJChemicalSuppliesModalpopup">
+        <div id="SJChemicalSuppliesPopUp">
+        </div>
+    </div>
+</div>
+<div class="slide-modal">
+    <div id="AddSJAssignmentModalpopup">
+        <div id="SJAssignmentPopUp">
+        </div>
+    </div>
+</div>
+
+<!-- V2-1055 -->
+<div id="AddWorkRequestDiv">
+</div>
+
+<div class="slide-modal" id="AccountTableModalPopup">
+    <div class="slide-modal-head">
+        <a class="slide-back-btn" id="AccountTableModalPopupHide"> <i class="fa fa-angle-left"></i> Back</a>
+        <div class="slide-back-title">
+            @Model.Loc.Where(a => a.ResourceId == "GlobalAccount").FirstOrDefault().Value.ToString()
+        </div>
+    </div>
+    <div class="slide-modal-body">
+        <div class="form-group" style="position:relative;">
+            <i class="fa fa-search txtSearchClickComp" style="font-size: 1.1rem;position: absolute;top: 9px;left: 15px;"></i>
+            <a href="javascript:void(0)"><i class="fa fa-close clearTextBoxValue" data-txtboxid="txtAccountSearch_Mobile" style="font-size: 1.1rem;position: absolute;top: 9px;right: 15px;"></i></a>
+            <input type="search" id="txtAccountSearch_Mobile" class="form-control search unsortable" placeholder="Search..." style="padding: 0.65rem 2.75rem;" autocomplete="off">
+        </div>
+        <div id="DivAccountSearchScrollViewModal"></div>
+    </div>
+</div>
+
+<div class="slide-modal">
+    <div id="FailSanitationModalpopup">
+        <div id="FailSanitationpopup">
+        </div>
+    </div>
+</div>
+@if (Model.security.SanitationJob.Create)
+{
+    <div id="AddSanitationModal"></div>
+    <div id="AddWorkRequestModalDialog" class="dropdown-modal modal fade" role="dialog"></div>
+}
+@*V2-1118 Start*@
+@if (!Model.JobDetailsModel.ExternalSanitation)
+{
+    <div class="slide-modal">
+        <div id="AddSJLaborModalpopup">
+            <div id="SJLaborPopUp">
+            </div>
+        </div>
+    </div>
+    <div class="slide-modal">
+        <div id="AddSJNotesModalpopup">
+            <div id="SJNotesPopUp">
+            </div>
+        </div>
+    </div>
+}
+@*V2-1118 End*@
+<style type="text/css">
+    .cam-container {
+        margin: 18px auto;
+    }
+    /*.vd-webcam-container {
+        height: 100vh;
+        width: 100vw;
+        background-color: black;
+        }*/
+    .vd-webcam {
+        display: block;
+        position: relative;
+        width: 100%;
+        height: auto;
+        padding: 1rem;
+        pointer-events: none;
+        margin: 0 auto;
+    }
+
+    @@media (max-width:900px) {
+        .gridStatus span.newStatus {
+            bottom: -10px !important;
+        }
+    }
+
+    @@media only screen and (min-width: 360px) and (max-width: 479px) {
+        .ActionBttnArea {
+            width: 140px !important;
+        }
+
+        .gridList button.complete, .updateArea button.complete {
+            margin: 5px 0px !important;
+        }
+    }
+
+    @@media (max-width:767px) {
+        #commentstems .ckeditorarea .mobBttn.btneditcomments {
+            margin-bottom: 10px !important;
+        }
+    }
+
+    @@media (max-width: 1023px) {
+        .row {
+            padding-top: 0px !important;
+        }
+    }
+
+    @@media(max-width:767px) {
+        ul.listView li.respons-box {
+            display: flex;
+            align-items: center;
+            flex-wrap: inherit !important;
+        }
+            /*ul.listView li.respons-box .label {
+        width: 120px !important;
+        }*/
+
+            ul.listView li.respons-box .label {
+                /*width: 120px !important;*/
+                padding: 0px;
+            }
+
+            ul.listView li.respons-box .description-span {
+                width: calc(100% - 120px) !important;
+                padding-top: 10px !important;
+                display: flex;
+                /*align-items: center;*/
+            }
+    }
+</style>

@@ -1,0 +1,109 @@
+﻿@model Client.Models.Project.ProjectVM
+<div class="row">
+    <div class="col-xl-6">
+        <div class="m-portlet padAdjstNew" id="m_portlet">
+            <div class="m-portlet__head" style="padding:0; margin-bottom:10px;">
+                <div class="m-portlet__head-caption">
+                    <div class="m-portlet__head-title">
+                        <h3 class="m-portlet__head-text" style="font-size: 1.2rem; line-height:3.55;">
+                            @Model.Loc.Where(a => a.ResourceId == "GlobalActivity").FirstOrDefault().Value.ToString()
+
+                        </h3>
+                    </div>
+                </div>
+            </div>
+            <div class="lds-ellipsis lds-adjust" id="activitydataloader">
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+            </div>
+            <div class="m-portlet__body m-portlet__body--no-padding">
+                <div id="activityList" class="mCustomScrollbar light" data-mcs-theme="minimal-dark">
+                    <div class="kt-notes">
+                        <div class="kt-notes__items" id="activityitems"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-6">
+        <div class="m-portlet padAdjstNew" id="m_portlet">
+            <div class="m-portlet__head" style="padding:0; margin-bottom:10px;">
+                <div class="m-portlet__head-caption">
+                    <div class="m-portlet__head-title">
+                        <h3 class="m-portlet__head-text" style="font-size: 1.2rem; line-height:3.55;">
+                            @Model.Loc.Where(a => a.ResourceId == "spnLogComment").FirstOrDefault().Value.ToString()
+                        </h3>
+                    </div>
+                </div>
+            </div>
+            <div class="lds-ellipsis lds-adjust" id="commentsdataloader">
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+            </div>
+            <div class="m-portlet__body  m-portlet__body--no-padding">
+                <div id="commentsList" class="mCustomScrollbar light" data-mcs-theme="minimal-dark">
+                    <div class="kt-notes">
+                        <div class="kt-notes__items" id="commentstems"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="kt-notes" style="padding-top:20px;">
+                <div class="kt-notes__items" id="commentstems">
+                    <div class="kt-notes__item" style="padding-bottom:10px;">
+                        <div class="kt-notes__media" style="left:-19px;">
+                            <h3 class="kt-notes__user kt-font-brand kt-font-boldest" style="width:40px; height:40px;display:none;" id="hdr-comments-add">
+                                @Model._userdata.DatabaseKey.Personnel.PersonnelInitial
+                            </h3>
+                        </div>
+                        <div class="kt-notes__content" style="padding: 0.2rem 0.5rem 0rem 1.5rem;">
+                            <div class="form-group" style="margin-bottom:0;">
+                                <textarea class="form-control" id="wotxtcommentsnew" rows="1" style="margin-bottom:1rem;" placeholder="@Model.Loc.Where(a => a.ResourceId == "globalAddAComment").FirstOrDefault().Value.ToString()"></textarea>
+                                <main style="margin-bottom:10px;">
+                                    <div class="document-editor ckeditorfield" style="display:none">
+                                        <div class="toolbar-container"></div>
+                                        <div class="content-container form-control">
+                                            <div id="wotxtcomments"></div>
+
+                                        </div>
+                                    </div>
+                                </main>
+                                <button type="submit" class="btn btn-blue mobBttn" id="btnsavecommand" style="cursor:pointer; float:left; margin-right:10px;" value="save"><i class="fa fa-save faIcon"></i>&nbsp;@Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+                                <button type="button" class="btn btn-blue mobBttn" id="commandCancel" style="cursor:pointer; float:left;"><i class="fa fa-close faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button>
+                                <div style="clear:both;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+    </div>
+</div>
+<style>
+    #activityList.mCustomScrollbar, #commentsList.mCustomScrollbar {
+        height: auto !important;
+        min-height: 1px !important;
+        max-height: 440px !important;
+        overflow: hidden !important;
+    }
+
+    #commentsdataloader.lds-ellipsi {
+        top: 5%;
+        margin-top: 0;
+        z-index: 9;
+    }
+    .lds-ellipsis {
+        margin-top: 50px !important;
+    }
+    #activitydataloader.lds-ellipsis {
+        top: 2.8%;
+        margin-top: 0;
+        z-index: 9;
+    }
+</style>

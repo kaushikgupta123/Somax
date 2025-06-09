@@ -1,0 +1,13 @@
+﻿@model Client.Models.Configuration.ConfigCraft.CraftVM
+@{
+    ViewBag.Title = "Somax-Config | Craft";
+}
+@Styles.Render("~/Content/datatable")
+
+@section scripts {
+    @Scripts.Render("~/bundles/datatable")
+    <script src="~/Scripts/Pages/Configuration/Craft/Craft.js"></script>
+}
+<div id="renderCraft">
+    @Html.Partial("~/Views/Configuration/Craft/_CraftSearch.cshtml")
+</div>

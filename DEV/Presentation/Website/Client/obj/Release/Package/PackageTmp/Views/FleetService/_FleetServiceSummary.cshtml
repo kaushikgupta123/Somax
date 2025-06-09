@@ -1,0 +1,181 @@
+﻿@model Client.Models.FleetService.FleetServiceVM
+    @{ 
+        string statusclass = "";
+        switch (Model._FleetServiceSummaryModel.Status)
+        {
+
+            case ServiceOrderStatusConstant.Canceled:
+                statusclass = "m-badge m-badge--orange m-badge--wide";
+                break;
+            case ServiceOrderStatusConstant.Complete:
+                statusclass = "m-badge m-badge--green m-badge--wide";
+                break;
+            case ServiceOrderStatusConstant.Open:
+                statusclass = "m-badge m-badge--purple m-badge--wide";
+                break;
+            case ServiceOrderStatusConstant.Scheduled:
+                statusclass = "m-badge m-badge--blue m-badge--wide";
+                break;
+
+        }
+
+        string imageUrl = Model._FleetServiceSummaryModel.ImageUrl;
+        if (Model._FleetServiceSummaryModel.ClientOnPremise)
+        {
+            imageUrl = UtilityFunction.PhotoBase64ImgSrc(Model._FleetServiceSummaryModel.ImageUrl);
+        }
+    }
+<div class="col-xl-12">
+    <div class="m-portlet padAdjst" id="m_portlet" style="padding:10px;">
+        <div class="m-portlet__body  m-portlet__body--no-padding">
+            <div class="row m-row--col-separator-xl">
+                <div class="col-md-12">
+                    <div class="m-portlet cardRow" style="margin-bottom:0; border:0;">
+                        <div class="m-portlet__body gridList" style="padding:0;">
+                            <div class="row summaryview">
+                                <div class="col-2 col-sm-2 col-md-2">
+                                    <div class="gridImgBox" style="width:100%;">
+                                        @if (!string.IsNullOrEmpty(imageUrl))
+                                        {
+                                            <img src="@imageUrl" id="EquipZoom" alt="Image" data-zoom-image="@imageUrl" />
+                                        }
+                                        else
+                                        {
+                                            <img src="~/Scripts/ImageZoom/images/NoImage.jpg" id="EquipZoom" alt="Image" data-zoom-image="/Scripts/ImageZoom/images/NoImage.jpg" />
+                                        }
+                                    </div>
+                                    <div style="clear:both;"></div>
+                                </div>
+                                <div class="col-5 col-sm-6 col-md-4">
+                                    <div class="newDescription">
+                                        <span class="orderId">
+                                            <span>@Model._FleetServiceSummaryModel.ServiceOrder_ClientLookupId</span>
+                                            &nbsp;
+                                            <small class='@statusclass'>@UtilityFunction.GetMessageFromResource(Model._FleetServiceSummaryModel.Status, LocalizeResourceSetConstants.StatusDetails) </small>
+                                        </span>
+                                        <div class="types">
+                                            <span style="display:block; margin-bottom:7px;"><strong>@Model._FleetServiceSummaryModel.Equipment_ClientLookupId</strong></span>
+                                            <span style="display:block;"><strong>@Model._FleetServiceSummaryModel.EquipmentName</strong></span>
+                                        </div>
+                                        <div class="types">
+                                            @if (Model._FleetServiceSummaryModel.Meter1Type != "")
+                                            {
+                                                <span>@Model._FleetServiceSummaryModel.Meter1Type : <strong>@Model._FleetServiceSummaryModel.Meter1CurrentReading</strong></span>
+                                            }
+                                            @if (Model._FleetServiceSummaryModel.Meter2Type != "")
+                                            {
+                                                <span>@Model._FleetServiceSummaryModel.Meter2Type : <strong>@Model._FleetServiceSummaryModel.Meter2CurrentReading</strong></span>
+                                            }
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-5 col-sm-4 col-md-3">
+                                    <div class="gridStatus">
+                                        <span>
+                                            @Model.Loc.Where(a => a.ResourceId == "spnGlobalScheduled").FirstOrDefault().Value.ToString() :
+                                            @if (Model._FleetServiceSummaryModel.ScheduleDate.HasValue && Model._FleetServiceSummaryModel.ScheduleDate != default(DateTime))
+                                            {
+                                                <strong>@Model._FleetServiceSummaryModel.ScheduleDate.Value.ToString("MM/dd/yyyy", CultureInfo.InvariantCulture)</strong>
+                                            }
+                                            else
+                                            {
+                                                <strong></strong>
+                                            }
+                                        </span>
+                                        <span class="assignedItem" id="@Model._FleetServiceSummaryModel.ServiceOrderId" wapersonnelid="@Model._FleetServiceSummaryModel.SOAssigned_PersonnelId">
+                                            @Model.Loc.Where(a => a.ResourceId == "spnGlobalAssigned").FirstOrDefault().Value.ToString() :
+                                            <strong class="assignedFName"> @Model._FleetServiceSummaryModel.Assigned</strong>
+
+                                            @if (Model._FleetServiceSummaryModel.SOAssigned_PersonnelId == -1)
+                                            {
+                                                var v = "spn" + Model._FleetServiceSummaryModel.ServiceOrderId;
+                                                <span id=@v class="tooltipcards" style="display :none !important;"></span>
+                                                <span class="loadingImg" style="display: none;"><img src="/Images/lineLoader.gif" style="width:55px; height:auto; position:absolute; left:0; top:40px;"></span>
+                                            }
+
+                                        </span>
+                                        <span class="newStatus">
+                                            @Model.Loc.Where(a => a.ResourceId == "spnGlobalCompleted").FirstOrDefault().Value.ToString() :
+                                            @if (Model._FleetServiceSummaryModel.CompleteDate.HasValue && Model._FleetServiceSummaryModel.CompleteDate != default(DateTime))
+                                            {
+                                                <strong>@Model._FleetServiceSummaryModel.CompleteDate.Value.ToString("MM/dd/yyyy", CultureInfo.InvariantCulture)</strong>
+                                            }
+                                            else
+                                            {
+                                                <strong></strong>
+                                            }
+                                        </span>
+                                    </div>
+                                </div>
+                                @if (Model._FleetServiceSummaryModel.IsDetail)
+                                {
+                                    if (Model.security.Fleet_ServiceOrder.Edit && (Model.FleetServiceModel.Status != ServiceOrderStatusConstant.Complete && Model.FleetServiceModel.Status != ServiceOrderStatusConstant.Canceled))
+                                    {
+                                            <div class="col-sm-12 col-md-3" style="text-align:right;">
+                                                <button type="button" id="actionCancelSO" data-toggle="modal" data-target="#CancelModalDetailsPage" class="btn btn-blue wobtngrdcancel soCancel" title="Cancel" style="padding: 0.65rem; float:right;"><i class="fa fa-times" style="margin-top:-3px;"></i> <span class="cancel_workorder" status="Approved"> @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</span></button>
+
+                                                <button type="button" id="actionCompleteSO" data-toggle="modal" class="btn btn-blue complete SoComplete" title="Complete" style="padding: 0.65rem; float:right; margin:0 7px;"><i class="fa fa-check" style="margin-top:-3px;"></i> <span class="complete_workorder">@Model.Loc.Where(a => a.ResourceId == "GlobalComplete").FirstOrDefault().Value.ToString()</span></button>
+                                                <div class="dropdown btn-sort scheduleDrop" id="scheduleDrop" style="float:right;">
+
+                                                    <button class="btn btn-blue dropdown-toggle newSchedulesort3" type="button" id="schedulesortmenu" data-toggle="dropdown">@Model.Loc.Where(a => a.ResourceId == "spnGlobalSchedule").FirstOrDefault().Value.ToString()</button>
+                                                    <ul class="dropdown-menu scheduleDropMenu scheduleDropMenu3" role="menu" aria-labelledby="schedulesortmenu">
+                                                        @if (Model._FleetServiceSummaryModel.ScheduleDate.HasValue && Model._FleetServiceSummaryModel.ScheduleDate != default(DateTime))
+                                                        {
+
+                                                            <li id="actionAddScheduleSO" class="AddSchedule" scheduledstartdate="@Model._FleetServiceSummaryModel.ScheduleDate.Value.ToString("MM/dd/yyyy", CultureInfo.InvariantCulture)" data-toggle="modal" data-id="@Model._FleetServiceSummaryModel.ServiceOrderId" data-target="#AddScheduleModalDetailsPage"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnGlobalAddSchedule").FirstOrDefault().Value.ToString()</a></li>
+                                                        }
+
+                                                        else
+                                                        {
+
+                                                            <li id="actionAddScheduleSO" class="AddSchedule" scheduledstartdate="" data-toggle="modal" data-id="@Model._FleetServiceSummaryModel.ServiceOrderId" data-target="#AddScheduleModalDetailsPage"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnGlobalAddSchedule").FirstOrDefault().Value.ToString()</a></li>
+                                                        }
+                                                        @*<li role="presentation" title="Schedule" class="AddSchedule" data-col="1" scheduledstartdate="" id="" data-id="" status="Approved" scheduledduration="0.00"><a tabindex="-1" href="javascript:void(0)">Add Schedule</a></li>*@
+                                                        <li id="actionRemoveScheduleSO" class="RemoveSchedule" data-id="@Model._FleetServiceSummaryModel.ServiceOrderId"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnGlobalRemoveSchedule").FirstOrDefault().Value.ToString()</a></li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+
+                                    }
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style type="text/css">
+    .gridImgBox img { width:100%; }
+    .select2-container--default .select2-selection--single,
+    .select2-container--default .select2-selection--multiple { min-height:34px; height:auto; }
+    @*@media only screen and (max-width: 1023px) {
+    }*@
+    @@media only screen and (max-width:1598px) {
+        .scheduleDrop, #actionCancelSO, #actionCompleteSO {
+            width: 80%;
+            margin: 0 0 6px 0 !important;
+        }
+
+            .scheduleDrop #schedulesortmenu
+             {
+                width: 100% !important; 
+            }
+    }
+    @@media only screen and (max-width:767px) {
+        .fixedDiv2 {
+            right: inherit;
+            left: inherit;
+        }
+        .scheduleDrop, #actionCancelSO, #actionCompleteSO {
+            width: calc(33.3333333% - 10px);
+            margin: 8px 8px 0px 0 !important;
+        }
+            .scheduleDrop #schedulesortmenu {
+                margin: 0 !important;
+            }
+    }
+</style>

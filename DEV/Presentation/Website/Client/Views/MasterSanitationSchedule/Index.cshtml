@@ -1,0 +1,21 @@
+﻿@model Client.Models.MasterSanitationSchedule.MasterScheduleVM
+
+@{
+    ViewBag.Title = "Somax | Master Schedule";
+}
+@Styles.Render("~/Content/datatable")
+<link href="~/Scripts/dropzone/basic.min.css" rel="stylesheet" />
+<link href="~/Scripts/dropzone/dropzone.min.css" rel="stylesheet" />
+<link href="~/Scripts/Metronic/assets/demo/default/base/GlobalSearchGrid.css" rel="stylesheet" />
+<link href="~/Scripts/Metronic/assets/demo/default/base/style_custom_tree.css" rel="stylesheet" />
+@section scripts {
+    @Scripts.Render("~/bundles/datatable")
+    @Scripts.Render("~/bundles/MasterSanitation")
+        <script type="text/javascript">
+            com_github_culmat_jsTreeTable.register(this);
+        </script>
+}
+
+<div id="rendermasterschedule">
+    @Html.Partial("_MasterScheduleSearch", Model)
+</div>

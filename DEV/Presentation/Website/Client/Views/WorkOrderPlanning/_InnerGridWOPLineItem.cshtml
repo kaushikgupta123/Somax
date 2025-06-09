@@ -1,0 +1,83 @@
+﻿@model Client.Models.WorkOrderPlanning.WorkOrderPlanningVM
+@{
+    Layout = null;
+}
+<table id="" dt-options="dtOptions" class="WOPinnerDataTable childtable cell-border" style="width:100%">
+    <thead>
+        <tr>
+            <th>@Model.Loc.Where(a => a.ResourceId == "spnGlobalWorkOrderID").FirstOrDefault().Value.ToString()</th>
+            <th>@Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString()</th>
+            <th>@Model.Loc.Where(a => a.ResourceId == "spnRequired").FirstOrDefault().Value.ToString()</th>
+            <th>@Model.Loc.Where(a => a.ResourceId == "spnAssetID").FirstOrDefault().Value.ToString()</th>
+            <th>@Model.Loc.Where(a => a.ResourceId == "spnAssetName").FirstOrDefault().Value.ToString()</th>
+            <th>@Model.Loc.Where(a => a.ResourceId == "spnStatus").FirstOrDefault().Value.ToString()</th>
+            <th>@Model.Loc.Where(a => a.ResourceId == "spnCompleteDate").FirstOrDefault().Value.ToString()</th>
+            <th>@Model.Loc.Where(a => a.ResourceId == "GlobalType").FirstOrDefault().Value.ToString()</th>
+
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model.woPlanLineitemModel.Count > 0)
+        {
+            foreach (var wop in Model.woPlanLineitemModel)
+            {
+        <tr>
+            <td>@wop.ClientLookupId</td>
+            <td><div class="text-wrap width-200">@wop.Description </div></td>
+            <td>@wop.RequiredDate </td>
+            <td>@wop.AssetId</td>
+            <td>@wop.ChargeTo_Name</td>
+            <td>@wop.Status</td>
+            <td>@wop.CompleteDate</td>
+            <td>@wop.Type</td>
+        </tr>
+            }
+        }
+    </tbody>
+    <tfoot>
+        <tr>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+        </tr>
+    </tfoot>
+</table>
+<style type="text/css">
+    .childtable tr th {
+        background: #4da5fe;
+        color: #fff !important;
+        white-space: nowrap !important;
+        text-align: center !important;
+        font-weight: 400 !important;
+    }
+
+    .link {
+        color: #235ddd;
+    }
+
+        .link:hover {
+            color: #32bf0e;
+        }
+
+    .nolink {
+        pointer-events: none;
+        color: #91a0a0;
+    }
+
+    table.dataTable thead .sorting {
+        padding-right: 15px;
+    }
+
+    table.dataTable thead .sorting_asc {
+        padding-right: 15px;
+    }
+
+    table.dataTable.display tbody tr:first-child td {
+        width: 1%;
+    }
+</style>

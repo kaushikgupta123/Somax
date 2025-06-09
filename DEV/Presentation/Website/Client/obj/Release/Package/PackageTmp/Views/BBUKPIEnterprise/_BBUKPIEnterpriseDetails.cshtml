@@ -1,0 +1,830 @@
+﻿@model Client.Models.BBUKPIEnterprise.BBUKPIEnterpriseVM
+
+@Styles.Render("~/Content/somaxcommentsection")
+
+<div class="m-subheader fixedDiv1">
+    <div class="new-m-subheader">
+        <div class="filterDescription">
+            <a href="javascript:void(0)" id="linkToSearch">
+                <span id="spnlinkToSearch"></span>
+            </a>
+            - @Model.BBUKPIEnterpriseModel.BBUKPIId
+        </div>
+
+        
+        <div style="clear:both;"></div>
+    </div>
+</div>
+<div class="pushDiv1"></div>
+
+<div class="row">
+    
+    <div class="col-xl-12">
+        <div class="row">
+            <div class="col-xl-12" id="btnnblock">
+                <div class="tabsArea nobg" id="PartsContainer" style="display:block;">
+                    <div class="row">
+                        <div class="col-xl-8">
+                            <div class="m-portlet" id="m_portlet" style="padding:15px;">
+                                <div class="bottomBlock">
+                                    <div id="Identification" style="display:block;">
+                                        <ul class="listView">
+                                            <li>
+                                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnYear").FirstOrDefault().Value.ToString() :</span>
+                                                <span class="inputText" id="partclientlookupid">@Model.BBUKPIEnterpriseModel.Year</span>
+                                            </li>
+                                            <li style="height:auto;">
+                                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnWeekNumber").FirstOrDefault().Value.ToString() :</span>
+                                                <span class="inputText description-span">@Model.BBUKPIEnterpriseModel.Week</span>
+                                                <div style="clear:both;"></div>
+                                            </li>
+                                            <li>
+                                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnSiteGlobal").FirstOrDefault().Value.ToString() :</span>
+                                                <span class="inputText">@string.Format("{0:N2}", @Model.BBUKPIEnterpriseModel.SiteName)</span>
+                                            </li>
+                                            <li>
+                                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnOntimePMpercentageCompletion").FirstOrDefault().Value.ToString() :</span>
+                                                <span class="inputText">@Model.BBUKPIEnterpriseModel.PMWOCompleted</span>
+                                            </li>
+                                            @*v2-909 start*@
+                                            <li>
+                                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnCountPMfollowUp").FirstOrDefault().Value.ToString() :</span>
+                                                <span class="inputText">@Model.BBUKPIEnterpriseModel.PMFollowUpComp</span>
+                                            </li>
+                                            <li>
+                                                <span class="label"># @Model.Loc.Where(a => a.ResourceId == "spnActiveMechanicUsers").FirstOrDefault().Value.ToString() :</span>
+                                                <span class="inputText">@Model.BBUKPIEnterpriseModel.ActiveMechUsers</span>
+                                            </li>
+                                            
+                                            <li>
+                                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnCountofWOBacklog").FirstOrDefault().Value.ToString() :</span>
+                                                <span class="inputText">@Model.BBUKPIEnterpriseModel.WOBacklogCount</span>
+                                            </li>
+                                            
+                                            <li>
+                                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnRCPS_EventsOnEquipBreakdown").FirstOrDefault().Value.ToString() :</span>
+                                                <span class="inputText">@Model.BBUKPIEnterpriseModel.RCACount</span>
+                                            </li>
+                                            <li>
+                                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnTTR_Events").FirstOrDefault().Value.ToString() :</span>
+                                                <span class="inputText">@Model.BBUKPIEnterpriseModel.TTRCount</span>
+                                            </li>
+                                            <li>
+                                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnInventoryDollarValueOverMax").FirstOrDefault().Value.ToString() :</span>
+                                                <span class="inputText">@string.Format("{0:N2}", @Model.BBUKPIEnterpriseModel.InvValueOverMax)</span>
+                                            </li>
+                                            <li>
+                                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnCycleCountAccuracyPercentage").FirstOrDefault().Value.ToString() :</span>
+                                                <span class="inputText">@string.Format("{0:N2}", @Model.BBUKPIEnterpriseModel.PhyInvAccuracy)</span>
+                                            </li>
+                                            
+                                            
+                                            <li>
+                                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnCycleCountProgressPercentage").FirstOrDefault().Value.ToString() :</span>
+                                                <span class="inputText">@string.Format("{0:N2}", @Model.BBUKPIEnterpriseModel.CycleCountProgress)</span>
+                                            </li>
+
+                                            <li>
+                                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnEVTrainingHrs").FirstOrDefault().Value.ToString() :</span>
+                                                <span class="inputText">@string.Format("{0:N2}", @Model.BBUKPIEnterpriseModel.EVTrainingHrs)</span>
+                                            </li>
+                                            @*v2-909 2start*@
+                                            <li>
+                                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnWeekStart").FirstOrDefault().Value.ToString() :</span>
+                                                <span class="inputText">@Model.BBUKPIEnterpriseModel.WeekStart</span>
+                                            </li>
+                                            <li>
+                                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnWeekEnd").FirstOrDefault().Value.ToString() :</span>
+                                                <span class="inputText">@Model.BBUKPIEnterpriseModel.WeekEnd</span>
+                                            </li>
+                                            @*v2-909 2end*@
+
+                                            <li>
+                                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnCreateBy").FirstOrDefault().Value.ToString() :</span>
+                                                <span class="inputText">@Model.BBUKPIEnterpriseModel.CreateBy</span>
+                                            </li>
+                                            <li>
+                                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "globalCreateDate").FirstOrDefault().Value.ToString() :</span>
+                                                <span class="inputText">
+                                                    @if (Model.BBUKPIEnterpriseModel.CreateDate.HasValue && Model.BBUKPIEnterpriseModel.CreateDate != default(DateTime))
+                                                    {
+                                                        @Model.BBUKPIEnterpriseModel.CreateDate.Value.ToString("MM/dd/yyyy", CultureInfo.InvariantCulture)
+                                                    }
+                                                </span>
+                                            </li>
+                                            <li>
+                                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnModifyBy").FirstOrDefault().Value.ToString() :</span>
+                                                <span class="inputText">@Model.BBUKPIEnterpriseModel.ModifyBy</span>
+                                            </li>
+                                            <li>
+                                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "globalModifyDate").FirstOrDefault().Value.ToString() :</span>
+                                                <span class="inputText">
+                                                    @if (Model.BBUKPIEnterpriseModel.ModifyDate.HasValue && Model.BBUKPIEnterpriseModel.ModifyDate != default(DateTime))
+                                                    {
+                                                        @Model.BBUKPIEnterpriseModel.ModifyDate.Value.ToString("MM/dd/yyyy", CultureInfo.InvariantCulture)
+                                                    }
+                                                </span>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div class="editBttn">
+                                        @if (Model.security.BBUKPI_Enterprise.Edit && Model.BBUKPIEnterpriseModel.Status==BBUKPIStatus.Submitted)
+                                        {
+                                            <a href="javascipt:void(0)" id="btnReopen"><button type="button" class="btn btn-blue"><i class="fa fa-envelope-open" style="margin-top:-3px;"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalReopen").FirstOrDefault().Value.ToString()</button></a>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-4">
+                            <div class="m-portlet padAdjstNew" id="m_portlet">
+                                <div class="m-portlet__head" style="padding:0; margin-bottom:10px;">
+                                    <div class="m-portlet__head-caption">
+                                        <div class="m-portlet__head-title">
+                                            <h3 class="m-portlet__head-text" style="font-size: 1.2rem; line-height:3.55;">
+                                                @Model.Loc.Where(a => a.ResourceId == "GlobalActivity").FirstOrDefault().Value.ToString()
+
+                                            </h3>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="lds-ellipsis lds-adjust" id="activitydataloader">
+                                    <div></div>
+                                    <div></div>
+                                    <div></div>
+                                    <div></div>
+                                </div>
+                                <div class="m-portlet__body m-portlet__body--no-padding">
+                                    <div id="activityList" class="mCustomScrollbar light" data-mcs-theme="minimal-dark">
+                                        <div class="kt-notes">
+                                            <div class="kt-notes__items" id="activityitems"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="m-portlet padAdjstNew" id="m_portlet">
+                                <div class="m-portlet__head" style="padding:0; margin-bottom:10px;">
+                                    <div class="m-portlet__head-caption">
+                                        <div class="m-portlet__head-title">
+                                            <h3 class="m-portlet__head-text" style="font-size: 1.2rem; line-height:3.55;">
+                                                @Model.Loc.Where(a => a.ResourceId == "spnLogComment").FirstOrDefault().Value.ToString()
+                                            </h3>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="lds-ellipsis lds-adjust" id="commentsdataloader">
+                                    <div></div>
+                                    <div></div>
+                                    <div></div>
+                                    <div></div>
+                                </div>
+                                <div class="m-portlet__body  m-portlet__body--no-padding">
+                                    <div id="commentsList" class="mCustomScrollbar light" data-mcs-theme="minimal-dark">
+                                        <div class="kt-notes">
+                                            <div class="kt-notes__items" id="commentstems"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="kt-notes" style="padding-top:20px;">
+                                    <div class="kt-notes__items" id="commentstems">
+                                        <div class="kt-notes__item" style="padding-bottom:10px;">
+                                            <div class="kt-notes__media" style="left:-19px;">
+                                                <h3 class="kt-notes__user kt-font-brand kt-font-boldest" style="width:40px; height:40px;display:none;" id="hdr-comments-add">
+                                                    @Model.udata.DatabaseKey.Personnel.PersonnelInitial
+                                                </h3>
+                                            </div>
+                                            <div class="kt-notes__content" style="padding: 0.2rem 0.5rem 0rem 1.5rem;">
+                                                <div class="form-group" style="margin-bottom:0;">
+                                                    <textarea class="form-control" id="wotxtcommentsnew" rows="1" style="margin-bottom:1rem;" placeholder="Add a comment…"></textarea>
+                                                    <main style="margin-bottom:10px;">
+                                                        <div class="document-editor ckeditorfield" style="display:none">
+                                                            <div class="toolbar-container"></div>
+                                                            <div class="content-container form-control">
+                                                                <div id="wotxtcomments"></div>
+                                                            </div>
+                                                        </div>
+                                                    </main>
+                                                    <button type="submit" class="btn btn-blue mobBttn" id="btnsavecommands" style="cursor:pointer; float:left; margin-right:10px;" value="save"><i class="fa fa-save faIcon"></i>&nbsp;@Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+                                                    <button type="button" class="btn btn-blue mobBttn" id="commandCancel" style="cursor:pointer; float:left;"><i class="fa fa-close faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button>
+                                                    <div style="clear:both;"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+@Html.HiddenFor(m=>m.BBUKPIEnterpriseModel.BBUKPIId)
+<!-- #endregion -->
+
+<!-- #endregion -->
+<style type="text/css">
+
+    #popupMultiStoreroomMoreItemShow {
+        width: 166px;
+        margin: 0 auto;
+        background: white;
+        color: black;
+        padding: 10px;
+        position: fixed;
+        top: 159px;
+        right: 80px !important;
+        z-index: 1000;
+        display: none;
+        border-radius: 3px;
+        box-shadow: 3px 3px 5px rgb(0 0 0 / 30%);
+        transition: all 0.3s;
+    }
+
+    #reviewSiteTable_wrapper.dataTables_wrapper {
+        margin-bottom: 3px;
+    }
+
+    .padAdjstNew {
+        padding: 0 10px 10px 10px;
+    }
+
+    .costsDrop {
+        width: 120px !important;
+    }
+
+    .m-state {
+        float: none !important;
+        margin-right: 0 !important;
+        margin-top: 0 !important;
+        font-size: 1.1rem !important;
+        font-weight: 500 !important;
+        color: #575962 !important;
+    }
+
+    .m-progress {
+        margin: 0.3rem 0 !important;
+        height: 0.5rem !important;
+    }
+
+    .m-title {
+        font-size: 1.1rem !important;
+        font-weight: 500 !important;
+        color: #575962 !important;
+        margin: 0 !important;
+    }
+
+    .m-total-count {
+        margin-bottom: 7px;
+    }
+
+    .m-total {
+        font-size: 1.5rem !important;
+        color: #575962 !important;
+        font-weight: 500 !important;
+    }
+
+    .m-total small {
+        font-size: 70% !important;
+    }
+
+    #activityList.mCustomScrollbar, #commentsList.mCustomScrollbar {
+        height: auto !important;
+        min-height: 1px !important;
+        max-height: 440px !important;
+        overflow: hidden !important;
+    }
+
+    .mCS-minimal-dark.mCSB_scrollTools .mCSB_dragger .mCSB_dragger_bar {
+        background-color: #e2e5ec !important;
+    }
+
+    #commentsdataloader.lds-ellipsis {
+        top: 17%;
+        margin-top: 0;
+        z-index: 9;
+    }
+
+    #activitydataloader.lds-ellipsis {
+        top: 2.8%;
+        margin-top: 0;
+        z-index: 9;
+    }
+
+    #costdataloader.lds-ellipsis {
+        top: 97px;
+        margin-top: 0;
+        z-index: 9;
+    }
+
+    #rangeDrop .bootstrap-select:not([class*="col-"]):not([class*="form-control"]):not(.input-group-btn) {
+        width: 120px;
+    }
+
+    .count-badge {
+        right: 34px;
+    }
+
+    .filterDescription {
+        width: auto;
+        float: left;
+        font-size: 1.2rem;
+        color: #000;
+        font-weight: 500;
+        line-height: 33px;
+    }
+
+    .filterDescription a {
+        color: #36a3f7;
+        text-decoration: none !important;
+    }
+
+    div.partsImgInfo .introTags {
+        left: 115px !important;
+        bottom: 0px !important;
+    }
+
+    /* for webcam start*/
+    .dropzone .dz-message {
+        margin-bottom: 0;
+        height: 142px;
+    }
+
+    .vd-webcam {
+        display: block;
+        position: relative;
+        width: auto;
+        height: 100vh;
+        z-index: 999;
+        pointer-events: none;
+        margin: auto;
+    }
+
+    .flash {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: #fff;
+        z-index: 999999;
+    }
+
+    .img-radio {
+        margin: 10px;
+        margin-right: 0;
+        margin-bottom: 0;
+        font-size: 13px;
+        font-weight: 400;
+        display: inline-block;
+    }
+
+    .radio label {
+        cursor: pointer;
+    }
+
+    .img-radio input[type=radio] {
+        position: absolute;
+        opacity: 0;
+    }
+
+    .img-radio input[type=radio] + .radio-label:before {
+        content: "";
+        background: #f4f4f4;
+        border-radius: 100%;
+        border: 1px solid #767676;
+        display: inline-block;
+        width: 15px;
+        height: 15px;
+        position: relative;
+        top: 2px;
+        margin-right: .5em;
+        vertical-align: top;
+        cursor: pointer;
+        text-align: center;
+        transition: all 250ms ease;
+    }
+
+    .img-radio input[type=radio]:checked + .radio-label:before {
+        background-color: #0075ff;
+        border: 1px solid #0075ff;
+        box-shadow: inset 0 0 0 4px #f4f4f4;
+    }
+
+    .img-radio input[type=radio]:focus + .radio-label:before {
+        outline: none;
+        border-color: #3197EE;
+    }
+
+    .img-radio input[type=radio]:disabled + .radio-label:before {
+        box-shadow: inset 0 0 0 4px #f4f4f4;
+        border-color: #b4b4b4;
+        background: #b4b4b4;
+    }
+
+    .img-radio input[type=radio] + .radio-label:empty:before {
+        margin-right: 0;
+    }
+
+    .app-panel {
+        height: 100vh;
+        width: 100vw;
+        text-align: center;
+        background-color: black;
+    }
+
+    .vd-webcam-container {
+        height: 100vh;
+        width: 100vw;
+        background-color: black;
+    }
+
+    .webcam-canvas {
+        background-color: transparent;
+        position: absolute;
+        width: auto;
+        height: 100vh;
+        z-index: 9999;
+        margin: auto;
+        top: 0;
+        left: 0;
+        right: 0;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .cameraControls {
+        position: absolute;
+        bottom: 2vh;
+        width: 100%;
+        z-index: 99999;
+        background: transparent;
+        opacity: 0.7;
+        padding: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .md-modal {
+        margin: auto;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        width: 100vw;
+        height: 100vh;
+        z-index: 2000;
+        visibility: hidden;
+        -webkit-backface-visibility: hidden;
+        -moz-backface-visibility: hidden;
+        backface-visibility: hidden;
+    }
+
+    .md-show {
+        visibility: visible;
+    }
+
+    .md-overlay {
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        visibility: hidden;
+        top: 0;
+        left: 0;
+        z-index: 1000;
+        opacity: 0;
+        background: #e4f0e3;
+        -webkit-transition: all 0.3s;
+        -moz-transition: all 0.3s;
+        transition: all 0.3s;
+    }
+
+    .md-show ~ .md-overlay {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    .md-effect-12 .md-content {
+        -webkit-transform: scale(0.8);
+        -moz-transform: scale(0.8);
+        -ms-transform: scale(0.8);
+        transform: scale(0.8);
+        opacity: 0;
+        -webkit-transition: all 0.3s;
+        -moz-transition: all 0.3s;
+        transition: all 0.3s;
+    }
+
+    .md-show.md-effect-12 ~ .md-overlay {
+        background-color: #e4f0e3;
+    }
+
+    .md-effect-12 .md-content h3,
+    .md-effect-12 .md-content {
+        background: transparent;
+    }
+
+    .md-show.md-effect-12 .md-content {
+        -webkit-transform: scale(1);
+        -moz-transform: scale(1);
+        -ms-transform: scale(1);
+        transform: scale(1);
+        opacity: 1;
+    }
+
+    .form-control.webcam-start {
+        position: relative;
+        background: black;
+        opacity: 0.8;
+        padding: 10px 20px;
+        border: none;
+        color: white;
+        text-shadow: 1px 1px #000;
+        font-size: 1.2rem;
+        width: 350px;
+        height: 55px;
+        z-index: 9999;
+        top: 45%;
+        left: 0;
+        right: 0;
+        margin: auto;
+    }
+
+    .form-control.webcam-on {
+        position: fixed;
+        top: 10vh;
+        bottom: auto;
+        left: 0px;
+        right: auto;
+        transition: all 100ms;
+        width: 145px !important;
+    }
+
+    .form-control.webcam-off {
+        transition: all 100ms;
+    }
+
+    .form-switch {
+        display: inline-block;
+        cursor: pointer;
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    .form-switch i {
+        position: relative;
+        display: inline-block;
+        margin-right: .5rem;
+        width: 60px;
+        height: 30px;
+        background-color: #e6e6e6;
+        border-radius: 25px;
+        vertical-align: text-bottom;
+        transition: all 0.3s linear;
+    }
+
+    .form-switch i::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        width: 56px;
+        height: 25px;
+        background-color: #fff;
+        border-radius: 15px;
+        transform: translate3d(2px, 2px, 0) scale3d(1, 1, 1);
+        transition: all 0.25s linear;
+    }
+
+    .form-switch i::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        width: 26px;
+        height: 26px;
+        background-color: #fff;
+        border: 1px solid grey;
+        border-radius: 15px;
+        box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.25);
+        transform: translate3d(2px, 2px, 0);
+        transition: all 0.2s ease-in-out;
+    }
+
+    .form-switch:active i::after {
+        width: 60px;
+        transform: translate3d(2px, 2px, 0);
+    }
+
+    .form-switch:active input:checked + i::after {
+        transform: translate3d(16px, 2px, 0);
+    }
+
+    .form-switch input {
+        display: none;
+    }
+
+    .form-switch input:checked + i {
+        background-color: #4BD763;
+    }
+
+    .form-switch input:checked + i::before {
+        transform: translate3d(18px, 2px, 0) scale3d(0, 0, 0);
+    }
+
+    .form-switch input:checked + i::after {
+        transform: translate3d(30px, 2px, 0);
+    }
+
+    .form-switch input:disabled + i {
+        background-color: #eeeeee;
+        cursor: not-allowed;
+    }
+
+    .form-switch input:disabled + i::after {
+        box-shadow: 0 2px 2px rgba(0, 0, 0, 0.10);
+    }
+
+    .cam-button {
+        border: none;
+        background: transparent;
+        height: 50px;
+        color: #fff !important;
+        outline: none;
+    }
+
+    .on-cam-icon:hover {
+        background: none;
+        color: #000 !important;
+        opacity: 1;
+    }
+
+    .on-cam-icon {
+        font-size: 30px !important;
+        opacity: 1;
+    }
+
+    .on-cam-icon:hover {
+        opacity: 1;
+    }
+
+    button#cameraFlip:hover, button#exit-app:hover, button#aad-photo:hover, button#resume-camera:hover, button#UploadWebCamImg:hover {
+        background: none;
+        color: #000 !important;
+        opacity: 1;
+    }
+    
+    body.hideScroll {
+        overflow: hidden;
+    }
+
+    .hldDropzone {
+        height: 272px;
+    }
+
+    .AzureImage {
+        height: 272px;
+    }
+
+    .AzureImage img {
+        height: 248px;
+    }
+    /* for webcam end*/
+
+    @@media screen and (max-width:479px) {
+        ul .listViewPart li span.label, ul.listViewPart li span.inputText {
+            width: 100%;
+        }
+
+        .mobBttn#btnRecordHandsQty {
+            width: auto;
+        }
+    }
+
+    @@media only screen and (width:1366px) {
+        div.partsImgInfo .introTags {
+            left: 90px !important;
+            bottom: 0px !important;
+        }
+    }
+
+    @@media only screen and (width:1360px) {
+        div.partsImgInfo .introTags {
+            left: 101px !important;
+            bottom: 0px !important;
+        }
+    }
+
+    @@media only screen and (width:1200px) {
+        div.partsImgInfo .introTags {
+            left: 90px !important;
+            bottom: 0px !important;
+        }
+    }
+
+    @@media only screen and (width:1024px) {
+        div.partsImgInfo .introTags {
+            left: 115px !important;
+            bottom: 0px !important;
+        }
+    }
+
+    /* for webcam responsive start*/
+    @@media only screen and (width:768px) {
+        .cam-container .buttonArea {
+            width: 100vw;
+        }
+
+        .hldDropzone {
+            height: 272px;
+        }
+
+        .AzureImage {
+            height: 272px;
+        }
+
+        .AzureImage img {
+            height: 248px;
+        }
+    }
+
+    @@media screen and (max-width:767px) {
+        .cam-container .buttonArea {
+            width: 100vw;
+            float: none;
+        }
+
+        .cam-container .buttonArea .btn-white {
+            float: none;
+            display: inline-block;
+            margin-right: 15px !important;
+        }
+
+        .hldDropzone {
+            height: auto;
+        }
+
+        .AzureImage {
+            height: 272px;
+        }
+
+        .AzureImage img {
+            height: 248px;
+        }
+    }
+
+    /* for webcam responsive end*/
+    .maskaction { /* create are mask */
+        position: fixed;
+        top: 0;
+        left: 0;
+        background: rgba(0,0,0,0.6);
+        z-index: 500;
+        width: 100%;
+        height: 100%;
+        display: none;
+        transition: all 0.3s;
+    }
+
+    .actionbtndiv { /* create are mask */
+        width: 195px;
+        /* margin: 0 auto; */
+        background: white;
+        /* color: black; */
+        padding: 10px;
+        position: sticky;
+         /*top: 40px;*/ 
+         right: 110px !important; 
+        z-index: 1000;
+        /* display: none; */
+        border-radius: 3px;
+        /* box-shadow: 3px 3px 5px rgb(0 0 0 / 30%); */
+        /* transition: all 0.3s; */
+        display: block;
+        /*height:74px;*/
+        /*overflow:scroll;*/
+        /*margin-top:-40px;*/
+    }
+
+    .actionbtndiv .btn-blue {
+        width: 100%;
+        float: none;
+        margin-bottom: 2px;
+    }
+</style>
+<script>
+    $(document).ready(function () {
+        var isMobile = CheckLoggedInFromMob();
+        if (isMobile) {
+            $(document).find('#divAddImage').remove();
+        }
+        else {
+            if ($(document).find('.addphotofrommobile').length > 0) {
+                $(document).find('.addphotofrommobile').remove();
+            }
+            $(document).find('#liAddimage').remove();
+        }
+    })
+
+</script>

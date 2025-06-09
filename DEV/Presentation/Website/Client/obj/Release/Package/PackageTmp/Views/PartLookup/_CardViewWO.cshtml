@@ -1,0 +1,587 @@
+﻿@model Client.Models.PartLookup.PartLookupVM
+
+@{
+    var userdata = Session["userData"];
+    DataContracts.UserData userData = new DataContracts.UserData();
+    userData = (DataContracts.UserData)userdata;
+    int lastpage = 0;
+    int toRecords = 0;
+    int currentpage = Convert.ToInt32(ViewBag.CurrentPage); ;
+    int length = Convert.ToInt32(ViewBag.Length);
+    int start = Convert.ToInt32(ViewBag.Start);
+    int TotalRecords = Convert.ToInt32(ViewBag.TotalRecords);
+    int startRecords = 0;
+    if (TotalRecords > 0)
+    {
+        startRecords = Convert.ToInt32(ViewBag.Start) + 1;
+    }
+    if (start + length <= TotalRecords)
+    {
+        toRecords = start + length;
+    }
+    else
+    {
+        toRecords = TotalRecords;
+    }
+
+    int paginationdropval1 = length;
+    int paginationdropval2 = length + paginationdropval1;
+    int paginationdropval3 = length + paginationdropval2;
+    int paginationdropval4 = length + paginationdropval3;
+    int paginationdropval5 = length + paginationdropval4;
+
+    int startpage = 1;
+    int page2 = startpage + 1;
+    int page3 = startpage + 2;
+    int page4 = startpage + 3;
+    int page5 = startpage + 4;
+    int page6 = startpage + 5;
+    int modforlastpage = TotalRecords / length;
+    if (modforlastpage == 0 || TotalRecords % length == 0)
+    {
+        lastpage = TotalRecords / length;
+    }
+    else
+    {
+        lastpage = TotalRecords / length + 1;
+    }
+    int lastpage_1 = lastpage - 1;
+    int lastpage_2 = lastpage - 2;
+    int lastpage_3 = lastpage - 3;
+
+    int curremtpagetoshow = currentpage;
+    int precurremtpagetoshow = currentpage - 1;
+    int postcurremtpagetoshow = currentpage + 1;
+}
+
+<div class="row" id="cartView">
+    @foreach (var item in Model.partLookupModels)
+    {
+        if (userData.Site.ShoppingCart)
+        {
+            if (item.InVendorCatalog)
+            {
+                <div class="col-xl-3 col-md-6 clsCardItem">
+                    <div class="m-portlet" style="border: 1px solid #cfd7df; border-radius: 0.25rem;">
+                        <div class="m-portlet-inner">
+                            @if (item.VC_Count == 0)
+                            {
+                                <p class="vendorcatalogText">@Model.Loc.Where(a => a.ResourceId == "VendorCatalog").FirstOrDefault().Value.ToString()</p>
+                            }
+                            else
+                            {
+                                <button type="button" id="btnAdditionalVC_@item.PartId" data-partid="@item.PartId" data-pclientlookupid="@item.ClientLookupId" class="btn btn-danger clsAdditionalCatalog" style="width:100%; margin-bottom:10px;" title="">Vendor Catalog (Additional)</button>
+                            }
+                            <img src="@item.ImageUrl" class="productImg clsproductImg" />
+                            <h2 class="productID clsClientLookupId">
+                                @{
+                                    if (item.ClientLookupId.Length > 10)
+                                    {
+                                        @item.ClientLookupId.Substring(0, 10) <span data-des-title="@Model.Loc.Where(a => a.ResourceId == "spnProductId").FirstOrDefault().Value.ToString()" data-des="@item.ClientLookupId" style="color:#315a98;cursor:pointer" id="partlookupmoreclientlookupId" class="showmoredesc">... </span>
+                                    }
+                                    else
+                                    {
+                                        @item.ClientLookupId
+                                    }
+                                }
+                            </h2>
+                            <div style="clear:both;"></div>
+                            <p class="productDescription clsPartDesc">
+
+                                @{
+                                    if (item.Description.Length > 10)
+                                    {
+                                        @item.Description.Substring(0, 10) <span data-des-title="@Model.Loc.Where(a => a.ResourceId == "spnProductDesc").FirstOrDefault().Value.ToString()" data-des="@item.Description" style="color:#315a98;cursor:pointer" id="partlookupmoreproddesc" class="showmoredesc">... </span>
+                                    }
+                                    else
+                                    {
+                                        @item.Description
+                                    }
+                                }
+                            </p>
+                            <div style="clear:both;"></div>
+                            <ul class="productDetails">
+                                <li>
+                                    <strong>@Model.Loc.Where(a => a.ResourceId == "GlobalVendor").FirstOrDefault().Value.ToString() :</strong>
+                                    <span>@item.VendorClientlookupId</span>
+                                </li>
+                                <li>
+                                    <strong>@Model.Loc.Where(a => a.ResourceId == "spnPLPrice").FirstOrDefault().Value.ToString() :</strong>
+                                    <span>@item.Price @item.Unit</span>
+                                </li>
+                                @{
+                                    if (item.UOMConvRequired)
+                                    {
+                                        <li>
+                                            <strong>@Model.Loc.Where(a => a.ResourceId == "spnIssueUOM").FirstOrDefault().Value.ToString() :</strong>
+                                            <span>@item.IssueUOM</span>
+                                        </li>
+                                        <li>
+                                            <strong>@Model.Loc.Where(a => a.ResourceId == "spnUOMConversion").FirstOrDefault().Value.ToString() :</strong>
+                                            <span>@item.UOMConversion</span>
+                                        </li>
+                                    }
+                                }
+                                <li>
+                                    <strong>@Model.Loc.Where(a => a.ResourceId == "VendorItemNumber").FirstOrDefault().Value.ToString()</strong>
+                                    <span>@item.VendorPartNumber</span>
+                                </li>
+                                <li>
+                                    <strong>@Model.Loc.Where(a => a.ResourceId == "spnManufacturer").FirstOrDefault().Value.ToString() :</strong>
+                                    <span>
+                                        @{
+                                            if (item.Manufacturer.Length > 13)
+                                            {
+                                                @item.Manufacturer.Substring(0, 13) <span data-des-title="@Model.Loc.Where(a => a.ResourceId == "spnManufacturer").FirstOrDefault().Value.ToString()" data-des="@item.Manufacturer" style="color:#315a98;cursor:pointer" id="partlookupmanufacdesc" class="showmoredesc">... </span>
+                                            }
+                                            else
+                                            {
+                                                @item.Manufacturer
+                                            }
+                                        }
+                                    </span>
+                                </li>
+                                <li>
+                                    <strong>@Model.Loc.Where(a => a.ResourceId == "spnManufacturerID").FirstOrDefault().Value.ToString() :</strong>
+                                    <span>
+                                        @{
+                                            if (item.ManufacturerId.Length > 10)
+                                            {
+                                                @item.ManufacturerId.Substring(0, 10) <span data-des-title="@Model.Loc.Where(a => a.ResourceId == "spnManufacturerID").FirstOrDefault().Value.ToString()" data-des="@item.ManufacturerId" style="color:#315a98;cursor:pointer" id="partlookupmoredesc" class="showmoredesc">... </span>
+                                            }
+                                            else
+                                            {
+                                                @item.ManufacturerId
+                                            }
+                                        }
+                                    </span>
+                                </li>
+                            </ul>
+                            <div class="qtyBox">
+                                <div class="input-groups">
+                                    <strong>@Model.Loc.Where(a => a.ResourceId == "spnOrderQnt").FirstOrDefault().Value.ToString() :</strong>
+                                    <input type="text" data-Qty-Id="partQtyCard" class="form-control search qtyothertext allownumericWithdecimal clsPartQuantity decimalinputupto2places " maskedFormat='8,2' placeholder="@Model.Loc.Where(a => a.ResourceId == "spnQtyPartLookUp").FirstOrDefault().Value.ToString()" value="1" maxlength="11" style="margin-right:0;" />
+                                    @*V2-1068*@
+                                    <input type="hidden" class="hidAccountId" value="@item.AccountId" />  @*V2-1068*@
+                                    <input type="hidden" class="hidUnitOfMeasure" value="@item.UnitOfMeasure" />  @*V2-1068*@
+                                    <input type="hidden" class="hidmyPartId" value="@item.PartId" />
+                                    <input type="hidden" class="hidVendorCatalog" value="true" />
+                                    <input type="hidden" class="hidpartPriceRate" value="@item.Price" />
+                                    <input type="hidden" class="hidpartUOM" value="@item.Unit" />
+                                    <input type="text" style="display:none" data-Price-Id="partPriceCard" class="form-control search pricetext allownumericWithdecimal input-number partPriceMe " placeholder="@Model.Loc.Where(a => a.ResourceId == "spnPLPrice").FirstOrDefault().Value.ToString()" value="@item.Price" maxlength="10">
+                                    <input type="hidden" class="hidTotalPrice" />
+                                    <!-- V2-553 -->
+                                    <input type="hidden" class="hidPurchaseUOM" value="@item.PurchaseUOM" />
+                                    <input type="hidden" class="hidUOMConvRequired" value="@item.UOMConvRequired.ToString()" />
+                                    <input type="hidden" class="hidIssueOrder" value="@item.IssueOrder" />
+                                    <input type="hidden" class="hidVendorCatalogItemId" value="@item.VendorCatalogItemId" />
+                                    <!-- V2-553 -->
+                                    <!-- V2-665 -->
+                                    <input type="hidden" class="hidQtyMaximum" value="@item.QtyMaximum" />
+                                    <!-- V2-665 -->
+                                    <!-- V2-690 -->
+                                    <input type="hidden" class="hidVendorId" value="@item.VendorId" />
+                                    <input type="hidden" class="hidPartCategoryMasterId" value="@item.PartCategoryMasterId" />
+                                    <input type="hidden" class="hidindexid" value="@item.indexid" />
+                                    <input type="hidden" class="hiddescription" value="@item.Description" />
+                                    <input type="hidden" class="hidstoreroomid" value="@item.StoreroomId" />
+                                    <input type="hidden" class="hidpartstoreroomid" value="@item.PartStoreroomId" />
+                                    <!-- V2-690 -->
+                                    <div style="clear:both;"></div>
+                                </div>
+                            </div>
+                            <button type="button" id="btnAddedtoCart_@item.PartId" class="btn btn-danger btn-addToCart" data-AddmyCart-Id="btn-AddmyCart-Id" style="width:100%; margin-top:10px;" title="@Model.Loc.Where(a => a.ResourceId == "spnAddToCart").FirstOrDefault().Value.ToString()">@Model.Loc.Where(a => a.ResourceId == "spnAddToCart").FirstOrDefault().Value.ToString()</button>
+                        </div>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="col-xl-3 col-md-6 clsCardItem">
+                    <div class="m-portlet" style="border: 1px solid #cfd7df; border-radius: 0.25rem;">
+                        <div class="m-portlet-inner">
+                            <img src="@item.ImageUrl" class="productImg clsproductImg" />
+                            <h2 class="productID clsClientLookupId">
+                                @{
+                                    if (item.ClientLookupId.Length > 10)
+                                    {
+                                        @item.ClientLookupId.Substring(0, 10) <span data-des-title="@Model.Loc.Where(a => a.ResourceId == "spnProductId").FirstOrDefault().Value.ToString()" data-des="@item.ClientLookupId" style="color:#315a98;cursor:pointer" id="partlookupmoreclientlookupId" class="showmoredesc">... </span>
+                                    }
+                                    else
+                                    {
+                                        @item.ClientLookupId
+                                    }
+                                }
+                            </h2>
+                            <div style="clear:both;"></div>
+                            <p class="productDescription clsPartDesc">
+                                @{
+                                    if (item.Description.Length > 10)
+                                    {
+                                        @item.Description.Substring(0, 10) <span data-des-title="@Model.Loc.Where(a => a.ResourceId == "spnProductDesc").FirstOrDefault().Value.ToString()" data-des="@item.Description" style="color:#315a98;cursor:pointer" id="partlookupmoreproddesc" class="showmoredesc">... </span>
+                                    }
+                                    else
+                                    {
+                                        @item.Description
+                                    }
+                                }
+                            </p>
+                            <div style="clear:both;"></div>
+                            <ul class="productDetails">
+                                <li>
+                                    <strong>@Model.Loc.Where(a => a.ResourceId == "GlobalVendor").FirstOrDefault().Value.ToString() :</strong>
+                                    <span>@item.VendorClientlookupId</span>
+                                </li>
+                                <li>
+                                    <strong>@Model.Loc.Where(a => a.ResourceId == "spnPLPrice").FirstOrDefault().Value.ToString() :</strong>
+                                    <span>@item.Price @item.Unit</span>
+                                </li>
+                                @{
+                                    if (item.UOMConvRequired)
+                                    {
+                                        <li>
+                                            <strong>@Model.Loc.Where(a => a.ResourceId == "spnIssueUOM").FirstOrDefault().Value.ToString() :</strong>
+                                            <span>@item.IssueUnit</span>
+                                        </li>
+                                        <li>
+                                            <strong>@Model.Loc.Where(a => a.ResourceId == "spnUOMConversion").FirstOrDefault().Value.ToString() :</strong>
+                                            <span>@item.UOMConversion</span>
+                                        </li>
+                                    }
+                                }
+                                <li>
+                                    <strong>@Model.Loc.Where(a => a.ResourceId == "spnManufacturer").FirstOrDefault().Value.ToString() :</strong>
+                                    <span>
+                                        @{
+                                            if (item.Manufacturer.Length > 13)
+                                            {
+                                                @item.Manufacturer.Substring(0, 13) <span data-des-title="@Model.Loc.Where(a => a.ResourceId == "spnManufacturer").FirstOrDefault().Value.ToString()" data-des="@item.Manufacturer" style="color:#315a98;cursor:pointer" id="partlookupmanufacdesc" class="showmoredesc">... </span>
+                                            }
+                                            else
+                                            {
+                                                @item.Manufacturer
+                                            }
+                                        }
+                                    </span>
+                                </li>
+                                <li>
+                                    <strong>@Model.Loc.Where(a => a.ResourceId == "spnManufacturerID").FirstOrDefault().Value.ToString() :</strong>
+                                    <span>
+                                        @{
+                                            if (item.ManufacturerId.Length > 10)
+                                            {
+                                                @item.ManufacturerId.Substring(0, 10) <span data-des-title="@Model.Loc.Where(a => a.ResourceId == "spnManufacturerID").FirstOrDefault().Value.ToString()" data-des="@item.ManufacturerId" style="color:#315a98;cursor:pointer" id="partlookupmoredesc" class="showmoredesc">... </span>
+                                            }
+                                            else
+                                            {
+                                                @item.ManufacturerId
+                                            }
+                                        }
+                                    </span>
+                                </li>
+                            </ul>
+                            <div class="qtyBox">
+                                <div class="input-groups">
+                                    <strong>Order Quantity :</strong>
+                                    <input type="text" class="form-control search qtyothertext allownumericWithdecimal clsPartQuantity decimalinputupto2places " maskedFormat='8,2' data-Qty-Id="partQtyCard" placeholder="@Model.Loc.Where(a => a.ResourceId == "spnQtyPartLookUp").FirstOrDefault().Value.ToString()" value="1" maxlength="11" style="margin-right:0;" />
+                                    <input type="hidden" class="hidmyPartId" value="@item.PartId" />
+                                    <input type="hidden" class="hidVendorCatalog" value="false" />
+                                    <input type="hidden" class="hidpartPriceRate" value="@item.Price" />
+                                    <input type="hidden" class="hidpartUOM" value="@item.Unit" />
+                                    @if (!item.UOMConvRequired)
+                                    {
+                                        <div style="clear:both;"></div>
+                                        <div style="margin-top:10px;display:none ">
+                                            <strong>@Model.Loc.Where(a => a.ResourceId == "spnUnitCost").FirstOrDefault().Value.ToString() :</strong>
+                                            <input type="text" data-Price-Id="partPriceCard" class="form-control search pricetext allownumericWithdecimal input-number partPriceMe " placeholder="@Model.Loc.Where(a => a.ResourceId == "spnPLPrice").FirstOrDefault().Value.ToString()" value="@item.Price" maxlength="10" style="margin-right:0;" />
+                                            <div style="clear:both"></div>
+                                        </div>
+
+                                    }
+                                    else
+                                    {
+                                        <input type="text" data-Price-Id="partPriceCard" class="form-control search pricetext allownumericWithdecimal input-number partPriceMe " placeholder="@Model.Loc.Where(a => a.ResourceId == "spnPLPrice").FirstOrDefault().Value.ToString()" value="@item.Price" maxlength="10" style="margin-right:0; display:none" />
+                                    }
+                                    <input type="text" style="display:none" data-Price-Id="partPriceCard" class="form-control search pricetext allownumericWithdecimal input-number partPriceMe " placeholder="@Model.Loc.Where(a => a.ResourceId == "spnPLPrice").FirstOrDefault().Value.ToString()" value="@item.Price" maxlength="10">
+                                    <input type="hidden" class="hidTotalPrice" />
+                                    <!-- V2-553 -->
+                                    <input type="hidden" class="hidPurchaseUOM" value="@item.PurchaseUOM" />
+                                    <input type="hidden" class="hidUOMConvRequired" value="@item.UOMConvRequired.ToString()" />
+                                    <input type="hidden" class="hidIssueOrder" value="@item.IssueOrder" />
+                                    <input type="hidden" class="hidVendorCatalogItemId" value="@item.VendorCatalogItemId" />
+                                    <!-- V2-553 -->
+                                    <!-- V2-665 -->
+                                    <input type="hidden" class="hidQtyMaximum" value="@item.QtyMaximum" />
+                                    <!-- V2-665 -->
+                                    <!-- V2-690 -->
+                                    <input type="hidden" class="hidVendorId" value="@item.VendorId" />
+                                    <input type="hidden" class="hidPartCategoryMasterId" value="@item.PartCategoryMasterId" />
+                                    <input type="hidden" class="hidindexid" value="@item.indexid" />
+                                    <input type="hidden" class="hiddescription" value="@item.Description" />
+                                    <input type="hidden" class="hidstoreroomid" value="@item.StoreroomId" />
+                                    <input type="hidden" class="hidpartstoreroomid" value="@item.PartStoreroomId" />
+                                    <!-- V2-1068 -->
+                                    <input type="hidden" class="hidAccountId" value="@item.AccountId" />  @*V2-1068*@
+                                    <input type="hidden" class="hidUnitOfMeasure" value="@item.UnitOfMeasure" />  @*V2-1068*@
+                                    <div style="clear:both;"></div>
+                                </div>
+                            </div>
+                            <button type="button" id="btnAddedtoCart_@item.PartId" class="btn btn-danger btn-addToCart" data-AddmyCart-Id="btn-AddmyCart-Id" style="width:100%; margin-top:10px;" title="@Model.Loc.Where(a => a.ResourceId == "spnAddToCart").FirstOrDefault().Value.ToString()">@Model.Loc.Where(a => a.ResourceId == "spnAddToCart").FirstOrDefault().Value.ToString()</button>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <div class="col-xl-3 col-md-6 clsCardItem">
+                <div class="m-portlet" style="border: 1px solid #cfd7df; border-radius: 0.25rem;">
+                    <div class="m-portlet-inner">
+                        <img src="@item.ImageUrl" class="productImg clsproductImg" />
+                        <h2 class="productID clsClientLookupId">
+                            @{
+                                if (item.ClientLookupId.Length > 10)
+                                {
+                                    @item.ClientLookupId.Substring(0, 10) <span data-des-title="@Model.Loc.Where(a => a.ResourceId == "spnProductId").FirstOrDefault().Value.ToString()" data-des="@item.ClientLookupId" style="color:#315a98;cursor:pointer" id="partlookupmoreclientlookupId" class="showmoredesc">... </span>
+                                }
+                                else
+                                {
+                                    @item.ClientLookupId
+                                }
+                            }
+                        </h2>
+                        <div style="clear:both;"></div>
+                        <p class="productDescription clsPartDesc">
+                            @{
+                                if (item.Description.Length > 10)
+                                {
+                                    @item.Description.Substring(0, 10) <span data-des-title="@Model.Loc.Where(a => a.ResourceId == "spnProductDesc").FirstOrDefault().Value.ToString()" data-des="@item.Description" style="color:#315a98;cursor:pointer" id="partlookupmoreproddesc" class="showmoredesc">... </span>
+                                }
+                                else
+                                {
+                                    @item.Description
+                                }
+                            }
+                        </p>
+                        <div style="clear:both;"></div>
+                        <ul class="productDetails">
+                            <li>
+                                <strong>@Model.Loc.Where(a => a.ResourceId == "GlobalVendor").FirstOrDefault().Value.ToString() :</strong>
+                                <span>@item.VendorClientlookupId</span>
+                            </li>
+                            <li>
+                                <strong>@Model.Loc.Where(a => a.ResourceId == "spnPLPrice").FirstOrDefault().Value.ToString() :</strong>
+                                <span>@item.Price @item.Unit</span>
+                            </li>
+                            @{
+                                if (item.UOMConvRequired)
+                                {
+                                    <li>
+                                        <strong>@Model.Loc.Where(a => a.ResourceId == "spnIssueUOM").FirstOrDefault().Value.ToString() :</strong>
+                                        <span>@item.Unit</span>
+                                    </li>
+                                    <li>
+                                        <strong>@Model.Loc.Where(a => a.ResourceId == "spnUOMConversion").FirstOrDefault().Value.ToString() :</strong>
+                                        <span>@item.IssueOrder</span>
+                                    </li>
+                                }
+                            }
+
+                            <li>
+                                <strong>@Model.Loc.Where(a => a.ResourceId == "spnManufacturer").FirstOrDefault().Value.ToString() :</strong>
+                                <span>
+                                    @{
+                                        if (item.Manufacturer.Length > 13)
+                                        {
+                                            @item.Manufacturer.Substring(0, 13) <span data-des-title="@Model.Loc.Where(a => a.ResourceId == "spnManufacturer").FirstOrDefault().Value.ToString()" data-des="@item.Manufacturer" style="color:#315a98;cursor:pointer" id="partlookupmanufacdesc" class="showmoredesc">... </span>
+                                        }
+                                        else
+                                        {
+                                            @item.Manufacturer
+                                        }
+                                    }
+                                </span>
+                            </li>
+                            <li>
+                                <strong>@Model.Loc.Where(a => a.ResourceId == "spnManufacturerID").FirstOrDefault().Value.ToString() :</strong>
+                                <span>
+                                    @{
+                                        if (item.ManufacturerId.Length > 10)
+                                        {
+                                            @item.ManufacturerId.Substring(0, 10) <span data-des-title="@Model.Loc.Where(a => a.ResourceId == "spnManufacturerID").FirstOrDefault().Value.ToString()" data-des="@item.ManufacturerId" style="color:#315a98;cursor:pointer" id="partlookupmoredesc" class="showmoredesc">... </span>
+                                        }
+                                        else
+                                        {
+                                            @item.ManufacturerId
+                                        }
+                                    }
+                                </span>
+                            </li>
+                        </ul>
+                        <div class="qtyBox">
+                            <div class="input-groups">
+                                <strong>@Model.Loc.Where(a => a.ResourceId == "spnOrderQnt").FirstOrDefault().Value.ToString() :</strong>
+                                <input type="text" data-Qty-Id="partQtyCard" class="form-control search qtyothertext allownumericWithdecimal clsPartQuantity decimalinputupto2places " maskedFormat='8,2' placeholder="@Model.Loc.Where(a => a.ResourceId == "spnQtyPartLookUp").FirstOrDefault().Value.ToString()" value="1" maxlength="11" style="margin-right:0;" />
+                                @*V2-1068*@
+                                <input type="hidden" class="hidAccountId" value="@item.AccountId" />  @*V2-1068*@
+                                <input type="hidden" class="hidUnitOfMeasure" value="@item.UnitOfMeasure" />  @*V2-1068*@
+                                <input type="hidden" class="hidmyPartId" value="@item.PartId" />
+                                <input type="hidden" class="hidVendorCatalog" value="false" />
+                                <input type="hidden" class="hidpartPriceRate" value="@item.Price" />
+                                <input type="hidden" class="hidpartUOM" value="@item.Unit" />
+                                @if (!item.UOMConvRequired)
+                                {
+                                    <div style="clear:both;"></div>
+                                    <div style="margin-top: 10px; display: none">
+                                        <strong>@Model.Loc.Where(a => a.ResourceId == "spnUnitCost").FirstOrDefault().Value.ToString() :</strong>
+                                        <input type="text" data-Price-Id="partPriceCard" class="form-control search pricetext allownumericWithdecimal input-number partPriceMe " placeholder="@Model.Loc.Where(a => a.ResourceId == "spnPLPrice").FirstOrDefault().Value.ToString()" value="@item.Price" maxlength="10" style="margin-right:0;" />
+                                        <div style="clear:both"></div>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <input type="text" data-Price-Id="partPriceCard" class="form-control search pricetext allownumericWithdecimal input-number partPriceMe " placeholder="@Model.Loc.Where(a => a.ResourceId == "spnPLPrice").FirstOrDefault().Value.ToString()" value="@item.Price" maxlength="10" style="margin-right:0; display:none" />
+                                }
+                                <input type="hidden" class="hidTotalPrice" />
+                                <!-- V2-553 -->
+                                <input type="hidden" class="hidPurchaseUOM" value="@item.PurchaseUOM" />
+                                <input type="hidden" class="hidUOMConvRequired" value="@item.UOMConvRequired.ToString()" />
+                                <input type="hidden" class="hidIssueOrder" value="@item.IssueOrder" />
+                                <input type="hidden" class="hidVendorCatalogItemId" value="@item.VendorCatalogItemId" />
+                                <!-- V2-553 -->
+                                <!-- V2-665 -->
+                                <input type="hidden" class="hidQtyMaximum" value="@item.QtyMaximum" />
+                                <!-- V2-665 -->
+                                <!-- V2-690 -->
+                                <input type="hidden" class="hidVendorId" value="@item.VendorId" />
+                                <input type="hidden" class="hidPartCategoryMasterId" value="@item.PartCategoryMasterId" />
+                                <input type="hidden" class="hidindexid" value="@item.indexid" />
+                                <input type="hidden" class="hiddescription" value="@item.Description" />
+                                <input type="hidden" class="hidstoreroomid" value="@item.StoreroomId" />
+                                <input type="hidden" class="hidpartstoreroomid" value="@item.PartStoreroomId" />
+                                <!-- V2-690 -->
+                                <div style="clear:both;"></div>
+                            </div>
+                        </div>
+                        <button type="button" id="btnAddedtoCart_@item.PartId" class="btn btn-danger btn-addToCart" data-AddmyCart-Id="btn-AddmyCart-Id" style="width:100%; margin-top:10px;" title="@Model.Loc.Where(a => a.ResourceId == "spnAddToCart").FirstOrDefault().Value.ToString()">@Model.Loc.Where(a => a.ResourceId == "spnAddToCart").FirstOrDefault().Value.ToString()</button>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+</div>
+
+@if (Model.partLookupModels.Count < 1)
+{
+    <div class="m-portlet cardRow">
+        <div id="spnNoData" style="display:block; text-align:center; padding:5px;">
+            @UtilityFunction.GetMessageFromResource("GlobalNoDataAvailable", LocalizeResourceSetConstants.Global)
+        </div>
+    </div>
+}
+@Html.HiddenFor(m => m.ModeForRedirect)
+<div class="dataTables_wrapper CardPagination">
+    <div class="dataTables_length" id="" style="display: block;">
+        <label>
+            <select class="searchdt-menu" id="wocardviewpagelengthdrp">
+                <option value="10">10</option>
+                <option value="20">20</option>
+                <option value="30">30</option>
+                <option value="40">40</option>
+                <option value="50">50</option>
+            </select>
+        </label>
+    </div>
+    <div class="dataTables_info" id="" role="status" aria-live="polite">Showing @String.Format("{0:n0}", startRecords) to @String.Format("{0:n0}", toRecords) of @String.Format("{0:n0}", TotalRecords) entries</div>
+    <div class="dataTables_paginate paging_full_numbers" id="tblpartlookup_paginate">
+        <ul class="pagination">
+            <li class="paginate_button page-item first " id="tbl_first"><a href="javascript:void(0)" aria-controls="tblpartlookup" data-dt-idx="0" tabindex="0" class="page-link"><img src="../images/drop-grid-first.png"></a></li>
+            <li class="paginate_button page-item previous " id="tbl_previous"><a href="javascript:void(0)" aria-controls="tblpartlookup" data-dt-idx="1" tabindex="0" class="page-link"><img src="../images/drop-grid-prev.png"></a></li>
+            @if (TotalRecords > 0)
+            {
+                if (currentpage <= 4)
+                {
+                    <li class="paginate_button page-item" data-currentpage="1"><a href="javascript:void(0)" aria-controls="tblpartlookup" data-currentpage="1" tabindex="0" class="page-link">@startpage</a></li>
+                    if (lastpage >= 2)
+                    {
+                        <li class="paginate_button page-item" data-currentpage="2"><a href="javascript:void(0)" aria-controls="tblpartlookup" tabindex="0" class="page-link">2</a></li>
+                    }
+                    if (lastpage >= 3)
+                    {
+                        <li class="paginate_button page-item" data-currentpage="3"><a href="javascript:void(0)" aria-controls="tblpartlookup" tabindex="0" class="page-link">3</a></li>
+                    }
+                    if (lastpage >= 4)
+                    {
+                        <li class="paginate_button page-item" data-currentpage="4"><a href="javascript:void(0)" aria-controls="tblpartlookup" tabindex="0" class="page-link">4</a></li>
+                    }
+                    if (lastpage >=5)
+                    {
+                        <li class="paginate_button page-item" data-currentpage="5"><a href="javascript:void(0)" aria-controls="tblpartlookup" tabindex="0" class="page-link">5</a></li>
+                        if (lastpage != 5)
+                        {
+                        <li class="paginate_button page-item disabled" id="tblpartlookup_ellipsis"><a href="javascript:void(0)" aria-controls="tblpartlookup" data-dt-idx="7" tabindex="0" class="page-link">…</a></li>
+                        <li class="paginate_button page-item" data-currentpage="@lastpage"><a href="javascript:void(0)" aria-controls="tblpartlookup" data-dt-idx="8" tabindex="0" class="page-link">@lastpage</a></li>
+                        }
+                    }
+                }
+                else if (currentpage == 5)
+                {
+                    <li class="paginate_button page-item" data-currentpage="1"><a href="javascript:void(0)" aria-controls="tblpartlookup" data-current="1" tabindex="0" class="page-link">@startpage</a></li>
+                    <li class="paginate_button page-item disabled" id="tblpartlookup_ellipsis"><a href="javascript:void(0)" aria-controls="tblpartlookup" data-dt-idx="7" tabindex="0" class="page-link">…</a></li>
+                    if (lastpage >= 3)
+                    {
+                        <li class="paginate_button page-item" data-currentpage="3"><a href="javascript:void(0)" aria-controls="tblpartlookup" data-current="3" tabindex="0" class="page-link">3</a></li>
+                    }
+                    if (lastpage >= 4)
+                    {
+                        <li class="paginate_button page-item" data-currentpage="4"><a href="javascript:void(0)" aria-controls="tblpartlookup" data-current="4" tabindex="0" class="page-link">4</a></li>
+                    }
+                    if (lastpage >= 5)
+                    {
+                        <li class="paginate_button page-item" data-currentpage="5"><a href="javascript:void(0)" aria-controls="tblpartlookup" data-current="5" tabindex="0" class="page-link">5</a></li>
+                    }
+                    if (lastpage != 5)
+                    {
+                    <li class="paginate_button page-item disabled" id="tblpartlookup_ellipsis"><a href="javascript:void(0)" aria-controls="tblpartlookup" data-dt-idx="7" tabindex="0" class="page-link">…</a></li>
+                    <li class="paginate_button page-item" data-currentpage="@lastpage"><a href="javascript:void(0)" aria-controls="tblpartlookup" data-dt-idx="8" tabindex="0" class="page-link">@lastpage</a></li>
+                    }
+                }
+                else if (currentpage > 5 && currentpage < lastpage - 4)
+                {
+                    <li class="paginate_button page-item" data-currentpage="1"><a href="javascript:void(0)" aria-controls="tblpartlookup" data-current="1" tabindex="0" class="page-link">@startpage</a></li>
+                    <li class="paginate_button page-item disabled" id="tblpartlookup_ellipsis"><a href="javascript:void(0)" aria-controls="tblpartlookup" data-dt-idx="7" tabindex="0" class="page-link">…</a></li>
+                    <li class="paginate_button page-item" data-currentpage="@precurremtpagetoshow"><a href="javascript:void(0)" aria-controls="tblpartlookup" data-current="3" tabindex="0" class="page-link">@precurremtpagetoshow</a></li>
+                    <li class="paginate_button page-item" data-currentpage="@curremtpagetoshow"><a href="javascript:void(0)" aria-controls="tblpartlookup" data-current="3" tabindex="0" class="page-link">@curremtpagetoshow</a></li>
+                    <li class="paginate_button page-item" data-currentpage="@postcurremtpagetoshow"><a href="javascript:void(0)" aria-controls="tblpartlookup" data-current="3" tabindex="0" class="page-link">@postcurremtpagetoshow</a></li>
+                    <li class="paginate_button page-item disabled" id="tblpartlookup_ellipsis"><a href="javascript:void(0)" aria-controls="tblpartlookup" data-dt-idx="7" tabindex="0" class="page-link">…</a></li>
+                    <li class="paginate_button page-item" data-currentpage="@lastpage"><a href="javascript:void(0)" aria-controls="tblpartlookup" data-dt-idx="8" tabindex="0" class="page-link">@lastpage</a></li>
+                }
+                else
+                {
+                    <li class="paginate_button page-item" data-currentpage="1"><a href="javascript:void(0)" aria-controls="tblpartlookup" data-current="1" tabindex="0" class="page-link">@startpage</a></li>
+                    <li class="paginate_button page-item disabled" id="tblpartlookup_ellipsis"><a href="javascript:void(0)" aria-controls="tblpartlookup" data-dt-idx="7" tabindex="0" class="page-link">…</a></li>
+                    if (lastpage >= 3)
+                    {
+                        <li class="paginate_button page-item" data-currentpage="@lastpage_3"><a href="javascript:void(0)" aria-controls="tblpartlookup" data-current="3" tabindex="0" class="page-link">@lastpage_3</a></li>
+                    }
+                    if (lastpage >= 4)
+                    {
+                        <li class="paginate_button page-item" data-currentpage="@lastpage_2"><a href="javascript:void(0)" aria-controls="tblpartlookup" data-current="4" tabindex="0" class="page-link">@lastpage_2</a></li>
+                    }
+                    if (lastpage >= 5)
+                    {
+                        <li class="paginate_button page-item" data-currentpage="@lastpage_1"><a href="javascript:void(0)" aria-controls="tblpartlookup" data-current="5" tabindex="0" class="page-link">@lastpage_1</a></li>
+                    }
+                    <li class="paginate_button page-item" data-currentpage="@lastpage"><a href="javascript:void(0)" aria-controls="tblpartlookup" data-dt-idx="8" tabindex="0" class="page-link">@lastpage</a></li>
+                }
+            }
+            <li class="paginate_button page-item next" id="tbl_next"><a href="javascript:void(0)" aria-controls="tblpartlookup" data-dt-idx="9" tabindex="0" class="page-link"><img src="../images/drop-grid-next.png"></a></li>
+            <li class="paginate_button page-item last" id="tbl_last"><a href="javascript:void(0)" aria-controls="tblpartlookup" data-dt-idx="10" tabindex="0" class="page-link"><img src="../images/drop-grid-last.png"></a></li>
+        </ul>
+    </div>
+</div>
+<div id="additionalCatalogDetails">
+
+</div>
+
+

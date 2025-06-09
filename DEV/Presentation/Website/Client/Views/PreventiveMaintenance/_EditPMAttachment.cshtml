@@ -1,0 +1,108 @@
+﻿@model Client.Models.PreventiveMaintenance.PrevMaintVM
+
+<div class="m-subheader">
+    <div class="new-m-subheader">
+        <div class="PageTitle">
+            <div class="align-items-center separator">
+                <h3 class="m-subheader__title ">
+                    @Model.Loc.Where(a => a.ResourceId == "spnAttachments").FirstOrDefault().Value.ToString()
+                </h3>
+            </div>
+        </div>
+
+        <div class="NewBreadcrumbArea">
+            <div class="newBreadcrumb">
+                <ul>
+                    <li><a href="/Dashboard/Dashboard">&nbsp;</a></li>
+                    <li><a href="/PreventiveMaintenance/Index?page=Maintenance_Preventive_Maintenance_Search">@Model.Loc.Where(a => a.ResourceId == "hdrPrevMaintSearch").FirstOrDefault().Value.ToString()</a></li>
+                    <li><a href="javascript:void(0)" id="brdpmattachment" data-val="@Model.preventiveMaintenanceModel.PrevMaintMasterId">@Model.preventiveMaintenanceModel.ClientLookupId</a></li>
+                    <li class="active">@Model.Loc.Where(a => a.ResourceId == "globalEditAttachment").FirstOrDefault().Value.ToString()</li>
+                </ul>
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+        <div style="clear:both;"></div>
+    </div>
+</div>
+@Html.Partial("_ErrorDiv")
+<form id="frmpmattachmentedit" name="frmpmattachmentedit" method="post" enctype="multipart/form-data">
+    @Html.AntiForgeryToken()
+    <div class="row">
+        <div class="col-xl-12">
+            <div class="m-portlet newPort" id="m_portlet" style="padding:15px;">
+                <div class="bottomBlock">
+                    <div class="tabsArea nobg">
+                        <h3>@Model.Loc.Where(a => a.ResourceId == "globalEditAttachment").FirstOrDefault().Value.ToString()</h3>
+                        <ul class="listView nobrd">
+                            <li>
+                                <span class="label">@Html.LabelFor(m => m.attachmentModel.Subject) : </span>
+                                <span class="inputText">
+                                    @Html.TextBoxFor(m => m.attachmentModel.Subject, new { @class = "form-control search", autocomplete = "off" })
+                                </span>
+                            </li>
+                            <li>
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "globalPrintWithForm").FirstOrDefault().Value.ToString() : </span>
+                                <span class="inputText">
+                                    @if (Model.attachmentModel.FileType.ToLower() == "pdf")
+                                    {
+                                        @Html.CheckBoxFor(m => m.attachmentModel.PrintwithForm, new { @class = "form-control m-input", @style = "color:black; width: auto; margin-top: 12px;" })
+                                    }
+                                    else
+                                    {
+                                        @Html.CheckBoxFor(m => m.attachmentModel.PrintwithForm, new { @class = "form-control m-input", @disabled = "disabled", @style = "color:black; width: auto; margin-top: 12px;" })
+                                    }
+                                </span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div style="clear:both;"></div>
+                    <div class="idBttns">
+                        <div class="bttn_pagin">
+                            <div class="bttns2">
+                                <button class="btn btn-blue mobBttn"><i class="fa fa-save faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalUpdate").FirstOrDefault().Value.ToString()</button>
+                            </div>
+                            <div class="bttns"><button type="button" class="btn btn-blue mobBttn" id="btnpmattachmentcancel"><i class="fa fa-close faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button></div>
+
+                            <div style="clear:both;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @Html.HiddenFor(m => m.attachmentModel.PrevMaintMasterId)
+    @Html.HiddenFor(m => m.attachmentModel.AttachmentId)
+</form>
+
+<script type="text/javascript">
+
+    $("form").submit(function (e) {
+        e.preventDefault();
+        var form = document.querySelector('#frmpmattachmentedit');
+        if (!$('form').valid()) {
+            return;
+        }
+        var data = new FormData(form);
+        $.ajax({
+            type: "POST",
+            url: "/PreventiveMaintenance/EditAttachments",
+            data: data,
+            processData: false,
+            contentType: false,
+            beforeSend: function () {
+                ShowLoader();
+            },
+            success: function (data) {
+                AttachmentPmAddOnSuccess(data);
+            },
+            complete: function () {
+                CloseLoader();
+            },
+            error: function (xhr) {
+                console.log(xhr);
+            }
+        });
+
+    });
+</script>
+

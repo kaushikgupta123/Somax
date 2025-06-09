@@ -1,0 +1,66 @@
+﻿@model Client.Models.AutoTRGenerationVM
+<div class="row" id="divAutoTRGenerationSearch" style="display:none;">
+    <div class="col-xl-12">
+        <div class="m-portlet newPort" style="padding:15px; margin-top:5px;display:none" id="AutoGenTRcontainer">
+            <div style="clear:both;"></div>
+            <div id="Active" class="tabcontent" style="display:block;">
+                <div style="clear:both;"></div>
+                <div class="actionBar">
+                    <div class="pull-right">
+                        <button type="button" class="btn btn-white import-export" id="btnAutoTRGenExport" disabled onclick="funcShowExportbtn()">@Model.Loc.Where(a => a.ResourceId == "spnExport").FirstOrDefault().Value.ToString()</button>
+                    </div>
+                    <div style="clear:both;"></div>
+                </div>
+                <div class="table-responsive">
+                    <table id="tblAutoTRGenerationSearch" class="eqpDtlTbl row-border custom-sort tblMain hover haschild tblDefaultSort" style="width:100%;">
+                        <thead>
+                            <tr>
+                                <th><input name="select_all" value="1" id="AutoTRGenerationSearch-select-all" type="checkbox" /></th>
+                                <th id="thPartClientLookupId" data-col="1" class="th-AutoTRGenerationSearch RowId" data-th-index="0" data-th-prop="RowId"> @Model.Loc.Where(a => a.ResourceId == "spnPartID").FirstOrDefault().Value.ToString()</th>
+                                <th data-col="2" data-th-index="1" class="RequestStr" data-th-prop="RequestStr">@Model.Loc.Where(a => a.ResourceId == "spnRequestStr").FirstOrDefault().Value.ToString()</th>
+                                <th id="thIssueStr" data-col="3" class="IssueStr" data-th-index="2" data-th-prop="IssueStr">@Model.Loc.Where(a => a.ResourceId == "spnIssueStr").FirstOrDefault().Value.ToString()</th>
+                                <th data-col="4" class="PartDescription" data-th-index="3" data-th-prop="PartDescription">@Model.Loc.Where(a => a.ResourceId == "spnPartDescription").FirstOrDefault().Value.ToString()</th>
+                                <th data-col="5" class="TransferQuantity" data-th-index="4" data-th-prop="TransferQuantity">@Model.Loc.Where(a => a.ResourceId == "spnTransferQuantity").FirstOrDefault().Value.ToString()</th>
+                                <th data-col="6" class="Max" data-th-index="5" data-th-prop="Max">@Model.Loc.Where(a => a.ResourceId == "spnMax").FirstOrDefault().Value.ToString()</th>
+                                <th data-col="7" class="Min" data-th-index="6" data-th-prop="Min">@Model.Loc.Where(a => a.ResourceId == "spnMin").FirstOrDefault().Value.ToString()</th>
+                                <th data-col="8" class="OnHand" data-th-index="7" data-th-prop="OnHand">@Model.Loc.Where(a => a.ResourceId == "spnOnHand").FirstOrDefault().Value.ToString()</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+            <div style="clear:both;"></div>
+            <div class="col-lg-12 col-md-12" style="text-align:right;padding:10px;">
+                <div class="idBttns">
+                    <div class="bttn_pagin">
+                        <div class="bttns2">
+                            <button type="button" class="btn btn-blue mobBttn" id="btnCreateTransferRequest"><i class="fa fa-plus faIcon"></i> &nbsp;@Model.Loc.Where(a => a.ResourceId == "spnCreateTransferRequests").FirstOrDefault().Value.ToString()</button>
+                        </div>
+                        <div style="clear:both;"></div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+@Html.Partial("_Export")
+<style>
+    #popupExport {
+        position: absolute;
+        top: 336px;
+    }
+    @@media (max-width: 480px) {
+
+        #popupExport {
+            position: fixed;
+            top: 336px;
+        }
+        .m-subheader.fixedDiv1 .new-m-subheader {
+            display: block;
+        }
+        #AutoTRGenerationmaincontainer .row {
+            padding-top: 0px !important;
+        }
+    }
+</style>

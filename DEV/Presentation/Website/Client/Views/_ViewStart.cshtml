@@ -1,0 +1,18 @@
+﻿@{
+    if (Convert.ToString(Session["MenuState"]) == "" || Convert.ToString(Session["MenuState"]) == "open")
+    {
+        Layout = "~/Views/Shared/_MasterPageLayout.cshtml";
+    }
+    else
+    {
+        Layout = "~/Views/Shared/_MasterPageLayoutCloseMenu.cshtml";
+    }
+}
+@*<script type='text/javascript' src='https://widget.freshworks.com/widgets/6000000403.js' async defer></script>
+<script>
+
+    window.fwSettings = {
+        'widget_id': 6000000403
+    };
+    !function () { if ("function" != typeof window.FreshworksWidget) { var n = function () { n.q.push(arguments) }; n.q = [], window.FreshworksWidget = n } }()
+</script>*@

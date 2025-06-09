@@ -1,0 +1,26 @@
+﻿@model Client.Models.Dashboard.DashboardVM
+<div class="sparklineArea">
+    <div class="secondBox">
+        <div class="lds-ellipsis lds-adjust spline-loader" id="workreqspchartloader">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+
+        @if (Model.WoSecurity)
+        {
+            <h2 id="wrCount" class="hoverClass"></h2>
+            <h3 class="hoverClass" id="wrCountText">@Model.Loc.Where(a => a.ResourceId == "spnWorkRequests").FirstOrDefault().Value.ToString()</h3>
+        }
+        else
+        {
+            <h2 id="wrCountInactive"></h2>
+            <h3>@Model.Loc.Where(a => a.ResourceId == "spnWorkRequests").FirstOrDefault().Value.ToString()</h3>
+        }
+        <div class="sparklineGraph">
+            <canvas id="myChart_WR" class="sparklinecanvas"></canvas>
+            <div class="clear"></div>
+        </div>
+    </div>
+</div>

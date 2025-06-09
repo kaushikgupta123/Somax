@@ -1,0 +1,393 @@
+﻿@model Client.Models.Dashboard.DashboardVM
+
+<link href="~/Scripts/Metronic/assets/demo/default/base/style_newCustom.css" rel="stylesheet" />
+<link href="~/Content/Dashboard/MaintenanceCompletionWorkbench.css" rel="stylesheet" />
+
+<!-- Floating Action Button-->
+<link href="~/Scripts/mobile/css/floating-action-button.css" type="text/css" rel="stylesheet" />
+<!-- Floating Action Button-->
+<link rel="stylesheet" href="~/Scripts/mobile/css/mobiscroll.jquery.min.css">
+<link href="~/Scripts/mobile/css/mobile-style.css" rel="stylesheet" />
+
+
+
+@{
+    var CompletionUserHoursList = UtilityFunction.GetGroupingDataForCompletionWorkbench();
+    if (CompletionUserHoursList != null)
+    {
+        Model.CompletionHoursList = CompletionUserHoursList.Select(x => new SelectListItem { Text = x.text, Value = x.value.ToString() });
+    }
+}
+
+@if (Model.security.MaintenanceCompletionWorkbenchWidget_Complete.Access)
+{
+    <div class="m-portlet m-portlet--full-height m-portlet--fit">
+        <div class="m-portlet__head">
+            <div class="m-portlet__head-caption">
+                <div class="m-portlet__head-title">
+                    <h3 class="m-portlet__head-text">
+                        @Model.Loc.Where(a => a.ResourceId == "spnCompletionWorkbench").FirstOrDefault().Value.ToString()
+                    </h3>
+                </div>
+            </div>
+        </div>
+
+        <div class="m-portlet__body">
+            <div class="tab-content">
+                <div class="actionBar">
+                    <div class="dateRangeDrop pull-left" id="complitionView" style="display:flex;">
+                        @*<div class="btn-group bootstrap-select m-datatable__pager-size dropup show selectDrop">
+                                @Html.DropDownListFor(m => m.CompletionUserHours, new SelectList(Model.CompletionHoursList, "Value", "Text"), null, new { id = "MaintenanceCompDropdown", @class = "selectpicker" })
+                            </div>*@
+                        <div mbsc-page class="demo-lists">
+                            <div mbsc-form>
+                                <div class="mbsc-form-group">
+                                    <div class="mbsc-btn-group-block">
+                                        <button class="btn btn-white navbar-btn" mbsc-button id="ShowMaintenanceCompDropdown">
+                                            @*showVertical*@
+                                            <i class="fa fa-filter" style="font-size: 1.3rem;"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="MaintenanceCompDropdownDiv" class="mbsc-cloak">
+                                @* vertical*@
+                                <ul id="MaintenanceCompDropdown" class="mbsc-cloak">
+                                    @* listview *@
+                                    @{
+                                        foreach (var item in Model.CompletionHoursList)
+                                        {
+                                            <li data-value="@item.Value">@item.Text</li>
+                                        }
+                                    }
+                                </ul>
+                            </div>
+                        </div>
+                        <button type="button" class="btn btn-white navbar-btn" title="@Model.Loc.Where(a => a.ResourceId == "globalSearch").FirstOrDefault().Value.ToString()" id="WoCompSrchBttn"><i class="fa fa-search" style="font-size: 1.1rem;position: relative;top: -2px;left: -2px;"></i></button>
+                        <div mbsc-page class="demo-lists">
+                            <div mbsc-form>
+                                <div class="mbsc-form-group">
+                                    <div class="mbsc-btn-group-block">
+                                        <button class="btn btn-white navbar-btn" mbsc-button id="ShowSortByDropdown">
+                                            <i class="fa fa-sort" style="font-size: 1.3rem;"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="SortByDropdownDiv" class="mbsc-cloak">
+                                <ul id="SortByDropdown" class="mbsc-cloak">
+                                    <li data-value="0">@Model.Loc.Where(a => a.ResourceId == "spnGlobalWorkOrderID").FirstOrDefault().Value.ToString()</li>
+                                    <li data-value="8">@Model.Loc.Where(a => a.ResourceId == "spnScheduledDate").FirstOrDefault().Value.ToString()</li>
+                                    <li data-value="2">@Model.Loc.Where(a => a.ResourceId == "GlobalChargeTo").FirstOrDefault().Value.ToString()</li>
+                                    <li data-value="7"> @Model.Loc.Where(a => a.ResourceId == "spnPriority").FirstOrDefault().Value.ToString()</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <button type="button" class="btn btn-white navbar-btn mbsc-control mbsc-btn mbsc-no-touch mbsc-ios mbsc-ltr" title="@Model.Loc.Where(a => a.ResourceId == "spnResetGrid").FirstOrDefault().Value.ToString()" id="ResetGridBtn"><i class="fa fa-refresh" style="font-size: 1.1rem;position: relative;top: -2px;"></i></button>
+
+                        <div style="clear:both;"></div>
+                        <div class="searchBttnDrop desktop" id="compsearchBttnNewDrop" style="display:none;left:60px !important;">
+                            <div class="form-group" style="position:relative;">
+                                <i class="fa fa-search txtSearchClickComp" style="font-size: 1.1rem;position: absolute;top: 9px;left: 15px;"></i>
+                                <a href="javascript:void(0)" id="cancelText"><i class="fa fa-close" style="font-size: 1.1rem;position: absolute;top: 9px;right: 15px;"></i></a>
+                                <input type="search" id="txtColumnCompSearch" class="form-control search unsortable" placeholder="@Model.Loc.Where(a => a.ResourceId == "globalSearch").FirstOrDefault().Value.ToString()..." style="padding: 0.65rem 2.75rem;" autocomplete="off">
+                            </div>
+                            <div class="searchTips">
+                                <div class="titleText">@Model.Loc.Where(a => a.ResourceId == "spnSearchTips").FirstOrDefault().Value.ToString()</div>
+                                <div class="infoText">@Model.Loc.Where(a => a.ResourceId == "spnCompletionWorkbenchSearchTipsVal").FirstOrDefault().Value.ToString()</div>
+                                <div style="clear:both;"></div>
+                            </div>
+
+                            <div class="searchInfo">
+                                <span class="recent">
+                                    @Model.Loc.Where(a => a.ResourceId == "GlobalRecentlySearched").FirstOrDefault().Value.ToString()
+                                </span>
+                                <div class="searchList" id="wosearchList">
+                                    <ul id="UlSearchList"></ul>
+                                </div>
+                                <span class="clear">
+                                    <a href="javascript:void(0)" id="clearText">
+                                        @Model.Loc.Where(a => a.ResourceId == "globalClear").FirstOrDefault().Value.ToString()
+                                    </a>
+                                </span>
+                                <div style="clear:both;"></div>
+                            </div>
+
+                        </div>
+
+
+                        <div id="searchfilteritems"></div>
+                        <div style="clear:both;"></div>
+                    </div>
+
+
+                </div>
+                <div style="clear:both; height:10px;"></div>
+                <div style="clear:both;"></div>
+                <div class="table-responsive">
+                    <table id="tblMaintenanceCompletionWorkbench" class="eqpDtlTbl row-border custom-sort tblMain tblDefaultSort" style="width:100%; display:none;">
+                        <thead>
+                            <tr>
+                                <th data-col="0" data-th-index="0">@Model.Loc.Where(a => a.ResourceId == "spnGlobalWorkOrderID").FirstOrDefault().Value.ToString()</th>
+                                <th data-col="1" data-th-index="1">@Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString()</th>
+                                <th data-col="2" data-th-index="2">@Model.Loc.Where(a => a.ResourceId == "spnAssetID").FirstOrDefault().Value.ToString()</th>
+                                <th data-col="3" data-th-index="3">@Model.Loc.Where(a => a.ResourceId == "spnAssetName").FirstOrDefault().Value.ToString()</th>
+                                <th data-col="4" data-th-index="4">@Model.Loc.Where(a => a.ResourceId == "spnStatus").FirstOrDefault().Value.ToString()</th>
+                                <th data-col="5" data-th-index="5">@Model.Loc.Where(a => a.ResourceId == "GlobalType").FirstOrDefault().Value.ToString()</th>
+                                <th data-col="6" data-th-index="6">@Model.Loc.Where(a => a.ResourceId == "spnCreated").FirstOrDefault().Value.ToString()</th>
+                                <th data-col="7" data-th-index="7">@Model.Loc.Where(a => a.ResourceId == "spnPriority").FirstOrDefault().Value.ToString()</th>
+                                <th data-col="8" data-th-index="8">@Model.Loc.Where(a => a.ResourceId == "spnGlobalScheduled").FirstOrDefault().Value.ToString()</th>
+                                <th data-col="8" data-th-index="9">@Model.Loc.Where(a => a.ResourceId == "spnRequired").FirstOrDefault().Value.ToString()</th>
+                                <th data-col="9" data-th-index="10">@Model.Loc.Where(a => a.ResourceId == "spnGlobalCompleted").FirstOrDefault().Value.ToString()</th>
+                            </tr>
+                        </thead>
+                    </table>
+
+                </div>
+                <div id="ActiveCard" class="tabcontent" style="display:block;"></div>
+            </div>
+        </div>
+        @{
+            var AddWorkRequest = Model.security.MaintenanceCompletionWorkbenchWidget_AddWorkRequest.Access;
+            var AddUnplannedWO = Model.security.MaintenanceCompletionWorkbenchWidget_AddUnplannedWO.Access;
+        }
+        @if (AddWorkRequest || AddUnplannedWO)
+        {
+            <div class="menu pmd-floating-action" role="navigation" style="max-width: 50px;">
+                @if (AddWorkRequest == true)
+                {
+                    //V2-735
+                    @*<a id="AddWorkRequestBtn_Mobile" href="javascript:void(0);"
+                           class="pmd-floating-action-btn btn btn-sm pmd-btn-fab pmd-btn-raised pmd-ripple-effect btn-default"
+                           data-title="@Model.Loc.Where(a => a.ResourceId == "spnAddWorkRequest").FirstOrDefault().Value.ToString()">
+                            <span class="pmd-floating-hidden">@Model.Loc.Where(a => a.ResourceId == "spnAddWorkRequest").FirstOrDefault().Value.ToString()</span>
+                            <i class="fa fa-file-text" style="font-size: 1.5rem;"></i>
+                        </a>*@
+
+                    <button id="AddWorkRequestBtn_Mobile" href="javascript:void(0);" data-color="success" class="btn btn-blue mobBttn" style="cursor: pointer; display: none; text-align: right; margin-bottom: 10px !important; width: auto; float: right; ">@Model.Loc.Where(a => a.ResourceId == "spnAddWorkRequest").FirstOrDefault().Value.ToString()&nbsp;<i class="fa fa-file-text" style="font-size: 1.5rem;margin-left:5px;"></i></button>
+
+                }
+                @if (AddUnplannedWO == true)
+                {
+                    //V2-735
+                    @*<a id="showUnplannedWoPopup_Mobile" href="javascript:void(0);"
+                           class="pmd-floating-action-btn btn btn-sm pmd-btn-fab pmd-btn-raised pmd-ripple-effect btn-default"
+                           data-title="@Model.Loc.Where(a => a.ResourceId == "spnAddNewUnPlanedWorkOrder").FirstOrDefault().Value.ToString()">
+                            <span class="pmd-floating-hidden">@Model.Loc.Where(a => a.ResourceId == "spnAddNewUnPlanedWorkOrder").FirstOrDefault().Value.ToString()</span>
+                            <i class="fa fa-file-o" style="font-size: 1.5rem;"></i>
+                        </a>*@
+                    <button id="showUnplannedWoPopup_Mobile" href="javascript:void(0);" data-color="success" class="btn btn-blue mobBttn" style="cursor: pointer; display: none; text-align: right; margin-bottom: 10px !important; width: auto; float: right; ">@Model.Loc.Where(a => a.ResourceId == "spnAddNewUnPlanedWorkOrder").FirstOrDefault().Value.ToString()&nbsp;<i class="fa fa-file-o" style="font-size: 1.5rem;margin-left:5px;"></i></button>
+                }
+                //V2-735
+                @*<a href="javascript:void(0);" class="pmd-floating-action-btn btn pmd-btn-fab pmd-btn-raised pmd-ripple-effect btn-primary" data-title="Add">
+                        <span class="pmd-floating-hidden">Primary</span>
+                        <i class="fa fa-plus" style="font-size: 1.3rem;"></i>
+                    </a>*@
+                <a href="javascript:void(0);" id="showWORequestUnplannedbtn" style="float: right;" class="pmd-floating-action-btn btn pmd-btn-fab pmd-btn-raised pmd-ripple-effect btn-primary">
+                    <i class="fa fa-plus" style="font-size: 1.3rem;"></i>
+                </a>
+            </div>
+        }
+    </div>
+    @*@Html.Partial("_StatusDetailsLocalization")*@
+}
+
+@if (Model.security.MaintenanceCompletionWorkbenchWidget_AddWorkRequest.Access == true)
+{
+    <div id="AddWorkRequestDiv"></div>
+}
+@if (Model.security.MaintenanceCompletionWorkbenchWidget_AddUnplannedWO.Access == true)
+{
+    <!-- #region Add unplanned Work Order -->
+    <div class="slide-modal" id="AddOnDemandWOModalpopup">
+        @*<div id="OnDemandWOPopUp">
+            </div>*@
+    </div>
+
+    <div class="slide-modal" id="AddDescribeWOModalpopup">
+        @*<div id="DescribeWOPopUp">
+            </div>*@
+    </div>
+    <div id="AddDescribeWOModalpopupDynamic"></div> @*V2-1067*@
+
+    @*<div id="AddDescribeWOModalpopup" class="modal fade" role="dialog">
+            <div class="modal-dialog" id="DescribeWOPopUp">
+            </div>
+        </div>*@
+    <!-- #endregion -->
+}
+@if (Model.security.MaintenanceCompletionWorkbenchWidget_AddWorkRequest.Access || Model.security.MaintenanceCompletionWorkbenchWidget_AddUnplannedWO.Access)
+{
+    @Html.Partial("~/Views/Dashboard/Widgets/MaintenanceCompletionWorkbench/Mobile/_QrCodeReaderModal.cshtml")
+    @*@Html.Partial("~/Views/Dashboard/Widgets/MaintenanceCompletionWorkbench/Mobile/_EquipmentGridPopUp.cshtml")*@
+    @*@Html.Partial("~/Views/Dashboard/Widgets/MaintenanceCompletionWorkbench/Mobile/_AccountGridPopUp.cshtml")*@
+    @*@Html.Partial("~/Views/Dashboard/Widgets/MaintenanceCompletionWorkbench/Mobile/_UnplannedWOPopUp.cshtml")*@
+}
+@if (Model.security.MaintenanceCompletionWorkbenchWidget_AddUnplannedWO.Access)
+{
+    @Html.Partial("~/Views/Dashboard/Widgets/MaintenanceCompletionWorkbench/Mobile/_UnplannedWOPopUp.cshtml")
+}
+@*Placing a common modal for add unplannd (on demand and describe)*@
+@if (Model._userdata.DatabaseKey.Client.AssetTree == true)
+{
+    @*<div id="commonWOTreeModal" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title" id="hdrPlantLocation">@Model.Loc.Where(a => a.ResourceId == "spnGlobalEquipmentTreeLookup").FirstOrDefault().Value.ToString()</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="table-responsive cntTree">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>*@
+
+    <div class="slide-modal" id="commonWOTreeModal">
+        <div class="slide-modal-head ">
+            <a id="commonWOTreeModalHide" class="slide-back-btn"> <i class="fa fa-angle-left"></i> Back</a>
+            <div class="slide-back-title">
+                @Model.Loc.Where(a => a.ResourceId == "spnGlobalEquipmentTreeLookup").FirstOrDefault().Value.ToString()
+            </div>
+        </div>
+        <div class="slide-modal-body">
+            <div class="cntTree">
+            </div>
+        </div>
+        <div class="slide-modal-footer"></div>
+    </div>
+}
+@Html.Partial("~/Views/Dashboard/Widgets/MaintenanceCompletionWorkbench/Mobile/_WoCompletionWorkbenchSummaryDescription.cshtml", Model)
+
+@* for equipment grid *@
+@*<div id="EquipmentWOModal" class="modal fade dropdown-modal" role="dialog" style="display:none;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">@Model.Loc.Where(a => a.ResourceId == "GlobalSelectEquipment").FirstOrDefault().Value.ToString()</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group" style="position:relative;">
+                        <i class="fa fa-search txtSearchClickComp" style="font-size: 1.1rem;position: absolute;top: 9px;left: 15px;"></i>
+                        <a href="javascript:void(0)"><i class="fa fa-close clearTextBoxValue" data-txtboxid="txtEquipmentSearch_Mobile" style="font-size: 1.1rem;position: absolute;top: 9px;right: 15px;"></i></a>
+                        <input type="text" id="txtEquipmentSearch_Mobile" class="form-control search unsortable" placeholder="Search..." style="padding: 0.65rem 2.75rem;" autocomplete="off">
+                    </div>
+
+                    <div id="DivEquipmentSearchScrollViewModal"></div>
+                </div>
+                <div class="modal-footer" style="padding:15px 25px !important;">
+                    <div style="clear:both;"></div>
+                </div>
+            </div>
+        </div>
+    </div>*@
+
+<div class="slide-modal" id="EquipmentWOModal">
+    <div class="slide-modal-head">
+        <a class="slide-back-btn" id="EquipmentWOModalHide"> <i class="fa fa-angle-left"></i> Back</a>
+        <div class="slide-back-title">
+            @Model.Loc.Where(a => a.ResourceId == "GlobalSelectEquipment").FirstOrDefault().Value.ToString()
+        </div>
+    </div>
+    <div class="slide-modal-body">
+        <div class="form-group" style="position:relative;">
+            <i class="fa fa-search txtSearchClickComp" style="font-size: 1.1rem;position: absolute;top: 9px;left: 15px;"></i>
+            <a href="javascript:void(0)"><i class="fa fa-close clearTextBoxValue" data-txtboxid="txtEquipmentSearch_Mobile" style="font-size: 1.1rem;position: absolute;top: 9px;right: 15px;"></i></a>
+            <input type="search" id="txtEquipmentSearch_Mobile" class="form-control search unsortable" placeholder="Search..." style="padding: 0.65rem 2.75rem;" autocomplete="off">
+        </div>
+        <div id="DivEquipmentSearchScrollViewModal"></div>
+    </div>
+</div>
+
+<div class="slide-modal" id="AccountTableModalPopup">
+    <div class="slide-modal-head">
+        <a class="slide-back-btn" id="AccountTableModalPopupHide"> <i class="fa fa-angle-left"></i> Back</a>
+        <div class="slide-back-title">
+            @Model.Loc.Where(a => a.ResourceId == "GlobalAccount").FirstOrDefault().Value.ToString()
+        </div>
+    </div>
+    <div class="slide-modal-body">
+        <div class="form-group" style="position:relative;">
+            <i class="fa fa-search txtSearchClickComp" style="font-size: 1.1rem;position: absolute;top: 9px;left: 15px;"></i>
+            <a href="javascript:void(0)"><i class="fa fa-close clearTextBoxValue" data-txtboxid="txtAccountSearch_Mobile" style="font-size: 1.1rem;position: absolute;top: 9px;right: 15px;"></i></a>
+            <input type="search" id="txtAccountSearch_Mobile" class="form-control search unsortable" placeholder="Search..." style="padding: 0.65rem 2.75rem;" autocomplete="off">
+        </div>
+        <div id="DivAccountSearchScrollViewModal"></div>
+    </div>
+</div>
+
+<div class="slide-modal" id="PersonnelPlannerTableModalPopup">
+    <div class="slide-modal-head">
+        <a class="slide-back-btn" id="PersonnelPlannerTableModalPopupHide"> <i class="fa fa-angle-left"></i> Back</a>
+        <div class="slide-back-title">
+            @Model.Loc.Where(a => a.ResourceId == "globalPlanner").FirstOrDefault().Value.ToString()
+        </div>
+    </div>
+    <div class="slide-modal-body">
+        <div class="form-group" style="position:relative;">
+            <i class="fa fa-search txtSearchClickComp" style="font-size: 1.1rem;position: absolute;top: 9px;left: 15px;"></i>
+            <a href="javascript:void(0)"><i class="fa fa-close clearTextBoxValue" data-txtboxid="txtPersonnelPlannerSearch_Mobile" style="font-size: 1.1rem;position: absolute;top: 9px;right: 15px;"></i></a>
+            <input type="search" id="txtPersonnelPlannerSearch_Mobile" class="form-control search unsortable" placeholder="Search..." style="padding: 0.65rem 2.75rem;" autocomplete="off">
+        </div>
+        <div id="DivPersonnelPlannerSearchScrollViewModal"></div>
+    </div>
+</div>
+
+<style>
+    #commonWOTreeModal .checkmark,
+    #wrEquipTreeModal .checkmark {
+        background-color: #fff !important;
+    }
+
+    #SortByDropdown li:after {
+        display: none !important;
+    }
+
+    #SortByDropdown .mbsc-lv-item:before {
+        border-top: 0 !important;
+    }
+
+    #SortByDropdown li {
+        border-top: 1px solid #ccc !important;
+    }
+
+    .sorting_desc_mobile:before {
+        font-family: 'FontAwesome' !important;
+        font-weight: 400 !important;
+        content: '\f106' !important;
+        font-size: 18px !important;
+        color: #fff;
+        position: absolute !important;
+        right: 23px !important;
+        left: auto !important;
+        top: 14px !important;
+        display: block;
+        width: 10px;
+        border-top: 0 !important;
+        outline: 0;
+    }
+
+    .pmd-floating-action-btn:last-child:before {
+        display: none;
+    }
+
+
+    .sorting_asc_mobile:before {
+        font-family: 'FontAwesome' !important;
+        font-weight: 400 !important;
+        content: '\f107' !important;
+        font-size: 18px !important;
+        color: #fff;
+        position: absolute !important;
+        right: 23px !important;
+        left: auto !important;
+        top: 14px !important;
+        display: block;
+        width: 10px;
+        border-top: 0 !important;
+        outline: 0;
+    }
+</style>

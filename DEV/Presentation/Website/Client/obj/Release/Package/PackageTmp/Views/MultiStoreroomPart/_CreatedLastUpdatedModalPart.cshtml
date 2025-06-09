@@ -1,0 +1,40 @@
+﻿@model Client.Models.MultiStoreroomPart.MultiStoreroomPartVM
+<div id="CreatedLastUpdatedModalPart" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-info">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">@Model.Loc.Where(a => a.ResourceId == "spnCreateLastUpdate").FirstOrDefault().Value.ToString()</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-lg-6 col-sm-6">
+                        <div class="form-group">
+                            <h5>@Model.Loc.Where(a => a.ResourceId == "spnCreated").FirstOrDefault().Value.ToString() :</h5>
+                            <div><label id="lblusercreated"><strong>@Model.Loc.Where(a => a.ResourceId == "GlobalUser").FirstOrDefault().Value.ToString() :</strong> @Model.CreatedLastUpdatedPartModel.CreatedUserValue</label></div>
+                            <div>
+                                <label id="lblcreateddate">
+                                    <strong>@Model.Loc.Where(a => a.ResourceId == "GlobalDate").FirstOrDefault().Value.ToString() :</strong>
+                                    @Model.CreatedLastUpdatedPartModel.CreatedDateValue
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-sm-6">
+                        <div class="form-group">
+                            <h5>@Model.Loc.Where(a => a.ResourceId == "GlobalLastUpdated").FirstOrDefault().Value.ToString() :</h5>
+                            <div><label id="lblusermodified"><strong>@Model.Loc.Where(a => a.ResourceId == "GlobalUser").FirstOrDefault().Value.ToString() :</strong> @Model.CreatedLastUpdatedPartModel.ModifyUserValue</label></div>
+                            <div>
+                                <label id="lblmodifieddate">
+                                    <strong>@Model.Loc.Where(a => a.ResourceId == "GlobalDate").FirstOrDefault().Value.ToString() :</strong>
+                                    @Model.CreatedLastUpdatedPartModel.ModifyDatevalue
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="clear:both;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,203 @@
+﻿@model SomaxMVC.Models.UserInfoDetails
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>
+        @ViewBag.Title
+    </title>
+    <meta name="description" content="Latest updates and statistic charts">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <script src="https://ajax.googleapis.com/ajax/libs/webfont/1.6.16/webfont.js"></script>
+    <script>
+        WebFont.load({
+            google: { "families": ["Poppins:300,400,500,600,700", "Roboto:300,400,500,600,700"] },
+            active: function () {
+                sessionStorage.fonts = true;
+            }
+        });
+    </script>
+    @* <link href="~/Scripts/Metronic/assets/vendors/base/vendors.bundle.css" rel="stylesheet" media="all" />
+        <link href="~/Scripts/Metronic/assets/login/demo/default/base/responsive.css" rel="stylesheet" />*@
+    @*@Styles.Render("~/Content/passwordcreate")*@
+    <link href="~/Scripts/Metronic/assets/login/vendors/base/vendors.bundle.css" rel="stylesheet" />
+    <link href="~/Scripts/Metronic/assets/login/demo/default/base/responsive.css" rel="stylesheet" />
+    <link href="~/Scripts/Metronic/assets/login/demo/default/base/style.bundle.css" rel="stylesheet" media="all" />
+    <link rel="shortcut icon" href="~/Scripts/Metronic/assets/login/demo/default/media/img/logo/favicon.png" />
+    <style type="text/css">
+        .errorClass {
+            border-bottom: 1px solid red !important;
+        }
+
+        .modal .modal-content .modal-header {
+            padding: 15px 25px !important;
+            background: #315a98 !important;
+        }
+
+            .modal .modal-content .modal-header .modal-title {
+                color: #fff !important;
+            }
+
+        .modal-header .close {
+            margin: 0rem -1rem -1rem auto !important;
+        }
+
+        .close {
+            color: #fff !important;
+            opacity: 1 !important;
+            text-shadow: none !important;
+        }
+
+        .modal .modal-content .modal-footer {
+            padding: 15px 25px !important;
+        }
+
+        .modal-footer {
+            display: block !important;
+        }
+
+        #myModal {
+            padding-right: 0px !important;
+        }
+    </style>
+    @Styles.Render("~/Content/datatable")
+</head>
+
+<body class="m--skin- m-header--fixed m-header--fixed-mobile m-aside-left--enabled m-aside-left--skin-dark m-aside-left--offcanvas m-footer--push m-aside--offcanvas-default">
+    <div class="m-grid m-grid--hor m-grid--root m-page">
+        <div class="m-grid__item m-grid__item--fluid m-grid m-grid--ver-desktop m-grid--desktop m-grid--tablet-and-mobile m-grid--hor-tablet-and-mobile m-login m-login--1 m-login--signin themeBg" id="m_login">
+            <div class="m-grid__item m-grid__item--order-tablet-and-mobile-2 m-login__aside">
+                <div class="m-stack m-stack--hor m-stack--desktop">
+                    <div class="m-stack__item m-stack__item--fluid">
+                        <div class="m-login__wrapper">
+                            <div class="m-login__logo">
+                                <a href="javascript:void(0)">
+                                    <img src="~/Scripts/Metronic/assets/app/media/img/logos/somaxLogo.png" />
+                                </a>
+                            </div>
+                            <div class="m-login__signin">
+                                <div class="lockIcon">
+                                    <img src="~/Scripts/Metronic/assets/app/media/img/logos/lockIcon.png" />
+                                </div>
+                                <div id="loginForm">
+                                    @Html.Partial("_LoginPartial", Model)
+                                </div>
+                            </div>
+                            <div class="m-login__signup">
+                                <div class="m-login__head">
+                                    <h3 class="m-login__title">
+                                        Sign Up
+                                    </h3>
+                                    <div class="m-login__desc">
+                                        Enter your details to create your account:
+                                    </div>
+                                </div>
+                                <form class="m-login__form m-form" action="">
+                                    <div class="form-group m-form__group">
+                                        <input class="form-control m-input" type="text" placeholder="Fullname" name="fullname">
+                                    </div>
+                                    <div class="form-group m-form__group">
+                                        <input class="form-control m-input" type="text" placeholder="Email" name="email" autocomplete="off">
+                                    </div>
+                                    <div class="form-group m-form__group">
+                                        <input class="form-control m-input" type="password" placeholder="Password" name="password">
+                                    </div>
+                                    <div class="form-group m-form__group">
+                                        <input class="form-control m-input m-login__form-input--last" type="password" placeholder="Confirm Password" name="rpassword">
+                                    </div>
+                                    <div class="row form-group m-form__group m-login__form-sub">
+                                        <div class="col m--align-left">
+                                            <label class="m-checkbox m-checkbox--focus">
+                                                <input type="checkbox" name="agree">
+                                                I Agree the
+                                                <a href="#" class="m-link m-link--focus">
+                                                    terms and conditions
+                                                </a>
+                                                .
+                                                <span></span>
+                                            </label>
+                                            <span class="m-form__help"></span>
+                                        </div>
+                                    </div>
+                                    <div class="m-login__form-action">
+                                        <button id="m_login_signup_submit" class="btn btn-focus m-btn m-btn--pill m-btn--custom m-btn--air">
+                                            Sign Up
+                                        </button>
+                                        <button id="m_login_signup_cancel" class="btn btn-outline-focus  m-btn m-btn--pill m-btn--custom">
+                                            Cancel
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                            <div id="forgetPasswordContainer"></div>
+                        </div>
+                    </div>
+                    <div class="m-stack__item m-stack__item--center">
+                        <div class="m-login__account">
+                            <span class="m-login__account-msg">
+                                &copy; @DateTime.Now.Year SOMAX Inc. All rights reserved. SOMAX is a registered trademark of SOMAX, Inc.
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="myModal" class="modal fade m-login" role="dialog" style="padding-right:0 !important;">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div id="confirmationPopUp"></div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    @*<script src="~/Scripts/Metronic/assets/vendors/base/vendors.bundle.js" type="text/javascript"></script>
+        <script src="~/Scripts/Metronic/assets/demo/demo3/base/scripts.bundle.js" type="text/javascript"></script>
+        <script src="~/Scripts/Metronic/assets/snippets/pages/user/login.js" type="text/javascript"></script>*@
+    @Scripts.Render("~/bundles/Login")
+    @Scripts.Render("~/bundles/datatable")
+    <script>
+        $(document).on('click', '#Eye', function () {
+            ShowHidePassword('Password', 'Eye');
+        });
+    </script>
+    <style type="text/css">
+        .m-stack.m-stack--desktop.m-stack--hor > .m-stack__item {
+            display: block;
+        }
+
+        .m-login.m-login--1 .m-login__wrapper {
+            padding-top: 0;
+        }
+
+            .m-login.m-login--1 .m-login__wrapper .m-login__logo {
+                margin: 0 auto 5rem auto;
+            }
+
+            .m-login.m-login--1 .m-login__wrapper .m-login__form {
+                margin-top: .75rem;
+            }
+
+        .m-form__group.adjust {
+            margin-bottom: 10px !important;
+        }
+
+        .m-login.m-login--1 .m-login__wrapper .m-login__form .m-login__form-sub {
+            margin-top: 1rem;
+        }
+
+        .m-login.m-login--1 .m-login__wrapper .m-login__form .m-login__form-action {
+            margin: .5rem 0;
+        }
+
+        .m-login.m-login--1.m-login--signin .m-login__signin {
+            padding: 60px 80px 40px;
+        }
+    </style>
+</body>
+</html>

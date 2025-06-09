@@ -1,0 +1,24 @@
+﻿@model Client.Models.Configuration.LookupLists.LookUpListsVM
+<nav id="sidebar">
+    <div id="dismiss">
+        <i class="fa fa-close"></i>
+    </div>
+    <div class="sidebar-header">
+        <h3><i class="fa fa-filter" style="position: relative; top: -2px;"></i> @Model.Loc.Where(a => a.ResourceId == "spnFilters").FirstOrDefault().Value.ToString()<span class="filteritemcount">0</span></h3>
+        <button type="button" class="btn btn-blue filterSearch" id="btnLUListDataAdvSrch"><i class="fa fa-search" style="margin-top:-3px;"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalSearch").FirstOrDefault().Value.ToString()</button>
+    </div>
+    <div class="sidebar-content" id="advsearchsidebarLUList">
+        <div class="form-group">
+            <label for="LUListValue">@Model.Loc.Where(a => a.ResourceId == "spnValue").FirstOrDefault().Value.ToString():</label>
+            <input type="text" class="form-control search adv-item" id="LUListValue">
+        </div>
+        <div class="form-group">
+            <label for="LUListDescription">@Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString():</label>
+            <input type="text" class="form-control search adv-item" id="LUListDescription">
+        </div>
+    </div>
+</nav>
+
+
+
+

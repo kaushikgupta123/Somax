@@ -1,0 +1,692 @@
+﻿@model Client.Models.Configuration.SiteSetUp.SiteSetUpModel
+@using Client.Models.Common
+@{
+    string imageUrl = Model.ImageUrl;
+    if (Model.ClientOnPremise)
+    {
+        imageUrl = UtilityFunction.PhotoBase64ImgSrc(Model.ImageUrl);
+    }
+    bool OraclePurchaseRequestExportInUse = false;
+    var InterfacePropData = (List<InterfacePropModel>)Session["InterfacePropData"];
+    if (InterfacePropData != null && InterfacePropData.Count > 0)
+    {
+        OraclePurchaseRequestExportInUse = InterfacePropData.Where(x => x.InterfaceType == ApiConstants.OraclePurchaseRequestExport).Select(x => x.InUse).FirstOrDefault();
+    }
+
+}
+<div class="m-subheader">
+    <div class="new-m-subheader">
+        <div class="PageTitle">
+            <div class="align-items-center separator">
+                <h3 class="m-subheader__title ">
+                    @Model.Loc.Where(a => a.ResourceId == "spnConfiguration").FirstOrDefault().Value.ToString()
+                </h3>
+            </div>
+        </div>
+        <div class="NewBreadcrumbArea">
+            <div class="newBreadcrumb">
+                <ul>
+                    <li><a href="/Configuration/Dashboard">&nbsp;</a></li>
+                    <li class="active">@Model.Loc.Where(a => a.ResourceId == "spnSiteSetup").FirstOrDefault().Value.ToString()</li>
+                </ul>
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+        <div style="clear:both;"></div>
+    </div>
+</div>
+@Html.Partial("_ErrorDiv")
+@using (Ajax.BeginForm("UpdateSiteSetup", "SiteSetup", new AjaxOptions { HttpMethod = "Post", OnSuccess = "SiteUpdateAddOnSuccess", OnBegin = "AjaxBeginFormBegin", OnComplete = "AjaxBeginFormComplete", OnFailure = "AjaxBeginFormFaillure" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="row">
+        <div class="col-xl-3">
+            <div class="m-portlet">
+                <div class="sideMenuArea nobg">
+                    <ul class="vtabs" id="detmaintab">
+                        <li class="active" id="idOverview"><a href="#Overview">@Model.Loc.Where(a => a.ResourceId == "spnSiteOverview").FirstOrDefault().Value.ToString()</a></li>
+                        @if (!(Model._userdata.Site.APM == true && Model._userdata.Site.CMMS == false && Model._userdata.Site.Sanitation == false) && !(Model._userdata.Site.APM == false && Model._userdata.Site.CMMS == false && Model._userdata.Site.Sanitation == true))
+                        {
+                            if ((Model._userdata.DatabaseKey.Client.PackageLevel.ToUpper() == PackageLevelConstant.Enterprise))
+                            {
+                                <li id="photot"><a href="#Photos" id="anchPhoto">@Model.Loc.Where(a => a.ResourceId == "spnPhotos").FirstOrDefault().Value.ToString()</a></li>
+                            }
+                            @*V2-720 :-Approval Groups Configuration*@
+                            if (Model.security.ApprovalGroupsConfiguration.Access)
+                            {
+                                <li id="idApprovalGroupSetting" onclick="openCity(event, 'ApprovalGroupSettings')"><a href="#ApprovalGroupSettings">Approval Group Settings</a></li>
+                            }
+                            @*End V2-720*@
+                            <li id="idAddMaintenance" onclick="openCity(event, 'AddMaintenance')"><a href="#AddMaintenance">Maintenance</a></li>
+                            <li id="idAddPurchasing" onclick="openCity(event, 'AddPurchasing')"><a href="#AddPurchasing">@Model.Loc.Where(a => a.ResourceId == "spnPurchasingto").FirstOrDefault().Value.ToString()</a></li>
+                            <li id="idInvoiceMatch" onclick="openCity(event, 'InvoiceMatch')"><a href="#InvoiceMatch">Invoice Match</a></li>
+                            //V2-1061
+                            <li id="idBillTo" onclick="openCity(event, 'BillTo')"><a href="#BillTo">@Model.Loc.Where(a => a.ResourceId == "spnBillTo").FirstOrDefault().Value.ToString()</a></li>
+
+                            <li id="idShipTo" onclick="openCity(event, 'ShipTo')"><a href="#ShipTo">@Model.Loc.Where(a => a.ResourceId == "spnShipTo").FirstOrDefault().Value.ToString()</a></li>
+                        }
+                        else
+                        { @*V2-720 :-Approval Groups Configuration*@
+                        if (Model.security.ApprovalGroupsConfiguration.Access)
+                        {
+                            <li id="idApprovalGroupSetting" onclick="openCity(event, 'ApprovalGroupSettings')"><a href="#ApprovalGroupSettings">Approval Group Settings</a></li>
+                        }
+                        @*End V2-720*@
+                        <li id="idInvoiceMatch" onclick="openCity(event, 'InvoiceMatch')"><a href="#InvoiceMatch">Invoice Match</a></li>
+                        //V2-1061
+
+                    }
+                        <li id="idAssetGroup1" onclick="openCity(event, 'AssetGroup1')"><a href="#AssetGroup1">@Model.AssetGroup1Name</a></li>
+                        <li id="idAssetGroup2" onclick="openCity(event, 'AssetGroup2')"><a href="#AssetGroup2">@Model.AssetGroup2Name</a></li>
+                        <li id="idAssetGroup3" onclick="openCity(event, 'AssetGroup3')"><a href="#AssetGroup3">@Model.AssetGroup3Name</a></li>
+
+                    </ul>
+                </div>
+                <div class="selectTabs" id="selectTabs">
+                    <select class="form-control" id="colorselector">
+                        <option value="Overview">@Model.Loc.Where(a => a.ResourceId == "spnSiteOverview").FirstOrDefault().Value.ToString()</option>
+                        @if (!(Model._userdata.Site.APM == true && Model._userdata.Site.CMMS == false && Model._userdata.Site.Sanitation == false) && !(Model._userdata.Site.APM == false && Model._userdata.Site.CMMS == false && Model._userdata.Site.Sanitation == true))
+                        {
+                            if (Model._userdata.DatabaseKey.Client.PackageLevel.ToUpper() == PackageLevelConstant.Enterprise)
+                            {
+                                <option value="Photos">@Model.Loc.Where(a => a.ResourceId == "spnPhotos").FirstOrDefault().Value.ToString()</option>
+                            }
+                            //V2-720
+                            if (Model.security.ApprovalGroupsConfiguration.Access)
+                            {
+                                <option value="ApprovalGroupSettings">Approval Group Settings</option>
+                            }
+                            //--END V2-720
+                            <option value="AddMaintenance">Maintenance</option>
+                            <option value="AddPurchasing">@Model.Loc.Where(a => a.ResourceId == "spnPurchasingto").FirstOrDefault().Value.ToString()</option>
+                            <option value="InvoiceMatch">Invoice Match</option>
+                            //V2-1061
+                            <option value="BillTo">@Model.Loc.Where(a => a.ResourceId == "spnBillTo").FirstOrDefault().Value.ToString()</option>
+                            <option value="ShipTo">@Model.Loc.Where(a => a.ResourceId == "spnShipTo").FirstOrDefault().Value.ToString()</option>
+                        }
+                        else
+                        {
+                            //V2-720
+                            if (Model.security.ApprovalGroupsConfiguration.Access)
+                            {
+                                <option value="ApprovalGroupSettings">Approval Group Settings</option>
+                            }
+                            //--END V2-720
+                            <option value="InvoiceMatch">Invoice Match</option>
+                            //V2-1061
+                        }
+                        <option value="AssetGroup1">@Model.AssetGroup1Name</option>
+                        <option value="AssetGroup2">@Model.AssetGroup2Name</option>
+                        <option value="AssetGroup3">@Model.AssetGroup3Name</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-9">
+            <div class="row">
+                <div class="col-xl-12" id="btnnblock">
+                    <div class="m-portlet" id="m_portlet" style="padding:15px;">
+                        <div class="bottomBlock">
+                            <div class="tabsArea nobg" id="Overview" style="display:block;">
+                                <ul class="listView nobrd">
+                                    <li>
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnName").FirstOrDefault().Value.ToString():<small>*</small> </span>
+                                        <span class="inputText">
+                                            @Html.ValidationMessageFor(m => m.Name, "", new { style = "display:none" })
+                                            @Html.TextBoxFor(m => m.Name, new { @class = "form-control search ", autocomplete = "off", maxlength = "63" })
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnTimeZone").FirstOrDefault().Value.ToString(): <small>*</small> </span>
+                                        <span class="inputText">
+                                            @Html.ValidationMessageFor(m => m.TimeZone, "", new { style = "display:none" })
+                                            @Html.DropDownListFor(m => m.TimeZone, Model.TimeZoneList, "--Select--", new { @class = "form-control search select2picker", style = "width:100%;" })
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnDefaultLabelSize").FirstOrDefault().Value.ToString(): </span>
+                                        <span class="inputText">
+                                            @Html.DropDownListFor(m => m.PrintType, Model.PrintTypeList, new { @class = "form-control search select2picker", style = "width:100%;" })
+                                        </span>
+                                    </li>
+                                    @if (!(Model._userdata.Site.APM == true && Model._userdata.Site.CMMS == false && Model._userdata.Site.Sanitation == false) && !(Model._userdata.Site.APM == false && Model._userdata.Site.CMMS == false && Model._userdata.Site.Sanitation == true))
+                                    {                                      
+                                        <li>
+                                            <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnAssetGroup1Name").FirstOrDefault().Value.ToString(): </span>
+                                            <span class="inputText">
+                                                @Html.ValidationMessageFor(m => m.AssetGroup1Name, "", new { style = "display:none" })
+                                                @Html.TextBoxFor(m => m.AssetGroup1Name, new { @class = "form-control search ", autocomplete = "off", maxlength = "31" })
+                                            </span>
+                                        </li>
+                                        <li>
+                                            <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnAssetGroup2Name").FirstOrDefault().Value.ToString(): </span>
+                                            <span class="inputText">
+                                                @Html.ValidationMessageFor(m => m.AssetGroup2Name, "", new { style = "display:none" })
+                                                @Html.TextBoxFor(m => m.AssetGroup2Name, new { @class = "form-control search ", autocomplete = "off", maxlength = "31" })
+                                            </span>
+                                        </li>
+                                        <li>
+                                            <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnAssetGroup3Name").FirstOrDefault().Value.ToString(): </span>
+                                            <span class="inputText">
+                                                @Html.ValidationMessageFor(m => m.AssetGroup3Name, "", new { style = "display:none" })
+                                                @Html.TextBoxFor(m => m.AssetGroup3Name, new { @class = "form-control search ", autocomplete = "off", maxlength = "31" })
+                                            </span>
+                                        </li>
+                                    }
+                                </ul>
+
+                            </div>
+                            <div class="tabsArea nobg imageDropZone" id="Photos" style="display:none;">
+                                <div class="row">
+                                    <div class="col-xl-4">
+                                        <div id="AzureImage" class="AzureImage">
+                                            @if (!string.IsNullOrEmpty(imageUrl))
+                                            {
+                                                <img src="@imageUrl" class="equipImg" id="EquipZoom" alt="Image" data-zoom-image="@imageUrl" />
+                                            }
+                                            else
+                                            {
+                                                <img src="~/Scripts/ImageZoom/images/NoImage.jpg" class="equipImg" id="EquipZoom" alt="Image" data-zoom-image="/Scripts/ImageZoom/images/NoImage.jpg" />
+                                            }
+                                            @if (!string.IsNullOrEmpty(Model.ImageUrl) && !Model.ImageUrl.Contains("NoImage"))
+                                            {
+                                                <a href="javascript:void(0)" id="deleteImg" class="trashIcon" title="@Model.Loc.Where(a => a.ResourceId == "globalDelete").FirstOrDefault().Value.ToString()"><i class="fa fa-trash"></i></a>
+                                            }
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-8">
+                                        <div class="hldDropzone">
+                                            <div class="dropzone" id="dropzoneForm">
+                                                <div class="fallback">
+                                                    <input name="file" type="file" multiple />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="tabsArea nobg" id="User" style="display:none;">
+                                <div class="m-portlet__head" style="padding:0; height:2.5rem; margin-bottom:10px;">
+                                    <div class="m-portlet__head-caption">
+                                        <div class="m-portlet__head-title">
+                                            <h3 class="m-portlet__head-text" style="vertical-align:top;">
+                                                @Model.Loc.Where(a => a.ResourceId == "spnUser").FirstOrDefault().Value.ToString()
+                                            </h3>
+                                        </div>
+                                    </div>
+                                </div>
+                                <ul class="listView nobrd">
+                                    <li>
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnFull").FirstOrDefault().Value.ToString(): </span>
+                                        <span class="inputText">
+                                            <input type="text" class="form-control search" />
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnWorkRequest").FirstOrDefault().Value.ToString(): </span>
+                                        <span class="inputText">
+                                            <input type="text" class="form-control search" />
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnSanitation").FirstOrDefault().Value.ToString(): </span>
+                                        <span class="inputText">
+                                            <input type="text" class="form-control search" />
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnMaximumFull").FirstOrDefault().Value.ToString(): </span>
+                                        <span class="inputText">
+                                            <input type="text" class="form-control search" />
+                                        </span>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="tabsArea nobg" id="AddMaintenance" style="display:none;">
+                                <ul class="listView nobrd">
+                                    @if (!(Model._userdata.Site.APM == true && Model._userdata.Site.CMMS == false && Model._userdata.Site.Sanitation == false) && !(Model._userdata.Site.APM == false && Model._userdata.Site.CMMS == false && Model._userdata.Site.Sanitation == true))
+                                    {
+                                        <li>
+                                            <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnMobileWOTimer").FirstOrDefault().Value.ToString(): </span>
+                                            <span class="inputText">
+                                                @Html.DropDownListFor(m => m.MobileWOTimer, Model.MobileWOTimerList, new { @class = "form-control search select2picker", style = "width:100%;" })
+                                            </span>
+                                        </li>
+                                        if (Model.PackageLevel.ToUpper() == PackageLevelConstant.Enterprise)
+                                        {
+                                            <li>
+                                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnUsePlanningSwitch").FirstOrDefault().Value.ToString():</span>
+                                                <span class="inputText">
+                                                    @Html.CheckBoxFor(m => m.IsUsePlanning, new { @class = "form-control m-input", @style = "color:black; width: auto; margin-top: 12px;" })
+                                                </span>
+                                            </li>
+
+                                            <li>
+                                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnPMLibrary").FirstOrDefault().Value.ToString():</span>
+                                                <span class="inputText">
+                                                    @Html.CheckBoxFor(m => m.PMLibrary, new { @class = "form-control m-input", @style = "color:black; width: auto; margin-top: 12px;" })
+                                                </span>
+                                            </li>
+                                        }
+                                        <li class="useMOD">
+                                            <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnUseMaintenanceOnDemand").FirstOrDefault().Value.ToString():</span>
+                                            <span class="inputText">
+                                                @Html.CheckBoxFor(m => m.IsondemandWorkorderaccess, new { @class = "form-control m-input", @style = "color:black; width: auto; margin-top: 12px;" })
+                                            </span>
+                                            <div style="clear:both;"></div>
+                                        </li>
+                                    }
+                                    <li>
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnWOBarCode").FirstOrDefault().Value.ToString(): </span>
+                                        <span class="inputText">
+                                            @Html.DropDownListFor(m => m.WOBarCode, Model.WOBarCodeList, new { @class = "form-control search select2picker", style = "width:100%;" })
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnSourceAssetAccountForWorkOrder").FirstOrDefault().Value.ToString():</span>
+                                        <span class="inputText">
+                                            @Html.CheckBoxFor(m => m.SourceAssetAccount, new { @class = "form-control m-input", @style = "color:black; width: auto; margin-top: 12px;" })
+                                        </span>
+                                    </li>
+                                </ul>
+                            </div>
+                            @*----V2-1061*@
+                            <div class="tabsArea nobg" id="InvoiceMatch" style="display:none;">
+                                <ul class="listView nobrd">
+                                    <li>
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "globalVarianceCheckOnAuthorizePayment").FirstOrDefault().Value.ToString(): </span>
+                                        <span class="inputText">
+                                            @Html.CheckBoxFor(a => a.InvoiceVarianceCheck, new { @class = "form-control m-input", @style = "color:black; width: auto; margin-top: 12px;" })
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "globalAllowedVariancePercentageOnAuthorizePayment").FirstOrDefault().Value.ToString(): </span>
+                                        <span class="inputText">
+                                            @Html.TextBoxFor(m => m.InvoiceVariance, new { @class = "form-control search m-input integerinput", autocomplete = "off", maxlength = "2" })
+                                        </span>
+                                    </li>
+
+                                </ul>
+                            </div>
+                            @*----end V2-1061*@
+
+                            <div class="tabsArea nobg" id="AddPurchasing" style="display:none;">
+                                <ul class="listView nobrd">
+                                    <li>
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnPRPrefix").FirstOrDefault().Value.ToString():<small>*</small> </span>
+                                        <span class="inputText">
+                                            @Html.ValidationMessageFor(m => m.PRPrefix, "", new { style = "display:none" })
+                                            @Html.TextBoxFor(m => m.PRPrefix, new { @class = "form-control search ", autocomplete = "off", maxlength = "4" })
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnPOPrefix").FirstOrDefault().Value.ToString():<small>*</small> </span>
+                                        <span class="inputText">
+                                            @Html.ValidationMessageFor(m => m.POPrefix, "", new { style = "display:none" })
+                                            @Html.TextBoxFor(m => m.POPrefix, new { @class = "form-control search ", autocomplete = "off", maxlength = "4" })
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnAutoPurchasingPrefix").FirstOrDefault().Value.ToString(): </span>
+                                        <span class="inputText">
+                                            @Html.TextBoxFor(m => m.AutoPurchPrefix, new { @class = "form-control search ", autocomplete = "off", maxlength = "7" })
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnAutoPurchasingCreator").FirstOrDefault().Value.ToString(): </span>
+                                        <span class="inputText">
+                                            @Html.DropDownListFor(m => m.CreatorID, Model.CreatorList, "--Select--", new { @class = "form-control search select2picker", style = "width:100%;" })
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnNonStockDefaultAccount").FirstOrDefault().Value.ToString(): </span>
+                                        <span class="inputText">
+                                            @Html.DropDownListFor(m => m.NonStockDefaultAccount, Model.NoStockDefaultAccountList, "--Select--", new { @class = "form-control search select2picker", style = "width:100%;" })
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnIncludeinAutoPurchasing").FirstOrDefault().Value.ToString(): </span>
+                                        <span class="inputText">
+                                            @Html.CheckBoxFor(m => m.Isincludeinautopurchasing, new { @class = "form-control m-input", @style = "color:black; width: auto; margin-top: 12px;" })
+                                        </span>
+                                    </li>
+                                    @*----V2-820*@
+                                    <li>
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnIncludePRReview").FirstOrDefault().Value.ToString(): </span>
+                                        <span class="inputText">
+                                            @Html.CheckBoxFor(m => m.IsIncludePRPreview, new { @class = "form-control m-input", @style = "color:black; width: auto; margin-top: 12px;" })
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnShoppingCartReviewDefault").FirstOrDefault().Value.ToString(): </span>
+                                        <span class="inputText">
+                                            @Html.DropDownListFor(m => m.ShoppingCartReviewDefault, Model.DefaultReviewerList, "--Select--", new { @class = "form-control search select2picker", style = "width:100%;" })
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnShoppingCartIncludeBuyer").FirstOrDefault().Value.ToString(): </span>
+                                        <span class="inputText">
+                                            @Html.CheckBoxFor(m => m.IsShoppingCartIncludeBuyer, new { @class = "form-control m-input", @style = "color:black; width: auto; margin-top: 12px;" })
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnDefaultBuyer").FirstOrDefault().Value.ToString(): </span>
+                                        <span class="inputText">
+                                            @Html.DropDownListFor(m => m.DefaultBuyer, Model.DefaultBuyerList, "--Select--", new { @class = "form-control search select2picker", style = "width:100%;" })
+                                        </span>
+                                    </li>
+
+                                    @*----end V2-820*@
+                                    @*---- V2-894*@
+                                    <li>
+                                        <span class="label"> @Model.Loc.Where(a => a.ResourceId == "spnOnOrderWhenAddingPurchaseRequestOrder").FirstOrDefault().Value.ToString() : </span>
+                                        <span class="inputText">
+                                            @Html.CheckBoxFor(m => m.IsOnOrderCheck, new { @class = "form-control m-input", @style = "color:black; width: auto; margin-top: 12px;" })
+                                        </span>
+                                    </li>
+                                    @*----end V2-894*@
+                                    @*---- V2-1032*@
+                                    @if (!OraclePurchaseRequestExportInUse)
+                                    {
+                                        <li>
+                                            <span class="label"> @Model.Loc.Where(a => a.ResourceId == "spnDisplayAddEditStockLineItem").FirstOrDefault().Value.ToString() : </span>
+                                            <span class="inputText">
+                                                @Html.CheckBoxFor(m => m.SingleStockLineItem, new { @class = "form-control m-input", @style = "color:black; width: auto; margin-top: 12px;" })
+                                            </span>
+                                        </li>
+                                    }
+
+                                    @*----end V2-1032*@
+                                </ul>
+                            </div>
+
+                            <div class="tabsArea nobg" id="BillTo" style="display:none;">
+                                <ul class="listView nobrd">
+                                    <li>
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnBillToName").FirstOrDefault().Value.ToString(): </span>
+                                        <span class="inputText">
+                                            @Html.TextBoxFor(m => m.BillToName, new { @class = "form-control search ", autocomplete = "off", maxlength = "63" })
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnAddress1").FirstOrDefault().Value.ToString(): </span>
+                                        <span class="inputText">
+                                            @Html.TextBoxFor(m => m.BillToAddress1, new { @class = "form-control search ", autocomplete = "off", maxlength = "63" })
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnAddress2").FirstOrDefault().Value.ToString(): </span>
+                                        <span class="inputText">
+                                            @Html.TextBoxFor(m => m.BillToAddress2, new { @class = "form-control search ", autocomplete = "off", maxlength = "63" })
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnAddress3").FirstOrDefault().Value.ToString(): </span>
+                                        <span class="inputText">
+                                            @Html.TextBoxFor(m => m.BillToAddress3, new { @class = "form-control search ", autocomplete = "off", maxlength = "63" })
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "GlobalCity").FirstOrDefault().Value.ToString(): </span>
+                                        <span class="inputText">
+                                            @Html.TextBoxFor(m => m.BillToCity, new { @class = "form-control search ", autocomplete = "off", maxlength = "63" })
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "GlobalState").FirstOrDefault().Value.ToString(): </span>
+                                        <span class="inputText">
+                                            @Html.TextBoxFor(m => m.BillToState, new { @class = "form-control search ", autocomplete = "off", maxlength = "31" })
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnPostalCode").FirstOrDefault().Value.ToString(): </span>
+                                        <span class="inputText">
+                                            @Html.TextBoxFor(m => m.BillToPostalCode, new { @class = "form-control search ", autocomplete = "off", maxlength = "31" })
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnCountry").FirstOrDefault().Value.ToString(): </span>
+                                        <span class="inputText">
+                                            @Html.TextBoxFor(m => m.BillToCountry, new { @class = "form-control search ", autocomplete = "off", maxlength = "63" })
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnBillToComment").FirstOrDefault().Value.ToString(): </span>
+                                        <span class="inputText">
+                                            @Html.TextBoxFor(m => m.BillToComment, new { @class = "form-control search ", autocomplete = "off", maxlength = "255" })
+                                        </span>
+                                    </li>
+                                </ul>
+                            </div>
+
+
+                            <div class="tabsArea nobg" id="ShipTo" style="display:none;">
+                                <ul class="listView nobrd">
+                                    <li>
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnShipToName").FirstOrDefault().Value.ToString(): </span>
+                                        <span class="inputText">
+                                            @Html.TextBoxFor(m => m.ShipToName, new { @class = "form-control search ", autocomplete = "off", maxlength = "63" })
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnAddress1").FirstOrDefault().Value.ToString(): </span>
+                                        <span class="inputText">
+                                            @Html.TextBoxFor(m => m.ShipToAddress1, new { @class = "form-control search ", autocomplete = "off", maxlength = "63" })
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnAddress2").FirstOrDefault().Value.ToString(): </span>
+                                        <span class="inputText">
+                                            @Html.TextBoxFor(m => m.ShipToAddress2, new { @class = "form-control search ", autocomplete = "off", maxlength = "63" })
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnAddress3").FirstOrDefault().Value.ToString(): </span>
+                                        <span class="inputText">
+                                            @Html.TextBoxFor(m => m.ShipToAddress3, new { @class = "form-control search ", autocomplete = "off", maxlength = "63" })
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "GlobalCity").FirstOrDefault().Value.ToString(): </span>
+                                        <span class="inputText">
+                                            @Html.TextBoxFor(m => m.ShipToCity, new { @class = "form-control search ", autocomplete = "off", maxlength = "63" })
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "GlobalState").FirstOrDefault().Value.ToString(): </span>
+                                        <span class="inputText">
+                                            @Html.TextBoxFor(m => m.ShipToState, new { @class = "form-control search ", autocomplete = "off", maxlength = "31" })
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnPostalCode").FirstOrDefault().Value.ToString(): </span>
+                                        <span class="inputText">
+                                            @Html.TextBoxFor(m => m.ShipToPostalCode, new { @class = "form-control search ", autocomplete = "off", maxlength = "31" })
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnCountry").FirstOrDefault().Value.ToString(): </span>
+                                        <span class="inputText">
+                                            @Html.TextBoxFor(m => m.ShipToCountry, new { @class = "form-control search ", autocomplete = "off", maxlength = "63" })
+                                        </span>
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <div class="tabsArea nobg" id="AssetGroup1" style="display:none;">
+                                <div class="table-responsive">
+                                    <table id="AssetGroup1Table" class="eqpDtlTbl row-border custom-sort" style="width:100%;">
+                                        <thead>
+                                            <tr>
+                                                <th>@Model.AssetGroup1Name @Model.Loc.Where(a => a.ResourceId == "spnID").FirstOrDefault().Value.ToString()</th>
+                                                <th>@Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString()</th>
+                                                <th style="text-align:center !important;">@Model.Loc.Where(a => a.ResourceId == "globalInActive").FirstOrDefault().Value.ToString()</th>
+                                                <th width="17%" style="text-align:center !important;">@Model.Loc.Where(a => a.ResourceId == "globalAction").FirstOrDefault().Value.ToString()</th>
+                                            </tr>
+                                        </thead>
+                                    </table>
+                                </div>
+                                <div class="bttns" id="btnAddAssetGroup1Container" style="display:none">
+                                    <button type="button" class="btn btn-blue" id="btnAddAssetGroup1"><i class="fa fa-plus faIcon"></i> &nbsp;@Model.Loc.Where(a => a.ResourceId == "spnAddAssetGroup1").FirstOrDefault().Value.ToString()</button>
+                                </div>
+                                <div style="clear:both;"></div>
+                            </div>
+                            <div class="tabsArea nobg" id="AssetGroup2" style="display:none;">
+                                <div class="table-responsive">
+                                    <table id="AssetGroup2Table" class="eqpDtlTbl row-border custom-sort" style="width:100%;">
+                                        <thead>
+                                            <tr>
+                                                <th>@Model.AssetGroup2Name @Model.Loc.Where(a => a.ResourceId == "spnID").FirstOrDefault().Value.ToString()</th>
+                                                <th>@Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString()</th>
+                                                <th style="text-align:center !important;">@Model.Loc.Where(a => a.ResourceId == "globalInActive").FirstOrDefault().Value.ToString()</th>
+                                                <th width="17%" style="text-align:center !important;">@Model.Loc.Where(a => a.ResourceId == "globalAction").FirstOrDefault().Value.ToString()</th>
+                                            </tr>
+                                        </thead>
+                                    </table>
+                                </div>
+                                <div class="bttns" id="btnAddAssetGroup2Container" style="display:none">
+                                    <button type="button" class="btn btn-blue" id="btnAddAssetGroup2"><i class="fa fa-plus faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "spnAddAssetGroup2").FirstOrDefault().Value.ToString()</button>
+                                </div>
+                                <div style="clear:both;"></div>
+                            </div>
+                            <div class="tabsArea nobg" id="AssetGroup3" style="display:none;">
+                                <div class="table-responsive">
+                                    <table id="AssetGroup3Table" class="eqpDtlTbl row-border custom-sort" style="width:100%;">
+                                        <thead>
+                                            <tr>
+                                                <th>@Model.AssetGroup3Name @Model.Loc.Where(a => a.ResourceId == "spnID").FirstOrDefault().Value.ToString()</th>
+                                                <th>@Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString()</th>
+                                                <th style="text-align:center !important;">@Model.Loc.Where(a => a.ResourceId == "globalInActive").FirstOrDefault().Value.ToString()</th>
+                                                <th width="17%" style="text-align:center !important;">@Model.Loc.Where(a => a.ResourceId == "globalAction").FirstOrDefault().Value.ToString()</th>
+                                            </tr>
+                                        </thead>
+                                    </table>
+                                </div>
+                                <div class="bttns" id="btnAddAssetGroup3Container" style="display:none">
+                                    <button type="button" class="btn btn-blue" id="btnAddAssetGroup3"><i class="fa fa-plus faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "spnAddAssetGroup3").FirstOrDefault().Value.ToString()</button>
+                                </div>
+                                <div style="clear:both;"></div>
+                            </div>
+                            <div class="tabsArea nobg" id="ShoppingCart" style="display:none;">
+                                <div class="m-portlet__head" style="padding:0; height:2.5rem; margin-bottom:10px;">
+                                    <div class="m-portlet__head-caption">
+                                        <div class="m-portlet__head-title">
+                                            <h3 class="m-portlet__head-text" style="vertical-align:top;">
+                                                @Model.Loc.Where(a => a.ResourceId == "spnShoppingCart").FirstOrDefault().Value.ToString()
+                                            </h3>
+                                        </div>
+                                    </div>
+                                </div>
+                                <ul class="listView nobrd">
+                                    <li>
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnDefaultBuyer").FirstOrDefault().Value.ToString() : </span>
+                                        <span class="inputText">
+                                            <input type="text" class="form-control search" />
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "PartMasterRequestEmail").FirstOrDefault().Value.ToString(): </span>
+                                        <span class="inputText">
+                                            <input type="text" class="form-control search" />
+                                        </span>
+                                    </li>
+                                </ul>
+                            </div>
+
+                            @*----V2-720*@
+                            <div class="tabsArea nobg" id="ApprovalGroupSettings" style="display:none;">
+                                <ul class="listView nobrd">
+                                    <li>
+                                        <span class="label">Material Requests : </span>
+                                        <span class="inputText">
+                                            @Html.CheckBoxFor(a => a.approvalGroupSettingsModel.MaterialRequests, new { @class = "form-control m-input", @style = "color:black; width: auto; margin-top: 12px;" })
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label">Purchase Requests : </span>
+                                        <span class="inputText">
+                                            @Html.CheckBoxFor(a => a.approvalGroupSettingsModel.PurchaseRequests, new { @class = "form-control m-input", @style = "color:black; width: auto; margin-top: 12px;" })
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label">Sanitation Requests : </span>
+                                        <span class="inputText">
+                                            @Html.CheckBoxFor(a => a.approvalGroupSettingsModel.SanitationRequests, new { @class = "form-control m-input", @style = "color:black; width: auto; margin-top: 12px;" })
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label">Work Requests : </span>
+                                        <span class="inputText">
+                                            @Html.CheckBoxFor(a => a.approvalGroupSettingsModel.WorkRequests, new { @class = "form-control m-input", @style = "color:black; width: auto; margin-top: 12px;" })
+                                        </span>
+                                    </li>
+                                    @Html.HiddenFor(m => m.approvalGroupSettingsModel.ApprovalGroupSettingsId)
+                                </ul>
+                            </div>
+                            @*----end V2-720*@
+
+                            <div style="clear:both;"></div>
+                            <div class="bttn_pagin">
+                                <div class="bttns2">
+                                    <button class="btn btn-blue mobBttn" name="Command" value="save" id="btnSaveSite"><i class="fa fa-save faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+                                </div>
+                                <div style="clear:both;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @Html.HiddenFor(m => m.SiteId)
+    @Html.HiddenFor(m => m.ClientOnPremise)
+    @Html.HiddenFor(m => m.tabType)
+}
+<style type="text/css">
+    .trashIcon {
+        z-index: 101;
+    }
+
+    @@media screen and (max-width: 1367px) {
+        .openMenu ul.listView.nobrd li.useMOD {
+            height: auto;
+        }
+
+            .openMenu ul.listView.nobrd li.useMOD span.label {
+                height: auto;
+                line-height: 18px;
+            }
+    }
+
+    @@media screen and (max-width: 1359px) {
+        ul.listView.nobrd li.useMOD {
+            height: auto;
+        }
+
+            ul.listView.nobrd li.useMOD span.label {
+                height: auto;
+                line-height: 18px;
+            }
+    }
+
+    @@media only screen and (width:1024px) {
+        .openMenu ul.listView.nobrd li.useMOD {
+            height: auto;
+        }
+
+            .openMenu ul.listView.nobrd li.useMOD span.label {
+                height: auto;
+                line-height: 18px;
+            }
+
+        .closeMenu ul.listView.nobrd li.useMOD {
+            height: 37px;
+        }
+
+            .closeMenu ul.listView.nobrd li.useMOD span.label {
+                height: 37px;
+                line-height: 37px;
+            }
+    }
+</style>

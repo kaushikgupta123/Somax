@@ -1,0 +1,37 @@
+﻿@model Client.Models.PurchaseApproval.PurchaseApprovalVM
+@{
+    Layout = null;
+}
+<table id="" dt-options="dtOptions" class="UserGridDataTable childtable" style="width:100%">
+    <thead>
+        <tr>
+            <th>@Model.Loc.Where(a => a.ResourceId == "spnPdLineNo").FirstOrDefault().Value.ToString()</th>
+            <th>@Model.Loc.Where(a => a.ResourceId == "spnPartID").FirstOrDefault().Value.ToString()</th>
+            <th>@Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString()</th>
+            <th style="text-align:right !important;">@Model.Loc.Where(a => a.ResourceId == "spnPdQuantity").FirstOrDefault().Value.ToString()</th>
+            <th>@Model.Loc.Where(a => a.ResourceId == "globalUnits").FirstOrDefault().Value.ToString()</th>
+            <th style="text-align:right !important;">@Model.Loc.Where(a => a.ResourceId == "spnUnitCost").FirstOrDefault().Value.ToString()</th>
+            <th style="text-align:right !important;">@Model.Loc.Where(a => a.ResourceId == "spnPdTotalCost").FirstOrDefault().Value.ToString()</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model.LineItemList.Count > 0)
+        {
+            foreach (var pro in Model.LineItemList)
+            {
+                <tr>
+                    <td>@pro.LineNumber</td>
+                    <td>@pro.PartClientLookupId</td>
+                    <td>@(pro.Description)</td>
+                    <td>@Math.Round(pro.OrderQuantity, 2)</td>
+                    <td>@pro.UnitofMeasure</td>
+                    <td>@Math.Round(pro.UnitCost, 2)</td>
+                    <td>@Math.Round(pro.TotalCost, 2)</td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+<style type="text/css">
+    .childtable tr th { background: #4da5fe; color: #fff !important; white-space: nowrap !important; text-align: center !important; font-weight: 400 !important; }
+</style>

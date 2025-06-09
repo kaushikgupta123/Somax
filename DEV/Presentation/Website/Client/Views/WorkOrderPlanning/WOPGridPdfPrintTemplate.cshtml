@@ -1,0 +1,122 @@
+﻿@model Client.Models.WorkOrderPlanning.WorkOrderPlanningVM
+@{ Layout = null;}
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Somax | Work Order Planning</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css" />
+    <link rel="shortcut icon" href="~/Scripts/Metronic/assets/login/demo/default/media/img/logo/favicon.png" />
+    <style type="text/css">
+        thead, tfoot {
+            display: table-row-group;
+        }
+
+        .my-table {
+            width: 100%;
+        }
+
+        table, tr, td, th, tbody, thead, tfoot {
+            page-break-inside: avoid !important;
+        }
+
+            table thead.mainTableHead tr th:last-child,
+            table thead.childTableHead tr th:last-child {
+                border-right: 0 !important;
+            }
+            /*table tbody.mainTableBody tr td:last-child,*/
+            table tbody.childTableBody tr td:last-child {
+                border-right: 0 !important;
+            }
+
+            table tbody.mainTableBody tr td:first-child {
+                border-left: 1px solid #d8d8d8 !important;
+            }
+
+            table tbody.childTableBody tr td:first-child {
+                border-left: 0 !important;
+            }
+    </style>
+</head>
+
+<body style="padding:0; margin:0; font-family: 'Roboto', sans-serif; font-size:12px; color:#737272;">
+    <table border="0" cellspacing="0" cellpadding="0" align="center" style="width:100%;">
+        <tr>
+            <td align="left" valign="top" style="border-bottom: 2px solid #264a7c;">
+                <div style="min-height:.01%; overflow-x: auto;">
+                    <table border="0" cellspacing="0" cellpadding="0" style="width:100%;" class="my-table">
+                        <thead class="mainTableHead">
+                            <tr style="background:#264a7c;">
+                                @foreach (var hed in Model.tableHaederProps)
+                                {
+                                    <th align="center" valign="middle" height="40" scope="col" style="border-right:1px solid #fff; font-size:12px; color:#fff; line-height:40px; font-weight:normal">@hed.title</th>
+                                }
+                            </tr>
+                        </thead>
+
+                        <tbody class="mainTableBody">
+                            @foreach (var item in Model.workOrderPlanPDFPrintModel)
+                            {
+                                <tr style="background:#fff;">
+                                    @foreach (var hed in Model.tableHaederProps)
+                                    {
+                                        if (!string.IsNullOrWhiteSpace(hed.property))
+                                        {
+                                            <td align="center" valign="middle" height="40" style="border-right:1px solid #d8d8d8; font-size:12px; line-height:40px; font-weight:normal;">@item.GetType().GetProperty(hed.property).GetValue(item, null)</td>
+                                        }
+
+                                    }
+                                </tr>
+                                if (item.WOPlanLineItemModelList.Count > 0)
+                                {
+                                    <tr>
+                                        <td colspan="@Model.tableHaederProps.Count()" style="padding:5px; border:1px solid #d8d8d8;">
+                                            <table border="0" cellspacing="0" cellpadding="0" style="border:1px solid #ebe8f2; width:100%" class="my-table">
+                                                <thead class="childTableHead">
+                                                    <tr style="background:#ebe8f2;">
+                                                        <th width="12%" align="center" valign="middle" height="40" scope="col" style="border-right:1px solid #fff; font-size:12px; line-height:40px; font-weight:normal;">@Model.Loc.Where(a => a.ResourceId == "spnGlobalWorkOrderID").FirstOrDefault().Value.ToString()</th>
+                                                        <th width="12%" align="center" valign="middle" height="40" scope="col" style="border-right:1px solid #fff; font-size:12px; line-height:40px; font-weight:normal;">@Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString()</th>
+                                                        <th width="15%" align="center" valign="middle" height="40" scope="col" style="border-right:1px solid #fff; font-size:12px; line-height:40px; font-weight:normal;">@Model.Loc.Where(a => a.ResourceId == "spnRequired").FirstOrDefault().Value.ToString()</th>
+                                                        <th width="12%" align="center" valign="middle" height="40" scope="col" style="border-right:1px solid #fff; font-size:12px; line-height:40px; font-weight:normal;">@Model.Loc.Where(a => a.ResourceId == "spnAssetID").FirstOrDefault().Value.ToString()</th>
+                                                        <th width="12%" align="center" valign="middle" height="40" scope="col" style="border-right:1px solid #fff; font-size:12px; line-height:40px; font-weight:normal;">@Model.Loc.Where(a => a.ResourceId == "spnAssetName").FirstOrDefault().Value.ToString()</th>
+                                                        <th width="12%" align="center" valign="middle" height="40" scope="col" style="border-right:1px solid #fff; font-size:12px; line-height:40px; font-weight:normal;">@Model.Loc.Where(a => a.ResourceId == "spnStatus").FirstOrDefault().Value.ToString()</th>
+                                                        <th width="12%" align="center" valign="middle" height="40" scope="col" style="border-right:1px solid #fff; font-size:12px; line-height:40px; font-weight:normal;">@Model.Loc.Where(a => a.ResourceId == "spnCompleteDate").FirstOrDefault().Value.ToString()</th>
+                                                        <th width="13%" align="center" valign="middle" height="40" scope="col" style="border-right:1px solid #fff; font-size:12px; line-height:40px; font-weight:normal;">@Model.Loc.Where(a => a.ResourceId == "GlobalType").FirstOrDefault().Value.ToString()</th>
+                                                    </tr>
+                                                </thead>
+
+                                                <tbody class="childTableBody">
+                                                    @foreach (var line in item.WOPlanLineItemModelList)
+                                                    {
+                                                        <tr style="background:#fff;">
+                                                            <td align="center" valign="middle" height="40" style="border-right:1px solid #ebe8f2; font-size:12px; line-height:40px; font-weight:normal;">@line.ClientLookupId</td>
+                                                            <td align="center" valign="middle" height="40" style="border-right:1px solid #ebe8f2; font-size:12px; line-height:40px; font-weight:normal;">@line.Description</td>
+                                                            <td align="center" valign="middle" height="40" style="border-right:1px solid #ebe8f2; font-size:12px; line-height:40px; font-weight:normal;">@line.RequiredDate</td>
+                                                            <td align="center" valign="middle" height="40" style="border-right:1px solid #ebe8f2; font-size:12px; line-height:40px; font-weight:normal;">@line.AssetId</td>
+                                                            <td align="center" valign="middle" height="40" style="border-right:1px solid #ebe8f2; font-size:12px; line-height:40px; font-weight:normal;">@line.ChargeTo_Name</td>
+                                                            <td align="center" valign="middle" height="40" style="border-right:1px solid #ebe8f2; font-size:12px; line-height:40px; font-weight:normal;">@line.Status</td>
+                                                            <td align="center" valign="middle" height="40" style="border-right:1px solid #ebe8f2; font-size:12px; line-height:40px; font-weight:normal;">@line.CompleteDate</td>
+                                                            <td align="center" valign="middle" height="40" style="border-right:1px solid #ebe8f2; font-size:12px; line-height:40px; font-weight:normal;">@line.Type</td>
+                                                        </tr>
+                                                    }
+                                                </tbody>
+                                                <tfoot>
+                                                    <tr style="background:#ebe8f2;">
+                                                        <th width="75%" colspan="6" align="center" valign="middle" height="40" scope="col" style="border-right:1px solid #fff; font-size:12px; color:#222; line-height:40px; font-weight:normal;"></th>
+                                                        <th width="12%" align="right" valign="middle" height="40" scope="col" style=" border-right:1px solid #fff; font-size:12px; color:#fff; line-height:40px; font-weight:bold; padding-right:10px;"></th>
+                                                        <th width="13%" align="center" valign="middle" height="40" scope="col" style="font-size:12px; color:#222; line-height:40px; font-weight:normal;"></th>
+                                                    </tr>
+                                                </tfoot>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>

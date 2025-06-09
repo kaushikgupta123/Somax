@@ -1,0 +1,149 @@
+﻿@model Client.Models.VendorsVM
+
+@*<link href="~/Scripts/Metronic/assets/demo/default/base/style_newCustom.css" rel="stylesheet" />*@
+<div class="m-subheader">
+    <div class="new-m-subheader">
+        <div class="PageTitle">
+            <div class="align-items-center separator">
+                <h3 class="m-subheader__title ">
+                    @Model.Loc.Where(a => a.ResourceId == "Vendor").FirstOrDefault().Value.ToString()
+                </h3>
+            </div>
+        </div>
+
+        <div class="NewBreadcrumbArea">
+            <div class="newBreadcrumb">
+                <ul>
+                    <li><a href="/Dashboard/Dashboard">&nbsp;</a></li>
+                    <li><a href="/Vendor/Index?page=Inventory_Vendors">@Model.Loc.Where(a => a.ResourceId == "VendorSearch").FirstOrDefault().Value.ToString()</a></li>
+                    <li><a href="javascript:void(0)" id="brdvendorinfo" data-val="@Model.VendorInsuranceWidgetModel.VendorId">@Model.VendorInsuranceWidgetModel.VendorClientLookupId</a></li>
+                    <li class="active">@Model.Loc.Where(a => a.ResourceId == "spnEditVendorInsuranceInformation").FirstOrDefault().Value.ToString()</li>
+                </ul>
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+        <div style="clear:both;"></div>
+    </div>
+</div>
+
+@Html.Partial("_ErrorDiv")
+@using (Ajax.BeginForm("EditVendorInsuranceInformation", "Vendor", new AjaxOptions { HttpMethod = "Post", OnSuccess = "UpdateVendorInsuranceInfoOnSuccess", OnBegin = "AjaxBeginFormBegin", OnComplete = "AjaxBeginFormComplete", OnFailure = "AjaxBeginFormFaillure" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="row">
+
+        <div class="col-xl-12">
+            <div class="row">
+                <div class="col-xl-12" id="btnnblock">
+                    <div class="m-portlet" id="m_portlet" style="padding:15px;">
+                        <div class="bottomBlock">
+                            <div class="tabsArea nobg" id="Identification" style="display:block;">
+                                <ul class="listView nobrd">
+                                    <li>
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "globalOwner").FirstOrDefault().Value.ToString() : </span>
+                                        <span class="inputText">
+                                            <div class="dropdown dropTableOuter">
+                                                <div class="input-group">
+                                                    @Html.TextBoxFor(m => m.VendorInsuranceWidgetModel.ContractorOwner_ClientLookupId, new
+                                               {
+                                                   @class = "form-control search dropbtn readonly",
+                                                   @readonly = "readonly",
+                                                   autocomplete = "off",
+                                                   style = "display:block;"
+                                               })
+                                                    @Html.TextBoxFor(m => m.VendorInsuranceWidgetModel.ContractorOwner, new
+                                                    {
+                                                        @class = "form-control search dropbtn readonly",
+                                                        @readonly = "readonly",
+                                                        autocomplete = "off",
+                                                        style = "display:none;"
+                                                    })
+                                                    @if (Model.VendorInsuranceWidgetModel.ContractorOwner_ClientLookupId == "" || Model.VendorInsuranceWidgetModel.ContractorOwner_ClientLookupId == null)
+                                                    {
+                                                        <div class="input-group-btn">
+                                                            <button class="btn btn-white btntxtInputGroup ClearPersonnelModalPopupGridData" type="button" data-textfield="VendorInsuranceWidgetModel_ContractorOwner_ClientLookupId"
+                                                                    data-valuefield="VendorInsuranceWidgetModel_ContractorOwner" style="display:none;">
+                                                                <i id="srcicon" class="fa fa-close"></i>
+                                                            </button>
+                                                        </div>
+                                                    }
+                                                    else
+                                                    {
+                                                        <div class="input-group-btn">
+                                                            <button class="btn btn-white btntxtInputGroup ClearPersonnelModalPopupGridData" type="button" data-textfield="VendorInsuranceWidgetModel_ContractorOwner_ClientLookupId"
+                                                                    data-valuefield="VendorInsuranceWidgetModel_ContractorOwner" style="display:block;">
+                                                                <i id="srcicon" class="fa fa-close"></i>
+                                                            </button>
+                                                        </div>
+                                                    }
+                                                    <div class="input-group-btn">
+                                                        <button class="btn btn-white btntxtInputGroup OpenPersonnelModalPopupGrid" type="button" data-textfield="VendorInsuranceWidgetModel_ContractorOwner_ClientLookupId"
+                                                                data-valuefield="VendorInsuranceWidgetModel_ContractorOwner">
+                                                            <i id="srcicon" class="fa fa-search"></i>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnSICCode").FirstOrDefault().Value.ToString() : </span>
+                                        <span class="inputText">
+                                            @Html.ValidationMessageFor(m => m.VendorInsuranceWidgetModel.SICCode, "", new { style = "display:none" })
+                                            @Html.TextBoxFor(m => m.VendorInsuranceWidgetModel.SICCode, new { @class = "form-control search", autocomplete = "off", maxlength = 31 })
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnOSHARate").FirstOrDefault().Value.ToString() : </span>
+                                        <span class="inputText">
+                                            @Html.ValidationMessageFor(m => m.VendorInsuranceWidgetModel.OSHARate, "", new { style = "display:none" })
+                                            @Html.TextBoxFor(m => m.VendorInsuranceWidgetModel.OSHARate, new { @class = "form-control search decimalinput", autocomplete = "off" })
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnExpModRate").FirstOrDefault().Value.ToString() : </span>
+                                        <span class="inputText">
+                                            @Html.ValidationMessageFor(m => m.VendorInsuranceWidgetModel.ExpModRate, "", new { style = "display:none" })
+                                            @Html.TextBoxFor(m => m.VendorInsuranceWidgetModel.ExpModRate, new { @class = "form-control search decimalinput", autocomplete = "off" })
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnNAICSCode").FirstOrDefault().Value.ToString() : </span>
+                                        <span class="inputText">
+                                            @Html.ValidationMessageFor(m => m.VendorInsuranceWidgetModel.NAICSCode, "", new { style = "display:none" })
+                                            @Html.TextBoxFor(m => m.VendorInsuranceWidgetModel.NAICSCode, new { @class = "form-control search", autocomplete = "off", maxlength = 31 })
+                                        </span>
+                                    </li>
+                                    <li id="liType">
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnClassCode").FirstOrDefault().Value.ToString() : </span>
+                                        <span class="inputText">
+                                            @Html.ValidationMessageFor(m => m.VendorInsuranceWidgetModel.ClassCode, "", new { style = "display:none" })
+                                            @Html.DropDownListFor(m => m.VendorInsuranceWidgetModel.ClassCode, Model.VendorInsuranceWidgetModel.LookupClassCodeList, "--Select--", new { @class = "form-control search select2picker", style = "width:100%;" })
+                                        </span>
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <div class="idBttns">
+                                <div class="bttn_pagin">
+                                    <div class="bttns2">
+                                        @if (Model.security.Vendor_Insurance.Create)
+                                        {
+                                            <button class="btn btn-blue mobBttn" name="Command" value="save" id="btnSaveVIInfo"><i class="fa fa-save faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+                                        }
+                                    </div>
+                                    <div class="bttns"><button type="button" class="btn btn-blue mobBttn" id="btnCancelVIInfo"><i class="fa fa-close faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button></div>
+
+                                    <div style="clear:both;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @Html.HiddenFor(m => m.VendorInsuranceWidgetModel.VendorId)
+}
+
+@Html.Partial("~/Views/Vendor/_PersonnelPopupLookup.cshtml")

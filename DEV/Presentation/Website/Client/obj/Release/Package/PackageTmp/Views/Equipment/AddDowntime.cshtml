@@ -1,0 +1,87 @@
+﻿@model Client.Models.EquipmentCombined
+
+<div class="m-subheader fixedDiv1">
+    <div class="new-m-subheader">
+        <div class="PageTitle">
+            <div class="align-items-center separator">
+                <h3 class="m-subheader__title ">
+                    @Model.Loc.Where(a => a.ResourceId == "hdrTitle").FirstOrDefault().Value.ToString()
+                </h3>
+            </div>
+        </div>
+
+        <div class="NewBreadcrumbArea">
+            <div class="newBreadcrumb">
+                <ul>
+                    <li><a href="/Dashboard/Dashboard">&nbsp;</a></li>
+                    <li><a href="/Equipment/Index?page=Maintenance_Assets">@Model.Loc.Where(a => a.ResourceId == "anchPagename").FirstOrDefault().Value.ToString()</a></li>
+                    <li class="lithisequipment" data-val="@Model.downTimeModel.EquipmentId"><a href="javascript:void(0)">@Model._EquipmentSummaryModel.Equipment_ClientLookupId</a></li>
+                    <li class="active" id="spnDowntimeAdd">@Model.Loc.Where(a => a.ResourceId == "GlobalAddDowntime").FirstOrDefault().Value.ToString()</li>
+                </ul>
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+        <div style="clear:both;"></div>
+    </div>
+</div>
+<div class="pushDiv1"></div>
+
+<div class="row fixedDiv2">
+    @Html.Partial("_EquipmentSummary", Model)
+</div>
+<div class="pushDiv2"></div>
+@Html.Partial("_ErrorDiv")
+
+@using (Ajax.BeginForm("DownTimeAdd", "Equipment", new AjaxOptions { HttpMethod = "Post", OnSuccess = "DownTimeAddOnSuccess", OnBegin = "AjaxBeginFormBegin", OnComplete = "AjaxBeginFormComplete", OnFailure = "AjaxBeginFormFaillure" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="row">
+        <div class="col-xl-12">
+            <div class="m-portlet newPort" id="m_portlet" style="padding:15px;">
+                <div class="bottomBlock">
+                    <div class="tabsArea nobg">
+                        <ul class="listView nobrd">                            
+                            <li>
+                                <span class="label" id="spnDateDown">@Html.LabelFor(m => m.downTimeModel.DateDown) : <small>*</small></span>
+                                <span class="inputText">
+                                    @Html.ValidationMessageFor(m => m.downTimeModel.DateDown, "", new { style = "display:none" })
+
+                                    @Html.TextBoxFor(m => m.downTimeModel.DateDown, "{0:MM/dd/yyyy}", new { @class = "form-control search dtpicker", autocomplete = "off" })
+                                </span>
+                            </li>
+                            <li>
+                                <span class="label" id="spnMinutesDown">@Html.LabelFor(m => m.downTimeModel.MinutesDown) : <small>*</small></span>
+                                <span class="inputText">
+                                    @Html.ValidationMessageFor(m => m.downTimeModel.MinutesDown, "", new { style = "display:none" })
+                                    @Html.TextBoxFor(m => m.downTimeModel.MinutesDown, new { @class = "form-control search decimalinput", autocomplete = "off" })
+                                </span>
+                            </li>
+                            @*For V2-695*@
+                            <li>
+                                <span class="label" id="spnReasonForDown">@Model.Loc.Where(a => a.ResourceId == "spnReasonForDown").FirstOrDefault().Value.ToString() :<small>*</small></span>
+                                <span class="inputText">
+                                    @Html.ValidationMessageFor(m => m.downTimeModel.ReasonForDown, "", new { style = "display:none" })
+                                    @Html.DropDownListFor(m => m.downTimeModel.ReasonForDown, Model.ReasonForDownList, "--Select--", new { @class = "form-control select2picker", style = "width:100%;" })
+                                </span>
+                            </li>                           
+                        </ul>
+                    </div>
+                    <div style="clear:both;"></div>
+                    <div class="idBttns">
+                        <div class="bttn_pagin">
+                            <div class="bttns2">
+                                <button type="submit" class="btn btn-blue mobBttn" id="btnAddDowntimeSave"><i class="fa fa-save faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+                            </div>
+                            <div class="bttns"><button type="button" class="btn btn-blue mobBttn" id="btnAddDowntimeCancel"><i class="fa fa-close faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button></div>
+                            <div style="clear:both;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @Html.HiddenFor(m => m.downTimeModel.EquipmentId)
+    @Html.HiddenFor(m => m.downTimeModel.PersonnelClientLookupId)
+    @Html.HiddenFor(m => m.downTimeModel.WorkOrderClientLookupId)
+}
+

@@ -1,0 +1,178 @@
+﻿@model Client.Models.Work_Order.WorkOrderVM
+
+@{
+  ViewBag.Title = "Somax | Work Order Approval Work Bench";
+}
+@Styles.Render("~/Content/datatable")
+<link href="~/Scripts/dropzone/basic.min.css" rel="stylesheet" />
+<link href="~/Scripts/dropzone/dropzone.min.css" rel="stylesheet" />
+<link href="~/Content/sidebar_custom.css" rel="stylesheet" />
+<link href="~/Scripts/Metronic/assets/demo/default/base/GlobalSearchGrid.css" rel="stylesheet" />
+@section scripts {
+  @Scripts.Render("~/bundles/datatable")
+  @Scripts.Render("~/bundles/imagezoom")
+  @Scripts.Render("~/bundles/WorkorderApproval")
+
+  <script type="text/javascript">
+    com_github_culmat_jsTreeTable.register(this);
+  </script>
+}
+<div id="RenderWOWorkBench">
+  <div class="m-subheader">
+    <div class="new-m-subheader">
+      <div class="PageTitle">
+        <div class="align-items-center separator">
+          <h3 class="m-subheader__title ">
+            @Model.Loc.Where(a => a.ResourceId == "spnApprovalWorkBench").FirstOrDefault().Value.ToString()
+          </h3>
+        </div>
+      </div>
+
+      <div class="NewBreadcrumbArea">
+        <div class="newBreadcrumb">
+          <ul>
+            <li><a href="/Dashboard/Dashboard">&nbsp;</a></li>
+            <li class="active">@Model.Loc.Where(a => a.ResourceId == "spnApprovalWorkBench").FirstOrDefault().Value.ToString()</li>
+          </ul>
+          <div style="clear:both;"></div>
+        </div>
+      </div>
+      <div style="clear:both;"></div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-xl-12">
+      <div class="m-portlet" id="m_portlet" style="padding:15px; margin-bottom:0;">
+        <div class="actionBar">
+          <div class="pull-left">
+            <div class="ActionSearchDrop LoaderDrop">
+              @Html.DropDownListFor(m => m.workOrderModel.Status, Model.workOrderModel.WbStatusList, new { @class = "form-control search adv-item select2picker LoaderDrop", id = "AWBStatus", style = "width:100%;" })
+            </div>
+            <div class="ActionSearchDrop LoaderDrop drpAdjust">
+              @Html.DropDownListFor(m => m.workOrderModel.Creator, Model.workOrderModel.CreateDatesList, new { @class = "form-control search adv-item select2picker LoaderDrop", id = "AWBcreatedates", style = "width:100%;" })
+            </div>
+            <button type="button" class="btn btn-white navbar-btn" id="sidebarCollapse" title="Advance Search"><i class="fa fa-filter" style="font-size: 1.3rem;"></i></button>
+            <ul class="filter_apply globalFilterAdjusted">
+              <li class="textFilter"><span class="spnControlCounter">0</span> @Model.Loc.Where(a => a.ResourceId == "globalFiltersAppiled").FirstOrDefault().Value.ToString()</li>
+              <li class="textClear" id="liclearadvsearch"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "globalClear").FirstOrDefault().Value.ToString()</a></li>
+            </ul>
+            <div style="clear:both;"></div>
+          </div>
+          <div style="clear:both;"></div>
+          <div id="dvFilterSearchSelect2" class="adv-search-container-for-multiple-dropdowns"></div>
+          <div style="clear:both;"></div>
+        </div>
+        <div style="clear:both;"></div>
+
+        <div id="Active" class="tabcontent" style="display:block;">
+          <div class="table-responsive">
+
+            <table id="tblworkbenchapproval" class="eqpDtlTbl row-border custom-sort" style="width:1500px;">
+              <thead>
+                  <tr>
+                      <th width="2%">
+                          <input name="select_all" value="1" id="eqsearch-select-all" type="checkbox" />
+                      </th>
+                      <th>@Model.Loc.Where(a => a.ResourceId == "spnWorkOrderId").FirstOrDefault().Value.ToString()</th>
+                      <th>@Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString()</th>
+                      <th>@Model.Loc.Where(a => a.ResourceId == "GlobalChargeTo").FirstOrDefault().Value.ToString()</th>
+                      <th>@Model.Loc.Where(a => a.ResourceId == "spnChargeToName").FirstOrDefault().Value.ToString()</th>
+                      <th>@Model.Loc.Where(a => a.ResourceId == "spnWorkAssigned").FirstOrDefault().Value.ToString()</th>
+                      <th>@Model.Loc.Where(a => a.ResourceId == "spnShift").FirstOrDefault().Value.ToString()</th>
+                      <th>@Model.Loc.Where(a => a.ResourceId == "spnScheduledDate").FirstOrDefault().Value.ToString()</th>
+                      <th width="10%">@Model.Loc.Where(a => a.ResourceId == "spnScheduledDuration").FirstOrDefault().Value.ToString()</th>
+                      <th>@Model.Loc.Where(a => a.ResourceId == "globalCreateDate").FirstOrDefault().Value.ToString()</th>
+                      <th>@Model.Loc.Where(a => a.ResourceId == "spnCreatedBy").FirstOrDefault().Value.ToString()</th>
+                      
+                  </tr>
+              </thead>
+            </table>
+          </div>
+        </div>
+        <div style="clear:both;"></div>
+
+        <div class="idBttns">
+          <div class="bttn_pagin">
+            <div class="bttns">
+              <button type="button" class="btn btn-blue mobBttn" id="btndenypopupshow"><i class="fa fa-close faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalDeny").FirstOrDefault().Value.ToString()</button>
+            </div>
+            <div class="bttns2">
+              <button type="submit" class="btn btn-blue mobBttn" id="btnapprove"><i class="fa fa-check faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalApprove").FirstOrDefault().Value.ToString()</button>
+            </div>
+            <div style="clear:both;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <nav class="sidebar">
+    <div id="dismiss">
+      <i class="fa fa-close"></i>
+    </div>
+    <div class="sidebar-header">
+      <h3><i class="fa fa-filter" style="position: relative; top: -2px;"></i> @Model.Loc.Where(a => a.ResourceId == "spnFilters").FirstOrDefault().Value.ToString() <span class="spnControlCounter">0</span></h3>
+      <button type="button" class="btn btn-blue filterSearch" id="btnappwobenchAdvSrch"><i class="fa fa-search" style="margin-top:-3px;"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalSearch").FirstOrDefault().Value.ToString()   </button>
+    </div>
+
+    <div class="sidebar-content" id="advsearchsidebar">
+      <form action="#" method="post">
+        <div class="form-group">
+          <label for="adv-workworder" id="lblEquipmentID" name="EquipmentID">@Model.Loc.Where(a => a.ResourceId == "GlobalWorkOrder").FirstOrDefault().Value.ToString()</label>
+          <input type="text" class="form-control search adv-item" id="adv-workworder" autocomplete="off" style="color:#333;">
+        </div>
+        <div class="form-group">
+          <label for="adv-Description" id="lblName">@Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString()</label>
+          <input type="text" class="form-control search adv-item" id="adv-Description" autocomplete="off" style="color:#333;">
+        </div>
+        <div class="form-group">
+          <label for="adv-ChargeTo" id="lblLocation">@Model.Loc.Where(a => a.ResourceId == "GlobalChargeTo").FirstOrDefault().Value.ToString()</label>
+          <input type="text" class="form-control search adv-item" id="adv-ChargeTo" autocomplete="off" style="color:#333;">
+        </div>
+        <div class="form-group">
+          <label for="adv-ChargeToName" id="lblSerialNumber">@Model.Loc.Where(a => a.ResourceId == "spnChargeToName").FirstOrDefault().Value.ToString()</label>
+          <input type="text" class="form-control search adv-item" id="adv-ChargeToName" autocomplete="off" style="color:#333;">
+        </div>
+        <div class="form-group">
+          <label for="adv-WorkAssigned" id="lblType">@Model.Loc.Where(a => a.ResourceId == "spnWorkAssigned").FirstOrDefault().Value.ToString()</label>
+          @Html.DropDownListFor(m => m.workOrderModel.WorkAssigned_PersonnelId, Model.workOrderModel.WorkAssignedLookUpList, "--Select--", new { @class = "form-control search adv-item select2picker", id = "adv-WorkAssigned", style = "width:100%;" })
+        </div>
+        <div class="form-group">
+          <label for="adv-shift" id="lblMake">@Model.Loc.Where(a => a.ResourceId == "spnShift").FirstOrDefault().Value.ToString()</label>
+          @Html.DropDownListFor(m => m.workOrderModel.Shift, Model.workOrderModel.ShiftList, "--Select--", new { @class = "form-control search adv-item select2picker", id = "adv-shift", style = "width:100%;" })
+        </div>
+        <div class="form-group">
+          <label for="adv-ScheduledDate" id="lblModel">@Model.Loc.Where(a => a.ResourceId == "spnScheduledDate").FirstOrDefault().Value.ToString()</label>
+          <input type="text" class="form-control search adv-item dtpicker" id="adv-ScheduledDate" autocomplete="off" style="color:#333;">
+        </div>
+        <div class="form-group">
+          <label for="adv-ScheduledDuration" id="lblAccount">@Model.Loc.Where(a => a.ResourceId == "spnScheduledDuration").FirstOrDefault().Value.ToString()</label>
+          <input type="text" class="form-control search adv-item decimalinputupto2places" id="adv-ScheduledDuration" autocomplete="off" style="color:#333;">
+        </div>
+        <div class="form-group">
+          <label for="adv-CreateDate" id="lblAsset">@Model.Loc.Where(a => a.ResourceId == "globalCreateDate").FirstOrDefault().Value.ToString()</label>
+          <input type="text" class="form-control search adv-item dtpicker" id="adv-CreateDate" autocomplete="off" style="color:#333;">
+        </div>
+        <div class="form-group">
+          <label for="adv-CreatedBy" id="lblArea">@Model.Loc.Where(a => a.ResourceId == "spnCreatedBy").FirstOrDefault().Value.ToString()</label>
+          <select id="adv-CreatedBy" style="width:100%;" class="form-control search adv-item select2picker"></select>
+        </div>
+      </form>
+    </div>
+  </nav>
+</div>
+@Html.Partial("_DenyModal", Model)
+
+<style type="text/css">
+  /*select.select-shift + span.select2-container { width: 110px !important; }*/
+  @@media only screen and (min-width: 360px) and (max-width: 479px) {
+    .ActionSearchDrop.drpAdjust {
+      margin-top: 10px;
+    }
+
+    .navbar-btn {
+      margin-top: 10px !important;
+    }
+  }
+</style>

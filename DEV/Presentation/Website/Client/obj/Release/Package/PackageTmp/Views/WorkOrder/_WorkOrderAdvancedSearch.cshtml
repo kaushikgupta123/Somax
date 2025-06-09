@@ -1,0 +1,167 @@
+﻿@model Client.Models.Work_Order.WorkOrderVM
+@using Client.CustomValidation
+<nav class="sidebar">
+    <div id="dismiss">
+        <i class="fa fa-close"></i>
+    </div>
+    <div class="sidebar-header">
+        <h3><i class="fa fa-filter" style="position: relative; top: -2px;"></i> @CustomHelper.LabelFor(Model.Loc, "spnFilters") <span class="filteritemcount">0</span></h3>
+        <button type="button" class="btn btn-blue filterSearch" id="btnDataAdvSrchworkorder"> @Model.Loc.Where(a => a.ResourceId == "GlobalApply").FirstOrDefault().Value.ToString()</button>
+    </div>
+    <div class="sidebar-content" id="advsearchsidebarWorkorder">
+        <div class="form-group">
+            <label for="gridadvsearchworkorder">@CustomHelper.LabelFor(Model.Loc, "GlobalWorkOrder"):</label>
+            <input type="text" class="form-control search adv-item" id="gridadvsearchworkorder" autocomplete="off">
+        </div>
+        <div class="form-group">
+            <label for="gridadvsearchdescription">@CustomHelper.LabelFor(Model.Loc, "spnDescription") :</label>
+            <input type="text" class="form-control search adv-item" id="gridadvsearchdescription" autocomplete="off">
+        </div>
+        <div class="form-group">
+            <label for="gridadvsearchChargeto">@CustomHelper.LabelFor(Model.Loc, "GlobalChargeTo") :</label>
+            <input type="text" class="form-control search adv-item" id="gridadvsearchChargeto" autocomplete="off">
+        </div>
+        <div class="form-group">
+            <label for="gridadvsearchChargetoname">@CustomHelper.LabelFor(Model.Loc, "spnChargeToName") :</label>
+            <input type="text" class="form-control search adv-item" id="gridadvsearchChargetoname" autocomplete="off">
+        </div>
+        <div class="form-group">
+            <label for="gridadvsearchAssetLocation">@Model.Loc.Where(a => a.ResourceId == "spnGlobalAssetLocation").FirstOrDefault().Value.ToString() :</label>
+            <input type="text" class="form-control search adv-item" id="gridadvsearchAssetLocation" autocomplete="off">
+        </div>
+        <div class="form-group">
+            <label for="gridadvsearchtype">@CustomHelper.LabelFor(Model.Loc, "GlobalType") :</label>
+            @Html.DropDownListFor(m => m.workOrderModel.Type, Model.workOrderModel.TypeList, new { @class = "form-control search adv-item select2picker Select2-multiselect", style = "width:100%;", @id = "gridadvsearchtype", multiple = "multiple" })
+        </div>
+        <div class="form-group">
+            <label for="gridadvsearchstatus">@CustomHelper.LabelFor(Model.Loc, "spnStatus") :</label>
+            @Html.DropDownListFor(m => m.workOrderModel.Status, Model.workOrderModel.StatusList, new { @class = "form-control search adv-item select2picker", style = "width:100%;", @id = "gridadvsearchstatus", multiple = "multiple" })
+        </div>
+        <div class="form-group">
+            <label for="gridadvsearchshift">@CustomHelper.LabelFor(Model.Loc, "spnShift") :</label>
+            @Html.DropDownListFor(m => m.workOrderModel.Shift, Model.workOrderModel.ShiftList, new { @class = "form-control search adv-item select2picker", style = "width:100%;", @id = "gridadvsearchshift", multiple = "multiple" })
+        </div>
+
+        <div class="form-group">
+            <label for="AssetGroup1Id">@Model.workOrderModel.AssetGroup1Name:</label>
+            <input type="text" class="form-control search adv-item" id="AssetGroup1ClientLookUpId" autocomplete="off" style="display:none">
+            @Html.DropDownListFor(m => m.workOrderModel.AssetGroup1Id, Model.workOrderModel.AssetGroup1List, new { @class = "form-control search adv-item select2picker", style = "width:100%;", @id = "AssetGroup1Id", multiple = "multiple" })
+        </div>
+        <div class="form-group">
+            <label for="AssetGroup2Id">@Model.workOrderModel.AssetGroup2Name:</label>
+            <input type="text" class="form-control search adv-item" id="AssetGroup2ClientLookUpId" autocomplete="off" style="display:none">
+            @Html.DropDownListFor(m => m.workOrderModel.AssetGroup2Id, Model.workOrderModel.AssetGroup2List, new { @class = "form-control search adv-item select2picker", style = "width:100%;", @id = "AssetGroup2Id", multiple = "multiple" })
+        </div>
+        <div class="form-group">
+            <label for="AssetGroup3Id">@Model.workOrderModel.AssetGroup3Name :</label>
+            <input type="text" class="form-control search adv-item" id="AssetGroup3ClientLookUpId" autocomplete="off" style="display:none">
+            @Html.DropDownListFor(m => m.workOrderModel.AssetGroup3Id, Model.workOrderModel.AssetGroup3List, new { @class = "form-control search adv-item select2picker", style = "width:100%;", @id = "AssetGroup3Id", multiple = "multiple" })
+        </div>
+        <div class="form-group">
+            <label for="gridadvsearchpriority">@CustomHelper.LabelFor(Model.Loc, "spnPriority") :</label>
+            @Html.DropDownListFor(m => m.workOrderModel.Priority, Model.workOrderModel.PriorityList, new { @class = "form-control search adv-item select2picker", style = "width:100%;", @id = "gridadvsearchpriority", multiple = "multiple" })
+        </div>
+        <div class="form-group">
+            <label for="dtgridadvsearchCreated">@CustomHelper.LabelFor(Model.Loc, "globalCreateDate") :</label>
+            <!--V2-347-->
+            <select id="dtgridadvsearchCreated" style="width:100%;" class="form-control search adv-item select2picker has-dtrangepicker">
+                <option value="">--Select--</option>
+                @foreach (var item in Model.workOrderModel.DateRangeDropList)
+                {
+                    <option value="@item.Value">@item.Text</option>
+                }
+            </select>
+            <div style="padding:10px 0 0 10px; border-left: 1px dashed #b9c1c4;display:none;" class="range-timeperiod" id="Createtimeperiodcontainer">
+                <label for="">@Model.Loc.Where(a => a.ResourceId == "spnGlobalTimePeriod").FirstOrDefault().Value.ToString() :</label>
+                <input type="text" class="form-control search dtrangepicker" id="advcreatedaterange" autocomplete="off">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="gridadvsearchcreator">@CustomHelper.LabelFor(Model.Loc, "spnCreator") :</label>
+            <input type="text" class="form-control search adv-item" id="gridadvsearchcreator" autocomplete="off">
+        </div>
+        <div class="form-group" style="display:none">
+            <label for="gridadvsearchassigned">@CustomHelper.LabelFor(Model.Loc, "spnAssigned") :</label>
+            <input type="text" class="form-control search adv-item" id="gridadvsearchassigned" autocomplete="off">
+        </div>
+        <div class="form-group">
+            <label for="dtgridadvsearchScheduled">@CustomHelper.LabelFor(Model.Loc, "spnScheduled"):</label>
+            <!--V2-347-->
+            <select id="dtgridadvsearchScheduled" style="width:100%;" class="form-control search adv-item select2picker has-dtrangepicker">
+                <option value="">--Select--</option>
+                @foreach (var item in Model.workOrderModel.DateRangeDropList)
+                {
+                    <option value="@item.Value">@item.Text</option>
+                }
+            </select>
+            <div style="padding:10px 0 0 10px; border-left: 1px dashed #b9c1c4; display:none;" class="range-timeperiod" id="Scheduledtimeperiodcontainer">
+                <label for="">@Model.Loc.Where(a => a.ResourceId == "spnGlobalTimePeriod").FirstOrDefault().Value.ToString() :</label>
+                <input type="text" class="form-control search dtrangepicker" id="advScheduleddaterange" autocomplete="off">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="gridadvsearchfailcode">@CustomHelper.LabelFor(Model.Loc, "spnFailCode") :</label>
+            @Html.DropDownListFor(m => m.workOrderModel.FailureCode, Model.workOrderModel.FailureList, new { @class = "form-control search adv-item select2picker", style = "width:100%;", @id = "gridadvsearchfailcode", multiple = "multiple" })
+        </div>
+        <div class="form-group">
+            <label for="dtgridadvsearchActualFinish">@CustomHelper.LabelFor(Model.Loc, "spnActualFinish") :</label>
+            <!--V2-347-->
+            <select id="dtgridadvsearchActualFinish" style="width:100%;" class="form-control search adv-item select2picker has-dtrangepicker">
+                <option value="">--Select--</option>
+                @foreach (var item in Model.workOrderModel.DateRangeDropList)
+                {
+                    <option value="@item.Value">@item.Text</option>
+                }
+            </select>
+            <div style="padding:10px 0 0 10px; border-left: 1px dashed #b9c1c4;display:none;" class="range-timeperiod" id="ActualFinishtimeperiodcontainer">
+                <label for="">@Model.Loc.Where(a => a.ResourceId == "spnGlobalTimePeriod").FirstOrDefault().Value.ToString() :</label>
+                <input type="text" class="form-control search dtrangepicker" id="advActualFinishdaterange" autocomplete="off">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="gridadvsearchactualduration">@CustomHelper.LabelFor(Model.Loc, "spnActualDuration") :</label>
+            <input type="text" class="form-control search decimalinput adv-item" id="gridadvsearchactualduration" autocomplete="off">
+        </div>
+        <div class="form-group">
+            <label for="gridadvsearchsource">@Model.Loc.Where(a => a.ResourceId == "spnSource").FirstOrDefault().Value.ToString() :</label>
+            @Html.DropDownListFor(m => m.workOrderModel.SourceType, Model.workOrderModel.SourceTypeList, new { @class = "form-control search adv-item select2picker", style = "width:100%;", @id = "gridadvsearchsource", multiple = "multiple" })
+        </div>
+        <div class="form-group">
+            <label for="txtDownRequired">@Model.Loc.Where(a => a.ResourceId == "spnDownRequired").FirstOrDefault().Value.ToString():</label>
+            @Html.DropDownListFor(m => m.workOrderModel.DownRequired, Model.DownRequiredInactiveFlagList, "--Select--", new { @class = "form-control search adv-item select2picker", style = "width:100%;", id = "txtDownRequired" })
+        </div>
+        @*V2-984*@
+        <div class="form-group">
+            <label for="gridadvsearchassign">@Model.Loc.Where(a => a.ResourceId == "spnAssigned").FirstOrDefault().Value.ToString() :</label>
+            @Html.DropDownListFor(m => m.workOrderModel.Assigned, Model.PersonnelIdList, new { @class = "form-control search adv-item select2picker", @id = "gridadvsearchassign", style = "width:100%;", multiple = "multiple" })
+        </div>
+        <div class="form-group">
+            <label for="gridadvsearchrequiredate">@Model.Loc.Where(a => a.ResourceId == "spnRequiredDate").FirstOrDefault().Value.ToString() :</label>
+            <input type="text" class="form-control search dtpicker adv-item" id="gridadvsearchrequiredate">
+        </div>
+        @*V2-1078*@
+        <div class="form-group">
+            <label for="gridadvsearchplanner">@Model.Loc.Where(a => a.ResourceId == "globalPlanner").FirstOrDefault().Value.ToString() :</label>
+            @Html.DropDownListFor(m => m.workOrderModel.Planner_PersonnelId, Model.PlannerList, new { @class = "form-control search adv-item select2picker", @id = "gridadvsearchplanner", style = "width:100%;", multiple = "multiple" })
+        </div>
+        @*V2-1135*@
+        <div class="form-group">
+            <label for="gridadvsearchproject">@Model.Loc.Where(a => a.ResourceId == "spnProjectId").FirstOrDefault().Value.ToString() :</label>
+            @Html.DropDownListFor(m => m.workOrderModel.ProjectIds, Model.ProjectList, new { @class = "form-control search adv-item select2picker", @id = "gridadvsearchproject", style = "width:100%;", multiple = "multiple" })
+        </div>
+    </div>
+</nav>
+
+<style>
+    .select2-container--default .select2-selection--single, .select2-container--default .select2-selection--multiple {
+        height: auto !important;
+    }
+
+    .sidebar .sidebar-content {
+        padding: 20px 20px 49px 20px !important;
+    }
+    iframe#launcher-frame {
+        bottom: 4px !important;
+    }
+</style>

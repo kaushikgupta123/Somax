@@ -1,0 +1,474 @@
+﻿@model Client.Models.Work_Order.WorkOrderVM
+@{
+    string imageUrl = string.Empty;
+    int lastpage = 0;
+    int toRecords = 0;
+    int currentpage = Convert.ToInt32(ViewBag.CurrentPage); ;
+    int length = Convert.ToInt32(ViewBag.Length);
+    int start = Convert.ToInt32(ViewBag.Start);
+    int TotalRecords = Convert.ToInt32(ViewBag.TotalRecords);
+    int startRecords = Convert.ToInt32(ViewBag.Start) + 1;
+    if (start + length <= TotalRecords)
+    {
+        toRecords = start + length;
+    }
+    else
+    {
+        toRecords = TotalRecords;
+    }
+
+    int paginationdropval1 = length;
+    int paginationdropval2 = length + paginationdropval1;
+    int paginationdropval3 = length + paginationdropval2;
+    int paginationdropval4 = length + paginationdropval3;
+    int paginationdropval5 = length + paginationdropval4;
+
+    int startpage = 1;
+    int page2 = startpage + 1;
+    int page3 = startpage + 2;
+    int page4 = startpage + 3;
+    int page5 = startpage + 4;
+    int page6 = startpage + 5;
+    int modforlastpage = TotalRecords / length;
+    if (modforlastpage == 0 || TotalRecords % length == 0)
+    {
+        lastpage = TotalRecords / length;
+    }
+    else
+    {
+        lastpage = TotalRecords / length + 1;
+    }
+    int lastpage_1 = lastpage - 1;
+    int lastpage_2 = lastpage - 2;
+    int lastpage_3 = lastpage - 3;
+
+    int curremtpagetoshow = currentpage;
+    int precurremtpagetoshow = currentpage - 1;
+    int postcurremtpagetoshow = currentpage + 1;
+}
+
+@foreach (var item in Model.workOrderModelList)
+{
+
+    imageUrl = item.AzureImageURL;
+    if (item.ClientOnPremise)
+    {
+        imageUrl = UtilityFunction.PhotoBase64ImgSrc(item.AzureImageURL);
+    }
+
+
+    <div class="m-portlet cardRow crdVu">
+        <div class="m-portlet__body gridList">
+            <div class="row">
+                <div class="col-md-2">
+                    @*<div class="checkbox gridCheck">
+                            <input type="checkbox" class="chksearch" value=@item.WorkOrderId id=@item.WorkOrderId>
+                        </div>*@
+                    <div class="gridImgBox">
+                        @if (!string.IsNullOrEmpty(imageUrl))
+                        {
+                            <img src="@imageUrl" id="EquipZoom" alt="Image" data-zoom-image="@imageUrl" />
+                        }
+                        else
+                        {
+                            <img src="~/Scripts/ImageZoom/images/NoImage.jpg" id="EquipZoom" alt="Image" data-zoom-image="/Scripts/ImageZoom/images/NoImage.jpg" />
+                        }
+                    </div>
+                    <div style="clear:both;"></div>
+                </div>
+                <div class="col-md-5">
+                    <div class="newDescription">
+                        <span class="orderId">
+                            <a href="JavaScript:void(0);"><span class="lnk_wocompletion_mobile" id=@item.WorkOrderId status=@item.Status clientlookupid=@item.ClientLookupId>@item.ClientLookupId</span></a> &nbsp;
+                            @if (item.Status == WorkOrderStatusConstants.Approved)
+                            {
+                                <small class="m-badge m-badge-grid-cell m-badge--yellow m-badge--wide">@UtilityFunction.GetMessageFromResource(item.Status, LocalizeResourceSetConstants.StatusDetails)</small>;
+                            }
+                            else if (item.Status == WorkOrderStatusConstants.Canceled)
+                            {
+                                <small class="m-badge m-badge-grid-cell m-badge--orange m-badge--wide"> @UtilityFunction.GetMessageFromResource(item.Status, LocalizeResourceSetConstants.StatusDetails) </small>;
+                            }
+                            else if (item.Status == WorkOrderStatusConstants.Complete)
+                            {
+                                <small class="m-badge m-badge-grid-cell m-badge--green m-badge--wide"> @UtilityFunction.GetMessageFromResource(item.Status, LocalizeResourceSetConstants.StatusDetails) </small>;
+                            }
+                            else if (item.Status == WorkOrderStatusConstants.Denied)
+                            {
+                                <small class="m-badge m-badge-grid-cell m-badge--purple m-badge--wide"> @UtilityFunction.GetMessageFromResource(item.Status, LocalizeResourceSetConstants.StatusDetails) </small>;
+                            }
+                            else if (item.Status == WorkOrderStatusConstants.Scheduled)
+                            {
+                                <small class="m-badge m-badge-grid-cell m-badge--blue m-badge--wide">@UtilityFunction.GetMessageFromResource(item.Status, LocalizeResourceSetConstants.StatusDetails) </small>;
+                            }
+                            else if (item.Status == WorkOrderStatusConstants.WorkRequest)
+                            {
+                                <small class="m-badge m-badge-grid-cell m-badge--red m-badge--wide">  @UtilityFunction.GetMessageFromResource(item.Status, LocalizeResourceSetConstants.StatusDetails)</small>;
+                            }
+                            else
+                            {
+                                <small class="m-badge m-badge-grid-cell m-badge--wide">  @UtilityFunction.GetMessageFromResource(item.Status, LocalizeResourceSetConstants.StatusDetails)</small>;
+                            }
+                            @if (item.PartsOnOrder > 0)
+                            {
+                                <span class="m-badge m-badge--purple m-badge--wide">@Model.Loc.Where(a => a.ResourceId == "globalPartsOnOrder").FirstOrDefault().Value.ToString() @item.PartsOnOrder</span>
+                            }
+                        </span>
+                        <div class="types">
+                            <span>@Model.Loc.Where(a => a.ResourceId == "GlobalType").FirstOrDefault().Value.ToString() : <strong>@item.Type</strong></span> &nbsp;&nbsp;&nbsp; <span>@Model.Loc.Where(a => a.ResourceId == "spnPriority").FirstOrDefault().Value.ToString() : <strong>@item.Priority</strong></span>
+                        </div>
+                        @*@if (item.Description.Length > 25)
+        {
+            @item.Description.Substring(0, 25)
+            <span style="color:#315a98;cursor:pointer" class="woCardViewDescription">
+                ... @Model.Loc.Where(a => a.ResourceId == "globalSpnMore").FirstOrDefault().Value.ToString()
+                <span style="display:none;">@item.Description</span>
+            </span>
+            //SameSiteMode modal used for description in detail and card view page
+        }
+        else
+        {*@
+                        <p>@item.Description</p>
+                        @*}*@
+                    <p>  @Model.Loc.Where(a => a.ResourceId == "spnAsset").FirstOrDefault().Value.ToString() : @item.ChargeToClientLookupId @item.ChargeTo_Name</p>
+                        <p class="n-type-desc">
+                            <span class="n-type-data" style="min-width: 90px; margin-right:8px;"><span class="n-type-level"> @Model.Loc.Where(a => a.ResourceId == "spnGlobalAssetLocation").FirstOrDefault().Value.ToString() :</span> <strong class="n-type-val">@item.AssetLocation </strong></span>
+
+                        </p>
+                    </div>
+                </div>
+                <div class="col-md-5">
+                    <div class="gridStatus">
+                        <span>
+                            @Model.Loc.Where(a => a.ResourceId == "spnGlobalScheduled").FirstOrDefault().Value.ToString()  :
+                            @if (item.ScheduledStartDate.HasValue && item.ScheduledStartDate.Value != default(DateTime))
+                            {
+                                <strong>
+                                    @item.ScheduledStartDate.Value.ToString("MM/dd/yyyy", CultureInfo.InvariantCulture)
+                                </strong>
+                            }
+                        </span>
+                        <span class="newStatus" style="position: relative;">
+                            @Model.Loc.Where(a => a.ResourceId == "spnRequired").FirstOrDefault().Value.ToString()  :
+                            @if (item.RequiredDate.HasValue && item.RequiredDate.Value != default(DateTime))
+                            {
+                                <strong>
+                                    @item.RequiredDate.Value.ToString("MM/dd/yyyy", CultureInfo.InvariantCulture)
+                                </strong>
+                            }
+                        </span>
+                        @{
+                            var id = "assignedItem" + item.WorkOrderId;
+                        }
+                    <span style="display:flex;" class="assignedItem @(item.WorkAssigned_PersonnelId == -1 ? "hasMultipleAssigned":"")" id=@id data-woid="@item.WorkOrderId" waPersonnelId=@item.WorkAssigned_PersonnelId>
+                        <span class="n-type-level datacolmn" style="max-width:71px; width:100%; display:inline-block !important;">
+                            @Model.Loc.Where(a => a.ResourceId == "spnGlobalAssigned").FirstOrDefault().Value.ToString() :
+                        </span>
+                        <strong class="assignedFName">@item.AssignedFullName</strong>
+
+                        @if (item.WorkAssigned_PersonnelId == -1)
+                            {
+                        @*var v = "spn" + item.WorkOrderId;
+                         <span id=@v class="tooltipcards"></span>*@
+                        <span class="loadingImg" style="display:none;"><img src="~/Images/lineLoader.gif" style="width:55px; height:auto; position:absolute; left:0; top:40px;" /></span>
+                            }
+                    </span>
+                        @if (item.WorkAssigned_PersonnelId == -1)
+                        {
+                            var v = "assigned" + item.WorkOrderId;
+                            <div id="@v" data-woid="@item.WorkOrderId" class="multipleAssigned mbsc-cloak" style="display:none;">
+                                <div class="mbsc-align-left mbsc-padding">
+                                    <span></span>
+                                </div>
+                            </div>
+                        }
+
+                        <span class="newStatus">
+                            @Model.Loc.Where(a => a.ResourceId == "spnGlobalCompleted").FirstOrDefault().Value.ToString()  :
+                            @if (item.CompleteDate.HasValue && item.CompleteDate.Value != default(DateTime))
+                            {
+                                <strong>
+                                    @item.CompleteDate.Value.ToString("MM/dd/yyyy", CultureInfo.InvariantCulture)
+                                </strong>
+                            }
+                        </span>
+                        <p class="n-type-desc">
+                            <span class="n-type-data" style="margin-right: 8px; display: flex;"><span class="n-type-level"> @Model.Loc.Where(a => a.ResourceId == "spnProject").FirstOrDefault().Value.ToString() :</span> <strong class="n-type-val">@item.ProjectClientLookupId </strong></span>
+
+                        </p>
+                    </div>
+                </div>
+                @*<div class="col-md-3" style="text-align:right;">
+                        @if (item.security.WorkOrders.Cancel && (item.Status == WorkOrderStatusConstants.Approved || item.Status == WorkOrderStatusConstants.Scheduled)) // V2 576
+                        {
+                            <button type="button" class="btn btn-blue wobtngrdcancel" title="Cancel" style="padding: 0.65rem; float:right;"><i class="fa fa-times" style="margin-top:-3px;"></i> <span class="cancel_workorder" id=@item.WorkOrderId status=@item.Status> @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</span></button>
+                        }
+                        @if (item.security.WorkOrders.Complete && (item.Status == WorkOrderStatusConstants.Approved || item.Status == WorkOrderStatusConstants.Scheduled || item.Status == WorkOrderStatusConstants.AwaitingApproval))
+                        {
+                            if (Model.UseWOCompletionWizard)
+                            {
+                                <button type="button" data-Status="@item.Status" data-ClientLookupId="@item.ClientLookupId" class="btn btn-blue complete wobtngrdcompleteWizard" title="Complete" style="padding: 0.65rem; float:right; margin:0 7px;"><i class="fa fa-check" style="margin-top:-3px;"></i> <span class="complete_workorder" id=@item.WorkOrderId>@Model.Loc.Where(a => a.ResourceId == "GlobalComplete").FirstOrDefault().Value.ToString()</span></button>
+                            }
+                            else
+                            {
+                                <button type="button" class="btn btn-blue complete wobtngrdcomplete" title="Complete" style="padding: 0.65rem; float:right; margin:0 7px;"><i class="fa fa-check" style="margin-top:-3px;"></i> <span class="complete_workorder" id=@item.WorkOrderId>@Model.Loc.Where(a => a.ResourceId == "GlobalComplete").FirstOrDefault().Value.ToString()</span></button>
+                            }
+
+                        }
+                        @if (item.security.WorkOrders.Scheduling && (item.Status == WorkOrderStatusConstants.Approved || item.Status == WorkOrderStatusConstants.Scheduled))  // As per comment on V2-576
+                        {
+                            if (item.ScheduledStartDate.HasValue && item.ScheduledStartDate.Value != default(DateTime))
+                            {
+
+                                <div class="dropdown btn-sort scheduleDrop" id="cardScheduleDrop" style="float:right;">
+                                    <button class="btn btn-blue dropdown-toggle newSchedulesort2" type="button" id="schedulesortmenu" data-toggle="dropdown">@Model.Loc.Where(a => a.ResourceId == "spnGlobalSchedule").FirstOrDefault().Value.ToString()</button>
+                                    <ul class="dropdown-menu scheduleDropMenu scheduleDropMenu2" role="menu" aria-labelledby="schedulesortmenu">
+                                        <li role="presentation" title="Schedule" class="wobtngrdschedule" data-col="1" scheduledStartDate=@item.ScheduledStartDate.Value.ToString("MM/dd/yyyy", CultureInfo.InvariantCulture) id=@item.WorkOrderId status=@item.Status ScheduledDuration=@item.ScheduledDuration><a tabindex="-1" href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnGlobalAddSchedule").FirstOrDefault().Value.ToString()</a></li>
+                                        @if (item.Status == WorkOrderStatusConstants.Scheduled)
+                                        {
+                                            <li role="presentation" title="RemoveSchedule" class="wobtngrdremoveschedule" data-col="0" id=@item.WorkOrderId><a tabindex="-1" href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnGlobalRemoveSchedule").FirstOrDefault().Value.ToString()</a></li>
+                                        }
+                                    </ul>
+                                </div>
+
+                            }
+                            else
+                            {
+                                <div class="dropdown btn-sort scheduleDrop" id="cardScheduleDrop" style="float:right;">
+                                    <button class="btn btn-blue dropdown-toggle newSchedulesort2" type="button" id="schedulesortmenu" data-toggle="dropdown">@Model.Loc.Where(a => a.ResourceId == "spnGlobalSchedule").FirstOrDefault().Value.ToString()</button>
+                                    <ul class="dropdown-menu scheduleDropMenu scheduleDropMenu2" role="menu" aria-labelledby="schedulesortmenu">
+                                        <li role="presentation" title="Schedule" class="wobtngrdschedule" data-col="1" scheduledStartDate="" id=@item.WorkOrderId status=@item.Status ScheduledDuration=@item.ScheduledDuration><a tabindex="-1" href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnGlobalAddSchedule").FirstOrDefault().Value.ToString()</a></li>
+                                        @if (item.Status == WorkOrderStatusConstants.Scheduled)
+                                        {
+                                            <li role="presentation" title="RemoveSchedule" class="wobtngrdremoveschedule" data-col="0" id=@item.WorkOrderId><a tabindex="-1" href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnGlobalRemoveSchedule").FirstOrDefault().Value.ToString()</a></li>
+                                        }
+                                    </ul>
+                                </div>
+                            }
+                        }
+                        @if (item.Status == WorkOrderStatusConstants.WorkRequest && ((item.security.WorkOrders.Approve) || (Model._userdata.Site.UsePlanning && item.security.WorkOrders.PlanningRequired)))
+                        {
+                            <div class="dropdown btn-sort approveDrop" id="cardApproveDrop" style="float:right;">
+                                <button class="btn btn-blue dropdown-toggle newApprovesort2" type="button" id="approvesortmenu" data-toggle="dropdown">@Model.Loc.Where(a => a.ResourceId == "spnGlobalApproval").FirstOrDefault().Value.ToString()</button>
+                                <ul class="dropdown-menu approveDropMenu approveDropMenu2" role="menu" aria-labelledby="approvesortmenu">
+                                    @if (item.security.WorkOrders.Approve)
+                                    {
+                                        <li role="presentation" class="ApproveDetailsCardViewWO" id=@item.WorkOrderId data-col="1"><a tabindex="-1" href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "globalApprove").FirstOrDefault().Value.ToString()</a></li>
+                                        <li role="presentation" class="DenyDetailsCardViewWO" id=@item.WorkOrderId data-col="0"><a tabindex="-1" href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "globalDeny").FirstOrDefault().Value.ToString()</a></li>
+                                    }
+                                    @if (Model._userdata.Site.UsePlanning && item.security.WorkOrders.PlanningRequired)
+                                    {
+                                        <li role="presentation" class="plannerDetailCardViewWo" id="@item.WorkOrderId" data-col="0"><a tabindex="-1" href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnPlanningRequired").FirstOrDefault().Value.ToString()</a></li>
+                                    }
+                                </ul>
+                            </div>
+                        }
+                    </div>*@
+            </div>
+        </div>
+    </div>
+}
+@if (Model.workOrderModelList.Count < 1)
+{
+    <div class="m-portlet cardRow">
+        <div id="spnNoData" style="display:block; text-align:center; padding:5px;">
+            @UtilityFunction.GetMessageFromResource("GlobalNoDataAvailable", LocalizeResourceSetConstants.Global)
+        </div>
+    </div>
+}
+<div class="dataTables_wrapper CardPagination">
+    <div class="dataTables_length" id="" style="display: block;">
+        <label>
+            <select class="searchdt-menu" id="Dashboardcardviewpagelengthdrp">
+                <option value="10">10</option>
+                <option value="20">20</option>
+                <option value="30">30</option>
+                <option value="40">40</option>
+                <option value="50">50</option>
+            </select>
+        </label>
+    </div>
+    @if (Model.workOrderModelList.Count < 1)
+    {
+
+        <div class="dataTables_info" id="" role="status" aria-live="polite">Showing @String.Format("{0:n0}", 0) to @String.Format("{0:n0}", toRecords) of @String.Format("{0:n0}", TotalRecords) entries</div>
+    }
+    else
+    {
+
+        <div class="dataTables_info" id="" role="status" aria-live="polite">Showing @String.Format("{0:n0}", startRecords) to @String.Format("{0:n0}", toRecords) of @String.Format("{0:n0}", TotalRecords) entries</div>
+    }
+    <div class="dataTables_paginate paging_full_numbers" id="tblMaintenanceCompletionWorkbench_paginate">
+        <ul class="pagination">
+            <li class="paginate_button page-item first disabled" id="tbl_first"><a href="javascript:void(0)" aria-controls="tblMaintenanceCompletionWorkbench" data-dt-idx="0" tabindex="0" class="page-link"><img src="../images/drop-grid-first.png"></a></li>
+            <li class="paginate_button page-item previous disabled" id="tbl_previous"><a href="javascript:void(0)" aria-controls="tblMaintenanceCompletionWorkbench" data-dt-idx="1" tabindex="0" class="page-link"><img src="../images/drop-grid-prev.png"></a></li>
+            @if (TotalRecords > 0)
+            {
+                if (currentpage <= 4)
+                {
+                    <li class="paginate_button page-item" data-currentpage="1"><a href="javascript:void(0)" aria-controls="tblMaintenanceCompletionWorkbench" data-currentpage="1" tabindex="0" class="page-link">@startpage</a></li>
+                    if (lastpage >= 2)
+                    {
+                        <li class="paginate_button page-item" data-currentpage="2"><a href="javascript:void(0)" aria-controls="tblMaintenanceCompletionWorkbench" tabindex="0" class="page-link">2</a></li>
+                    }
+                    if (lastpage >= 3)
+                    {
+                        <li class="paginate_button page-item" data-currentpage="3"><a href="javascript:void(0)" aria-controls="tblMaintenanceCompletionWorkbench" tabindex="0" class="page-link">3</a></li>
+                    }
+                    if (lastpage >= 4)
+                    {
+                        <li class="paginate_button page-item" data-currentpage="4"><a href="javascript:void(0)" aria-controls="tblMaintenanceCompletionWorkbench" tabindex="0" class="page-link">4</a></li>
+                    }
+                    if (lastpage >= 5)
+                    {
+                        <li class="paginate_button page-item" data-currentpage="5"><a href="javascript:void(0)" aria-controls="tblMaintenanceCompletionWorkbench" tabindex="0" class="page-link">5</a></li>
+                        <li class="paginate_button page-item disabled" id="tblMaintenanceCompletionWorkbench_ellipsis"><a href="javascript:void(0)" aria-controls="tblMaintenanceCompletionWorkbench" data-dt-idx="7" tabindex="0" class="page-link">…</a></li>
+                        <li class="paginate_button page-item" data-currentpage="@lastpage"><a href="javascript:void(0)" aria-controls="tblMaintenanceCompletionWorkbench" data-dt-idx="8" tabindex="0" class="page-link">@lastpage</a></li>
+                    }
+                }
+                else if (currentpage == 5)
+                {
+                    <li class="paginate_button page-item" data-currentpage="1"><a href="javascript:void(0)" aria-controls="tblMaintenanceCompletionWorkbench" data-current="1" tabindex="0" class="page-link">@startpage</a></li>
+                    <li class="paginate_button page-item disabled" id="tblMaintenanceCompletionWorkbench_ellipsis"><a href="javascript:void(0)" aria-controls="tblMaintenanceCompletionWorkbench" data-dt-idx="7" tabindex="0" class="page-link">…</a></li>
+                    if (lastpage >= 3)
+                    {
+                        <li class="paginate_button page-item" data-currentpage="3"><a href="javascript:void(0)" aria-controls="tblMaintenanceCompletionWorkbench" data-current="3" tabindex="0" class="page-link">3</a></li>
+                    }
+                    if (lastpage >= 4)
+                    {
+                        <li class="paginate_button page-item" data-currentpage="4"><a href="javascript:void(0)" aria-controls="tblMaintenanceCompletionWorkbench" data-current="4" tabindex="0" class="page-link">4</a></li>
+                    }
+                    if (lastpage >= 5)
+                    {
+                        <li class="paginate_button page-item" data-currentpage="5"><a href="javascript:void(0)" aria-controls="tblMaintenanceCompletionWorkbench" data-current="5" tabindex="0" class="page-link">5</a></li>
+                    }
+                    <li class="paginate_button page-item disabled" id="tblMaintenanceCompletionWorkbench_ellipsis"><a href="javascript:void(0)" aria-controls="tblMaintenanceCompletionWorkbench" data-dt-idx="7" tabindex="0" class="page-link">…</a></li>
+                    <li class="paginate_button page-item" data-currentpage="@lastpage"><a href="javascript:void(0)" aria-controls="tblMaintenanceCompletionWorkbench" data-dt-idx="8" tabindex="0" class="page-link">@lastpage</a></li>
+                }
+                else if (currentpage > 5 && currentpage < lastpage - 4)
+                {
+                    <li class="paginate_button page-item" data-currentpage="1"><a href="javascript:void(0)" aria-controls="tblMaintenanceCompletionWorkbench" data-current="1" tabindex="0" class="page-link">@startpage</a></li>
+                    <li class="paginate_button page-item disabled" id="tblMaintenanceCompletionWorkbench_ellipsis"><a href="javascript:void(0)" aria-controls="tblMaintenanceCompletionWorkbench" data-dt-idx="7" tabindex="0" class="page-link">…</a></li>
+                    <li class="paginate_button page-item" data-currentpage="@precurremtpagetoshow"><a href="javascript:void(0)" aria-controls="tblMaintenanceCompletionWorkbench" data-current="3" tabindex="0" class="page-link">@precurremtpagetoshow</a></li>
+                    <li class="paginate_button page-item" data-currentpage="@curremtpagetoshow"><a href="javascript:void(0)" aria-controls="tblMaintenanceCompletionWorkbench" data-current="3" tabindex="0" class="page-link">@curremtpagetoshow</a></li>
+                    <li class="paginate_button page-item" data-currentpage="@postcurremtpagetoshow"><a href="javascript:void(0)" aria-controls="tblMaintenanceCompletionWorkbench" data-current="3" tabindex="0" class="page-link">@postcurremtpagetoshow</a></li>
+                    <li class="paginate_button page-item disabled" id="tblMaintenanceCompletionWorkbench_ellipsis"><a href="javascript:void(0)" aria-controls="tblMaintenanceCompletionWorkbench" data-dt-idx="7" tabindex="0" class="page-link">…</a></li>
+                    <li class="paginate_button page-item" data-currentpage="@lastpage"><a href="javascript:void(0)" aria-controls="tblMaintenanceCompletionWorkbench" data-dt-idx="8" tabindex="0" class="page-link">@lastpage</a></li>
+                }
+                else
+                {
+                    <li class="paginate_button page-item" data-currentpage="1"><a href="javascript:void(0)" aria-controls="tblMaintenanceCompletionWorkbench" data-current="1" tabindex="0" class="page-link">@startpage</a></li>
+                    <li class="paginate_button page-item disabled" id="tblMaintenanceCompletionWorkbench_ellipsis"><a href="javascript:void(0)" aria-controls="tblMaintenanceCompletionWorkbench" data-dt-idx="7" tabindex="0" class="page-link">…</a></li>
+                    if (lastpage >= 3)
+                    {
+                        <li class="paginate_button page-item" data-currentpage="@lastpage_3"><a href="javascript:void(0)" aria-controls="tblMaintenanceCompletionWorkbench" data-current="3" tabindex="0" class="page-link">@lastpage_3</a></li>
+                    }
+                    if (lastpage >= 4)
+                    {
+                        <li class="paginate_button page-item" data-currentpage="@lastpage_2"><a href="javascript:void(0)" aria-controls="tblMaintenanceCompletionWorkbench" data-current="4" tabindex="0" class="page-link">@lastpage_2</a></li>
+                    }
+                    if (lastpage >= 5)
+                    {
+                        <li class="paginate_button page-item" data-currentpage="@lastpage_1"><a href="javascript:void(0)" aria-controls="tblMaintenanceCompletionWorkbench" data-current="5" tabindex="0" class="page-link">@lastpage_1</a></li>
+                    }
+                    <li class="paginate_button page-item" data-currentpage="@lastpage"><a href="javascript:void(0)" aria-controls="tblMaintenanceCompletionWorkbench" data-dt-idx="8" tabindex="0" class="page-link">@lastpage</a></li>
+                }
+            }
+            <li class="paginate_button page-item next" id="tbl_next"><a href="javascript:void(0)" aria-controls="tblMaintenanceCompletionWorkbench" data-dt-idx="9" tabindex="0" class="page-link"><img src="../images/drop-grid-next.png"></a></li>
+            <li class="paginate_button page-item last" id="tbl_last"><a href="javascript:void(0)" aria-controls="tblMaintenanceCompletionWorkbench" data-dt-idx="10" tabindex="0" class="page-link"><img src="../images/drop-grid-last.png"></a></li>
+        </ul>
+    </div>
+</div>
+
+<style type="text/css">
+    .assignedFName {
+        display: block;
+        width: 100%;
+        white-space: nowrap;
+        overflow: hidden !important;
+        text-overflow: ellipsis;
+    }
+
+    .assignedItem {
+        position: relative;
+    }
+
+    .tooltipcards {
+        background: #d0e8fa;
+        padding: 5px;
+        border-radius: 5px;
+        position: absolute;
+        width: 100%;
+        height: auto;
+        left: 0;
+        top: 21px;
+        color: #000;
+        font-size: 13px;
+        font-weight: 500;
+        z-index: 9;
+        display: none !important;
+        cursor: pointer;
+    }
+
+    /*New CSS*/
+    .dropdown-toggle.newApprovesort2::after {
+        position: absolute;
+        right: 32px;
+        top: 15px;
+    }
+
+    .dropdown-menu.approveDropMenu.show {
+        width: 100%;
+        top: 2px !important;
+    }
+
+    .dropdown-toggle.newSchedulesort2::after {
+        position: absolute;
+        right: 23px;
+        top: 15px;
+    }
+
+    .newSchedulesort2 {
+        width: 100px !important;
+        text-align: left;
+        margin-top: 0px;
+    }
+
+    .newApprovesort2 {
+        width: 100px !important;
+        text-align: left;
+        margin-top: 0px;
+        margin-right: 10px;
+    }
+
+    .dropdown-menu.scheduleDropMenu.show {
+        width: 100%;
+        top: 2px !important;
+    }
+    /*New CSS*/
+    @@media screen and (max-width: 639px) {
+        .actionBar div.pull-left {
+            width: 100%;
+        }
+      
+        .actionBar div.pull-right {
+            float: left;
+            margin-top: 10px;
+        }
+        .n-type-level.datacolmn {
+            max-width: 45px !important;
+            width: 100% !important;
+            display: inline-block !important;
+        }
+    }
+
+    @@media screen and (max-width: 410px) {
+        .actionBar#woGridAction div.pull-right #liCustomize {
+            margin-left: 0 !important;
+        }
+
+        .m-badge {
+            margin-top: 8px !important;
+        }
+    }
+</style>
+

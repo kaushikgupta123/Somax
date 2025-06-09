@@ -1,0 +1,33 @@
+﻿@model Client.Models.Approval.ApprovalVM
+
+<div class="row">
+    <div class="col-xl-12">
+        <div class="m-portlet" id="m_portlet" style="padding:15px;">
+            <div class="actionBar" style="display:block" id="materialRequestGridAction">
+                <div class="pull-right">
+                    <button type="button" class="btn btn-white import-export" id="btnMaterialRequestExport" disabled onclick="funcShowExportbtn()">@Model.Loc.Where(a => a.ResourceId == "spnExport").FirstOrDefault().Value.ToString()</button>
+                    <div style="clear:both;"></div>
+                </div>
+                <div style="clear:both;"></div>
+            </div>
+            <div class="tabsArea nobg" id="MaterialRequestSearchGridItem">
+                <div style="clear:both;"></div>
+                <div class="table-responsive">
+                    <table id="Tbl_materialRequestSearchGrid" class="eqpDtlTbl row-border custom-sort" style="width:100%;">
+                        <thead>
+                            <tr>
+                                <th data-col="1" data-th-index="0">@Model.Loc.Where(a => a.ResourceId == "spnPart").FirstOrDefault().Value.ToString()</th>
+                                <th data-col="2" data-th-index="1">@Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString()</th>
+                                <th data-col="3" data-th-index="2">@Model.Loc.Where(a => a.ResourceId == "spnUnitCost").FirstOrDefault().Value.ToString()</th>
+                                <th data-col="4" data-th-index="3">@Model.Loc.Where(a => a.ResourceId == "spnQuantity").FirstOrDefault().Value.ToString()</th>
+                                <th data-col="5" data-th-index="4">@Model.Loc.Where(a => a.ResourceId == "spnTotalCost").FirstOrDefault().Value.ToString()</th>
+                                <th data-col="6" data-th-index="5">@Model.Loc.Where(a => a.ResourceId == "GlobalDate").FirstOrDefault().Value.ToString()</th>
+                                <th data-col="7" data-th-index="6">@Model.Loc.Where(a => a.ResourceId == "spnLogComment").FirstOrDefault().Value.ToString()</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

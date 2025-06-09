@@ -1,0 +1,148 @@
+﻿@model Client.Models.Configuration.VendorMaster.VendorMasterVM
+@using Client.Models.Common
+@{
+    bool VendorMasterImportInUse = false;
+    bool VendorMasterImportSwitch1 = false;
+    var InterfacePropData = (List<InterfacePropModel>)Session["InterfacePropData"];
+    if (InterfacePropData != null && InterfacePropData.Count > 0)
+    {
+        VendorMasterImportInUse = InterfacePropData.Where(x => x.InterfaceType == InterfacePropConstants.VendorMasterImport).Select(x => x.InUse).FirstOrDefault();
+        VendorMasterImportSwitch1 = InterfacePropData.Where(x => x.InterfaceType == InterfacePropConstants.VendorMasterImport).Select(x => x.Switch1).FirstOrDefault();
+    }
+}
+<div class="m-subheader">
+    <div class="new-m-subheader">
+        <div class="PageTitle">
+            <div class="align-items-center separator">
+                <h3 class="m-subheader__title ">
+                    @Model.Loc.Where(a => a.ResourceId == "spnVendorMasterSearch").FirstOrDefault().Value.ToString()
+                </h3>
+            </div>
+        </div>
+
+        <div class="NewBreadcrumbArea">
+            <div class="newBreadcrumb">
+                <ul>
+                    <li><a href="/Configuration/Dashboard">&nbsp;</a></li>
+                    <li class="active">@Model.Loc.Where(a => a.ResourceId == "spnVendorMasterSearch").FirstOrDefault().Value.ToString()</li>
+                </ul>
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+
+        <div class="ActionBttnArea">
+            @if (Model.security.VendorMaster.Create && VendorMasterImportInUse && VendorMasterImportSwitch1)
+            {
+                <button type="button" class="btn newBtn-add  pull-left addPlusbtnVendor" title="Add Equipment">@Model.Loc.Where(a => a.ResourceId == "spnNewVendorMaster").FirstOrDefault().Value.ToString()</button>
+            }
+            <div style="clear:both;"></div>
+        </div>
+        <div style="clear:both;"></div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xl-12">
+        <div class="m-portlet" id="m_portlet" style="padding:15px; margin-bottom:0;">
+            <div class="actionBar" style="display:none" id="vendormasterGridAction">
+                <div class="pull-left">
+                    <div class="ActiveInactiveDrop LoaderDrop">
+                        <select class="form-control search select2-not-search LoaderDrop" id="vMasterDropdown" name="vendorMasterDropdown">
+                            <option value="1">@Model.Loc.Where(a => a.ResourceId == "globalActive").FirstOrDefault().Value.ToString()</option>
+                            <option value="2">@Model.Loc.Where(a => a.ResourceId == "globalInActive").FirstOrDefault().Value.ToString()</option>
+                        </select>
+                    </div>
+                    <button type="button" class="btn btn-white navbar-btn" id="sidebarCollapse" title="Advance Search"><i class="fa fa-filter" style="font-size: 1.3rem;"></i></button>
+                    <ul class="filter_apply">
+                        <li class="textFilter"><span class="filteritemcount">0</span>&nbsp;@Model.Loc.Where(a => a.ResourceId == "globalFiltersAppiled").FirstOrDefault().Value.ToString()</li>
+                        <li class="textClear" id="liClearAdvSearchFilter"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "globalClear").FirstOrDefault().Value.ToString()</a></li>
+                    </ul>
+                    <div style="clear:both;"></div>
+                </div>
+
+                <div class="pull-right">
+                    <button type="button" class="btn btn-white import-export" onclick="funcShowExportbtn()">@Model.Loc.Where(a => a.ResourceId == "spnExport").FirstOrDefault().Value.ToString()</button>
+                    <button type="button" class="btn btn-white" id="liCustomize" title="Customize" data-toggle="modal" data-target="#gridcolumncustomizemodal"><i class="fa fa-cog" style="font-size: 1.3rem;"></i></button>
+                    <div style="clear:both;"></div>
+                </div>
+                <div style="clear:both;"></div>
+                <div id="advsearchfilteritems"></div>
+                <div style="clear:both;"></div>
+            </div>
+            <div style="clear:both;"></div>
+
+            <div id="Active" class="tabcontent" style="display:block;">
+                <div class="table-responsive">
+                    <table id="vMasterSearchTBL" class="eqpDtlTbl row-border custom-sort" style="width:100%;">
+                        <thead>
+                            <tr>
+                                <th class="th-VendorId ClientLookupId" id="thVendorId" data-th-index="0" data-th-prop="ClientLookupId">@Model.Loc.Where(a => a.ResourceId == "spnVendorID").FirstOrDefault().Value.ToString()</th>
+                                <th class="Name" id="thName" data-th-index="1" data-th-prop="Name">@Model.Loc.Where(a => a.ResourceId == "spnName").FirstOrDefault().Value.ToString()</th>
+                                <th class="ExVendorSiteCode" id="thLocation" data-th-index="2" data-th-prop="ExVendorSiteCode">@Model.Loc.Where(a => a.ResourceId == "spnSiteCode").FirstOrDefault().Value.ToString()</th>
+                                <th class="AddressCity" data-th-index="3" data-th-prop="AddressCity">@Model.Loc.Where(a => a.ResourceId == "GlobalCity").FirstOrDefault().Value.ToString()</th>
+                                <th class="AddressState" data-th-index="4" data-th-prop="AddressState">@Model.Loc.Where(a => a.ResourceId == "GlobalState").FirstOrDefault().Value.ToString()</th>
+                                <th class="Type" id="thType" data-th-index="5" data-th-prop="Type">@Model.Loc.Where(a => a.ResourceId == "GlobalType").FirstOrDefault().Value.ToString()</th>
+                                <th class="IsExternal" width="5%" data-th-index="6" data-th-prop="IsExternal">@Model.Loc.Where(a => a.ResourceId == "globalIsExternal").FirstOrDefault().Value.ToString()</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<nav id="sidebar">
+    <div id="dismiss">
+        <i class="fa fa-close"></i>
+    </div>
+    <div class="sidebar-header">
+        <h3><i class="fa fa-filter" style="position: relative; top: -2px;"></i>&nbsp;@Model.Loc.Where(a => a.ResourceId == "spnFilters").FirstOrDefault().Value.ToString()<span class="filteritemcount">0</span></h3>
+        <button type="button" class="btn btn-blue filterSearch" id="btnvMasterDataAdvSrch"><i class="fa fa-search" style="margin-top:-3px;"></i>&nbsp;@Model.Loc.Where(a => a.ResourceId == "globalSearch").FirstOrDefault().Value.ToString()</button>
+    </div>
+    <div class="sidebar-content" id="advsearchsidebar">
+        <form action="#" method="post">
+            <div class="form-group vndm-ClientLookupId">
+                <label for="txtClientLookupId" id="lblEquipmentID" name="EquipmentID">@Model.Loc.Where(a => a.ResourceId == "spnVendorID").FirstOrDefault().Value.ToString()</label>
+                <input type="text" class="form-control search adv-item" id="txtClientLookupId" autocomplete="off" style="color:#333;">
+            </div>
+            <div class="form-group vndm-Name">
+                <label for="txtName" id="lblName">@Model.Loc.Where(a => a.ResourceId == "spnName").FirstOrDefault().Value.ToString()</label>
+                <input type="text" class="form-control search adv-item" id="txtName" autocomplete="off" style="color:#333;">
+            </div>
+            <div class="form-group vndm-ExVendorSiteCode">
+                <label for="txtExVendorSiteCode" id="lblLocation">@Model.Loc.Where(a => a.ResourceId == "spnSiteCode").FirstOrDefault().Value.ToString()</label>
+                <input type="text" class="form-control search adv-item" id="txtExVendorSiteCode" autocomplete="off" style="color:#333;">
+            </div>
+            <div class="form-group vndm-AddressCity">
+                <label for="txtAddressCity" id="lblSerialNumber2">@Model.Loc.Where(a => a.ResourceId == "GlobalCity").FirstOrDefault().Value.ToString()</label>
+                <input type="text" class="form-control search adv-item" id="txtAddressCity" autocomplete="off" style="color:#333;">
+            </div>
+            <div class="form-group vndm-AddressState">
+                <label for="txtAddressState" id="lblSerialNumber">@Model.Loc.Where(a => a.ResourceId == "GlobalState").FirstOrDefault().Value.ToString()</label>
+                <input type="text" class="form-control search adv-item" id="txtAddressState" autocomplete="off" style="color:#333;">
+            </div>
+            <div class="form-group vndm-Type">
+                <label for="txtType" id="lblEquipmentID" name="EquipmentID">@Model.Loc.Where(a => a.ResourceId == "GlobalType").FirstOrDefault().Value.ToString()</label>
+                <input type="text" class="form-control search adv-item" id="txtType" autocomplete="off" style="color:#333;">
+            </div>
+            <div class="form-group vndm-IsExternal">
+                <label for="IsExternal">@Model.Loc.Where(a => a.ResourceId == "globalIsExternal").FirstOrDefault().Value.ToString()</label>
+                @Html.DropDownListFor(m => m.vendorMasterModel.IsExternal, Model.vendorMasterModel.ExternalTypeList, "--Select--", new { @class = "form-control search adv-item select2picker", style = "width:100%;", id = "IsExternal" })
+            </div>
+        </form>
+    </div>
+</nav>
+@Html.Partial("_CustomizeGridSetup")
+@Html.Partial("_Export")
+<style type="text/css">
+    #popupExport {
+        right: 97px;
+    }
+
+    @@media only screen and (width:1360px) {
+        #popupExport {
+            right: 97px !important;
+        }
+    }
+</style>

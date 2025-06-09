@@ -1,0 +1,122 @@
+﻿@model Client.Models.FleetAsset.FleetAssetVM
+
+@section scripts{
+    <script type="text/javascript">
+        $(function () {
+            $('.select2picker').select2({
+            });
+        });
+    </script>
+}
+
+<div class="m-subheader fixedDiv1">
+    <div class="new-m-subheader">
+        <div class="PageTitle">
+            <div class="align-items-center separator">
+                <h3 class="m-subheader__title ">
+                    @Model.Loc.Where(a => a.ResourceId == "spnFleetAsset").FirstOrDefault().Value.ToString()
+                </h3>
+            </div>
+        </div>
+
+        <div class="NewBreadcrumbArea">
+            <div class="newBreadcrumb">
+                <ul>
+                    <li><a href="/Dashboard/Dashboard">&nbsp;</a></li>
+                    <li><a href="/FleetAsset/Index?page=Fleet_Asset" id="anchPagename">@Model.Loc.Where(a => a.ResourceId == "spnFleetAssetSearch").FirstOrDefault().Value.ToString()</a></li>
+                    <li class="lithisfleetasset" data-val="@Model.partsSessionData.EquipmentId"><a href="javascript:void(0)">@Model._FleetAssetSummaryModel.Equipment_ClientLookupId</a></li>
+                    <li class="active" id="spnPartsAdd">@Model.Loc.Where(a => a.ResourceId == "spnPartsAdd").FirstOrDefault().Value.ToString()</li>
+                </ul>
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+        <div style="clear:both;"></div>
+    </div>
+</div>
+<div class="pushDiv1"></div>
+
+<div class="row fixedDiv2">
+    @Html.Partial("_FleetAssetSummary", Model)
+</div>
+<div class="pushDiv2"></div>
+@Html.Partial("_ErrorDiv")
+@using (Ajax.BeginForm("PartsAdd", "FleetAsset", new AjaxOptions { HttpMethod = "Post", OnSuccess = "PartAddOnSuccess", OnBegin = "AjaxBeginFormBegin", OnComplete = "AjaxBeginFormComplete", OnFailure = "AjaxBeginFormFaillure" }, new { id = "frmeqpAddpart" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="row">
+        <div class="col-xl-12">
+            <div class="m-portlet newPort" id="m_portlet" style="padding:15px;">
+                <div class="bottomBlock">
+                    <div class="tabsArea nobg">
+                        <ul class="listView partListView nobrd">
+                            <li id="partdrop-region">
+                                <span class="label" id="spnPartId">@Html.LabelFor(m => m.partsSessionData.Part) : <small>*</small></span>
+                                <span class="inputText" style="position:relative;">
+                                    <div class="dropdown dropTableOuter">
+                                        <div class="input-group">
+                                            @Html.ValidationMessageFor(m => m.partsSessionData.Part, "", new { style = "display:none" })
+                                            @Html.TextBoxFor(m => m.partsSessionData.Part, new { @class = "form-control search dropbtn readonly", id = "txtpartid", autocomplete = "off", @readonly = "readonly" })
+                                            <div class="input-group-btn">
+                                                <button class="btn btn-white btntxtInputGroup" type="button" id="openvendorgrid">
+                                                    <i id="srcicon" class="fa fa-search"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </span>
+                            </li>
+                            <li>
+                                <span class="label" id="spnQtyNeeded">@Html.LabelFor(m => m.partsSessionData.QuantityNeeded) : </span>
+                                <span class="inputText">
+                                    @Html.ValidationMessageFor(m => m.partsSessionData.QuantityNeeded, "", new { style = "display:none" })
+                                    @Html.TextBoxFor(m => m.partsSessionData.QuantityNeeded, new { @class = "form-control search decimalinput", autocomplete = "off" })
+                                </span>
+                            </li>
+                            <li>
+                                <span class="label" id="spnQtyUsed">@Html.LabelFor(m => m.partsSessionData.QuantityUsed) : </span>
+                                <span class="inputText">
+                                    @Html.ValidationMessageFor(m => m.partsSessionData.QuantityUsed, "", new { style = "display:none" })
+                                    @Html.TextBoxFor(m => m.partsSessionData.QuantityUsed, new { @class = "form-control search decimalinput", autocomplete = "off" })
+                                </span>
+                            </li>
+                            <li style="height:auto;">
+                                <span class="label" id="spnComments">@Html.LabelFor(m => m.partsSessionData.Comment) :</span>
+                                <span class="inputText" style="height:auto;">
+                                    @Html.TextAreaFor(m => m.partsSessionData.Comment, new { @class = "form-control search", autocomplete = "off" })
+                                </span>
+                                <div style="clear:both;"></div>
+                            </li>
+                        </ul>
+                    </div>
+                    <div style="clear:both;"></div>
+                    <div class="idBttns">
+                        <div class="bttn_pagin">
+                            <div class="bttns2">
+                                <button type="submit" class="btn btn-blue mobBttn"><i class="fa fa-save faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+                            </div>
+                            <div class="bttns"><button type="button" class="btn btn-blue mobBttn" id="Partsaddcancelbutton"><i class="fa fa-close faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button></div>
+                            <div style="clear:both;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @Html.HiddenFor(m => m.partsSessionData.EquipmentId)
+}
+@Html.Partial("~/Views/FleetAsset/_FleetAssetPartPopup.cshtml")
+
+<style type="text/css">
+    @@media only screen and (max-width: 479px) and (min-width: 360px) {
+        ul.listView li span.label {
+            width: 100%;
+            float: none;
+        }
+
+        ul.listView li span.inputText {
+            width: 100%;
+            float: none;
+        }
+    }
+</style>

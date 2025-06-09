@@ -1,0 +1,37 @@
+﻿@model Client.Models.Configuration.UIConfiguration.UiConfigurationVM
+<div class="modal fade" id="AddUserDefineFieldmodal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle" style="margin:0 0 0 0 !important">@Model.Loc.Where(a => a.ResourceId == "spnAddDefinedField").FirstOrDefault().Value.ToString()</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <table id="DDTable" class="table table-style table-striped"  style="width:100%;">
+                    <thead>
+                        <tr>
+                            <th scope="col" width="7%" style="text-align:center !important;">@Model.Loc.Where(a => a.ResourceId == "spnSelect").FirstOrDefault().Value.ToString() </th>
+                            <th scope="col" width="93%" style="text-align:center !important;">@Model.Loc.Where(a => a.ResourceId == "spnColumnName").FirstOrDefault().Value.ToString()</th>
+
+                        </tr>
+                    </thead>                  
+                </table>
+            </div>
+
+
+           
+            <div class="modal-footer" style="padding-top:15px !important;">
+                <button type="button" class="btn btn-white saveConfig" style="float:right;" id="btnAddUDF">
+                    <i class="fa fa-plus"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "spnAddField").FirstOrDefault().Value.ToString()
+                </button>
+                <button type="button" class="btn btn-white" data-dismiss="modal">
+                    <i class="fa fa-close faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()
+                </button>
+                    <div style="clear:both;"></div>
+            </div>
+
+        </div>
+    </div>
+</div>

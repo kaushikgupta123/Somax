@@ -1,0 +1,205 @@
+﻿@model Client.Models.EquipmentCombined
+
+<div class="m-subheader">
+    <div class="new-m-subheader">
+        <div class="PageTitle">
+            <div class="align-items-center separator">
+                <h3 class="m-subheader__title ">
+                    @Model.Loc.Where(a => a.ResourceId == "hdrTitle").FirstOrDefault().Value.ToString()
+                </h3>
+            </div>
+        </div>
+
+        <div class="NewBreadcrumbArea">
+            <div class="newBreadcrumb">
+                <ul>
+                    <li><a href="/Dashboard/Dashboard">&nbsp;</a></li>
+                    <li><a href="/Equipment/Index?page=Maintenance_Assets" id="anchPagename">@Model.Loc.Where(a => a.ResourceId == "anchPagename").FirstOrDefault().Value.ToString()</a></li>
+                    <li class="active">@Model.Loc.Where(a => a.ResourceId == "AddEquip").FirstOrDefault().Value.ToString()</li>
+                </ul>
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+        <div style="clear:both;"></div>
+    </div>
+</div>
+
+@Html.Partial("_ErrorDiv")
+
+@using (Ajax.BeginForm("AddEquipment", "Equipment", new AjaxOptions { HttpMethod = "Post", OnSuccess = "EquipmentAddOnSuccess", OnBegin = "onLoginBegin", OnFailure = "onLoginFailure" }, new { enctype = "multipart/form-data", id = "eqpaddform" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="row">
+        <div class="col-xl-3">
+            <div class="m-portlet">
+                <div class="sideMenuArea nobg">
+                    <ul class="vtabs" id="detmaintab">
+                        <li id="equipmentabdidtab" class="active"><a href="#Identifications">@Model.Loc.Where(a => a.ResourceId == "btnIdentification").FirstOrDefault().Value.ToString()</a></li>
+                        <li id="equipmentabwarrantytab"><a href="#Warrantys">@Model.Loc.Where(a => a.ResourceId == "btnWarranty").FirstOrDefault().Value.ToString()</a></li>
+                    </ul>
+                </div>
+
+                <div class="selectTabs" id="selectTabs">
+                    <select class="form-control" id="colorselector">
+                        <option value="Identifications">@Model.Loc.Where(a => a.ResourceId == "btnIdentification").FirstOrDefault().Value.ToString()</option>
+                        <option value="Warrantys">@Model.Loc.Where(a => a.ResourceId == "btnWarranty").FirstOrDefault().Value.ToString()</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-9">
+            <div class="row">
+                <div class="col-xl-12" id="btnnblock">
+                    <div class="m-portlet" id="m_portlet" style="padding:15px;">
+                        <div class="bottomBlock">
+                            <div class="tabsArea nobg" id="Identifications" style="display:block;">
+                                <ul class="listView nobrd">
+                                    <li>
+                                        <span class="label" id="spnEquipmentId">@Html.LabelFor(m => m.EquipModel.EquipmentID)<small>*</small></span>
+                                        <span class="inputText">
+                                            @Html.ValidationMessageFor(m => m.EquipModel.EquipmentID, "", new { style = "display:none" })
+                                            @Html.TextBoxFor(m => m.EquipModel.EquipmentID, new { @class = "form-control search m-input", maxlength = "31", @style = "color:black", autocomplete = "off" })
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label" id="spnName">@Html.LabelFor(m => m.EquipModel.Name)<small>*</small></span>
+                                        <span class="inputText">
+                                            @Html.ValidationMessageFor(m => m.EquipModel.Name, "", new { style = "display:none" })
+                                            @Html.TextBoxFor(m => m.EquipModel.Name, new { @class = "form-control search m-input", @style = "color:black", autocomplete = "off", maxlength = "63" })
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label" id="spnAssetCategory">@Html.LabelFor(m => m.EquipModel.AssetCategory)<small>*</small></span>
+                                        <span class="inputText">
+                                            @Html.ValidationMessageFor(m => m.EquipModel.AssetCategory, "", new { style = "display:none" })
+                                            @Html.DropDownListFor(m => m.EquipModel.AssetCategory, Model.EquipModel.AssetCategoryList, "--Select--", new { @class = "form-control search select2picker", style = "width:100%;" })
+                                        </span>
+                                    </li>
+                                    @if (Model.EquipModel.BusinessType.ToUpper() != BusinessTypeConstants.Facilities)
+                                    {
+                                        <li>
+                                            <span class="label" id="spnLocation">@Html.LabelFor(m => m.EquipModel.Location)</span>
+                                            <span class="inputText">
+                                                @Html.TextBoxFor(m => m.EquipModel.Location, new { @class = "form-control search m-input", @style = "color:black", autocomplete = "off", maxlength = "63" })
+                                            </span>
+                                        </li>
+                                    }
+
+                                    <li>
+                                        <span class="label">@Model.EquipModel.AssetGroup1Name</span>
+                                        <span class="inputText">
+                                            @Html.DropDownListFor(m => m.EquipModel.AssetGroup1Id, Model.EquipModel.AssetGroup1List, "--Select--", new { @class = "form-control search select2picker", style = "width:100%;" })
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label">@Model.EquipModel.AssetGroup2Name</span>
+                                        <span class="inputText">
+                                            @Html.DropDownListFor(m => m.EquipModel.AssetGroup2Id, Model.EquipModel.AssetGroup2List, "--Select--", new { @class = "form-control search select2picker", style = "width:100%;", disabled = "disabled" })
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label">@Model.EquipModel.AssetGroup3Name</span>
+                                        <span class="inputText">
+                                            @Html.DropDownListFor(m => m.EquipModel.AssetGroup3Id, Model.EquipModel.AssetGroup3List, "--Select--", new { @class = "form-control search select2picker", style = "width:100%;", disabled = "disabled" })
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label" id="spnSerialNo">@Html.LabelFor(m => m.EquipModel.SerialNumber)<small></small></span>
+                                        <span class="inputText">
+                                            @Html.TextBoxFor(m => m.EquipModel.SerialNumber, new { @class = "form-control search m-input", @style = "color:black", autocomplete = "off", maxlength = "63" })
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label" id="spnType">@Html.LabelFor(m => m.EquipModel.Type) <small>*</small></span>
+                                        <span class="inputText">
+                                            @Html.ValidationMessageFor(m => m.EquipModel.Type, "", new { style = "display:none" })
+                                            @Html.DropDownListFor(m => m.EquipModel.Type, Model.LookupTypeList, "--Select--", new { @class = "form-control search select2picker", style = "width:100%;" })
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label" id="spnMake">@Html.LabelFor(m => m.EquipModel.Make)<small></small></span>
+                                        <span class="inputText">
+                                            @Html.TextBoxFor(m => m.EquipModel.Make, new { @class = "form-control search m-input", @style = "color:black", autocomplete = "off", maxlength = "31" })
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label" id="spnModelNo">@Html.LabelFor(m => m.EquipModel.ModelNumber)<small></small></span>
+                                        <span class="inputText">
+                                            @Html.TextBoxFor(m => m.EquipModel.ModelNumber, new { @class = "form-control search m-input", @style = "color:black", autocomplete = "off", maxlength = "63" })
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label" id="spnAccount">@Html.LabelFor(m => m.EquipModel.Account)<small></small></span>
+                                        <span class="inputText">
+                                            @Html.DropDownListFor(m => m.EquipModel.Account, Model.EquipModel.AccountList, "--Select--", new { @class = "form-control search select2picker", style = "width:100%;" })
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label" id="spnAssetNo">@Html.LabelFor(m => m.EquipModel.AssetNumber)</span>
+                                        <span class="inputText">
+                                            @Html.TextBoxFor(m => m.EquipModel.AssetNumber, new { @class = "form-control search m-input", @style = "color:black", autocomplete = "off", maxlength = "31" })
+                                        </span>
+                                    </li>                                   
+                                </ul>
+                            </div>
+
+                            <div class="tabsArea nobg" id="Warrantys" style="display:none;">
+                                <ul class="listView nobrd">
+                                    <li>
+                                        <span class="label" id="spnExpires">@Html.LabelFor(m => m.EquipModel.Maint_WarrantyExpire)</span>
+                                        <span class="inputText">
+                                            @Html.ValidationMessageFor(m => m.EquipModel.Maint_WarrantyExpire, "", new { style = "display:none" })
+                                            @Html.TextBoxFor(m => m.EquipModel.Maint_WarrantyExpire, new { @class = "form-control search dtpicker", autocomplete = "off" })
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label" id="spnVendor">@Html.LabelFor(m => m.EquipModel.MaintVendorIdClientLookupId)</span>
+                                        <span class="inputText">
+                                            <div class="dropdown dropTableOuter">
+                                                <div class="input-group">
+                                                    @Html.TextBoxFor(m => m.EquipModel.MaintVendorIdClientLookupId, new { @class = "form-control search dropbtn eqpvendid readonly", @readonly = "readonly", autocomplete = "off" })
+                                                    <div class="input-group-btn">
+                                                        <button class="btn btn-white btntxtInputGroup" type="button" id="openvendorgrid">
+                                                            <i id="srcicon" class="fa fa-search"></i>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </span>
+                                    </li>
+                                    <li style="height:auto;">
+                                        <span class="label" id="spnMaintWarrantyDesc">@Html.LabelFor(m => m.EquipModel.Maint_WarrantyDesc)</span>
+                                        <span class="inputText" style="height:auto;">
+                                            @Html.TextAreaFor(m => m.EquipModel.Maint_WarrantyDesc, new { @class = "form-control search", autocomplete = "off", maxlength = "127" })
+                                        </span>
+                                        <div style="clear:both;"></div>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div style="clear:both;"></div>
+
+                            <div class="idBttns">
+                                <div class="bttn_pagin">
+                                    <div class="bttns2">
+                                        <button type="submit" class="btn btn-white mobBttn" name="Command" id="btnSaveAnotherOpen" style="cursor:pointer" value="saveAdd"><i class="fa fa-save faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalSaveAndAdd").FirstOrDefault().Value.ToString()</button>
+                                        <button type="submit" class="btn btn-blue mobBttn" name="Command" id="btnSave" style="cursor:pointer" value="save"><i class="fa fa-save faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+                                    </div>
+                                    <div class="bttns"><button type="button" class="btn btn-blue mobBttn" id="btnCancelAddEquipment" style="cursor:pointer"><i class="fa fa-close faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button></div>
+
+                                    <div style="clear:both;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @Html.HiddenFor(m => m.EquipModel.PlantLocation, new { id = "PlantLocation" })
+    @Html.Partial("~/Views/Equipment/_EqpVendorPopup.cshtml")
+}
+<style type="text/css">
+    .select2-container--default .select2-selection--single .select2-selection__rendered { padding-right: 30px; }
+    .ui-tooltip.ui-tooltip1 { z-index: 101 !important; }
+</style>

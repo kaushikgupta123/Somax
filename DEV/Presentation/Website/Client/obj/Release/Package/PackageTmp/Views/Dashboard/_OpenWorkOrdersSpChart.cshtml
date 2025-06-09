@@ -1,0 +1,26 @@
+﻿@model Client.Models.Dashboard.DashboardVM
+
+    <div class="sparklineArea">
+        <div class="firstBox">
+            <div class="lds-ellipsis lds-adjust spline-loader" id="openwospchartloader">
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+            </div>
+            @if (Model.WoSecurity)
+            {
+                <h2 id="openWoCount" class="hoverClass"></h2>
+                <h3 class="hoverClass" id="openWoCountText">@Model.Loc.Where(a => a.ResourceId == "spnOpenWorkOrders").FirstOrDefault().Value.ToString()</h3>
+            }
+            else
+            {
+                <h2 id="openWoCountInactive"></h2>
+                <h3>@Model.Loc.Where(a => a.ResourceId == "spnOpenWorkOrders").FirstOrDefault().Value.ToString()</h3>
+            }
+            <div class="sparklineGraph">
+                <canvas id="myChart_OpenWo" class="sparklinecanvas"></canvas>
+                <div class="clear"></div>
+            </div>
+        </div>
+    </div>

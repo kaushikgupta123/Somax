@@ -1,0 +1,1020 @@
+﻿@model Client.Models.EquipmentCombined
+
+@*----------------For BarCode CODE39-------------------------*@
+<script src="~/Scripts/jsbarcode/JsBarcode.code39.min.js"></script>
+@*----------------BarCode CODE39-------------------------*@
+
+<div class="m-subheader equip-subheader">
+    <div class="new-m-subheader">
+        <div class="filterDescription">
+            <a href="javascript:void(0)" id="linkToSearch"><span id="spnlinkToSearch">   @Model.Loc.Where(a => a.ResourceId == "anchPagename").FirstOrDefault().Value.ToString()</span></a> - @Model.EquipData.ClientLookupId
+        </div>
+    </div>
+</div>
+@*<div class="pushDiv1"></div>*@
+
+
+
+@{
+
+
+    var imageUrl = Model._EquipmentSummaryModel.ImageUrl;
+
+    if (Model._EquipmentSummaryModel.ClientOnPremise)
+    {
+        imageUrl = UtilityFunction.PhotoBase64ImgSrc(imageUrl);
+    }
+
+}
+
+<div class="row">
+    <div class="col-xl-12">
+        <div class="m-portlet padAdjst" id="m_portlet" style="padding:5px;">
+            <div class="m-portlet__body  m-portlet__body--no-padding">
+                <div class="row m-row--col-separator-xl">
+                    <div class="col-md-12">
+                        <div class="m-portlet cardRow" style="margin-bottom:0; border:0;">
+                            <div class="m-portlet__body gridList" style="padding:0;">
+                                <div class="summaryview">
+                                    <div class="col-box-1">
+                                       
+                                        <div class="gridImgBox">
+                                            @if (!string.IsNullOrEmpty(imageUrl))
+                                            {
+                                                <img src="@imageUrl" id="EquipZoom" alt="Image" data-zoom-image="@imageUrl" />
+                                            }
+                                            else
+                                            {
+                                                <img src="~/Scripts/ImageZoom/images/NoImage.jpg" id="EquipZoom" alt="Image" data-zoom-image="/Scripts/ImageZoom/images/NoImage.jpg" />
+                                            }
+                                        </div>
+                                        <div style="clear:both;"></div>
+                                    </div>
+                                    <div class="col-box-3">
+                                        <div class="newDescription">
+                                            <div class="orderId">
+                                                @if (Model.EquipmentDetailsCard.RemoveFromService == true)
+                                                {
+                                                    <span class="outserv ">@Model.Loc.Where(a => a.ResourceId == "spnOutofService").FirstOrDefault().Value.ToString()</span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="inserv ">@Model.Loc.Where(a => a.ResourceId == "spnInService").FirstOrDefault().Value.ToString()</span>
+                                                }
+
+                                            </div>
+                                            <div class="types">
+                                               
+                                                @Model.EquipmentDetailsCard.ClientLookupId
+                                            </div>
+                                            <div class="types">
+
+                                                <span>
+
+                                                    @if (Model.EquipmentDetailsCard.Name.Length > 18)
+                                                    {
+                                                        @Model.EquipmentDetailsCard.Name.Substring(0, 18)
+                                                        <span style="color:#315a98;cursor:pointer" class="equipmentCardViewMoreDetailsPopup">
+                                                            ... @Model.Loc.Where(a => a.ResourceId == "globalSpnMore").FirstOrDefault().Value.ToString()
+                                                            <span style="display:none;">@Model.EquipmentDetailsCard.Name</span>
+                                                            <p style="display:none;">@Model.Loc.Where(a => a.ResourceId == "spnName").FirstOrDefault().Value.ToString()</p>
+                                                        </span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span>@Model.EquipmentDetailsCard.Name</span>
+                                                    }
+                                                </span>
+                                            </div>
+                                            <div class="types">
+                                                <span>@Model.Loc.Where(a => a.ResourceId == "GlobalType").FirstOrDefault().Value.ToString() : <span>@Model.EquipmentDetailsCard.Type</span></span>
+                                            </div>
+
+                                            <div class="types">@Model.Loc.Where(a => a.ResourceId == "spnSerialNo").FirstOrDefault().Value.ToString() : @Model.EquipmentDetailsCard.SerialNumber</div>
+
+
+                                        </div>
+                                    </div>
+                                    <div class="col-box-2">
+                                        <div class="gridStatus eq-data">
+                                            <div class="types">@Model.Loc.Where(a => a.ResourceId == "spnMake").FirstOrDefault().Value.ToString() : @Model.EquipmentDetailsCard.Make</div>
+                                            <div class="types">@Model.Loc.Where(a => a.ResourceId == "GlobalModel").FirstOrDefault().Value.ToString() : @Model.EquipmentDetailsCard.Model</div>
+                                            <div class="types">@Model.Loc.Where(a => a.ResourceId == "spnLocation").FirstOrDefault().Value.ToString() : @Model.EquipmentDetailsCard.Location</div>
+                                            <div class="types">
+                                                <span>
+                                                    @Model.EquipModel.AssetGroup1Name :
+
+                                                    @if (Model.EquipmentDetailsCard.AssetGroup1ClientLookupId.Length > 18)
+                                                    {
+                                                        @Model.EquipmentDetailsCard.AssetGroup1ClientLookupId.Substring(0, 18)
+                                                        <span style="color:#315a98;cursor:pointer" class="equipmentCardViewMoreDetailsPopup">
+                                                            ... @Model.Loc.Where(a => a.ResourceId == "globalSpnMore").FirstOrDefault().Value.ToString()
+                                                            <span style="display:none;">@Model.EquipmentDetailsCard.AssetGroup1ClientLookupId</span>
+                                                            <p style="display:none;"> @Model.EquipModel.AssetGroup1Name</p>
+                                                        </span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span>@Model.EquipmentDetailsCard.AssetGroup1ClientLookupId</span>
+                                                    }
+                                                </span>
+                                            </div>
+
+                                            <div class="types">
+                                                <span>
+                                                    @Model.EquipModel.AssetGroup2Name :
+                                                    @if (Model.EquipmentDetailsCard.AssetGroup2ClientLookupId.Length > 18)
+                                                    {
+                                                        @Model.EquipmentDetailsCard.AssetGroup2ClientLookupId.Substring(0, 18)
+                                                        <span style="color:#315a98;cursor:pointer" class="equipmentCardViewMoreDetailsPopup">
+                                                            ... @Model.Loc.Where(a => a.ResourceId == "globalSpnMore").FirstOrDefault().Value.ToString()
+                                                            <span style="display:none;">@Model.EquipmentDetailsCard.AssetGroup2ClientLookupId</span>
+                                                            <p style="display:none;"> @Model.EquipModel.AssetGroup2Name</p>
+                                                        </span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span>@Model.EquipmentDetailsCard.AssetGroup2ClientLookupId</span>
+                                                    }
+
+                                                </span>
+                                            </div>
+                                            <div class="types">
+                                                <span>
+                                                    @Model.EquipModel.AssetGroup3Name :
+                                                    @if (Model.EquipmentDetailsCard.AssetGroup3ClientLookupId.Length > 18)
+                                                    {
+                                                        @Model.EquipmentDetailsCard.AssetGroup3ClientLookupId.Substring(0, 18)
+                                                        <span style="color:#315a98;cursor:pointer" class="equipmentCardViewMoreDetailsPopup">
+                                                            ... @Model.Loc.Where(a => a.ResourceId == "globalSpnMore").FirstOrDefault().Value.ToString()
+                                                            <span style="display:none;">@Model.EquipmentDetailsCard.AssetGroup3ClientLookupId</span>
+                                                            <p style="display:none;"> @Model.EquipModel.AssetGroup3Name</p>
+                                                        </span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span>@Model.EquipmentDetailsCard.AssetGroup3ClientLookupId</span>
+                                                    }
+                                                </span>
+
+
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="col-box-4 button-row">
+                                    @if (Model.security.Asset_Photos.Access)
+                                    {
+
+                                        <div class="img-radio bttns takePic">
+                                            <button class="btn btn-blue" title="Take Picture" style="padding: 0.65rem; float:right; width:100%">
+                                                <label for="files" style="margin-bottom:0px !important"><i class="fa fa-camera"></i></label>
+                                                <input id="files" @*accept=".jpeg,.jpg,.png,.JPEG,.JPG,.PNG"*@ style="display:none;" type="file" value="" accept="image/*" capture>
+                                            </button>
+                                        </div>
+
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="row">
+    <div class="col-xl-12">
+        <div class="m-portlet  equip-tab-wrap" id="m_portlet" style="padding:15px;">
+            <ul class="no-border-bottom tab-nav" id="tabscroll">
+                <li data-selected="true">  <button data-tab="Details" class="tablinks wo-det-tab active">Details</button> </li>
+
+
+                @if (Model.security.Asset_Photos.Access)
+                {
+                    <li>
+                        <button data-tab="Photos" class="tablinks wo-det-tab">@Model.Loc.Where(a => a.ResourceId == "anchPhoto").FirstOrDefault().Value.ToString()</button>
+                    </li>
+                }
+                @if (Model.security.Equipment.Access)
+                {
+                    <li>
+                        <button data-tab="Comments" class="tablinks wo-det-tab">@Model.Loc.Where(a => a.ResourceId == "spnLogComment").FirstOrDefault().Value.ToString()</button>
+                    </li>
+                }
+                <li>
+                    <button data-tab="Attachment" class="tablinks wo-det-tab">@Model.Loc.Where(a => a.ResourceId == "spnAttachments").FirstOrDefault().Value.ToString()</button>
+                    @if (Model.attachmentCount > 0)
+                    {
+                        <span class="m-badge m-badge--danger count-badge" id="asstAttachmentCount">@Model.attachmentCount</span>
+                    }
+                </li>
+                @if (Model._userdata.Site.CMMS == true)
+                {
+                    <li>
+                        <button data-tab="TechSpecs" class="tablinks wo-det-tab">@Model.Loc.Where(a => a.ResourceId == "anchTechSpec").FirstOrDefault().Value.ToString()</button>
+                    </li>
+                    <li>
+                        <button data-tab="Parts" class="tablinks wo-det-tab">@Model.Loc.Where(a => a.ResourceId == "anchParts").FirstOrDefault().Value.ToString()</button>
+                    </li>
+                    if (Model._userdata.Security.Asset_Downtime.Access == true)
+                    {
+                        <li>
+                            <button data-tab="Downtime" class="tablinks wo-det-tab">@Model.Loc.Where(a => a.ResourceId == "anchDowntime").FirstOrDefault().Value.ToString()</button>
+                        </li>
+                    }
+                    <li>
+                        <button data-tab="PMList" class="tablinks wo-det-tab">@Model.Loc.Where(a => a.ResourceId == "anchPMList").FirstOrDefault().Value.ToString()</button>
+                    </li>
+                    <li>
+                        <button data-tab="WOActive" class="tablinks wo-det-tab">@Model.Loc.Where(a => a.ResourceId == "anchWOActive").FirstOrDefault().Value.ToString()</button>
+                    </li>
+                    <li>
+                        <button data-tab="WOComplete" class="tablinks wo-det-tab">@Model.Loc.Where(a => a.ResourceId == "anchWoComplete").FirstOrDefault().Value.ToString()</button>
+                    </li>
+                    <li>
+                        <button data-tab="PartIssues" class="tablinks wo-det-tab">@Model.Loc.Where(a => a.ResourceId == "anchPartIssues").FirstOrDefault().Value.ToString()</button>
+                    </li>
+                }
+            </ul>
+
+
+        </div>
+
+        <div class="md-apps-tab md-apps-tab-sel tabcontent" id="Details">
+            <ul class="listView" id="AssetDetails">
+            </ul>
+        </div>
+
+        @if (Model.security.Asset_Photos.Access)
+        {
+            <div class="md-apps-tab tabcontent" id="Photos"></div>
+        }
+
+        @if (Model.security.Equipment.Access)
+        {
+            <div class="md-apps-tab tabcontent" id="Comments"></div>
+        }
+        <div class="md-apps-tab tabcontent" id="Attachment"></div>
+        @if (Model._userdata.Site.CMMS == true)
+        {
+            <div class="md-apps-tab tabcontent" id="TechSpecs"></div>
+            <div class="md-apps-tab tabcontent" id="Parts"></div>
+            if (Model._userdata.Security.Asset_Downtime.Access == true)
+            {
+                <div class="md-apps-tab tabcontent" id="Downtime"></div>
+            }
+            <div class="md-apps-tab tabcontent" id="PMList"></div>
+            <div class="md-apps-tab tabcontent" id="WOActive"></div>
+            <div class="md-apps-tab tabcontent" id="WOComplete"></div>
+            <div class="md-apps-tab tabcontent" id="PartIssues"></div>
+        }
+
+
+
+    </div>
+    @Html.HiddenFor(m => Model.EquipmentDetailsCard.RemoveFromService, new { id = "EquipData_RemoveFromService" })
+    @Html.HiddenFor(m => Model.EquipmentDetailsCard.EquipmentId, new { id = "EquipData_EquipmentId" })
+    @Html.HiddenFor(m => Model.EquipmentDetailsCard.ClientLookupId, new { id = "EquipModel_ClientLookupId" })
+    @Html.HiddenFor(m => m.EquipData.Status, new { id = "EquipModel_Status" })
+    @Html.HiddenFor(m => m.EquipData.Name, new { id = "EquipModel_Name" })
+    @Html.HiddenFor(m => m._EquipmentSummaryModel.ClientOnPremise, new { id = "EquipModel_ClientOnPremise" })
+</div>
+
+@if (Model.security.Asset_Photos.Access)
+{
+    <div class="row" id="divImageGrid">
+        <div class="col-xl-12">
+            <div class="m-portlet" id="m_portlet" style="padding:15px;">
+                <div id="EquipmentImages" class="tabcontent" style="padding-top:11px;display:block;"></div>
+            </div>
+        </div>
+    </div>
+    <div id="OpenImgActionPopup" class="slide-modal">
+        @Html.Hidden("AttachmentId", "", new { @id = "imgAttachmentId" })
+        @Html.Hidden("AttachmentURL", "", new { @id = "imgAttachmentURL" })
+        <div class="slide-modal-head">
+            <a class="slide-back-btn actionpopupmobileback"> <i class="fa fa-angle-left"></i> Back</a>
+            <div class="slide-back-title">
+                @Model.Loc.Where(a => a.ResourceId == "globalAction").FirstOrDefault().Value.ToString()
+            </div>
+        </div>
+        <div class="slide-modal-body">
+            <div mbsc-page class="demo-responsive">
+                <div style="height:100%;margin-top:10px;">
+                    <div mbsc-form class="mbsc-form-grid">
+                        <div class="mbsc-grid">
+                            <div class="mbsc-row">
+                                @if (Model.security.Asset_Photos.Access)
+                                {
+                                    <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                        <div class="design-box">
+                                            <div class="mbsc-button-group-block">
+                                                <button mbsc-button data-color="success" type="button" class="btn btn-blue mobBttn mbsc-btn selectidOpen">@Model.Loc.Where(a => a.ResourceId == "GlobalOpen").FirstOrDefault().Value.ToString()</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                                @if (Model.security.Asset_Photos.Edit)
+                                {
+                                    <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                        <div class="design-box">
+                                            <div class="mbsc-button-group-block">
+                                                <button mbsc-button data-color="success" type="button" class="btn btn-blue btnRqst mobBttn mbsc-btn" id="selectidSetAsDefault">@Model.Loc.Where(a => a.ResourceId == "spnSetDefault").FirstOrDefault().Value.ToString()</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                                @if (Model.security.Asset_Photos.Delete /*&& Model.security.Equipment.Edit && ((Model._userdata.Site.APM == false && Model._userdata.Site.CMMS == true) || (Model._userdata.Site.APM == true && Model._userdata.Site.CMMS == false) || (Model._userdata.Site.APM == true && Model._userdata.Site.CMMS == true) || (Model._userdata.Site.APM == true && Model._userdata.Site.CMMS == true) || (Model._userdata.Site.APM == false && Model._userdata.Site.CMMS == false && Model._userdata.Site.Sanitation == true))*/)
+                                {
+                                    <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                        <div class="design-box">
+                                            <div class="mbsc-button-group-block">
+                                                <button mbsc-button data-color="success" type="button" class="btn btn-blue btnRqst mobBttn mbsc-btn" id="selectidDelete">@Model.Loc.Where(a => a.ResourceId == "globalDelete").FirstOrDefault().Value.ToString()</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="slide-modal-footer"></div>
+    </div>
+
+    <div id="ShowImgPopup" class="slide-modal">
+        <div class="slide-modal-head">
+            <a class="slide-back-btn openimgback"> <i class="fa fa-angle-left"></i> Back</a>
+            <div class="slide-back-title">
+                @Model.Loc.Where(a => a.ResourceId == "spnImagePreview").FirstOrDefault().Value.ToString()
+            </div>
+        </div>
+        <div class="slide-modal-body">
+            <div mbsc-page class="demo-responsive">
+                <div style="height:100%;margin-top:10px;">
+                    <div mbsc-form class="mbsc-form-grid">
+                        <div class="mbsc-grid">
+                            <div class="mbsc-row">
+                                <div class="mbsc-col-12 mbsc-col-md-12 mbsc-col-lg-12">
+                                    <img id="SelectedImg" src="" style="width: 100%; padding:1rem" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="slide-modal-footer"></div>
+    </div>
+}
+@Html.Partial("~/Views/Equipment/Mobile/_EquipmentSummaryDescription.cshtml")
+@Html.Partial("_StatusDetailsLocalization")
+@*V2-919*@
+@Html.HiddenFor(m => m.EquipData.ClientLookupId)
+@Html.HiddenFor(m => m._userdata.DatabaseKey.Client.UseMultiStoreroom, new { id = "UseMultiStoreroom" })@*V2-1007*@
+<div class="slide-modal">
+    <div id="AddAttachmentModalpopup">
+        <div id="AttachmentPopUp">
+        </div>
+    </div>
+</div>
+<div class="slide-modal">
+    <div id="AddTechSpecsModalpopup">
+        <div id="TechSpecsPopUp">
+        </div>
+    </div>
+</div>
+<div class="slide-modal">
+    <div id="AddPartsModalpopup">
+        <div id="PartsPopUp">
+        </div>
+    </div>
+</div>
+<div class="slide-modal">
+    <div id="AddDowntimeModalpopup">
+        <div id="DowntimePopUp">
+        </div>
+    </div>
+</div>
+<style type="text/css">
+    /*New */
+    .eq-data span {
+        display: inline-block;
+        margin: 0px;
+    }
+
+    @@media (max-width:767px) {
+        #commentstems .ckeditorarea .mobBttn.btneditcomments {
+            margin-bottom: 10px !important;
+        }
+    }
+    /*New */
+    .cartIcon {
+        position: relative;
+        padding: 9px 10px 10px 5px;
+        border: 0;
+    }
+
+        .cartIcon i.fa-shopping-cart {
+            font-size: 1.5rem;
+            position: relative;
+            top: -1px;
+            left: -2px;
+        }
+
+    .cartBadges {
+        position: absolute;
+        top: -2px;
+        right: -2px;
+    }
+
+    .searchArea {
+        width: 570px;
+        float: left;
+        margin-right: 10px;
+        position: relative
+    }
+
+        .searchArea i.fa-search {
+            position: absolute;
+            left: 14px;
+            top: 9px;
+        }
+
+        .searchArea input.form-control.search {
+            padding: 0.65rem 1rem 0.65rem 2.7rem;
+        }
+
+    .searchTips {
+        padding-top: 10px;
+        border-bottom: 0;
+        margin: 0;
+        padding-bottom: 0;
+    }
+
+        .searchTips div.titleText {
+            width: 12%;
+        }
+
+        .searchTips div.infoText {
+            width: 88%;
+        }
+
+    .m-portlet-inner {
+        padding: 15px;
+        position: relative;
+    }
+
+    p.catalogText {
+        float: right;
+        color: red;
+        font-weight: 500;
+        position: absolute;
+        right: 10px;
+        top: 5px;
+    }
+
+    p.vendorcatalogText {
+        float: right;
+        color: red;
+        font-weight: 500;
+        position: absolute;
+        right: 10px;
+        top: 10px;
+    }
+
+    img.productImg {
+        width: 120px;
+        height: 70px;
+        margin-right: 10px; /*display:inline-block;*/
+        border-radius: 0;
+        float: left;
+    }
+
+    h2.productID {
+        font-size: 1.15rem;
+        font-weight: 500; /*vertical-align:middle;display:inline-block;*/
+        margin: 0;
+        display: flex;
+        align-items: center;
+        height: 70px;
+        /*V2-424*/
+        /*width: 70%;
+                        float: left;*/
+        float: right;
+        /*V2-424*/
+        overflow: auto;
+    }
+
+    p.productDescription {
+        margin: 0;
+        padding: 10px 0;
+        font-size: 14px;
+        font-weight: 400;
+        line-height: 20px;
+        height: 45px;
+        margin-top: -30px;
+        overflow: auto;
+        /*V2-424*/
+        float: right;
+        /*V2-424*/
+    }
+
+    ul.productDetails {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+        ul.productDetails li {
+            padding: 5px 0;
+            font-size: 14px;
+            font-weight: 400;
+            color: #6d6d6d;
+        }
+
+            ul.productDetails li strong {
+                font-weight: 600;
+                color: #3e3e3e;
+            }
+
+
+            ul.productDetails li span {
+                float: right;
+            }
+
+    .qtyBox { /*width:240px;*/
+        margin: 6px 0;
+    }
+
+        .qtyBox label {
+            margin: 0;
+            font-size: 15px;
+            font-weight: 500;
+            line-height: 34px;
+            margin-right: 10px;
+            color: #3e3e3e;
+        }
+
+    .btn-minus {
+        border-radius: 0.25rem 0 0 0.25rem;
+        border-right: 0;
+        border-color: #b9c1c4 !important;
+    }
+
+        .btn-minus:hover {
+            background-color: #f4516c !important;
+        }
+
+            .btn-minus:hover i.fa {
+                color: #fff !important;
+            }
+
+    .btn-plus {
+        border-radius: 0 0.25rem 0.25rem 0;
+        border-left: 0;
+        border-color: #b9c1c4 !important;
+    }
+
+        .btn-plus:hover {
+            background-color: #34bfa3 !important;
+            color: #fff !important;
+        }
+
+            .btn-plus:hover i.fa {
+                color: #fff !important;
+            }
+
+    .productDetailsArea { /*-webkit-box-align:center !important;-ms-flex-align:center !important;*/
+        align-items: center !important; /*display:-webkit-box !important;display:-ms-flexbox !important;display:flex !important;margin-bottom:10px;*/
+    }
+
+    .symbol {
+        width: 40px;
+        height: 40px;
+        display: inline-block;
+        margin-right: 10px;
+        border-radius: 50%;
+        flex-shrink: 0;
+        float: left;
+    }
+
+        .symbol img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+        }
+
+    .dtlsBox { /*display:inline-block;*/
+        vertical-align: middle;
+        float: left;
+        width: 210px;
+    }
+
+        .dtlsBox h2 {
+            padding: 0;
+            margin: 0;
+            font-size: 1.08rem;
+            color: #3f4254 !important;
+            font-weight: 500 !important;
+        }
+
+        .dtlsBox p {
+            padding: 0;
+            margin: 0;
+            font-weight: 400;
+            color: #949494 !important;
+            font-size: 13px;
+            max-height: 43px;
+            height: auto;
+            overflow: auto;
+        }
+
+        .dtlsBox.tablePartId { /*width:357px;*/
+            width: 80%;
+        }
+
+            .dtlsBox.tablePartId p {
+                padding: 0;
+                margin: 0;
+                font-weight: 400;
+                color: #949494 !important;
+                font-size: 13px;
+                max-height: 60px;
+                height: auto;
+                overflow: auto;
+            }
+
+    .btn-cart {
+        display: inline-block;
+        position: relative;
+        top: -1px;
+        padding: 0.65rem;
+        background: #fff;
+        border-color: #f4516c;
+        color: #f4516c !important;
+    }
+
+        .btn-cart:hover, .btn-cart:focus, .btn-cart:active {
+            background: #f4516c;
+            border-color: #f4516c;
+            color: #fff !important;
+        }
+
+        .btn-cart i.fa {
+            font-size: 18px;
+            position: relative;
+            left: -1px;
+        }
+
+    .sidebar .sidebar-header h3 span {
+        background: #f4516c;
+        left: 70px;
+    }
+
+    .sidebarCartList {
+        border-bottom: 1px solid #ccc;
+        padding-bottom: 0;
+        margin-bottom: 10px;
+    }
+
+    .sidebar .sidebar-content .sidebarCartList:last-child {
+        border-bottom: 0px solid #ccc;
+        margin-bottom: 0px;
+    }
+
+    .sidebarSymbol {
+        width: 60px;
+        height: 60px; /*display:inline-block;*/
+        margin-left: 10px;
+        border-radius: 50%; /*flex-shrink:0;*/
+        float: right;
+    }
+
+        .sidebarSymbol img {
+            width: 100%;
+            height: 100%;
+            border-radius: 0.42rem;
+        }
+
+    .sidebarAction {
+        margin: 10px 0;
+    }
+
+    .sidebar-footer {
+        background: #fff;
+        border-top: 1px solid #b8c2c4;
+        position: fixed;
+        right: auto;
+        left: auto;
+        bottom: 0;
+        width: 300px;
+        padding: 20px;
+    }
+
+
+    .qtyothertext {
+        width: 105px !important;
+        display: inline-block;
+        margin-right: 7px;
+        text-align: center;
+        /*float: left;*/
+        float: right;
+    }
+
+    #advsearchsidebarWorkorder .qtyothertext,
+    #advsearchsidebarWorkorder .pricetext {
+        width: 90px !important;
+    }
+
+    .pricetext {
+        width: 105px !important;
+        display: inline-block;
+        margin-right: 7px;
+        text-align: center;
+        /*float: left;*/
+        float: right;
+    }
+
+    .searchArea {
+        width: 515px; /*float:left;margin-right:10px;position:relative;*/
+    }
+
+    .lblQty, .lblPrice {
+        float: left;
+    }
+
+    .addtoCartchkBoxColor {
+        color: greenyellow;
+    }
+
+    #tblpartlookup thead th:last-child {
+        width: 240px !important;
+    }
+
+    #tblpartlookup tbody td:last-child {
+        width: 240px !important;
+        justify-content: center;
+        min-height: 40px;
+        align-items: center
+    }
+
+    #tblpartlookup tbody td.lastActiontd:last-child {
+        width: 240px !important;
+        display: flex;
+        justify-content: center;
+        min-height: 40px;
+        align-items: center;
+    }
+
+    .dataTables_scroll .dataTables_scrollHeadInner thead th:last-child {
+        width: 240px !important;
+    }
+
+    #tblpartlookup tbody td input.qtyothertext {
+        float: none;
+    }
+
+    #tblpartlookup tbody td input.pricetext {
+        float: none;
+    }
+
+    .filterDescription {
+        width: auto;
+        float: left;
+        font-size: 1.2rem;
+        color: #000;
+        font-weight: 500;
+        line-height: 33px;
+    }
+
+        .filterDescription a {
+            color: #36a3f7;
+            text-decoration: none !important;
+        }
+
+
+    @@media only screen and (min-width: 1366px) and (max-width: 1599px) {
+        h2 .productID.clsClientLookupId {
+            /*V2-424*/
+            /*width: 62%;*/
+            float: right;
+            /*V2-424*/
+        }
+        /*.pricetext { width:74px !important; }*/
+        .dtlsBox.tablePartId { /*width: 297px;*/
+            width: auto;
+        }
+
+        .lblPrice {
+            margin-top: 5px;
+        }
+    }
+
+    @@media only screen and (width:1360px) {
+        .openMenu .actionBar .pull-right {
+            float: right !important;
+            margin-top: 0 !important;
+        }
+
+        h2.productID.clsClientLookupId {
+            /*V2-424*/
+            /*width: 62%;*/
+            float: right;
+            /*V2-424*/
+        }
+        /*.pricetext { width:74px !important; }*/
+    }
+
+    @@media only screen and (min-width: 1200px) and (max-width: 1365px) {
+        .openMenu .actionBar .pull-right {
+            float: left;
+            margin-top: 10px;
+        }
+
+        img.productImg {
+            float: none;
+        }
+
+        h2.productID {
+            height: auto;
+         
+            float: right;
+            /*V2-424*/
+            margin-top: 10px;
+        }
+
+        .lblPrice {
+            margin-top: 5px;
+        }
+    }
+
+    @@media only screen and (min-width: 1024px) and (max-width: 1199px) {
+        .openMenu .actionBar .pull-right, .closeMenu .actionBar .pull-right {
+            float: left !important;
+            margin-top: 10px !important;
+        }
+    }
+
+    @@media only screen and (min-width: 768px) and (max-width: 1023px) {
+        .actionBar div.pull-right {
+            float: left !important;
+            margin-top: 10px !important;
+        }
+    }
+
+    @@media only screen and (min-width: 640px) and (max-width: 767px) {
+        .searchArea {
+            width: 420px;
+        }
+    }
+
+    @@media only screen and (min-width: 568px) and (max-width: 639px) {
+        .searchArea {
+            width: 348px;
+        }
+    }
+
+    @@media only screen and (max-width: 567px) {
+        .searchArea {
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        .col-box-4.button-row {
+            width: 100% !important;
+        }
+    }
+
+    @@media only screen and (max-width: 410px) {
+        .searchArea {
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        img.productImg {
+            float: none;
+        }
+
+        h2.productID {
+            height: auto;
+            width: 100%;
+            float: none;
+            margin-top: 10px;
+        }
+
+        p.productDescription {
+            float: left;
+            margin-top: 0;
+        }
+
+        .lblPrice {
+            margin-top: 5px;
+        }
+    }
+
+    .menufacDtl {
+        width: 100%;
+    }
+
+    .priceDtl {
+        width: 100%;
+        float: right;
+    }
+
+    .newBreadcrumb {
+        padding: 0;
+    }
+</style>
+
+<style>
+    .outserv {
+      
+        background-color: #f4516c;
+        color: white;
+        border-radius: 7px;
+        font-weight: 500;
+        padding: 0px 5px 1px 5px;
+        width: 175px;
+    }
+
+    .inserv {
+       
+        background-color: #34bfa3;
+        color: white;
+        border-radius: 7px;
+        font-weight: 500;
+        padding: 0px 5px 1px 5px;
+        width: 125px;
+    }
+</style>
+<style>
+    #commonWOTreeModal .checkmark,
+    #wrEquipTreeModal .checkmark {
+        background-color: #fff !important;
+    }
+
+    #SortByDropdown li:after {
+        display: none !important;
+    }
+
+    #SortByDropdown .mbsc-lv-item:before {
+        border-top: 0 !important;
+    }
+
+    #SortByDropdown li {
+        border-top: 1px solid #ccc !important;
+    }
+
+    .sorting_desc_mobile:before {
+        font-family: 'FontAwesome' !important;
+        font-weight: 400 !important;
+        content: '\f106' !important;
+        font-size: 18px !important;
+        color: #fff;
+        position: absolute !important;
+        right: 23px !important;
+        left: auto !important;
+        top: 14px !important;
+        display: block;
+        width: 10px;
+        border-top: 0 !important;
+        outline: 0;
+    }
+
+    .pmd-floating-action-btn:last-child:before {
+        display: none;
+    }
+
+
+    .sorting_asc_mobile:before {
+        font-family: 'FontAwesome' !important;
+        font-weight: 400 !important;
+        content: '\f107' !important;
+        font-size: 18px !important;
+        color: #fff;
+        position: absolute !important;
+        right: 23px !important;
+        left: auto !important;
+        top: 14px !important;
+        display: block;
+        width: 10px;
+        border-top: 0 !important;
+        outline: 0;
+    }
+
+    .equip-subheader {
+        overflow: hidden !important;
+    }
+
+    .equip-comment-cancel .btncommandCancel {
+        margin-top: 10px;
+    }
+</style>

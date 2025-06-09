@@ -1,0 +1,434 @@
+﻿@model Client.Models.MasterSanitationSchedule.MasterScheduleVM
+
+<div class="m-subheader">
+    <div class="new-m-subheader">
+        <div class="PageTitle">
+            <div class="align-items-center separator">
+                <h3 class="m-subheader__title">
+                    @Model.Loc.Where(a => a.ResourceId == "spnMasterSanitationSchedule").FirstOrDefault().Value.ToString()
+                </h3>
+            </div>
+        </div>
+
+        <div class="NewBreadcrumbArea">
+            <div class="newBreadcrumb">
+                <ul>
+                    <li><a href="/Dashboard/Dashboard">&nbsp;</a></li>
+                    <li><a href="/MasterSanitationSchedule/index?page=Sanitation_Master_Schedule_Search">@Model.Loc.Where(a => a.ResourceId == "spnMasterSanitationScheduleSearch").FirstOrDefault().Value.ToString()</a></li>
+                    <li class="active">
+                        <div>
+                            @if (Model.MasterSanitModel.Description.Length > 20)
+                            {
+                                <span title="@Model.MasterSanitModel.Description"> @(String.IsNullOrEmpty(Model.MasterSanitModel.Description) ? "" : (Model.MasterSanitModel.Description.Length > 20 ? (Model.MasterSanitModel.Description.Substring(0, 20) + "...") : (Model.MasterSanitModel.Description)))</span>
+                            }
+                            else
+                            {
+                                @Model.MasterSanitModel.Description
+                            }
+
+                        </div>    
+                    </li>
+                </ul>
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+
+        <div class="ActionBttnArea">
+            @if (Model.security.Sanitation.Create)
+            {
+                <div class="actionDiv pull-left">
+                    <div class="btn-group bootstrap-select m-datatable__pager-size dropup show selectDrop actionNewDrop" style="margin-right:0;">
+                        <div class="btn-group bootstrap-select m-datatable__pager-size" style="width: 100%;">
+                            <button type="button" class="btn dropdown-toggle bs-placeholder btn-default" data-toggle="dropdown" role="button" title=""><span class="filter-option pull-left">@Model.Loc.Where(a => a.ResourceId == "globalAction").FirstOrDefault().Value.ToString()</span>&nbsp;<span class="bs-caret"><span class="caret"></span></span></button>
+                            <div class="dropdown-menu open" role="combobox">
+                                <ul class="dropdown-menu inner" role="listbox" aria-expanded="false">
+                                    @if (Model.security.Sanitation.Delete)
+                                    {
+                                        <li id="DeleteMSSchedule" data-id=@Model.MasterSanitModel.SanitationMasterId><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "globalDelete").FirstOrDefault().Value.ToString()</a></li>
+                                    }
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button type="button" class="btn newBtn-add AddMasterSchedule innerBtn pull-left" title="Add Master Schedule"><i class="fa fa-plus"></i></button>
+            }
+            else
+            {
+                <div class="actionDiv pull-left" style="margin-right:0px;">
+                    <div class="btn-group bootstrap-select m-datatable__pager-size dropup show selectDrop actionNewDrop">
+                        <div class="btn-group bootstrap-select m-datatable__pager-size" style="width: 100%;">
+                            <button type="button" class="btn dropdown-toggle bs-placeholder btn-default" data-toggle="dropdown" role="button" title=""><span class="filter-option pull-left">@Model.Loc.Where(a => a.ResourceId == "globalAction").FirstOrDefault().Value.ToString()</span>&nbsp;<span class="bs-caret"><span class="caret"></span></span></button>
+                            <div class="dropdown-menu open" role="combobox">
+                                <ul class="dropdown-menu inner" role="listbox" aria-expanded="false">
+                                    @if (Model.security.Sanitation.Delete)
+                                    {
+                                        <li id="DeleteMSSchedule" data-id=@Model.MasterSanitModel.SanitationMasterId><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "globalDelete").FirstOrDefault().Value.ToString()</a></li>
+                                    }
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+            <div style="clear:both;"></div>
+        </div>
+        <div style="clear:both;"></div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xl-3">
+        <div class="m-portlet">
+            <div class="sideMenuArea nobg">
+                <ul class="vtabs" id="detmaintab">
+                    <li class="active" id="sanitationSidebar" onclick="openCity(event, 'SanitationOverview')"><a href="#SanitationOverview">@Model.Loc.Where(a => a.ResourceId == "spnSanitationOverview").FirstOrDefault().Value.ToString()</a></li>
+                    <li id="sotask" onclick="openCity(event, 'SOTasks')"><a href="#SOTasks">@Model.Loc.Where(a => a.ResourceId == "spnTasks").FirstOrDefault().Value.ToString() </a></li>
+                    <li id="sonotes" onclick="openCity(event, 'SONotes')"><a href="#SONotes">@Model.Loc.Where(a => a.ResourceId == "spnGlobalNote").FirstOrDefault().Value.ToString()</a></li>
+                    <li id="soattachments" onclick="openCity(event, 'SOAttachments')" style="position:relative;">
+                        <a href="#SOAttachments">@Model.Loc.Where(a => a.ResourceId == "spnAttachments").FirstOrDefault().Value.ToString()</a>
+                        @if (Model.attachmentCount > 0)
+                        {
+                            <span class="m-badge m-badge--danger count-badge" id="mastsanitAttachmentCount">@Model.attachmentCount</span>
+                        }
+                    </li>
+                    <li><a href="#Estimating" id="drpDwnLink">@Model.Loc.Where(a => a.ResourceId == "spnEstimating").FirstOrDefault().Value.ToString() </a></li>
+                    <ul id="drpDwn" style="display:none">
+                        <li id="sotools" onclick="openCity(event, 'SOTools')"><a href="#SOTools">@Model.Loc.Where(a => a.ResourceId == "spnTools").FirstOrDefault().Value.ToString()</a></li>
+                        <li id="sochemicals" onclick="openCity(event, 'SOChemicals')"><a href="#SOChemicals">@Model.Loc.Where(a => a.ResourceId == "spnChemicals").FirstOrDefault().Value.ToString() </a></li>
+                    </ul>
+                </ul>
+            </div>
+
+            <div class="selectTabs" id="selectTabs">
+                <select class="form-control" id="colorselector">
+                    <option value="SanitationOverview">@Model.Loc.Where(a => a.ResourceId == "spnSanitationOverview").FirstOrDefault().Value.ToString()</option>
+                    <option value="SOTasks">@Model.Loc.Where(a => a.ResourceId == "spnTasks").FirstOrDefault().Value.ToString()</option>
+                    <option value="SONotes">@Model.Loc.Where(a => a.ResourceId == "spnGlobalNote").FirstOrDefault().Value.ToString()</option>
+                    <option value="SOAttachments">@Model.Loc.Where(a => a.ResourceId == "spnAttachments").FirstOrDefault().Value.ToString()</option>
+                    <optgroup label="Estimating">
+                        <option value="SOTools">@Model.Loc.Where(a => a.ResourceId == "spnTools").FirstOrDefault().Value.ToString()</option>
+                        <option value="SOChemicals">@Model.Loc.Where(a => a.ResourceId == "spnChemicals").FirstOrDefault().Value.ToString() </option>
+                    </optgroup>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-9">
+        <div class="row">
+            <div class="col-xl-12" id="btnnblock">
+                <div class="m-portlet" id="m_portlet" style="padding:15px;">
+                    <div class="bottomBlock">
+                        <div class="tabsArea nobg" id="SanitationOverview" style="display:block;">
+                            <ul class="listView">
+                                <li>
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString()  :</span>
+                                    <span class="inputText description-span">@Model.MasterSanitModel.Description</span>
+                                </li>
+                                <li>
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "GlobalChargeTo").FirstOrDefault().Value.ToString()  :</span>
+                                    <span class="inputText">@Model.MasterSanitModel.ChargeToClientLookupId</span>
+                                </li>
+                                <li>
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnName").FirstOrDefault().Value.ToString() :</span>
+                                    <span class="inputText">@Model.MasterSanitModel.ChargeToName</span>
+                                </li>
+                                <li>
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnFrequency").FirstOrDefault().Value.ToString():</span>
+                                    <span class="inputText">@Model.MasterSanitModel.Frequency</span>
+                                </li>
+                                <li>
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnAssigned").FirstOrDefault().Value.ToString():</span>
+                                    <span class="inputText">@Model.MasterSanitModel.Assigned</span>
+                                </li>
+                                <li>
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnNextDue").FirstOrDefault().Value.ToString() :</span>
+                                    @if (Model.MasterSanitModel.NextDue.HasValue && Model.MasterSanitModel.NextDue.Value != default(DateTime))
+                                    {
+                                        <span class="inputText nwinpt">@Model.MasterSanitModel.NextDue.Value.ToString("MM/dd/yyyy", CultureInfo.InvariantCulture)</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="inputText nwinpt"></span>
+                                    }
+
+                                </li>
+                                <li>
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnShift").FirstOrDefault().Value.ToString()  :</span>
+                                    <span class="inputText">@Model.MasterSanitModel.Shift</span>
+                                </li>
+                                <li>
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnDuration").FirstOrDefault().Value.ToString() :</span>
+                                    <span class="inputText">@Model.MasterSanitModel.ScheduledDuration</span>
+                                </li>
+                                <li>
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnLastScheduled").FirstOrDefault().Value.ToString():</span>
+                                    @if (Model.MasterSanitModel.LastScheduled.HasValue && Model.MasterSanitModel.LastScheduled.Value != default(DateTime))
+                                    {
+                                        <span class="inputText nwinpt">@Model.MasterSanitModel.LastScheduled.Value.ToString("MM/dd/yyyy", CultureInfo.InvariantCulture)</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="inputText nwinpt"></span>
+                                    }
+                                </li>
+                                <li>
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "globalInActive").FirstOrDefault().Value.ToString() :</span>
+                                    @*@if (Model.MasterSanitModel.InactiveFlag)
+                                        {
+                                            <span class="inputText">@Html.CheckBoxFor(m => m.MasterSanitModel.InactiveFlag, new { @disabled = "disabled", @checked = "checked" })</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="inputText">@Html.CheckBoxFor(m => m.MasterSanitModel.InactiveFlag, new { @disabled = "disabled" })</span>
+                                        }*@
+                                    <span class="inputText">
+                                        @Html.CheckBoxFor(m => m.MasterSanitModel.InactiveFlag, new { onclick = "return false;" })
+                                    </span>
+                                </li>
+                                <li style="height:auto;">
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnExclude").FirstOrDefault().Value.ToString()  :</span>
+                                    <span class="inputText" style="height:auto;">
+                                        <label class="excldChk">
+                                            @Html.CheckBoxFor(m => m.MasterSanitModel.Sunday, new { onclick = "return false;" })
+                                            @Model.Loc.Where(a => a.ResourceId == "spnSunday").FirstOrDefault().Value.ToString()
+                                        </label>
+                                        <label class="excldChk">
+                                            @Html.CheckBoxFor(m => m.MasterSanitModel.Monday, new { onclick = "return false;" })
+                                            @Model.Loc.Where(a => a.ResourceId == "spnMonday").FirstOrDefault().Value.ToString()
+                                        </label>
+                                        <label class="excldChk">
+                                            @Html.CheckBoxFor(m => m.MasterSanitModel.Tuesday, new { onclick = "return false;" })
+                                            @Model.Loc.Where(a => a.ResourceId == "spnTuesday").FirstOrDefault().Value.ToString()
+                                        </label>
+                                        <label class="excldChk">
+                                            @Html.CheckBoxFor(m => m.MasterSanitModel.Wednesday, new { onclick = "return false;" })
+                                            @Model.Loc.Where(a => a.ResourceId == "spnWednesday").FirstOrDefault().Value.ToString()
+                                        </label>
+                                        <label class="excldChk">
+                                            @Html.CheckBoxFor(m => m.MasterSanitModel.Thursday, new { onclick = "return false;" })
+                                            @Model.Loc.Where(a => a.ResourceId == "spnThursday").FirstOrDefault().Value.ToString()
+                                        </label>
+                                        <label class="excldChk">
+                                            @Html.CheckBoxFor(m => m.MasterSanitModel.Friday, new { onclick = "return false;" })
+                                            @Model.Loc.Where(a => a.ResourceId == "spnFriday").FirstOrDefault().Value.ToString()
+                                        </label>
+                                        <label class="excldChk">
+                                            @Html.CheckBoxFor(m => m.MasterSanitModel.Saturday, new { onclick = "return false;" })
+                                            @Model.Loc.Where(a => a.ResourceId == "spnSaturday").FirstOrDefault().Value.ToString()
+                                        </label>
+                                        <div style="clear:both;"></div>
+                                    </span>
+
+
+
+                                    @*<span class="inputText" style="height:auto;">
+                                        @if (!string.IsNullOrEmpty(Model.MasterSanitModel.ExclusionDays) && Model.MasterSanitModel.ExclusionDays[0] == '1')
+                                        {
+                                            <label class="excldChk"><input class="excld" type="checkbox" disabled="disabled" checked="checked" value="">@Model.Loc.Where(a => a.ResourceId == "spnSunday").FirstOrDefault().Value.ToString()</label>
+                                        }
+                                        else
+                                        {
+                                            <label class="excldChk"><input class="excld" type="checkbox" disabled="disabled" value="">@Model.Loc.Where(a => a.ResourceId == "spnSunday").FirstOrDefault().Value.ToString() </label>
+                                        }
+                                        @if (!string.IsNullOrEmpty(Model.MasterSanitModel.ExclusionDays) && Model.MasterSanitModel.ExclusionDays[1] == '1')
+                                        {
+                                            <label class="excldChk"><input class="excld" type="checkbox" disabled="disabled" checked="checked" value="">@Model.Loc.Where(a => a.ResourceId == "spnMonday").FirstOrDefault().Value.ToString() </label>
+                                        }
+                                        else
+                                        {
+                                            <label class="excldChk"><input class="excld" type="checkbox" disabled="disabled" value="">@Model.Loc.Where(a => a.ResourceId == "spnMonday").FirstOrDefault().Value.ToString() </label>
+                                        }
+                                        @if (!string.IsNullOrEmpty(Model.MasterSanitModel.ExclusionDays) && Model.MasterSanitModel.ExclusionDays[2] == '1')
+                                        {
+                                            <label class="excldChk"><input class="excld" type="checkbox" disabled="disabled" checked="checked" value="">@Model.Loc.Where(a => a.ResourceId == "spnTuesday").FirstOrDefault().Value.ToString() </label>
+                                        }
+                                        else
+                                        {
+                                            <label class="excldChk"><input class="excld" type="checkbox" disabled="disabled" value="">@Model.Loc.Where(a => a.ResourceId == "spnTuesday").FirstOrDefault().Value.ToString() </label>
+                                        }
+                                        @if (!string.IsNullOrEmpty(Model.MasterSanitModel.ExclusionDays) && Model.MasterSanitModel.ExclusionDays[3] == '1')
+                                        {
+                                            <label class="excldChk"><input class="excld" type="checkbox" disabled="disabled" checked="checked" value="">@Model.Loc.Where(a => a.ResourceId == "spnWednesday").FirstOrDefault().Value.ToString() </label>
+                                        }
+                                        else
+                                        {
+                                            <label class="excldChk"><input class="excld" type="checkbox" disabled="disabled" value="">@Model.Loc.Where(a => a.ResourceId == "spnWednesday").FirstOrDefault().Value.ToString() </label>
+                                        }
+                                        @if (!string.IsNullOrEmpty(Model.MasterSanitModel.ExclusionDays) && Model.MasterSanitModel.ExclusionDays[4] == '1')
+                                        {
+                                            <label class="excldChk"><input class="excld" type="checkbox" disabled="disabled" checked="checked" value="">@Model.Loc.Where(a => a.ResourceId == "spnThursday").FirstOrDefault().Value.ToString()</label>
+                                        }
+                                        else
+                                        {
+                                            <label class="excldChk"><input class="excld" type="checkbox" disabled="disabled" value="">@Model.Loc.Where(a => a.ResourceId == "spnThursday").FirstOrDefault().Value.ToString() </label>
+                                        }
+                                        @if (!string.IsNullOrEmpty(Model.MasterSanitModel.ExclusionDays) && Model.MasterSanitModel.ExclusionDays[5] == '1')
+                                        {
+                                            <label class="excldChk"><input class="excld backgrndcolor" type="checkbox" disabled="disabled" checked="checked" value="">@Model.Loc.Where(a => a.ResourceId == "spnFriday").FirstOrDefault().Value.ToString()</label>
+                                        }
+                                        else
+                                        {
+                                            <label class="excldChk"><input class="excld" type="checkbox" disabled="disabled" value="">@Model.Loc.Where(a => a.ResourceId == "spnFriday").FirstOrDefault().Value.ToString() </label>
+                                        }
+                                        @if (!string.IsNullOrEmpty(Model.MasterSanitModel.ExclusionDays) && Model.MasterSanitModel.ExclusionDays[6] == '1')
+                                        {
+                                            <label class="excldChk"><input class="excld" type="checkbox" disabled="disabled" checked="checked" value="">@Model.Loc.Where(a => a.ResourceId == "spnSaturday").FirstOrDefault().Value.ToString() </label>
+                                        }
+                                        else
+                                        {
+                                            <label class="excldChk"><input class="excld" type="checkbox" disabled="disabled" value="">@Model.Loc.Where(a => a.ResourceId == "spnSaturday").FirstOrDefault().Value.ToString() </label>
+                                        }
+                                        <div style="clear:both;"></div>
+                                    </span>*@
+                                    <div style="clear:both;"></div>
+                                </li>
+                            </ul>
+
+                            <div class="editBttn">
+                                @if (Model.security.Sanitation.Edit)
+                                {
+                                    <button type="button" id="EditMSSchedule" class="btn btn-blue"><i class="fa fa-pencil" style="margin-top:-3px;"></i> &nbsp;@Model.Loc.Where(a => a.ResourceId == "globalEdit").FirstOrDefault().Value.ToString()</button>
+                                }
+                            </div>
+
+                        </div>
+
+                        <div class="tabsArea nobg" id="SOTasks" style="display:none;">
+                            <div class="table-responsive">
+                                <table id="msTaskTable" class="eqpDtlTbl row-border custom-sort" style="width:100%;">
+                                    <thead>
+                                        <tr>
+                                            <th>@Model.Loc.Where(a => a.ResourceId == "spnOrder").FirstOrDefault().Value.ToString()</th>
+                                            <th>@Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString() </th>
+                                            <th width="17%" style="text-align:center !important;">@Model.Loc.Where(a => a.ResourceId == "globalAction").FirstOrDefault().Value.ToString()</th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
+
+                            <div class="bttns">
+                                <button type="button" class="btn btn-blue" id="btnMsTaskAdd" style="display:none;"><i class="fa fa-plus faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "spnAddTask").FirstOrDefault().Value.ToString()</button>
+                            </div>
+                            <div style="clear:both;"></div>
+                        </div>
+
+                        <div class="tabsArea nobg" id="SOTools" style="display:none;">
+                            <div class="table-responsive">
+                                <table id="tblmsTools" class="eqpDtlTbl row-border custom-sort" style="width:100%;">
+                                    <thead>
+                                        <tr>
+                                            <th>@Model.Loc.Where(a => a.ResourceId == "spnTool").FirstOrDefault().Value.ToString()</th>
+                                            <th>@Model.Loc.Where(a => a.ResourceId == "spnToolDescription").FirstOrDefault().Value.ToString()</th>
+                                            <th>@Model.Loc.Where(a => a.ResourceId == "spnToolInstrustions").FirstOrDefault().Value.ToString()</th>
+                                            <th>@Model.Loc.Where(a => a.ResourceId == "spnQuantity").FirstOrDefault().Value.ToString()</th>
+                                            <th width="10%" style="text-align:center !important;">@Model.Loc.Where(a => a.ResourceId == "globalAction").FirstOrDefault().Value.ToString() </th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
+
+                            <div class="bttns"><button type="button" class="btn btn-blue" data-toggle="" data-target="" id="btnAddmsTool" style="display:none;"><i class="fa fa-plus faIcon"></i> &nbsp;@Model.Loc.Where(a => a.ResourceId == "spnAddTools").FirstOrDefault().Value.ToString() </button></div>
+                            <div style="clear:both;"></div>
+                        </div>
+
+                        <div class="tabsArea nobg" id="SOChemicals" style="display:none;">
+                            <div class="table-responsive">
+                                <table id="tblSOChemicals" class="eqpDtlTbl row-border custom-sort" style="width:100%;">
+                                    <thead>
+                                        <tr>
+                                            <th>@Model.Loc.Where(a => a.ResourceId == "spnChemicals").FirstOrDefault().Value.ToString()</th>
+                                            <th>@Model.Loc.Where(a => a.ResourceId == "spnChemicalsDescription").FirstOrDefault().Value.ToString()</th>
+                                            <th>@Model.Loc.Where(a => a.ResourceId == "spnChemicalsInstrustions").FirstOrDefault().Value.ToString()</th>
+                                            <th>@Model.Loc.Where(a => a.ResourceId == "spnQuantity").FirstOrDefault().Value.ToString()</th>
+                                            <th width="10%" style="text-align:center !important;">@Model.Loc.Where(a => a.ResourceId == "globalAction").FirstOrDefault().Value.ToString()</th>
+                                        </tr>
+                                    </thead>
+
+                                </table>
+                            </div>
+
+                            <div class="bttns"><button type="button" class="btn btn-blue" data-toggle="" data-target="" id="btnAddChemicals" style=" display:none"><i class="fa fa-plus faIcon"></i> &nbsp;@Model.Loc.Where(a => a.ResourceId == "spnAddChemicals").FirstOrDefault().Value.ToString()</button></div>
+                            <div style="clear:both;"></div>
+                        </div>
+
+                        <div class="tabsArea nobg" id="SONotes" style="display:none;">
+                            <div class="table-responsive">
+                                <table id="tblSONotes" class="eqpDtlTbl row-border custom-sort" style="width:100%;">
+                                    <thead>
+                                        <tr>
+                                            <th>@Model.Loc.Where(a => a.ResourceId == "globalSubject").FirstOrDefault().Value.ToString()</th>
+                                            <th>@Model.Loc.Where(a => a.ResourceId == "globalOwner").FirstOrDefault().Value.ToString()</th>
+                                            <th>@Model.Loc.Where(a => a.ResourceId == "spnModified").FirstOrDefault().Value.ToString() </th>
+                                            <th width="17%" style="text-align:center !important;">@Model.Loc.Where(a => a.ResourceId == "globalAction").FirstOrDefault().Value.ToString()</th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                            <div class="bttns">
+                                <button type="button" class="btn btn-blue" id="btnMsAddNote"><i class="fa fa-plus faIcon"></i> &nbsp;@Model.Loc.Where(a => a.ResourceId == "globalAddNotes").FirstOrDefault().Value.ToString()</button>
+                            </div>
+                            <div style="clear:both;"></div>
+                        </div>
+
+                        <div class="tabsArea nobg" id="SOAttachments" style="display:none;">
+                            <div class="table-responsive">
+                                <table id="tblSOAttachment" class="eqpDtlTbl row-border custom-sort" style="width:100%;">
+                                    <thead>
+                                        <tr>
+                                            <th>@Model.Loc.Where(a => a.ResourceId == "globalSubject").FirstOrDefault().Value.ToString() </th>
+                                            <th>@Model.Loc.Where(a => a.ResourceId == "globalFileName").FirstOrDefault().Value.ToString()</th>
+                                            <th>@Model.Loc.Where(a => a.ResourceId == "globalFileSize").FirstOrDefault().Value.ToString()</th>
+                                            <th>@Model.Loc.Where(a => a.ResourceId == "globalOwner").FirstOrDefault().Value.ToString()</th>
+                                            <th>@Model.Loc.Where(a => a.ResourceId == "globalCreateDate").FirstOrDefault().Value.ToString()</th>
+                                            <th width="17%" style="text-align:center !important;">@Model.Loc.Where(a => a.ResourceId == "globalAction").FirstOrDefault().Value.ToString() </th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                            <div class="bttns">
+                                <button type="button" class="btn btn-blue" id="btnMsAddAttachment"><i class="fa fa-plus faIcon"></i> &nbsp;@Model.Loc.Where(a => a.ResourceId == "globalAddAttachment").FirstOrDefault().Value.ToString()</button>
+                            </div>
+                            <div style="clear:both;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@Html.Partial("_MasterSanitationScheduleDescription", Model)
+@Html.HiddenFor(m => m.MasterSanitModel.SanitationMasterId)
+@Html.HiddenFor(m => m.MasterSanitModel.Description)
+<style type="text/css">
+    .excldChk {
+        float: left;
+        margin-right: 10px;
+        margin-bottom: 0;
+    }
+
+    .excld {
+        position: relative;
+        top: 2px;
+        margin-right: 5px;
+    }
+
+    .details-box {
+        box-shadow: 0px 1px 15px 1px rgb(69 65 78 / 8%);
+        background-color: #ffffff;
+        padding: 15px;
+        margin-top: 6px;
+        margin-top: 6px;
+        position: relative;
+        margin-left: -25 px;
+        width: calc(100% + 2%);
+    }
+
+    /*.backgrndcolor {
+        /*background-color: #2196F3 !important;
+        color: #ccc;
+        /*background-color: #36a3f7 !important;*/
+        /*background: #ddd !important;
+    }*/
+</style>

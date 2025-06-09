@@ -1,0 +1,14 @@
+﻿
+@{
+    ViewBag.Title = "Somax | Multi-Site Parts Search";
+}
+
+@Styles.Render("~/Content/datatable")
+<link href="~/Scripts/Metronic/assets/demo/default/base/GlobalSearchGrid.css" rel="stylesheet" />
+@section scripts {
+    @Scripts.Render("~/bundles/datatable")
+   <script src="~/Scripts/Pages/MultiSitePartSearch/MultiSitePartSearch.js"></script>
+}
+<div id="renderMultiSitePartSearch">
+    @Html.Partial("~/Views/MultiSitePartSearch/_MultiSitePartSearch.cshtml")
+</div>

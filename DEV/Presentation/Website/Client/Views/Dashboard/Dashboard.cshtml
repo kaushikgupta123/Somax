@@ -1,0 +1,129 @@
+﻿@model Client.Models.Dashboard.DashboardVM
+@{
+    ViewBag.Title = "Somax | Dashboard";
+}
+@Styles.Render("~/Content/datatable")
+@Styles.Render("~/Content/dashboardStyle")
+@section scripts{
+    @Scripts.Render("~/bundles/datatable")
+    @Scripts.Render("~/bundles/FusionChart")
+    <script src="~/Scripts/Pages/dashboard/dashboard_graph.js"></script>
+
+    @if (1 == 1)//add condition for Maintenance Live Tiles
+    {
+        <script src="~/Scripts/Pages/dashboard/Widgets/MaintenanceLiveTiles/MaintenanceLiveTiles.js"></script>
+    }
+
+    @if (1 == 1)//add condition for Asset Down Time
+    {
+        <script src="~/Scripts/Pages/dashboard/Widgets/EquipmentDownTime/EquipmentDownTime.js"></script>
+    }
+
+    @if (1 == 1)//add condition for Wo source Type
+    {
+        <script src="~/Scripts/Pages/dashboard/Widgets/WOSourceType/WOSourceType.js"></script>
+    }
+
+    @if (1 == 1)//add condition for Workorder by Type
+    {
+        <script src="~/Scripts/Pages/dashboard/Widgets/WorkOrdersbyType/WorkOrdersbyType.js"></script>
+    }
+
+    @if (1 == 1)//add condition for Workorder by Proprity
+    {
+        <script src="~/Scripts/Pages/dashboard/Widgets/WorkOrdersbyPriority/WorkOrdersbyPriority.js"></script>
+    }
+
+    @if (1 == 1)//add condition for Workorder Source
+    {
+        <script src="~/Scripts/Pages/dashboard/Widgets/WorkOrderSource/WorkOrderSource.js"></script>
+    }
+
+    @if (1 == 1)//add condition for Labor Hour
+    {
+        <script src="~/Scripts/Pages/dashboard/Widgets/WOLaborHours/WOLaborHours.js"></script>
+    }
+
+    @if (1 == 1)//add condition for Inventory Valuation
+    {
+        <script src="~/Scripts/Pages/dashboard/Widgets/InventoryValuation/InventoryValuation.js"></script>
+    }
+
+    @if (1 == 1)//add condition for Workorder Back Log Widget
+    {
+        <script src="~/Scripts/Pages/dashboard/Widgets/WorkOrderBacklogWidget/WorkOrderBacklogWidget.js"></script>
+    }
+}
+
+<div class="m-subheader ">
+    <div class="d-flex align-items-center">
+        <div class="mr-auto">
+            <h3 class="m-subheader__title ">@Model.Loc.Where(a => a.ResourceId == "spnDashboard").FirstOrDefault().Value.ToString()</h3>
+        </div>
+    </div>
+</div>
+@*<div class="m-portlet ">
+        <div class="m-portlet__body  m-portlet__body--no-padding">
+            <div class="row m-row--no-padding m-row--col-separator-xl">
+                <div class="col-md-12 col-lg-6 col-xl-3">
+                    @Html.Partial("_OpenWorkOrdersSpChart")
+                </div>
+                <div class="col-md-12 col-lg-6 col-xl-3">
+                    @Html.Partial("_WorkRequestSpChart")
+                </div>
+                <div class="col-md-12 col-lg-6 col-xl-3">
+                    @Html.Partial("_OverDuePMSpChart")
+                </div>
+                <div class="col-md-12 col-lg-6 col-xl-3">
+                    @Html.Partial("_LowPartsSpChart")
+                </div>
+            </div>
+        </div>
+    </div>*@
+
+@Html.Partial("~/Views/Dashboard/Widgets/MaintenanceLiveTiles/MaintenanceLiveTiles.cshtml")
+<div class="row">
+    <div class="col-xl-6" id="Widgetdown">
+        @Html.Partial("~/Views/Dashboard/Widgets/EquipmentDownTime/EquipmentDownTime.cshtml")
+        @*@Html.Partial("_EquipmentDownTime")*@
+    </div>
+    <div class="col-xl-6">
+        @Html.Partial("~/Views/Dashboard/Widgets/WOSourceType/WOSourceType.cshtml")
+        @*@Html.Partial("_WoSourceType")*@
+    </div>
+</div>
+<div class="row">
+    <div class="col-xl-6">
+        @Html.Partial("~/Views/Dashboard/Widgets/WorkOrdersbyType/WorkOrdersbyType.cshtml")
+        @*@Html.Partial("_WorkOrdersbyType")*@
+    </div>
+    <div class="col-xl-6">
+        @Html.Partial("~/Views/Dashboard/Widgets/WorkOrdersbyPriority/WorkOrdersbyPriority.cshtml")
+        @*@Html.Partial("_WorkOrdersbyPriority")*@
+    </div>
+</div>
+<div class="row">
+    <div class="col-xl-6">
+        @Html.Partial("~/Views/Dashboard/Widgets/WorkOrderSource/WorkOrderSource.cshtml")
+        @*@Html.Partial("_WorkOrderSource")*@
+    </div>
+    <div class="col-xl-6">
+        @Html.Partial("~/Views/Dashboard/Widgets/WOLaborHours/WOLaborHours.cshtml")
+        @*@Html.Partial("_WOLaborHours")*@
+    </div>
+</div>
+<div class="row">
+    <div class="col-xl-6">
+        @Html.Partial("~/Views/Dashboard/Widgets/InventoryValuation/InventoryValuation.cshtml")
+        @*@Html.Partial("_InventoryValuation")*@
+    </div>
+    <div class="col-xl-6">
+        @Html.Partial("~/Views/Dashboard/Widgets/WorkOrderBacklogWidget/WorkOrderBacklogWidget.cshtml")
+        @*@Html.Partial("_WorkOrderBacklogWidget")*@
+    </div>
+</div>
+@*@Html.HiddenFor(m=>m.UseVendorMaster,new { id= "usevendormaster" })
+    @Html.HiddenFor(m => m.VendorMaster_AllowLocal, new { id = "vendormasterallowlocal" })*@
+
+@*@Html.Partial("~/Views/Dashboard/_VendorAddPopupUM.cshtml")*@
+

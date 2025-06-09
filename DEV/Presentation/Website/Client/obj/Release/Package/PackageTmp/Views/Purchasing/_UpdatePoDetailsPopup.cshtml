@@ -1,0 +1,90 @@
+﻿@model Client.Models.PurchaseOrder.PurchaseOrderVM
+
+@using (Ajax.BeginForm("UpdatePurchaseOrdersDetails", "Purchasing", new AjaxOptions { HttpMethod = "Post", OnSuccess = "POUpdateDetailsOnSuccess", OnBegin = "AjaxBeginFormBegin", OnComplete = "AjaxBeginFormComplete", OnFailure = "AjaxBeginFormFaillure" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close clearstate" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title">@Model.Loc.Where(a => a.ResourceId == "spnUpdatePODetails").FirstOrDefault().Value.ToString()</h4>
+        </div>
+        @Html.Partial("_ErrorDiv")
+        <div class="modal-body">
+            <div class="form-group" style="margin-bottom:0;">
+                <div class="bottomBlock">
+                    <div class="tabsArea nobg" id="RequestCharge" style="display:block;">
+                        <ul class="listView nobrd">
+                            <li id="liBuyer_PersonnelId">
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnPoBuyer").FirstOrDefault().Value.ToString() :</span>
+                                <span class="inputText">
+                                    @Html.DropDownListFor(m => m.PurchaseOrderUpdateModel.Buyer_PersonnelId, Model.PurchaseOrderUpdateModel.BuyerList, "--Select--", new { @class = "form-control search select2picker readonly", @readonly = true, style = "width:100%;" })
+                                </span>
+                            </li>
+                            <li id="liAttention">
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnPoAttention").FirstOrDefault().Value.ToString() :</span>
+
+                                <span class="inputText">
+                                    @Html.TextBoxFor(m => m.PurchaseOrderUpdateModel.Attention, new { @class = "form-control search", autocomplete = "off", maxlength = "63" })
+                                </span>
+                            </li>
+                            <li id="liRequired">
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnPoRequired").FirstOrDefault().Value.ToString() :</span>
+                                <span class="inputText">
+                                    @Html.TextBoxFor(m => m.PurchaseOrderUpdateModel.Required, "{0:MM/dd/yyyy}", new { @class = "form-control search dtpicker ", autocomplete = "off" })
+                                </span>
+                            </li>
+                            <li id="liCarrier">
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnPoCarrier").FirstOrDefault().Value.ToString() :</span>
+                                <span class="inputText">
+                                    @Html.TextBoxFor(m => m.PurchaseOrderUpdateModel.Carrier, new { @class = "form-control search ", autocomplete = "off", maxlength = "15" })
+                                </span>
+                            </li>
+                            <li id="liFOB">
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnFOB").FirstOrDefault().Value.ToString() :</span>
+                                <span class="inputText">
+                                    @Html.DropDownListFor(m => m.PurchaseOrderUpdateModel.FOB, Model.PurchaseOrderUpdateModel.FOBList, "--Select--", new { @class = "form-control search select2picker", style = "width:100%;" })
+                                </span>
+                            </li>
+                            <li id="liTerms">
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnPoTerms").FirstOrDefault().Value.ToString() :</span>
+                                <span class="inputText">
+                                    @Html.DropDownListFor(m => m.PurchaseOrderUpdateModel.Terms, Model.PurchaseOrderUpdateModel.TermsList, "--Select--", new { @class = "form-control search select2picker", style = "width:100%;" })
+                                </span>
+                            </li>
+                            <li id="liReason">
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnPoReason").FirstOrDefault().Value.ToString() :</span>
+                                <span class="inputText">
+                                    @Html.TextBoxFor(m => m.PurchaseOrderUpdateModel.Reason, new { @class = "form-control search", autocomplete = "off", maxlength = "255" })
+                                </span>
+                            </li>
+                            <li style="height:auto;" id="liMessageToVendor">
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnPospnPoMessageToVendor").FirstOrDefault().Value.ToString() :</span>
+                                <span class="inputText" style="height:auto;">
+                                    @Html.TextAreaFor(m => m.PurchaseOrderUpdateModel.MessageToVendor, new { @class = "form-control search", autocomplete = "off", maxlength = "255" })
+                                </span>
+                                <div style="clear:both;"></div>
+                            </li>
+                        </ul>
+                    </div>
+                    <div style="clear:both;"></div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer" style="padding:15px 25px !important;">
+            <div class="idBttns">
+                <div class="bttn_pagin">
+                    <div class="bttns2">
+                        <button type="submit" class="btn btn-blue mobBttn" name="Command" value="save" id="btnSavePO"><i class="fa fa-save faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+                    </div>
+                    <div class="bttns"><button type="button" data-dismiss="modal" class="btn btn-blue mobBttn" id="btnCancelUpdatePO"><i class="fa fa-close faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button></div>
+
+                    <div style="clear:both;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @Html.HiddenFor(m => m.PurchaseOrderUpdateModel.PurchaseOrderId)
+    @Html.HiddenFor(m => m.PurchaseOrderUpdateModel.Buyer_PersonnelId, new { id = "UiconfigBuyer_PersonnelId" })
+    @Html.HiddenFor(m => m.PurchaseOrderUpdateModel.FOB, new { id = "UiconfigFOB" })
+    @Html.HiddenFor(m => m.PurchaseOrderUpdateModel.Terms, new { id = "UiconfigTerms" })
+}

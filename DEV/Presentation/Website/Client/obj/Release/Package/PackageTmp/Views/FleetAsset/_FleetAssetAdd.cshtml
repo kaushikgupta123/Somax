@@ -1,0 +1,183 @@
+﻿@model Client.Models.FleetAsset.FleetAssetVM
+
+<div class="m-subheader">
+    <div class="new-m-subheader">
+        <div class="PageTitle">
+            <div class="align-items-center separator">
+                <h3 class="m-subheader__title ">
+                    @Model.Loc.Where(a => a.ResourceId == "spnFleetAsset").FirstOrDefault().Value.ToString()
+                </h3>
+            </div>
+        </div>
+
+        <div class="NewBreadcrumbArea">
+            <div class="newBreadcrumb">
+                <ul>
+                    <li><a href="/Dashboard/Dashboard">&nbsp;</a></li>
+                    <li><a href="/FleetAsset/Index?page=Fleet_Asset" id="anchPagename">@Model.Loc.Where(a => a.ResourceId == "spnFleetAssetSearch").FirstOrDefault().Value.ToString()</a></li>
+                    <li class="active">@Model.Loc.Where(a => a.ResourceId == "AddEquip").FirstOrDefault().Value.ToString()</li>
+                </ul>
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+        <div style="clear:both;"></div>
+    </div>
+</div>
+@Html.Partial("_ErrorDiv")
+
+@using (Ajax.BeginForm("AddFleetAsset", "FleetAsset", new AjaxOptions { HttpMethod = "Post", OnSuccess = "FleetAssetAddOnSuccess", OnBegin = "onLoginBegin", OnFailure = "onLoginFailure" }, new { enctype = "multipart/form-data", id = "eqpaddform" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="row">
+        <div class="col-xl-3">
+            <div class="m-portlet">
+                <div class="sideMenuArea nobg">
+                    <ul class="vtabs" id="detmaintab">
+                        <li id="equipmentabdidtab" class="active"><a href="#Identifications">@Model.Loc.Where(a => a.ResourceId == "btnIdentification").FirstOrDefault().Value.ToString()</a></li>
+                        <li id="dimentiontab"><a href="#Dimensions">@Model.Loc.Where(a => a.ResourceId == "btnDimensions").FirstOrDefault().Value.ToString()</a></li>
+                        <li id="engineandTransmissiontab"><a href="#EngineandTransmission">@Model.Loc.Where(a => a.ResourceId == "btnEngineandTransmission").FirstOrDefault().Value.ToString()</a></li>
+                        <li id="wheelsandTirestab"><a href="#WheelsandTires">@Model.Loc.Where(a => a.ResourceId == "btnWheelsandTires").FirstOrDefault().Value.ToString()</a></li>
+                        <li id="fluidstab"><a href="#Fluids">@Model.Loc.Where(a => a.ResourceId == "btnFluids").FirstOrDefault().Value.ToString()</a></li>
+                        <li id="setuptab"><a href="#Setup">SetUp @*@Model.Loc.Where(a => a.ResourceId == "btnSetup").FirstOrDefault().Value.ToString()*@</a></li><!--AA 391-392 -->
+                    </ul>
+                </div>
+
+                <div class="selectTabs" id="selectTabs">
+                    <select class="form-control" id="colorselector">
+                        <option value="Identifications">@Model.Loc.Where(a => a.ResourceId == "btnIdentification").FirstOrDefault().Value.ToString()</option>
+                        <option value="Dimensions">@Model.Loc.Where(a => a.ResourceId == "btnDimensions").FirstOrDefault().Value.ToString()</option>
+                        <option value="EngineandTransmission">@Model.Loc.Where(a => a.ResourceId == "btnEngineandTransmission").FirstOrDefault().Value.ToString()</option>
+                        <option value="WheelsandTires">@Model.Loc.Where(a => a.ResourceId == "btnWheelsandTires").FirstOrDefault().Value.ToString()</option>
+                        <option value="Fluids">@Model.Loc.Where(a => a.ResourceId == "btnFluids").FirstOrDefault().Value.ToString()</option>
+                        <option value="Setup">SetUp @*@Model.Loc.Where(a => a.ResourceId == "btnSetup").FirstOrDefault().Value.ToString()*@</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-9">
+            <div class="row">
+                <div class="col-xl-12" id="btnnblock">
+                    <div class="m-portlet" id="m_portlet" style="padding:15px;">
+                        <div class="bottomBlock">
+                            <div class="tabsArea nobg" id="Identifications" style="display:block;">
+                                <ul class="listView nobrd">
+                                    <li>
+                                        <span class="label" id="spnEquipmentId">@Html.LabelFor(m => m.FleetAssetModel.EquipmentID)<small>*</small></span>
+                                        <span class="inputText">
+                                            @Html.ValidationMessageFor(m => m.FleetAssetModel.EquipmentID, "", new { style = "display:none" })
+                                            @Html.TextBoxFor(m => m.FleetAssetModel.EquipmentID, new { @class = "form-control search m-input", maxlength = "31", @style = "color:black", autocomplete = "off" })
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label" id="spnName">@Html.LabelFor(m => m.FleetAssetModel.Name)<small>*</small></span>
+                                        <span class="inputText">
+                                            @Html.ValidationMessageFor(m => m.FleetAssetModel.Name, "", new { style = "display:none" })
+                                            @Html.TextBoxFor(m => m.FleetAssetModel.Name, new { @class = "form-control search m-input", @style = "color:black", autocomplete = "off", maxlength = "63" })
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label" id="spnAssetCategory">@Html.LabelFor(m => m.FleetAssetModel.VIN)<small></small></span>
+                                        <span class="inputText">
+                                            @Html.TextBoxFor(m => m.FleetAssetModel.VIN, new { @class = "form-control search m-input", @style = "color:black", autocomplete = "off", maxlength = "30" })
+                                        </span>
+                                    </li>
+
+                                    <li>
+                                        <span class="label">@Html.LabelFor(m => m.FleetAssetModel.VehicleType)<small>*</small></span>
+                                        <span class="inputText">
+                                            @Html.ValidationMessageFor(m => m.FleetAssetModel.VehicleType, "", new { style = "display:none" })
+                                            @Html.DropDownListFor(m => m.FleetAssetModel.VehicleType, Model.LookupVehicleTypeList, "--Select--", new { @class = "form-control search select2picker", style = "width:100%;" })
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label">@Html.LabelFor(m => m.FleetAssetModel.VehicleYear)</span>
+                                        <span class="inputText">
+                                            @Html.TextBoxFor(m => m.FleetAssetModel.VehicleYear, new { @class = "form-control search longinput", @style = "color:black", autocomplete = "off", maxlength = "4" })
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label" id="spnMake">@Html.LabelFor(m => m.FleetAssetModel.Make)<small></small></span>
+                                        <span class="inputText">
+                                            @Html.TextBoxFor(m => m.FleetAssetModel.Make, new { @class = "form-control search m-input", @style = "color:black", autocomplete = "off", maxlength = "31" })
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label" id="spnMake">@Html.LabelFor(m => m.FleetAssetModel.Model)<small></small></span>
+                                        <span class="inputText">
+                                            @Html.TextBoxFor(m => m.FleetAssetModel.Model, new { @class = "form-control search m-input", @style = "color:black", autocomplete = "off", maxlength = "63" })
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label">@Html.LabelFor(m => m.FleetAssetModel.License)</span>
+                                        <span class="inputText">
+                                            @Html.TextBoxFor(m => m.FleetAssetModel.License, new { @class = "form-control search m-input", @style = "color:black", autocomplete = "off", maxlength = "15" })
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label">@Html.LabelFor(m => m.FleetAssetModel.RegistrationLoc)<small></small></span>
+                                        <span class="inputText">
+                                            @Html.TextBoxFor(m => m.FleetAssetModel.RegistrationLoc, new { @class = "form-control search m-input", @style = "color:black", autocomplete = "off", maxlength = "15" })
+                                        </span>
+                                    </li>
+
+
+                                </ul>
+                            </div>
+
+                            <div class="tabsArea nobg" id="Dimensions" style="display:none;">
+                                <!--Add dimention partial view-->
+                                @Html.Partial("_FleetAssetDimensions", Model)
+                            </div>
+
+                            <div class="tabsArea nobg" id="EngineandTransmission" style="display:none;">
+                                <!--Add Engine and Transmission partial view-->
+                                @Html.Partial("_FleetAssetEngineandTransmission", Model)
+                            </div>
+
+                            <div class="tabsArea nobg" id="WheelsandTires" style="display:none;">
+                                <!--Add WheelsandTires partial view-->
+                                @Html.Partial("_FleetAssetWheelsandTires", Model)
+                            </div>
+
+                            <div class="tabsArea nobg" id="Fluids" style="display:none;">
+                                <!--Add Fluids partial view-->
+                                @Html.Partial("_FleetAssetFluids", Model)
+                            </div>
+
+                            <div class="tabsArea nobg" id="Setup" style="display:none;">
+                                <!--Add Setup partial view-->
+                                @Html.Partial("_FleetAssetSetup", Model)
+                            </div>
+                            <div style="clear:both;"></div>
+
+                            <div class="idBttns">
+                                <div class="bttn_pagin">
+                                    <div class="bttns2">
+                                        <button type="submit" class="btn btn-white mobBttn" name="Command" id="btnSaveAnotherOpen" style="cursor:pointer" value="saveAdd"><i class="fa fa-save faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalSaveAndAdd").FirstOrDefault().Value.ToString()</button>
+                                        <button type="submit" class="btn btn-blue mobBttn" name="Command" id="btnSave" style="cursor:pointer" value="save"><i class="fa fa-save faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+                                    </div>
+                                    <div class="bttns"><button type="button" class="btn btn-blue mobBttn" id="btnCancelAddFleetAsset" style="cursor:pointer"><i class="fa fa-close faIcon"></i> &nbsp;  @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button></div>
+
+                                    <div style="clear:both;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @Html.HiddenFor(m => m.FleetAssetModel.isfleetDimensionData)
+    @Html.HiddenFor(m => m.FleetAssetModel.isfleetEngineData)
+    @Html.HiddenFor(m => m.FleetAssetModel.isfleetFluidsData)
+    @Html.HiddenFor(m => m.FleetAssetModel.isfleetWheelData)
+   
+}
+<style type="text/css">
+    .ui-tooltip.ui-tooltip1 { z-index: 101 !important; }
+    .select2-container--default .select2-selection--single .select2-selection__rendered { padding-right: 30px; }
+    @@media screen and (max-width: 639px) {
+        ul.listView.nobrd li:last-child span.label { line-height: normal; }
+    }
+</style>

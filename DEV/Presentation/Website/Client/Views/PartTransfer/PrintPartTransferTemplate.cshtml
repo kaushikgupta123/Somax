@@ -1,0 +1,167 @@
+﻿@model Client.Models.PartTransfer.PartTransferVM
+
+@{ Layout = null;}
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css" />
+    <link rel="shortcut icon" href="~/Scripts/Metronic/assets/login/demo/default/media/img/logo/favicon.png" />
+</head>
+
+<body style="padding:0; margin:0; font-family: 'Roboto', sans-serif; font-size:14px; color:#737272;">
+    <table width="1000" border="0" cellspacing="0" cellpadding="0" align="center">
+        <tr>
+            <td align="left" valign="top" style="border-bottom:2px solid #264a7c;">
+                <table width="1000" border="0" cellspacing="0" cellpadding="0">
+                    <tr>
+                        <td align="left" valign="top">
+                            <table width="1000" border="0" cellspacing="0" cellpadding="0">
+                                <tr style="background:#77c2a4;">
+                                    <th width="1000" align="center" valign="middle" height="40" scope="col" colspan="3" style="font-size:20px; color:#fff; line-height:40px; font-weight:400;">@Model.Loc.Where(a => a.ResourceId == "IssuedFrom").FirstOrDefault().Value.ToString()</th>
+                                </tr>
+                                <tr style="background:#e4e4e4;">
+                                    <td align="left" valign="top" style="border-right:1px solid #cccccc; font-size:14px; color:#737272; line-height:40px; font-weight:normal;">
+                                        <table width="500" border="0" cellspacing="0" cellpadding="0">
+                                            <tr>
+                                                <td width="150" align="left" valign="top" style="padding-left:15px; font-size:14px; color:#222; font-weight:500;">@Model.Loc.Where(a => a.ResourceId == "spnSiteGlobal").FirstOrDefault().Value.ToString()</td>
+                                                <td width="6" align="left" valign="top" style="font-size:14px; color:#222; font-weight:500;">:</td>
+                                                <td width="344" align="left" valign="top" style="padding-left:15px; font-size:14px; color:#737272; font-weight:normal;">@Model.printPartTransferModel.IssueSite_Name</td>
+                                            </tr>
+                                            <tr>
+                                                <td align="left" valign="top" style="padding-left:15px; font-size:14px; color:#222; font-weight:500;">@Model.Loc.Where(a => a.ResourceId == "spnPartID").FirstOrDefault().Value.ToString()</td>
+                                                <td align="left" valign="top" style="font-size:14px; color:#222; font-weight:500;">:</td>
+                                                <td align="left" valign="top" style="padding-left:15px; font-size:14px; color:#737272; font-weight:normal;">@Model.printPartTransferModel.IssuePart_ClientLookupId</td>
+                                            </tr>
+                                            <tr>
+                                                <td align="left" valign="top" style="padding-left:15px; font-size:14px; color:#222; font-weight:500;">@Model.Loc.Where(a => a.ResourceId == "spnQuantityShipped").FirstOrDefault().Value.ToString()</td>
+                                                <td align="left" valign="top" style="font-size:14px; color:#222; font-weight:500;">:</td>
+                                                <td align="left" valign="top" style="padding-left:15px; font-size:14px; color:#737272; font-weight:normal;">@Model.printPartTransferModel.QtyOnHand</td>
+                                            </tr>
+                                            <tr>
+                                                <td align="left" valign="top" style="padding-left:15px; font-size:14px; color:#222; font-weight:500;"> @Model.Loc.Where(a => a.ResourceId == "spnShippingAccount").FirstOrDefault().Value.ToString()</td>
+                                                <td align="left" valign="top" style="font-size:14px; color:#222; font-weight:500;">:</td>
+                                                <td align="left" valign="top" style="padding-left:15px; font-size:14px; color:#737272; font-weight:normal;">@Model.printPartTransferModel.Shipping_Account</td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                    <td align="left" valign="top" style="font-size:14px; color:#737272; line-height:40px; font-weight:normal;">
+                                        <table width="500" border="0" cellspacing="0" cellpadding="0">
+                                            <tr>
+                                                <td width="150" align="left" valign="top" style="padding-left:15px; font-size:14px; color:#222; font-weight:500;">@Model.Loc.Where(a => a.ResourceId == "spnAddressLine1").FirstOrDefault().Value.ToString()</td>
+                                                <td width="6" align="left" valign="top" style="font-size:14px; color:#222; font-weight:500;">:</td>
+                                                <td width="344" align="left" valign="top" style="padding-left:15px; font-size:14px; color:#737272; font-weight:normal;">@Model.printPartTransferModel.IssueSite_Address1</td>
+                                            </tr>
+                                            <tr>
+                                                <td align="left" valign="top" style="padding-left:15px; font-size:14px; color:#222; font-weight:500;">@Model.Loc.Where(a => a.ResourceId == "spnAddressLine2").FirstOrDefault().Value.ToString()</td>
+                                                <td align="left" valign="top" style="font-size:14px; color:#222; font-weight:500;">:</td>
+                                                <td align="left" valign="top" style="padding-left:15px; font-size:14px; color:#737272; font-weight:normal;">@Model.printPartTransferModel.IssueSite_Address2</td>
+                                            </tr>
+                                            <tr>
+                                                <td align="left" valign="top" style="padding-left:15px; font-size:14px; color:#222; font-weight:500;">@Model.Loc.Where(a => a.ResourceId == "spnAddressLine3").FirstOrDefault().Value.ToString()</td>
+                                                <td align="left" valign="top" style="font-size:14px; color:#222; font-weight:500;">:</td>
+                                                <td align="left" valign="top" style="padding-left:15px; font-size:14px; color:#737272; font-weight:normal;">@Model.printPartTransferModel.RequestSite_CityStateZip</td>
+                                            </tr>
+                                            <tr>
+                                                <td align="left" valign="top" style="padding-left:15px; font-size:14px; color:#222; font-weight:500;">@Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString()</td>
+                                                <td align="left" valign="top" style="font-size:14px; color:#222; font-weight:500;">:</td>
+                                                <td align="left" valign="top" style="padding-left:15px; font-size:14px; color:#737272; font-weight:normal;">@Model.printPartTransferModel.IssuePart_Description</td>
+                                            </tr>
+                                            <tr>
+                                                <td align="left" valign="top" style="padding-left:15px; font-size:14px; color:#222; font-weight:500;">@Model.Loc.Where(a => a.ResourceId == "spnPreparedBy").FirstOrDefault().Value.ToString()</td>
+                                                <td align="left" valign="top" style="font-size:14px; color:#222; font-weight:500;">:</td>
+                                                <td align="left" valign="top" style="padding-left:15px; font-size:14px; color:#737272; font-weight:normal;">@Model.printPartTransferModel.RequesterName</td>
+                                            </tr>
+                                            <tr>
+                                                <td align="left" valign="top" style="padding-left:15px; font-size:14px; color:#222; font-weight:500;">@Model.Loc.Where(a => a.ResourceId == "spnDatePrepared").FirstOrDefault().Value.ToString()</td>
+                                                <td align="left" valign="top" style="font-size:14px; color:#222; font-weight:500;">:</td>
+                                                <td align="left" valign="top" style="padding-left:15px; font-size:14px; color:#737272; font-weight:normal;">@Model.printPartTransferModel.TransactionDate</td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+
+        <tr>
+            <td align="left" valign="top" height="10"><img src="../Content/images/space.png" alt="" /></td>
+        </tr>
+
+        <tr>
+            <td align="left" valign="top" style="border-bottom:2px solid #264a7c;">
+                <table width="1000" border="0" cellspacing="0" cellpadding="0">
+                    <tr>
+                        <td align="left" valign="top">
+                            <table width="1000" border="0" cellspacing="0" cellpadding="0">
+                                <tr style="background:#77c2a4;">
+                                    <th width="1000" align="center" valign="middle" height="40" scope="col" colspan="3" style="font-size:20px; color:#fff; line-height:40px; font-weight:400;">@Model.Loc.Where(a => a.ResourceId == "spnShippedTo").FirstOrDefault().Value.ToString()</th>
+                                </tr>
+                                <tr style="background:#e4e4e4;">
+                                    <td align="left" valign="top" style="border-right:1px solid #cccccc; font-size:14px; color:#737272; line-height:40px; font-weight:normal;">
+                                        <table width="500" border="0" cellspacing="0" cellpadding="0">
+                                            <tr>
+                                                <td width="150" align="left" valign="top" style="padding-left:15px; font-size:14px; color:#222; font-weight:500;">@Model.Loc.Where(a => a.ResourceId == "spnSiteGlobal").FirstOrDefault().Value.ToString()</td>
+                                                <td width="6" align="left" valign="top" style="font-size:14px; color:#222; font-weight:500;">:</td>
+                                                <td width="344" align="left" valign="top" style="padding-left:15px; font-size:14px; color:#737272; font-weight:normal;">@Model.printPartTransferModel.IssueSite_Name</td>
+                                            </tr>
+                                            <tr>
+                                                <td align="left" valign="top" style="padding-left:15px; font-size:14px; color:#222; font-weight:500;">@Model.Loc.Where(a => a.ResourceId == "spnPartID").FirstOrDefault().Value.ToString()</td>
+                                                <td align="left" valign="top" style="font-size:14px; color:#222; font-weight:500;">:</td>
+                                                <td align="left" valign="top" style="padding-left:15px; font-size:14px; color:#737272; font-weight:normal;">@Model.printPartTransferModel.RequestPart_ClientLookupId</td>
+                                            </tr>
+                                            <tr>
+                                                <td align="left" valign="top" style="padding-left:15px; font-size:14px; color:#222; font-weight:500;">@Model.Loc.Where(a => a.ResourceId == "spnRequester").FirstOrDefault().Value.ToString()</td>
+                                                <td align="left" valign="top" style="font-size:14px; color:#222; font-weight:500;">:</td>
+                                                <td align="left" valign="top" style="padding-left:15px; font-size:14px; color:#737272; font-weight:normal;">@Model.printPartTransferModel.RequesterName</td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                    <td align="left" valign="top" style="font-size:14px; color:#737272; line-height:40px; font-weight:normal;">
+                                        <table width="500" border="0" cellspacing="0" cellpadding="0">
+                                            <tr>
+                                                <td width="150" align="left" valign="top" style="padding-left:15px; font-size:14px; color:#222; font-weight:500;">@Model.Loc.Where(a => a.ResourceId == "spnAddressLine1").FirstOrDefault().Value.ToString()</td>
+                                                <td width="6" align="left" valign="top" style="font-size:14px; color:#222; font-weight:500;">:</td>
+                                                <td width="344" align="left" valign="top" style="padding-left:15px; font-size:14px; color:#737272; font-weight:normal;">@Model.printPartTransferModel.IssueSite_Address1</td>
+                                            </tr>
+                                            <tr>
+                                                <td align="left" valign="top" style="padding-left:15px; font-size:14px; color:#222; font-weight:500;">@Model.Loc.Where(a => a.ResourceId == "spnAddressLine2").FirstOrDefault().Value.ToString()</td>
+                                                <td align="left" valign="top" style="font-size:14px; color:#222; font-weight:500;">:</td>
+                                                <td align="left" valign="top" style="padding-left:15px; font-size:14px; color:#737272; font-weight:normal;">@Model.printPartTransferModel.IssueSite_Address2</td>
+                                            </tr>
+                                            <tr>
+                                                <td align="left" valign="top" style="padding-left:15px; font-size:14px; color:#222; font-weight:500;">@Model.Loc.Where(a => a.ResourceId == "spnAddressLine3").FirstOrDefault().Value.ToString()</td>
+                                                <td align="left" valign="top" style="font-size:14px; color:#222; font-weight:500;">:</td>
+                                                <td align="left" valign="top" style="padding-left:15px; font-size:14px; color:#737272; font-weight:normal;">@Model.printPartTransferModel.RequestSite_CityStateZip</td>
+                                            </tr>
+                                            <tr>
+                                                <td align="left" valign="top" style="padding-left:15px; font-size:14px; color:#222; font-weight:500;">@Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString()</td>
+                                                <td align="left" valign="top" style="font-size:14px; color:#222; font-weight:500;">:</td>
+                                                <td align="left" valign="top" style="padding-left:15px; font-size:14px; color:#737272; font-weight:normal;">@Model.printPartTransferModel.RequestPart_Description</td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+
+        <tr>
+            <td align="left" valign="top" height="10"><img src="../Content/images/space.png" alt="" /></td>
+        </tr>
+
+
+    </table>
+</body>
+</html>
+<style type="text/css">
+    thead { display: table-header-group }
+    tfoot { display: table-footer-group }
+    .test { page-break-after: always !important; background-color: red !important; }
+</style>

@@ -1,0 +1,128 @@
+﻿@model Client.Models.InventoryReceipt.ReceiptVM
+<div class="m-subheader">
+    <div class="new-m-subheader">
+        <div class="PageTitle">
+            <div class="align-items-center separator">
+                <h3 class="m-subheader__title ">
+                    @Model.Loc.Where(a => a.ResourceId == "hdfPartReceipt").FirstOrDefault().Value.ToString()
+                </h3>
+            </div>
+        </div>
+
+        <div class="NewBreadcrumbArea">
+            <div class="newBreadcrumb">
+                <ul>
+                    <li><a href="/Dashboard/Dashboard">&nbsp;</a></li>
+                    <li class="active"> @Model.Loc.Where(a => a.ResourceId == "hdfPartReceipt").FirstOrDefault().Value.ToString()</li>
+                </ul>
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+        <div style="clear:both;"></div>
+    </div>
+</div>
+@Html.Partial("_ErrorDiv")
+@using (Ajax.BeginForm("ValidateData", "InventoryReceipts", new AjaxOptions { HttpMethod = "Post", OnSuccess = "ValidationOnSuccess", OnBegin = "AjaxBeginFormBegin", OnFailure = "AjaxBeginFormFaillure" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="row">
+        <div class="col-xl-12">
+            <div class="m-portlet newPort" id="m_portlet" style="padding:15px;">
+                <div class="bottomBlock">
+                    <div class="tabsArea nobg">
+                        <ul class="listView nobrd">
+                            @if (Model.receiptModel.MultiStoreroom)
+                            {
+                                <li class="txtSrchArea txtSrch">
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnStoreroom").FirstOrDefault().Value.ToString(): <small>*</small></span>
+                                    <span class="inputText">
+                                        @Html.DropDownListFor(m => m.receiptModel.StoreroomId, Model.receiptModel.StoreroomList, "--Select--", new { @class = "form-control search select2picker ddlStoreroom", style = "width:100%;" })
+                                        @Html.ValidationMessageFor(m => m.receiptModel.StoreroomId, "", new { style = "display:none" })
+                                    </span>
+                                    <div style="clear:both;"></div>
+                                </li>
+                            }
+                            <li style="position:relative;">
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnPartID").FirstOrDefault().Value.ToString(): <small>*</small></span>
+                                <span class="inputText">
+                                    <div class="dropdown dropTableOuter">
+                                        <div class="input-group">
+                                            @Html.ValidationMessageFor(m => m.receiptModel.PartClientLookupId, "", new { style = "display:none" })
+                                            @Html.TextBoxFor(m => m.receiptModel.PartClientLookupId, new { @class = "form-control search dropbtn readonly", id = "txtPartId", autocomplete = "off", @readonly = "readonly" })
+                                            <div class="input-group-btn">
+                                                <button class="btn btn-white btntxtInputGroup" type="button" id="openpartgrid" data-multistoreroomvalue="@Model.receiptModel.MultiStoreroom">
+                                                    <i id="srcicon" class="fa fa-search"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </span>
+                                <div style="clear:both;"></div>
+                            </li>
+                            <li>
+                                <span class="label"> @Model.Loc.Where(a => a.ResourceId == "spnUnitCost").FirstOrDefault().Value.ToString() :<small>*</small> </span>
+                                <span class="inputText">
+                                    @Html.ValidationMessageFor(m => m.receiptModel.UnitCost, "", new { style = "display:none" })
+                                    @Html.TextBoxFor(m => m.receiptModel.UnitCost, new { @class = "form-control search decimalinput", autocomplete = "off" })
+                                </span>
+                            </li>
+                            <li>
+                                <span class="label"> @Model.Loc.Where(a => a.ResourceId == "spnReceiptQuantity").FirstOrDefault().Value.ToString() : <small>*</small></span>
+                                <span class="inputText">
+                                    @Html.ValidationMessageFor(m => m.receiptModel.ReceiptQuantity, "", new { style = "display:none" })
+                                    @Html.TextBoxFor(m => m.receiptModel.ReceiptQuantity, new { @class = "form-control search decimalinput", autocomplete = "off" })
+                                </span>
+                            </li>
+                        </ul>
+                        <div style="clear:both;"></div>
+                        <div class="idBttns">
+                            <div class="bttn_pagin">
+                                <div class="bttns2"><button class="btn btn-blue mobBttn" id="btnselectreceipt"><i class="fa fa-plus faIcon"></i> &nbsp;@Model.Loc.Where(a => a.ResourceId == "globalAdd").FirstOrDefault().Value.ToString()</button></div>
+                                <div style="clear:both;"></div>
+                            </div>
+                        </div>
+                        <div id="finselectcontainer" style="display:none">
+                            <div class="table-responsive" style="margin-top:15px;">
+                                <table id="tblfinalSelectReceiptsGrid" class="eqpDtlTbl row-border custom-sort" style="width:100%;">
+                                    <thead>
+                                        <tr>
+                                            <th></th>
+                                            <th></th>
+                                            <th>@Model.Loc.Where(a => a.ResourceId == "spnStoreroom").FirstOrDefault().Value.ToString()</th>
+                                            <th>@Model.Loc.Where(a => a.ResourceId == "spnPartID").FirstOrDefault().Value.ToString()</th>
+                                            <th>@Model.Loc.Where(a => a.ResourceId == "spnUPCCode").FirstOrDefault().Value.ToString()</th>
+                                            <th>@Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString()</th>
+                                            <th>@Model.Loc.Where(a => a.ResourceId == "spnUnitCost").FirstOrDefault().Value.ToString()</th>
+                                            <th>@Model.Loc.Where(a => a.ResourceId == "spnCurrentAverageCost").FirstOrDefault().Value.ToString()</th>
+                                            <th>@Model.Loc.Where(a => a.ResourceId == "spnReceiptQuantity").FirstOrDefault().Value.ToString()</th>
+                                            <th width="17%" style="text-align:center !important;">@Model.Loc.Where(a => a.ResourceId == "globalAction").FirstOrDefault().Value.ToString()</th>
+                                            <th>@Model.Loc.Where(a => a.ResourceId == "globalError").FirstOrDefault().Value.ToString()</th>
+                                            <th>@Model.Loc.Where(a => a.ResourceId == "spnGlobalStoreRoomId").FirstOrDefault().Value.ToString()</th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                            <div class="idBttns">
+                                <div class="bttn_pagin">
+                                    <div class="bttns">
+                                        <button type="button" class="btn btn-blue mobBttn" id="btncancel"><i class="fa fa-close faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button>
+                                    </div>
+                                    <div class="bttns2"><button type="button" class="btn btn-blue mobBttn" id="btnconfirm"><i class="fa fa-check faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalconfirm").FirstOrDefault().Value.ToString()</button></div>
+                                    <div style="clear:both;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="clear:both;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @Html.TextBoxFor(m => m.receiptModel.MultiStoreroom, new { id = "MultiStoreroom", style = "display:none" })
+
+    @Html.Partial("~/Views/InventoryReceipts/_AddPartPopUp.cshtml")
+
+}
+
+
+

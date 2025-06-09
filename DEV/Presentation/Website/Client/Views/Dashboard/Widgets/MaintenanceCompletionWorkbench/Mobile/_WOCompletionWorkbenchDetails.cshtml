@@ -1,0 +1,584 @@
+﻿@model Client.Models.Dashboard.DashboardVM
+<link href="~/Scripts/Metronic/assets/demo/default/base/style_newCustom.css" rel="stylesheet" />
+<link href="~/Content/Dashboard/MaintenanceCompletionWorkbench.css" rel="stylesheet" />
+@Styles.Render("~/Content/somaxcommentsection")
+<link href="~/Content/Wizard/Wizard.css" rel="stylesheet" />
+
+<!-- mobiscroll form-->
+<link rel="stylesheet" href="~/Scripts/mobile/css/mobiscroll.jquery.min.css">
+<!-- mobiscroll form-->
+<link href="~/Scripts/mobile/css/mobile-style.css" rel="stylesheet" />
+<link href="~/Scripts/mobile/css/mobile-dashboard-style.css" rel="stylesheet" />
+
+@Scripts.Render("~/bundles/QRScanner")
+@Scripts.Render("~/bundles/WebCam")
+<script src="~/Scripts/treeTable.js"></script>
+@*----------------For BarCode CODE39-------------------------*@
+<script src="~/Scripts/jsbarcode/JsBarcode.code39.min.js"></script>
+@*----------------BarCode CODE39-------------------------*@
+@*<script src="~/Scripts/mobile/js/mobiscroll.jquery.min.js"></script>*@
+<script type="text/javascript">
+    com_github_culmat_jsTreeTable.register(this);
+
+
+
+
+</script>
+
+
+
+<div class="m-subheader fixedDiv1">
+    <div class="new-m-subheader">
+        <div class="filterDescription">
+            <a href="javascript:void(0)" id="linkToSearchWorkbench"><span id="spnlinkToSearch">@Model.Loc.Where(a => a.ResourceId == "spnCompletionWorkbench").FirstOrDefault().Value.ToString()</span></a>
+            - @Model.woCompletionDetailsHeader.ClientLookupId
+        </div>
+        <!--#region ActionBttnArea-->
+        @if (((Model.woCompletionWorkbenchSummary.Status == WorkOrderStatusConstants.Scheduled || Model.woCompletionWorkbenchSummary.Status == WorkOrderStatusConstants.Approved) && (Model.security.MaintenanceCompletionWorkbenchWidget_Cancel.Access || Model.security.MaintenanceCompletionWorkbenchWidget_Complete.Access)) || (Model.security.MaintenanceCompletionWorkbenchWidget_AddUnplannedWO.Access) || (Model.security.MaintenanceCompletionWorkbenchWidget_AddFollowUpWO.Access))
+        {
+            <div class="ActionBttnArea">
+                <div class="actionDiv pull-left" id="ad1" style="margin-right:0px !important; ">
+                    <div class="btn-group bootstrap-select m-datatable__pager-size dropup show selectDrop actionNewDrop" style="margin-right:0px;">
+                        <div class="btn-group bootstrap-select m-datatable__pager-size" style="width: 100%;">
+                            <button type="button" class="btn dropdown-toggle bs-placeholder btn-default" data-toggle="dropdown" role="button" title=""><span class="filter-option pull-left">@Model.Loc.Where(a => a.ResourceId == "globalAction").FirstOrDefault().Value.ToString()</span>&nbsp;<span class="bs-caret"><span class="caret"></span></span></button>
+                            <div class="dropdown-menu open" role="combobox">
+                                <ul class="dropdown-menu inner" role="listbox" aria-expanded="false">
+                                    @if (Model.woCompletionWorkbenchSummary.Status == WorkOrderStatusConstants.Scheduled || Model.woCompletionWorkbenchSummary.Status == WorkOrderStatusConstants.Approved)
+                                    {
+                                        if (Model.security.MaintenanceCompletionWorkbenchWidget_Cancel.Access)
+                                        {
+                                            <li><a id="actionCancelWO" href="javascript:void(0);">@Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</a></li>
+
+                                        }
+                                        if (Model.security.MaintenanceCompletionWorkbenchWidget_Complete.Access)
+                                        {
+                                            if (Model.UseWOCompletionWizard == true) //V2-634
+                                            {
+                                                <li><a id="actionCompleteWoCheckListWizard_Workbench" data-workbench_WorkOrder_ClientLookupId='@Model.woCompletionWorkbenchSummary.WorkOrder_ClientLookupId' data-workbench_wostatus='@Model.woCompletionWorkbenchSummary.Status' href="javascript:void(0);">@Model.Loc.Where(a => a.ResourceId == "GlobalComplete").FirstOrDefault().Value.ToString()</a></li>
+
+                                            }
+                                            else
+                                            {
+                                                <li><a id="actionCompleteWO" href="javascript:void(0);">@Model.Loc.Where(a => a.ResourceId == "GlobalComplete").FirstOrDefault().Value.ToString()</a></li>
+                                            }
+                                        }
+                                    }
+
+                                    @if (Model.security.MaintenanceCompletionWorkbenchWidget_AddFollowUpWO.Access)
+                                    {
+                                        <li><a id="actionAddFollowUpWO" href="javascript:void(0);">@Model.Loc.Where(a => a.ResourceId == "spnAddFollowUpWorkOrder").FirstOrDefault().Value.ToString()</a></li>
+                                    }
+                                    @*V2-1056 .Add Sanitation Request Btn*@
+                                    @if (Model._userdata.Site.Sanitation == true && Model._userdata.Site.CMMS == true && Model.security.SanitationJob_Sanitation_Request_From_Maintenance.Access == true)
+                                    {
+                                        <li><a id="AddSanitationRequestBtn_Mobile" href="javascript:void(0);">@Model.Loc.Where(a => a.ResourceId == "spnAddSanitationRequest").FirstOrDefault().Value.ToString()</a></li>
+                                    }
+                                    <!--V2-676 barcode detail-->
+                                    @if (!string.IsNullOrEmpty(Model.WOBarcode))
+                                    {
+                                        if (Model.WOBarcode.ToLower() == WorkOrderBarCodeConstant.BarCode.ToLower())
+                                        {
+                                            <li><a id="BarCodeDetails" href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "globalWoBarCode").FirstOrDefault().Value.ToString()</a></li>
+                                        }
+                                        else if (Model.WOBarcode.ToLower() == WorkOrderBarCodeConstant.QRCode.ToLower())
+                                        {
+                                            <li><a id="QrCodeDetail" href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "globalWoQRCode").FirstOrDefault().Value.ToString()</a></li>
+                                        }
+                                    }
+                                    @if (Model.security.MaintenanceCompletionWorkbenchWidget_Photos.Create)
+                                    {
+                                        <li>
+                                            <a href="javascript:void(0)">
+                                                <label for="files">@Model.Loc.Where(a => a.ResourceId == "spnAddPhotos").FirstOrDefault().Value.ToString()</label>
+                                                <input id="files" accept=".jpeg,.jpg,.png,.JPEG,.JPG,.PNG" style="display:none;" type="file" value="">
+                                            </a>
+                                        </li>
+                                    }
+                                </ul>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+
+
+            </div>
+        }
+        <div style="clear:both;"></div>
+    </div>
+    <!--#endregion-->
+
+
+
+</div>
+
+
+
+<div class="pushDiv1"></div>
+
+<div class="fixedDiv2 row">
+    @Html.Partial("~/Views/Dashboard/Widgets/MaintenanceCompletionWorkbench/Mobile/_WoCompletionWorkbenchSummary.cshtml", Model)
+</div>
+
+<div class="row rowTopSpaceComplition"> @*V2-1188*@
+    <div class="col-xl-12">
+        <div class="m-portlet top-tab" id="m_portlet" style="padding:15px;">
+            <ul class="no-border-bottom tab-nav" id="tabscroll">
+                @if (Model.security.MaintenanceCompletionWorkbenchWidget_Complete.Access)
+                {
+                    <li data-selected="true">  <button data-tab="Labor" class="tablinks wo-det-tab active">@Model.Loc.Where(a => a.ResourceId == "spnLabor").FirstOrDefault().Value.ToString()</button> </li>
+
+                }
+                @if (Model.security.MaintenanceCompletionWorkbenchWidget_PartIssue.Access)
+                {
+                    <li>
+                        <button data-tab="Parts" class="tablinks wo-det-tab">@Model.Loc.Where(a => a.ResourceId == "spnParts").FirstOrDefault().Value.ToString()</button>
+                    </li>
+                }
+                @if (Model.security.MaintenanceCompletionWorkbenchWidget_Complete.Access)
+                {
+                    <li>
+                        <button data-tab="Tasks" class="tablinks wo-det-tab">@Model.Loc.Where(a => a.ResourceId == "spnTasks").FirstOrDefault().Value.ToString()</button>
+                    </li>
+                }
+                @if (Model.security.MaintenanceCompletionWorkbenchWidget_Complete.Access)
+                {
+                    <li>
+                        <button data-tab="Instructions" class="tablinks wo-det-tab">@Model.Loc.Where(a => a.ResourceId == "spnAddInstructions").FirstOrDefault().Value.ToString()</button>
+                    </li>
+                }
+                @if (Model.security.MaintenanceCompletionWorkbenchWidget_Complete.Access)
+                {
+                    <li>
+                        <button data-tab="Comments" class="tablinks wo-det-tab">@Model.Loc.Where(a => a.ResourceId == "spnLogComment").FirstOrDefault().Value.ToString()</button>
+                    </li>
+                }
+                @if (Model.security.MaintenanceCompletionWorkbenchWidget_Downtime.Access)
+                {
+                    <li>
+                        <button data-tab="Downtime" class="tablinks wo-det-tab">@Model.Loc.Where(a => a.ResourceId == "spnDowntime").FirstOrDefault().Value.ToString()</button>
+                    </li>
+                }
+                @if (Model.security.MaintenanceCompletionWorkbenchWidget_Photos.Access)
+                {
+                    <li>
+                        <button data-tab="Photos" class="tablinks wo-det-tab">@Model.Loc.Where(a => a.ResourceId == "spnPhotos").FirstOrDefault().Value.ToString()</button>
+                    </li>
+                }
+                @if (Model.security.MaintenanceCompletionWorkbenchWidget_Complete.Access)
+                {
+                    <li>
+                        <button data-tab="Attachments" class="tablinks wo-det-tab">@Model.Loc.Where(a => a.ResourceId == "spnAttachments").FirstOrDefault().Value.ToString()</button>
+                    </li>
+                }
+                @if (Model.security.MaintenanceCompletionWorkbenchWidget_MaterialRequest.Access)
+                {
+                    <li>
+                        <button class="tablinks wo-det-tab" data-tab="MaterialRequests">@Model.Loc.Where(a => a.ResourceId == "spnMaterialRequest").FirstOrDefault().Value.ToString()</button>
+                    </li>
+                }
+            </ul>
+
+
+        </div>
+
+        @if (Model.security.MaintenanceCompletionWorkbenchWidget_Complete.Access)
+        {
+            <div class="md-apps-tab md-apps-tab-sel tabcontent" id="Labor"></div>
+        }
+        @if (Model.security.MaintenanceCompletionWorkbenchWidget_PartIssue.Access)
+        {
+            <div class="md-apps-tab tabcontent" id="Parts"></div>
+        }
+        @if (Model.security.MaintenanceCompletionWorkbenchWidget_Complete.Access)
+        {
+            <div class="md-apps-tab tabcontent" id="Tasks"></div>
+        }
+        @if (Model.security.MaintenanceCompletionWorkbenchWidget_Complete.Access)
+        {
+            <div class="md-apps-tab tabcontent" id="Instructions"></div>
+        }
+        @if (Model.security.MaintenanceCompletionWorkbenchWidget_Complete.Access)
+        {
+            <div class="md-apps-tab tabcontent" id="Comments"></div>
+        }
+        @if (Model.security.MaintenanceCompletionWorkbenchWidget_Downtime.Access)
+        {
+            <div class="md-apps-tab tabcontent" id="Downtime"></div>
+        }
+        @if (Model.security.MaintenanceCompletionWorkbenchWidget_Photos.Access)
+        {
+            <div class="md-apps-tab tabcontent" id="Photos"></div>
+        }
+        @if (Model.security.MaintenanceCompletionWorkbenchWidget_Complete.Access)
+        {
+            <div class="md-apps-tab tabcontent" id="Attachments"></div>
+        }
+        @if (Model.security.MaintenanceCompletionWorkbenchWidget_MaterialRequest.Access)
+        {
+            <div id="MaterialRequests" class="md-apps-tab tabcontent"></div>
+        }
+
+    </div>
+
+
+</div>
+
+<!-- Modal -->
+<div class="slide-modal">
+    <div id="AddLaborModalpopup">
+        <div id="LaborPopUp">
+        </div>
+    </div>
+</div>
+
+<div class="slide-modal">
+    <div id="AddMaterialRequestModalpopup">
+        <div id="MaterialRequestPopUp">
+        </div>
+    </div>
+</div>
+<div class="slide-modal">
+    <div id="AddDowntimeModalpopup">
+        <div id="DowntimePopUp">
+        </div>
+    </div>
+</div>
+@*V2-716*@
+@if (Model.security.MaintenanceCompletionWorkbenchWidget_Photos.Create)
+{
+    <div id="CameraPopup" class="slide-modal">
+        <div class="slide-modal-head">
+            <a class="slide-back-btn CloseCameraPopup"> <i class="fa fa-angle-left"></i> Back</a>
+            <div class="slide-back-title">
+                <i for="" class="fa fa-camera"></i>
+            </div>
+            @*}*@
+
+        </div>
+
+        <div class="slide-modal-body">
+            <div mbsc-page class="demo-responsive">
+                <div style="height:100%">
+                    <div mbsc-form class="mbsc-form-grid">
+                        <div class="mbsc-grid">
+                            <div id="forWebcam" class="cam-container" style="display:none;">
+                                <!--Web cam-->
+                                <div class="webcam-start">
+                                    <div class="md-modal md-effect-12">
+                                        <div id="app-panel" class="app-panel md-content p-0 m-0">
+                                            <div class="imgArea">
+                                                <div id="webcam-container" class="vd-webcam-container">
+                                                    <video id="webcam" autoplay playsinline width="300" height="165" class="onCamera vd-webcam"></video>
+                                                    <canvas id="canvas" class="d-none webcam-canvas"></canvas>
+                                                    <div class="flash"></div>
+                                                    <audio id="snapSound" src="~/Scripts/Webcam/camera-shutter-click.wav" preload="auto"></audio>
+                                                    <img src="" id="imgDisply" style="width:auto;" class="offCamera d-none" />
+                                                </div>
+                                            </div>
+
+                                            <div id="cameraControls" class="cameraControls buttonArea">
+                                                <div class="mbsc-row">
+                                                    <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                                        <div class="design-box">
+                                                            <div class="mbsc-button-group-block">
+                                                                <button id="cameraFlip" type="button" class="btn btn-blue mobBttn clearstate mbsc-control mbsc-btn mbsc-no-touch mbsc-ios mbsc-ltr onCamera cam-button" title="Flip Camera"><i class="fa fa-rotate-right on-cam-icon"></i>&nbsp;&nbsp;@Model.Loc.Where(a => a.ResourceId == "globalFlipCamera").FirstOrDefault().Value.ToString()</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                                        <div class="design-box">
+                                                            <div class="mbsc-button-group-block">
+                                                                <button id="take-photo" type="button" class="btn btn-blue mobBttn clearstate mbsc-control mbsc-btn mbsc-no-touch mbsc-ios mbsc-ltr onCamera cam-button" title="Take Snap"><i for="" class="fa fa-camera" style="margin-top:-3px;font-size:20px"></i>&nbsp;@Model.Loc.Where(a => a.ResourceId == "globalTakeSnap").FirstOrDefault().Value.ToString()</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                                        <div class="design-box">
+                                                            <div class="mbsc-button-group-block">
+                                                                <button id="exit-app" type="button" title="Close Camera" class="btn btn-blue mobBttn clearstate mbsc-control mbsc-btn mbsc-no-touch mbsc-ios mbsc-ltr onCamera cam-button"><i class="fa fa-close on-cam-icon"></i>&nbsp;@Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="mbsc-row">
+                                                    <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                                        <div class="design-box">
+                                                            <div class="mbsc-button-group-block">
+                                                                <button id="resume-camera" type="button" class="btn btn-blue mobBttn clearstate mbsc-control mbsc-btn mbsc-no-touch mbsc-ios mbsc-ltr offCamera d-none cam-button" title="Take Another Snap"><i class="fa fa-plus on-cam-icon"></i>&nbsp;@Model.Loc.Where(a => a.ResourceId == "globalTakeAnotherSnap").FirstOrDefault().Value.ToString()</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                                        <div class="design-box">
+                                                            <div class="mbsc-button-group-block">
+                                                                <button id="UploadWebCamImg" type="button" class="btn btn-blue mobBttn clearstate mbsc-control mbsc-btn mbsc-no-touch mbsc-ios mbsc-ltr offCamera d-none cam-button" title="Upload Image"><i class="fa fa-upload on-cam-icon"></i>&nbsp;@Model.Loc.Where(a => a.ResourceId == "globalUploadImage").FirstOrDefault().Value.ToString()</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="md-overlay"></div>
+                                    <div style="clear:both;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="slide-modal-footer">
+        </div>
+    </div>
+}
+
+<div id="OpenImgActionPopup" class="slide-modal">
+    @Html.Hidden("AttachmentId", "", new { @id = "imgAttachmentId" })
+    @Html.Hidden("AttachmentURL", "", new { @id = "imgAttachmentURL" })
+    <div class="slide-modal-head">
+        <a class="slide-back-btn actionpopupmobileback"> <i class="fa fa-angle-left"></i> Back</a>
+        <div class="slide-back-title">
+            @Model.Loc.Where(a => a.ResourceId == "globalAction").FirstOrDefault().Value.ToString()
+        </div>
+    </div>
+    <div class="slide-modal-body">
+        <div mbsc-page class="demo-responsive">
+            <div style="height:100%;margin-top:10px;">
+                <div mbsc-form class="mbsc-form-grid">
+                    <div class="mbsc-grid">
+                        <div class="mbsc-row">
+                            @if (Model.security.MaintenanceCompletionWorkbenchWidget_Photos.Access)
+                            {
+                                <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                    <div class="design-box">
+                                        <div class="mbsc-button-group-block">
+                                            <button mbsc-button data-color="success" type="button" class="btn btn-blue mobBttn mbsc-btn selectidOpen">@Model.Loc.Where(a => a.ResourceId == "GlobalOpen").FirstOrDefault().Value.ToString()</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                            @if (Model.security.MaintenanceCompletionWorkbenchWidget_Photos.Edit)
+                            {
+                                <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                    <div class="design-box">
+                                        <div class="mbsc-button-group-block">
+                                            <button mbsc-button data-color="success" type="button" class="btn btn-blue btnRqst mobBttn mbsc-btn" id="selectidSetAsDefault">@Model.Loc.Where(a => a.ResourceId == "spnSetDefault").FirstOrDefault().Value.ToString()</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                            @if (Model.security.MaintenanceCompletionWorkbenchWidget_Photos.Delete /*&& Model.security.Equipment.Edit && ((Model._userdata.Site.APM == false && Model._userdata.Site.CMMS == true) || (Model._userdata.Site.APM == true && Model._userdata.Site.CMMS == false) || (Model._userdata.Site.APM == true && Model._userdata.Site.CMMS == true) || (Model._userdata.Site.APM == true && Model._userdata.Site.CMMS == true) || (Model._userdata.Site.APM == false && Model._userdata.Site.CMMS == false && Model._userdata.Site.Sanitation == true))*/)
+                            {
+                                <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                    <div class="design-box">
+                                        <div class="mbsc-button-group-block">
+                                            <button mbsc-button data-color="success" type="button" class="btn btn-blue btnRqst mobBttn mbsc-btn" id="selectidDelete">@Model.Loc.Where(a => a.ResourceId == "globalDelete").FirstOrDefault().Value.ToString()</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="slide-modal-footer"></div>
+</div>
+
+<div id="ShowImgPopup" class="slide-modal">
+    <div class="slide-modal-head">
+        <a class="slide-back-btn openimgback"> <i class="fa fa-angle-left"></i> Back</a>
+        <div class="slide-back-title">
+            @Model.Loc.Where(a => a.ResourceId == "spnImagePreview").FirstOrDefault().Value.ToString()
+        </div>
+    </div>
+    <div class="slide-modal-body">
+        <div mbsc-page class="demo-responsive">
+            <div style="height:100%;margin-top:10px;">
+                <div mbsc-form class="mbsc-form-grid">
+                    <div class="mbsc-grid">
+                        <div class="mbsc-row">
+                            <div class="mbsc-col-12 mbsc-col-md-12 mbsc-col-lg-12">
+                                <img id="SelectedImg" src="" style="width: 100%; padding:1rem" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="slide-modal-footer"></div>
+</div>
+@*V2-716*@
+@*V2-726*@
+<div class="slide-modal">
+    <div id="SendForApprovalPopup">
+        <div id="divSendForApproval"></div>
+    </div>
+</div>
+@*V2-726*@
+<!-- #region Add unplanned Work Order -->
+<div id="AddOnDemandWOModalpopup" class="modal fade" role="dialog">
+    <div class="modal-dialog" id="OnDemandWOPopUp">
+    </div>
+</div>
+<div class="slide-modal">
+    <div id="AddFollowupWOModalpopup">
+        <div id="FollowupWOPopUp">
+        </div>
+    </div>
+</div>
+<!-- #region Add Sanitation Request Work Order -->
+<div class="slide-modal">
+    <div id="AddSanitationRequestWODashboardModalpopup">
+        <div id="AddSanitationRequestWODashboardPopUp">
+        </div>
+    </div>
+</div>
+@if (Model._userdata.DatabaseKey.Client.AssetTree == true)
+{
+    <div class="slide-modal" id="commonWOTreeModal">
+        <div class="slide-modal-head ">
+            <a id="commonWOTreeModalHide" class="slide-back-btn"> <i class="fa fa-angle-left"></i> Back</a>
+            <div class="slide-back-title">
+                @Model.Loc.Where(a => a.ResourceId == "spnGlobalEquipmentTreeLookup").FirstOrDefault().Value.ToString()
+            </div>
+        </div>
+        <div class="slide-modal-body">
+            <div class="cntTree">
+            </div>
+        </div>
+        <div class="slide-modal-footer"></div>
+    </div>
+}
+
+
+@if (Model.security.MaintenanceCompletionWorkbenchWidget_Complete.Access && Model.UseWOCompletionWizard)
+{
+    <div id="WorkorderCompletionWizardDiv"></div>
+}
+@Html.Partial("~/Views/Dashboard/Widgets/MaintenanceCompletionWorkbench/Mobile/_QrCodeReaderModal.cshtml")
+
+
+@Html.Partial("~/Views/Dashboard/Widgets/MaintenanceCompletionWorkbench/Mobile/_WoCompletionWorkbenchSummaryDescription.cshtml", Model)
+@Html.Partial("~/Views/Dashboard/Widgets/MaintenanceCompletionWorkbench/Mobile/_CancelModal.cshtml", Model)
+@Html.Hidden("WorkOrderId", Model.woCompletionDetailsHeader.WorkOrderId, new { @id = "WorkOrderId" })
+@Html.Hidden("WorkOrderClientLookupId", Model.woCompletionDetailsHeader.ClientLookupId, new { @id = "WorkOrderClientLookupId" })
+@Html.Hidden("hdnFoodSafetyPopup", Model._userdata.DatabaseKey.Client.BusinessType.ToUpper())
+@Html.HiddenFor(m => m._userdata.DatabaseKey.Client.OnPremise, new { id = "MCW_ClientOnPremise" })
+@Html.HiddenFor(m => m.woCompletionWorkbenchSummary.Status)
+
+<div class="slide-modal" id="EquipmentWOModal">
+    <div class="slide-modal-head">
+        <a class="slide-back-btn" id="EquipmentWOModalHide"> <i class="fa fa-angle-left"></i> Back</a>
+        <div class="slide-back-title">
+            @Model.Loc.Where(a => a.ResourceId == "GlobalSelectEquipment").FirstOrDefault().Value.ToString()
+        </div>
+    </div>
+    <div class="slide-modal-body">
+        <div class="form-group" style="position:relative;">
+            <i class="fa fa-search txtSearchClickComp" style="font-size: 1.1rem;position: absolute;top: 9px;left: 15px;"></i>
+            <a href="javascript:void(0)"><i class="fa fa-close clearTextBoxValue" data-txtboxid="txtEquipmentSearch_Mobile" style="font-size: 1.1rem;position: absolute;top: 9px;right: 15px;"></i></a>
+            <input type="search" id="txtEquipmentSearch_Mobile" class="form-control search unsortable" placeholder="Search..." style="padding: 0.65rem 2.75rem;" autocomplete="off">
+        </div>
+        <div id="DivEquipmentSearchScrollViewModal"></div>
+    </div>
+</div>
+
+@if (Model.WOBarcode == WorkOrderBarCodeConstant.QRCode)
+{
+    @Html.Partial("~/Views/Dashboard/Widgets/MaintenanceCompletionWorkbench/Mobile/_QrCodeDetailsModal.cshtml")
+}
+@if (Model.WOBarcode.ToLower() == WorkOrderBarCodeConstant.BarCode.ToLower())
+{
+    @Html.Partial("~/Views/Dashboard/Widgets/MaintenanceCompletionWorkbench/Mobile/_BarCodeDetailsModal.cshtml")
+}
+
+<div class="slide-modal" id="AccountTableModalPopup">
+    <div class="slide-modal-head">
+        <a class="slide-back-btn" id="AccountTableModalPopupHide"> <i class="fa fa-angle-left"></i> Back</a>
+        <div class="slide-back-title">
+            @Model.Loc.Where(a => a.ResourceId == "GlobalAccount").FirstOrDefault().Value.ToString()
+        </div>
+    </div>
+    <div class="slide-modal-body">
+        <div class="form-group" style="position:relative;">
+            <i class="fa fa-search txtSearchClickComp" style="font-size: 1.1rem;position: absolute;top: 9px;left: 15px;"></i>
+            <a href="javascript:void(0)"><i class="fa fa-close clearTextBoxValue" data-txtboxid="txtAccountSearch_Mobile" style="font-size: 1.1rem;position: absolute;top: 9px;right: 15px;"></i></a>
+            <input type="search" id="txtAccountSearch_Mobile" class="form-control search unsortable" placeholder="Search..." style="padding: 0.65rem 2.75rem;" autocomplete="off">
+        </div>
+        <div id="DivAccountSearchScrollViewModal"></div>
+    </div>
+
+</div>
+<div class="slide-modal" id="VendorTableModalPopup">
+    <div class="slide-modal-head">
+        <a class="slide-back-btn" id="VendorTableModalPopupHide"> <i class="fa fa-angle-left"></i> Back</a>
+        <div class="slide-back-title">
+            @Model.Loc.Where(a => a.ResourceId == "spnVendor").FirstOrDefault().Value.ToString()
+        </div>
+    </div>
+    <div class="slide-modal-body">
+        <div class="form-group" style="position:relative;">
+            <i class="fa fa-search txtSearchClickComp" style="font-size: 1.1rem;position: absolute;top: 9px;left: 15px;"></i>
+            <a href="javascript:void(0)"><i class="fa fa-close clearTextBoxValue" data-txtboxid="txtVendorSearch_Mobile" style="font-size: 1.1rem;position: absolute;top: 9px;right: 15px;"></i></a>
+            <input type="search" id="txtVendorSearch_Mobile" class="form-control search unsortable" placeholder="Search..." style="padding: 0.65rem 2.75rem;" autocomplete="off">
+        </div>
+        <div id="DivVendorSearchScrollViewModal"></div>
+    </div>
+</div>
+<div class="slide-modal" id="PartCategoryMasterTableModalPopup">
+    <div class="slide-modal-head">
+        <a class="slide-back-btn" id="PartCategoryMasterTableModalPopupHide"> <i class="fa fa-angle-left"></i> Back</a>
+        <div class="slide-back-title">
+            @Model.Loc.Where(a => a.ResourceId == "spnPartCategory").FirstOrDefault().Value.ToString()
+        </div>
+    </div>
+    <div class="slide-modal-body">
+        <div class="form-group" style="position:relative;">
+            <i class="fa fa-search txtSearchClickComp" style="font-size: 1.1rem;position: absolute;top: 9px;left: 15px;"></i>
+            <a href="javascript:void(0)"><i class="fa fa-close clearTextBoxValue" data-txtboxid="txtPartCategoryMasterSearch_Mobile" style="font-size: 1.1rem;position: absolute;top: 9px;right: 15px;"></i></a>
+            <input type="search" id="txtPartCategoryMasterSearch_Mobile" class="form-control search unsortable" placeholder="Search..." style="padding: 0.65rem 2.75rem;" autocomplete="off">
+        </div>
+        <div id="DivPartCategoryMasterSearchScrollViewModal"></div>
+    </div>
+</div>
+<style type="text/css">
+    .cam-container {
+        margin: 18px auto;
+    }
+    /*.vd-webcam-container {
+        height: 100vh;
+        width: 100vw;
+        background-color: black;
+    }*/
+    .vd-webcam {
+        display: block;
+        position: relative;
+        width: 100%;
+        height: auto;
+        padding: 1rem;
+        pointer-events: none;
+        margin: 0 auto;
+    }
+
+    @@media (max-width:900px) {
+        .gridStatus span.newStatus {
+            bottom: -10px !important;
+        }
+    }
+
+    @@media only screen and (min-width: 360px) and (max-width: 479px) {
+        .ActionBttnArea {
+            width: 140px !important;
+        }
+
+        .gridList button.complete, .updateArea button.complete {
+            margin: 5px 0px !important;
+        }
+    }
+</style>

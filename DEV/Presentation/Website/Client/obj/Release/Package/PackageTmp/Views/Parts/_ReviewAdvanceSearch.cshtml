@@ -1,0 +1,61 @@
+﻿@model Client.Models.Parts.PartsVM
+
+<nav class="sidebar">
+    <div class="dismiss">
+        <i class="fa fa-close"></i>
+    </div>
+
+    <div class="sidebar-header">
+        <h3><i class="fa fa-filter" style="position: relative; top: -2px;"></i> @Model.Loc.Where(a => a.ResourceId == "spnFilters").FirstOrDefault().Value.ToString() <span class="receiptfilteritemcount">0</span></h3>
+        <button type="button" id="btnReviewSiteDataAdvSrch" class="btn btn-blue filterSearch">@Model.Loc.Where(a => a.ResourceId == "globalSearch").FirstOrDefault().Value.ToString() </button>
+    </div>
+
+    <div class="sidebar-content" id="reviewsitegridadvsearchsidebar">
+        <form action="#" method="post">
+            <div class="form-group">
+                <label for="RSSiteName">@Model.Loc.Where(a => a.ResourceId == "spnSiteGlobal").FirstOrDefault().Value.ToString():</label>
+                <input type="text" class="form-control search adv-item" autocomplete="off" id="RSSiteName">
+            </div>
+            <div class="form-group">
+                <label for="RSClientLookupId">@Model.Loc.Where(a => a.ResourceId == "spnPartID").FirstOrDefault().Value.ToString():</label>
+                <input type="text" class="form-control search adv-item" autocomplete="off" id="RSClientLookupId">
+            </div>
+            <div class="form-group">
+                <label for="RSDescription">@Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString() :</label>
+                <input type="text" class="form-control search adv-item" autocomplete="off" id="RSDescription">
+            </div>
+            <div class="form-group">
+                <label for="RSQtyOnHand">@Model.Loc.Where(a => a.ResourceId == "spnQtyOnHand").FirstOrDefault().Value.ToString():</label>
+                <input type="text" class="form-control search decimalinput adv-item" autocomplete="off" id="RSQtyOnHand">
+            </div>
+            <div class="form-group">
+                <label for="RSQtyOnOrder">@Model.Loc.Where(a => a.ResourceId == "spnQtyOnOrder").FirstOrDefault().Value.ToString():</label>
+                <input type="text" class="form-control search decimalinput adv-item" autocomplete="off" id="RSQtyOnOrder">
+            </div>
+            <div class="form-group">
+                <label for="RSLastPurchaseDate">@Model.Loc.Where(a => a.ResourceId == "spnLastPurchase").FirstOrDefault().Value.ToString():</label>
+                <input type="text" class="form-control search dtpicker adv-item" autocomplete="off" id="RSLastPurchaseDate">
+            </div>
+            <div class="form-group">
+                <label for="RSLastPurchaseCost">@Model.Loc.Where(a => a.ResourceId == "spnLastCost").FirstOrDefault().Value.ToString() :</label>
+                <input type="text" class="form-control search decimalinput adv-item" autocomplete="off" id="RSLastPurchaseCost">
+            </div>
+            <div class="form-group">
+                <label for="RSLastPurchaseVendor">@Model.Loc.Where(a => a.ResourceId == "spnLastPurchaseFrom").FirstOrDefault().Value.ToString() :</label>
+                <input type="text" class="form-control search  adv-item" autocomplete="off" id="RSLastPurchaseVendor">
+            </div>
+            <div class="form-group">
+                <label for="RSisInactive">@Model.Loc.Where(a => a.ResourceId == "globalInactiveFlag").FirstOrDefault().Value.ToString():</label>
+                <select id="RSisInactive" class="form-control search adv-item select2picker">
+                    <option value="">--Select--</option>
+                    <option value="true">Yes</option>
+                    <option value="false">No</option>
+                </select>
+            </div>
+        </form>
+    </div>
+</nav>
+
+
+
+

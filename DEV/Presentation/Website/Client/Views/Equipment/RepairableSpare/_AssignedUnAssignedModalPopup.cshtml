@@ -1,0 +1,98 @@
+﻿@model Client.Models.EquipmentCombined
+@using (Ajax.BeginForm("UpdateAssignment", "Equipment", new AjaxOptions { HttpMethod = "POST", OnBegin = "AjaxBeginFormBegin", OnSuccess = "AssignmentUpdateOnSuccess", OnFailure = "AjaxBeginFormFaillure", OnComplete = "AjaxBeginFormComplete" }))
+{
+    <div id="AssignUnAssignModal" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false" style="padding-right:0px !important;">
+        <div class="modal-dialog modal-info">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    @if (Model.EquipData.Status == AssetStatusConstant.Assigned)
+                    {
+                        <h4 class="modal-title" id="hdrAssigned">@Model.Loc.Where(a => a.ResourceId == "spnUnassign").FirstOrDefault().Value.ToString()</h4>
+                    }
+                    else
+                    {
+                        <h4 class="modal-title" id="hdrAssigned">@Model.Loc.Where(a => a.ResourceId == "spnAssign").FirstOrDefault().Value.ToString()</h4>
+                    }
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <ul class="listView nobrd">
+                            <li>
+                                <span class="label">@Html.LabelFor(m => m.assignmentModel.AssignedAssetClientlookupId)<small>*</small></span>
+                                <span class="inputText">
+                                    <div class="dropdown dropTableOuter">
+                                        <div class="input-group">
+                                            @Html.ValidationMessageFor(m => m.assignmentModel.AssignedAssetClientlookupId, "", new { style = "display:none" })
+
+                                            @Html.TextBoxFor(m => m.assignmentModel.AssignedAssetClientlookupId, "", new
+                                       {
+                                           @class = "form-control search dropbtn readonly",
+                                           @readonly = "readonly",
+                                           autocomplete = "off",
+                                           style = "display:block;"
+                                       })
+                                            @Html.TextBoxFor(m => m.assignmentModel.AssignedAssetId, new
+                                       {
+                                           @class = "form-control search dropbtn readonly",
+                                           @readonly = "readonly",
+                                           autocomplete = "off",
+                                           style = "display:none;"
+                                       })
+
+
+                                          
+                                            <div class="input-group-btn">
+                                                <button class="btn btn-white btntxtInputGroup ClearRepSpareModalPopupGrid" type="button"
+                                                        data-textfield="assignmentModel_AssignedAssetClientlookupId"
+                                                        data-valuefield="assignmentModel_AssignedAssetId" style="display:none;">
+                                                    <i id="srcicon" class="fa fa-close"></i>
+                                                </button>
+                                            </div>
+                                            <div class="input-group-btn">
+                                                <button class="btn btn-white btntxtInputGroup OpenRepSpareModalPopupGrid" type="button"
+                                                        data-textfield="assignmentModel_AssignedAssetClientlookupId"
+                                                        data-valuefield="assignmentModel_AssignedAssetId">
+                                                    <i id="srcicon" class="fa fa-search"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </span>
+                            </li>
+                            @if (Model.EquipData.Status == AssetStatusConstant.Assigned)
+                            {
+                                <li>
+                                    <span class="label">@Html.LabelFor(m => m.assignmentModel.Location)<small>*</small></span>
+                                    <span class="inputText">
+                                        @Html.ValidationMessageFor(m => m.assignmentModel.Location, "", new { style = "display:none" })
+                                        @Html.TextBoxFor(m => m.assignmentModel.Location, new { @class = "form-control m-input search ", @style = "color:black", autocomplete = "off", maxlength = "126" })
+                                    </span>
+                                </li>
+                            }
+
+
+                        </ul>
+                    </div>
+                </div>
+                <div class="modal-footer" style="padding:15px 25px !important;">
+                    <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-close faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button>
+                    <button type="submit" class="btn btn-blue" style="float:right;" id="saveAss" data-eqid="@Model._ChangeEquipmentIDModel.EquipmentId"><i class="fa fa-save faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+                    <div style="clear:both;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @Html.HiddenFor(m => m.IsAssigned, new { id = "hdnIsAssigned" })
+    @Html.HiddenFor(m => m.assignmentModel.RepairableSpareStatusAssign, new { id = "RepairableSpareStatusAssign" })
+    @Html.HiddenFor(m => m.assignmentModel.EquipmentId)
+}
+<style type="text/css">
+    .ui-tooltip {
+        z-index: 1151 !important;
+    }
+
+    .errormessage {
+        margin-bottom: 1px !important;
+    }
+</style>

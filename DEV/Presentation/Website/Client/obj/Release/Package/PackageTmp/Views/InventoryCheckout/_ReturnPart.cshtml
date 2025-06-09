@@ -1,0 +1,191 @@
+﻿@model Client.Models.InventoryCheckout.InventoryCheckVM
+@using (Ajax.BeginForm("ValiDateReturnControlls", "InventoryCheckout", new AjaxOptions { HttpMethod = "Post", OnSuccess = "ReturnItemAddToGridSuccess", OnBegin = "AjaxBeginFormBegin", OnFailure = "AjaxBeginFormFaillure" }))
+{
+
+    @Html.AntiForgeryToken()
+    <div class="tabsArea nobg m-portlet newPort" id="Returnpart" style="display:block;">
+        <ul class="listView nobrd rt-part tree-rt-adj inpt-full-adj">
+            <li class="txtSrchArea txtSrch">
+                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnGlobalReturnFrom").FirstOrDefault().Value.ToString(): <small>*</small></span>
+                <span class="inputText ">
+                    @Html.DropDownListFor(m => m.inventoryCheckoutReturnModel.selectedPersonnelId, Model.inventoryCheckoutModel.IssueToList, new { @class = "form-control search select2picker", style = "width:100%;" })
+                    @Html.ValidationMessageFor(m => m.inventoryCheckoutReturnModel.PersonnelId, "", new { style = "display:none" })
+                </span>
+                
+            </li>
+            <li class="txtSrchArea txtSrch">
+                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnChargeType").FirstOrDefault().Value.ToString(): <small>*</small></span>
+                <span class="inputText ">
+                    @Html.DropDownListFor(m => m.inventoryCheckoutReturnModel.ChargeType, Model.inventoryCheckoutModel.ChargeTypeList, "--Select--", new { @class = "form-control search select2picker", style = "width:100%;" })
+                    @Html.ValidationMessageFor(m => m.inventoryCheckoutReturnModel.ChargeType, "", new { style = "display:none" })
+                </span>
+               
+            </li>
+
+            <li style="position:relative;" class="search-feild">
+                <span class="label">@Model.Loc.Where(a => a.ResourceId == "GlobalChargeTo").FirstOrDefault().Value.ToString(): <small>*</small></span>
+                <div class="opt-btn-box">
+                    <span class="inputText wthAdjst2 tree-sub-adj">
+                        <div class="dropdown dropTableOuter">
+                            <div class="input-group">
+                                @Html.ValidationMessageFor(m => m.inventoryCheckoutReturnModel.ChargeToClientLookupId, "", new { style = "display:none" })
+                                @Html.TextBoxFor(m => m.inventoryCheckoutReturnModel.ChargeToClientLookupId, new { @class = "form-control search dropbtn readonly", id = "txtReturnChargeToId", autocomplete = "off", @readonly = "readonly" })
+                                @Html.HiddenFor(m => m.inventoryCheckoutReturnModel.ChargeToId, new { id = "hdnReturnChargeToId" })
+                                @Html.Hidden("hdnId")
+                                <div class="input-group-btn">
+                                    <button class="btn btn-white btntxtInputGroup" type="button" id="opengridreturn">
+                                        <i id="srcicon" class="fa fa-search"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </span>
+                    @if (Model.userData.DatabaseKey.Client.AssetTree == true)
+                    {
+                        <i class="fa fa-tree chargeTree adjust" id="imgChargeToTreereturn" style="display:none;"></i>
+                    }
+                    @*<a href="javascript:void(0)" class="lookupTree" id="imgChargeToTree" style="display:none;"><img src="~/Scripts/ImageZoom/images/tree7.png" /></a>*@
+                    </div>
+            </li>
+            @if (Model.inventoryCheckoutReturnModel.MultiStoreroom)
+            {
+                <li class="txtSrchArea txtSrch">
+                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnStoreroom").FirstOrDefault().Value.ToString(): <small>*</small></span>
+                    <span class="inputText">
+                        @Html.DropDownListFor(m => m.inventoryCheckoutReturnModel.StoreroomId, Model.inventoryCheckoutReturnModel.StoreroomList, "--Select--", new { @class = "form-control search select2picker ddlStoreroom", style = "width:100%;" })
+                        @Html.ValidationMessageFor(m => m.inventoryCheckoutReturnModel.StoreroomId, "", new { style = "display:none" })
+                    </span>
+                    <div style="clear:both;"></div>
+                </li>
+            }
+        <li class="qr-part qr-rt-adj">
+            <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnPartID").FirstOrDefault().Value.ToString(): <small>*</small></span>
+            <div class="opt-btn-box">
+                <span class="inputText wthAdjst2 tree-sub-adj" style="position:relative;">
+                    <div class="dropdown dropTableOuter">
+                        <div class="input-group">
+                            @Html.ValidationMessageFor(m => m.inventoryCheckoutReturnModel.PartClientLookupId, "", new { style = "display:none" })
+                            @Html.TextBoxFor(m => m.inventoryCheckoutReturnModel.PartClientLookupId, new { @class = "form-control search dropbtn readonly", id = "txtPartReturnId", autocomplete = "off", @readonly = "readonly" })
+                            @Html.HiddenFor(m => m.inventoryCheckoutReturnModel.PartId, new { id = "hdnPartReturnId" })
+
+                            <div class="input-group-btn">
+                                <button class="btn btn-white btntxtInputGroup" type="button" id="openpartgrid" data-multistoreroomvalue="@Model.inventoryCheckoutReturnModel.MultiStoreroom">
+                                    <i id="srcicon" class="fa fa-search"></i>
+                                </button>
+
+                            </div>
+                        </div>
+                    </div>
+                </span>
+                <div class="input-group-btn qr-scr-adj">
+                    <button type="button" class="btn btn-blue mobBttn" id="btnQrScannerreturn"><i class="fa fa-qrcode"></i></button>
+                </div>
+            </div>
+        </li>
+            <li class="txtSrchArea txtSrch">
+                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnGlobalReturnQuantity").FirstOrDefault().Value.ToString(): <small>*</small></span>
+                <span class="inputText inpt-rt-adj">
+                    @Html.ValidationMessageFor(m => m.inventoryCheckoutReturnModel.Quantity, "", new { style = "display:none" })
+                    @Html.TextBoxFor(m => m.inventoryCheckoutReturnModel.Quantity, new { @class = "form-control search decimalinput", @Value = "1", autocomplete = "off" })
+                </span>
+                <div style="clear:both;"></div>
+            </li>
+
+            <li class="txtSrchArea txtSrch">
+                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnLogComment").FirstOrDefault().Value.ToString():</span>
+                <span class="inputText inpt-rt-adj">
+                    @Html.ValidationMessageFor(m => m.inventoryCheckoutReturnModel.Comments, "", new { style = "display:none" })
+                    @Html.TextBoxFor(m => m.inventoryCheckoutReturnModel.Comments, new { @class = "form-control search", autocomplete = "off", maxlength = "254" })
+                </span>
+                <div style="clear:both;"></div>
+            </li>
+
+        </ul>
+        <div style="clear:both;"></div>
+
+        <div class="idBttns">
+            <div class="bttn_pagin">
+                <div class="bttns2">
+                    <button type="submit" class="btn btn-blue mobBttn" id="btnAddReturnToGrid"><i class="fa fa-plus" style="margin-top:-2px;"></i> @Model.Loc.Where(a => a.ResourceId == "globalAdd").FirstOrDefault().Value.ToString()</button>
+                </div>
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+    </div>
+
+
+}
+<div id="finselectReturncontainer" style="display:none; margin-top:15px;">
+    <div class="table-responsive" id="dvInventoryReturnSelectTable" style="display:none;">
+        <table id="inventoryReturnSelectTable" class="eqpDtlTbl row-border custom-sort" style="width:100%;">
+            <thead>
+                <tr>
+                    <th>@Model.Loc.Where(a => a.ResourceId == "spnGlobalReturnFrom").FirstOrDefault().Value.ToString()</th>
+                    <th>@Model.Loc.Where(a => a.ResourceId == "spnChargeType").FirstOrDefault().Value.ToString()</th>
+                    <th>@Model.Loc.Where(a => a.ResourceId == "GlobalChargeTo").FirstOrDefault().Value.ToString()</th>
+                    <th>@Model.Loc.Where(a => a.ResourceId == "spnStoreroom").FirstOrDefault().Value.ToString()</th>
+                    <th>@Model.Loc.Where(a => a.ResourceId == "spnPartID").FirstOrDefault().Value.ToString()</th>
+                    <th>@Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString()</th>
+                    <th>@Model.Loc.Where(a => a.ResourceId == "spnUPCCode").FirstOrDefault().Value.ToString()</th>
+                    <th>@Model.Loc.Where(a => a.ResourceId == "spnGlobalReturnQuantity").FirstOrDefault().Value.ToString()</th>
+                    <th>@Model.Loc.Where(a => a.ResourceId == "spnErrorMessage").FirstOrDefault().Value.ToString()</th>
+                    <th width="17%" style="text-align:center !important;">@Model.Loc.Where(a => a.ResourceId == "globalAction").FirstOrDefault().Value.ToString()</th>
+                    <th>@Model.Loc.Where(a => a.ResourceId == "spnGlobalStoreRoomId").FirstOrDefault().Value.ToString()</th>
+                    <th>@Model.Loc.Where(a => a.ResourceId == "spnGlobalChargeToId").FirstOrDefault().Value.ToString()</th>
+                    <th>@Model.Loc.Where(a => a.ResourceId == "spnGlobalPartId").FirstOrDefault().Value.ToString()</th>
+                    <th>@Model.Loc.Where(a => a.ResourceId == "spnLogComment").FirstOrDefault().Value.ToString()</th>
+                    <th>@Model.Loc.Where(a => a.ResourceId == "spnGlobalStoreRoomId").FirstOrDefault().Value.ToString()</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+    <div style="clear:both;"></div>
+    <div class="idBttns" id="dvIdReturnBttns" style="display:none;">
+        <div class="bttn_pagin">
+            <div class="bttns2">
+                <button type="button" class="btn btn-blue mobBttn" id="btnReturnConfirmAllItems"><i class="fa fa-check faIcon"></i> @Model.Loc.Where(a => a.ResourceId == "globalconfirm").FirstOrDefault().Value.ToString()</button>
+            </div>
+            <div class="bttns"><button type="button" class="btn btn-blue mobBttn" id="btnReturnCancelAllItems"><i class="fa fa-close faIcon"></i> @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button></div>
+            <div style="clear:both;"></div>
+        </div>
+    </div>
+</div>
+@Html.TextBoxFor(m => m.inventoryCheckoutReturnModel.MultiStoreroom, new { id = "MultiStoreroom", style = "display:none" })
+
+<style>
+    .chargeTree.adjust {
+        right: 14px !important;
+    }
+
+    @@media(max-width: 767px) {
+        ul.listView.tree-rt-adj li span.inputText {
+            width: calc(100% - 0px) !important;
+        }
+
+            ul.listView.tree-rt-adj li span.inputText.wthAdjst2 {
+                width: calc(100% - 0px) !important;
+                margin-bottom: 10px;
+                left: 0px;
+            }
+
+        .chargeTree {
+            display: block;
+            position: static;
+            left: 0;
+            right: 0;
+            text-align: center;
+            border: #b9c1c4 1px solid;
+            border-radius: 0.25rem;
+            padding: 0.65rem 1rem;
+        }
+    
+    }
+
+    @@media only screen and (min-width: 768px) {
+
+        #btnQrScannerreturn {
+            margin: 0px 0 0px 10px !important;
+        }
+    }
+
+</style>

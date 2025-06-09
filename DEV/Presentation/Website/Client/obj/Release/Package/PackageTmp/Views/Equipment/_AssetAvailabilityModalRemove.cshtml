@@ -1,0 +1,121 @@
+﻿@model Client.Models.EquipmentCombined
+<div id="RemoveAssetAvailabilityModal" class="modal fade" role="dialog" style="padding-right:0px !important;">
+    <div class="modal-dialog modal-info">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close Cancelclearerr" data-dismiss="modal">&times;</button>
+
+                <h4 class="modal-title">@Model.Loc.Where(a => a.ResourceId == "spnRemoveFromService").FirstOrDefault().Value.ToString()</h4>
+            </div>
+            @using (Ajax.BeginForm("RemoveAssetAvailability", "Equipment", new AjaxOptions { HttpMethod = "Post", OnSuccess = "RemoveAvailabilityUpdateOnSuccess", OnBegin = "AjaxBeginFormBegin", OnComplete = "AjaxBeginFormComplete", OnFailure = "AjaxBeginFormFaillure" }, new { enctype = "multipart/form-data", id = "EquipAvailabilityform" }))
+            {
+                @Html.AntiForgeryToken()
+                <div class="modal-body">
+                    <div class="form-group" style="position:relative;">
+                        <label for="Line" id="lblexpRet">@Model.Loc.Where(a => a.ResourceId == "spnExpectedReturn").FirstOrDefault().Value.ToString() :</label>
+                        @Html.TextBoxFor(m => m._AssetAvailabilityRemoveModel.ExpectedReturnToService, "{0:MM/dd/yyyy}", new { @class = "form-control search dtpickerNew restkey", autocomplete = "off" })
+                        <div style="clear:both;"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="Line" id="lblReason">@Model.Loc.Where(a => a.ResourceId == "GlobalReason").FirstOrDefault().Value.ToString() :<small>*</small></label>
+                        @Html.ValidationMessageFor(m => m._AssetAvailabilityRemoveModel.RemoveFromServiceReasonCode, "", new { style = "display:none" })
+                        @Html.DropDownListFor(m => m._AssetAvailabilityRemoveModel.RemoveFromServiceReasonCode, Model.LookupRemoveFromServiceReasonCode, "--Select--", new { @class = "form-control search select2picker", style = "width:100%;",Id="ddlReasonCode" })
+
+                    </div>
+                    <div class="form-group">
+                        <label for="Line" id="lblComment">@Model.Loc.Where(a => a.ResourceId == "spnComment").FirstOrDefault().Value.ToString() :</label>
+                        @Html.TextAreaFor(m => m._AssetAvailabilityRemoveModel.RemoveFromServiceReason, new { @class = "form-control search", autocomplete = "off" })
+
+                    </div>
+                </div>
+                <div class="modal-footer" style="padding:15px 25px !important;">
+                    <button type="button" class="btn btn-default mobBttn Cancelclearerr" data-dismiss="modal"> <i class="fa fa-close faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button>
+                    <button type="submit" class="btn btn-blue mobBttn" name="Command" style="cursor:pointer;float:right" value="save" id="btnAssetAvailability"><i class="fa fa-save faIcon"></i> &nbsp;@Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+                    <div style="clear:both;"></div>
+                </div>
+                @Html.HiddenFor(m => m._AssetAvailabilityRemoveModel.EquipmentId)
+                @Html.HiddenFor(m => m._AssetAvailabilityRemoveModel.RemoveFromService)
+            }
+
+        </div>
+    </div>
+</div>
+
+
+
+<style type="text/css">
+    .ui-tooltip {
+        z-index: 1151 !important;
+    }
+
+    .errormessage {
+        margin-bottom: 1px !important;
+    }
+
+    .form-control.search.restkey {
+        width: 100%;
+    }
+
+    .ui-datepicker-trigger { 
+        position: absolute !important;
+        right: 0 !important;
+        left:auto;
+        top: 25px !important;
+    }
+
+    .ui-datepicker.ui-widget.ui-widget-content {       
+        top: 155.047px !important;
+    }
+
+    .modal-footer > .btn {
+        margin-right: 0;
+    }
+
+    @@media screen and (max-width: 767px) {
+        .ui-datepicker.ui-widget.ui-widget-content {           
+        }
+    }
+
+    @@media screen and (max-width: 479px) {
+        #btnUpdate {
+            margin-right: 0 !important;
+        }
+    }
+</style>
+<script>
+    $.validator.setDefaults({ ignore: null });
+    $.validator.unobtrusive.parse(document);
+    $('input, form').blur(function () {
+        $(this).valid();
+    });
+    $(function () {
+        $.validator.setDefaults({ ignore: null });
+        $.validator.unobtrusive.parse(document);
+        $('.select2picker, form').change(function () {
+            var areaddescribedby = $(this).attr('aria-describedby');
+            if ($(this).valid()) {
+                if (typeof areaddescribedby != 'undefined') {
+                    $('#' + areaddescribedby).hide();
+                }
+            }
+            else {
+                if (typeof areaddescribedby != 'undefined') {
+                    $('#' + areaddescribedby).show();
+                }
+            }
+        });
+        $(document).find('.select2picker').select2({});
+        $(".dtpickerNew").datepicker({
+            changeMonth: true,
+            changeYear: true,
+            autoclose: true,
+            showOn: 'button',
+            buttonImageOnly: true,
+            minDate: new Date(),
+            buttonImage: '/Images/calender.png',
+            buttonText: "Calender"
+        });
+
+    });
+
+</script>

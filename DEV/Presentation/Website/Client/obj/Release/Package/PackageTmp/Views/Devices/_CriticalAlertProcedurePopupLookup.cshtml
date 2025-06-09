@@ -1,0 +1,42 @@
+﻿
+<div id="CAProcTableModalPopup" class="modal fade dropdown-modal" role="dialog" style="display:none;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title" id="hdrPopCAProc">@UtilityFunction.GetMessageFromResource("spnSelectAlertProcedure", LocalizeResourceSetConstants.DeviceDetails)</h4>
+            </div>
+            <div class="modal-body">
+                <div id="tbldropdown" class="dropdown-content tbl-dropdown" style="display:block;">
+                    <div class="table-responsive dropTableOuter">
+                        <table id="tblCAProcModalPopup" class="stripe dropTable globalDropTable tableWOBtn" style="width:100%;">
+                            <thead>
+                                <tr>
+                                    <th>@UtilityFunction.GetMessageFromResource("spnAlertProcedureId", LocalizeResourceSetConstants.DeviceDetails)</th>
+                                    <th>@UtilityFunction.GetMessageFromResource("spnDescription", LocalizeResourceSetConstants.Global)</th>
+                                    <th>@UtilityFunction.GetMessageFromResource("GlobalType", LocalizeResourceSetConstants.Global)</th>
+                                </tr>
+                            </thead>
+                            <tfoot id="tblCAProcModalPopupFooter" style="display:none">
+                                <tr>
+                                    <th style="position:relative;">@UtilityFunction.GetMessageFromResource("spnAlertProcedureId", LocalizeResourceSetConstants.DeviceDetails)</th>
+                                    <th style="position:relative;">@UtilityFunction.GetMessageFromResource("spnDescription", LocalizeResourceSetConstants.Global)</th>
+                                    <th style="position:relative;">@UtilityFunction.GetMessageFromResource("GlobalType", LocalizeResourceSetConstants.Global)</th>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="padding:15px 25px !important;">
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style type="text/css">
+    .dropdown-modal .tbl-dropdown .dataTables_wrapper {
+        width: 100% !important;
+    }
+</style>

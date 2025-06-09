@@ -1,0 +1,156 @@
+﻿
+@model Client.Models.InventoryCheckout.InventoryCheckVM
+@{
+    ViewBag.Title = "Somax | Part Checkout";
+}
+@Styles.Render("~/Content/datatable")
+<link href="~/Scripts/Metronic/assets/demo/default/base/GlobalSearchGrid.css" rel="stylesheet" />
+<link href="~/Scripts/Metronic/assets/demo/default/base/style_custom_tree.css" rel="stylesheet" />
+@section scripts {
+    @Scripts.Render("~/bundles/QRScanner")
+    @Scripts.Render("~/bundles/datatable")
+    @Scripts.Render("~/bundles/InventoryCheckout")
+
+    <script type="text/javascript">
+        com_github_culmat_jsTreeTable.register(this);
+    </script>
+}
+
+<div id="renderinventorycheckout">
+    @Html.Partial("~/Views/InventoryCheckout/_InventoryCheckout.cshtml")
+</div>
+@Html.Partial("~/Views/Shared/QR/_QrCodeReaderModal.cshtml")
+
+<style>
+    .QRmodal {
+        z-index: 9999 !important;
+    }
+
+    .QRmodal-content {
+        max-height: 100%;
+    }
+
+    .qr-cam-button {
+        float: right;
+        margin-right: 0 !important;
+        border: none;
+    }
+
+    .Qrmodal-body {
+        max-height: 100%;
+        overflow-y: auto;
+    }
+
+    .QRmodal-header {
+        padding: 0 !important;
+    }
+
+    ul.listView li span.inputText {
+        width: calc(100% - 300px) !important;
+    }
+
+    ul.listView li span.inputText.wthAdjst2 {
+        width: calc(100% - 345px) !important;
+    }
+
+    #btnQrScanner,#btnQrScannerreturn {
+        margin: 0px 0 4px 10px;
+    }
+
+
+   
+
+        @@media(max-width: 860px) {
+           
+
+            ul.listView li span.inputText {
+                width: calc(100% - 206px) !important;
+            }
+
+            .chargeTree {
+                right: 10px;
+            }
+
+            ul.listView li span.inputText.wthAdjst2 {
+                width: calc(100% - 256px) !important;
+                margin-bottom:5px;
+            }
+      
+        
+    }
+
+    @@media(max-width: 767px) {
+
+        ul.listView li span.label {
+            width: 210px;
+        }
+        ul.listView.nobrd li {
+            margin-bottom: 2px !important;
+        }
+
+       
+
+        }
+
+    @@media(min-width: 560px) and (max-width: 650px) {
+        ul.listView li span.inputText {
+            width: calc(100% - 0px) !important;
+        }
+
+            ul.listView li span.inputText.wthAdjst2 {
+                width: calc(100% - 45px) !important;
+                margin-bottom: 5px;
+            }
+
+        .btntxtInputGroup {
+            margin-top: 2px !important;
+        }
+
+        .chargeTree {
+            top: 32px;
+            left: auto !important;
+        }
+
+        ul.listView.nobrd li span.label {
+            height: auto !important;
+        }
+
+       
+
+        #btnQrScanner, #btnQrScannerreturn {
+            position: absolute;
+            right: 0;
+            top: 23px;
+        }
+
+        .input-group-btn {
+            position: relative;
+        }
+    }
+
+    @@media(max-width: 480px){
+        ul.listView li span.inputText {
+            width: calc(100% - 0px) !important;
+        }
+
+            ul.listView li span.inputText.wthAdjst2 {
+                width: calc(100% - 0px) !important;
+                margin-bottom: 10px;
+                left:0px;
+            }
+
+        .chargeTree {
+            display: block;
+            position: static;
+            left: 0;
+            right: 0;
+            text-align: center;
+            border: #b9c1c4 1px solid;
+            border-radius: 0.25rem;
+            padding: 0.65rem 1rem;
+        }
+
+    }
+
+    
+</style>

@@ -1,0 +1,179 @@
+﻿@model Client.Models.Sanitation.SanitationVM
+
+@using (Ajax.BeginForm("EditSanitationJobDetailsMobile", "SanitationJob", new AjaxOptions { HttpMethod = "Post", OnSuccess = "SanitationUpdateOnSuccess", OnBegin = "AjaxBeginFormBegin", OnComplete = "AjaxBeginFormComplete", OnFailure = "AjaxBeginFormFaillure" }, new { id = "frmeditsanitation" })) //
+{
+    @Html.AntiForgeryToken()
+    <div class="slide-modal" id="EditSanitationModalpopup">
+        <div class="slide-modal-head">
+            <a class="slide-back-btn EditSanitationclearstate"> <i class="fa fa-angle-left"></i> Back</a>
+            <div class="slide-back-title">
+                @Model.Loc.Where(a => a.ResourceId == "spnEditSanitationJob").FirstOrDefault().Value.ToString()
+            </div>
+
+        </div>
+        @Html.Partial("_ErrorDiv")
+        <div class="slide-modal-body">
+            <div mbsc-page class="demo-responsive">
+                <div style="height:100%">
+                    <div mbsc-form class="mbsc-form-grid">
+                        <div class="mbsc-grid">
+                            <div class="mbsc-row">
+                                <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                    <label>
+                                        @Model.Loc.Where(a => a.ResourceId == "GlobalChargeTo").FirstOrDefault().Value.ToString()
+                                        @Html.HiddenFor(m => m.JobDetailsModel.ChargeToId, new { id = "hdnChargeToId" })
+                                        @Html.TextBoxFor(m => m.JobDetailsModel.PlantLocationDescription, new
+                                   {
+                                       id = "txtChargeToId",
+                                       @class = "form-control search readonly",
+                                       @mbsc_input = "true",
+                                       @data_label_style = "floating",
+                                       @placeholder = Model.Loc.Where(a => a.ResourceId == "GlobalChargeTo").FirstOrDefault().Value.ToString(),
+                                       @data_input_style = "box",
+                                       autocomplete = "off",
+                                       @readonly = true
+                                   })
+                                    </label>
+                                    @Html.ValidationMessageFor(m => m.JobDetailsModel.PlantLocationDescription, "", new { })
+                                </div>
+                                @if (Model.AssetTree == true)
+                                {
+                                    <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                        <div class=" design-box">
+                                            <div class="input-group-btn">
+
+                                                <button type="button" class="btn btn-blue mobBttn" data-assignedid="txtChargeToId" id="imgChargeToTree">
+                                                    <i id="srcicon" class="fa fa-tree chargeTree" style="display:block;"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                                <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                    <label>
+                                        @Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString()
+                                        @Html.TextBoxFor(m => m.JobDetailsModel.Description, new
+                                        {
+                                       @class = "form-control search",
+                                       @mbsc_input = "true",
+                                       @data_label_style = "floating",
+                                       @placeholder = Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString(),
+                                       @data_input_style = "box",
+                                       autocomplete = "off"
+                                        })
+                                    </label>
+                                    @Html.ValidationMessageFor(m => m.JobDetailsModel.Description, "", new { })
+                                </div>
+                                <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                    <label>
+                                        @Model.Loc.Where(a => a.ResourceId == "spnShift").FirstOrDefault().Value.ToString()
+                                        @Html.DropDownListFor(m => m.JobDetailsModel.Shift, Model.ShiftList, "--Select--", new
+                                   {
+                                       @class = "form-control search mobiscrollselect",
+                                       @style = "width:100%;",
+                                       @mbsc_dropdown = "true",
+                                       @data_label = Model.Loc.Where(a => a.ResourceId == "spnShift").FirstOrDefault().Value.ToString(),
+                                       @data_input_style = "box",
+                                       @data_label_style = "floating",
+                                       @placeholder = Model.Loc.Where(a => a.ResourceId == "spnShift").FirstOrDefault().Value.ToString()
+                                   })
+                                    </label>
+                                    @Html.ValidationMessageFor(m => m.JobDetailsModel.Shift, "", new { })
+                                </div>
+                                <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                    <label style="margin: 0 16px 16px !important;">
+                                        @Model.Loc.Where(a => a.ResourceId == "spnDownRequired").FirstOrDefault().Value.ToString()
+
+                                        @Html.CheckBoxFor(m => m.JobDetailsModel.DownRequired, new { @class = "form-control m-input", @style = "color:black; width: auto; margin-top: 12px;" })
+                                    </label>
+                                </div>
+                                <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                    <label>
+                                        @Model.Loc.Where(a => a.ResourceId == "spnScheduledDuration").FirstOrDefault().Value.ToString()
+                                        @Html.TextBoxFor(m => m.JobDetailsModel.ScheduledDuration, new
+                                   {
+                                       @class = "form-control search decimalinput",
+                                       @mbsc_input = "true",
+                                       @data_label_style = "floating",
+                                       @placeholder = Model.Loc.Where(a => a.ResourceId == "spnScheduledDuration").FirstOrDefault().Value.ToString(),
+                                       @data_input_style = "box",
+                                       autocomplete = "off"
+                                   })
+                                    </label>
+                                    @Html.ValidationMessageFor(m => m.JobDetailsModel.ScheduledDuration, "", new { })
+                                </div>
+                                <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                    <label>
+                                        @Model.Loc.Where(a => a.ResourceId == "spnActualDuration").FirstOrDefault().Value.ToString()
+                                        @Html.TextBoxFor(m => m.JobDetailsModel.ActualDuration, new
+                                        {
+                                       @class = "form-control search decimalinput",
+                                       @mbsc_input = "true",
+                                       @data_label_style = "floating",
+                                       @placeholder = Model.Loc.Where(a => a.ResourceId == "spnActualDuration").FirstOrDefault().Value.ToString(),
+                                       @data_input_style = "box",
+                                       autocomplete = "off"
+                                        })
+                                    </label>
+                                    @Html.ValidationMessageFor(m => m.JobDetailsModel.ActualDuration, "", new { })
+                                </div>
+                                <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                    <label>
+                                        @Model.Loc.Where(a => a.ResourceId == "spnCompleteComments").FirstOrDefault().Value.ToString()
+                                        @Html.TextBoxFor(m => m.JobDetailsModel.CompleteComments, new
+                                        {
+                                       @class = "form-control search",
+                                       @mbsc_input = "true",
+                                       @data_label_style = "floating",
+                                       @placeholder = Model.Loc.Where(a => a.ResourceId == "spnCompleteComments").FirstOrDefault().Value.ToString(),
+                                       @data_input_style = "box",
+                                       autocomplete = "off"
+                                        })
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="mbsc-row">
+                                <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                    <div class="design-box">
+                                        <div class="mbsc-button-group-block">
+                                            <button mbsc-button data-color="success" type="button" class="btn btn-blue mobBttn EditSanitationclearstate" id="btnCancelEditSanitation"><i class="fa fa-close faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                    <div class="design-box">
+                                        <div class="mbsc-button-group-block">
+                                            <button data-color="success" type="submit" class="btn btn-blue mobBttn" style="cursor:pointer" name="Command" value="save"><i class="fa fa-save faIcon"></i> &nbsp;@Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                @*@if (Model.JobDetailsModel.IsCompleteButtonShow)
+                                    {
+                                        <div class="mbsc-col-12 mbsc-col-md-12 mbsc-col-lg-12">
+                                            <div class="mbsc-button-group-block">
+                                                <div class=" design-box">
+                                                    <button mbsc-button data-color="success" type="submit" class="btn btn-blue mobBttn" name="Command" value="complete"><i class="fa fa-save faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "GlobalComplete").FirstOrDefault().Value.ToString()</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }*@
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="slide-modal-footer"></div>
+    </div>
+    @Html.HiddenFor(m => m.JobDetailsModel.SanitationJobId)
+    @Html.HiddenFor(m => m.JobDetailsModel.ClientLookupId)
+    @Html.HiddenFor(m => m.JobDetailsModel.ChargeTo_ClientLookupId)
+    @Html.HiddenFor(m => m.JobDetailsModel.ChargeType)
+    @Html.HiddenFor(m => m.AssetTree)
+    @Html.HiddenFor(m => m.TchargeType)
+    @Html.HiddenFor(m => m.TplantLocationId)
+    @Html.HiddenFor(m => m.TplantLocationDescription)
+    @Html.HiddenFor(m => m.JobDetailsModel.PlantLocation, new { id = "SanitationPlantLocation" })
+}
+@Html.Partial("~/Views/SanitationJob/Mobile/_AssetTreeModal.cshtml", Model)
+@Html.Partial("~/Views/SanitationJob/Mobile/_EquipmentGridPopUp.cshtml", Model)

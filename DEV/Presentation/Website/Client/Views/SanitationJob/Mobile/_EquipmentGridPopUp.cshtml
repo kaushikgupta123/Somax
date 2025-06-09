@@ -1,0 +1,25 @@
+﻿@model Client.Models.Sanitation.SanitationVM
+
+
+<div class="slide-modal" id="SJEquipmentModal">
+    <div class="slide-modal-head">
+        <a class="slide-back-btn " id="SJEquipmentModalHide"> <i class="fa fa-angle-left"></i> Back</a>
+        <div class="slide-back-title">
+            @Model.Loc.Where(a => a.ResourceId == "GlobalSelectEquipment").FirstOrDefault().Value.ToString()
+        </div>
+    </div>
+    <div class="slide-modal-body">
+        <div class="form-group" style="position:relative;">
+            <i class="fa fa-search txtSearchClickComp" style="font-size: 1.1rem;position: absolute;top: 9px;left: 15px;"></i>
+            <a href="javascript:void(0)"><i class="fa fa-close clearTextBoxValue" data-txtboxid="txtEquipmentSearch_Mobile" style="font-size: 1.1rem;position: absolute;top: 9px;right: 15px;"></i></a>
+            <input type="search" id="txtEquipmentSearch_Mobile" class="form-control search unsortable" placeholder="Search..." style="padding: 0.65rem 2.75rem;" autocomplete="off">
+        </div>
+        <div id="DivSJSearchScrollViewModal">
+            <ul id="AssetListViewForSearch" class="mbsc-cloak" mbsc-enhance>
+            </ul>
+            <div class="mbsc-padding" mbsc-form style="margin-bottom:80px;">
+                <button mbsc-button id="btnAssetLoadMore" class="btn btn-blue mobBttn" data-color="success">Load More</button>
+            </div>
+        </div>
+    </div>
+</div>

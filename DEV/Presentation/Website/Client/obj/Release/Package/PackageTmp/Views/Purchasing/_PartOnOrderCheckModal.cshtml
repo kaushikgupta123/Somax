@@ -1,0 +1,47 @@
+﻿<div id="LineitemlookupListPOModal" class="modal fade dropdown-modal" role="dialog" style="display:none;">
+    <div class="modal-dialog partPopup" style="max-width: 900px !important;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title" id="popLineitemlookupListPOHeader"></h4>
+            </div>
+            <div class="modal-body">
+                <div id="tbldropdown" class="dropdown-content tbl-dropdown" style="display: block; height: 350px !important;">
+                    <div class="table-responsive dropTableOuter">
+                        <table id="LineitemlookupListPOTable" class="stripe dropTable globalDropTable" style="width:100%;">
+                            <thead>
+                                <tr style="text-align:center">
+                                    <th style="white-space: nowrap;">@UtilityFunction.GetMessageFromResource("globalRequestPurchaseOrder", LocalizeResourceSetConstants.Global)</th>
+                                    <th>@UtilityFunction.GetMessageFromResource("globalLine", LocalizeResourceSetConstants.Global)</th>
+                                    <th>@UtilityFunction.GetMessageFromResource("spnQuantity", LocalizeResourceSetConstants.Global)</th>
+                                    <th>@UtilityFunction.GetMessageFromResource("GlobalUnit", LocalizeResourceSetConstants.Global)</th>
+                                    <th>@UtilityFunction.GetMessageFromResource("GlobalRequestor", LocalizeResourceSetConstants.Global)</th>
+                                    <th>@UtilityFunction.GetMessageFromResource("spnCreated", LocalizeResourceSetConstants.Global)</th>
+                                </tr>
+                            </thead>
+
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div style="padding:15px 25px !important;">
+                <div class="idBttns">
+                    <div class="bttn_pagin">
+                        <div class="bttns2" style="padding: 10px;">
+                            <button class="btn btn-blue mobBttn" style="cursor:pointer" value="save" id="addPOPartfromLineItemSSPopUp"><i class="fa fa-save faIcon"></i> &nbsp; @UtilityFunction.GetMessageFromResource("spnAddPart", LocalizeResourceSetConstants.Global)</button>
+                        </div>
+                        <div class="bttns" style="padding: 10px;"><button type="button" data-dismiss="modal" class="btn btn-blue mobBttn clearstate1" id="btncancelfromLineItemPOPopUp"><i class="fa fa-close faIcon"></i> &nbsp;@UtilityFunction.GetMessageFromResource("globalDoNOTAddPart", LocalizeResourceSetConstants.Global)</button></div>
+
+                        <div style="clear:both;"></div>
+                    </div>
+                </div>
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<style>
+    .dropTableOuter table.dataTable thead th.sorting_asc, .dropTableOuter table.dataTable thead th.sorting_desc {
+        padding: 10px 38px 10px 18px;
+    }
+</style>

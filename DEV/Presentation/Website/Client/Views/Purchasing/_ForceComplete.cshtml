@@ -1,0 +1,20 @@
+﻿@model Client.Models.PurchaseOrder.PurchaseOrderVM
+<div id="forceCompleteModal" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-info">       
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">@Model.Loc.Where(a => a.ResourceId == "spnPoForceComplete").FirstOrDefault().Value.ToString()</h4>
+            </div>
+            <div class="modal-body">
+                <p>@Model.Loc.Where(a => a.ResourceId == "spnPoAreyousureyouwanttoForceCompletethispurchaseorder").FirstOrDefault().Value.ToString()</p>
+            </div>
+            <div class="modal-footer" style="padding:15px 25px !important;">
+                <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-close faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button>
+                <button type="button" class="btn btn-blue" style="float:right;" id="btnforceComplete"><i class="fa fa-check faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "spnPoOk").FirstOrDefault().Value.ToString()</button>
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+    </div>
+</div>
+

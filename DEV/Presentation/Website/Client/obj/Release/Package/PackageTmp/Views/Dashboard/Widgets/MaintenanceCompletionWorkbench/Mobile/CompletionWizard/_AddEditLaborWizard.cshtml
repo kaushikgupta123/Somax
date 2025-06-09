@@ -1,0 +1,79 @@
+﻿@model Client.Models.Work_Order.WorkOrderVM
+
+
+@using (Ajax.BeginForm("RetrieveCompletionLaborDetails_Mobile", "Dashboard", new AjaxOptions { HttpMethod = "Post", OnSuccess = "CompletionLaborAddOnSuccess", OnBegin = "AjaxBeginFormBegin", OnComplete = "AjaxBeginFormComplete", OnFailure = "AjaxBeginFormFaillure" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="slide-modal" id="WorkorderCompletionLaborModal">
+        <div class="slide-modal-head">
+            <a class="slide-back-btn btnWizardLaborcancel"> <i class="fa fa-angle-left"></i> Back</a>
+            <div class="slide-back-title">
+                @Model.Loc.Where(a => a.ResourceId == "spnLabor").FirstOrDefault().Value.ToString()
+            </div>
+        </div>
+        @Html.Partial("_ErrorDiv")
+        <div class="slide-modal-body">
+            <div mbsc-page class="demo-responsive">
+                <div style="height:100%">
+                    <div mbsc-form class="mbsc-form-grid">
+                        <div class="mbsc-grid">
+                            <div class="mbsc-row">
+                                <div class="mbsc-col-12 mbsc-col-md-12 mbsc-col-lg-12">
+                                    <label>
+                                        @Model.Loc.Where(a => a.ResourceId == "spnPersonnelID").FirstOrDefault().Value.ToString()
+
+
+                                        @Html.DropDownListFor(m => m.CompletionLaborWizard.PersonnelID, Model.CompletionLaborWizard.WorkAssignedLookUpList, "--Select--", new {
+                                            @class = "form-control search mobiscrollselect",
+                                            @style = "width:100%;",
+                                            @mbsc_dropdown = "true",
+                                            @data_label = Model.Loc.Where(a => a.ResourceId == "spnPersonnelID").FirstOrDefault().Value.ToString(),
+                                            @data_input_style = "box",
+                                            @data_label_style = "floating",
+                                            @placeholder = Model.Loc.Where(a => a.ResourceId == "spnPersonnelID").FirstOrDefault().Value.ToString(),
+                                        })
+                                    </label>
+                                    @Html.ValidationMessageFor(m => m.CompletionLaborWizard.PersonnelID, "", new { })
+                                </div>
+                                <div class="mbsc-col-12 mbsc-col-md-12 mbsc-col-lg-12">
+                                    <label>
+                                        @Model.Loc.Where(a => a.ResourceId == "spnDate").FirstOrDefault().Value.ToString()
+
+                                        @Html.TextBoxFor(m => m.CompletionLaborWizard.StartDate, "{0:MM/dd/yyyy}", new { @class = "form-control search", @mbsc_input = "true", @data_label_style = "floating", @placeholder = "Date", @data_input_style = "box", autocomplete = "off" })
+                                    </label>
+                                    @Html.ValidationMessageFor(m => m.CompletionLaborWizard.StartDate, "", new { })
+                                </div>
+                                <div class="mbsc-col-12 mbsc-col-md-12 mbsc-col-lg-12">
+                                    <label>
+                                        @Model.Loc.Where(a => a.ResourceId == "spnHours").FirstOrDefault().Value.ToString()
+
+                                        @Html.TextBoxFor(m => m.CompletionLaborWizard.Hours, new { @class = "form-control search", @mbsc_input = "true", @data_label_style = "floating", @placeholder = Model.Loc.Where(a => a.ResourceId == "spnHours").FirstOrDefault().Value.ToString(), @data_input_style = "box", autocomplete = "off" })
+                                    </label>
+                                    @Html.ValidationMessageFor(m => m.CompletionLaborWizard.Hours, "", new { })
+                                </div>
+                            </div>
+                            <div class="mbsc-row">
+                                <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-3">
+                                    <div class="design-box">
+                                        <div class="mbsc-button-group-block">
+                                            <button mbsc-button data-color="success" type="button" class="btn btn-blue mobBttn btnWizardLaborcancel"><i class="fa fa-close buttonIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-3">
+                                    <div class="design-box">
+                                        <div class="mbsc-button-group-block">
+                                            <button mbsc-button data-color="success" type="submit" class="btn btn-blue mobBttn" style="cursor:pointer" value="save"><i class="fa fa-save faIcon"></i> &nbsp;@Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="slide-modal-footer"></div>
+    </div>
+}
+

@@ -1,0 +1,52 @@
+﻿@model Client.Models.Dashboard.DashboardVM
+@{
+    var EnterpriseUserHoursList = UtilityFunction.EnterpriseUserDatesList();
+    if (EnterpriseUserHoursList != null)
+    {
+        Model.EnterpriseUserHoursList = EnterpriseUserHoursList.Select(x => new SelectListItem { Text = x.text, Value = x.value.ToString() });
+    }
+}
+
+<div class="m-portlet m-portlet--full-height m-portlet--fit">
+    <div class="m-portlet__head">
+        <div class="m-portlet__head-caption">
+            <div class="m-portlet__head-title">
+                <h3 class="m-portlet__head-text">
+                    @Model.Loc.Where(a => a.ResourceId == "spnPurchasing").FirstOrDefault().Value.ToString()
+                </h3>
+            </div>
+        </div>
+    </div>
+
+    <div class="m-portlet__body">
+        <div class="tab-content">
+            <div class="dateRangeDrop">
+
+                <div class="btn-group bootstrap-select m-datatable__pager-size dropup show selectDrop">
+                    @Html.DropDownListFor(m => m.EnterpriseUserHours, new SelectList(Model.EnterpriseUserHoursList, "Value", "Text"), null, new { id = "PurchasingDropdown", @class = "selectpicker m-datatable__pager-size" })
+                </div>
+                <div style="clear:both; height:15px;"></div>
+            </div>
+            <div class="table-responsive">
+                <table id="PurchasingTable" class="eqpDtlTbl row-border custom-sort tblMain" style="width:100%;">
+                    <thead>
+                        <tr>
+                            <th>@Model.Loc.Where(a => a.ResourceId == "spnSiteGlobal").FirstOrDefault().Value.ToString()</th>
+                            <th>@Model.Loc.Where(a => a.ResourceId == "spnPurchaseOrdersCreated").FirstOrDefault().Value.ToString()</th>
+                            <th>@Model.Loc.Where(a => a.ResourceId == "spnPurchaseOrdersCompleted").FirstOrDefault().Value.ToString()</th>
+                            <th>@Model.Loc.Where(a => a.ResourceId == "spnReceivedAmount").FirstOrDefault().Value.ToString()</th>
+                        </tr>
+                    </thead>
+                    <tfoot>
+                        <tr>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th style="text-align:right !important;font-weight: 500 !important;background: #b3b1b7 !important;"></th>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

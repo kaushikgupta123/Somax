@@ -1,0 +1,35 @@
+﻿@model Client.Models.Approval.ApprovalVM
+
+<div class="row">
+    <div class="col-xl-12">
+        <div class="m-portlet" id="m_portlet" style="padding:15px;">
+            <div class="actionBar" style="display:block" id="purchaseRequestGridAction">
+                <div class="pull-right">
+                    <button type="button" class="btn btn-white import-export" id="btnPurchaseRequestExport" disabled onclick="funcShowExportbtn()">@Model.Loc.Where(a => a.ResourceId == "spnExport").FirstOrDefault().Value.ToString()</button>
+                    <div style="clear:both;"></div>
+                </div>
+                <div style="clear:both;"></div>
+            </div>
+            <div id="PurchaseRequestListid" class="tabcontentRL">
+                <div class="table-responsive">
+                    <table id="PurchaseRequestSearchTable" class="eqpDtlTbl row-border custom-sort" style="width:100%;">
+                        <thead>
+                            <tr>
+                                <th data-th-index="0">Purchase Request</th>
+                                <th data-th-index="1">Vendor</th>
+                                <th data-th-index="2">Date</th>
+                                <th data-th-index="3">Comments</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+                <div class="bttn_pagin">
+                    <div style="clear:both;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row PurchaseRequestView">
+</div>
+@Html.Partial("_Export")

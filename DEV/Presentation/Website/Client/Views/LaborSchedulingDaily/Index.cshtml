@@ -1,0 +1,122 @@
+﻿@model Client.Models.LaborScheduling.LaborSchedulingVM
+@{
+    ViewBag.Title = "Somax | Labor - Daily Scheduling";
+}
+@Styles.Render("~/Content/datatable")
+<link href="~/Scripts/Metronic/assets/demo/default/base/GlobalSearchGrid.css" rel="stylesheet" />
+@section scripts {
+    @Scripts.Render("~/bundles/datatable")
+    @Scripts.Render("~/bundles/LaborScheduling")
+}
+<div id="renderlabourschedule">
+    @Html.Partial("_ErrorDiv")
+    <div class="m-subheader">
+        <div class="new-m-subheader">
+            <div class="PageTitle">
+                <div class="align-items-center separator">
+                    <h3 class="m-subheader__title ">
+                        @Model.Loc.Where(a => a.ResourceId == "spnDailyLaborScheduling").FirstOrDefault().Value.ToString()
+                    </h3>
+                </div>
+            </div>
+            <div class="NewBreadcrumbArea">
+                <div class="newBreadcrumb">
+                    <ul>
+                        <li><a href="/Dashboard/Dashboard">&nbsp;</a></li>
+                        <li>@Model.Loc.Where(a => a.ResourceId == "spnDailyLaborScheduling").FirstOrDefault().Value.ToString()</li>
+                    </ul>
+                    <div style="clear:both;"></div>
+                </div>
+            </div>
+            <div style="clear:both;"></div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-xl-12">
+            <div class="m-portlet newPort" id="m_portlet" style="padding:15px;">
+                <div class="bottomBlock">
+                    <div class="tabsArea nobg">
+                        <ul class="listView nobrd">
+                            <li>
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnScheduledStart").FirstOrDefault().Value.ToString(): <small>*</small></span>
+                                <span class="inputText">
+                                    @Html.ValidationMessageFor(m => m.LaborSchedulingModel.Date, "", new { style = "display:none" })
+                                    @Html.TextBoxFor(m => m.LaborSchedulingModel.Date, "{0:MM/dd/yyyy}", new { @class = "form-control search dtpicker tdDate", autocomplete = "off" })
+                                </span>
+                            </li>
+                            <li>
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnAssigned").FirstOrDefault().Value.ToString(): <small>*</small></span>
+                                <span class="inputText">
+                                    @Html.ValidationMessageFor(m => m.LaborSchedulingModel.PersonnelId, "", new { style = "display:none" })
+                                    @Html.DropDownListFor(m => m.LaborSchedulingModel.PersonnelId, Model.LaborSchedulingModel.PersonnelIdList, "--Select--", new { @class = "form-control search select2picker", style = "width:100%;" })
+                                </span>
+                            </li>
+                            @*<li>
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnHours").FirstOrDefault().Value.ToString(): </span>
+                                <span class="inputText">
+                                    @Html.ValidationMessageFor(m => m.LaborSchedulingModel.Hours, "", new { style = "display:none" })
+                                    @Html.TextBoxFor(m => m.LaborSchedulingModel.Hours, new { @class = "form-control search decimalinput readonly", autocomplete = "off", @readonly = "readonly" })
+                                </span>
+                            </li>*@
+                        </ul>
+                        <div style="clear:both;"></div>
+                        <div class="idBttns">
+                            <div class="bttn_pagin">
+                                <div style="clear:both;"></div>
+                            </div>
+                        </div>
+                        <div id="finselectcontainer">
+                            <div class="table-responsive" style="margin-top:15px;">
+                                <table id="tblLabourGrid" class="eqpDtlTbl row-border custom-sort" style="width:100%;">
+                                    <thead>
+                                        <tr>
+                                            <th><input type="checkbox" id="labschidselectall"></th>
+                                            <th>@Model.Loc.Where(a => a.ResourceId == "GlobalWorkOrder").FirstOrDefault().Value.ToString()</th>
+                                            <th>@Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString()</th>
+                                            <th>@Model.Loc.Where(a => a.ResourceId == "spnWOType").FirstOrDefault().Value.ToString()</th>
+                                            <th style="text-align:center !important;">@Model.Loc.Where(a => a.ResourceId == "spnHours").FirstOrDefault().Value.ToString()</th>
+                                            <th>@Model.Loc.Where(a => a.ResourceId == "spnStatus").FirstOrDefault().Value.ToString()</th>
+                                            <th>@Model.Loc.Where(a => a.ResourceId == "spnRequiredDate").FirstOrDefault().Value.ToString()</th>
+                                        </tr>
+                                    </thead>
+                                    <tfoot>
+                                        <tr>
+                                            <th colspan="4"></th>
+                                            <th style="text-align:right !important;font-weight: 400 !important;color: #000 !important;position: relative;height: 18px;"><div id="th-total" style="position:absolute;width:88px;left:0;top:0;min-height:34px;line-height:34px;"></div></th>
+                                            <th colspan="2"></th>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                            <div class="idBttns">
+                                <div class="bttn_pagin">
+                                    <div class="bttns2">
+                                        <button type="button" class="btn btn-blue mobBttn" title="Please BUILD the schedule BEFORE selecting 'Available Work'" id="btnAvailableWork"><i class="fa fa-check faIcon"></i>&nbsp; @Model.Loc.Where(a => a.ResourceId == "spnAvailableWork").FirstOrDefault().Value.ToString()</button>
+                                    </div>
+                                    <div class="bttns"><button type="button" class="btn btn-blue mobBttn" id="btnRemove"><i class="fa fa-trash faIcon"></i>&nbsp; @Model.Loc.Where(a => a.ResourceId == "spnRemove").FirstOrDefault().Value.ToString()</button></div>
+                                    <div style="clear:both;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="clear:both;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style type="text/css">
+    td.test {
+        width: 90px !important;
+    }
+    table.eqpDtlTbl tfoot th {
+        border-top: 0px solid #111;
+    }
+</style>
+
+
+
+
+

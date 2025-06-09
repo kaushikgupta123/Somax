@@ -1,0 +1,34 @@
+﻿@model Client.Models.PurchaseOrder.PurchaseOrderVM
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<body style="padding:0; margin:0; font-family: 'Roboto', sans-serif; font-size:14px; color:#737272;">
+    <table width="1000" border="0" cellspacing="0" cellpadding="0" align="center">
+        <tr>
+            <td align="left" valign="top" height="200">
+                <table width="1000" border="0" cellspacing="0" cellpadding="0">
+                    <tr>
+                        <td width="557" height="200" align="left" valign="top" style="padding:0">
+                            <a href="#"><img src="@Model.poPrintReceiptmodel.AzureImageURL" alt="" style="height:200px; width:auto;" /></a>
+                        </td>
+                        <td width="108" height="200" align="left" valign="top" style="padding:0;">
+                            <img src='@Url.Content("~/Content/images/angleBg.jpg")' alt="" style="height:200px; width:108px;" />
+                        </td>
+                        <td width="310" height="175" align="left" valign="top" style="background:#e4effd; padding:25px 0 0 25px;">
+                            <h2 style="padding:0; margin:0 0 5px 0; font-size:25px; color:#264a7c; text-decoration:underline; font-weight:normal;">@Model.Loc.Where(a => a.ResourceId == "spnPOR").FirstOrDefault().Value.ToString() </h2>
+                            <p style="padding:0; margin:0 0 7px 0; font-size:16px; color:#5d5d5d; font-weight:normal;">@Model.Loc.Where(a => a.ResourceId == "spnPoPurchaseOrder").FirstOrDefault().Value.ToString() : <span style="color:#ff8400;">@Model.poPrintReceiptmodel.ClientLookupId</span></p>
+                            <p style="padding:0; margin:0 0 7px 0; font-size:16px; color:#5d5d5d; font-weight:normal;">@Model.Loc.Where(a => a.ResourceId == "spnReceiptNumber").FirstOrDefault().Value.ToString() : <span style="color:#ff8400;">@Model.poPrintReceiptmodel.ReceiptNumber</span></p>
+                            <p style="padding:0; margin:0 0 7px 0; font-size:16px; color:#5d5d5d; font-weight:normal;">@Model.Loc.Where(a => a.ResourceId == "spnReceiptDate").FirstOrDefault().Value.ToString() : <span style="color:#ff8400;">@Model.poPrintReceiptmodel.ReceiveDate</span></p>
+                            <p style="padding:0; margin:0 0 7px 0; font-size:16px; color:#5d5d5d; font-weight:normal;">@Model.Loc.Where(a => a.ResourceId == "spnReceivedBy").FirstOrDefault().Value.ToString() : <span style="color:#ff8400;">@Model.poPrintReceiptmodel.PersonnelName</span></p>
+                            <p style="padding:0; margin:0 0 7px 0; font-size:16px; color:#5d5d5d; font-weight:normal;">@Model.Loc.Where(a => a.ResourceId == "spnPoComments").FirstOrDefault().Value.ToString() : <span style="color:#ff8400;">@Model.poPrintReceiptmodel.Comments</span></p>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+
+    </table>
+</body>
+</html>

@@ -1,0 +1,153 @@
+﻿@model Client.Models.MultiStoreroomPart.MultiStoreroomPartVM
+
+<div class="m-subheader fixedDiv1">
+    <div class="new-m-subheader">
+        <div class="PageTitle">
+            <div class="align-items-center separator">
+                <h3 class="m-subheader__title ">
+                    @Model.Loc.Where(a => a.ResourceId == "hdrVendors").FirstOrDefault().Value.ToString()
+                </h3>
+            </div>
+        </div>
+
+        <div class="NewBreadcrumbArea">
+            <div class="newBreadcrumb">
+                <ul>
+                    <li><a href="/Dashboard/Dashboard">&nbsp;</a></li>
+                    <li><a href="/MultiStoreroomPart/Index?page=Inventory_MultiStoreroom_Part">@Model.Loc.Where(a => a.ResourceId == "spnPartSearch").FirstOrDefault().Value.ToString()</a></li>
+                    <li><a href="javascript:void(0)" id="brdpart" data-val="@Model.MultiStoreroomPartModel.PartId">@Model.MultiStoreroomPartModel.ClientLookupId</a></li>
+                    @if (Model.MSPVendorModel.PartVendorXrefId != 0)
+                    {
+                        <li class="active">@Model.Loc.Where(a => a.ResourceId == "spnVendorEdit ").FirstOrDefault().Value.ToString()</li>
+                    }
+                    else
+                    {
+                        <li class="active">@Model.Loc.Where(a => a.ResourceId == "spnVendorAdd").FirstOrDefault().Value.ToString()</li>
+                    }
+
+                </ul>
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+        <div style="clear:both;"></div>
+    </div>
+</div>
+<div class="pushDiv1"></div>
+
+<div class="row fixedDiv2">
+    @Html.Partial("_MultiStoreroomPartSummary", Model)
+</div>
+<div class="pushDiv2 partsAdjust"></div>
+
+@Html.Partial("_ErrorDiv")
+
+@using (Ajax.BeginForm("MSPVedndorAdd", "MultiStoreroomPart", new AjaxOptions { HttpMethod = "Post", OnSuccess = "MSPVendorAddOnSuccess", OnBegin = "AjaxBeginFormBegin", OnComplete = "AjaxBeginFormComplete", OnFailure = "AjaxBeginFormFaillure" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="row">
+        <div class="col-xl-12">
+            <div class="m-portlet newPort" id="m_portlet" style="padding:15px;">
+                <div class="bottomBlock">
+                    <div class="tabsArea nobg">
+                        <ul class="listView nobrd">
+                            <li>
+                                <span class="label">@Html.LabelFor(m => m.MSPVendorModel.VendorClientLookupId) : <small>*</small></span>
+                                <span class="inputText">
+                                    <div class="dropdown dropTableOuter">
+                                        <div class="input-group">
+                                            @Html.ValidationMessageFor(m => m.MSPVendorModel.VendorClientLookupId, "", new { style = "display:none" })
+                                            @Html.TextBoxFor(m => m.MSPVendorModel.VendorClientLookupId, new { @class = "form-control search dropbtn readonly", autocomplete = "off", @readonly = "readonly" })
+                                            <div class="input-group-btn">
+                                                <button class="btn btn-white btntxtInputGroup OpenVendorModalPopupGrid" type="button" data-textfield="MSPVendorModel_VendorClientLookupId" data-valuefield="MSPVendorModel_VendorId">
+                                                    <i id="srcicon" class="fa fa-search"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </span>
+                            </li>
+                            <li>
+                                <span class="label">@Html.LabelFor(m => m.MSPVendorModel.CatalogNumber) : </span>
+                                <span class="inputText">
+                                    @Html.TextBoxFor(m => m.MSPVendorModel.CatalogNumber, new { @class = "form-control search", autocomplete = "off" })
+                                </span>
+                            </li>
+                            <li>
+                                <span class="label">@Html.LabelFor(m => m.MSPVendorModel.Manufacturer) : </span>
+                                <span class="inputText">
+                                    @Html.TextBoxFor(m => m.MSPVendorModel.Manufacturer, new { @class = "form-control search", autocomplete = "off" })
+                                </span>
+                            </li>
+                            <li>
+                                <span class="label">@Html.LabelFor(m => m.MSPVendorModel.ManufacturerID) : </span>
+                                <span class="inputText">
+                                    @Html.TextBoxFor(m => m.MSPVendorModel.ManufacturerID, new { @class = "form-control search", autocomplete = "off" })
+                                </span>
+                            </li>
+                            <li>
+                                <span class="label">@Html.LabelFor(m => m.MSPVendorModel.OrderQuantity) : </span>
+                                <span class="inputText">
+                                    @Html.ValidationMessageFor(m => m.MSPVendorModel.OrderQuantity, "", new { style = "display:none" })
+                                    @Html.TextBoxFor(m => m.MSPVendorModel.OrderQuantity, new { @class = "form-control search longinput", autocomplete = "off" })
+                                </span>
+                            </li>
+                            <li>
+                                <span class="label">@Html.LabelFor(m => m.MSPVendorModel.OrderUnit) : </span>
+                                <span class="inputText">
+                                    @Html.ValidationMessageFor(m => m.MSPVendorModel.OrderUnit, "", new { style = "display:none" })
+                                    @Html.DropDownListFor(m => m.MSPVendorModel.OrderUnit, Model.MSPVendorModel.OrderUnitList, "--Select--", new { @class = "form-control select2picker", style = "width:100%;" })
+                                </span>
+                            </li>
+                            <li>
+                                <span class="label">@Html.LabelFor(m => m.MSPVendorModel.Price) : </span>
+                                <span class="inputText">
+                                    @Html.ValidationMessageFor(m => m.MSPVendorModel.Price, "", new { style = "display:none" })
+                                    @Html.TextBoxFor(m => m.MSPVendorModel.Price, new { @class = "form-control search decimalinput", autocomplete = "off" })
+                                    @Html.HiddenFor(m => m.MSPVendorModel.DefaultPricevalue, new { @id = "DefaultPricevalue" })
+                                </span>
+                            </li>
+                         
+                            <li>
+                                <span class="label">@Html.LabelFor(m => m.MSPVendorModel.IssueOrder) : </span>
+                                <span class="inputText">
+                                    @Html.ValidationMessageFor(m => m.MSPVendorModel.IssueOrder, "", new { style = "display:none" })
+                                    @Html.TextBoxFor(m => m.MSPVendorModel.IssueOrder, new { @class = "form-control search decimalinput", autocomplete = "off" })
+                                    @Html.HiddenFor(m => m.MSPVendorModel.DefaultissueOrdervalue, new { @id = "DefaultissueOrdervalue" })
+                                </span>
+                            </li>
+                            <li>
+                                <span class="label">@Html.LabelFor(m => m.MSPVendorModel.UOMConvRequired) : </span>
+                                <span class="inputText">
+                                    @Html.CheckBoxFor(m => m.MSPVendorModel.UOMConvRequired, new { @id = "UOMConvRequired" })
+                                </span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div style="clear:both;"></div>
+
+                    <div class="idBttns">
+                        <div class="bttn_pagin">
+                            <div class="bttns2">
+                                <button type="submit" class="btn btn-blue mobBttn"><i class="fa fa-save faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+                            </div>
+                            <div class="bttns"><button type="button" class="btn btn-blue mobBttn" id="btnmspvendorcancel"><i class="fa fa-close faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button></div>
+
+                            <div style="clear:both;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @Html.Partial("~/Views/Shared/LookupTypeTablePopup/_VendorPopup.cshtml")
+    @Html.HiddenFor(m => m.MSPVendorModel.PartId)
+    @Html.HiddenFor(m => m.MSPVendorModel.PartVendorXrefId)
+}
+<!-- #region Show full description -->
+@Html.Partial("~/Views/MultiStoreroomPart/_MultiStoreroomPartSummaryDescription.cshtml")
+<!-- #endregion -->
+<style type="text/css">
+    .ui-tooltip.ui-tooltip1 {
+        z-index: 98 !important;
+    }
+</style>

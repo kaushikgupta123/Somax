@@ -1,0 +1,312 @@
+﻿@model Client.Models.PurchaseOrder.PurchaseOrderVM
+@using Client.Models.Common
+@{
+    var AttachedModelName = "addPurchaseOrder";
+    var fieldName = "";
+    var fieldId = "";
+    var EmptyLookupList = new List<SelectListItem> { new SelectListItem { } };
+    const string constVendor = "Vendor";
+    string[] VendorColumns = { "vendorid" };
+    const string constStoreroom = "Storeroom";
+    bool EPMInvoiceImportInUse = false;
+    var InterfacePropData = (List<InterfacePropModel>)Session["InterfacePropData"];
+    if (InterfacePropData != null && InterfacePropData.Count > 0)
+    {
+        EPMInvoiceImportInUse = InterfacePropData.Where(x => x.InterfaceType == ApiConstants.EPMInvoiceImport).Select(x => x.InUse).FirstOrDefault();
+    }
+}
+<div class="m-subheader">
+    <div class="new-m-subheader">
+        <div class="PageTitle">
+            <div class="align-items-center separator">
+                <h3 class="m-subheader__title ">
+                    @Model.Loc.Where(a => a.ResourceId == "spnPoPurchaseOrder").FirstOrDefault().Value.ToString()
+                </h3>
+            </div>
+        </div>
+        <div class="NewBreadcrumbArea">
+            <div class="newBreadcrumb">
+                <ul>
+                    <li><a href="/Dashboard/Dashboard">&nbsp;</a></li>
+                    <li><a href="/Purchasing/Index?page=Procurement_Orders">@Model.Loc.Where(a => a.ResourceId == "spnPoPurchasingSearch").FirstOrDefault().Value.ToString()</a></li>
+                    <li class="active">@Model.Loc.Where(a => a.ResourceId == "spnPoPurchasingOrderAdd").FirstOrDefault().Value.ToString()</li>
+                </ul>
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+        <div style="clear:both;"></div>
+    </div>
+</div>
+
+@Html.Partial("_ErrorDiv")
+@if (Model.UIConfigurationDetails != null && Model.UIConfigurationDetails.Count > 0)
+{
+    using (Ajax.BeginForm("AddPurchaseOrdersDynamic", "Purchasing", new AjaxOptions { HttpMethod = "Post", OnSuccess = "POAddOnSuccess", OnBegin = "AjaxBeginFormBegin", OnComplete = "AjaxBeginFormComplete", OnFailure = "AjaxBeginFormFaillure" }))
+    {
+        @Html.AntiForgeryToken()
+        <div class="row">
+            <div class="col-xl-12">
+                <div class="row">
+                    <div class="col-xl-12" id="btnnblock">
+                        <div class="m-portlet" id="m_portlet" style="padding:15px;">
+                            <div class="bottomBlock">
+                                <div class="tabsArea nobg" id="Identifications" style="display:block;">
+                                    <ul class="listView nobrd">
+                                        @foreach (var data in Model.UIConfigurationDetails)
+                                        {
+                                            if (data.Section == true)
+                                            {
+                                                <li>
+                                                    <span class="label"><strong>@data.SectionName</strong></span>
+                                                </li>
+                                                continue;
+                                            }
+                                            if (string.IsNullOrEmpty(data.ColumnName))
+                                            {
+                                                continue;
+                                            }
+                                            else if (!string.IsNullOrEmpty(data.ColumnName))
+                                            {
+                                                string colName = UtilityFunction.ReturnPropertyNameWithoutCaseComparison(data.ColumnName, Model.addPurchaseOrder);
+                                                if (string.IsNullOrEmpty(colName))
+                                                {
+                                                    continue;
+                                                }
+                                                data.ColumnName = colName;
+                                            }
+
+                                            fieldName = AttachedModelName + "." + data.ColumnName;
+                                            fieldId = data.ColumnName;
+
+                                            if (data.SystemRequired == true)
+                                            {
+                                                data.Required = true;
+                                            }
+                                            if (data.LookupType == DataDictionaryLookupTypeConstant.Table && data.LookupName.ToLower() == constVendor.ToLower() && data.ColumnName.ToLower() == "VendorId".ToLower())
+                                            {
+
+                                                <li>
+                                                    @CustomHelperDynamic.GetLabel(data.ColumnLabel, data.Required)
+
+                                                    @{
+                                                        string TextFieldName = "", TextFieldId = "";
+                                                        TextFieldId = "VendorClientLookupId";
+                                                        TextFieldName = AttachedModelName + "." + TextFieldId;
+
+                                                    }
+
+                                                    <span class="inputText">
+                                                        <div class="dropdown dropTableOuter">
+                                                            <div class="input-group">
+                                                                @Html.ValidationMessage(fieldName, new { style = "display:none" })
+
+                                                                @Html.TextBox(fieldName, "", new
+                                                                  {
+                                                                     id = fieldId,
+                                                                     @class = "form-control search dropbtn readonly",
+                                                                     @readonly = "readonly",
+                                                                     autocomplete = "off"
+                                                                  })
+
+                                                                @Html.TextBox(TextFieldName, "", new
+                                                                   {
+                                                                      id = TextFieldId,
+                                                                      @class = "form-control search dropbtn readonly",
+                                                                      @readonly = "readonly",
+                                                                      autocomplete = "off",
+                                                                      @style = "display:none"
+                                                                   })
+                                                                <div class="input-group-btn">
+                                                                    <button class="btn btn-white btntxtInputGroup ClearVendorModalPopupGridData" type="button" data-textfield="@TextFieldId"
+                                                                            data-valuefield="@fieldId" data-namefield="VendorName" data-ispunchout="False" style="display:none;">
+                                                                        <i id="srcicon" class="fa fa-close"></i>
+                                                                    </button>
+                                                                </div>
+                                                                <div class="input-group-btn">
+                                                                    <button class="btn btn-white btntxtInputGroup OpenVendorModalPopupGrid" type="button" data-textfield="@TextFieldId" data-valuefield="@fieldId" data-namefield="VendorName" data-ispunchout="False">
+                                                                        <i id="srcicon" class="fa fa-search"></i>
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                    </span>
+
+                                                </li>
+                                                <li>
+                                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnPoVendorName").FirstOrDefault().Value.ToString() : </span>
+                                                    <span class="inputText">
+                                                        @Html.TextBox("VendorName", "", new { @readonly = "readonly", @class = "form-control search dropbtn readonly", autocomplete = "off" })
+                                                    </span>
+                                                </li>
+                                            }
+                                            else if (data.LookupType == DataDictionaryLookupTypeConstant.Table && data.LookupName.ToLower() == constStoreroom.ToLower() && data.ColumnName.ToLower() == "StoreroomId".ToLower() && Model.udata.DatabaseKey.Client.UseMultiStoreroom == true)
+                                            {
+
+                                                var LookUpList = Model.StoreroomList.ToList();
+                                                <li>
+                                                    @CustomHelperDynamic.GetLabel(data.ColumnLabel, data.Required)
+                                                    <span class="inputText">
+                                                        @Html.ValidationMessage(fieldName, new { style = "display:none" })
+                                                        @if (LookUpList != null && LookUpList.Count() > 0)
+                                                        {
+                                                            @Html.DropDownList(fieldName, LookUpList, "--Select--", new
+                                                       {
+                                                           id = fieldId,
+                                                           @class = "form-control search select2picker",
+                                                           style = "width:100%;",
+                                                           required = "required"
+                                                       })
+                                                        }
+                                                        else
+                                                        {
+                                                            @Html.DropDownList(fieldName, EmptyLookupList, "--Select--", new
+                                                       {
+                                                           id = fieldId,
+                                                           @class = "form-control search select2picker",
+                                                           style = "width:100%;",
+                                                           required = "required"
+                                                       })
+                                                        }
+                                                    </span>
+                                                </li>
+
+
+
+                                            }
+                                            else if (data.LookupType == DataDictionaryLookupTypeConstant.Table && data.LookupName.ToLower() == constStoreroom.ToLower() && data.ColumnName.ToLower() == "StoreroomId".ToLower() && Model.udata.DatabaseKey.Client.UseMultiStoreroom == false)
+                                            {
+                                                @Html.Hidden(fieldName, 0, new
+                                                          {
+                                                              id = fieldId,
+                                                              @class = "form-control search dropbtn readonly",
+                                                              @readonly = "readonly",
+                                                              autocomplete = "off"
+                                                          })
+                                            }
+                                            else if (data.LookupType.ToLower() == DataDictionaryLookupTypeConstant.LookupList.ToLower() &&
+                                                    !string.IsNullOrEmpty(data.LookupName))
+                                            {
+                                                var LookUpList = Model.AllRequiredLookUplist
+                                                                .Where(x => x.lookupname == data.LookupName)
+                                                                .Select(x => new SelectListItem { Text = x.text, Value = x.value })
+                                                                .ToList();
+                                                <li>
+                                                    @CustomHelperDynamic.GetLabel(data.ColumnLabel, data.Required)
+                                                    <span class="inputText">
+                                                        @Html.ValidationMessage(fieldName, new { style = "display:none" })
+                                                        @if (LookUpList != null && LookUpList.Count() > 0)
+                                                        {
+                                                            @Html.DropDownList(fieldName, LookUpList, "--Select--", new
+                                                       {
+                                                           id = fieldId,
+                                                           @class = "form-control search select2picker",
+                                                           style = "width:100%;"
+                                                       })
+                                                        }
+                                                        else
+                                                        {
+                                                            @Html.DropDownList(fieldName, EmptyLookupList, "--Select--", new
+                                                       {
+                                                           id = fieldId,
+                                                           @class = "form-control search select2picker",
+                                                           style = "width:100%;"
+                                                       })
+                                                        }
+                                                    </span>
+                                                </li>
+                                            }
+                                            else if (data.ColumnName.ToLower() == "Buyer_PersonnelId".ToLower())
+                                            {
+                                                <li>
+                                                    @CustomHelperDynamic.GetLabel(data.ColumnLabel, data.Required)
+                                                    <span class="inputText">
+                                                        @Html.ValidationMessage(fieldName, new { style = "display:none" })
+                                                        @Html.DropDownList(fieldName, Model.BuyerList, "--Select--", new
+                                                        {
+                                                            id = fieldId,
+                                                            @class = "form-control search select2picker",
+                                                            style = "width:100%;"
+                                                        })
+                                                    </span>
+                                                </li>
+                                            }
+                                            else if (data.ColumnName.ToLower() == "Shipto".ToLower())
+                                            {
+                                                <li>
+                                                    @CustomHelperDynamic.GetLabel(data.ColumnLabel, data.Required)
+                                                    <span class="inputText">
+                                                        @Html.ValidationMessage(fieldName, new { style = "display:none" })
+                                                        @Html.DropDownList(fieldName, Model.ShipToList, "--Select--", new
+                                                        {
+                                                            id = fieldId,
+                                                            @class = "form-control search select2picker",
+                                                            style = "width:100%;"
+                                                        })
+                                                    </span>
+                                                </li>
+                                            }
+
+                                            else
+                                            {
+                                                <li>
+                                                    @CustomHelperDynamic.GetLabel(data.ColumnLabel, data.Required)
+                                                    <span class="inputText">
+                                                        @Html.ValidationMessage(fieldName, new { style = "display:none" })
+                                                        @Html.UIConfigControl(fieldName, fieldId, data.ColumnType.ToLower(), data.MaxLength, data.ViewOnly)
+                                                        @CustomHelperDynamic.GetCountMessageLabel(data.MaxLength, data.ViewOnly, "")
+                                                    </span>
+                                                </li>
+                                            }
+                                        }
+                                    </ul>
+                                </div>
+
+
+                                <div style="clear:both;"></div>
+
+                                <div class="idBttns">
+                                    <div class="bttn_pagin">
+                                        <div class="bttns2">
+                                            @if (EPMInvoiceImportInUse)
+                                            {
+                                                <button class="btn btn-white mobBttn" id="btnSaveAnotherCustomEPMPOModal" name="Command" value="openAddCustomEPMPO"><i class="fa fa-save faIcon"></i> &nbsp;  @Model.Loc.Where(a => a.ResourceId == "globalSaveAndAdd").FirstOrDefault().Value.ToString()</button>
+                                                <button id="btnCustomEPMPOModal" class="btn btn-blue mobBttn" name="Command" value="openCustomEPMPO"><i class="fa fa-save faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+                                            }
+                                            else
+                                            {
+                                                <button class="btn btn-white mobBttn" name="Command" value="saveAdd" id="btnSaveAnotherOpenPO"><i class="fa fa-save faIcon"></i> &nbsp;  @Model.Loc.Where(a => a.ResourceId == "globalSaveAndAdd").FirstOrDefault().Value.ToString()</button>
+                                                <button type="submit" class="btn btn-blue mobBttn" name="Command" value="save"><i class="fa fa-save faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+                                            }
+                                        </div>
+                                        <div class="bttns" id="btnCancelAddPO"><button type="button" class="btn btn-blue mobBttn"><i class="fa fa-close faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button></div>
+
+                                        <div style="clear:both;"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @*@Html.HiddenFor(m => m.PurchaseOrderModel.PurchaseOrderId)*@
+        @*@Html.HiddenFor(m => m.PurchaseOrderModel.IsExternal, new { id = "IsExternal" })*@
+        @*@Html.HiddenFor(m => m.PurchaseOrderModel.ViewName, new { id = "ViewName" })*@
+        if (Model.UIConfigurationDetails.Any(x => VendorColumns.Contains(x.ColumnName.ToLower())))
+        {
+            @*@Html.Partial("~/Views/Shared/LookupTypeTablePopup/_VendorPopup.cshtml")*@
+            @Html.Partial("~/Views/Shared/LookupTypeTablePopup/_PurchaseVendorPopup.cshtml")
+        }
+
+    }
+}
+@*Start V2-1112 AddEPMCustomPO*@
+@if (EPMInvoiceImportInUse)
+{
+    @Html.Partial("~/Views/Purchasing/_AddEPMCustomPurchaseOrder.cshtml", Model);
+
+}
+@*End*@
+

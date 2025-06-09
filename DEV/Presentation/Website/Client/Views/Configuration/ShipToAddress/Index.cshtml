@@ -1,0 +1,17 @@
+﻿
+@{
+    ViewBag.Title = "Somax-Config | Ship To Address";
+}
+
+@section scripts {
+    @Scripts.Render("~/bundles/datatable")
+    @Styles.Render("~/Content/dropzone")
+    @Scripts.Render("~/bundles/ShipToAddress")
+}
+@Styles.Render("~/Content/datatable")
+<link href="~/Scripts/Metronic/assets/demo/default/base/style_newCustom.css" rel="stylesheet" />
+<link href="~/Scripts/dropzone/basic.min.css" rel="stylesheet" />
+<div id="renderShipToAddress">
+    @Html.Partial("~/Views/Configuration/ShipToAddress/_ShipToAddressSearch.cshtml")
+</div>
+

@@ -1,0 +1,127 @@
+﻿@model Client.Models.PurchaseRequest.PurchaseRequestVM
+
+<link href="~/Scripts/Metronic/assets/demo/default/base/style_newCustom.css" rel="stylesheet" />
+
+<div class="m-subheader">
+    <div class="new-m-subheader">
+        <div class="PageTitle">
+            <div class="align-items-center separator">
+                <h3 class="m-subheader__title ">
+                    @Model.Loc.Where(a => a.ResourceId == "spnPurchaseRequest").FirstOrDefault().Value.ToString()
+                </h3>
+            </div>
+        </div>
+
+        <div class="NewBreadcrumbArea">
+            <div class="newBreadcrumb">
+                <ul>
+                    <li><a href="/Dashboard/Dashboard">&nbsp;</a></li>
+                    <li>
+                        <a href="/PurchaseRequest/Index?page=Procurement_Requests">
+                            @Model.Loc.Where(a => a.ResourceId == "spnPdPurchaseRequestSearch").FirstOrDefault().Value.ToString()
+                        </a>
+                    </li>
+                    <li><a href="javascript:void(0)" class="brdprrequest" data-val="@Model.shoppingList[0].PurchaseRequestId">@Model.shoppingList[0].ClientLookupId</a></li>
+                    <li class="active">@Model.Loc.Where(a => a.ResourceId == "spnGlobalShoppingCart").FirstOrDefault().Value.ToString() </li>
+
+                </ul>
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+        <div style="clear:both;"></div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xl-12">
+        <div class="m-portlet" id="m_portlet" style="padding:15px; margin-bottom:0;">
+            <div class="tabcontent" style="display:none;" id="divErrorMsg">
+            </div>
+            <div id="Active" class="tabcontent" style="display:block;">
+                <div class="table-responsive">
+                    <table id="tblPurchaseRequestShoppingCart" class="eqpDtlTbl row-border custom-sort" style="min-width:1600px;">
+                        <thead>
+                            <tr>
+                                <th>@Model.Loc.Where(a => a.ResourceId == "spnSupplierPartId").FirstOrDefault().Value.ToString()</th>
+                                <th>@Model.Loc.Where(a => a.ResourceId == "spnSupplierPartAuxiliaryId").FirstOrDefault().Value.ToString()</th>
+                                <th>@Model.Loc.Where(a => a.ResourceId == "spnLineDescription").FirstOrDefault().Value.ToString()</th>
+                                <th style="text-align:right !important;">@Model.Loc.Where(a => a.ResourceId == "spnOrderQnt").FirstOrDefault().Value.ToString()</th>
+                                <th style="text-align:right !important;">@Model.Loc.Where(a => a.ResourceId == "spnVendorUnit").FirstOrDefault().Value.ToString()</th>
+                                <th>@Model.Loc.Where(a => a.ResourceId == "spnUnitofMeasure").FirstOrDefault().Value.ToString()</th>
+                                <th style="text-align:right !important;">@Model.Loc.Where(a => a.ResourceId == "spnUnitCost").FirstOrDefault().Value.ToString()</th>
+                                <th>@Model.Loc.Where(a => a.ResourceId == "spnManufacturer").FirstOrDefault().Value.ToString()</th>
+                                <th style="text-align:right !important;">@Model.Loc.Where(a => a.ResourceId == "spnManufacturerPartID").FirstOrDefault().Value.ToString()</th>
+                                <th width="170px">@Model.Loc.Where(a => a.ResourceId == "spnPartID").FirstOrDefault().Value.ToString()</th>
+                                <th width="150px">@Model.Loc.Where(a => a.ResourceId == "spnChargeType").FirstOrDefault().Value.ToString()</th>
+                                <th width="180px">@Model.Loc.Where(a => a.ResourceId == "spnChargeToID").FirstOrDefault().Value.ToString()</th>
+                                <th width="180px">@Model.Loc.Where(a => a.ResourceId == "spnAccountId").FirstOrDefault().Value.ToString()</th>
+                                <th>@Model.Loc.Where(a => a.ResourceId == "spnRequiredDate").FirstOrDefault().Value.ToString()</th>
+                                <th>@Model.Loc.Where(a => a.ResourceId == "spnCategory").FirstOrDefault().Value.ToString()</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+            <div class="idBttns">
+                <div class="bttn_pagin">
+                    <div class="bttns">
+                        <button type="button" class="btn btn-blue mobBttn" id="btnShoppingCartCancel"><i class="fa fa-close faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button>
+                    </div>
+                    <div class="bttns2">
+                        <button type="button" class="btn btn-blue mobBttn" id="btnConfirm"><i class="fa fa-check faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalconfirm").FirstOrDefault().Value.ToString()</button>
+                    </div>
+
+                    <div style="clear:both;"></div>
+                </div>
+            </div>
+            <div style="clear:both"></div>
+        </div>
+    </div>
+</div>
+
+@Html.HiddenFor(X => X.IsPunchOutCheckOut, new { @id = "IsPunchOutCheckOut" })
+@Html.HiddenFor(X => X.IsPunchOutCheckOutTab, new { @id = "IsPunchOutCheckOutTab" })
+@Html.HiddenFor(X => X.IsOraclePurchaseRequestExportInUse, new { @id = "IsOraclePurchaseRequestExportInUse" })
+<input type="hidden" id="hdrprid" value="@Model.shoppingList[0].PurchaseRequestId" />
+<input type="hidden" id="hdrprstatus" value="@Model.shoppingList[0].Status" />
+<style type="text/css">
+    ul.listView.nobrd.divErrorMsg {
+        margin-bottom: 10px;
+        border-bottom: 0;
+        border: 1px solid #ddd;
+        padding: 10px;
+        max-height: 200px;
+        overflow-y: auto;
+    }
+
+        ul.listView.nobrd.divErrorMsg li {
+            margin-bottom: 0;
+            height: auto;
+        }
+
+            ul.listView.nobrd.divErrorMsg li span.label,
+            ul.listView.nobrd.divErrorMsg li span.inputText {
+                height: auto;
+                line-height: 30px;
+                padding-left: 10px;
+            }
+
+            ul.listView.nobrd.divErrorMsg li.errorTitle {
+                line-height: 30px;
+                font-size: 14px;
+                font-weight: 500;
+                padding-left: 10px;
+                background: #ebe8f2;
+            }
+
+            ul.listView.nobrd.divErrorMsg li span.inputText p {
+                padding: 0;
+                margin: 0;
+                height: 30px;
+                line-height: 30px;
+            }
+            table td .divShopingCart{display:flex; flex-flow:row; gap:0;}
+            button[type="button"].divShopingCart {
+                margin-top: 0 !important;
+            }
+</style>

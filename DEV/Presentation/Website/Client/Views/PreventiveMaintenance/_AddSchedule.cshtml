@@ -1,0 +1,591 @@
+﻿@model Client.Models.PreventiveMaintenance.PrevMaintVM
+
+<div class="m-subheader">
+    <div class="new-m-subheader">
+        <div class="PageTitle">
+            <div class="align-items-center separator">
+                <h3 class="m-subheader__title ">
+                    @Model.Loc.Where(a => a.ResourceId == "spnScheduleRecords").FirstOrDefault().Value.ToString()
+                </h3>
+            </div>
+        </div>
+
+        <div class="NewBreadcrumbArea">
+            <div class="newBreadcrumb">
+                <ul>
+                    <li><a href="/Dashboard/Dashboard">&nbsp;</a></li>
+                    <li><a href="/PreventiveMaintenance/Index?page=Maintenance_Preventive_Maintenance_Search">@Model.Loc.Where(a => a.ResourceId == "spnPreventiveMaintenanceSearch").FirstOrDefault().Value.ToString()</a></li>
+                    <li><a href="javascript:void(0)" id="brdschrecords" data-val="@Model.scheduleRecords.PrevMaintMasterId">@Model.scheduleRecords.PrevmaintClientlookUp</a></li>
+                    @if (Model.scheduleRecords.PrevMaintScheId == 0)
+                    {
+                        <li class="active">@Model.Loc.Where(a => a.ResourceId == "spnAddScheduleRecords").FirstOrDefault().Value.ToString()</li>
+                    }
+                    else
+                    {
+                        <li class="active">@Model.Loc.Where(a => a.ResourceId == "spnUpdateScheduleRecords").FirstOrDefault().Value.ToString()</li>
+                    }
+                </ul>
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+        <div style="clear:both;"></div>
+    </div>
+</div>
+@Html.Partial("_ErrorDiv")
+
+@using (Ajax.BeginForm("AddScheduleRecords", "PreventiveMaintenance", new AjaxOptions { HttpMethod = "Post", OnSuccess = "ScheduleRecordsAddOnSuccess", OnBegin = "AjaxBeginFormBegin", OnComplete = "AjaxBeginFormComplete", OnFailure = "AjaxBeginFormFaillure" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="row">
+        <div class="col-xl-12">
+            <div class="m-portlet newPort tree-full" id="m_portlet" style="padding:15px;">
+                <div class="bottomBlock">
+                    <div class="tabsArea nobg">
+                        <ul class="listView nobrd n-cust-ul rt-part" style="margin-bottom:10px;">
+                            <li>
+                                <span class="label">@Html.LabelFor(m => m.scheduleRecords.ChargeType) : <small>*</small></span>
+                                <span class="inputText">
+                                    @Html.ValidationMessageFor(m => m.scheduleRecords.ChargeType, "", new { style = "display:none" })
+                                    @if (Model.scheduleRecords.PrevMaintScheId > 0 && Model.scheduleRecords.PrevMaintLibraryID != 0)
+                                    {
+                                        @Html.TextBoxFor(m => m.scheduleRecords.ChargeType, new { @class = "form-control search longinput readonly", @readonly = "readonly", autocomplete = "off" })
+                                    }
+                                    else
+                                    {
+                                        @Html.DropDownListFor(m => m.scheduleRecords.ChargeType, Model.scheduleRecords.ChargeTypeList, "--Select--", new { @class = "form-control search select2picker", style = "width:100%;" })
+                                    }
+                                </span>
+                            </li>
+                            <li style="position:relative;" class="tree-block-box n-cust-li">
+                                <span class="label">@Html.LabelFor(m => m.scheduleRecords.ChargeToClientLookupId)  : <small>*</small></span>
+                                <div class="n-cust-row">
+                                    <span class="inputText wthAdjstNew2">
+                                        @if (Model.scheduleRecords.ChargeType != null && Model.scheduleRecords.ChargeType.Equals("Equipment"))
+                                        {
+                                            <div class="input-group">
+                                                @Html.ValidationMessageFor(m => m.scheduleRecords.ChargeToClientLookupId, "", new { style = "display:none" })
+                                                @Html.TextBoxFor(m => m.scheduleRecords.ChargeToClientLookupId, new { @class = "form-control search dropbtn readonly", id = "txtChargeTo", autocomplete = "off", @readonly = "readonly" })
+                                                @Html.HiddenFor(m => m.scheduleRecords.ChargeToClientLookupId, new { id = "hdnChargeTo" })
+                                                <div class="input-group-btn">
+                                                    @if (Model.scheduleRecords.PrevMaintScheId > 0 && Model.scheduleRecords.PrevMaintLibraryID != 0)
+                                                    {
+                                                        <button disabled="disabled" class="btn btn-white btntxtInputGroup" type="button" id="openpmschedulechargetogrid">
+                                                            <i id="srcicon" class="fa fa-search"></i>
+                                                        </button>
+                                                    }
+                                                    else
+                                                    {
+                                                        <button class="btn btn-white btntxtInputGroup" type="button" id="openpmschedulechargetogrid">
+                                                            <i id="srcicon" class="fa fa-search"></i>
+                                                        </button>
+                                                    }
+                                                </div>
+                                            </div>
+                                        }
+                                        else
+                                        {
+
+                                            <div class="input-group">
+                                                @Html.ValidationMessageFor(m => m.scheduleRecords.ChargeToClientLookupId, "", new { style = "display:none" })
+                                                @Html.TextBoxFor(m => m.scheduleRecords.ChargeToClientLookupId, new { @class = "form-control search dropbtn readonly", id = "txtChargeTo", autocomplete = "off", @readonly = "readonly" })
+                                                @Html.HiddenFor(m => m.scheduleRecords.ChargeToClientLookupId, new { id = "hdnChargeTo" })
+                                                <div class="input-group-btn">
+                                                    @if (Model.scheduleRecords.PrevMaintScheId > 0 && Model.scheduleRecords.PrevMaintLibraryID != 0)
+                                                    {
+                                                        <button disabled="disabled" class="btn btn-white btntxtInputGroup" type="button" id="openpmschedulechargetogrid">
+                                                            <i id="srcicon" class="fa fa-search"></i>
+                                                        </button>
+                                                    }
+                                                    else
+                                                    {
+                                                        <button class="btn btn-white btntxtInputGroup" type="button" id="openpmschedulechargetogrid">
+                                                            <i id="srcicon" class="fa fa-search"></i>
+                                                        </button>
+                                                    }
+                                                </div>
+                                            </div>
+
+                                        }
+                                    </span>
+                                    @if (Model.userData.DatabaseKey.Client.AssetTree == true)
+                                    {
+                                        <i class="fa fa-tree chargeTree" id="imgChargeToTreeLineItem"></i>
+                                    }
+                                </div>
+                            </li>
+                            <li>
+                                <span class="label">@Html.LabelFor(m => m.scheduleRecords.ChargeToName) : </span>
+                                <span class="inputText">
+                                    @Html.TextBoxFor(m => m.scheduleRecords.ChargeToName, new { @class = "form-control search readonly", @readonly = "readonly", autocomplete = "off" })
+                                </span>
+                            </li>
+                            @if (!(Model.scheduleRecords.ScheduleType == ScheduleTypeConstants.OnDemand) && !(Model.scheduleRecords.ScheduleType == ScheduleTypeConstants.Calendar) && !(Model.scheduleRecords.ScheduleType == ScheduleTypeConstants.Meter))
+                            {
+                                <li>
+                                    <span class="label">@Html.LabelFor(m => m.scheduleRecords.LastPerformed): </span>
+                                    <span class="inputText">
+                                        @Html.TextBoxFor(m => m.scheduleRecords.LastPerformed, "{0:MM/dd/yyyy}", new { @class = "form-control search readonly", @readonly = "readonly", autocomplete = "off" })
+                                    </span>
+                                </li>
+
+                                <li>
+                                    <span class="label">@Html.LabelFor(m => m.scheduleRecords.LastScheduled): </span>
+                                    <span class="inputText">
+                                        @Html.TextBoxFor(m => m.scheduleRecords.LastScheduled, "{0:MM/dd/yyyy}", new { @class = "form-control search readonly dtpicker", @readonly = "readonly", autocomplete = "off" })
+                                    </span>
+                                </li>
+
+                                <li>
+                                    <span class="label">@Html.LabelFor(m => m.scheduleRecords.WorkOrder_ClientLookupId) : </span>
+                                    <span class="inputText">@Html.TextBoxFor(m => m.scheduleRecords.WorkOrder_ClientLookupId, new { @class = "form-control search readonly", @readonly = "readonly", autocomplete = "off" })</span>
+                                </li>
+                                <li>
+                                    <span class="label">@Html.LabelFor(m => m.scheduleRecords.CurrentWOComplete) : </span>
+                                    <span class="inputText">@Html.TextBoxFor(m => m.scheduleRecords.CurrentWOComplete, "{0:MM/dd/yyyy}", new { @class = "form-control search readonly", @readonly = "readonly", autocomplete = "off" })</span>
+                                </li>
+                            }
+                            @if (Model.scheduleRecords.ScheduleType == ScheduleTypeConstants.Calendar)
+                            {
+
+                                <li>
+                                    <span class="label">@Html.LabelFor(m => m.scheduleRecords.ScheduleMethod) :<small>*</small> </span>
+                                    <span class="inputText">
+                                        @Html.ValidationMessageFor(m => m.scheduleRecords.ScheduleMethod, "", new { style = "display:none" })
+                                        @if (Model.scheduleRecords.PrevMaintLibraryID > 0 && Model.scheduleRecords.PrevMaintScheId == 0)
+                                        {
+                                            @Html.TextBoxFor(m => m.scheduleRecords.ScheduleMethod, new { @class = "form-control search longinput readonly", @readonly = "readonly", autocomplete = "off" })
+                                        }
+                                        else
+                                        { @Html.DropDownListFor(m => m.scheduleRecords.ScheduleMethod, Model.scheduleRecords.ScheduleMethodList, "--Select--", new { @class = "form-control search select2picker", style = "width:100%;" })
+
+                                    }
+                                    </span>
+                                </li>
+                            }
+                            else if(!(Model.scheduleRecords.ScheduleType == ScheduleTypeConstants.Meter))
+                            {
+                                <li>
+                                    <span class="label">@Html.LabelFor(m => m.scheduleRecords.ScheduleMethod) : </span>
+                                    <span class="inputText">
+
+                                        @if (Model.scheduleRecords.PrevMaintLibraryID > 0 && Model.scheduleRecords.PrevMaintScheId == 0)
+                                        {
+                                            @Html.TextBoxFor(m => m.scheduleRecords.ScheduleMethod, new { @class = "form-control search longinput readonly", @readonly = "readonly", autocomplete = "off" })
+                                        }
+                                        else
+                                        { @Html.DropDownListFor(m => m.scheduleRecords.ScheduleMethod, Model.scheduleRecords.ScheduleMethodList, "--Select--", new { @class = "form-control search select2picker", style = "width:100%;" })
+
+                                    }
+
+                                    </span>
+                                </li>
+
+                            }
+                            @if (Model.scheduleRecords.ScheduleType == ScheduleTypeConstants.Calendar)
+                            {
+                                <li>
+                                    <span class="label">@Html.LabelFor(m => m.scheduleRecords.FrequencyType) : <small>*</small></span>
+                                    <span class="inputText">
+                                        @Html.ValidationMessageFor(m => m.scheduleRecords.FrequencyType, "", new { style = "display:none" })
+                                        @if ((Model.scheduleRecords.PrevMaintLibraryID > 0) || (Model.scheduleRecords.PrevMaintLibraryID > 0 && Model.scheduleRecords.PrevMaintScheId > 0))
+                                        {
+                                            @Html.TextBoxFor(m => m.scheduleRecords.FrequencyType, new { @class = "form-control search longinput readonly", @readonly = "readonly", autocomplete = "off" })
+                                        }
+                                        else
+                                        {
+                                            @Html.DropDownListFor(m => m.scheduleRecords.FrequencyType, Model.scheduleRecords.FrequencyTypeList, "--Select--", new { @id = "FrequencyType", @class = "form-control search select2picker", style = "width:100%;" })
+                                        }
+                                    </span>
+                                </li>
+                            }
+                            @if (Model.scheduleRecords.ScheduleType == ScheduleTypeConstants.Calendar)
+                            {
+                                <li>
+
+                                    <span class="label">@Html.LabelFor(m => m.scheduleRecords.Frequency) : <small>*</small></span>
+                                    <span class="inputText">
+                                        <div class="row">
+                                            <div class="col-lg-9">
+                                                @Html.ValidationMessageFor(m => m.scheduleRecords.Frequency, "", new { style = "display:none" })
+                                                @if (Model.scheduleRecords.PrevMaintLibraryID == 0)
+                                                {
+                                                    @Html.TextBoxFor(m => m.scheduleRecords.Frequency, new { @id = "Frequency", @class = "form-control search longinput", autocomplete = "off" })
+                                                }
+                                                else
+                                                {
+                                                    @Html.TextBoxFor(m => m.scheduleRecords.Frequency, new { @class = "form-control search longinput readonly", @readonly = "readonly", autocomplete = "off" })
+                                                }
+                                            </div>
+                                            <div class="col-lg-3">
+                                                @if (Model.scheduleRecords.PrevMaintLibraryID == 0 && (Model.scheduleRecords.FrequencyType == "Days" && Model.scheduleRecords.Frequency == 1))
+                                                {
+                                                    <button type="button" class="btn btn-blue mobBttn btn-fr" id="exclusionDays"> @Model.Loc.Where(a => a.ResourceId == "spnExcludeDaysOfWeek").FirstOrDefault().Value.ToString() </button>
+                                                }
+                                                else
+                                                {
+                                                    <button type="button" class="btn btn-blue mobBttn btn-fr" id="exclusionDays" disabled> @Model.Loc.Where(a => a.ResourceId == "spnExcludeDaysOfWeek").FirstOrDefault().Value.ToString() </button>
+                                                }
+                                                <div id="ExclusionDaysModal"> </div>
+
+                                                @Html.HiddenFor(m => m.scheduleRecords.ExclusionDaysStringHdn, new { @id = "ExclusionDaysStringHdn" })
+                                            </div>
+                                        </div>
+                                    </span>
+                                </li>
+
+                                <li style="height:auto;">
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnExclude").FirstOrDefault().Value.ToString() :</span>
+                                    <span class="inputText daysofweek" style="height:auto;">
+                                        <label class="excldChk">
+                                            @Html.CheckBoxFor(m => m.scheduleRecords.Sunday, new { @id = "SundayCB", @class = "daycb", onclick = "return false;" })
+                                            @Model.Loc.Where(a => a.ResourceId == "spnSunday").FirstOrDefault().Value.ToString()
+                                        </label>
+                                        <label class="excldChk">
+                                            @Html.CheckBoxFor(m => m.scheduleRecords.Monday, new { @id = "MondayCB", @class = "daycb", onclick = "return false;" })
+                                            @Model.Loc.Where(a => a.ResourceId == "spnMonday").FirstOrDefault().Value.ToString()
+                                        </label>
+                                        <label class="excldChk">
+                                            @Html.CheckBoxFor(m => m.scheduleRecords.Tuesday, new { @id = "TuesdayCB", @class = "daycb", onclick = "return false;" })
+                                            @Model.Loc.Where(a => a.ResourceId == "spnTuesday").FirstOrDefault().Value.ToString()
+                                        </label>
+                                        <label class="excldChk">
+                                            @Html.CheckBoxFor(m => m.scheduleRecords.Wednesday, new { @id = "WednesdayCB", @class = "daycb", onclick = "return false;" })
+                                            @Model.Loc.Where(a => a.ResourceId == "spnWednesday").FirstOrDefault().Value.ToString()
+                                        </label>
+                                        <label class="excldChk">
+                                            @Html.CheckBoxFor(m => m.scheduleRecords.Thursday, new { @id = "ThursdayCB", @class = "daycb", onclick = "return false;" })
+                                            @Model.Loc.Where(a => a.ResourceId == "spnThursday").FirstOrDefault().Value.ToString()
+                                        </label>
+                                        <label class="excldChk">
+                                            @Html.CheckBoxFor(m => m.scheduleRecords.Friday, new { @id = "FridayCB", @class = "daycb", onclick = "return false;" })
+                                            @Model.Loc.Where(a => a.ResourceId == "spnFriday").FirstOrDefault().Value.ToString()
+                                        </label>
+                                        <label class="excldChk">
+                                            @Html.CheckBoxFor(m => m.scheduleRecords.Saturday, new { @id = "SaturdayCB", @class = "daycb", onclick = "return false;" })
+                                            @Model.Loc.Where(a => a.ResourceId == "spnSaturday").FirstOrDefault().Value.ToString()
+                                        </label>
+                                    </span>
+                                    <div style="clear:both;"></div>
+                                </li>
+                            }
+
+                            @if (Model.scheduleRecords.ScheduleType == ScheduleTypeConstants.Calendar)
+                            {
+                                <li>
+                                    <span class="label">@Html.LabelFor(m => m.scheduleRecords.NextDueDate)  : <small>*</small></span>
+                                    <span class="inputText">
+                                        @Html.ValidationMessageFor(m => m.scheduleRecords.NextDueDate, "", new { style = "display:none" })
+                                        @Html.TextBoxFor(m => m.scheduleRecords.NextDueDate, "{0:MM/dd/yyyy}", new { @class = "form-control search dtpicker", autocomplete = "off" })
+                                    </span>
+                                </li>
+                            }
+                            @if (Model.scheduleRecords.ScheduleType == ScheduleTypeConstants.Calendar)
+                            {
+                                <li>
+                                    <span class="label">@Html.LabelFor(m => m.scheduleRecords.CalendarSlack) : </span>
+                                    <span class="inputText">
+                                        @Html.ValidationMessageFor(m => m.scheduleRecords.CalendarSlack, "", new { style = "display:none" })
+                                        @Html.TextBoxFor(m => m.scheduleRecords.CalendarSlack, new { @class = "form-control search", autocomplete = "off" })
+                                    </span>
+                                </li>
+                            }
+                            @if (Model.scheduleRecords.ScheduleType == ScheduleTypeConstants.Meter)
+                            {
+                                <li>
+                                    <span class="label">@Html.LabelFor(m => m.scheduleRecords.MeterId)  : <small>*</small></span>
+                                    <span class="inputText">
+                                        @Html.ValidationMessageFor(m => m.scheduleRecords.MeterId, "", new { style = "display:none" })
+
+                                        @if (Model.scheduleRecords.PrevMaintScheId > 0 && Model.scheduleRecords.PrevMaintLibraryID != 0)
+                                        {
+                                            @Html.TextBoxFor(m => m.scheduleRecords.MeterId, new { @class = "form-control search longinput readonly", @readonly = "readonly", autocomplete = "off" })
+                                        }
+                                        else
+                                        {
+                                            @Html.DropDownListFor(m => m.scheduleRecords.MeterId, Model.scheduleRecords.MeterLookUpList, "--Select--", new { @class = "form-control search select2picker", style = "width:100%;" })
+                                        }
+
+                                    </span>
+                                </li>
+                            }
+                            @if (Model.scheduleRecords.ScheduleType == ScheduleTypeConstants.Meter)
+                            {
+                                <li>
+                                    <span class="label">@Html.LabelFor(m => m.scheduleRecords.MeterInterval): <small>*</small></span>
+                                    <span class="inputText">
+                                        @Html.ValidationMessageFor(m => m.scheduleRecords.MeterInterval, "", new { style = "display:none" })
+                                        @if (Model.scheduleRecords.PrevMaintScheId > 0 && Model.scheduleRecords.PrevMaintLibraryID != 0)
+                                        {
+                                            @Html.TextBoxFor(m => m.scheduleRecords.MeterInterval, new { @class = "form-control search readonly", @readonly = "readonly", autocomplete = "off" })
+                                        }
+                                        else
+                                        {
+                                            @Html.TextBoxFor(m => m.scheduleRecords.MeterInterval, new { @class = "form-control search", autocomplete = "off" })
+                                        }
+
+                                    </span>
+                                </li>
+                            }
+                            @if (Model.scheduleRecords.ScheduleType == ScheduleTypeConstants.Meter)
+                            {
+                                <li>
+                                    <span class="label">@Html.LabelFor(m => m.scheduleRecords.MeterLastDue): <small>*</small></span>
+                                    <span class="inputText">
+                                        @Html.ValidationMessageFor(m => m.scheduleRecords.MeterLastDue, "", new { style = "display:none" })
+                                        @if (Model.scheduleRecords.PrevMaintScheId > 0 && Model.scheduleRecords.PrevMaintLibraryID != 0)
+                                        {
+                                            @Html.TextBoxFor(m => m.scheduleRecords.MeterLastDue, new { @class = "form-control search readonly", @readonly = "readonly", autocomplete = "off" })
+                                        }
+                                        else
+                                        {
+                                            @Html.TextBoxFor(m => m.scheduleRecords.MeterLastDue, new { @class = "form-control search", autocomplete = "off" })
+                                        }
+                                    </span>
+                                </li>
+                            }
+                            @if ((Model.scheduleRecords.ScheduleType == ScheduleTypeConstants.Meter))
+                            {
+                                <li>
+                                    <span class="label">@Html.LabelFor(m => m.scheduleRecords.CalendarSlack) : </span>
+                                    <span class="inputText">
+                                        @Html.ValidationMessageFor(m => m.scheduleRecords.CalendarSlack, "", new { style = "display:none" })
+                                        @Html.TextBoxFor(m => m.scheduleRecords.CalendarSlack, new { @class = "form-control search", autocomplete = "off" })
+                                    </span>
+                                </li>
+                            }
+                            @if (Model.scheduleRecords.ScheduleType == ScheduleTypeConstants.OnDemand)
+                            {
+                                <li>
+                                    <span class="label">On Demand Group : <small>*</small></span>
+                                    <span class="inputText">
+                                        @Html.ValidationMessageFor(m => m.scheduleRecords.OnDemandGroup, "", new { style = "display:none" })
+                                        @if (Model.scheduleRecords.PrevMaintScheId > 0 && Model.scheduleRecords.PrevMaintLibraryID != 0)
+                                        {
+                                            @Html.TextBoxFor(m => m.scheduleRecords.OnDemandGroup, new { @class = "form-control search longinput readonly", @readonly = "readonly", autocomplete = "off" })
+                                        }
+                                        else
+                                        {
+                                            @Html.DropDownListFor(m => m.scheduleRecords.OnDemandGroup, Model.scheduleRecords.OnDemandList, "--Select--", new { @class = "form-control search select2picker", style = "width:100%;" })
+                                        }
+
+                                    </span>
+                                </li>
+                            }
+                            @if (!(Model.scheduleRecords.ScheduleType == ScheduleTypeConstants.OnDemand) && !(Model.scheduleRecords.ScheduleType == ScheduleTypeConstants.Calendar) && !(Model.scheduleRecords.ScheduleType == ScheduleTypeConstants.Meter))
+                            {
+                                if (Model.scheduleRecords.PrevMaintScheId != 0)
+                                {
+
+                                    if (Model.scheduleRecords.ChargeToIdStatus == true)
+                                    {
+                                        <li>
+                                            <span class="label">@Html.LabelFor(m => m.scheduleRecords.InactiveFlag)  : </span>
+                                            <span class="inputText">@Html.CheckBoxFor(m => m.scheduleRecords.InactiveFlag, new { @class = "readonly", @readonly = "readonly", onclick = "return false;" })</span>
+                                        </li>
+                                    }
+                                    else
+                                    {
+                                        <li>
+                                            <span class="label">@Html.LabelFor(m => m.scheduleRecords.InactiveFlag)  : </span>
+                                            <span class="inputText">@Html.CheckBoxFor(m => m.scheduleRecords.InactiveFlag)</span>
+                                        </li>
+                                    }
+                                }
+                            }
+                            <li>
+                                <span class="label">@Html.LabelFor(m => m.scheduleRecords.DownRequired)   : <small></small></span>
+                                @if ((Model.scheduleRecords.PrevMaintLibraryID == 0) || (Model.scheduleRecords.PrevMaintScheId > 0 && Model.scheduleRecords.PrevMaintLibraryID != 0))
+                                {
+                                    <span class="inputText">@Html.CheckBoxFor(m => m.scheduleRecords.DownRequired)</span>
+                                }
+                                else
+                                {
+                                    <span class="inputText">@Html.CheckBoxFor(m => m.scheduleRecords.DownRequired, new { @class = "readonly", @readonly = "readonly", onclick = "return false;" })</span>
+                                }
+                            </li>
+                            @*************V2-866************@
+                            @if (Model.scheduleRecords.PrevMaintScheId != 0)
+                            {
+                            <li>
+                                <span class="label">@Html.LabelFor(m => m.scheduleRecords.InactiveFlag)   : <small></small></span>
+                                <span class="inputText">@Html.CheckBoxFor(m => m.scheduleRecords.InactiveFlag)</span>
+                            </li>
+                            }
+                            @**********************************@
+
+                            @if (!(Model.scheduleRecords.ScheduleType == ScheduleTypeConstants.OnDemand) && !(Model.scheduleRecords.ScheduleType == ScheduleTypeConstants.Calendar) && !(Model.scheduleRecords.ScheduleType == ScheduleTypeConstants.Meter))
+                            {
+                                if (Model.scheduleRecords.PrevMaintScheId > 0 && Model.scheduleRecords.PrevMaintLibraryID != 0)
+                                {
+                                    <li>
+                                        <span class="label">@Html.LabelFor(m => m.scheduleRecords.Scheduled)   :</span>
+                                        <span class="inputText">@Html.CheckBoxFor(m => m.scheduleRecords.Scheduled, new { @class = "readonly", @readonly = "readonly", onclick = "return false;" })</span>
+                                    </li>
+                                }
+                                else
+                                {
+                                    <li>
+                                        <span class="label">@Html.LabelFor(m => m.scheduleRecords.Scheduled)   :</span>
+                                        <span class="inputText">@Html.CheckBoxFor(m => m.scheduleRecords.Scheduled)</span>
+                                    </li>
+                                }
+                            }
+                        </ul>
+                        <h3>@Model.Loc.Where(a => a.ResourceId == "spnWorkOrderDefaults").FirstOrDefault().Value.ToString()</h3>
+                        <ul class="listView nobrd n-cust-ul">
+                            <li>
+                                <span class="label">@Html.LabelFor(m => m.scheduleRecords.AssignedTo_PersonnelId)  : <small></small></span>
+                                <span class="inputText">
+                                    @Html.DropDownListFor(m => m.scheduleRecords.AssignedTo_PersonnelId, Model.scheduleRecords.WorkAssignedLookUpList, "--Select--", new { @class = "form-control search select2picker", style = "width:100%;" })
+                                </span>
+                            </li>
+                            <li>
+                                <span class="label">@Html.LabelFor(m => m.scheduleRecords.Shift) : <small></small></span>
+                                <span class="inputText">
+                                    @Html.DropDownListFor(m => m.scheduleRecords.Shift, Model.scheduleRecords.ScheduledShiftList, "--Select--", new { @class = "form-control search select2picker", style = "width:100%;" })
+                                </span>
+                            </li>
+                            <li>
+                                <span class="label">@Html.LabelFor(m => m.scheduleRecords.Priority)  : <small></small></span>
+                                <span class="inputText">
+                                    @Html.DropDownListFor(m => m.scheduleRecords.Priority, Model.scheduleRecords.ScheduledPriorityList, "--Select--", new { @class = "form-control search select2picker", style = "width:100%;" })
+                                </span>
+                            </li>
+                            <li>
+                                <span class="label">@Html.LabelFor(m => m.scheduleRecords.Type)  : <small></small></span>
+                                <span class="inputText">
+                                    @Html.DropDownListFor(m => m.scheduleRecords.Type, Model.scheduleRecords.ScheduledTypeList, "--Select--", new { @class = "form-control search select2picker", style = "width:100%;" })
+                                </span>
+                            </li>
+                            <li>
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "globalPlanner").FirstOrDefault().Value.ToString() : <small></small></span>
+                                <span class="inputText">
+                                    @Html.DropDownListFor(m => m.scheduleRecords.Planner_PersonnelId, Model.scheduleRecords.PlannerPersonnelList, "--Select--", new { @class = "form-control search select2picker", style = "width:100%;" })
+                                </span>
+                            </li>
+                            <li>
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnFailureCode").FirstOrDefault().Value.ToString() : <small></small></span>
+                                <span class="inputText">
+                                    @Html.DropDownListFor(m => m.scheduleRecords.FailureCode, Model.scheduleRecords.FailureCodeList, "--Select--", new { @class = "form-control search select2picker", style = "width:100%;" })
+                                </span>
+                            </li>
+                            <li>
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnActionCode").FirstOrDefault().Value.ToString() : <small></small></span>
+                                <span class="inputText">
+                                    @Html.DropDownListFor(m => m.scheduleRecords.ActionCode, Model.scheduleRecords.ActionCodeList, "--Select--", new { @class = "form-control search select2picker", style = "width:100%;" })
+                                </span>
+                            </li>
+                            <li>
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnRootCause").FirstOrDefault().Value.ToString() : <small></small></span>
+                                <span class="inputText">
+                                    @Html.DropDownListFor(m => m.scheduleRecords.RootCauseCode, Model.scheduleRecords.RootCauseCodeList, "--Select--", new { @class = "form-control search select2picker", style = "width:100%;" })
+                                </span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div style="clear:both;"></div>
+
+                    <div class="idBttns">
+                        <div class="bttn_pagin">
+                            <div class="bttns2">
+                                <button type="submit" class="btn btn-blue mobBttn"><i class="fa fa-save faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+                            </div>
+                            <div class="bttns"><button type="button" class="btn btn-blue mobBttn" id="btnschedulescancel"><i class="fa fa-close faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button></div>
+
+                            <div style="clear:both;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @Html.HiddenFor(m => m.scheduleRecords.PrevMaintMasterId)
+    @Html.HiddenFor(m => m.scheduleRecords.ScheduleType, new { id = "ScheduleType" })
+    if (Model.scheduleRecords.PrevMaintScheId != 0)
+    {
+        @Html.HiddenFor(m => m.scheduleRecords.PrevMaintScheId)
+    }
+    if (Model.scheduleRecords.PrevMaintLibraryID > 0)
+    {
+        @Html.HiddenFor(m => m.scheduleRecords.PrevMaintLibraryID)
+    }
+}
+<div id="prevEdipTreeModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title" id="hdrPlantLocation">@Model.Loc.Where(a => a.ResourceId == "spnGlobalEquipmentTreeLookup").FirstOrDefault().Value.ToString()</h4>
+            </div>
+            <div class="modal-body">
+                <div class="cntTree">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<style type="text/css">
+    .lookupTree_workorder {
+        float: right;
+        width: 10%;
+        text-align: center;
+        margin: -10px 0 0 0;
+    }
+
+    .chargeTree {
+        right: 0px;
+    }
+
+    .inputText.wthAdjstNew {
+        width: 67% !important;
+    }
+
+    .inputText.wthAdjstNew2 {
+        width: 68% !important;
+    }
+
+    @@media screen and (max-width: 1599px) {
+        .openMenu .chargeTree, .closeMenu .chargeTree {
+            right: 0px !important;
+        }
+    }
+    @@media screen and (max-width: 767px) {
+        .tree-full .tree-block-box .chargeTree {
+            left:0px;
+            margin-top:10px;
+        }
+    }
+
+        .ui-tooltip.ui-tooltip1 {
+            z-index: 101 !important;
+        }
+
+        .excldChk {
+            float: left;
+            margin-right: 10px;
+            margin-bottom: 0;
+        }
+
+        .daysofweek {
+            display: flex !important;
+            justify-content: space-between;
+        }
+
+        .btn-fr {
+            float: right;
+        }
+
+        .tree-full .chargeTree {
+            right: 0px;
+            top: 0px;
+            left: 10px;
+            position: relative;
+        }
+
+</style>
+
+@Html.Partial("~/Views/PreventiveMaintenance/_PrevMaintEquipementPopUp.cshtml")
+@Html.Partial("~/Views/PreventiveMaintenance/_AddPMLocationPopUp.cshtml")

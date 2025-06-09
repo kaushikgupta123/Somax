@@ -1,0 +1,128 @@
+﻿@model Client.Models.Project.ProjectVM
+<div class="row">
+    <div class="col-xl-6">
+        <div class="m-portlet m-portlet--full-height m-portlet--fit">
+            <div class="m-portlet__head">
+                <div class="m-portlet__head-caption">
+                    <div class="m-portlet__head-title">
+                        <h3 class="m-portlet__head-text">
+                            @Model.Loc.Where(a => a.ResourceId == "ProjectDetailsDashboardScheduleComplienceText").FirstOrDefault().Value.ToString()
+                        </h3>
+                    </div>
+                </div>
+            </div>
+
+            <div class="m-portlet__body">
+                <div class="tab-content">
+                    <div class="chartBox" style="position: relative; min-height: 300px; margin-top:0;">
+                        <div class="lds-ellipsis lds-adjust ScheduleComplienceLoader">
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                        </div>
+
+                        <div id="ProjectTaskScheduleComplience">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-6 rightWidgetArea">
+        <div class="row">
+            <div class="col-xl-5 col-md-6 planed">
+                <div class="m-portlet m-portlet--fit">
+                    <div class="m-portlet__head">
+                        <div class="m-portlet__head-caption">
+                            <div class="m-portlet__head-title">
+                                <h3 class="m-portlet__head-text">
+                                    @Model.Loc.Where(a => a.ResourceId == "ProjectDetailsDashboardPlannedText").FirstOrDefault().Value.ToString()
+                                </h3>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="m-portlet__body">
+                        <div class="tab-content">
+                            <div class="chartBox">
+                                <span class="chartCount" id="ProjectTaskPlannedCount"></span>
+                                <span class="chartCountText">@Model.Loc.Where(a => a.ResourceId == "spnTaskCount").FirstOrDefault().Value.ToString()</span>
+                                <div class="lds-ellipsis lds-adjust ScheduleComplienceCountLoader">
+                                    <div></div>
+                                    <div></div>
+                                    <div></div>
+                                    <div></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xl-5 col-md-6 incomplete">
+                <div class="m-portlet m-portlet--fit">
+                    <div class="m-portlet__head">
+                        <div class="m-portlet__head-caption">
+                            <div class="m-portlet__head-title">
+                                <h3 class="m-portlet__head-text">
+                                    @Model.Loc.Where(a => a.ResourceId == "GlobalIncomplete").FirstOrDefault().Value.ToString()
+                                </h3>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="m-portlet__body">
+                        <div class="tab-content">
+                            <div class="chartBox">
+                                <span class="chartCount" id="ProjectTaskInCompleteCount"></span>
+                                <span class="chartCountText">@Model.Loc.Where(a => a.ResourceId == "spnTaskCount").FirstOrDefault().Value.ToString()</span>
+                                <div class="lds-ellipsis lds-adjust ScheduleComplienceCountLoader">
+                                    <div></div>
+                                    <div></div>
+                                    <div></div>
+                                    <div></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-xl-5 col-md-6 complete">
+                <div class="m-portlet m-portlet--fit">
+                    <div class="m-portlet__head">
+                        <div class="m-portlet__head-caption">
+                            <div class="m-portlet__head-title">
+                                <h3 class="m-portlet__head-text">
+                                    @Model.Loc.Where(a => a.ResourceId == "GlobalComplete").FirstOrDefault().Value.ToString()
+                                </h3>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="m-portlet__body">
+                        <div class="tab-content">
+                            <div class="chartBox">
+                                <span class="chartCount" id="ProjectTaskCompleteCount"></span>
+                                <span class="chartCountText">@Model.Loc.Where(a => a.ResourceId == "spnTaskCount").FirstOrDefault().Value.ToString()</span>
+                                <div class="lds-ellipsis lds-adjust ScheduleComplienceCountLoader">
+                                    <div></div>
+                                    <div></div>
+                                    <div></div>
+                                    <div></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+

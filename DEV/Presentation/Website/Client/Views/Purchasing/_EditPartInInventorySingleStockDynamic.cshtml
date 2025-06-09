@@ -1,0 +1,450 @@
+﻿@model Client.Models.PurchaseOrder.PurchaseOrderVM
+@{
+    var AttachedModelName = "EditPOLineItemPartInInventorySingleStock";
+    var fieldName = "";
+    var fieldId = "";
+    var EmptyLookupList = new List<SelectListItem> { new SelectListItem { } };
+    var constAccount = "Account";
+    object Value = null;
+    bool isPunchOut = false;
+    string[] AccountColumns = { "accountid" };
+    var constUNSPSC = "PartCategoryMaster";
+    string[] UNSPSCColumns = { "unspsc" };
+}
+<link href="~/Scripts/Metronic/assets/demo/default/base/style_newCustom.css" rel="stylesheet" />
+<div class="m-subheader">
+    <div class="new-m-subheader">
+        <div class="PageTitle">
+            <div class="align-items-center separator">
+                <h3 class="m-subheader__title ">
+                    @Model.Loc.Where(a => a.ResourceId == "spnPoPurchasing").FirstOrDefault().Value.ToString()
+                </h3>
+            </div>
+        </div>
+
+        <div class="NewBreadcrumbArea">
+            <div class="newBreadcrumb">
+                <ul>
+                    <li><a href="/Dashboard/Dashboard">&nbsp;</a></li>
+                    <li><a href="/Purchasing/Index?page=Procurement_Orders">@Model.Loc.Where(a => a.ResourceId == "spnPoPurchasingSearch").FirstOrDefault().Value.ToString()</a></li>
+                    <li><a href="javascript:void(0)" id="brdPO" data-val="@Model.EditPOLineItemPartInInventorySingleStock.PurchaseOrderId">@Model.EditPOLineItemPartInInventorySingleStock.PurchaseOrder_ClientLookupId</a></li>
+                    <li class="active">@Model.Loc.Where(a => a.ResourceId == "spnEditStockLineItem").FirstOrDefault().Value.ToString()</li>
+                </ul>
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+        <div style="clear:both;"></div>
+    </div>
+</div>
+
+@Html.Partial("_ErrorDiv")
+@if (Model.UIConfigurationDetails != null && Model.UIConfigurationDetails.Count > 0)
+{
+    using (Ajax.BeginForm("UpdatePOPartInInventorySingleStockDynamic", "Purchasing", new AjaxOptions { HttpMethod = "Post", OnSuccess = "EditLineItemOnSuccess", OnBegin = "AjaxBeginFormBegin", OnComplete = "AjaxBeginFormComplete", OnFailure = "AjaxBeginFormFaillure" }, new { id = "frmPOLineItemEditSingleStockDynamic" }))
+    {
+        @Html.AntiForgeryToken()
+        <div class="row">
+            <div class="col-xl-12">
+                <div class="row">
+                    <div class="col-xl-12" id="btnnblock">
+                        <div class="m-portlet" id="m_portlet" style="padding:15px;">
+                            <div class="bottomBlock">
+                                <div class="tabsArea nobg" id="Identifications" style="display:block;">
+                                    <ul class="listView nobrd">
+                                        @foreach (var data in Model.UIConfigurationDetails)
+                                        {
+                                            if (data.Section == true)
+                                            {
+                                                <li>
+                                                    <span class="label"><strong>@data.SectionName</strong></span>
+                                                </li>
+                                                continue;
+                                            }
+                                            if (string.IsNullOrEmpty(data.ColumnName))
+                                            {
+                                                continue;
+                                            }
+                                            else if (!string.IsNullOrEmpty(data.ColumnName))
+                                            {
+                                                string colName = UtilityFunction.ReturnPropertyNameWithoutCaseComparison(data.ColumnName, Model.EditPOLineItemPartInInventorySingleStock);
+                                                if (string.IsNullOrEmpty(colName))
+                                                {
+                                                    continue;
+                                                }
+                                                data.ColumnName = colName;
+                                            }
+
+                                            fieldName = AttachedModelName + "." + data.ColumnName;
+                                            fieldId = data.ColumnName;
+                                            Value = Model.EditPOLineItemPartInInventorySingleStock.GetType().GetProperty(data.ColumnName).GetValue(Model.EditPOLineItemPartInInventorySingleStock);
+                                            isPunchOut = (bool)Model.EditPOLineItemPartInInventorySingleStock.GetType().GetProperty("IsPunchout").GetValue(Model.EditPOLineItemPartInInventorySingleStock);
+                                            if (data.SystemRequired == true)
+                                            {
+                                                data.Required = true;
+                                            }
+                                            if (data.ColumnName == "Description")
+                                            {
+                                                <li>
+                                                    @CustomHelperDynamic.GetLabel(data.ColumnLabel, data.Required)
+                                                    <span class="inputText">
+                                                        @Html.TextBox(fieldName, Value, new
+                                                                           {
+                                                                              id = fieldId,
+                                                                              @class = "form-control search dropbtn",
+                                                                              autocomplete = "off"
+                                                                           })
+                                                    </span>
+                                                </li>
+                                                continue;
+                                            }
+                                            if (data.ColumnName == "PartId")
+                                            {
+
+                                                <li>
+                                                    @CustomHelperDynamic.GetLabel(data.ColumnLabel, data.Required)
+
+                                                    @{
+                                                        string TextFieldName = "", TextFieldId = "", TextFieldValue = "";
+                                                        TextFieldId = "PartClientLookupId";
+                                                        TextFieldName = AttachedModelName + "." + TextFieldId;
+                                                        TextFieldValue = Model.EditPOLineItemPartInInventorySingleStock.GetType().GetProperty(TextFieldId).GetValue(Model.EditPOLineItemPartInInventorySingleStock).ToString();
+                                                    }
+                                                    <span class="inputText">
+                                                        <div class="dropdown dropTableOuter">
+                                                            <div class="input-group">
+                                                                @Html.ValidationMessage(fieldName, new { style = "display:none" })
+                                                                @if (Value == null || Value.ToString() == "0")
+                                                                {
+                                                                    @Html.TextBox(fieldName, "", new
+                                                                    {
+                                                                   id = fieldId,
+                                                                   @class = "form-control search dropbtn readonly",
+                                                                   @readonly = "readonly",
+                                                                   autocomplete = "off"
+                                                                    })
+
+                                                                    @Html.TextBox(TextFieldName, "", new
+                                                                    {
+                                                                   id = TextFieldId,
+                                                                   @class = "form-control search dropbtn readonly",
+                                                                   @readonly = "readonly",
+                                                                   autocomplete = "off",
+                                                                   @style = "display:none"
+                                                                    })
+                                                                }
+                                                                else
+                                                                {
+                                                                    @Html.TextBox(fieldName, Value, new
+                                                                    {
+                                                                    id = fieldId,
+                                                                    @class = "form-control search dropbtn readonly",
+                                                                    @readonly = "readonly",
+                                                                    autocomplete = "off",
+                                                                    @style = "display:none"
+                                                                    })
+                                                                    @Html.TextBox(TextFieldName, TextFieldValue, new
+                                                                    {
+                                                                    id = TextFieldId,
+                                                                    @class = "form-control search dropbtn readonly",
+                                                                    @readonly = "readonly",
+                                                                    autocomplete = "off"
+                                                                    })
+                                                                }
+                                                                @if (data.ViewOnly == false)
+                                                                {
+                                                                    <div class="input-group-btn">
+                                                                        <button class="btn btn-white btntxtInputGroup ClearPartModalPopupGridData" type="button" data-textfield="@TextFieldId"
+                                                                                data-valuefield="@fieldId" style="display:none;">
+                                                                            <i id="srcicon" class="fa fa-close"></i>
+                                                                        </button>
+                                                                    </div>
+                                                                    <div class="input-group-btn">
+                                                                        <button class="btn btn-white btntxtInputGroup OpenPartModalPopupGrid" type="button" data-textfield="@TextFieldId" data-valuefield="@fieldId" data-multistoreroomvalue="@Model.EditPOLineItemPartInInventorySingleStock.MultiStoreroom" data-storeroomid="@Model.EditPOLineItemPartInInventorySingleStock.StoreroomId">
+                                                                            <i id="srcicon" class="fa fa-search"></i>
+                                                                        </button>
+                                                                    </div>
+                                                                }
+                                                            </div>
+                                                        </div>
+                                                    </span>
+                                                </li>
+                                                continue;
+                                            }
+                                            if (isPunchOut)
+                                            {
+                                                if (data.ColumnName == "Description")
+                                                {
+                                                    <li>
+                                                        @CustomHelperDynamic.GetLabel(data.ColumnLabel, data.Required)
+                                                        <span class="inputText">
+                                                            @Html.TextBox(fieldName, Value, new
+                                                                               {
+                                                                                  id = fieldId,
+                                                                                  @class = "form-control search dropbtn readonly",
+                                                                                  @readonly = "readonly",
+                                                                                  autocomplete = "off"
+                                                                               })
+                                                        </span>
+                                                    </li>
+                                                    continue;
+                                                }
+                                                if (data.ColumnName == "UnitofMeasure")
+                                                {
+                                                    var LookUpList = Model.AllRequiredLookUplist
+                                                    .Where(x => x.lookupname == data.LookupName)
+                                                    .Select(x => new SelectListItem { Text = x.text, Value = x.value })
+                                                    .ToList();
+                                                    <li>
+                                                        @CustomHelperDynamic.GetLabel(data.ColumnLabel, data.Required)
+                                                        <span class="inputText">
+                                                            @Html.ValidationMessage(fieldName, new { style = "display:none" })
+                                                            @if (LookUpList != null && LookUpList.Count() > 0)
+                                                            {
+                                                                @Html.DropDownList(fieldName, LookUpList, "--Select--", new
+                                                           {
+                                                               id = fieldId,
+                                                               @class = "form-control search select2picker",
+                                                               style = "width:100%;",
+                                                               disabled = "disabled"
+                                                           })
+                                                            }
+                                                            else
+                                                            {
+                                                                @Html.DropDownList(fieldName, EmptyLookupList, "--Select--", new
+                                                           {
+                                                               id = fieldId,
+                                                               @class = "form-control search select2picker",
+                                                               style = "width:100%;",
+                                                               disabled = "disabled"
+                                                           })
+                                                            }
+                                                        </span>
+                                                    </li>
+                                                    continue;
+                                                }
+                                            }
+
+                                            if (data.LookupType.ToLower() == DataDictionaryLookupTypeConstant.LookupList.ToLower() &&
+                                            !string.IsNullOrEmpty(data.LookupName))
+                                            {
+                                                var LookUpList = Model.AllRequiredLookUplist
+                                                .Where(x => x.lookupname == data.LookupName)
+                                                .Select(x => new SelectListItem { Text = x.text, Value = x.value })
+                                                .ToList();
+                                                <li>
+                                                    @CustomHelperDynamic.GetLabel(data.ColumnLabel, data.Required)
+                                                    <span class="inputText">
+                                                        @Html.ValidationMessage(fieldName, new { style = "display:none" })
+                                                        @if (LookUpList != null && LookUpList.Count() > 0)
+                                                        {
+                                                            @Html.DropDownList(fieldName, LookUpList, "--Select--", new
+                                                       {
+                                                           id = fieldId,
+                                                           @class = "form-control search select2picker",
+                                                           style = "width:100%;"
+                                                       })
+                                                        }
+                                                        else
+                                                        {
+                                                            @Html.DropDownList(fieldName, EmptyLookupList, "--Select--", new
+                                                       {
+                                                           id = fieldId,
+                                                           @class = "form-control search select2picker",
+                                                           style = "width:100%;"
+                                                       })
+                                                        }
+                                                    </span>
+                                                </li>
+                                                continue;
+                                            }
+
+                                            if (data.LookupType == DataDictionaryLookupTypeConstant.Table && data.LookupName.ToLower() == constAccount.ToLower() && data.ColumnName.ToLower() == "AccountId".ToLower())
+                                            {
+
+                                                <li>
+                                                    @CustomHelperDynamic.GetLabel(data.ColumnLabel, data.Required)
+
+                                                    @{
+                                                        string TextFieldName = "", TextFieldId = "", TextFieldValue = "";
+                                                        TextFieldId = "AccountClientLookupId";
+                                                        TextFieldName = AttachedModelName + "." + TextFieldId;
+                                                        TextFieldValue = Model.EditPOLineItemPartInInventorySingleStock.GetType().GetProperty(TextFieldId).GetValue(Model.EditPOLineItemPartInInventorySingleStock).ToString();
+                                                    }
+                                                    <span class="inputText">
+                                                        <div class="dropdown dropTableOuter">
+                                                            <div class="input-group">
+                                                                @Html.ValidationMessage(fieldName, new { style = "display:none" })
+                                                                @if (Value == null)
+                                                                {
+                                                                    @Html.TextBox(fieldName, Value, new
+                                                                    {
+                                                                    id = fieldId,
+                                                                    @class = "form-control search dropbtn readonly",
+                                                                    @readonly = "readonly",
+                                                                    autocomplete = "off"
+                                                                    })
+
+                                                                    @Html.TextBox(TextFieldName, TextFieldValue, new
+                                                                    {
+                                                                    id = TextFieldId,
+                                                                    @class = "form-control search dropbtn readonly",
+                                                                    @readonly = "readonly",
+                                                                    autocomplete = "off",
+                                                                    @style = "display:none"
+                                                                    })
+                                                                }
+                                                                else
+                                                                {
+                                                                    @Html.TextBox(fieldName, Value, new
+                                                                    {
+                                                                    id = fieldId,
+                                                                    @class = "form-control search dropbtn readonly",
+                                                                    @readonly = "readonly",
+                                                                    autocomplete = "off",
+                                                                    @style = "display:none"
+                                                                    })
+                                                                    @Html.TextBox(TextFieldName, TextFieldValue, new
+                                                                    {
+                                                                    id = TextFieldId,
+                                                                    @class = "form-control search dropbtn readonly",
+                                                                    @readonly = "readonly",
+                                                                    autocomplete = "off"
+                                                                    })
+                                                                }
+                                                                @if (data.ViewOnly == false)
+                                                                {
+                                                                    if (string.IsNullOrEmpty(TextFieldValue))
+                                                                    {
+                                                                        <div class="input-group-btn">
+                                                                            <button class="btn btn-white btntxtInputGroup ClearAccountModalPopupGridData" type="button" data-textfield="@TextFieldId"
+                                                                                    data-valuefield="@fieldId" style="display:none;">
+                                                                                <i id="srcicon" class="fa fa-close"></i>
+                                                                            </button>
+                                                                        </div>
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <div class="input-group-btn">
+                                                                            <button class="btn btn-white btntxtInputGroup ClearAccountModalPopupGridData" type="button" data-textfield="@TextFieldId"
+                                                                                    data-valuefield="@fieldId">
+                                                                                <i id="srcicon" class="fa fa-close"></i>
+                                                                            </button>
+                                                                        </div>
+                                                                    }
+                                                                    <div class="input-group-btn">
+                                                                        <button class="btn btn-white btntxtInputGroup OpenAccountModalPopupGrid" type="button" data-textfield="@TextFieldId" data-valuefield="@fieldId">
+                                                                            <i id="srcicon" class="fa fa-search"></i>
+                                                                        </button>
+                                                                    </div>
+                                                                }
+                                                            </div>
+                                                        </div>
+                                                    </span>
+                                                </li>
+                                                continue;
+                                            }
+                                            if (data.ColumnName == "UnitCost")
+                                            {
+                                                <li>
+                                                    @CustomHelperDynamic.GetLabel(data.ColumnLabel, data.Required)
+                                                    <span class="inputText">
+                                                        @Html.ValidationMessage(fieldName, new { style = "display:none" })
+                                                        @Html.UIConfigControl(fieldName, fieldId, data.ColumnType.ToLower(), data.MaxLength, data.ViewOnly)
+                                                    </span>
+                                                </li>
+
+                                                string TextFieldName = "", TextFieldId = "", TextFieldValue = "";
+                                                TextFieldId = "TotalCost";
+                                                TextFieldName = AttachedModelName + "." + TextFieldId;
+                                                TextFieldValue = Model.EditPOLineItemPartInInventorySingleStock.GetType().GetProperty(TextFieldId).GetValue(Model.EditPOLineItemPartInInventorySingleStock).ToString();
+                                                <li>
+                                                    @CustomHelperDynamic.GetLabel(@Model.Loc.Where(a => a.ResourceId == "spnTotalCost").FirstOrDefault().Value.ToString(), false)
+                                                    <span class="inputText">
+                                                        @Html.TextBox(TextFieldName, TextFieldValue, new
+                                                                           {
+                                                                              id = TextFieldId,
+                                                                              @class = "form-control search dropbtn readonly",
+                                                                              @readonly = "readonly",
+                                                                              autocomplete = "off"
+                                                                           })
+                                                    </span>
+                                                </li>
+                                                continue;
+                                            }
+                                            if (data.ColumnName == "EsitmatedDelivery")
+                                            {
+                                                <li>
+                                                    @CustomHelperDynamic.GetLabel(data.ColumnLabel, data.Required)
+                                                    <span class="inputText">
+                                                        @Html.ValidationMessage(fieldName, new { style = "display:none" })
+                                                        @Html.TextBox(fieldName, Value, "{0:MM/dd/yyyy}", new
+                                                        {
+                                                        id = fieldId,
+                                                        @class = "form-control search dtpickernextseven",
+                                                        autocomplete = "off"
+                                                        })
+                                                    </span>
+
+                                                    <div style="clear:both;"></div>
+                                                </li>
+                                                continue;
+                                            }
+
+                                            <li>
+                                                @CustomHelperDynamic.GetLabel(data.ColumnLabel, data.Required)
+                                                <span class="inputText">
+                                                    @Html.ValidationMessage(fieldName, new { style = "display:none" })
+                                                    @Html.UIConfigControl(fieldName, fieldId, data.ColumnType.ToLower(), data.MaxLength, data.ViewOnly)
+                                                    @CustomHelperDynamic.GetCountMessageLabel(data.MaxLength, data.ViewOnly, Convert.ToString(Value))
+                                                </span>
+                                            </li>
+                                        }
+                                    </ul>
+                                </div>
+                                <div style="clear:both;"></div>
+                                <div class="idBttns">
+                                    <div class="bttn_pagin">
+                                        <div class="bttns2">
+                                            <button class="btn btn-blue mobBttn" id="btnPOEditLineItemSingleStockSave" name="Command" value="save"><i class="fa fa-save faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+                                        </div>
+                                        <div class="bttns"><button type="button" class="btn btn-blue mobBttn" id="btnPOLineItemcancel"><i class="fa fa-close faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button></div>
+                                        <div style="clear:both;"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+        @Html.HiddenFor(m => m.EditPOLineItemPartInInventorySingleStock.PurchaseOrderId, new { id = "PurchaseOrderId" })
+        @Html.HiddenFor(m => m.EditPOLineItemPartInInventorySingleStock.PurchaseOrderLineItemId, new { id = "PurchaseOrderLineItemId" })
+        @Html.HiddenFor(m => m.EditPOLineItemPartInInventorySingleStock.UpdateIndex)
+        @Html.HiddenFor(m => m.EditPOLineItemPartInInventorySingleStock.PartId, new { id = "PartId" })
+        @Html.HiddenFor(m => m.EditPOLineItemPartInInventorySingleStock.PurchaseUOM, new { id = "UiconfigPurchaseUOM" })
+        @Html.HiddenFor(m => m.EditPOLineItemPartInInventorySingleStock.AccountId, new { id = "UiconfigAccountId" })
+        @Html.HiddenFor(m => m.EditPOLineItemPartInInventorySingleStock.IsOnOderCheck)
+        @Html.HiddenFor(m => m.EditPOLineItemPartInInventorySingleStock.PartStoreroomId)
+        @Html.HiddenFor(m => m.EditPOLineItemPartInInventorySingleStock.StoreroomId)
+        @Html.HiddenFor(m => m.EditPOLineItemPartInInventorySingleStock.VendorId, new { id = "PartInInventoryVendorId" })
+        if (Model.UIConfigurationDetails.Any(x => AccountColumns.Contains(x.ColumnName.ToLower())))
+        {
+            @Html.Partial("~/Views/Shared/LookupTypeTablePopup/_AccountPopupLookup.cshtml")
+        }
+        if (Model.UIConfigurationDetails.Any(x => UNSPSCColumns.Contains(x.ColumnName.ToLower())))
+        {
+            @Html.Partial("~/Views/Shared/LookupTypeTablePopup/_PartCategoryMasterPopup.cshtml")
+        }
+
+    }
+}
+@Html.Partial("~/Views/Shared/LookupTypeTablePopup/_PartPopupLookup.cshtml")
+@if (Model.EditPOLineItemPartInInventorySingleStock.IsOnOderCheck)
+{
+    @Html.Partial("~/Views/Purchasing/_PartOnOrderCheckModal.cshtml")
+}
+
+

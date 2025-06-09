@@ -1,0 +1,44 @@
+﻿@model Client.Models.MaterialRequest.MaterialRequestVM
+
+<nav class="sidebar">
+    <div class="dismiss">
+        <i class="fa fa-close"></i>
+    </div>
+    <div class="sidebar-header">
+        <h3><i class="fa fa-filter" style="position: relative; top: -2px;"></i>&nbsp;@Model.Loc.Where(a => a.ResourceId == "globalFilter").FirstOrDefault().Value.ToString() <span class="filteritemcount">0</span></h3>
+        <button type="button" class="btn btn-blue filterSearch" id="btnMRDataAdvSrch">
+            @Model.Loc.Where(a => a.ResourceId == "GlobalApply").FirstOrDefault().Value.ToString()
+        </button>
+    </div>
+    <div class="sidebar-content" id="advsearchsidebar">
+        <form action="#" method="post">
+            <div class="form-group prc-MaterialRequestId">
+                <label for="MaterialRequestId">@Model.Loc.Where(a => a.ResourceId == "spnMaterialRequestId").FirstOrDefault().Value.ToString() :</label>
+                <input type="text" class="form-control search adv-item longinput" id="MaterialRequestId" autocomplete="off">
+            </div>
+            <div class="form-group prc-Description">
+                <label for="Description">@Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString() :</label>
+                <input type="text" class="form-control search adv-item" id="Description" autocomplete="off">
+            </div>
+            <div class="form-group">
+                <label for="AccountId">@Model.Loc.Where(a => a.ResourceId == "spnAccount").FirstOrDefault().Value.ToString() : </label>
+                <input type="text" class="form-control search adv-item" id="AccountId" autocomplete="off">
+            </div>
+            <div class="form-group prc-CreateDate">
+                <label for="Created">@Model.Loc.Where(a => a.ResourceId == "spnCreated").FirstOrDefault().Value.ToString() :</label>
+                <input type="text" class="form-control search adv-item dtpicker" id="Created" autocomplete="off">
+            </div>
+            <div class="form-group prc-RequiredDate">
+                <label for="RequiredDate">@Model.Loc.Where(a => a.ResourceId == "spnRequiredDate").FirstOrDefault().Value.ToString() :</label>
+                <input type="text" class="form-control search adv-item dtpicker" id="RequiredDate" autocomplete="off">
+            </div>
+            <div class="form-group prc-CompleteDate">
+                <label for="Completed">@Model.Loc.Where(a => a.ResourceId == "spnGlobalCompleted").FirstOrDefault().Value.ToString() :</label>
+                <input type="text" class="form-control search adv-item dtpicker" id="Completed" autocomplete="off">
+            </div>
+        </form>
+    </div>
+</nav>
+
+
+

@@ -1,0 +1,30 @@
+﻿@model Client.Models.Configuration.ConfigCraft.CraftVM
+<nav id="sidebar">
+    <div id="dismiss">
+        <i class="fa fa-close"></i>
+    </div>
+    <div class="sidebar-header">
+        <h3><i class="fa fa-filter" style="position: relative; top: -2px;"></i>&nbsp;@Model.Loc.Where(a => a.ResourceId == "spnFilters").FirstOrDefault().Value.ToString() <span class="filteritemcount">0</span></h3>
+        <button type="button" class="btn btn-blue filterSearch" id="btnCraftAdvSrch">
+            <i class="fa fa-search" style="margin-top:-3px;"></i> &nbsp;@Model.Loc.Where(a => a.ResourceId == "globalSearch").FirstOrDefault().Value.ToString()
+        </button>
+    </div>
+    <div class="sidebar-content" id="advsearchsidebar">
+        <div class="form-group">
+            <label for="txtCraft">@Model.Loc.Where(a => a.ResourceId == "spnCraft").FirstOrDefault().Value.ToString() :</label>
+            <input type="text" class="form-control search adv-item" id="txtCraft" autocomplete="off">
+        </div>
+        <div class="form-group">
+            <label for="txtDescription">@Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString() :</label>
+            <input type="text" class="form-control search adv-item" id="txtDescription" autocomplete="off">
+        </div>
+        <div class="form-group">
+            <label for="txtRate">@Model.Loc.Where(a => a.ResourceId == "spnRate").FirstOrDefault().Value.ToString():</label>
+            <input type="text" class="form-control search adv-item decimalinput" id="txtRate" autocomplete="off">
+        </div>
+        <div class="form-group">
+            <label for="txtInactiveFlag">@Model.Loc.Where(a => a.ResourceId == "globalInactiveFlag").FirstOrDefault().Value.ToString():</label>
+            @Html.DropDownListFor(m => m.craftModel.InactiveFlag, Model.craftModel.InactiveFlagList, "--Select--", new { @class = "form-control search adv-item select2picker", style = "width:100%;", id = "txtInactiveFlag" })
+        </div>
+    </div>
+</nav>

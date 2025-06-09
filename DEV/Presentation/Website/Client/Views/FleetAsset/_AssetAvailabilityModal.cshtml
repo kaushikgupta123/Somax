@@ -1,0 +1,83 @@
+﻿@model Client.Models.FleetAsset.FleetAssetVM
+<div id="AssetAvailabilityModal" class="modal fade" role="dialog" style="padding-right:0px !important;">
+    <div class="modal-dialog modal-info">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                @if (Model.FleetAssetModel.RemoveFromService == false)
+                {
+                <h4 class="modal-title">@Model.Loc.Where(a => a.ResourceId == "spnRemoveFromService").FirstOrDefault().Value.ToString()</h4>
+                }
+                else
+                {
+                <h4 class="modal-title">@Model.Loc.Where(a => a.ResourceId == "spnUpdateAvailabilityStatus").FirstOrDefault().Value.ToString()</h4>
+                }
+
+            </div>
+            @using (Ajax.BeginForm("AssetAvailability", "FleetAsset", new AjaxOptions { HttpMethod = "Post", OnSuccess = "AssetAvailabilityUpdateOnSuccess", OnBegin = "AjaxBeginFormBegin", OnComplete = "AjaxBeginFormComplete", OnFailure = "AjaxBeginFormFaillure" }, new { enctype = "multipart/form-data", id = "AssetAvailabilityform" }))
+            {
+                <div class="modal-body">
+                    <div class="form-group" style="position:relative;">
+                        <label for="Line" id="lblexpRet">@Model.Loc.Where(a => a.ResourceId == "spnExpectedReturn").FirstOrDefault().Value.ToString() :</label>
+                        @Html.TextBoxFor(m => m._AssetAvailabilityModel.ExpectedReturnToService, "{0:MM/dd/yyyy}", new { @class = "form-control search dtpickerNew restkey", autocomplete = "off" })
+                        <div style="clear:both;"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="Line" id="lblreason">@Model.Loc.Where(a => a.ResourceId == "GlobalReason").FirstOrDefault().Value.ToString():<small>*</small></label>
+                        @Html.ValidationMessageFor(m => m._AssetAvailabilityModel.RemoveFromServiceReason, "", new { style = "display:none" })
+                        @Html.TextAreaFor(m => m._AssetAvailabilityModel.RemoveFromServiceReason, new { @class = "form-control search", autocomplete = "off" })
+
+                    </div>
+                </div>
+                <div class="modal-footer" style="padding:15px 25px !important;">
+                    <button type="button" class="btn btn-default mobBttn Cancelclearerr" data-dismiss="modal"> <i class="fa fa-close faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button>
+                    <button type="submit" class="btn btn-blue mobBttn" name="Command" style="cursor:pointer;float:right" value="save" id="btnAssetAvailability"><i class="fa fa-save faIcon"></i> &nbsp;@Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+                    <div style="clear:both;"></div>
+                </div>
+                @Html.HiddenFor(m => m._AssetAvailabilityModel.EquipmentId)
+                @Html.HiddenFor(m => m._AssetAvailabilityModel.RemoveFromService)
+            }
+
+        </div>
+    </div>
+</div>
+
+
+
+<style type="text/css">
+    .ui-tooltip { z-index: 1151 !important; }
+    .errormessage { margin-bottom: 1px !important; }
+    .form-control.search.restkey { width: 100%; }
+    .ui-datepicker-trigger { /*float: left; margin-left: -2px;*/ position: absolute; right: 0; top: 25px; }
+    .modal-footer > .btn {
+        margin-right: 0;
+    }
+    @@media screen and (max-width: 767px) {
+        .ui-datepicker.ui-widget.ui-widget-content { top:135px !important; }
+    }
+    @@media screen and (max-width: 479px) {
+        #btnUpdate { margin-right: 0 !important;}
+    }
+</style>
+<script>
+    $.validator.setDefaults({ ignore: null });
+    $.validator.unobtrusive.parse(document);
+    $('input, form').blur(function () {
+        $(this).valid();
+    });
+    $(function () {
+        $(".dtpickerNew").datepicker({
+            showOn: 'button',
+            buttonImageOnly: true,
+            minDate: new Date(),
+            buttonImage: '/Images/calender.png'
+        });
+
+    });
+    $(function () {
+        $('.restkey').bind('keyup keydown keypress', function (evt) {
+            return false;
+        });
+        $(document).find('form').find("#FleetFuelModel_ClientLookupId").removeClass("input-validation-error");
+    });
+</script>

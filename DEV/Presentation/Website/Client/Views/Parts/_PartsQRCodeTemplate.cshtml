@@ -1,0 +1,148 @@
+﻿@model Client.Models.Parts.PartsVM
+@{ Layout = null;}
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Somax | Part QR Code</title>
+    <link rel="shortcut icon" href="~/Scripts/Metronic/assets/login/demo/default/media/img/logo/favicon.png" />
+    <style type="text/css">
+        p {
+            margin: 0;
+            padding: 0;
+            text-align: left;
+        }
+
+        div {
+            margin: 0;
+            padding: 0;
+            text-align: left;
+        }
+
+        p.qrDescription {
+            width: 120px;
+            word-break: break-all;
+        }
+
+        p.qrDescription2 {
+            width: 280px;
+            word-break: break-all;
+        }
+    </style>
+</head>
+
+<body style="padding:0; margin:0; font-family: 'Roboto', sans-serif; font-size:12px; color:#737272;">
+    @{
+        bool SmallQR = ViewBag.SmallQR;
+
+        string PartIdSmall = "", DescriptionSmall = "", LocationSmall = "", IssueUnitSmall = "";
+        string PartIdLarge = "", DescriptionLarge = "", LocationLarge = "", IssueUnitLarge = "", ManufacturerLarge = "", ManufacturerIDLarge = "";
+        decimal MinQuantityLarge = 0M, MaxQuantityLarge = 0M;
+
+        string[] splitArray;
+
+        for (int i = 0; i < Model.qRCodeModel.PartIdsList.Count; i++)
+        {
+            splitArray = Model.qRCodeModel.PartIdsList[i].Split(new string[] { "][" }, StringSplitOptions.None);
+            var imgSrouce = UtilityFunction.QrGenerate(splitArray[0]);
+        <div border="0" cellspacing="0" cellpadding="0" style="overflow:hidden;margin:0;padding:0;">
+            @if (SmallQR == true)
+            {
+                PartIdSmall = "";
+                DescriptionSmall = "";
+                LocationSmall = "";
+                IssueUnitSmall = "";
+
+                PartIdSmall = splitArray[0];
+                PartIdSmall = PartIdSmall.Length > 18 ? PartIdSmall.Substring(0, 18) : PartIdSmall;
+
+                DescriptionSmall = splitArray[1];
+                DescriptionSmall = DescriptionSmall.Length > 35 ? DescriptionSmall.Substring(0, 35) : DescriptionSmall;
+
+                LocationSmall = splitArray[2];
+                LocationSmall = LocationSmall.Length > 35 ? LocationSmall.Substring(0, 35) : LocationSmall;
+
+                IssueUnitSmall = splitArray[3];
+                IssueUnitSmall = IssueUnitSmall.Length > 15 ? IssueUnitSmall.Substring(0, 15) : IssueUnitSmall;
+                <div style="page-break-after:always;">
+                    <div class="rows" style="color: #000; font-weight: 400; font-size:11px;">
+                        <div class="row">
+                            <div style="float:left;">
+                                <img src="@imgSrouce" width="100" height="100" />
+                            </div>
+                            <div style='float: left; padding-top: 10px; width:140px'>
+                                <p style="width: 140px;display:block;">@PartIdSmall</p>
+                                <p style="padding-top: 3px; width: 140px;display:block;" class="qrDescription">@DescriptionSmall</p>
+                                <p style="padding-top: 3px; width: 140px; display: block;">
+                                    <span style='color: #000; font-weight: 400; font-size: 10px; word-break: break-all;'>@LocationSmall</span>
+                                </p>
+                                <div style="padding-top:3px; width:140px">
+                                    <span style='color: #000; font-weight: 400; font-size: 10px;'>UOM : @IssueUnitSmall</span>
+                                </div>
+                            </div>
+                            <div class="clear"></div>
+                        </div>
+                    </div>
+                </div>
+            }
+            else
+            {
+                PartIdLarge = "";
+                DescriptionLarge = "";
+                LocationLarge = "";
+                IssueUnitLarge = "";
+                ManufacturerLarge = "";
+                ManufacturerIDLarge = "";
+
+                PartIdLarge = splitArray[0];
+                //  PartIdLarge = PartIdLarge.Length > 26 ? PartIdLarge.Substring(0, 26) + ".." : PartIdLarge;
+
+                DescriptionLarge = splitArray[1];
+                DescriptionLarge = DescriptionLarge.Length > 35 ? DescriptionLarge.Substring(0, 35) : DescriptionLarge;
+
+                LocationLarge = splitArray[2];
+                LocationLarge = LocationLarge.Length > 70 ? LocationLarge.Substring(0, 70) : LocationLarge;
+
+                IssueUnitLarge = splitArray[3];
+                IssueUnitLarge = IssueUnitLarge.Length > 8 ? IssueUnitLarge.Substring(0, 8) : IssueUnitLarge;
+
+                MinQuantityLarge = string.IsNullOrEmpty(splitArray[4]) ? 0M : Convert.ToDecimal(splitArray[4]);
+                MaxQuantityLarge = string.IsNullOrEmpty(splitArray[5]) ? 0M : Convert.ToDecimal(splitArray[5]);
+
+                ManufacturerLarge = splitArray[6];
+                ManufacturerLarge = ManufacturerLarge.Length > 29 ? ManufacturerLarge.Substring(0, 29) : ManufacturerLarge;
+
+                ManufacturerIDLarge = splitArray[7];
+                ManufacturerIDLarge = ManufacturerIDLarge.Length > 29 ? ManufacturerIDLarge.Substring(0, 29) : ManufacturerIDLarge;
+
+                <div style="page-break-after: always;">
+                    <div class="rows" style="color: #000; font-weight: 400; font-size:12px;">
+                        <div class="row">
+                            <div style="float: left; position: relative; width:116px; ">
+                                <img class="roll" src="@imgSrouce" width="116" height="116" />
+                            </div>
+                            <div style="float: left; position: relative; padding-top: 10px; width:280px;">
+                                <p style="display: block; width: 270px; color: #000; font-weight: 400; font-size: 12px; ">@PartIdLarge</p>
+                                <p style="display: block; width: 270px; padding-top: 1px; color: #000; font-weight: 400; font-size: 12px;" class="qrDescription2">@DescriptionLarge</p>
+                                <p style="display: block; width: 270px; padding-top: 1px; color: #000; font-weight: 400; font-size: 12px;">
+                                    <span style='display: inline-block; color: #000; font-weight: 400; font-size: 12px; word-break: break-all;'>@LocationLarge</span>
+
+                                </p>
+                                <p style="display: block; width: 270px; padding-top: 1px;">
+                                    <span style='display: inline-block; color: #000; font-weight: 400; font-size: 12px;'>MIN : @MinQuantityLarge.ToString("0.######")</span>
+                                    <span style="color: #000; font-weight: 400; font-size: 12px;">MAX : @MaxQuantityLarge.ToString("0.######")</span>
+                                    <span style="color: #000; font-weight: 400; font-size: 12px;">UOM : @IssueUnitLarge</span>
+                                </p>
+                                <p style="display: block; width: 270px; padding-top: 1px; color: #000; font-weight: 400; font-size: 12px; word-break: break-all;">MFG : @ManufacturerLarge</p>
+                                <p style="display: block; width: 270px; padding-top: 1px; color: #000; font-weight: 400; font-size: 12px; word-break: break-all;">MFG ID : @ManufacturerIDLarge</p>
+                            </div>
+                            <div class='clear'></div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+        }
+    }
+</body>
+</html>

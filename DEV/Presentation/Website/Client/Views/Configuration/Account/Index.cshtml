@@ -1,0 +1,14 @@
+﻿@model Client.Models.Configuration.Account.AccountConfigVM
+@{
+    ViewBag.Title = "Somax-Config | Account";
+}
+@Styles.Render("~/Content/datatable")
+<link href="~/Content/sidebar_custom.css" rel="stylesheet" />
+@section scripts {
+    @Scripts.Render("~/bundles/datatable")
+    <script src="~/Scripts/Pages/Configuration/Account/Account.js"></script>
+}
+<div id="renderAccountPage">
+    @Html.Partial("~/Views/Configuration/Account/_AccountSearch.cshtml")
+</div>
+

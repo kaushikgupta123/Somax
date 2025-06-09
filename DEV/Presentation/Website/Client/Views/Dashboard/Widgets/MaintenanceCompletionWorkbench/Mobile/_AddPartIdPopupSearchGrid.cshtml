@@ -1,0 +1,60 @@
+﻿@*@using Client.Models.Dashboard
+    @model ScrollViewModel<PartScrollViewModel>
+
+    <div mbsc-page class="demo-paging">
+        <div style="height:100%">
+            <div class="md-paging">
+                @if (Model.LookupList.Count()>0)
+                {
+                    <ul class="md-category mbsc-cloak" id="part-md-category">
+                        @for (var i = 0; i < Model.PageNos.Count; i++)
+                        {
+                            var item = Model.PageNos[i];
+                            if (i == 0)
+                            {
+                                <li data-id="@item" data-page="md-@item" data-selected="true">@item</li>
+                            }
+                            else
+                            {
+                                <li data-id="@item" data-page="md-@item">@item</li>
+                            }
+                        }
+                    </ul>
+
+                    <ul class="md-content mbsc-cloak" id="part-md-content">
+                        @for (var i = 0; i < Model.PageNos.Count; i++)
+                        {
+                            var Pageno = Model.PageNos[i];
+                            var data = Model.LookupList.Where(x => x.Pageno == Pageno).ToList();
+
+                            <li class="md-@Pageno">
+                                <ul class="md-music-lv md-list mbsc-cloak part-md-list">
+                                    @foreach (var item in data)
+                                    {
+                                        <li class="scrollview-partsearch" data-id="@item.PartId" data-clientlookupid="@item.ClientLookupId">
+                                            <h4>@item.ClientLookupId</h4>
+                                            <p>@item.Description</p>
+                                        </li>
+                                    }
+                                </ul>
+                            </li>
+                        }
+                    </ul>
+                }
+                else
+                {
+                    <ul class="md-content mbsc-cloak" id="part-md-content">
+                        <li class="text-center">
+                            No data available in the table
+                        </li>
+                    </ul>
+                }
+            </div>
+        </div>
+    </div>*@
+<ul id="PartListViewForSearch" class="mbsc-cloak" mbsc-enhance>
+    @*<li data-role="list-divider">Top Rated Movies</li>*@
+</ul>
+<div class="mbsc-padding" mbsc-form>
+    <button mbsc-button id="btnPartLoadMore" class="btn btn-blue mobBttn" data-color="success">Load More</button>
+</div>

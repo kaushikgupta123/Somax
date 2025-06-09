@@ -1,0 +1,125 @@
+﻿@model Client.Models.Work_Order.WorkOrderVM
+
+<div class="row">
+    <span class="inputText" style="height:auto;">
+        <main>
+            <div class="mydocument-editor myckeditorfield" style="padding-right:0px !important;">
+                <div class="mytoolbar-container"></div>
+                <div class="mycontent-container form-control">
+                    <div id="CommentEditorFromWizard"></div>
+                </div>
+            </div>
+        </main>
+    </span>
+    <div style="clear:both;"></div>
+</div>
+
+<style>
+    #CompletionCommentsStep .select2-selection__choice {
+        min-height: 25px !important;
+        height: auto;
+    }
+
+    .readOnlyEdit {
+        background: #f5f4f4 !important;
+    }
+
+    .ck.ck-editor__editable_inline[dir=ltr] {
+        min-height: 250px;
+        max-height: 250px;
+    }
+
+    .ck-body-wrapper {
+        z-index:9999 !important;
+    }
+
+    .ck.ck-button .ck-button__label {
+        font-size: 16px !important
+    }
+
+    div.ck-font-size-dropdown > .ck-dropdown__panel-visible,
+    div.ck-font-family-dropdown > .ck-dropdown__panel-visible {
+        height: 200px;
+        overflow-y: auto;
+    }
+
+    .ck.ck-list__item {
+        min-width: 5em;
+    }
+
+    @@media (max-width: 1200px) {
+        .m-wizard.m-wizard--5 .m-wizard__head {
+            width: 300px !important;
+        }
+    }
+    @@media (max-width: 1000px) {
+
+        .m-wizard.m-wizard--5 .m-wizard__head .m-wizard__nav .m-wizard__steps .m-wizard__step .m-wizard__step-info .m-wizard__step-number .m-wizard__step-label {
+            font-size: 12px;
+        }
+        .m-wizard.m-wizard--5 .m-wizard__head {
+            width: 240px !important;
+        }
+
+        .m-wizard__form {
+            width: calc(100% - 260px);
+        }
+        .wizard-wrap-box .m-wizard__step-label {
+            padding:0px !important;
+        }
+    }
+
+
+    @@media screen and (max-width: 650px) {
+        ul .listView.nobrd li#lblTopicDesc {
+            height: auto !important;
+        }
+
+        .step-modal-box {
+            width: auto !important;
+            max-width: auto !important;
+        }
+
+        .modal-header, .modal .modal-content .modal-body {
+            padding:15px !important;
+        }
+        .wizard-wrap-box {
+            padding: 5px !important;
+        }
+
+
+        .m-wizard.m-wizard--5 .m-wizard__head {
+            width: 100% !important;
+            margin-bottom:10px !important;
+        }
+
+        .m-wizard__form {
+            width: 100% !important;
+            margin: 0px !important;
+        }
+
+        .m-wizard.m-wizard--5 .m-wizard__head .m-wizard__nav .m-wizard__steps {
+            margin: 0px !important;
+        }
+
+        .m-wizard.m-wizard--5 .m-wizard__head .m-wizard__nav .m-wizard__steps .m-wizard__step .m-wizard__step-info .m-wizard__step-number .m-wizard__step-label {
+            font-size: 14px;
+        }
+
+        .modal-info .m-wizard__form-step .inputText {
+            width: calc(100% - 0px) !important;
+            margin: 0 auto 0px;
+        }
+
+        ul.listView.nobrd li span.inputText {
+            height: 40px;
+        }
+
+    }
+
+   @@media screen and (max-width: 479px) {
+            ul.listView.nobrd li#lblTopicDesc {
+            height: auto !important;
+        }
+    }
+</style>

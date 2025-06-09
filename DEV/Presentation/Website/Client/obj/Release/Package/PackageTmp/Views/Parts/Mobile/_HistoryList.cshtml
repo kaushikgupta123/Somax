@@ -1,0 +1,46 @@
+﻿@model Client.Models.Parts.PartsVM
+<div class="tabsArea nobg" id="History">
+    <div class="m-portlet" id="m_portlet" style="padding:15px;">
+        <div class="bottomBlock">
+            <div class="actionBar">
+                <div class="pull-left">
+                    <div class="ActionSearchDrop partActnAdjst">
+                        @Html.DropDownListFor(m => m.partsHistoryModel.HistoryDaterange, new SelectList(Model.partsHistoryModel.HistoryDateList, "Value", "Text"), null, new { @class = "form-control search select2picker", style = "opacity: 1 !important;width: 100% !important; height:34px !important;" })
+                    </div>
+                    @*<button type="button" class="btn btn-white navbar-btn" id="historysidebarCollapse" title="Advance Search"><i class="fa fa-filter" style="font-size: 1.3rem;"></i></button>
+                    <button type="button" class="btn btn-white navbar-btn" id="downloahistorydata" title="Export To Excel"><i class="fa fa-download" style="font-size: 1.3rem;"></i></button>
+                    <ul class="filter_apply globalFilterAdjusted partFltrAdjst">
+                        <li class="textFilter"><span class="lifilteritemcount">0</span> @Model.Loc.Where(a => a.ResourceId == "globalFiltersAppiled").FirstOrDefault().Value.ToString()</li>
+                        <li class="textClear" id="lineitemClearAdvSearchFilter"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "globalClear").FirstOrDefault().Value.ToString()</a></li>
+                    </ul>*@
+                    <div style="clear:both;"></div>
+                </div>
+                @*<div style="clear:both;"></div>
+                <div id="lineitemadvsearchfilteritems"></div>
+                <div style="clear:both;"></div>*@
+            </div>
+            <div style="clear:both;"></div>
+            <div class="table-responsive">
+                <table id="phistoryTable_Mobile" class="eqpDtlTbl row-border custom-sort" style="width:100%;">
+                    <thead>
+                        <tr>
+                            <th width="10%">@Model.Loc.Where(a => a.ResourceId == "GlobalType").FirstOrDefault().Value.ToString()</th>
+                            <th width="20%">@Model.Loc.Where(a => a.ResourceId == "spnRequestor").FirstOrDefault().Value.ToString()</th>
+                            <th width="20%">@Model.Loc.Where(a => a.ResourceId == "spnPerformedBy").FirstOrDefault().Value.ToString()</th>
+                            <th width="10%">@Model.Loc.Where(a => a.ResourceId == "spnDate").FirstOrDefault().Value.ToString()</th>
+                            <th width="10%">@Model.Loc.Where(a => a.ResourceId == "spnQuantity").FirstOrDefault().Value.ToString()</th>
+                            <th width="10%">@Model.Loc.Where(a => a.ResourceId == "spnUnitCost").FirstOrDefault().Value.ToString()</th>
+                            <th width="10%">@Model.Loc.Where(a => a.ResourceId == "spnChargeType").FirstOrDefault().Value.ToString()</th>
+                            <th width="10%">@Model.Loc.Where(a => a.ResourceId == "GlobalChargeTo").FirstOrDefault().Value.ToString()</th>
+                            <th width="10%">@Model.Loc.Where(a => a.ResourceId == "spnAccount").FirstOrDefault().Value.ToString()</th>
+                            <th width="10%">@Model.Loc.Where(a => a.ResourceId == "spnPurchaseOrder").FirstOrDefault().Value.ToString()</th>
+                            <th width="10%">@Model.Loc.Where(a => a.ResourceId == "spnVendor").FirstOrDefault().Value.ToString()</th>
+                            <th width="20%">@Model.Loc.Where(a => a.ResourceId == "spnVendorName").FirstOrDefault().Value.ToString()</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+            <div style="clear:both;"></div>
+        </div>
+    </div>
+</div>

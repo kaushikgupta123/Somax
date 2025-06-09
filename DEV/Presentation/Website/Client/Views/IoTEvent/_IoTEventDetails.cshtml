@@ -1,0 +1,183 @@
+﻿@model Client.Models.IoTEvent.IoTEventVM
+
+<div class="m-subheader">
+    <div class="new-m-subheader Breadcrumb-box-wrap">
+        <div class="PageTitle">
+            <div class="align-items-center separator">
+                <h3 class="m-subheader__title">
+                    @Model.Loc.Where(a => a.ResourceId == "spnEventInformation").FirstOrDefault().Value.ToString()
+                </h3>
+            </div>
+        </div>
+        <div class="Breadcrumb-box">
+            <div class="NewBreadcrumbArea">
+                <div class="newBreadcrumb">
+                    <ul>
+                        <li><a href="/Dashboard/Dashboard">&nbsp;</a></li>
+                        <li><a href="/IoTEvent/index?page=Sensors_Events">@Model.Loc.Where(a => a.ResourceId == "spnEventInfoSearch").FirstOrDefault().Value.ToString()</a></li>
+                        <li class="active"><a href="javascript:void(0)">@Model.ioTEventModel.IoTEventId</a></li>
+                    </ul>
+                    <div style="clear:both;"></div>
+                </div>
+            </div>
+            @if (Model.security.EventInfo.EventsProcess && Model.ioTEventModel.Status == "Open")
+            {
+                <div class="ActionBttnArea">
+                    <div class="actionDiv pull-left" style="margin-right:0;">
+                        <div class="btn-group bootstrap-select m-datatable__pager-size dropup show selectDrop actionNewDrop">
+                            <div class="btn-group bootstrap-select m-datatable__pager-size" style="width: 100%;">
+                                <button type="button" class="btn dropdown-toggle bs-placeholder btn-default" data-toggle="dropdown" role="button" title=""><span class="filter-option pull-left">@Model.Loc.Where(a => a.ResourceId == "globalAction").FirstOrDefault().Value.ToString()</span>&nbsp;<span class="bs-caret"><span class="caret"></span></span></button>
+                                <div class="dropdown-menu open" role="combobox">
+                                    <ul class="dropdown-menu inner" role="listbox" aria-expanded="false">
+                                        <li id="lnkAcknowledge"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnAcknowledge").FirstOrDefault().Value.ToString()</a></li>
+
+                                        <li id="lnkDismiss"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnDismiss").FirstOrDefault().Value.ToString()</a></li>
+
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="clear:both;"></div>
+                </div>
+
+            }
+        </div>
+            <div style="clear:both;"></div>
+        </div>
+</div>
+
+<div class="row">
+    <div class="col-xl-12">
+        <div class="row">
+            <div class="col-xl-12" id="btnnblock">
+                <div class="m-portlet" id="m_portlet" style="padding:15px;">
+                    <div class="bottomBlock">
+                        <div class="tabsArea nobg" id="RequestCharge" style="display:block;">
+                            <div class="m-portlet__head" style="padding:0; height:2.5rem;">
+                                <div class="m-portlet__head-caption">
+                                    <div class="m-portlet__head-title">
+                                        <h3 class="m-portlet__head-text" style="vertical-align:top;">
+                                            @Model.Loc.Where(a => a.ResourceId == "spnRequest").FirstOrDefault().Value.ToString()
+                                            &amp;
+                                            @Model.Loc.Where(a => a.ResourceId == "GlobalChargeTo").FirstOrDefault().Value.ToString()
+                                        </h3>
+                                    </div>
+                                </div>
+                            </div>
+                            <ul class="listView">
+                                <li>
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnEventID").FirstOrDefault().Value.ToString() :</span>
+                                    <span class="inputText">@Model.ioTEventModel.IoTEventId</span>
+                                </li>
+                                <li>
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnSourceType").FirstOrDefault().Value.ToString() :</span>
+                                    <span class="inputText">@Model.ioTEventModel.SourceType</span>
+                                </li>
+                                <li>
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnEventType").FirstOrDefault().Value.ToString() :</span>
+                                    <span class="inputText">@Model.ioTEventModel.EventType</span>
+                                </li>
+                                <li>
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnGlobalEquipmentId").FirstOrDefault().Value.ToString() :</span>
+                                    <span class="inputText">@Model.ioTEventModel.EquipClientLookupId</span>
+                                </li>
+                                <li>
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnAssetName").FirstOrDefault().Value.ToString() :</span>
+                                    <span class="inputText">@Model.ioTEventModel.AssetName</span>
+                                </li>
+                                <li>
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnStatus").FirstOrDefault().Value.ToString() :</span>
+                                    <span class="inputText">@Model.ioTEventModel.Status</span>
+                                </li>
+                                <li>
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnDisposition").FirstOrDefault().Value.ToString() :</span>
+                                    <span class="inputText">@Model.ioTEventModel.Disposition</span>
+                                </li>
+
+                                <li>
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnDismissReason").FirstOrDefault().Value.ToString() :</span>
+                                    <span class="inputText">@Model.ioTEventModel.DismissReason</span>
+                                </li>
+                                <li>
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "GlobalWorkOrder").FirstOrDefault().Value.ToString() :</span>
+                                    <span class="inputText">@Model.ioTEventModel.WOClientLookupId</span>
+                                </li>
+                                <li>
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnFaultCode").FirstOrDefault().Value.ToString() :</span>
+                                    <span class="inputText">@Model.ioTEventModel.FaultCode</span>
+                                </li>
+                                <li>
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnCreated").FirstOrDefault().Value.ToString() :</span>
+                                    @if (Model.ioTEventModel.CreateDate.HasValue && Model.ioTEventModel.CreateDate.Value != default(DateTime))
+                                    {
+                                        <span class="inputText">@Model.ioTEventModel.CreateDate.Value.ToString("MM/dd/yyyy", CultureInfo.InvariantCulture)</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="inputText"></span>
+                                    }
+                                </li>
+                                <li style="height:auto;">
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnIoTDeviceID").FirstOrDefault().Value.ToString() :</span>
+                                    <span class="inputText" style="height:auto;" id="ioTEventModel_IoTDeviceID">@Model.ioTEventModel.IoTDeviceClientLookupId</span>
+                                    <div style="clear:both;"></div>
+                                </li>
+                                <li>
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnProcessedDate").FirstOrDefault().Value.ToString() :</span>
+                                    @if (Model.ioTEventModel.ProcessDate.HasValue && Model.ioTEventModel.ProcessDate.Value != default(DateTime))
+                                    {
+                                        <span class="inputText">@Model.ioTEventModel.ProcessDate.Value.ToString("MM/dd/yyyy", CultureInfo.InvariantCulture)</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="inputText"></span>
+                                    }
+                                </li>
+                                <li>
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnProcessedBy").FirstOrDefault().Value.ToString() :</span>
+                                    <span class="inputText">@Model.ioTEventModel.ProcessBy_Personnel</span>
+                                </li>
+
+                                <li style="height:auto;">
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnLogComment").FirstOrDefault().Value.ToString() :</span>
+                                    <span class="inputText" style="height:auto;" id="ioTEventModel_Comments">@Model.ioTEventModel.Comments</span>
+                                    <div style="clear:both;"></div>
+                                </li>
+                            </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+@Html.HiddenFor(m => m.ioTEventModel.IoTEventId)
+@Html.Partial("_DismissModal",Model)
+@Html.Partial("_AcknowledgeModal",Model)
+<style type="text/css">
+    #modalDismiss .modal-footer, #modalAcknowledge .modal-footer {
+        padding: 15px 25px !important;
+    }
+
+    h4.modal-title {
+        line-height: 34px;
+    }
+    .Breadcrumb-box-wrap {
+        display:flex;
+    }
+    .Breadcrumb-box {
+        display:flex;
+        flex-wrap:wrap;
+        justify-content:space-between;
+        width:100%;
+    }
+
+    @@Media(max-width:960px){
+        .Breadcrumb-box-wrap {
+            display:block;
+        }
+    }
+
+
+</style>

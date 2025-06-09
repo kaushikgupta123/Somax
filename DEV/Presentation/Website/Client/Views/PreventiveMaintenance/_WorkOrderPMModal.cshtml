@@ -1,0 +1,62 @@
+﻿@model Client.Models.PreventiveMaintenance.PrevMaintVM
+<div id="WorkOrderPMModal" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-info">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">@Model.Loc.Where(a => a.ResourceId == "spnPreventiveMaintenanceWorkOrderGeneration").FirstOrDefault().Value.ToString()</h4>
+            </div>
+            @Html.Partial("_ErrorDiv")
+            @using (Ajax.BeginForm("GenerateWorkOrder", "PreventiveMaintenance", new AjaxOptions { HttpMethod = "Post", OnSuccess = "CreatePMWorkOrderOnSuccess", OnBegin = "AjaxBeginFormBegin", OnFailure = "AjaxBeginFormFaillure" }))
+            {
+                @Html.AntiForgeryToken()
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label id="lblSchdType">@Model.Loc.Where(a => a.ResourceId == "spnSchdType").FirstOrDefault().Value.ToString():<small>*</small></label>
+                        @Html.DropDownListFor(m => m.preventiveMaitenanceWOModel.ScheduleType, Model.preventiveMaitenanceWOModel.ScheduleTypeList, "--Select--", new { @class = "form-control search select2picker adv-item", id = "ddlscheduletype", style = "width:100%;" })
+                    </div>
+                    <div class="form-group">
+                        <label id="lblGenerateThrough">@Model.Loc.Where(a => a.ResourceId == "spnGenerateThrough").FirstOrDefault().Value.ToString():<small>*</small></label>
+                        @Html.ValidationMessageFor(m => m.preventiveMaitenanceWOModel.GenerateThrough, "", new { style = "display:none" })
+                        @Html.TextBoxFor(m => m.preventiveMaitenanceWOModel.GenerateThrough, "{0:MM/dd/yyyy}", new { @class = "form-control search dtpicker1 adv-item genwo", autocomplete = "off", id = "dtgeneratedthrough" })
+
+                    </div>
+                    <div class="form-group" id="divOnDemand" style="display:none;">
+                        <label id="lblOnDemand">@Model.Loc.Where(a => a.ResourceId == "spnOn-DemandGroup").FirstOrDefault().Value.ToString():<small>*</small></label>
+                        @Html.DropDownListFor(m => m.preventiveMaitenanceWOModel.OnDemand, Model.preventiveMaitenanceWOModel.OnDemandList, "--Select--", new { @class = "form-control search select2picker adv-item", id = "ondemandgroup", style = "width:100%;" })
+                    </div>
+                    <div class="form-group">
+                        <label id="chk_printWorkOrder">@Model.Loc.Where(a => a.ResourceId == "spnPrintGeneratedWorkOrders").FirstOrDefault().Value.ToString(): </label>
+                        <span class="inputText">
+                            @Html.CheckBoxFor(m => m.preventiveMaitenanceWOModel.chkPrintWorkOrder, new { @class = "prnChk" })
+                        </span>
+                    </div>
+                </div>
+                <div class="modal-footer" style="padding:15px 25px !important;">
+                    <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-close faIcon"></i> &nbsp;@Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button>
+                    <button type="submit" class="btn btn-blue" style="float:right;" id="btnCreatePmWorkOrders"><i class="fa fa-plus faIcon"></i> &nbsp;@Model.Loc.Where(a => a.ResourceId == "spnCreateWorkOrders").FirstOrDefault().Value.ToString()</button>
+                    <div style="clear:both;"></div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<style type="text/css">
+    .prnChk { position: relative; top: 3px; }
+    #WorkOrderPMModal .errormessage { margin: 10px 25px 1px !important; }
+    #WorkOrderPMModal .alert.m-alert--outline.alert-danger { margin-bottom: 0 !important; }
+    .ui-tooltip { z-index: 1151 !important; }
+</style>
+
+@section scripts {
+    <script>
+        $(document).ready(function () {
+            $.validator.setDefaults({ ignore: null });
+            $.validator.unobtrusive.parse(document);
+            $('input, form').blur(function () {
+                $(this).valid();
+            });
+        });
+    </script>
+}

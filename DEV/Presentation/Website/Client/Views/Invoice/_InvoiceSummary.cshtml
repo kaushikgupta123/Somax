@@ -1,0 +1,186 @@
+﻿@model Client.Models.Invoice.InvoiceVM
+@{
+    var ItemAmount = Model.InvoiceMatchHeaderModel.ItemTotal;
+    var TaxAmount = Model.InvoiceMatchHeaderModel.TaxAmount;
+    var ShipAmount = Model.InvoiceMatchHeaderModel.ShipAmount;
+    var TotaltemAmount = ItemAmount + TaxAmount + ShipAmount;
+    var TotalInput = Model.InvoiceMatchHeaderModel.TotalInput;
+    var Varience = TotaltemAmount - TotalInput;
+}
+<div class="col-xl-12">
+    <div class="m-portlet padAdjst" id="m_portlet">
+        <div class="m-portlet__body  m-portlet__body--no-padding">
+            <div class="row m-row--col-separator-xl">
+                <div class="col-md-12">
+                    <div class="m-portlet cardRow" style="margin-bottom:0; border:0;">
+                        <div class="m-portlet__body gridList" style="padding:0;">
+
+                            <div class="row summaryview">
+
+                             
+                                <div class="col-sm-6 ">
+                                    <div class="newDescription">
+                                        <span class="summaryviewcardspan">
+                                            <span class="cardsummarylabel">
+                                                @Model.Loc.Where(a => a.ResourceId == "spnIdInvoice").FirstOrDefault().Value.ToString() :
+                                                @(String.IsNullOrEmpty(Model.InvoiceMatchHeaderModel.ClientLookupId) ? "" : (Model.InvoiceMatchHeaderModel.ClientLookupId.Length > 21 ? (Model.InvoiceMatchHeaderModel.ClientLookupId.Substring(0, 21) + "...") : (Model.InvoiceMatchHeaderModel.ClientLookupId)))
+                                            </span>
+                                        </span>
+                                        <div class="gridStatus">
+                                            <span class="summaryviewcardspan">
+                                                <span class="cardsummarylabel">
+                                                    @Model.Loc.Where(a => a.ResourceId == "spnIdStatus").FirstOrDefault().Value.ToString() :
+                                                    @Model.InvoiceMatchHeaderModel.Status
+                                                </span>
+                                            </span>
+                                        </div>
+                                        <div class="gridStatus">
+                                            <span class="summaryviewcardspan">
+                                                <span class="cardsummarylabel">
+                                                    @Model.Loc.Where(a => a.ResourceId == "GlobalType").FirstOrDefault().Value.ToString() :
+                                                    @UtilityFunction.GetMessageFromResource(Model.InvoiceMatchHeaderModel.Type, LocalizeResourceSetConstants.InvoiceMatchType)
+                                                </span>
+                                            </span>
+                                        </div>
+                                        <div class="gridStatus">
+                                            <span class="summaryviewcardspan">
+                                                <span class="cardsummarylabel">
+                                                    @Model.Loc.Where(a => a.ResourceId == "spnIdVendor").FirstOrDefault().Value.ToString() :
+                                                    @Model.InvoiceMatchHeaderModel.VendorClientLookupId            &nbsp;&nbsp;&nbsp;&nbsp;@Model.InvoiceMatchHeaderModel.VendorName
+                                                </span>
+
+                                            </span>
+                                        </div>
+                                        <div class="gridStatus">
+                                            <span class="summaryviewcardspan">
+                                                <span class="cardsummarylabel">
+                                                    @Model.Loc.Where(a => a.ResourceId == "spnIdReceiptDate").FirstOrDefault().Value.ToString() :
+                                                    @if (Model.InvoiceMatchHeaderModel.ReceiptDate.HasValue && Model.InvoiceMatchHeaderModel.ReceiptDate.Value != default(DateTime))
+                                                    {
+                                                        @Model.InvoiceMatchHeaderModel.ReceiptDate.Value.ToString("MM/dd/yyyy", CultureInfo.InvariantCulture)
+                                                    }
+                                                </span>
+                                            </span>
+                                        </div>
+                                        <div class="gridStatus">
+                                            <span class="summaryviewcardspan">
+                                                <span class="cardsummarylabel">
+                                                    @Model.Loc.Where(a => a.ResourceId == "spnIdDueDate").FirstOrDefault().Value.ToString() :
+                                                    @if (Model.InvoiceMatchHeaderModel.DueDate.HasValue && Model.InvoiceMatchHeaderModel.DueDate.Value != default(DateTime))
+                                                    {
+                                                        @Model.InvoiceMatchHeaderModel.DueDate.Value.ToString("MM/dd/yyyy", CultureInfo.InvariantCulture)
+                                                    }
+                                                </span>
+                                            </span>
+                                        </div>
+                                        <div class="gridStatus">
+                                            <span class="summaryviewcardspan">
+                                                <span class="cardsummarylabel">
+                                                    @Model.Loc.Where(a => a.ResourceId == "spnIdPurchaseOrder").FirstOrDefault().Value.ToString() :
+                                                    @Model.InvoiceMatchHeaderModel.POClientLookUpId
+                                                </span>
+                                            </span>
+                                        </div>
+                                    </div>
+
+
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="gridStatus">
+                                        <span class="summaryviewcardspan">
+                                            <span class="cardsummarylabel">
+                                                @Model.Loc.Where(a => a.ResourceId == "spnIdItemAmount").FirstOrDefault().Value.ToString() :
+                                                @ItemAmount
+                                            </span>
+                                        </span>
+                                        <span class="summaryviewcardspan">
+                                            <span class="cardsummarylabel">
+                                                @Model.Loc.Where(a => a.ResourceId == "spnIdTaxAmount").FirstOrDefault().Value.ToString() :
+                                                @TaxAmount
+                                            </span>
+                                        </span>
+                                        <span class="summaryviewcardspan">
+                                            <span class="cardsummarylabel">
+                                                @Model.Loc.Where(a => a.ResourceId == "spnIdShippingAmount").FirstOrDefault().Value.ToString() :
+                                                @ShipAmount
+                                            </span>
+                                        </span>
+                                        <span class="summaryviewcardspan">
+                                            <span class="cardsummarylabel">
+                                                @Model.Loc.Where(a => a.ResourceId == "spnIdTotal").FirstOrDefault().Value.ToString() :
+                                                @TotaltemAmount
+                                            </span>
+                                        </span>
+                                        <span class="summaryviewcardspan">
+                                            <span class="cardsummarylabel">
+                                                @Model.Loc.Where(a => a.ResourceId == "spnIdInputAmount").FirstOrDefault().Value.ToString() :
+                                                @TotalInput
+                                            </span>
+                                        </span>
+                                        <span class="summaryviewcardspan">
+                                            <span class="cardsummarylabel">
+                                                @Model.Loc.Where(a => a.ResourceId == "spnIdVariance").FirstOrDefault().Value.ToString() :
+                                                @Varience
+                                            </span>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .pushDiv2 {
+        height: 195px !important;
+    }
+
+    .fixedDiv2 {
+        position: fixed;
+        right: 15px;
+        left: 270px;
+    }
+
+
+    .gridStatus span {
+        display: block;
+        margin-bottom: 2px;
+    }
+
+    @@media(max-width:1200px) {
+        .m-portlet__body.gridList {
+            padding: 10px 0px 0px 0px !important;
+        }
+    }
+
+    @@media (max-width:900px) {
+        #renderinvoice .newDescription {
+            margin-top: 0px !important;
+        }
+
+        #renderinvoice .fixedDiv2 {
+            position:inherit !important;
+            right: 15px;
+            left: 15px;
+            top: 139px !important;
+        }
+    }
+
+    @@media (max-width:767px) {
+        #renderinvoice .gridStatus {
+            margin-bottom:0px !important;
+        }
+        #renderinvoice .filter_apply.globalFilterAdjusted {
+            margin-top: 0px !important;
+        }
+        #renderinvoice .m-portlet__head-text {
+            line-height: 30px !important;
+        }
+    }
+
+</style>
+

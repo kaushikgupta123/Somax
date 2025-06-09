@@ -1,0 +1,26 @@
+﻿@model Client.Models.EquipmentCombined
+<nav id="sidebar">
+    <div id="dismiss">
+        <i class="fa fa-close"></i>
+    </div>
+    <div class="sidebar-header">
+        <h3><i class="fa fa-filter" style="position: relative; top: -2px;"></i>&nbsp; @Model.Loc.Where(a => a.ResourceId == "globalFilter").FirstOrDefault().Value.ToString() <span class="partitemcount">0</span></h3>
+        <button type="button" class="btn btn-blue filterSearch" id="btnPartDataAdvSrch"> @Model.Loc.Where(a => a.ResourceId == "GlobalApply").FirstOrDefault().Value.ToString()</button>
+    </div>
+    <div class="sidebar-content" id="advsearchsidebar">
+        <form action="#" method="post">
+            <div class="form-group">
+                <label for="PartClientLookUpId">@Model.Loc.Where(a => a.ResourceId == "spnPartID").FirstOrDefault().Value.ToString() :</label>
+                <input type="text" class="form-control search adv-item" id="PartClientLookUpId" autocomplete="off">
+            </div>
+            <div class="form-group">
+                <label for="Description">@Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString() :</label>
+                <input type="text" class="form-control search adv-item" id="Description" autocomplete="off">
+            </div>
+            <div class="form-group">
+                <label for="StockType">@Model.Loc.Where(a => a.ResourceId == "spnStockType").FirstOrDefault().Value.ToString() :</label>              
+                @Html.DropDownListFor(m => m.PartModel.StockType, Model.PartModel.LookupStokeTypeList, "--Select--", new { @class = "form-control search adv-item select2picker", @id = "StockType" })
+            </div>
+        </form>
+    </div>
+</nav>

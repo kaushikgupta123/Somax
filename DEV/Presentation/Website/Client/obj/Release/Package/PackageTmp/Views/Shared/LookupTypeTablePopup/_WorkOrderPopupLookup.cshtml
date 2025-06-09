@@ -1,0 +1,49 @@
+﻿
+<div id="WorkOrderTableModalPopup" class="modal fade dropdown-modal" role="dialog" style="display:none;">
+    <div class="modal-dialog partPopup">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" onclick="$('#WorkOrderTableModalPopup').modal('hide');">&times;</button>
+                <h4 class="modal-title" id="popWorkOrderTable">@UtilityFunction.GetMessageFromResource("GlobalSelectWorkOrder", LocalizeResourceSetConstants.Global)</h4>
+            </div>
+            <div class="modal-body">
+                <div id="tbldropdown" class="dropdown-content tbl-dropdown" style="display:block;">
+                    <div class="table-responsive dropTableOuter">
+                        <table id="tblWorkOrderModalPopup" class="stripe dropTable globalDropTable" style="width:100%;">
+                            <thead>
+                                <tr>
+                                    <th>@UtilityFunction.GetMessageFromResource("GlobalWorkOrder", LocalizeResourceSetConstants.Global)</th>
+                                    <th>@UtilityFunction.GetMessageFromResource("spnDescription", LocalizeResourceSetConstants.Global)</th>
+                                    <th>@UtilityFunction.GetMessageFromResource("GlobalChargeTo", LocalizeResourceSetConstants.Global)</th>
+                                    <th>@UtilityFunction.GetMessageFromResource("GlobalWorkAssigned", LocalizeResourceSetConstants.Global)</th>
+                                    <th>@UtilityFunction.GetMessageFromResource("GlobalRequestor", LocalizeResourceSetConstants.Global)</th>
+                                    <th>@UtilityFunction.GetMessageFromResource("GlobalStatus", LocalizeResourceSetConstants.Global)</th>
+                                </tr>
+                            </thead>
+                            <tfoot id="tblWorkOrderModalPopupFooter" style="display:none">
+                                <tr>
+                                    <th style="position:relative;">@UtilityFunction.GetMessageFromResource("GlobalWorkOrder", LocalizeResourceSetConstants.Global)</th>
+                                    <th style="position:relative;">@UtilityFunction.GetMessageFromResource("spnDescription", LocalizeResourceSetConstants.Global)</th>
+                                    <th style="position:relative;">@UtilityFunction.GetMessageFromResource("GlobalChargeTo", LocalizeResourceSetConstants.Global)</th>
+                                    <th style="position:relative;">@UtilityFunction.GetMessageFromResource("GlobalWorkAssigned", LocalizeResourceSetConstants.Global)</th>
+                                    <th style="position:relative;">@UtilityFunction.GetMessageFromResource("GlobalRequestor", LocalizeResourceSetConstants.Global)</th>
+                                    <th style="position:relative;">@UtilityFunction.GetMessageFromResource("GlobalStatus", LocalizeResourceSetConstants.Global)</th>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="padding:15px 25px !important;">
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style type="text/css">
+    .dropdown-content {
+        height: 438px !important;
+    }
+
+</style>

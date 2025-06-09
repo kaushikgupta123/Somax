@@ -1,0 +1,63 @@
+﻿@model Client.Models.MultiStoreroomPart.MultiStoreroomPartVM
+@using (Ajax.BeginForm("SaveAddtoAutoTransfer", "MultiStoreroomPart", new AjaxOptions { HttpMethod = "Post", OnSuccess = "addToAutotransferAddOnSuccess", OnBegin = "AjaxBeginFormBegin", OnComplete = "AjaxBeginFormComplete", OnFailure = "AjaxBeginFormFaillure" }, new { id = "frmStoreroomAdd" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close clearstate" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title">@Model.Loc.Where(a => a.ResourceId == "globalAddToAutoTransfer").FirstOrDefault().Value.ToString()</h4>
+        </div>
+        @Html.Partial("_ErrorDiv")
+        <div class="modal-body">
+            <div class="form-group" style="margin-bottom:0;">
+                <div class="bottomBlock">
+                    <div class="tabsArea nobg">
+                        <ul class="listView nobrd" style="border-bottom:0;">
+
+                            <li style="margin-bottom:4px;">
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "globalIssueStoreroom").FirstOrDefault().Value.ToString() : <small>*</small></span>
+                                <span class="inputText">
+                                    @Html.ValidationMessageFor(m => m.addToAutoTransfer.AutoTransferIssueStoreroom, "", new { style = "display:none" })
+                                    @Html.DropDownListFor(m => m.addToAutoTransfer.AutoTransferIssueStoreroom, Model.StoreroomList, "--Select--", new { @class = "form-control search select2picker", style = "width:100%;" })
+                                </span>
+                            </li>
+                            <li style="margin-bottom:4px;">
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "GlobalMaximumQuantity").FirstOrDefault().Value.ToString() :<small>*</small></span>
+                                <span class="inputText">
+                                    @Html.ValidationMessageFor(m => m.addToAutoTransfer.AutoTransferMaxQty, "", new { style = "display:none" })
+                                    @Html.TextBoxFor(m => m.addToAutoTransfer.AutoTransferMaxQty, new { @class = "form-control decimalinput search", autocomplete = "off" })
+                                </span>
+                            </li>
+                            <li style="margin-bottom:4px;">
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "globalMinimumQuantity").FirstOrDefault().Value.ToString() :<small>*</small></span>
+                                <span class="inputText">
+                                    @Html.ValidationMessageFor(m => m.addToAutoTransfer.AutoTransferMinQty, "", new { style = "display:none" })
+                                    @Html.TextBoxFor(m => m.addToAutoTransfer.AutoTransferMinQty, new { @class = "form-control decimalinput search", autocomplete = "off" })
+                                </span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div style="clear:both;"></div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer" style="padding:15px 25px !important;">
+            <div class="idBttns">
+                <div class="bttn_pagin">
+                    <div class="bttns2" style="margin:0;">
+
+                        <button type="submit" onclick="return checkMinValue();" class="btn btn-blue mobBttn" style="cursor:pointer" value="save"><i class="fa fa-save faIcon"></i> &nbsp;@Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+                    </div>
+                    <div class="bttns" style="margin:0;"><button type="button" data-dismiss="modal" class="btn btn-blue mobBttn clearstate" id="btnStoreroomcancel"><i class="fa fa-close faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button></div>
+                    <div style="clear:both;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @Html.HiddenFor(m => m.addToAutoTransfer.StoreroomId)
+    @Html.HiddenFor(m => m.addToAutoTransfer.PartStoreroomId)
+    @Html.HiddenFor(m => m.addToAutoTransfer.PartId)
+}
+
+
+

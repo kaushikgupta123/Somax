@@ -1,0 +1,67 @@
+﻿table {
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    height: 500px; /* this can vary */
+}
+table * {
+    box-sizing: inherit;
+    -moz-box-sizing: inherit;
+}
+thead {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+}
+tbody {
+    overflow-y: scroll;
+    display: inline-block;
+}
+thead > tr, tbody > tr, tfoot > tr {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+}
+thead, tfoot {
+    flex-shrink: 0;
+}
+#tasksModuleTable th, #tasksModuleTable tbody td {
+    /*width: 20%;*/ /* this can vary */
+    overflow-x: hidden;
+    text-overflow: ellipsis;
+    display: inline-block;
+}
+#tasksProcessTable th, #tasksProcessTable tbody td {
+    width: 50%; /* this can vary */
+    overflow-x: hidden;
+    text-overflow: ellipsis;
+    display: inline-block;
+}
+tfoot {
+    display: inline-block;
+}
+tfoot td {
+    width: 100%;
+    display: inline-block;
+}
+.m-checkbox.m-checkbox--brand.m-checkbox--solid > input[type=checkbox][disabled] ~ span {
+    background: #e2e5ec !important;
+}
+.table th {
+    border-top:none !important;
+}
+#tasksModuleTable .m-checkbox, #tasksProcessTable .m-checkbox {
+    padding-left: 0px !important;
+    margin-bottom: 10px !important;
+    top: -4px;
+    -webkit-transition: none !important;
+    -moz-transition: none !important;
+    -ms-transition: none !important;
+    -o-transition: none !important;
+    transition: none !important;
+}
+.m-checkbox.m-checkbox--brand.m-checkbox--solid > input:checked ~ span {
+        background: #315a98 !important;
+    }

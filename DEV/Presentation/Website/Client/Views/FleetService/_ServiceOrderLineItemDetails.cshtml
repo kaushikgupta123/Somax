@@ -1,0 +1,292 @@
+﻿@model Client.Models.FleetService.FleetServiceVM
+@{
+    var index = -1;
+    var statusclass = "m-badge m-badge--blue m-badge--wide";
+}
+@foreach (var elem in Model.FleetServiceLineItemModelList)
+{
+
+    List<SelectListItem> VMRSSystemList = Model.VMRSSystemList
+                                               .Select(x => new { x.Level1Value, x.Level1Description })
+                                               .Distinct()
+                                               .Select(x => new SelectListItem { Text = x.Level1Value + " - " + x.Level1Description, Value = x.Level1Value })
+                                               .OrderBy(x => x.Value)
+                                               .ToList();
+    List<SelectListItem> AssemblyList = Model.VMRSSystemList
+                                             .Select(x => new { x.Level1Value, x.Level2Value, x.Level2Description })
+                                             .Distinct()
+                                             .Where(x => x.Level1Value == elem.System)
+                                             .Select(x => new SelectListItem { Text = x.Level2Value + " - " + x.Level2Description, Value = x.Level2Value })                                             
+                                             .OrderBy(x => x.Value)
+                                             .ToList();
+
+    index++;
+    <div class="FleetLineItemTabsBlock" id="ServiceLineItem_@elem.ServiceOrderLineItemId">
+        <div class="tab" style="margin-bottom:10px;">
+            <button class="tablinks active lineitemdetail" id="btn-details-@elem.ServiceOrderLineItemId" onclick="openLineItem(event, 'Details','@elem.ServiceOrderLineItemId')">@Model.Loc.Where(a => a.ResourceId == "spnDetails").FirstOrDefault().Value.ToString()</button>
+            <button class="tablinks" id="btn-Labor-@elem.ServiceOrderLineItemId" onclick="openLineItem(event, 'Labor','@elem.ServiceOrderLineItemId')">@Model.Loc.Where(a => a.ResourceId == "spnLabor").FirstOrDefault().Value.ToString()</button>
+            <button class="tablinks" id="btn-Parts-@elem.ServiceOrderLineItemId" onclick="openLineItem(event, 'Parts','@elem.ServiceOrderLineItemId')">@Model.Loc.Where(a => a.ResourceId == "spnParts").FirstOrDefault().Value.ToString()</button>
+            <button class="tablinks" id="btn-Other-@elem.ServiceOrderLineItemId" onclick="openLineItem(event, 'Other','@elem.ServiceOrderLineItemId')">@Model.Loc.Where(a => a.ResourceId == "spnOthers").FirstOrDefault().Value.ToString()</button>
+            @*V2-421*@
+            @if (elem.SchedServiceId > 0)
+            {
+                <span class="orderId" style="float:right;">
+                    <small class='@statusclass'>@UtilityFunction.GetMessageFromResource("spnScheduledService", LocalizeResourceSetConstants.FleetServiceOrder) </small>
+                </span>
+            }
+            @*V2-421*@
+        </div>
+
+        <div id="Details_@elem.ServiceOrderLineItemId" class="tabcontent" style="display:block;">
+            @using (Ajax.BeginForm("ServiceOrderLineItemAddEdit", "FleetService", new AjaxOptions { HttpMethod = "Post", OnSuccess = "LineItemAddOnSuccess", OnBegin = "AjaxBeginFormBegin", OnComplete = "AjaxBeginFormComplete", OnFailure = "AjaxBeginFormFaillure" }, new { }))
+            {
+                @Html.AntiForgeryToken()
+                @Html.HiddenFor(m => m.FleetServiceLineItemModel.ServiceOrderId, new { @Value = Model.FleetServiceLineItemModelList[index].ServiceOrderId, @id = "ServiceOrderId_" + index })
+                @Html.HiddenFor(m => m.FleetServiceLineItemModel.ServiceOrderLineItemId, new { @Value = Model.FleetServiceLineItemModelList[index].ServiceOrderLineItemId, @id = "ServiceOrderLineItemId_" + index })
+                @Html.HiddenFor(m => m.FleetServiceLineItemModel.ServiceTaskId, new { @Value = Model.FleetServiceLineItemModelList[index].ServiceTaskId, @id = "ServiceTaskId_" + index })
+                @Html.HiddenFor(m => m.FleetServiceLineItemModel.EquipmentId, new { @Value = Model.FleetServiceLineItemModelList[index].EquipmentId, @id = "ServiceOrderequipId_" + index })
+                <div class="row">
+                    <div class="col-xl-6">
+                        <ul class="listView nobrd" style="border:0;">
+                            <li>
+                                <span class="label">@Model.Loc.Where(m => m.ResourceId == "spnServiceTask").FirstOrDefault().Value.ToString() : <small>*</small></span>
+                                <span class="inputText">@Html.TextBoxFor(m => m.FleetServiceLineItemModelList[index].Description, new { @class = "form-control search", autocomplete = "off", @disabled = true })</span>
+                            </li>
+                            <li>
+                                <span class="label">@Model.Loc.Where(m => m.ResourceId == "spnRepairReason").FirstOrDefault().Value.ToString() : <small>*</small></span>
+                                <span class="inputText">
+                                    @Html.ValidationMessageFor(m => m.FleetServiceLineItemModel.RepairReason, "", new { style = "display:none" })
+                                    @Html.DropDownListFor(m => m.FleetServiceLineItemModel.RepairReason, Model.LookupRepairReasonList.Select(x => new SelectListItem() { Value = x.Value, Text = x.Text, Selected = (x.Value == elem.RepairReason) }), "--Select--", new { @Value = Model.FleetServiceLineItemModelList[index].RepairReason, @class = "form-control search select2picker", style = "width:100%;", @id = "RepairReason_" + index })
+                                </span>
+                            </li>
+
+                            <li>
+                                <span class="label">@Html.LabelFor(m => m.FleetServiceLineItemModel.FleetIssuesId) :</span>
+                                <span class="inputText">
+                                    <div class="dropdown dropTableOuter">
+                                        <div class="input-group">
+                                            @Html.TextBoxFor(m => Model.FleetServiceLineItemModel.FIDescription, new { @Value = Model.FleetServiceLineItemModelList[index].FIDescription, @class = "form-control search dropbtn readonly", @id = "FIDescription_" + index, autocomplete = "off", @readonly = "readonly" })
+                                            @Html.HiddenFor(m => m.FleetServiceLineItemModel.FleetIssuesId, new { @Value = Model.FleetServiceLineItemModelList[index].FleetIssuesId, @id = "hdnFleetIssueId_" + index })
+                                            <div class="input-group-btn" id="divSearch">
+                                                <button class="btn btn-white btntxtInputGroup" type="button" id="openFIgrid-@elem.ServiceOrderLineItemId" onclick="generateSOFleetIssueTable('@elem.ServiceOrderLineItemId','@index')">
+                                                    <i id="srcicon" class="fa fa-search"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="col-xl-6">
+                        <ul class="listView nobrd" style="border:0;">
+                            <li>
+                                <span class="label">@Html.LabelFor(m => m.FleetServiceLineItemModel.System) : <small>*</small></span>
+                                <span class="inputText">
+                                    @Html.ValidationMessageFor(m => m.FleetServiceLineItemModel.System, "", new { style = "display:none" })
+                                    @Html.DropDownListFor(m => m.FleetServiceLineItemModel.System, VMRSSystemList.Select(x => new SelectListItem { Text = x.Text, Value = x.Value, Selected = (x.Value == elem.System) }), "--Select--", new { @Value = Model.FleetServiceLineItemModelList[index].System, @class = "form-control search select2picker fleetsystemdetail", style = "width:100%;", @id = "System_" + index })
+                                </span>
+                            </li>
+                            <li>
+                                <span class="label">@Html.LabelFor(m => m.FleetServiceLineItemModel.Assembly) : <small>*</small></span>
+                                <span class="inputText">
+                                    @Html.ValidationMessageFor(m => m.FleetServiceLineItemModel.Assembly, "", new { style = "display:none" })
+                                    @Html.DropDownListFor(m => m.FleetServiceLineItemModel.Assembly, AssemblyList.Select(x => new SelectListItem { Text = x.Text, Value = x.Value, Selected = (x.Value == elem.Assembly) }), "--Select--", new { @Value = Model.FleetServiceLineItemModelList[index].Assembly, @class = "form-control search select2picker", style = "width:100%;", @id = "Assembly_" + index })
+                                </span>
+                            </li>
+                        </ul>
+                        @*<div class="row">
+                            <div class="col-xl-6">
+                                <span class="label">@Html.LabelFor(m => m.FleetServiceLineItemModel.System) :</span>
+                                <span class="inputText">
+                                    @Html.ValidationMessageFor(m => m.FleetServiceLineItemModel.System, "", new { style = "display:none" })
+                                    @Html.DropDownListFor(m => m.FleetServiceLineItemModel.System, VMRSSystemList.Select(x => new SelectListItem { Text = x.Text, Value = x.Value, Selected = (x.Value == elem.System) }), "--Select--", new { @Value = Model.FleetServiceLineItemModelList[index].System, @class = "form-control search select2picker fleetsystemdetail", style = "width:100%;", @id = "System_" + index })
+                                </span>
+                            </div>
+                            <div class="col-xl-6">
+                                <span class="label">@Html.LabelFor(m => m.FleetServiceLineItemModel.Assembly) :</span>
+                                <span class="inputText">
+                                    @Html.ValidationMessageFor(m => m.FleetServiceLineItemModel.Assembly, "", new { style = "display:none" })
+                                    @Html.DropDownListFor(m => m.FleetServiceLineItemModel.Assembly, AssemblyList.Select(x => new SelectListItem { Text = x.Text, Value = x.Value, Selected = (x.Value == elem.Assembly) }), "--Select--", new { @Value = Model.FleetServiceLineItemModelList[index].Assembly, @class = "form-control search select2picker", style = "width:100%;", @id = "Assembly_" + index })
+                                </span>
+                            </div>
+                        </div>*@
+                        <div class="row">
+                            <div class="col-xl-3">
+                                <ul class="listView nobrd" style="border:0;">
+                                    <li>
+                                        <span class="label" style="line-height:35px;">@Model.Loc.Where(m => m.ResourceId == "spnLabour").FirstOrDefault().Value.ToString() :</span>
+                                        <span class="inputText totalLabel">
+                                            @Html.TextBoxFor(m => m.FleetServiceLineItemModelList[index].Labor, new { @class = "form-control search", @disabled = "disabled", @autocomplete = "off", @style = "text-align:right" })
+                                        </span>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="col-xl-3">
+                                <ul class="listView nobrd" style="border:0;">
+                                    <li>
+                                        <span class="label" style="line-height:35px;">@Model.Loc.Where(m => m.ResourceId == "spnParts").FirstOrDefault().Value.ToString() :</span>
+                                        <span class="inputText totalLabel">
+                                            @Html.TextBoxFor(m => m.FleetServiceLineItemModelList[index].Materials, new { @class = "form-control search", @autocomplete = "off", @disabled = "disabled", @style = "text-align:right" })
+                                        </span>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="col-xl-3">
+                                <ul class="listView nobrd" style="border:0;">
+                                    <li>
+                                        <span class="label" style="line-height:35px;">@Model.Loc.Where(m => m.ResourceId == "spnOthers").FirstOrDefault().Value.ToString() :</span>
+                                        <span class="inputText totalLabel">
+                                            @Html.TextBoxFor(m => m.FleetServiceLineItemModelList[index].Others, new { @class = "form-control search", @autocomplete = "off", @disabled = "disabled", @style = "text-align:right" })
+                                        </span>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="col-xl-3">
+                                <ul class="listView nobrd" style="border:0;">
+                                    <li>
+                                        <span class="label" style="line-height:35px;">@Model.Loc.Where(m => m.ResourceId == "spnTotal").FirstOrDefault().Value.ToString() :</span>
+                                        <span class="inputText totalLabel">
+                                            @Html.TextBoxFor(m => m.FleetServiceLineItemModelList[index].DetailsTotal, new { @class = "form-control search", @autocomplete = "off", @disabled = "disabled", @style = "text-align:right" })
+                                        </span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                <div class="col-xl-12">
+                    <ul class="listView nobrd">
+                        <li class="FleetServDes">
+                            <span class="label">@Model.Loc.Where(m => m.ResourceId == "spnLogComment").FirstOrDefault().Value.ToString() :</span>
+                            <span class="inputText description-span">
+                                @*@Html.TextAreaFor(m => m.FleetServiceLineItemModel.Comment, new { @Value = Model.FleetServiceLineItemModelList[index].Comment, @text = Model.FleetServiceLineItemModelList[index].Comment, @class = "form-control search", autocomplete = "off", @id = "Comment_" + index })*@
+                                @Html.TextArea("FleetServiceLineItemModel.Comment", Model.FleetServiceLineItemModelList[index].Comment, new { @class = "form-control search", autocomplete = "off", @id = "Comment_" + index, @maxlength = 100 })
+                            </span>
+                            <div style="clear:both;"></div>
+                        </li>
+                    </ul>
+                </div>
+                @if (elem.Status != ServiceOrderStatusConstant.Complete && elem.Status != ServiceOrderStatusConstant.Canceled)
+                {
+                    <div class="col-xl-12">
+                        <div class="idBttns">
+                            <div class="bttn_pagin">
+                                <div class="bttns2">
+                                    <button class="btn btn-blue mobBttn" name="Command" value="save"><i class="fa fa-save faIcon"></i> &nbsp; @Model.Loc.Where(m => m.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+                                </div>
+                                <div class="bttns">
+                                    <button type="button" data-id="@Model.FleetServiceLineItemModelList[index].ServiceOrderLineItemId" class="btn btn-blue mobBttn btnDeleteLineItem"><i class="fa fa-trash faIcon"></i> &nbsp; @Model.Loc.Where(m => m.ResourceId == "globalDelete").FirstOrDefault().Value.ToString()</button>
+                                </div>
+                                <div style="clear:both;"></div>
+                            </div>
+                        </div>
+                    </div>
+                }
+
+
+            </div>
+            }
+        </div>
+
+        <div id="Labor_@elem.ServiceOrderLineItemId" class="tabcontent">
+            <div class="table-responsive">
+                <table id="LaborDataTable_@elem.ServiceOrderLineItemId" class="eqpDtlTbl row-border custom-sort tblMain" style="width:100%;">
+                    <thead>
+                        <tr>
+                            <th>@Model.Loc.Where(m => m.ResourceId == "spnName").FirstOrDefault().Value.ToString()</th>
+                            <th>@Model.Loc.Where(m => m.ResourceId == "spnDate").FirstOrDefault().Value.ToString()</th>
+                            <th style="text-align:right !important;">@Model.Loc.Where(m => m.ResourceId == "spnHours").FirstOrDefault().Value.ToString()</th>
+                            <th style="text-align:right !important;">@Model.Loc.Where(m => m.ResourceId == "spnUnitCost").FirstOrDefault().Value.ToString()</th>
+                            <th>@Model.Loc.Where(m => m.ResourceId == "spnWorkAccomplishedCode").FirstOrDefault().Value.ToString()</th>
+                            <th style="text-align:center !important;">@Model.Loc.Where(m => m.ResourceId == "globalAction").FirstOrDefault().Value.ToString()</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+            <div class="bttn_pagin">
+                <div class="bttns">
+                    @if (Model.security.Fleet_ServiceOrder.Edit)
+                    {
+                        <button type="button" data-lineitemid="@elem.ServiceOrderLineItemId" class="btn btn-blue addLaborTimerBttn addstate" data-toggle="" data-target="">
+                            <i class="fa fa-clock-o faIcon"></i> &nbsp; @Model.Loc.Where(m => m.ResourceId == "globalTimer").FirstOrDefault().Value.ToString()
+                        </button>
+                        <button type="button" data-lineitemid="@elem.ServiceOrderLineItemId" class="btn btn-blue addLaborBttn addstate" data-toggle="" data-target="">
+                            <i class="fa fa-plus faIcon"></i> &nbsp; @Model.Loc.Where(m => m.ResourceId == "spnAddLabour").FirstOrDefault().Value.ToString()
+                        </button>
+                    }
+                </div>
+                <div style="clear:both;"></div>
+            </div>
+            <div style="clear:both;"></div>
+        </div>
+
+        <div id="Parts_@elem.ServiceOrderLineItemId" class="tabcontent">
+            <div class="table-responsive">
+                <table id="PartsDataTable_@elem.ServiceOrderLineItemId" class="eqpDtlTbl row-border custom-sort tblMain" style="width:100%;">
+                    <thead>
+                        <tr>
+                            <th>@Model.Loc.Where(m => m.ResourceId == "spnPartID").FirstOrDefault().Value.ToString()</th>
+                            <th>@Model.Loc.Where(m => m.ResourceId == "spnDescription").FirstOrDefault().Value.ToString()</th>
+                            <th style="text-align:right !important;">@Model.Loc.Where(m => m.ResourceId == "spnTransactionQty").FirstOrDefault().Value.ToString()</th>
+                            <th style="text-align:right !important;">@Model.Loc.Where(m => m.ResourceId == "spnUnitCost").FirstOrDefault().Value.ToString()</th>
+                            <th style="text-align:right !important;">@Model.Loc.Where(m => m.ResourceId == "spnTotalCost").FirstOrDefault().Value.ToString()</th>
+                            <th>@Model.Loc.Where(m => m.ResourceId == "spnUnitofMeasure").FirstOrDefault().Value.ToString()</th>
+                            <th>@Model.Loc.Where(m => m.ResourceId == "spnTranDate").FirstOrDefault().Value.ToString()</th>
+                            <th>@Model.Loc.Where(m => m.ResourceId == "FailureCode").FirstOrDefault().Value.ToString()</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+
+            <div class="bttn_pagin">
+                <div class="bttns">
+                    @if (Model.security.Fleet_ServiceOrder.Edit)
+                    {
+                        <button type="button" class="btn btn-blue addIssuePartBttn addstate" data-lineitemid="@elem.ServiceOrderLineItemId" data-toggle="" data-target="">
+                            <i class="fa fa-plus faIcon"></i> &nbsp; @Model.Loc.Where(m => m.ResourceId == "spnAddPart").FirstOrDefault().Value.ToString()
+                        </button>
+                    }
+                </div>
+                <div style="clear:both;"></div>
+            </div>
+            <div style="clear:both;"></div>
+        </div>
+
+        <div id="Other_@elem.ServiceOrderLineItemId" class="tabcontent">
+            <div class="table-responsive">
+                <table id="OtherDataTable_@elem.ServiceOrderLineItemId" class="eqpDtlTbl row-border custom-sort tblMain" style="width:100%;">
+                    <thead>
+                        <tr>
+                            <th>@Model.Loc.Where(m => m.ResourceId == "spnSource").FirstOrDefault().Value.ToString()</th>
+                            <th>@Model.Loc.Where(m => m.ResourceId == "spnVendorID").FirstOrDefault().Value.ToString()</th>
+                            <th>@Model.Loc.Where(m => m.ResourceId == "spnDescription").FirstOrDefault().Value.ToString()</th>
+                            <th style="text-align:right !important;">@Model.Loc.Where(m => m.ResourceId == "spnUnitCost").FirstOrDefault().Value.ToString()</th>
+                            <th style="text-align:right !important;">@Model.Loc.Where(m => m.ResourceId == "spnQuantity").FirstOrDefault().Value.ToString()</th>
+                            <th style="text-align:right !important;">@Model.Loc.Where(m => m.ResourceId == "spnTotalCost").FirstOrDefault().Value.ToString()</th>
+                            <th style="text-align:center !important;">@Model.Loc.Where(m => m.ResourceId == "globalAction").FirstOrDefault().Value.ToString()</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+            @if (Model.security.Fleet_ServiceOrder.Edit)
+            {
+                <div class="bttn_pagin">
+                    <div class="bttns">
+                        <button type="button" data-lineitemid="@elem.ServiceOrderLineItemId" class="btn btn-blue addOtherBttn addstate" data-toggle="" data-target="" id="btnAddSO_others">
+                            <i class="fa fa-plus faIcon"></i> &nbsp; @Model.Loc.Where(m => m.ResourceId == "spnAddOthers").FirstOrDefault().Value.ToString()
+                        </button>
+                    </div>
+                    <div style="clear:both;"></div>
+                </div>
+            }
+        </div>
+
+        <div style="clear:both;"></div>
+
+    </div>
+}
+<script>
+    var EditRights = '@Model.security.Fleet_ServiceOrder.Edit';
+</script>

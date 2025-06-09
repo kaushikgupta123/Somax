@@ -1,0 +1,81 @@
+﻿@model Client.Models.PreventiveMaintenance.PrevMaintVM
+<nav class="sidebar">
+    <div class="dismiss">
+        <i class="fa fa-close"></i>
+    </div>
+    <div class="sidebar-header">
+        <h3><i class="fa fa-filter" style="position: relative; top: -2px;"></i> @Model.Loc.Where(a => a.ResourceId == "spnFilters").FirstOrDefault().Value.ToString()<span class="filteritemcount">0</span></h3>
+        <button type="button" class="btn btn-blue filterSearch" id="btnPMForcastDataAdvSrch"><i class="fa fa-search" style="margin-top:-3px;"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalSearch").FirstOrDefault().Value.ToString()</button>
+    </div>
+    <div class="sidebar-content" id="advsearchsidebarPMForcast">
+        <div class="form-group">
+            <label for="PMFPmId">@Model.Loc.Where(a => a.ResourceId == "spnPMID").FirstOrDefault().Value.ToString():</label>
+            <input type="text" class="form-control search adv-item" id="PMFPmId">
+        </div>
+        <div class="form-group">
+            <label for="PMFDescription">@Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString() :</label>
+            <input type="text" class="form-control search adv-item" id="PMFDescription">
+        </div>
+        <div class="form-group">
+            <label for="PMFScheduled">@Model.Loc.Where(a => a.ResourceId == "spnScheduled").FirstOrDefault().Value.ToString() :</label>
+            <input type="text" class="form-control search dtpicker adv-item" id="PMFScheduled">
+        </div>
+        @*<div class="form-group">
+            <label for="PMFAssignedTo">@Model.Loc.Where(a => a.ResourceId == "spnAssignedTo").FirstOrDefault().Value.ToString() :</label>
+            <input type="text" class="form-control search adv-item" id="PMFAssignedTo">
+        </div>*@
+        <div class="form-group">
+            <label for="PMFChargeTo">@Model.Loc.Where(a => a.ResourceId == "GlobalChargeTo").FirstOrDefault().Value.ToString() :</label>
+            <input type="text" class="form-control search adv-item" id="PMFChargeTo">
+        </div>
+        <div class="form-group">
+            <label for="PMFChargeToName">@Model.Loc.Where(a => a.ResourceId == "spnChargeToName").FirstOrDefault().Value.ToString() :</label>
+            <input type="text" class="form-control search decimalinput adv-item" id="PMFChargeToName">
+        </div>
+        <div class="form-group">
+            <label for="PMFJobDuration">@Model.Loc.Where(a => a.ResourceId == "spnDuration").FirstOrDefault().Value.ToString() :</label>
+            <input type="text" class="form-control search decimalinput adv-item" id="PMFJobDuration">
+        </div>
+        <div class="form-group">
+            <label for="PMFLaborHours">@Model.Loc.Where(a => a.ResourceId == "spnLaborHours").FirstOrDefault().Value.ToString() :</label>
+            <input type="text" class="form-control search decimalinput adv-item" id="PMFLaborHours">
+        </div>
+        <div class="form-group">
+            <label for="PMFLaborCost">@Model.Loc.Where(a => a.ResourceId == "spnLaborCost").FirstOrDefault().Value.ToString() :</label>
+            <input type="text" class="form-control search decimalinput adv-item" id="PMFLaborCost">
+        </div>
+        <div class="form-group">
+            <label for="PMFOtherCost">@Model.Loc.Where(a => a.ResourceId == "spnOtherCost").FirstOrDefault().Value.ToString() :</label>
+            <input type="text" class="form-control search decimalinput adv-item" id="PMFOtherCost">
+        </div>
+        <div class="form-group">
+            <label for="PMFMaterialCost">@Model.Loc.Where(a => a.ResourceId == "spnMaterialCost").FirstOrDefault().Value.ToString() :</label>
+            <input type="text" class="form-control search decimalinput adv-item" id="PMFMaterialCost">
+        </div>
+        <div class="form-group">
+            <label for="gridadvsearchrequiredate">@Model.Loc.Where(a => a.ResourceId == "spnRequiredDate").FirstOrDefault().Value.ToString() :</label>
+            <input type="text" class="form-control search dtpicker adv-item" id="gridadvsearchrequiredate">
+        </div>
+        <div class="form-group">
+            <label for="gridadvsearchassign">@Model.Loc.Where(a => a.ResourceId == "spnAssigned").FirstOrDefault().Value.ToString() :</label>
+            @Html.DropDownListFor(m => m.pMForcastModel.Assigned, Model.pMForcastModel.PersonnelIdList, new { @class = "form-control search adv-item", @id = "gridadvsearchassign", style = "width:100%;", multiple = "multiple" })
+        </div>
+        <div class="form-group">
+            <label for="txtDownRequired">@Model.Loc.Where(a => a.ResourceId == "spnDownRequired").FirstOrDefault().Value.ToString():</label>
+            @Html.DropDownListFor(m => m.pMForcastModel.DownRequired, Model.pMForcastModel.DownRequiredInactiveFlagList, "--Select--", new { @class = "form-control search adv-item select2picker", style = "width:100%;", id = "txtDownRequired" })
+        </div>
+
+        <div class="form-group">
+            <label for="gridadvsearchshift">@Model.Loc.Where(a => a.ResourceId == "spnShift").FirstOrDefault().Value.ToString():</label>
+            @Html.DropDownListFor(m => m.pMForcastModel.Shift, Model.pMForcastModel.ShiftList, new { @class = "form-control search adv-item select2picker", style = "width:100%;", @id = "gridadvsearchshift", multiple = "multiple" })
+        </div>
+        @*V2-1207*@
+        <div class="form-group">
+            <label for="PMFType">@Model.Loc.Where(a => a.ResourceId == "GlobalType").FirstOrDefault().Value.ToString():</label>
+            @Html.DropDownListFor(m => m.pMForcastModel.Type, Model.TypeList, new { @class = "form-control search adv-item select2picker", style = "width:100%;", @id = "PMFType", multiple = "multiple" })
+        </div>
+
+    </div>
+</nav>
+
+

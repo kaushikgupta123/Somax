@@ -1,0 +1,107 @@
+﻿@model Client.Models.Work_Order.WorkOrderVM
+<div class="m-subheader fixedDiv1">
+    <div class="new-m-subheader">
+        <div class="PageTitle">
+            <div class="align-items-center separator">
+                <h3 class="m-subheader__title ">
+                    @Model.Loc.Where(a => a.ResourceId == "globalAttachment").FirstOrDefault().Value.ToString()
+                </h3>
+            </div>
+        </div>       
+    
+        <div class="filterDescription">
+            <a href="javascript:void(0)" id="linkToSearch"><span id="spnlinkToSearch"></span></a>
+            -<a href="javascript:void(0)" id="brdwoattachment" data-val="@Model.attachmentModel.WorkOrderId">@Model.attachmentModel.ClientLookupId</a>
+            - @Model.Loc.Where(a => a.ResourceId == "globalAddAttachment").FirstOrDefault().Value.ToString()
+        </div>
+        <div style="clear:both;"></div>
+    </div>
+</div>
+<div class="pushDiv1"></div>
+
+<div class="row fixedDiv2">
+    @Html.Partial("_WorkOrderSummary", Model)
+</div>
+<div class="pushDiv2 WOScheduleAdjust"></div>
+<div class="errormessage" style="display:none"></div>
+<form id="frmwoattachmentadd" name="frmwoattachmentadd" method="post" enctype="multipart/form-data">
+    @Html.AntiForgeryToken()
+    <div class="row">
+        <div class="col-xl-12">
+            <div class="m-portlet newPort" id="m_portlet" style="padding:15px;">
+                <div class="bottomBlock">
+                    <div class="tabsArea nobg">
+                        @if (Model.attachmentModel.AttachmentId != 0)
+                        {
+
+                            <h3>@Model.Loc.Where(a => a.ResourceId == "spnUpdateAttachment").FirstOrDefault().Value.ToString()</h3>
+                        }
+                        else
+                        {
+                            <h3>@Model.Loc.Where(a => a.ResourceId == "globalAddAttachment").FirstOrDefault().Value.ToString()</h3>
+                        }
+                    <ul class="listView nobrd">
+                        <li>
+                            <span class="label">@Html.LabelFor(m => m.attachmentModel.Subject) : </span>
+                            <span class="inputText">
+                                @Html.TextBoxFor(m => m.attachmentModel.Subject, new { @class = "form-control search", autocomplete = "off" })
+                            </span>
+                        </li>
+                        <li>
+                            <span class="label">@Html.LabelFor(m => m.attachmentModel.FileContent) : <small>*</small></span>
+                            <span class="inputText fileT">
+                                @Html.SomaxAttachmentFileFor(m => m.attachmentModel.FileContent, new { autocomplete = "off", @class = "attfile" })
+                                @Html.ValidationMessageFor(m => m.attachmentModel.FileContent, "", new { style = "display:none" })
+                            </span>
+                        </li>
+                        <li>
+                            <span class="label">@Model.Loc.Where(a => a.ResourceId == "globalPrintWithForm").FirstOrDefault().Value.ToString() : <small>*</small></span>
+                            <span class="inputText">
+                                @Html.CheckBoxFor(m => m.attachmentModel.PrintwithForm, new { @class = "form-control m-input", @disabled = "disabled", @style = "color:black; width: auto; margin-top: 12px;" })
+                            </span>
+                        </li>
+
+                    </ul>
+                    </div>
+                    <div style="clear:both;"></div>
+                    <div class="idBttns">
+                        <div class="bttn_pagin">
+                            <div class="bttns2">
+                                <button class="btn btn-blue mobBttn"><i class="fa fa-save faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+                            </div>
+                            <div class="bttns"><button type="button" class="btn btn-blue mobBttn" id="btnwoattachmentcancel"><i class="fa fa-close faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button></div>
+
+                            <div style="clear:both;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @Html.HiddenFor(m => m.attachmentModel.WorkOrderId)
+    @Html.HiddenFor(m => m.attachmentModel.AttachmentId)
+</form>
+@Html.Partial("_WOSummaryDescription", Model)
+@Html.Partial("_CompleteModal")
+@Html.Partial("_CancelModal")
+@Html.Partial("_ScheduleModal")
+
+<link href="~/Scripts/Metronic/assets/demo/default/base/style_newCustom.css" rel="stylesheet" />
+<style type="text/css">
+    .pushDiv2.WOScheduleAdjust { height: 161px !important; }
+    .gridList:hover { background: #fff; }
+    .row[class*="m-row--col-separator-"] > div:last-child { border-bottom: 0px solid #ebedf2; }
+    .filterDescription {
+        padding-left: 12px;
+        width: auto;
+        float: left;
+        font-size: 1.2rem;
+        color: #000;
+        font-weight: 500;
+        line-height: 33px;
+    }
+    .filterDescription a {
+        color: #36a3f7;
+        text-decoration: none !important;
+    }
+</style>

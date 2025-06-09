@@ -1,0 +1,56 @@
+﻿@model Client.Models.PurchaseRequest.PurchaseRequestVM
+
+<nav class="sidebar">
+    <div class="dismiss">
+        <i class="fa fa-close"></i>
+    </div>
+
+    <div class="sidebar-header">
+        <h3><i class="fa fa-filter" style="position: relative; top: -2px;"></i> @Model.Loc.Where(a => a.ResourceId == "spnWrFilters").FirstOrDefault().Value.ToString() <span class="lifilteritemcount">0</span></h3>
+        <button type="button" class="btn btn-blue filterSearch" id="btnLItemDataAdvSrch"><i class="fa fa-search" style="margin-top:-3px;"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalSearch").FirstOrDefault().Value.ToString()</button>
+    </div>
+
+    <div class="sidebar-content" id="litemadvsearchsidebar">
+        <form action="#" method="post">
+            <div class="form-group prcli-LineNumber">
+                <label for="LineNo">@Model.Loc.Where(a => a.ResourceId == "spnPdLineNo").FirstOrDefault().Value.ToString() :</label>
+                <input type="text" class="form-control search adv-item" id="LineNo" autocomplete="off">
+            </div>
+            <div class="form-group prcli-PartClientLookupId">
+                <label for="PartID">@Model.Loc.Where(a => a.ResourceId == "spnPartID").FirstOrDefault().Value.ToString() :</label>
+                <input type="text" class="form-control search adv-item" id="PartID" autocomplete="off">
+            </div>
+            <div class="form-group prcli-Description">
+                <label for="Description">@Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString() :</label>
+                <input type="text" class="form-control search adv-item" id="Description" autocomplete="off">
+            </div>
+            <div class="form-group prcli-OrderQuantity">
+                <label for="OrderQty">@Model.Loc.Where(a => a.ResourceId == "spnPdOrderQty").FirstOrDefault().Value.ToString() :</label>
+                <input type="text" class="form-control search adv-item decimalinput" id="OrderQty" autocomplete="off">
+            </div>
+            <div class="form-group prcli-UnitofMeasure">
+                <label for="UOM">@Model.Loc.Where(a => a.ResourceId == "spnPdUOM").FirstOrDefault().Value.ToString() :</label>
+                @Html.DropDownListFor(m => m.purchaseRequestModel.Uoms, Model.purchaseRequestModel.UOMList, "--Select--", new { @class = "form-control search adv-item select2picker", id = "UOM", style = "width:100%;" })
+            </div>
+            <div class="form-group prcli-UnitCost">
+                <label for="UnitCost">@Model.Loc.Where(a => a.ResourceId == "spnUnitCost").FirstOrDefault().Value.ToString() :</label>
+                <input type="text" class="form-control search decimalinput adv-item" id="UnitCost" autocomplete="off">
+            </div>
+            <div class="form-group prcli-TotalCost">
+                <label for="TotalCost">@Model.Loc.Where(a => a.ResourceId == "spnPdTotalCost").FirstOrDefault().Value.ToString() :</label>
+                <input type="text" class="form-control search decimalinput adv-item" id="TotalCost" autocomplete="off">
+            </div>
+            <div class="form-group prcli-Account_ClientLookupId">
+                <label for="liAccount">Account :</label>
+                @Html.DropDownListFor(m => m.purchaseRequestModel.Account_ClientLookupId, Model.purchaseRequestModel.AccountList, "--Select--", new { @class = "form-control search adv-item select2picker", id = "liAccount", style = "width:100%;" })
+            </div>
+            <div class="form-group prcli-ChargeToClientLookupId">
+                <label for="ChargeToClientLookupId">@Model.Loc.Where(a => a.ResourceId == "GlobalChargeTo").FirstOrDefault().Value.ToString() :</label>
+                <input type="text" class="form-control search adv-item" id="ChargeToClientLookupId" autocomplete="off">
+            </div>
+        </form>
+    </div>
+</nav>
+
+
+

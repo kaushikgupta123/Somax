@@ -1,0 +1,50 @@
+﻿@model Client.Models.NewLaborScheduling.NewLaborSchedulingVM
+<div id="AvailableWorkAssignModal" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-info">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close btnAsscancelmod" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">@Model.Loc.Where(a => a.ResourceId == "spnGlobalSchedule").FirstOrDefault().Value.ToString()</h4>
+            </div>
+            @using (Ajax.BeginForm("AddAvailableWorkAssignCalendar", "LaborScheduling", new AjaxOptions { HttpMethod = "Post", OnSuccess = "AvailableWorkAddOnSuccess", OnBegin = "AjaxBeginFormBegin", OnComplete = "AjaxBeginFormComplete", OnFailure = "AjaxBeginFormFaillure" }))
+            {
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="Line" id="lblLine">@Model.Loc.Where(a => a.ResourceId == "spnGlobalAssigned").FirstOrDefault().Value.ToString():<small>*</small></label>
+                        @if (Model.availableWorkAssignCalendarModel.Personnellist != null)
+                        {
+                            @Html.ValidationMessageFor(m => m.availableWorkAssignCalendarModel.PersonnelIds, "", new { style = "display:none" })
+                            @Html.DropDownListFor(m => m.availableWorkAssignCalendarModel.PersonnelIds, Model.availableWorkAssignCalendarModel.Personnellist, new { @class = "form-control search select2picker", style = "width:100%;", id = "ddlAssUser", multiple = "multiple",name= "PersonnelIds" })
+                       }
+                    </div>
+                    <div class="form-group">
+                        <label for="Line" id="lblLine">@Model.Loc.Where(a => a.ResourceId == "spnGlobalSchedule").FirstOrDefault().Value.ToString():<small>*</small></label>
+                        @Html.ValidationMessageFor(m => m.availableWorkAssignCalendarModel.Schedulestartdate, "", new { style = "display:none" })
+                        @Html.TextBoxFor(m => m.availableWorkAssignCalendarModel.Schedulestartdate, "{0:MM/dd/yyyy}", new { @class = "form-control search dtpicker", autocomplete = "off", id = "Assignstartdate" })
+                    </div>
+                    <div class="form-group">
+                        <label for="Line" id="lblLine">@Html.LabelFor(m => m.availableWorkAssignCalendarModel.ScheduledDuration) :<small>*</small></label>
+                        @Html.ValidationMessageFor(m => m.availableWorkAssignCalendarModel.ScheduledDuration, "", new { style = "display:none" })
+                        @Html.TextBoxFor(m => m.availableWorkAssignCalendarModel.ScheduledDuration, new { @class = "form-control search decimalinput", autocomplete = "off" })
+                    </div>
+                </div>
+                <div class="modal-footer" style="padding:15px 25px !important;">
+                    <button type="button" class="btn btn-default mobBttn btnAsscancelmod" data-dismiss="modal"><i class="fa fa-close buttonIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button>
+                    <button type="submit" class="btn btn-blue mobBttn" style="float:right;"><i class="fa fa-save faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+                    <div style="clear:both;"></div>
+                </div>
+                @Html.HiddenFor(x => x.availableWorkAssignCalendarModel.WorkOrderId)                
+                @Html.HiddenFor(x => x.availableWorkAssignCalendarModel.WorkOrderIds)
+                @Html.HiddenFor(x => x.availableWorkAssignCalendarModel.ClientLookupIds)
+                @Html.HiddenFor(x => x.availableWorkAssignCalendarModel.Status)
+            }
+        </div>
+    </div>
+</div>
+<style type="text/css">
+    #ui-datepicker-div.ui-datepicker.ui-widget.ui-widget-content {
+        z-index: 1153 !important;
+        top: 235px !important;
+    }
+</style>
+

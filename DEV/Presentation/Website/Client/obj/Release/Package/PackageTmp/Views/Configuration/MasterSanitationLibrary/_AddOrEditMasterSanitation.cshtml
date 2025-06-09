@@ -1,0 +1,122 @@
+﻿@model Client.Models.Configuration.MasterSanitationLibrary.MasterSanitationVM
+<div class="m-subheader">
+    <div class="new-m-subheader">
+        <div class="PageTitle">
+            <div class="align-items-center separator">
+                <h3 class="m-subheader__title ">
+                    @Model.Loc.Where(a => a.ResourceId == "spnOnDemandID").FirstOrDefault().Value.ToString()
+                </h3>
+            </div>
+        </div>
+        <div class="NewBreadcrumbArea">
+            <div class="newBreadcrumb">
+                <ul>
+                    <li><a href="/Configuration/Dashboard">&nbsp;</a></li>
+                    <li>
+                        <a href="/MasterSanitationLibrary/index?page=Master_Sanitation">
+                            @Model.Loc.Where(a => a.ResourceId == "spnMasterSanitationSearch").FirstOrDefault().Value.ToString()
+                        </a>
+                    </li>
+                    @if (Model.masterSanitationModel.MasterSanLibraryId == 0)
+                    {
+                        <li class="active"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnAddMasterSanitation").FirstOrDefault().Value.ToString()</a></li>
+                    }
+                    else
+                    {
+                        <li><a href="javascript:void(0)" id="brdondemand" data-val="@Model.masterSanitationModel.MasterSanLibraryId">@Model.masterSanitationModel.ClientLookUpId</a></li>
+                        <li class="active">@Model.Loc.Where(a => a.ResourceId == "spnUpdateMasterSanitation").FirstOrDefault().Value.ToString()</li>
+                    }
+                </ul>
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+        <div style="clear:both;"></div>
+    </div>
+</div>
+@Html.Partial("_ErrorDiv")
+@using (Ajax.BeginForm("AddSanitationMaster", "MasterSanitationLibrary", new AjaxOptions { HttpMethod = "Post", OnSuccess = "OnMasterSanitationAddOnSuccess", OnBegin = "AjaxBeginFormBegin", OnComplete = "AjaxBeginFormComplete", OnFailure = "AjaxBeginFormFaillure" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="row">
+        <div class="col-xl-12">
+            <div class="m-portlet newPort" id="m_portlet" style="padding:15px;">
+                <div class="bottomBlock">
+                    <div class="tabsArea nobg">
+                        <ul class="listView nobrd">
+
+                            <li>
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnSanitationMasterID").FirstOrDefault().Value.ToString():<small>*</small></span>
+                                <span class="inputText">
+                                    @Html.ValidationMessageFor(m => m.masterSanitationModel.ClientLookUpId, "", new { style = "display:none" })
+                                    @Html.TextBoxFor(m => m.masterSanitationModel.ClientLookUpId, new { @class = "form-control search", autocomplete = "off" })
+                                </span>
+                            </li>
+                            <li style="height:auto;">
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString()  : </span>
+                                <span class="inputText" style="height:auto;">
+                                    @Html.TextAreaFor(m => m.masterSanitationModel.Description, new { @class = "form-control search", style = "resize:none;", autocomplete = "off" })
+                                </span>
+                                <div style="clear:both;"></div>
+                            </li>
+                            @if (Model.masterSanitationModel.MasterSanLibraryId > 0)
+                            {
+                                <li>
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnInActive").FirstOrDefault().Value.ToString():</span>
+                                    <span class="inputText">
+                                        @Html.CheckBoxFor(m => m.masterSanitationModel.InactiveFlag, new { @class = "form-control m-input", @style = "color:black; width: auto; margin-top: 12px;" })
+                                    </span>
+                                </li>
+                            }
+                            <li>
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnScheduleType").FirstOrDefault().Value.ToString(): </span>
+                                <span class="inputText">
+                                    @Html.DropDownListFor(m => m.masterSanitationModel.ScheduleType, Model.masterSanitationModel.ScheduleTypeList, "--Select--", new { @class = "form-control search select2picker", style = "width:100%;" })
+                                </span>
+                            </li>
+                            <li>
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnScheduleMethod").FirstOrDefault().Value.ToString(): </span>
+                                <span class="inputText">
+                                    @Html.DropDownListFor(m => m.masterSanitationModel.ScheduleMethod, Model.masterSanitationModel.ScheduleMethodList, "--Select--", new { @class = "form-control search select2picker", style = "width:100%;" })
+                                </span>
+                            </li>
+                            <li>
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnFrequencyType").FirstOrDefault().Value.ToString(): </span>
+                                <span class="inputText">
+                                    @Html.DropDownListFor(m => m.masterSanitationModel.FrequencyType, Model.masterSanitationModel.FrequencyTypeList, "--Select--", new { @class = "form-control search select2picker", style = "width:100%;" })
+                                </span>
+                            </li>
+                            <li>
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnFrequency").FirstOrDefault().Value.ToString() : </span>
+                                <span class="inputText">
+                                    @Html.ValidationMessageFor(m => m.masterSanitationModel.Frequency, "", new { style = "display:none" })
+                                    @Html.TextBoxFor(m => m.masterSanitationModel.Frequency, new { @class = "form-control search longinput", autocomplete = "off" })
+                                </span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div style="clear:both;"></div>
+                    <div class="idBttns" id="idBttns">
+                        <div class="bttn_pagin">
+                            <div class="bttns2">
+                                @if (Model.masterSanitationModel.MasterSanLibraryId == 0)
+                                {
+                                    <button class="btn btn-white mobBttn" name="Command" value="saveAdd" id="btnSaveAnotherOpenPO"><i class="fa fa-save faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalSaveAndAdd").FirstOrDefault().Value.ToString()</button>
+                                }
+                                &nbsp;&nbsp;
+                                <button type="submit" class="btn btn-blue mobBttn" name="Command" value="save"><i class="fa fa-save faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+
+                            </div>
+                            <div class="bttns" id="btnCancelMSanitation"><button type="button" class="btn btn-blue mobBttn"><i class="fa fa-close faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button></div>
+                            <div style="clear:both;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    if (Model.masterSanitationModel.MasterSanLibraryId != 0)
+    {
+        @Html.HiddenFor(m => m.masterSanitationModel.MasterSanLibraryId)
+    }
+    @Html.HiddenFor(m => m.masterSanitationModel.MasterIdForCancel)
+}

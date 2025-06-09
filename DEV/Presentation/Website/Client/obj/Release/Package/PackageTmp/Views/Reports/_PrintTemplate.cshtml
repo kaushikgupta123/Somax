@@ -1,0 +1,274 @@
+﻿@model Client.Models.BusinessIntelligenceVM
+@using System.Data;
+
+@{
+    Layout = null;
+    int loopStartCount = 0;
+    int loopEndCount = 0;
+    int tblColCount = 0;
+    int lastheader = 0;
+    int tditemarraydeduction = 0;
+    var dataTable = Model.reportPrintModel.ReportData;
+    tblColCount = Model.reportPrintModel.gridColumnsProps.Count;
+    int dtcolumnCount = Model.reportPrintModel.ReportData.Columns.Count;
+    int colspan = dtcolumnCount - 1;
+    string prevGroup = "";
+    string groupColumn = Model.reportPrintModel.GroupColumn;
+    int groupColumnIdx = Model.reportPrintModel.gridColumnsProps.Select(x => x.data.ToLower()).ToList().IndexOf(groupColumn.ToLower());
+    if (groupColumnIdx > -1)
+    {
+        prevGroup = dataTable.Rows[0][groupColumnIdx].ToString();
+    }
+    string currentGroup = prevGroup;
+    int thisRow = 0;
+    bool hasGrouped = Model.reportPrintModel.IsGrouped;
+    bool hasGroupTotal = false;
+    if (hasGrouped)
+    {
+        hasGroupTotal = Model.reportPrintModel.gridColumnsProps.Any(x => x.IsGroupTotaled == true);
+        //-- group column could have any position in the list
+        if (Model.reportPrintModel.gridColumnsProps.Any(gp => gp.data.ToLower() == groupColumn.ToLower() && gp.bVisible == false))
+        {
+            loopEndCount = dtcolumnCount - 1;
+            tditemarraydeduction = 1;
+            lastheader = tblColCount - 2;
+        }
+        else
+        {
+            loopEndCount = dtcolumnCount;
+            lastheader = tblColCount - 1;
+            colspan++;
+        }
+        //--
+    }
+    else
+    {
+        loopEndCount = dtcolumnCount;
+        lastheader = tblColCount - 1;
+    }
+    bool hasGrandTotal = Model.reportPrintModel.gridColumnsProps.Any(x => x.IsGrandTotal == true);
+    decimal[] grantTotalCounts = new decimal[dtcolumnCount];
+    decimal[] groupTotalCounts = new decimal[dtcolumnCount];
+    bool hasChild = Model.reportPrintModel.hasChild;
+
+    if (hasChild)
+    {
+        loopStartCount = 2;
+    }
+
+    int childgriditemcount = 0;
+}
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Somax - PDF - Reports List</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css" />
+    <style type="text/css">
+        thead, tfoot {
+            display: table-row-group;
+        }
+
+        table, tr, td, th, tbody, thead, tfoot {
+            page-break-inside: avoid !important;
+        }
+
+        .text-left {
+            text-align: left !important;
+            padding: 10px !important;
+            font-size: 14px;
+        }
+
+        .text-right {
+            text-align: right !important;
+            padding: 10px !important;
+            font-size: 14px;
+        }
+
+        table thead.mainTableHead tr th:last-child {
+            border-right: 0 !important;
+        }
+
+        table tbody.mainTableBody tr td:first-child {
+            border-left: 1px solid #d8d8d8 !important;
+        }
+    </style>
+</head>
+
+<body style="padding:0; margin:0; font-family: 'Roboto', sans-serif; font-size:14px; color:#737272;">
+    <table border="0" cellspacing="0" cellpadding="0" align="center" style="width:100%">
+        <tr>
+            <td align="left" valign="top" height="10"><img src="../Content/images/space.png" alt="" /></td>
+        </tr>
+        <tr>
+            <td align="left" valign="top" style="border-bottom:2px solid #83cad0;">
+                <table border="0" cellspacing="0" cellpadding="0" style="width:100%">
+                    <tr>
+                        <td align="left" valign="top">
+                            <table border="0" cellspacing="0" cellpadding="0" style="width:100%">
+                                <thead class="mainTableHead">
+                                    <tr style="background: #264a7c;">
+                                        @for (int i = loopStartCount; i < loopEndCount; i++)
+                                        {
+                                            if (i == lastheader)
+                                            {
+                                                <th class="@Model.reportPrintModel.gridColumnsProps[i].className" valign="middle" height="40" scope="col" style="border-right: 1px solid #ebe8f2;color: #fff;line-height: 40px;font-weight: 400;">@Model.reportPrintModel.gridColumnsProps[i].title</th>
+                                            }
+                                            else
+                                            {
+                                                <th class="@Model.reportPrintModel.gridColumnsProps[i].className" valign="middle" height="40" scope="col" style="border-right:1px solid #fff;color:#fff; line-height:40px; font-weight:400;">@Model.reportPrintModel.gridColumnsProps[i].title</th>
+                                            }
+                                        }
+                                    </tr>
+                                </thead>
+                                <tbody class="mainTableBody">
+                                    @if (hasGrouped)
+                                    {
+                                        <tr>
+                                            <td align="center" valign="middle" height="30" colspan="@colspan" style="background-color: #83cad0; color: #fff; font-weight: 400; font-size: 14px; padding: 0 10px;">@prevGroup</td>
+                                        </tr>
+                                    }
+                                    @foreach (DataRow row in Model.reportPrintModel.ReportData.Rows)
+                                    {
+                                        if (hasGrouped)
+                                        {                                            
+                                            currentGroup = row[groupColumnIdx].ToString();
+                                            if (currentGroup != prevGroup)
+                                            {
+                                                if (hasGroupTotal)
+                                                {
+                                                    <tr>
+                                                        @{int count = 0;}
+                                                        @for (int item = loopStartCount; item < dtcolumnCount - 1; item++)
+                                                        {
+                                                            if (Model.reportPrintModel.gridColumnsProps[item].IsGroupTotaled)
+                                                            {
+                                                                <td class="text-right" valign="middle" height="30" scope="col" style="border-right:1px solid #ebe8f2;color:#222; line-height:40px; font-weight:400;">@UtilityFunction.GetFormattedData(groupTotalCounts[count], @Model.reportPrintModel.gridColumnsProps[item])</td>
+                                                            }
+                                                            else
+                                                            {
+                                                                <td class="text-right" valign="middle" height="30" scope="col" style="border-right:1px solid #ebe8f2;color:#222; line-height:40px; font-weight:400;"></td>
+                                                            }
+                                                            count++;
+                                                        }
+                                                    </tr>
+                                                }
+                                                prevGroup = currentGroup;
+                                                <tr>
+                                                    <td align="center" valign="middle" height="30" colspan="@colspan" style="background-color: #83cad0; color: #fff; font-weight: 400; font-size: 14px; padding: 0 10px;">@currentGroup</td>
+                                                </tr>
+                                                groupTotalCounts = new decimal[dtcolumnCount];
+                                            }
+                                        }
+                                        if (thisRow % 2 == 0)
+                                        {
+                                            <tr style="background:#ececec;">
+                                                @for (int i = loopStartCount; i < row.ItemArray.Count() - tditemarraydeduction; i++)
+                                                {
+                                                    if (@Model.reportPrintModel.gridColumnsProps[i].IsGrandTotal)
+                                                    {
+                                                        grantTotalCounts[i] = grantTotalCounts[i] + Convert.ToDecimal(row.ItemArray[i]);
+                                                    }
+                                                    if (@Model.reportPrintModel.gridColumnsProps[i].IsGroupTotaled)
+                                                    {
+                                                        groupTotalCounts[i] = groupTotalCounts[i] + Convert.ToDecimal(row.ItemArray[i]);
+                                                    }
+                                                    if (i == row.ItemArray.Count() - tditemarraydeduction)
+                                                    {
+                                                        <td class="@Model.reportPrintModel.gridColumnsProps[i].className" valign="middle" height="40" style="border-right:1px solid #ececec; color:#737272; line-height:40px; font-weight:normal;">@UtilityFunction.GetFormattedData(@row.ItemArray[i], @Model.reportPrintModel.gridColumnsProps[i])</td>
+                                                    }
+                                                    else
+                                                    {
+                                                        <td class="@Model.reportPrintModel.gridColumnsProps[i].className" valign="middle" height="40" style="border-right:1px solid #fff;color:#737272; line-height:40px; font-weight:normal;">@UtilityFunction.GetFormattedData(@row.ItemArray[i], @Model.reportPrintModel.gridColumnsProps[i])</td>
+                                                    }
+
+                                                }
+                                            </tr>
+                                        }
+                                        else
+                                        {
+                                            <tr>
+                                                @for (int i = loopStartCount; i < row.ItemArray.Count() - tditemarraydeduction; i++)
+                                                {
+                                                    if (@Model.reportPrintModel.gridColumnsProps[i].IsGrandTotal)
+                                                    {
+                                                        grantTotalCounts[i] = grantTotalCounts[i] + Convert.ToDecimal(row.ItemArray[i]);
+                                                    }
+                                                    if (@Model.reportPrintModel.gridColumnsProps[i].IsGroupTotaled)
+                                                    {
+                                                        groupTotalCounts[i] = groupTotalCounts[i] + Convert.ToDecimal(row.ItemArray[i]);
+                                                    }
+                                                    if (i == row.ItemArray.Count() - tditemarraydeduction)
+                                                    {
+                                                        <td class="@Model.reportPrintModel.gridColumnsProps[i].className" valign="middle" height="40" style="border-right:1px solid #fff;color:#737272; line-height:40px; font-weight:normal;">@UtilityFunction.GetFormattedData(@row.ItemArray[i], @Model.reportPrintModel.gridColumnsProps[i])</td>
+                                                    }
+                                                    else
+                                                    {
+                                                        <td class="@Model.reportPrintModel.gridColumnsProps[i].className" valign="middle" height="40" style="border-right:1px solid #ececec;color:#737272; line-height:40px; font-weight:normal;">@UtilityFunction.GetFormattedData(@row.ItemArray[i], @Model.reportPrintModel.gridColumnsProps[i])</td>
+                                                    }
+                                                }
+                                            </tr>
+                                        }
+                                        if (hasChild)
+                                        {
+
+                                            int childCount = Convert.ToInt32(row.ItemArray[0]);
+                                            if (childCount > 0)
+                                            {
+                                                var childmodel = Model.reportPrintModel.ChildGrids[childgriditemcount];
+                                                @Html.Partial("_ChildGridPrintTemplate", childmodel)
+                                                childgriditemcount++;
+                                            }
+                                        }
+                                        thisRow++;
+                                    }
+                                    @if (hasGroupTotal)
+                                    {
+                                        <tr>
+                                            @{int count = 0;}
+                                            @for (int item = loopStartCount; item < dtcolumnCount - 1; item++)
+                                            {
+                                                if (Model.reportPrintModel.gridColumnsProps[item].IsGroupTotaled)
+                                                {
+                                                    <td class="text-right" valign="middle" height="30" scope="col" style="border-right:1px solid #ebe8f2;color:#222; line-height:40px; font-weight:400;">@UtilityFunction.GetFormattedData(groupTotalCounts[count], @Model.reportPrintModel.gridColumnsProps[item])</td>
+
+                                                }
+                                                else
+                                                {
+                                                    <td class="text-right" valign="middle" height="30" scope="col" style="border-right:1px solid #ebe8f2;color:#222; line-height:40px; font-weight:400;"></td>
+                                                }
+                                                count++;
+                                            }
+                                        </tr>
+                                    }
+                                </tbody>
+                                @if (hasGrandTotal)
+                                {
+                                    <tfoot>
+                                        <tr style="background:#ebe8f2;">
+                                            @{int count = 0;}
+                                            @for (int item = loopStartCount; item < loopEndCount; item++)
+                                            {
+                                                if (Model.reportPrintModel.gridColumnsProps[item].IsGrandTotal)
+                                                {
+                                                    <td class="text-right" valign="middle" height="30" scope="col" style="border-right:1px solid #ebe8f2;color:#222; line-height:40px; font-weight:400;">@UtilityFunction.GetFormattedData(grantTotalCounts[count], @Model.reportPrintModel.gridColumnsProps[item])</td>
+                                                }
+                                                else
+                                                {
+                                                    <td class="text-right" valign="middle" height="30" scope="col" style="border-right:1px solid #ebe8f2;color:#222; line-height:40px; font-weight:400;"></td>
+                                                }
+                                                count++;
+                                            }
+                                        </tr>
+                                    </tfoot>
+                                }
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>
+

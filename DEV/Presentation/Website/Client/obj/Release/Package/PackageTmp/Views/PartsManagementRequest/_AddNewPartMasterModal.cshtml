@@ -1,0 +1,197 @@
+﻿@model Client.Models.PartsManagement.PartsManagementRequest.PartsManagementRequestVM
+
+<div class="m-subheader">
+    <div class="new-m-subheader">
+        <div class="PageTitle">
+            <div class="align-items-center separator">
+                <h3 class="m-subheader__title ">
+                    @Model.PageHeader
+                </h3>
+            </div>
+        </div>
+        <div class="NewBreadcrumbArea">
+            <div class="newBreadcrumb">
+                <ul>
+                    <li><a href="/Dashboard/Dashboard">&nbsp;</a></li>
+                    <li><a href="/PartsManagementRequest/Index?page=Inventory_Parts_Management_Parts_Management_Requests" id="anchPagename">@Model.Loc.Where(a => a.ResourceId == "spnPartMasterRequestSearch").FirstOrDefault().Value.ToString()</a></li>
+                    <li class="active"><a href="javascript:void(0)"><span id="brdId" class="clsbrd"></span></a></li>
+                </ul>
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+        <div style="clear:both;"></div>
+    </div>
+</div>
+@Html.Partial("_ErrorDiv")
+@using (Ajax.BeginForm("AddNewPartManagement", "PartsManagementRequest", null, new AjaxOptions { HttpMethod = "Post", OnSuccess = "AddNewPartMasterOnSuccess", OnBegin = "AjaxBeginFormBegin", OnComplete = "AjaxBeginFormComplete", OnFailure = "AjaxBeginFormFaillure" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="row">
+        <div class="col-xl-12">
+            <div class="m-portlet newPort" id="m_portlet" style="padding:15px;">
+                <div class="bottomBlock">
+                    <div class="tabsArea nobg">
+                        <ul class="listView nobrd">
+                            <li>
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnManufacturer").FirstOrDefault().Value.ToString() : <small>*</small></span>
+                                <span class="inputText">
+                                    <div class="dropdown dropTableOuter">
+                                        <div class="input-group">
+                                            @Html.ValidationMessageFor(m => m.partsManagementRequestModel.Manufacturer, "", new { style = "display:none" })
+                                            @Html.TextBoxFor(m => m.partsManagementRequestModel.Manufacturer, new { @class = "form-control search dropbtn mfnametxt readonly", autocomplete = "off", @readonly = "readonly" })
+                                            <div class="input-group-btn">
+                                                <button class="btn btn-white btntxtInputGroup" type="button" id="addPmMfgrid">
+                                                    <i id="srcicon" class="fa fa-search"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </span>
+                            </li>
+                            <li>
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnManufacturerPartNumber").FirstOrDefault().Value.ToString() : <small>*</small></span>
+                                <span class="inputText">
+                                    <div class="dropdown dropTableOuter">
+                                        <div class="input-group">
+                                            @Html.ValidationMessageFor(m => m.partsManagementRequestModel.ManufacturerId, "", new { style = "display:none" })
+                                            @Html.TextBoxFor(m => m.partsManagementRequestModel.ManufacturerId, new { @class = "form-control search", autocomplete = "off", maxlength = "63" })
+                                        </div>
+                                    </div>
+                                </span>
+                            </li>
+                            <li>
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnCriticalForProduction").FirstOrDefault().Value.ToString() : </span>
+                                <span class="inputText">
+                                    <div class="dropdown dropTableOuter">
+                                        <div class="input-group">
+                                            @if (Model.partsManagementRequestModel.Critical)
+                                            {
+                                                <span class="inputText">@Html.CheckBoxFor(m => m.partsManagementRequestModel.Critical, new { @checked = "checked" })</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="inputText">@Html.CheckBoxFor(m => m.partsManagementRequestModel.Critical)</span>
+                                            }
+                                        </div>
+                                    </div>
+                                </span>
+                            </li>
+                            <li>
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnUnitofMeasure").FirstOrDefault().Value.ToString() : <small>*</small></span>
+                                <span class="inputText">
+                                    @Html.ValidationMessageFor(m => m.partsManagementRequestModel.UnitOfMeasure, "", new { style = "display:none" })
+                                    @Html.DropDownListFor(m => m.partsManagementRequestModel.UnitOfMeasure, Model.partsManagementRequestModel.UnitOfMeasureList, "--Select--", new { @class = "form-control search select2picker", style = "width:100%;" })
+                                </span>
+                            </li>
+                            <li>
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnPurchaseFrequency").FirstOrDefault().Value.ToString() : <small>*</small></span>
+                                <span class="inputText">
+                                    @Html.ValidationMessageFor(m => m.partsManagementRequestModel.PurchaseFreq, "", new { style = "display:none" })
+                                    @Html.DropDownListFor(m => m.partsManagementRequestModel.PurchaseFreq, Model.partsManagementRequestModel.PurchaseFreqList, "--Select--", new { @class = "form-control search select2picker", style = "width:100%;" })
+                                </span>
+                            </li>
+                            <li>
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnPurchaseLeadTime").FirstOrDefault().Value.ToString() : <small>*</small></span>
+                                <span class="inputText">
+                                    @Html.ValidationMessageFor(m => m.partsManagementRequestModel.PurchaseLeadTime, "", new { style = "display:none" })
+                                    @Html.DropDownListFor(m => m.partsManagementRequestModel.PurchaseLeadTime, Model.partsManagementRequestModel.PurchaseLeadTimeList, "--Select--", new { @class = "form-control search select2picker", style = "width:100%;" })
+                                </span>
+                            </li>
+                            @if (Model.SomaxPartNoVisiblity)
+                            {
+                                @Html.HiddenFor(m => m.partsManagementRequestModel.RequestTypeForPopUp)
+                                <li>
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnSOMAXPartNo").FirstOrDefault().Value.ToString():<small>*</small></span>
+                                    <span class="inputText">
+                                        <div class="dropdown dropTableOuter">
+                                            <div class="input-group">
+                                                @Html.TextBoxFor(m => m.partsManagementRequestModel.Part_ClientLookupId, new { @class = "form-control search dropbtn repltxt ", autocomplete = "off" })
+                                                <div class="input-group-btn">
+                                                    <button class="btn btn-white btntxtInputGroup" type="button" id="replSomPidgrid">
+                                                        <i id="srcicon" class="fa fa-search"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </span>
+                                </li>
+                            }
+                            <li>
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnCostLevel").FirstOrDefault().Value.ToString() : <small>*</small></span>
+                                <span class="inputText">
+                                    @Html.ValidationMessageFor(m => m.partsManagementRequestModel.PurchaseCost, "", new { style = "display:none" })
+                                    @Html.DropDownListFor(m => m.partsManagementRequestModel.PurchaseCost, Model.partsManagementRequestModel.PurchaseCostList, "--Select--", new { @class = "form-control search select2picker", style = "width:100%;" })
+                                </span>
+                            </li>
+                            <li style="height:auto;">
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString() : <small>*</small></span>
+                                <span class="inputText" style="height:auto;">
+                                    @Html.ValidationMessageFor(m => m.partsManagementRequestModel.Description, "", new { style = "display:none" })
+                                    @Html.TextAreaFor(m => m.partsManagementRequestModel.Description, new { @class = "form-control search", autocomplete = "off" })
+                                </span>
+                                <div style="clear:both;"></div>
+                            </li>
+                            <li style="height:auto;">
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnJustification").FirstOrDefault().Value.ToString() : <small>*</small></span>
+                                <span class="inputText" style="height:auto;">
+                                    @Html.ValidationMessageFor(m => m.partsManagementRequestModel.Justification, "", new { style = "display:none" })
+                                    @Html.TextAreaFor(m => m.partsManagementRequestModel.Justification, new { @class = "form-control search", autocomplete = "off" })
+                                </span>
+                                <div style="clear:both;"></div>
+                            </li>
+                            <li style="height:auto;">
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnUnitCost").FirstOrDefault().Value.ToString() : <small>*</small></span>
+                                <span class="inputText" style="height:auto;">
+                                    @Html.ValidationMessageFor(m => m.partsManagementRequestModel.UnitCost, "", new { style = "display:none" })
+                                    @Html.TextBoxFor(m => m.partsManagementRequestModel.UnitCost, new { @class = "form-control search decimalinput", autocomplete = "off" })
+                                </span>
+                                <div style="clear:both;"></div>
+                            </li>
+                            <li style="height:auto;">
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnLocation").FirstOrDefault().Value.ToString() : <small>*</small></span>
+                                <span class="inputText" style="height:auto;">
+                                    @Html.ValidationMessageFor(m => m.partsManagementRequestModel.Location, "", new { style = "display:none" })
+                                    @Html.TextBoxFor(m => m.partsManagementRequestModel.Location, new { @class = "form-control search", maxlength = "31" })
+                                </span>
+                                <div style="clear:both;"></div>
+                            </li>
+                            <li style="height:auto;">
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "globalMinimumQuantity").FirstOrDefault().Value.ToString() : </span>
+                                <span class="inputText" style="height:auto;">
+                                    @Html.ValidationMessageFor(m => m.partsManagementRequestModel.QtyMinimum, "", new { style = "display:none" })
+                                    @Html.TextBoxFor(m => m.partsManagementRequestModel.QtyMinimum, new { @class = "form-control search decimalinput", autocomplete = "off", @id = "QtyMinimum" })
+                                </span>
+                                <div style="clear:both;"></div>
+                            </li>
+                            <li style="height:auto;">
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "GlobalMaximumQuantity").FirstOrDefault().Value.ToString() : <small>*</small></span>
+                                <span class="inputText" style="height:auto;">
+                                    @Html.ValidationMessageFor(m => m.partsManagementRequestModel.QtyMaximum, "", new { style = "display:none" })
+                                    @Html.TextBoxFor(m => m.partsManagementRequestModel.QtyMaximum, new { @class = "form-control search decimalinput", autocomplete = "off" })
+                                </span>
+                                <div style="clear:both;"></div>
+                            </li>
+                        </ul>
+                    </div>
+                    <div style="clear:both;"></div>
+
+                    <div class="bttn_pagin">
+                        <div class="bttns2">
+                            <button type="submit" class="btn btn-blue mobBttn"><i class="fa fa-save faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+                        </div>
+                        <div class="bttns"><button type="button" class="btn btn-blue mobBttn" id="btnAdPmCancel"><i class="fa fa-close faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button></div>
+                        <div style="clear:both;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @Html.Partial("~/Views/PartsManagementRequest/_PartManufacturerPopup.cshtml")
+    @Html.Partial("~/Views/PartsManagementRequest/_PartReplacementIdPopup.cshtml")
+    @Html.HiddenFor(m => m.partsManagementRequestModel.RequestType)
+}
+
+<style type="text/css">
+  #AddNewPartMaster .modal-dialog { overflow-y: initial !important; max-width: 850px !important; }
+  #AddNewPartMaster .modal-body { height: 350px; overflow-y: auto; }
+</style>

@@ -1,0 +1,19 @@
+﻿@model Client.Models.Dashboard.DashboardVM
+<div class="m-portlet ">
+    <div class="m-portlet__body  m-portlet__body--no-padding">
+        <div class="row m-row--no-padding m-row--col-separator-xl">
+            <div class="col-md-12 col-lg-6 col-xl-3">
+                @Html.Partial("_OpenWorkOrdersSpChart")
+            </div>
+            <div class="col-md-12 col-lg-6 col-xl-3">
+                @Html.Partial("_WorkRequestSpChart")
+            </div>
+            <div class="col-md-12 col-lg-6 col-xl-3">
+                @Html.Partial("_OverDuePMSpChart")
+            </div>
+            <div class="col-md-12 col-lg-6 col-xl-3">
+                @Html.Partial("_LowPartsSpChart")
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,64 @@
+﻿
+@model Client.Models.Configuration.ApprovalGroups.ApprovalGroupsVM
+<div id="PersonnelApprovalPopupModal" class="modal fade dropdown-modal" role="dialog" style="display:none;">
+    <div class="modal-dialog partPopup">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title" id="hdrPopVendor">@Model.Loc.Where(l=>l.ResourceId=="globalSelectRequestor").FirstOrDefault().Value.ToString()</h4>
+            </div>
+            <div class="modal-body">
+                <div id="tbldropdown" class="dropdown-content tbl-dropdown" style="display:block;">
+                    <div class="table-responsive dropTableOuter">
+                        <table id="AddRequestorTable" class="stripe dropTable globalDropTable tableWOBtn" style="width:100%;">
+                            <thead>
+                                <tr>
+                                    <th style="min-width: 10px !important; width: 13px !important; text-align:center">
+                                        <input name="PersonnelIDGridselect_all" value="1" id="PersonnelIDsearch-select-all" type="checkbox" />
+                                    </th>
+                                    <th style="position:relative;">@Model.Loc.Where(l=>l.ResourceId=="globalPersonnelId").FirstOrDefault().Value.ToString()</th>
+                                    <th style="position:relative;">@Model.Loc.Where(a => a.ResourceId == "spnName").FirstOrDefault().Value.ToString()</th>
+                                    <th style="position:relative;">@Model.ApprovalGroupMasterModel.AssetGroup1ClientLookupId</th>
+                                    <th style="position:relative;">@Model.ApprovalGroupMasterModel.AssetGroup2ClientLookupId</th>
+                                    <th style="position:relative;">@Model.ApprovalGroupMasterModel.AssetGroup3ClientLookupId</th>
+                                </tr>
+                            </thead>
+                            <tfoot id="tblAddRequestorTablefooter" style="display:none">
+                                <tr>
+                                    <th style="min-width: 10px !important; width: 13px !important; text-align:center">
+
+                                    </th>
+                                   
+                                <th style="position:relative;">@Model.Loc.Where(l => l.ResourceId=="globalPersonnelId").FirstOrDefault().Value.ToString()</th>
+                                    <th style="position:relative;">@Model.Loc.Where(a => a.ResourceId == "spnName").FirstOrDefault().Value.ToString()</th>
+                                    <th style="position:relative;">@Model.ApprovalGroupMasterModel.AssetGroup1ClientLookupId</th>
+                                    <th style="position:relative;">@Model.ApprovalGroupMasterModel.AssetGroup2ClientLookupId</th>
+                                    <th style="position:relative;">@Model.ApprovalGroupMasterModel.AssetGroup3ClientLookupId</th>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+                <div class="col-lg-12 col-md-12" style="text-align:right;padding:10px;">
+                    <div class="pull-left">
+                        <ul class="filter_apply2">
+                            <li><span class="PersonnelLookupGriditemcount">0</span>&nbsp;@Model.Loc.Where(a => a.ResourceId == "globalItemsSelected").FirstOrDefault().Value.ToString()</li>
+                        </ul>
+
+                    </div>
+                <button type="button" class="btn btn-blue" style="float: right; margin: 0 7px;" id="btnProcessRequestorsToAdd"><i class="fa fa-plus" style="margin-top:-3px;"></i> &nbsp;@Model.Loc.Where(a => a.ResourceId == "spnProcess").FirstOrDefault().Value.ToString()</button>
+                </div>
+            </div>
+            <div class="modal-footer" style="padding:15px 25px !important;">
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style type="text/css">
+    .dropdown-modal .tbl-dropdown .dataTables_wrapper {
+        width: 100% !important;
+    }
+</style>
+

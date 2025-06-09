@@ -1,0 +1,104 @@
+﻿@model Client.Models.StoreroomTransfer.StoreroomTransferVM
+@using (Ajax.BeginForm("SaveAddTransferRequest", "StoreroomTransfers", new AjaxOptions { HttpMethod = "Post", OnSuccess = "partTransferRequestAddOnSuccess", OnBegin = "AjaxBeginFormBegin", OnComplete = "AjaxBeginFormComplete", OnFailure = "AjaxBeginFormFaillure" }, new { id = "frmStoreroomAdd" }))
+{
+    var EmptyLookupList = new List<SelectListItem> { new SelectListItem { } };
+    @Html.AntiForgeryToken()
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close clearstate" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title">@Model.Loc.Where(a => a.ResourceId == "spnAddTransferRequest").FirstOrDefault().Value.ToString()</h4>
+
+        </div>
+        @Html.Partial("_ErrorDiv")
+        <div class="modal-body">
+            <div class="form-group" style="margin-bottom:0;">
+                <div class="bottomBlock">
+                    <div class="tabsArea nobg">
+                        <ul class="listView nobrd" style="border-bottom:0;">
+
+
+                            <li style="margin-bottom:4px;">
+                                <span class="label">
+                                    @Model.Loc.Where(a => a.ResourceId == "spnRequestStoreroom").FirstOrDefault().Value.ToString() :
+                                </span>
+                                <span class="inputText">
+                                    @Html.TextBoxFor(m => m.addTransferRequest.RequestStoreroomName, new { @class = "form-control search", autocomplete = "off", @disabled = true })
+                                </span>
+                            </li>
+                            <li>
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnPartID").FirstOrDefault().Value.ToString(): <small>*</small></span>
+                                <span class="inputText wthAdjst2" style="position:relative;">
+                                    <div class="dropdown dropTableOuter">
+                                        <div class="input-group">
+                                            @Html.ValidationMessageFor(m => m.addTransferRequest.ClientLookupId, "", new { style = "display:none" })
+                                            @Html.TextBoxFor(m => m.addTransferRequest.ClientLookupId, new { @class = "form-control search dropbtn readonly", id = "txtPartId", autocomplete = "off", @readonly = "readonly",@required= "required" })
+                                            @Html.HiddenFor(m => m.addTransferRequest.PartId, new { id = "hdnPartId" })
+                                            <div class="input-group-btn">
+                                                <button class="btn btn-white btntxtInputGroup" type="button" id="openpartgrid" data-multistoreroomvalue="@Model.addTransferRequest.RequestStoreroomId">
+                                                    <i id="srcicon" class="fa fa-search"></i>
+                                                </button>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </span>
+                                <div style="clear:both;"></div>
+                            </li>
+                           
+                            <li style="margin-bottom:3px;">
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnIssuingStoreroom").FirstOrDefault().Value.ToString() : <small>*</small></span>
+                                <span class="inputText">
+                                    @Html.ValidationMessageFor(m => m.addTransferRequest.IssuePartStoreroomIdAndStoreroomId, "", new { style = "display:none" })
+                                    @Html.DropDownListFor(m => m.addTransferRequest.IssuePartStoreroomIdAndStoreroomId, EmptyLookupList, new { @class = "form-control search select2picker", style = "width:100%;" })
+                                </span>
+                            </li>
+                            <li style="margin-bottom:4px;">
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnRequestQuantity").FirstOrDefault().Value.ToString() :<small>*</small></span>
+                                <span class="inputText">
+                                    @Html.ValidationMessageFor(m => m.addTransferRequest.RequestQuantity, "", new { style = "display:none" })
+                                    @Html.TextBoxFor(m => m.addTransferRequest.RequestQuantity, new { @class = "form-control decimalinput search", autocomplete = "off" })
+                                </span>
+                            </li>
+                            <li style="margin-bottom:4px;">
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "GlobalReason").FirstOrDefault().Value.ToString() :</span>
+                                <span class="inputText">
+                                    @Html.ValidationMessageFor(m => m.addTransferRequest.Reason, "", new { style = "display:none" })
+                                    @Html.TextAreaFor(m => m.addTransferRequest.Reason, new { @class = "form-control search", autocomplete = "off", maxlength = "511", @row = "3" })
+                                </span>
+                            </li>
+
+                        </ul>
+                    </div>
+                    <div style="clear:both;"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal-footer" style="padding:15px 25px !important;">
+            <div class="idBttns">
+                <div class="bttn_pagin">
+                    <div class="bttns2" style="margin:0;">
+
+                        <button type="submit" class="btn btn-blue mobBttn" style="cursor:pointer" value="save"><i class="fa fa-save faIcon"></i> &nbsp;@Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+
+                    </div>
+                    <div class="bttns" style="margin:0;"><button type="button" data-dismiss="modal" class="btn btn-blue mobBttn clearstate" id="btnStoreroomcancel"><i class="fa fa-close faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button></div>
+
+                    <div style="clear:both;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @Html.HiddenFor(m => m.addTransferRequest.RequestStoreroomId)
+    @*@Html.HiddenFor(m => m.addTransferRequest.RequestPartStoreroomId)
+    @Html.HiddenFor(m => m.addTransferRequest.PartId)*@
+}
+
+<script>
+    $(function () {
+        $(document).find('form').find("#addTransferRequest_IssuePartStoreroomIdAndStoreroomId").removeClass("input-validation-error");
+    });
+</script>
+
+
+

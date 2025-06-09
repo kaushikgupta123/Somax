@@ -1,0 +1,123 @@
+﻿@model Client.Models.PurchaseOrder.PurchaseOrderVM
+<div class="m-subheader">
+    <div class="new-m-subheader">
+        <div class="PageTitle">
+            <div class="align-items-center separator">
+                <h3 class="m-subheader__title ">
+                    @Model.Loc.Where(a => a.ResourceId == "spnPoPurchaseOrder").FirstOrDefault().Value.ToString()
+                </h3>
+            </div>
+        </div>
+
+        <div class="NewBreadcrumbArea">
+            <div class="newBreadcrumb">
+                <ul>
+                    <li><a href="/Dashboard/Dashboard">&nbsp;</a></li>
+                    <li><a href="/Purchasing/Index?page=Procurement_Orders">@Model.Loc.Where(a => a.ResourceId == "spnPoPurchasingSearch").FirstOrDefault().Value.ToString()</a></li>
+                    <li><a href="javascript:void(0)" id="brdpolineitem" data-val="@Model.partInInventoryModel.PurchaseOrderId">@Model.partInInventoryModel.PurchaserequestClientLookupId</a></li>
+                    <li class="active">@Model.Loc.Where(a => a.ResourceId == "spnPoPartinInventory").FirstOrDefault().Value.ToString()</li>
+                </ul>
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+        <div style="clear:both;"></div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xl-12">
+        <div class="m-portlet newPort" id="m_portlet" style="padding:15px;">
+            <div class="bottomBlock">
+                <div class="tabsArea nobg">
+                    <div class="actionBar">
+                        <div class="pull-left">
+                            <button type="button" class="btn btn-white navbar-btn" id="pinvsidebarCollapse" title="Advance Search"><i class="fa fa-filter" style="font-size: 1.3rem;"></i></button>
+                            <ul class="filter_apply globalFilterAdjusted">
+                                <li class="textFilter"><span class="pinvgridfilteritemcount">0</span> @Model.Loc.Where(a => a.ResourceId == "globalFiltersAppiled").FirstOrDefault().Value.ToString()</li>
+                                <li class="textClear" id="SPGClearSearch"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "globalClear").FirstOrDefault().Value.ToString()</a></li>
+                            </ul>
+                            <div style="clear:both;"></div>
+                        </div>
+                        <div style="clear:both;"></div>
+                        <div id="SPGadvsearchfilteritems"></div>
+                        <div style="clear:both;"></div>
+                    </div>
+                    <div style="clear:both;"></div>
+
+                    <div class="table-responsive">
+                        <table id="tblSelectPartsGrid" class="eqpDtlTbl row-border custom-sort" style="width:100%;">
+                            <thead>
+                                <tr>
+                                    <th></th>
+                                    <th>@Model.Loc.Where(a => a.ResourceId == "spnPoPartID").FirstOrDefault().Value.ToString()</th>
+                                    <th>@Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString()</th>                                    
+                                    <th>@Model.Loc.Where(a => a.ResourceId == "spnManufacturerID").FirstOrDefault().Value.ToString()</th>
+                                    <th>@Model.Loc.Where(a => a.ResourceId == "spnManufacturer").FirstOrDefault().Value.ToString()</th>
+                                    <th>@Model.Loc.Where(a => a.ResourceId == "spnPoQuantity").FirstOrDefault().Value.ToString()</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                    <div class="idBttns">
+                        <div class="bttn_pagin">
+                            <div class="bttns2"><button type="button" class="btn btn-blue mobBttn" id="btnselectinventory"><i class="fa fa-check faIcon"></i>&nbsp;@Model.Loc.Where(a => a.ResourceId == "spnSelect").FirstOrDefault().Value.ToString()</button></div>
+                            <div class="bttns">
+                                <button type="button" class="btn btn-blue mobBttn" id="btnAddInventorycancel"><i class="fa fa-close faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button>
+                            </div>
+                            <div style="clear:both;"></div>
+                        </div>
+                    </div>
+                    <div id="finselectcontainer" style="display:none">
+                        <div class="table-responsive" style="margin-top:15px;">
+                            <table id="tblfinalSelectPartsGrid" class="eqpDtlTbl row-border custom-sort" style="width:100%;">
+                                <thead>
+                                    <tr>
+                                        <th><input type="checkbox" id="fgidselectall"></th>
+                                        <th>@Model.Loc.Where(a => a.ResourceId == "spnPoPartID").FirstOrDefault().Value.ToString()</th>
+                                        <th>@Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString()</th>
+                                        <th>@Model.Loc.Where(a => a.ResourceId == "spnPoOrderQty").FirstOrDefault().Value.ToString()</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                        <div class="idBttns">
+                            <div class="bttn_pagin">
+                                <div class="bttns2">
+                                    <button type="button" class="btn btn-blue mobBttn" id="btnprocess"><i class="fa fa-check faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "spnPoProcess").FirstOrDefault().Value.ToString()</button>
+                                </div>
+                                <div class="bttns">
+                                    <button type="button" class="btn btn-blue mobBttn" id="btnremoverowfgrid"><i class="fa fa-trash faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "spnPoRemove").FirstOrDefault().Value.ToString()</button>
+                                </div>
+                                <div style="clear:both;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+    </div>
+</div>
+@Html.HiddenFor(m => m.partInInventoryModel.PurchaseOrderId)
+
+<nav class="sidebar">
+    <div class="dismiss">
+        <i class="fa fa-close"></i>
+    </div>
+    <div class="sidebar-header">
+        <h3><i class="fa fa-filter" style="position: relative; top: -2px;"></i> @Model.Loc.Where(a => a.ResourceId == "spnPoFilters").FirstOrDefault().Value.ToString() <span class="pinvgridfilteritemcount">0</span></h3>
+        <button type="button" class="btn btn-blue filterSearch" id="btnSPGAdvanceSearch"><i class="fa fa-search" style="margin-top:-3px;"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalSearch").FirstOrDefault().Value.ToString()</button>
+    </div>
+    <div class="sidebar-content" id="SPGadvsearchsidebar">
+        <form action="#" method="post">
+            <div class="form-group">
+                <label for="PinvPartID">@Model.Loc.Where(a => a.ResourceId == "spnPoPartID").FirstOrDefault().Value.ToString() :</label>
+                <input type="text" class="form-control search adv-item" id="PinvPartID" autocomplete="off">
+            </div>
+            <div class="form-group">
+                <label for="pinvDescription">@Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString() :</label>
+                <input type="text" class="form-control search adv-item" id="pinvDescription" autocomplete="off">
+            </div>
+        </form>
+    </div>
+</nav>

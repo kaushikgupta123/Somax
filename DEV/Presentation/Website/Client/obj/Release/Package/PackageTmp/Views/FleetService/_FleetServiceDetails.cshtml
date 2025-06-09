@@ -1,0 +1,777 @@
+﻿@model Client.Models.FleetService.FleetServiceVM
+@{
+    string imageUrl = Model._FleetServiceSummaryModel.ImageUrl;
+    if (Model._FleetServiceSummaryModel.ClientOnPremise)
+    {
+        imageUrl = UtilityFunction.PhotoBase64ImgSrc(Model._FleetServiceSummaryModel.ImageUrl);
+    }
+
+}
+<link href="~/Scripts/Metronic/assets/demo/default/base/style_newCustom.css" rel="stylesheet" />
+
+<script src="~/Scripts/jspdf.min.js"></script>
+@Styles.Render("~/Content/somaxcommentsection")
+
+
+@Html.HiddenFor(m => m.FleetServiceModel.ServiceOrderId, new { @id = "ServiceOrderId" })
+@Html.HiddenFor(m => m.FleetServiceModel.ClientLookupId, new { @id = "ClientLookupId" })
+
+<div class="m-subheader fixedDiv1">
+    <div class="new-m-subheader">
+        <div class="filterDescription">
+            <a href="javascript:void(0)" id="linkToSearch"><span id="spnlinkToSearch">@Model.Loc.Where(a => a.ResourceId == "hrdServiceOrder").FirstOrDefault().Value.ToString()</span></a>
+            - @Model.FleetServiceModel.ClientLookupId
+        </div>
+        <div class="ActionBttnArea">
+            <div class="actionDiv pull-left" id="ad1">
+                <div class="btn-group bootstrap-select m-datatable__pager-size dropup show selectDrop actionNewDrop" style="margin-right:0;">
+                    <div class="btn-group bootstrap-select m-datatable__pager-size" style="width: 100%;">
+                        <button type="button" class="btn dropdown-toggle bs-placeholder btn-default" data-toggle="dropdown" role="button" title=""><span class="filter-option pull-left">@Model.Loc.Where(a => a.ResourceId == "globalAction").FirstOrDefault().Value.ToString()</span>&nbsp;<span class="bs-caret"><span class="caret"></span></span></button>
+                        <div class="dropdown-menu open" role="combobox">
+                            <ul class="dropdown-menu inner" role="listbox" aria-expanded="false">
+
+                                <li id="actionServiceOrderHistory" data-id="@Model.FleetServiceModel.ServiceOrderId"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnServiceOrderHistory").FirstOrDefault().Value.ToString()</a></li>
+                                @if (Model.security.Fleet_ServiceOrder.Edit && (Model.FleetServiceModel.Status != ServiceOrderStatusConstant.Complete && Model.FleetServiceModel.Status != ServiceOrderStatusConstant.Canceled))
+                                {
+                                    if (Model.FleetServiceModel.ScheduleDate.HasValue && Model.FleetServiceModel.ScheduleDate != default(DateTime))
+                                    {
+
+                                        <li id="actionAddScheduleSO" class="AddSchedule" scheduledstartdate="@Model.FleetServiceModel.ScheduleDate.Value.ToString("MM/dd/yyyy", CultureInfo.InvariantCulture)" data-toggle="modal" data-id="@Model.FleetServiceModel.ServiceOrderId" data-target="#AddScheduleModalDetailsPage"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnGlobalAddSchedule").FirstOrDefault().Value.ToString()</a></li>
+                                    }
+
+                                    else
+                                    {
+
+                                        <li id="actionAddScheduleSO" class="AddSchedule" scheduledstartdate="" data-toggle="modal" data-id="@Model.FleetServiceModel.ServiceOrderId" data-target="#AddScheduleModalDetailsPage"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnGlobalAddSchedule").FirstOrDefault().Value.ToString()</a></li>
+                                    }
+                                }
+                                @if (Model.FleetServiceModel.Status != ServiceOrderStatusConstant.Complete && Model.FleetServiceModel.Status != ServiceOrderStatusConstant.Canceled)
+                                {
+                                    <li id="actionRemoveScheduleSO" class="RemoveSchedule" data-id="@Model.FleetServiceModel.ServiceOrderId"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnGlobalRemoveSchedule").FirstOrDefault().Value.ToString()</a></li>
+                                }
+                                @if (Model.security.Fleet_ServiceOrder.Edit)
+                                {
+                                    if (Model.FleetServiceModel.Status != ServiceOrderStatusConstant.Complete && Model.FleetServiceModel.Status != ServiceOrderStatusConstant.Canceled)
+                                    {
+                                        <li id="actionCompleteSO" data-toggle="modal" class="SoComplete"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "GlobalComplete").FirstOrDefault().Value.ToString()</a></li>
+                                        <li id="actionCancelSO" data-toggle="modal" class="soCancel" data-target="#CancelModalDetailsPage"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</a></li>
+                                    }
+
+                                    if (Model.FleetServiceModel.Status == ServiceOrderStatusConstant.Complete || Model.FleetServiceModel.Status == ServiceOrderStatusConstant.Canceled)
+                                    {
+                                        <li id="SoReopen"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "globalReopen").FirstOrDefault().Value.ToString()</a></li>
+                                    }
+
+                                }
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @if (Model.security.Fleet_ServiceOrder.Create)
+            {
+                <button type="button" class="btn newBtn-add AddFleetService innerBtn pull-left" title="Add Fleet Service" data-toggle="modal"><i class="fa fa-plus"></i></button>
+            }
+            <div style="clear:both;"></div>
+        </div>
+        <div style="clear:both;"></div>
+    </div>
+</div>
+<div class="pushDiv1"></div>
+
+<div class="row fixedDiv2">
+    @Html.Partial("_FleetServiceSummary", Model)
+</div>
+<div class="pushDiv2 WOScheduleAdjust"></div>
+
+<div class="row">
+    <div class="col-xl-2">
+        <div class="m-portlet">
+            <div class="sideMenuArea nobg">
+                <ul class="vtabs" id="detmaintab">
+                    <li class="active" id="fleetServiceOverview"><a href="#Overview">@Model.Loc.Where(a => a.ResourceId == "spnOverview").FirstOrDefault().Value.ToString()</a></li>
+                    <li id="photot"><a href="#Photos" id="anchPhoto">@Model.Loc.Where(a => a.ResourceId == "spnPhotos").FirstOrDefault().Value.ToString()</a></li>
+                    <li id="Attachmentt" onclick="openCity(event, 'SOAttachments')" style="position:relative;">
+                        <a href="#SOAttachments">@Model.Loc.Where(a => a.ResourceId == "globalAttachment").FirstOrDefault().Value.ToString() </a>
+                        @if (Model.attachmentCount > 0)
+                        {
+                            <span class="m-badge m-badge--danger count-badge SOcount" id="asstAttachmentCount">@Model.attachmentCount</span>
+                        }
+                    </li>
+                </ul>
+            </div>
+
+            <div class="selectTabs" id="selectTabs">
+                <select class="form-control" id="colorselector">
+                    <option value="Overview">@Model.Loc.Where(a => a.ResourceId == "spnOverview").FirstOrDefault().Value.ToString()</option>
+                    <option value="Photos">@Model.Loc.Where(a => a.ResourceId == "spnPhotos").FirstOrDefault().Value.ToString()</option>
+                    <option value="SOAttachments">@Model.Loc.Where(a => a.ResourceId == "globalAttachment").FirstOrDefault().Value.ToString() </option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-10">
+        <div class="row">
+            <div class="col-xl-12" id="btnnblock">
+                <div class="tabsArea nobg" id="Overview" style="display:block;">
+                    <div class="row">
+                        <div class="col-xl-9">
+                            <div class="m-portlet" id="m_portlet" style="padding:10px;">
+                                <div class="tab">
+                                    <button class="tablinks active" onclick="openCity(event, 'Request')" id="tabRequest">@Model.Loc.Where(a => a.ResourceId == "spnRequest").FirstOrDefault().Value.ToString()</button>
+                                    <button class="tablinks" onclick="openCity(event, 'Completion')">@Model.Loc.Where(a => a.ResourceId == "spnCompletion").FirstOrDefault().Value.ToString()</button>
+                                </div>
+
+                                <div id="Request" class="tabcontent" style="display:block;">
+                                    <ul class="listView">
+                                        <li>
+                                            <span class="label">@Html.LabelFor(m => m.FleetServiceModel.ServiceOrderId) :</span>
+                                            <span class="inputText">@Model.FleetServiceModel.ClientLookupId</span>
+                                        </li>
+                                        <li>
+                                            <span class="label">@Html.LabelFor(m => m.FleetServiceModel.EquipmentClientLookupId) :</span>
+                                            <span class="inputText">@Model.FleetServiceModel.EquipmentClientLookupId</span>
+                                        </li>
+                                        <li>
+                                            <span class="label">@Html.LabelFor(m => m.FleetServiceModel.AssetName) :</span>
+                                            <span class="inputText">@Model.FleetServiceModel.AssetName</span>
+                                        </li>
+                                        <li style="height:auto;">
+                                            <span class="label">@Html.LabelFor(m => m.FleetServiceModel.Description) :</span>
+                                            <span class="inputText description-span">@Model.FleetServiceModel.Description</span>
+                                            <div style="clear:both;"></div>
+                                        </li>
+                                        <li>
+                                            <span class="label">@Html.LabelFor(m => m.FleetServiceModel.Shift) :</span>
+                                            <span class="inputText">@Model.FleetServiceModel.ShiftDesc</span>
+                                        </li>
+                                        <li>
+                                            <span class="label">@Html.LabelFor(m => m.FleetServiceModel.Status) :</span>
+                                            <span class="inputText">@Model.FleetServiceModel.Status</span>
+                                        </li>
+                                        <li>
+                                            <span class="label">@Html.LabelFor(m => m.FleetServiceModel.Type) :</span>
+                                            <span class="inputText">@Model.FleetServiceModel.TypeDesc</span>
+                                        </li>
+                                    </ul>
+                                </div>
+
+                                <div id="Completion" class="tabcontent" style="display:none;">
+                                    <ul class="listView">
+                                        <li>
+                                            <span class="label">@Html.LabelFor(m => m.FleetServiceModel.ScheduleDate) :</span>
+                                            @if (Model.FleetServiceModel.ScheduleDate.HasValue && Model.FleetServiceModel.ScheduleDate != default(DateTime))
+                                            {
+                                                <span class="inputText">@Model.FleetServiceModel.ScheduleDate.Value.ToString("MM/dd/yyyy", CultureInfo.InvariantCulture)</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="inputText"></span>
+                                            }
+                                        </li>
+                                        <li>
+                                            <span class="label">@Html.LabelFor(m => m.FleetServiceModel.CompleteDate) :</span>
+                                            @if (Model.FleetServiceModel.CompleteDate.HasValue && Model.FleetServiceModel.CompleteDate != default(DateTime))
+                                            {
+                                                <span class="inputText">@Model.FleetServiceModel.CompleteDate.Value.ToString("MM/dd/yyyy", CultureInfo.InvariantCulture)</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="inputText"></span>
+                                            }
+                                        </li>
+                                        <li>
+                                            <span class="label">@Html.LabelFor(m => m.FleetServiceModel.CompletedByPersonnels) :</span>
+                                            <span class="inputText">@Model.FleetServiceModel.CompletedByPersonnels</span>
+                                        </li>
+                                        <li>
+                                            <span class="label">@Html.LabelFor(m => m.FleetServiceModel.CancelDate) :</span>
+                                            @if (Model.FleetServiceModel.CancelDate.HasValue && Model.FleetServiceModel.CancelDate != default(DateTime))
+                                            {
+                                                <span class="inputText">@Model.FleetServiceModel.CancelDate.Value.ToString("MM/dd/yyyy", CultureInfo.InvariantCulture)</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="inputText"></span>
+                                            }
+                                        </li>
+                                        <li>
+                                            <span class="label">@Html.LabelFor(m => m.FleetServiceModel.CancelledByPersonnels) :</span>
+                                            <span class="inputText">@Model.FleetServiceModel.CancelledByPersonnels</span>
+                                        </li>
+                                        <li>
+                                            <span class="label">@Html.LabelFor(m => m.FleetServiceModel.CancelReason) :</span>
+                                            <span class="inputText">@Model.FleetServiceModel.CancelReason</span>
+                                        </li>
+                                    </ul>
+                                </div>
+
+                                <div class="editBttn">
+                                    @if ((Model.security.Fleet_ServiceOrder.Edit) && (Model.FleetServiceModel.Status != ServiceOrderStatusConstant.Complete && Model.FleetServiceModel.Status != ServiceOrderStatusConstant.Canceled))
+                                    {
+                                        <button type="button" id="editserviceorder" class="btn btn-blue"><i class="fa fa-pencil" style="margin-top:-3px;"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalEdit").FirstOrDefault().Value.ToString()</button>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-xl-3">
+                            <div class="m-portlet" id="m_portlet" style="padding:10px;">
+                                <table border="0" cellspacing="0" cellpadding="0" style="width:100%;">
+                                    <tr style="background-color: #ebe8f2 !important;">
+                                        <th align="left" valign="middle" scope="col" style="padding:10px; color: #575962 !important; font-weight:400 !important;">@Model.Loc.Where(a => a.ResourceId == "spnUnitCost").FirstOrDefault().Value.ToString()</th>
+                                        <th align="left" valign="middle" scope="col" style="padding:10px; color: #575962 !important; font-weight:400 !important;">&nbsp;</th>
+                                    </tr>
+                                    <tr>
+                                        <td align="left" valign="middle" style="padding:10px; border-top:1px solid #ddd;">@Model.Loc.Where(a => a.ResourceId == "spnLabor").FirstOrDefault().Value.ToString()</td>
+                                        <td align="left" valign="middle" style="padding:10px; border-top:1px solid #ddd;" id="lblLabour">@Model.FleetServiceModel.LaborTotal</td>
+                                    </tr>
+                                    <tr>
+                                        <td align="left" valign="middle" style="padding:10px; border-top:1px solid #ddd;">@Model.Loc.Where(a => a.ResourceId == "spnMaterials").FirstOrDefault().Value.ToString()</td>
+                                        <td align="left" valign="middle" style="padding:10px; border-top:1px solid #ddd;">@Model.FleetServiceModel.PartTotal</td>
+                                    </tr>
+                                    <tr>
+                                        <td align="left" valign="middle" style="padding:10px; border-top:1px solid #ddd;">@Model.Loc.Where(a => a.ResourceId == "spnOther").FirstOrDefault().Value.ToString()</td>
+                                        <td align="left" valign="middle" style="padding:10px; border-top:1px solid #ddd;">@Model.FleetServiceModel.OtherTotal</td>
+                                    </tr>
+                                    <tr>
+                                        <td align="left" valign="middle" style="padding:10px; border-top:1px solid #ddd;">@Model.Loc.Where(a => a.ResourceId == "spnTotal").FirstOrDefault().Value.ToString()</td>
+                                        <td align="left" valign="middle" style="padding:10px; border-top:1px solid #ddd;">@Model.FleetServiceModel.GrandTotal</td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tabsArea nobg imageDropZone" id="Photos" style="display:none;">
+                    <div class="m-portlet" id="m_portlet" style="padding:10px;">
+                        <div class="row">
+                            <div class="col-xl-4">
+                                <div id="AzureImage" class="AzureImage">
+                                    @if (!string.IsNullOrEmpty(imageUrl))
+                                    {
+                                        <img src="@imageUrl" class="equipImg"  id="EquipZoom" alt="Image" data-zoom-image="@imageUrl" />
+                                    }
+                                    else
+                                    {
+                                        <img src="~/Scripts/ImageZoom/images/NoImage.jpg" class="equipImg"  id="EquipZoom" alt="Image" data-zoom-image="/Scripts/ImageZoom/images/NoImage.jpg" />
+                                    }
+                                    @if (!string.IsNullOrEmpty(Model._FleetServiceSummaryModel.ImageUrl) && !Model._FleetServiceSummaryModel.ImageUrl.Contains("NoImage"))
+                                    {
+                                        <a href="javascript:void(0)" id="deleteImg" class="trashIcon" title="@Model.Loc.Where(a => a.ResourceId == "globalDelete").FirstOrDefault().Value.ToString()"><i class="fa fa-trash"></i></a>
+                                    }
+                                </div>
+                            </div>
+                            <div class="col-xl-8">
+                                <div class="hldDropzone">
+                                    <div class="dropzone" id="dropzoneForm">
+                                        <div class="fallback">
+                                            <input name="file" type="file" multiple />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tabsArea nobg" id="SOAttachments" style="display:none;">
+                    <div class="m-portlet" id="m_portlet" style="padding:10px;">
+                        <div class="table-responsive">
+                            <table id="soAttachmentTable" class="eqpDtlTbl row-border custom-sort" style="width:100%;">
+                                <thead>
+                                    <tr>
+                                        <th>@Model.Loc.Where(a => a.ResourceId == "globalSubject").FirstOrDefault().Value.ToString()</th>
+                                        <th>@Model.Loc.Where(a => a.ResourceId == "globalFileName").FirstOrDefault().Value.ToString()</th>
+                                        <th>@Model.Loc.Where(a => a.ResourceId == "globalFileSize").FirstOrDefault().Value.ToString()</th>
+                                        <th>@Model.Loc.Where(a => a.ResourceId == "globalOwner").FirstOrDefault().Value.ToString()</th>
+                                        <th>@Model.Loc.Where(a => a.ResourceId == "globalCreateDate").FirstOrDefault().Value.ToString()</th>
+                                        <th width="17%" style="text-align:center !important;">@Model.Loc.Where(a => a.ResourceId == "globalAction").FirstOrDefault().Value.ToString()</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                        <div class="bttn_pagin">
+                            <div class="bttns">
+                                <button type="button" class="btn btn-blue" data-toggle="" data-target="" id="btnAddAttachment">
+                                    <i class="fa fa-plus faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalAddAttachment").FirstOrDefault().Value.ToString()
+                                </button>
+                            </div>
+                            <div style="clear:both;"></div>
+                        </div>
+                        <div style="clear:both;"></div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xl-12">
+        <div class="m-portlet tabcontent" style="padding:0 10px 10px;">
+            <div class="m-portlet__head" style="padding:0; margin-bottom:10px;">
+                <div class="m-portlet__head-caption" style="position:relative;">
+                    <div class="m-portlet__head-title">
+                        <h3 class="m-portlet__head-text" style="font-size: 1.2rem; line-height:3.55;">@Model.Loc.Where(a => a.ResourceId == "spnLineItems").FirstOrDefault().Value.ToString()</h3>
+                    </div>
+                    @if (Model.FleetServiceModel.Status != ServiceOrderStatusConstant.Complete && Model.FleetServiceModel.Status != ServiceOrderStatusConstant.Canceled)
+                    {
+                        <div class="bttns FleetLIBttns">
+                            <button type="button" class="btn btn-blue" data-toggle="" data-target="" id="btnScheduledService">
+                                @Model.Loc.Where(a => a.ResourceId == "spnScheduledService").FirstOrDefault().Value.ToString()
+                            </button>
+                            @if (Model.security.Fleet_ServiceOrder.Create)
+                            {
+                                <button type="button" class="btn btn-blue" data-toggle="" data-target="" id="btnAddLineItem">
+                                    <i class="fa fa-plus faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "spnSoAddLineItems").FirstOrDefault().Value.ToString()
+                                </button>
+                            }
+                        </div>
+                    }
+
+                </div>
+            </div>
+            <div class="lds-ellipsis lds-adjust" id="lineitemataloader">
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+            </div>
+            <div class="FleetLineItemTabsArea">
+                <div class="mCustomScrollbar light" id="LineItemData" data-mcs-theme="minimal-dark">
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row ">
+    <div class="col-xl-6">
+        <div class="m-portlet tabcontent padAdjstNew" id="m_portlet">
+            <div class="m-portlet__head" style="padding:0; margin-bottom:10px;">
+                <div class="m-portlet__head-caption">
+                    <div class="m-portlet__head-title">
+                        <h3 class="m-portlet__head-text" style="font-size: 1.2rem; line-height:3.55;">
+                            @Model.Loc.Where(a => a.ResourceId == "GlobalActivity").FirstOrDefault().Value.ToString()
+                        </h3>
+                    </div>
+                </div>
+            </div>
+            <div class="lds-ellipsis lds-adjust" id="activitydataloader">
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+            </div>
+            <div class="m-portlet__body m-portlet__body--no-padding">
+                <div id="activityList" class="mCustomScrollbar light" data-mcs-theme="minimal-dark">
+                    <div class="kt-notes">
+                        <div class="kt-notes__items" id="activityitems">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-6">
+        <div class="m-portlet padAdjstNew tabcontent" id="m_portlet">
+            <div class="m-portlet__head" style="padding:0; margin-bottom:10px;">
+                <div class="m-portlet__head-caption">
+                    <div class="m-portlet__head-title">
+                        <h3 class="m-portlet__head-text" style="font-size: 1.2rem; line-height:3.55;">@Model.Loc.Where(a => a.ResourceId == "spnLogComment").FirstOrDefault().Value.ToString()</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="lds-ellipsis lds-adjust" id="commentsdataloader">
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+            </div>
+            <div class="m-portlet__body  m-portlet__body--no-padding">
+                <div id="commentsList" class="mCustomScrollbar light" data-mcs-theme="minimal-dark">
+                    <div class="kt-notes">
+                        <div class="kt-notes__items" id="commentstems"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="kt-notes" style="padding-top:20px;">
+                <div class="kt-notes__items" id="commentstems">
+                    <div class="kt-notes__item" style="padding-bottom:10px;">
+                        <div class="kt-notes__media" style="left:-19px;">
+                            <h3 class="kt-notes__user kt-font-brand kt-font-boldest" style="color:#5A0E61 !important;border:1px solid #5A0E61!important;" id="hdr-comments-add">
+                                @Model._userdata.DatabaseKey.Personnel.PersonnelInitial
+                            </h3>
+                        </div>
+                        <div class="kt-notes__content" style="padding: 0.2rem 0.5rem 0rem 1.5rem;">
+                            <div class="form-group" style="margin-bottom:0;">
+                                <textarea class="form-control" id="txtcommentsnew" rows="1" style="margin-bottom:1rem;" placeholder="Add a comment…"></textarea>
+                                <main style="margin-bottom:10px;">
+                                    <div class="document-editor ckeditorfield" style="display:none">
+                                        <div class="toolbar-container"></div>
+                                        <div class="content-container form-control">
+                                            <div id="txtcomments"></div>
+                                        </div>
+                                    </div>
+                                </main>
+                                <button type="submit" class="btn btn-blue mobBttn" id="btnsavecommands" style="cursor:pointer; float:left; margin-right:10px;" value="save"><i class="fa fa-save faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+                                <button type="button" class="btn btn-blue mobBttn" id="commandCancel" style="cursor:pointer; float:left;"><i class="fa fa-close faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button>
+                                <div style="clear:both;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div id="FleetServiceModalpopup" class="modal fade" role="dialog">
+    <div class="modal-dialog" id="fleetservicepopup">
+    </div>
+</div>
+
+<!-- Modal -->
+@if (Model.FleetServiceModel.Status != ServiceOrderStatusConstant.Complete && Model.FleetServiceModel.Status != ServiceOrderStatusConstant.Canceled)
+{
+    <div id="AddLineItemModalpopup" class="modal fade" role="dialog">
+        <div class="modal-dialog" id="LineItemPopUp">
+        </div>
+    </div>
+}
+
+
+<!-- Modal -->
+<div id="AddLabourModalpopup" class="modal fade" role="dialog">
+    <div class="modal-dialog" id="LabourPopUp">
+    </div>
+</div>
+
+<!-- Modal -->
+<div id="AddLabourTimerModalpopup" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-info" id="LabourTimerPopUp">
+    </div>
+</div>
+
+<!-- Modal -->
+<div id="AddIssuePartModalpopup" class="modal fade" role="dialog">
+    <div class="modal-dialog" id="IssuePartPopUp">
+    </div>
+</div>
+
+<!-- Modal -->
+<div id="AddOtherCostModalpopup" class="modal fade" role="dialog">
+    <div class="modal-dialog" id="OtherCostPopUp">
+    </div>
+</div>
+@Html.HiddenFor(m => m.FleetServiceModel.ServiceOrderId)
+@Html.HiddenFor(m => m.FleetServiceModel.EquipmentId)
+@Html.HiddenFor(m => m.FleetServiceModel.ClientLookupId)
+@Html.HiddenFor(m => m.FleetServiceModel.AssetName)
+@Html.HiddenFor(m => m.FleetServiceModel.EquipmentClientLookupId)
+@Html.HiddenFor(m => m.FleetServiceModel.Meter1Type)
+@Html.HiddenFor(m => m.FleetServiceModel.Meter1CurrentReading)
+@Html.HiddenFor(m => m.FleetServiceModel.Meter2Type)
+@Html.HiddenFor(m => m.FleetServiceModel.Meter2CurrentReading)
+
+@Html.HiddenFor(m => m.FleetServiceModel.ScheduleDate)
+@Html.HiddenFor(m => m.FleetServiceModel.Assigned)
+@Html.HiddenFor(m => m.FleetServiceModel.CompleteDate)
+@Html.HiddenFor(m => m.FleetServiceModel.Status)
+@Html.HiddenFor(m => m.FleetServiceModel.Meter1Units)
+@Html.HiddenFor(m => m.FleetServiceModel.Meter2Units)
+@Html.HiddenFor(m => m.CompleteServiceOrderModel.Meter1DayDiff)
+@Html.HiddenFor(m => m.CompleteServiceOrderModel.Meter2DayDiff)
+@Html.HiddenFor(m => m.FleetServiceModel.Assign_PersonnelId)
+@Html.HiddenFor(m => m.FleetServiceModel.ClientOnPremise)
+
+@Html.Partial("~/Views/FleetService/_FleetServiceEquipmentPopUp.cshtml")
+@Html.Partial("~/Views/FleetService/_AddPartPopUp.cshtml")
+@Html.Partial("~/Views/FleetService/_ServiceOrderFleetIssuePopUp.cshtml")
+@Html.Partial("~/Views/FleetService/_SoVendorPopup.cshtml")
+@if (Model.FleetServiceModel.Status != ServiceOrderStatusConstant.Complete && Model.FleetServiceModel.Status != ServiceOrderStatusConstant.Canceled)
+{
+    @Html.Partial("_ScheduleModal")
+    @Html.Partial("_CancelModal")
+    @Html.Partial("_CompleteServiceOrder")
+    @Html.Partial("~/Views/FleetService/_ScheduledServiceList.cshtml")
+}
+
+@Html.Partial("~/Views/FleetService/_ServiceOrderHistory.cshtml")
+
+
+<style type="text/css">
+    .count-badge.SOcount {
+        right: 6px !important;
+    }
+
+    .pushDiv2.WOScheduleAdjust {
+        height: 161px !important;
+    }
+
+    .filterDescription {
+        width: auto;
+        float: left;
+        font-size: 1.2rem;
+        color: #000;
+        font-weight: 500;
+        line-height: 33px;
+    }
+
+        .filterDescription a {
+            color: #36a3f7;
+            text-decoration: none !important;
+        }
+
+    .assignedFName {
+        /*display: block;
+        width: 100%;*/
+        white-space: nowrap;
+        overflow: hidden !important;
+        text-overflow: ellipsis;
+    }
+
+    .assignedItem {
+        position: relative;
+    }
+
+    .tooltipcards {
+        background: #d0e8fa;
+        padding: 5px;
+        border-radius: 5px;
+        position: absolute;
+        width: 100%;
+        height: auto;
+        left: 0;
+        top: 21px;
+        color: #000;
+        font-size: 13px;
+        font-weight: 500;
+        z-index: 9;
+        display: none !important;
+        cursor: pointer;
+    }
+
+    .padAdjstNew {
+        padding: 0 10px 10px 10px;
+    }
+
+    ul.listView.nobrd li.FleetServDes {
+        height: auto;
+    }
+
+        ul.listView.nobrd li.FleetServDes span.label {
+            width: 14.8%;
+        }
+
+        ul.listView.nobrd li.FleetServDes span.inputText.description-span {
+            width: 85.2%;
+            padding: 0;
+        }
+
+    ul.listView li span.inputText.description-span {
+        height: auto !important;
+        overflow: auto;
+        line-height: 22px;
+        padding-top: 12px;
+    }
+
+    .FleetLIBttns {
+        width: auto !important;
+        margin-top: 0;
+        position: absolute;
+        right: 0;
+        top: 10px;
+    }
+
+    .FleetLineItemTabsArea {
+        max-height: 1000px;
+        overflow: auto;
+    }
+
+    .FleetLineItemTabsBlock {
+        margin-bottom: 10px;
+        border: 1px solid #cccccc;
+        padding: 10px;
+        border-radius: 0.25rem;
+    }
+
+        .FleetLineItemTabsBlock:last-child {
+            margin-bottom: 0;
+        }
+
+    ul.listView li span.inputText.totalLabel {
+        width: 65%;
+        float: right;
+    }
+    /*New CSS*/
+    .gridList:hover {
+        background: #fff;
+    }
+
+    .dropdown-toggle.newApprovesort2::after {
+        position: absolute;
+        right: 32px;
+        top: 15px;
+    }
+
+    .dropdown-toggle.newApprovesort3::after {
+        position: absolute;
+        right: 23px;
+        top: 15px;
+    }
+
+    .dropdown-menu.approveDropMenu.show {
+        width: 100%;
+        top: 2px !important;
+    }
+
+    .dropdown-toggle.newSchedulesort2::after {
+        position: absolute;
+        right: 23px;
+        top: 15px;
+    }
+
+    .dropdown-toggle.newSchedulesort3::after {
+        position: absolute;
+        right: 23px;
+        top: 15px;
+    }
+
+    .newSchedulesort2 {
+        width: 100px !important;
+        text-align: left;
+        margin-top: 0px;
+    }
+
+    .newSchedulesort3 {
+        width: 100px !important;
+        text-align: left;
+        margin-top: 0px;
+    }
+
+    .newApprovesort2 {
+        width: 100px !important;
+        text-align: left;
+        margin-top: 0px;
+        margin-right: 10px;
+    }
+
+    .newApprovesort3 {
+        width: 100px !important;
+        text-align: left;
+        margin-top: 0px;
+    }
+
+    .dropdown-menu.scheduleDropMenu.show {
+        width: 100%;
+        top: 2px !important;
+    }
+
+    .dropdown-menu.scheduleDropMenu3.show {
+        width: 135px;
+        top: 2px !important;
+    }
+    /*New CSS*/
+
+
+    .dropdown-modal .partPopup, .partPopup {
+        max-width: 81%;
+    }
+    /*For calender adjust*/
+    .dtpickerNew {
+        width: 120px !important;
+        float: left !important;
+    }
+
+    #ui-datepicker-div.ui-datepicker.ui-widget.ui-widget-content {
+        z-index: 1153 !important;
+        top: 145px !important;
+    }
+
+    .ui-datepicker-trigger {
+        margin-right: 0 !important;
+    }
+
+    table#FleetIssuePopupTable thead th:first-child {
+        width: 126px !important;
+    }
+
+    table#serviceOrderHistoryTable thead th:first-child {
+        width: 1px !important;
+    }
+
+    table#serviceOrderHistoryTable thead th:nth-child(7) {
+        width: 138px !important;
+    }
+
+    table#serviceOrderHistoryTable thead th:nth-child(8) {
+        width: 138px !important;
+    }
+    /*For calender adjust*/
+    @@media screen and (max-width: 1199px) {
+        #serviceOrderHistoryTable {
+            width: 1100px !important;
+        }
+
+        #FleetIssuePopupTable {
+            width: 1100px !important;
+        }
+    }
+
+    @@media screen and (max-width: 639px) {
+        .ui-datepicker-trigger {
+            height: auto !important;
+        }
+    }
+
+    @@media screen and (max-width: 479px) {
+        .FleetLineItemTabsArea {
+            min-height: 40px;
+        }
+
+        .FleetLIBttns {
+            left: 0;
+            top: 69px;
+        }
+
+        .FleetLineItemTabsBlock {
+            margin-top: 50px;
+        }
+    }
+
+    @@media screen and (max-width: 321px) {
+        .FleetLineItemTabsArea {
+            min-height: 86px;
+        }
+
+        .FleetLIBttns button:first-child {
+            margin-bottom: 10px;
+        }
+
+        .FleetLineItemTabsBlock {
+            margin-top: 95px;
+        }
+    }
+
+    .filterDescription {
+        width: auto;
+        float: left;
+        font-size: 1.2rem;
+        color: #000;
+        font-weight: 500;
+        line-height: 33px;
+    }
+
+        .filterDescription a {
+            color: #36a3f7;
+            text-decoration: none !important;
+        }
+</style>

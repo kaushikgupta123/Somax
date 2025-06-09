@@ -1,0 +1,14 @@
+﻿@{
+    ViewBag.Title = "Somax-Config | Part Master";
+}
+@Styles.Render("~/Content/datatable")
+@Styles.Render("~/Content/dropzone")
+<link href="~/Scripts/dropzone/basic.min.css" rel="stylesheet" />
+@section scripts {
+    @Scripts.Render("~/bundles/datatable")
+    @Scripts.Render("~/bundles/imagezoom")
+    @Scripts.Render("~/bundles/PartMaster")
+}
+<div id="renderpartmaster">
+    @Html.Partial("~/Views/Configuration/PartMaster/_PartMasterSearch.cshtml")
+</div>

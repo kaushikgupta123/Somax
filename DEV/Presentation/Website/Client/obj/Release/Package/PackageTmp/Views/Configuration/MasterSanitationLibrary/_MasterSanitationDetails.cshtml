@@ -1,0 +1,156 @@
+﻿@model Client.Models.Configuration.MasterSanitationLibrary.MasterSanitationVM
+<div class="m-subheader">
+    <div class="new-m-subheader">
+        <div class="PageTitle">
+            <div class="align-items-center separator">
+                <h3 class="m-subheader__title ">
+                    @Model.Loc.Where(a => a.ResourceId == "spnLibraries").FirstOrDefault().Value.ToString()
+                </h3>
+            </div>
+        </div>
+        <div class="NewBreadcrumbArea">
+            <div class="newBreadcrumb">
+                <ul>
+                    <li><a href="/Configuration/Dashboard">&nbsp;</a></li>
+                    <li>
+                        <a href="/MasterSanitationLibrary/index?page=Master_Sanitation">
+                            @Model.Loc.Where(a => a.ResourceId == "spnMasterSanitationSearch").FirstOrDefault().Value.ToString() 
+                        </a>
+                    </li>
+                    <li class="active"><a href="javascript:void(0)" id="brdondemand" data-val="@Model.masterSanitationModel.MasterSanLibraryId">@Model.masterSanitationModel.ClientLookUpId</a></li>
+                </ul>
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+        <div class="ActionBttnArea">
+            @if (Model.security.MasterSanitation.Create)
+            {
+                <button type="button" class="btn newBtn-add AddSanitationMaster pull-left" title="Add Maintenance On-Demand Master"><i class="fa fa-plus"></i></button>
+            }
+            <div style="clear:both;"></div>
+        </div>
+        <div style="clear:both;"></div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-xl-3">
+        <div class="m-portlet">
+            <div class="sideMenuArea">
+                <ul class="vtabs" id="detmaintab">
+                    <li class="active"><a href="#Preventive">@Model.Loc.Where(a => a.ResourceId == "spnOverview").FirstOrDefault().Value.ToString()</a></li>
+                    <li id="onDemamdTask" onclick="openCity(event, 'Tasks')"><a href="#Tasks">@Model.Loc.Where(a => a.ResourceId == "spnTasks").FirstOrDefault().Value.ToString()</a></li>
+                </ul>
+            </div>
+            <div class="selectTabs" id="selectTabs">
+                <select class="form-control" id="colorselector">
+                    <option value="Preventive">@Model.Loc.Where(a => a.ResourceId == "spnOverview").FirstOrDefault().Value.ToString()</option>
+                    <option value="Tasks">@Model.Loc.Where(a => a.ResourceId == "spnTasks").FirstOrDefault().Value.ToString()</option>
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-9">
+        <div class="row">
+            <div class="col-xl-12" id="btnnblock">
+                <div class="m-portlet" id="m_portlet" style="padding:15px;">
+                    <div class="bottomBlock">
+                        <div class="tabsArea nobg" id="Preventive" style="display:block;">
+                            <ul class="listView">
+                                <li>
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnOnDemandID").FirstOrDefault().Value.ToString() :</span>
+                                    <span class="inputText">@Model.masterSanitationModel.ClientLookUpId</span>
+                                </li>
+                                <li style="height:auto;">
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString():</span>
+                                    @if (Model.masterSanitationModel.Description != null && Model.masterSanitationModel.Description.Length > 30)
+                                    {
+                                        <span class="inputText description-span">@Model.masterSanitationModel.Description</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="inputText description-span">@Model.masterSanitationModel.Description</span>
+                                    }
+                                    <div style="clear:both"></div>
+                                </li>
+                                <li>                                  
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnInActive").FirstOrDefault().Value.ToString():</span>
+                                    <span class="inputText">
+                                        @if (Model.masterSanitationModel.InactiveFlag)
+                                        {
+                                            <input type="checkbox" class="form-control m-input readonly" readonly="readonly" checked="checked" style = "color:black; width: auto; margin-top: 12px;" disabled="disabled"/>
+                                        }
+                                        else
+                                        {
+                                            <input type="checkbox" class="form-control m-input readonly" readonly="readonly" style = "color:black; width: auto; margin-top: 12px;" disabled="disabled"/>
+                                        }
+                                    </span>
+                                </li>
+                                <li>
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnFrequencyType").FirstOrDefault().Value.ToString():</span>
+                                    <span class="inputText">@Model.masterSanitationModel.FrequencyType</span>
+                                </li>
+                                <li>
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnFrequency").FirstOrDefault().Value.ToString():</span>
+                                    <span class="inputText">@Model.masterSanitationModel.Frequency</span>
+                                </li>
+                                <li>
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnScheduleType").FirstOrDefault().Value.ToString():</span>
+                                    <span class="inputText">@Model.masterSanitationModel.ScheduleType</span>
+                                </li>
+                                <li>
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnScheduleMethod").FirstOrDefault().Value.ToString():</span>
+                                    <span class="inputText">@Model.masterSanitationModel.ScheduleMethod</span>
+                                </li>
+                            </ul>
+                            <div class="editBttn">
+                                @if (Model.masterSanitationModel.MasterSanLibraryId > 0)
+                                {
+                                <button type="button" class="btn btn-blue" id="btneditSanitationMaster"><i class="fa fa-pencil" style="margin-top:-3px;"></i> &nbsp;@Model.Loc.Where(a => a.ResourceId == "globalEdit").FirstOrDefault().Value.ToString()</button>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tabsArea nobg" id="Tasks" style="display:none;">
+                        <div class="table-responsive">
+                            <table id="tasksTable" class="eqpDtlTbl row-border custom-sort" style="width:100%;">
+                                <thead>
+                                    <tr>
+                                        <th>@Model.Loc.Where(a => a.ResourceId == "spnTaskNumber").FirstOrDefault().Value.ToString()</th>
+                                        <th>@Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString()</th>
+                                        <th width="17%" style="text-align:center !important;">@Model.Loc.Where(a => a.ResourceId == "globalAction").FirstOrDefault().Value.ToString()</th>
+                                    </tr>
+                                </thead>
+
+                            </table>
+                        </div>
+                            <div class="bttns">
+                                <button type="button" class="btn btn-blue" id="btnAddTask" style="display:none;"><i class="fa fa-plus faIcon"></i> &nbsp;@Model.Loc.Where(a => a.ResourceId == "spnAddTask").FirstOrDefault().Value.ToString()</button>
+                            </div>
+                        <div style="clear:both;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div style="clear:both;"></div>
+@Html.HiddenFor(m => m.masterSanitationModel.MasterSanLibraryId)
+@Html.HiddenFor(m => m.masterSanitationModel.ClientLookUpId)
+@Html.HiddenFor(m => m.masterSanitationModel.Description)
+@Html.HiddenFor(m => m.masterSanitationModel.InactiveFlag)
+@Html.HiddenFor(m => m.masterSanitationModel.FrequencyType)
+@Html.HiddenFor(m => m.masterSanitationModel.Frequency)
+@Html.HiddenFor(m => m.masterSanitationModel.ScheduleType)
+@Html.HiddenFor(m => m.masterSanitationModel.ScheduleMethod)
+
+
+
+
+
+
+
+
+
+
+
+

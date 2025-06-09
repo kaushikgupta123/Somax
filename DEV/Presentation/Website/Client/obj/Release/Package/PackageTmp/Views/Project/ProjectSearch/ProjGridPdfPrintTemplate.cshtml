@@ -1,0 +1,182 @@
+﻿@model Client.Models.Project.ProjectVM
+@{ Layout = null;}
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Somax | Project</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css" />
+    <link rel="shortcut icon" href="~/Scripts/Metronic/assets/login/demo/default/media/img/logo/favicon.png" />
+    <style type="text/css">
+        thead, tfoot {
+            display: table-row-group;
+        }
+
+        .my-table {
+            width: 100%;
+        }
+
+        table, tr, td, th, tbody, thead, tfoot {
+            page-break-inside: avoid !important;
+        }
+
+            table thead.mainTableHead tr th:last-child,
+            table thead.childTableHead tr th:last-child {
+                border-right: 0 !important;
+            }
+            /*table tbody.mainTableBody tr td:last-child,*/
+            table tbody.childTableBody tr td:last-child {
+                border-right: 0 !important;
+            }
+
+            table tbody.mainTableBody tr td:first-child {
+                border-left: 1px solid #d8d8d8 !important;
+            }
+
+            table tbody.childTableBody tr td:first-child {
+                border-left: 0 !important;
+            }
+    </style>
+</head>
+
+<body style="padding:0; margin:0; font-family: 'Roboto', sans-serif; font-size:12px; color:#737272;">
+    <table border="0" cellspacing="0" cellpadding="0" align="center" style="width:100%;">
+        <tr>
+            <td align="left" valign="top" style="border-bottom: 2px solid #264a7c;">
+                <div style="min-height:.01%; overflow-x: auto;">
+                    <table border="0" cellspacing="0" cellpadding="0" style="width:100%;" class="my-table">
+                        <thead class="mainTableHead">
+                            <tr style="background:#264a7c;">
+                                @foreach (var hed in Model.tableHaederProps)
+                                {
+                                    <th align="center" valign="middle" height="40" scope="col" style="border-right:1px solid #fff; font-size:12px; color:#fff; line-height:40px; font-weight:normal">@hed.title</th>
+                                }
+                            </tr>
+                        </thead>
+
+                        <tbody class="mainTableBody">
+                            @foreach (var item in Model.projectPDFPrintModel)
+                            {
+                                <tr style="background:#fff;">
+                                    @foreach (var hed in Model.tableHaederProps)
+                                    {
+                                        if (!string.IsNullOrWhiteSpace(hed.property))
+                                        {
+                                            <td align="center" valign="middle" height="40" style="border-right:1px solid #d8d8d8; font-size:12px; line-height:40px; font-weight:normal;">@item.GetType().GetProperty(hed.property).GetValue(item, null)</td>
+                                        }
+
+                                    }
+                                </tr>
+                                if (item.projectTaskmodel.Count > 0)
+                                {
+                                    <tr>
+                                        <td colspan="@Model.tableHaederProps.Count()" style="padding:5px; border:1px solid #d8d8d8;">
+                                            <table border="0" cellspacing="0" cellpadding="0" style="border:1px solid #ebe8f2; width:100%" class="my-table">
+                                                <thead class="childTableHead">
+                                                    <tr style="background:#ebe8f2;">
+                                                        <th width="20%" align="center" valign="middle" height="40" scope="col" style="border-right:1px solid #fff; font-size:12px; line-height:40px; font-weight:normal;">@Model.Loc.Where(a => a.ResourceId == "spnGlobalWorkOrderID").FirstOrDefault().Value.ToString()</th>
+                                                        <th width="20%" align="center" valign="middle" height="40" scope="col" style="border-right:1px solid #fff; font-size:12px; line-height:40px; font-weight:normal;">@Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString()</th>
+                                                        <th width="20%" align="center" valign="middle" height="40" scope="col" style="border-right:1px solid #fff; font-size:12px; line-height:40px; font-weight:normal;">@Model.Loc.Where(a => a.ResourceId == "globalStart").FirstOrDefault().Value.ToString()</th>
+                                                        <th width="20%" align="center" valign="middle" height="40" scope="col" style="border-right:1px solid #fff; font-size:12px; line-height:40px; font-weight:normal;">@Model.Loc.Where(a => a.ResourceId == "globalSpnEnd").FirstOrDefault().Value.ToString()</th>
+                                                        <th width="20%" align="center" valign="middle" height="40" scope="col" style="border-right:1px solid #fff; font-size:12px; line-height:40px; font-weight:normal;">@Model.Loc.Where(a => a.ResourceId == "spnProgress").FirstOrDefault().Value.ToString()</th>
+                                                    </tr>
+                                                </thead>
+
+                                                <tbody class="childTableBody">
+                                                    @foreach (var line in item.projectTaskmodel)
+                                                    {
+                                                        <tr style="background:#fff;">
+                                                            <td align="center" valign="middle" height="40" style="border-right:1px solid #ebe8f2; font-size:12px; line-height:40px; font-weight:normal;">@line.WorkOrderClientLookupId</td>
+                                                            <td align="center" valign="middle" height="40" style="border-right:1px solid #ebe8f2; font-size:12px; line-height:40px; font-weight:normal;">@line.WorkOrderDescription</td>
+                                                            <td align="center" valign="middle" height="40" style="border-right:1px solid #ebe8f2; font-size:12px; line-height:40px; font-weight:normal;">@line.StartDate</td>
+                                                            <td align="center" valign="middle" height="40" style="border-right:1px solid #ebe8f2; font-size:12px; line-height:40px; font-weight:normal;">@line.Enddate</td>
+                                                            <td>
+                                                                @if(line.ProgressPercentage == 0)
+                                                                {
+                                                                <div class="progress" style="margin-bottom:0px;" title="@line.ProgressPercentage% Complete" data-placement="top" data-toggle="popover" data-trigger="hover" data-html="true" data-content="Some data here...">
+                                                                    <div class="progress-bar " role="progressbar" aria-valuenow="@line.ProgressPercentage" aria-valuemin="0" aria-valuemax="100" style="width: @line.ProgressPercentage%">
+                                                                        <span style="text-align:center;color: #212529;">@line.ProgressPercentage%</span>
+                                                                    </div>
+                                                                </div>
+                                                                continue;
+                                                                }
+                                                                else if (line.ProgressPercentage < 20)
+                                                                {
+                                                                    <div class="progress" style="margin-bottom:0px;" title="@line.ProgressPercentage% Complete" data-placement="top" data-toggle="popover" data-trigger="hover" data-html="true" data-content="Some data here...">
+                                                                        <div class="progress-bar " role="progressbar" aria-valuenow="@line.ProgressPercentage" aria-valuemin="0" aria-valuemax="100" style="background-color:red;width: @line.ProgressPercentage%">
+                                                                            <span style="text-align:center;color: white;">@line.ProgressPercentage%</span>
+                                                                        </div>
+                                                                    </div>
+                                                                    continue;
+                                                                }
+                                                                else if (line.ProgressPercentage < 40)
+                                                                {
+                                                                    <div class="progress" style="margin-bottom:0px;" title="@line.ProgressPercentage% Complete" data-placement="top" data-toggle="popover" data-trigger="hover" data-html="true" data-content="Some data here...">
+                                                                        <div class="progress-bar " role="progressbar" aria-valuenow="@line.ProgressPercentage" aria-valuemin="0" aria-valuemax="100" style="background-color:#5867dd;width: @line.ProgressPercentage%">
+                                                                            <span style="text-align:center;color: white;">@line.ProgressPercentage%</span>
+                                                                        </div>
+                                                                    </div>
+                                                                    continue;
+                                                                }
+                                                                else if (line.ProgressPercentage < 60)
+                                                                {
+                                                                    <div class="progress" style="margin-bottom:0px;" title="@line.ProgressPercentage% Complete" data-placement="top" data-toggle="popover" data-trigger="hover" data-html="true" data-content="Some data here...">
+                                                                        <div class="progress-bar " role="progressbar" aria-valuenow="@line.ProgressPercentage" aria-valuemin="0" aria-valuemax="100" style="background-color:#da0fc1;width: @line.ProgressPercentage%">
+                                                                            <span style="text-align:center;color: white;">@line.ProgressPercentage%</span>
+                                                                        </div>
+                                                                    </div>
+                                                                    continue;
+                                                                }
+                                                                else if (line.ProgressPercentage < 80)
+                                                                {
+                                                                    <div class="progress" style="margin-bottom:0px;" title="@line.ProgressPercentage% Complete" data-placement="top" data-toggle="popover" data-trigger="hover" data-html="true" data-content="Some data here...">
+                                                                        <div class="progress-bar " role="progressbar" aria-valuenow="@line.ProgressPercentage" aria-valuemin="0" aria-valuemax="100" style="background-color:#c5b818;width: @line.ProgressPercentage%">
+                                                                            <span style="text-align:center;color: white;">@line.ProgressPercentage%</span>
+                                                                        </div>
+                                                                    </div>
+                                                                    continue;
+                                                                }
+                                                                else
+                                                                {
+                                                                    <div class="progress" style="margin-bottom:0px;" title="@line.ProgressPercentage% Complete" data-placement="top" data-toggle="popover" data-trigger="hover" data-html="true" data-content="Some data here...">
+                                                                        <div class="progress-bar " role="progressbar" aria-valuenow="@line.ProgressPercentage" aria-valuemin="0" aria-valuemax="100" style="background-color:green;width: @line.ProgressPercentage%">
+                                                                            <span style="text-align:center;color: white;">@line.ProgressPercentage%</span>
+                                                                        </div>
+                                                                    </div>
+                                                                    continue;
+                                                                }
+
+                                                            </td>
+                                                        </tr>
+                                                    }
+                                                </tbody>
+                                                <tfoot>
+                                                    <tr style="background:#ebe8f2;">
+                                                        <th width="75%" colspan="6" align="center" valign="middle" height="40" scope="col" style="border-right:1px solid #fff; font-size:12px; color:#222; line-height:40px; font-weight:normal;"></th>
+                                                        <th width="12%" align="right" valign="middle" height="40" scope="col" style=" border-right:1px solid #fff; font-size:12px; color:#fff; line-height:40px; font-weight:bold; padding-right:10px;"></th>
+                                                        <th width="13%" align="center" valign="middle" height="40" scope="col" style="font-size:12px; color:#222; line-height:40px; font-weight:normal;"></th>
+                                                    </tr>
+                                                </tfoot>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>
+<style>
+    .progress {
+        display: flex;
+        height: 1rem;
+        overflow: hidden;
+        font-size: 0.75rem;
+        background-color: #e9ecef;
+        border-radius: 0.25rem;
+    }
+</style>

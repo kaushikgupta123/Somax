@@ -1,0 +1,50 @@
+﻿@model Client.Models.WorkOrderPlanning.WorkOrderPlanningVM
+<form>
+    <nav class="sidebar" style="height: 550px;">
+        <div class="dismiss" id="dismissAW">
+            <i class="fa fa-close"></i>
+        </div>
+        <div class="sidebar-header">
+            <h3><i class="fa fa-filter" style="position: relative; top: -2px;"></i> @Model.Loc.Where(a => a.ResourceId == "globalFilter").FirstOrDefault().Value.ToString() <span class="AWOfilteritemcountRL">0</span></h3>
+            <button type="button" class="btn btn-blue filterSearch" id="btnAvailableRLDataAdvSrch"><i class="fa fa-search" style="margin-top:-3px;"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalSearch").FirstOrDefault().Value.ToString()</button>
+        </div>
+        <div class="sidebar-content" id="advsearchsidebarAvailableRL">
+            <div class="form-group">
+                <label for="AWOWorkOrder">@Model.Loc.Where(a => a.ResourceId == "spnGlobalWorkOrderID").FirstOrDefault().Value.ToString() :</label>
+                <input type="text" class="form-control search adv-item" id="AWOWorkOrder">
+            </div>
+            <div class="form-group">
+                <label for="AWOChargeTo">@Model.Loc.Where(a => a.ResourceId == "GlobalChargeTo").FirstOrDefault().Value.ToString() :</label>
+                <input type="text" class="form-control search adv-item" id="AWOChargeTo">
+            </div>
+            <div class="form-group">
+                <label for="AWOChargeToName">@Model.Loc.Where(a => a.ResourceId == "spnChargeToName").FirstOrDefault().Value.ToString() :</label>
+                <input type="text" class="form-control search adv-item" id="AWOChargeToName">
+            </div>
+            <div class="form-group">
+                <label for="AWODescription">@Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString() :</label>
+                <input type="text" class="form-control search adv-item" id="AWODescription">
+            </div>
+            <div class="form-group">
+                <label for="AWOStatus">@Model.Loc.Where(a => a.ResourceId == "spnStatus").FirstOrDefault().Value.ToString() :</label>
+                <input type="text" class="form-control search adv-item" id="AWOStatus">
+            </div>
+            <div class="form-group">
+                <label for="AWOPriority">@Model.Loc.Where(a => a.ResourceId == "spnPriority").FirstOrDefault().Value.ToString() :</label>
+                <input type="text" class="form-control search decimalinput adv-item" id="AWOPriority">
+            </div>
+            <div class="form-group">
+                <label for="AWOWOType">@Model.Loc.Where(a => a.ResourceId == "GlobalType").FirstOrDefault().Value.ToString() :</label>
+                <input type="text" class="form-control search adv-item" id="AWOWOType">
+            </div>
+            @*<div class="form-group">
+                <label for="AWORequiredDate">@Model.Loc.Where(a => a.ResourceId == "spnRequiredDate").FirstOrDefault().Value.ToString() :</label>
+                <input type="text" class="form-control search dtpicker adv-item" id="AWORequiredDate">
+            </div>*@
+        </div>
+    </nav>
+</form>
+@*<style type="text/css">
+        .pagerignt { right: 0; }
+        .sidebar { height:550px; }
+    </style>*@

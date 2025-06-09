@@ -1,0 +1,164 @@
+﻿@model Client.Models.Configuration.ApprovalGroups.ApprovalGroupsVM
+<link href="~/Scripts/Metronic/assets/demo/default/base/style_newCustom.css" rel="stylesheet" />
+<div class="m-subheader">
+    <div class="new-m-subheader">
+        <div class="PageTitle">
+            <div class="align-items-center separator">
+                <h3 class="m-subheader__title ">
+                    @Model.Loc.Where(l => l.ResourceId=="spnApprovalGroupMaster").FirstOrDefault().Value.ToString()
+                </h3>
+            </div>
+        </div>
+
+        <div class="NewBreadcrumbArea">
+            <div class="newBreadcrumb">
+                <ul>
+                    <li><a href="/Configuration/Dashboard">&nbsp;</a></li>
+                    <li class="active">@Model.Loc.Where(a => a.ResourceId == "spnApprovalGroupSearch").FirstOrDefault().Value.ToString()</li>
+                </ul>
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+
+        <div class="ActionBttnArea">
+            @if (Model.security.ApprovalGroupsConfiguration.Access)
+            {
+                <button type="button" class="btn newBtn-add addNewApprovalGroup pull-left" title="Add Approval Group">@Model.Loc.Where(a => a.ResourceId == "spnAddApprovalGroup").FirstOrDefault().Value.ToString()</button>
+            }
+            <div style="clear:both;"></div>
+        </div>
+        <div style="clear:both;"></div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xl-12">
+        <div class="m-portlet" id="m_portlet" style="padding:15px; margin-bottom:0;">
+            <div class="actionBar" style="display:none;" id="ApprovalGroupSearchAction">
+                <div class="pull-left">
+                    <button type="button" class="btn btn-white navbar-btn" title="Search" id="SrchBttnNew"><i class="fa fa-search" style="font-size: 1.1rem;position: relative;top: -2px;left: -2px;"></i>@Model.Loc.Where(a => a.ResourceId == "globalSearch").FirstOrDefault().Value.ToString()</button>
+                    <button type="button" class="btn btn-white navbar-btn" id="sidebarCollapse" title="Advance Search"><i class="fa fa-filter" style="font-size: 1.3rem;"></i></button>
+
+                    <ul class="filter_apply" style="display:none;">
+                        <li class="textFilter" id="liSelectCount">0 @Model.Loc.Where(a => a.ResourceId == "globalFiltersAppiled").FirstOrDefault().Value.ToString()</li>
+                        <li class="textClear" id="liClearAdvSearchFilter"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "globalClear").FirstOrDefault().Value.ToString() </a></li>
+                    </ul>
+                    <div style="clear:both;"></div>
+                    <div class="searchBttnDrop desktop" id="searchBttnNewDrop" style="display:none;">
+                        <div class="form-group" style="position:relative;">
+                            <i class="fa fa-search txtSearchClick" style="font-size: 1.1rem;position: absolute;top: 9px;left: 15px;"></i>
+                            <a href="javascript:void(0)" id="cancelText"><i class="fa fa-close" style="font-size: 1.1rem;position: absolute;top: 9px;right: 15px;"></i></a>
+                            <input type="text" id="txtColumnSearch" class="form-control search" placeholder="Search..." style="padding: 0.65rem 2.75rem;" autocomplete="off">
+                        </div>
+
+                        <div class="searchTips">
+                            <div class="titleText">@Model.Loc.Where(a => a.ResourceId == "GlobalSearchTips").FirstOrDefault().Value.ToString()</div>
+                            @if (Model.Loc.Any(a => a.ResourceId == SearchTipsType.ApprovalGroupSearchTips))
+                            {
+                                <div class="infoText">@Model.Loc.Where(a => a.ResourceId == SearchTipsType.ApprovalGroupSearchTips).FirstOrDefault().Value.ToString()</div>
+                            }
+
+                            <div style="clear:both;"></div>
+                        </div>
+
+                        <div class="searchInfo">
+                            <span class="recent">@Model.Loc.Where(a => a.ResourceId == "GlobalRecentlySearched").FirstOrDefault().Value.ToString()</span>
+                            <div class="searchList" id="wosearchList">
+                                <ul id="UlSearchList"></ul>
+                            </div>
+                            <span class="clear"><a href="javascript:void(0)" id="clearText">@Model.Loc.Where(a => a.ResourceId == "globalClear").FirstOrDefault().Value.ToString()</a></span>
+                            <div style="clear:both;"></div>
+                        </div>
+                    </div>
+                </div>
+                
+
+                <div class="pull-right">
+                    <button type="button" class="btn btn-white import-export" onclick="funcShowExportbtn()">@Model.Loc.Where(a => a.ResourceId == "spnExport").FirstOrDefault().Value.ToString()</button>
+                    <button type="button" class="btn btn-white" id="liCustomize" title="Customize" data-toggle="modal" data-target="#gridcolumncustomizemodal"><i class="fa fa-cog" style="font-size: 1.3rem;"></i></button>
+                    <div style="clear:both;"></div>
+                </div>
+                <div style="clear:both;"></div>
+                <div id="dvFilterSearchSelect2"></div>
+                <div style="clear:both;"></div>
+            </div>
+            <div style="clear:both;"></div>
+
+            <div id="Active" class="tabcontent" style="display:block;">
+                <div class="table-responsive">
+                    <table id="ApprovalGroupSearch" class="eqpDtlTbl row-border custom-sort tblMain hover haschild tblDefaultSort" style="width:100%;">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th data-col="1" data-th-index="0" data-th-prop="ApprovalGroupId">@Model.Loc.Where(a => a.ResourceId == "globalApprovalGroupId").FirstOrDefault().Value.ToString()</th>
+                                <th data-col="2" data-th-index="1" data-th-prop="RequestType">@Model.Loc.Where(a => a.ResourceId == "globalRequestType").FirstOrDefault().Value.ToString()</th>
+                                <th data-col="3" data-th-index="2" data-th-prop="Description">@Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString()</th>
+                                <th data-col="4" data-th-index="3" data-th-prop="AssetGroup1ClientLookupId">@Model.ApprovalGroupsModel.AssetGroup1ClientLookupId</th>
+                                <th data-col="5" data-th-index="4" data-th-prop="AssetGroup2ClientLookupId">@Model.ApprovalGroupsModel.AssetGroup2ClientLookupId</th>
+                                <th data-col="6" data-th-index="5" data-th-prop="AssetGroup3ClientLookupId">@Model.ApprovalGroupsModel.AssetGroup3ClientLookupId</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <nav id="sidebar">
+        <div id="dismiss">
+            <i class="fa fa-close"></i>
+        </div>
+        <div class="sidebar-header">
+            <h3><i class="fa fa-filter" style="position: relative; top: -2px;"></i>&nbsp;@Model.Loc.Where(a => a.ResourceId == "globalFilter").FirstOrDefault().Value.ToString()<span id="spnControlCounter" class="filteritemcount">0</span></h3>
+            <button type="button" class="btn btn-blue filterSearch" id="btnApprovalGroupsDataAdvSrch"><i class="fa fa-search" style="margin-top:-3px;"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalSearch").FirstOrDefault().Value.ToString()</button>
+        </div>
+
+        <div class="sidebar-content" id="advsearchsidebar">
+            <form action="#" method="post">
+                <div class="form-group">
+                    <label for="ApprovalGroupId" id="lblApprovalGroupId">@Model.Loc.Where(a => a.ResourceId == "globalApprovalGroupId").FirstOrDefault().Value.ToString() :</label>
+                    <input type="text" class="form-control adv-item search  integerinput" autocomplete="off" id="ApprovalGroupId" style="color:#333;">
+                </div>
+                <div class="form-group">
+                    <label for="RequestType" id="lblRequestType">@Model.Loc.Where(a => a.ResourceId == "globalRequestType").FirstOrDefault().Value.ToString() :</label>
+                    @Html.DropDownListFor(m => m.ApprovalGroupsModel.RequestType, Model.ApprovalGroupsModel.RequestTypeList, "--Select--", new { @class = "form-control search adv-item select2picker", style = "width:100%;", id = "RequestType" })
+                </div>
+                <div class="form-group">
+                    <label for="Description" id="lblDescription">@Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString() :</label>
+                    <input type="text" class="form-control adv-item  search" autocomplete="off" id="Description" style="color:#333;">
+                </div>
+                <div class="form-group">
+                    <label for="AssetGroup1Id" id="lblAssetGroup1">@Model.ApprovalGroupsModel.AssetGroup1ClientLookupId :</label>
+                    @Html.DropDownListFor(m => m.ApprovalGroupsModel.AssetGroup1Id, Model.ApprovalGroupsModel.AssetGroup1List, "--Select--", new { @class = "form-control search adv-item select2picker", style = "width:100%;", id = "AssetGroup1Id" })
+                </div>
+                <div class="form-group">
+                    <label for="AssetGroup2Id" id="lblAssetGroup2">@Model.ApprovalGroupsModel.AssetGroup2ClientLookupId :</label>
+                    @Html.DropDownListFor(m => m.ApprovalGroupsModel.AssetGroup2Id, Model.ApprovalGroupsModel.AssetGroup2List, "--Select--", new { @class = "form-control search adv-item select2picker", style = "width:100%;", id = "AssetGroup2Id" })
+                </div>
+                <div class="form-group">
+                    <label for="AssetGroup3Id" id="lblAssetGroup3">@Model.ApprovalGroupsModel.AssetGroup3ClientLookupId :</label>
+                    @Html.DropDownListFor(m => m.ApprovalGroupsModel.AssetGroup3Id, Model.ApprovalGroupsModel.AssetGroup3List, "--Select--", new { @class = "form-control search adv-item select2picker", style = "width:100%;", id = "AssetGroup3Id" })
+                </div>
+            </form>
+        </div>
+    </nav>
+@Html.Partial("_CustomizeGridSetup")
+@Html.Partial("_Export")
+<style type="text/css">
+    #popupExport {
+        right: 97px;
+    }
+
+    @@media only screen and (width:1360px) {
+        #popupExport {
+            right: 97px !important;
+        }
+    }
+
+    tbody tr.DTFC_NoData {
+        background-color: transparent !important;
+        text-align: center;
+    }
+</style>
+

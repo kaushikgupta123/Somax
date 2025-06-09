@@ -1,0 +1,74 @@
+﻿@model Client.Models.EquipmentCombined
+<div class="row">
+    <div class="col-xl-12">
+        <div class="m-portlet newPort" id="m_portlet" style="padding:15px;">
+            <div class="bottomBlock">
+                <div class="tabsArea nobg">
+                    <ul class="listView nobrd">
+                        <li>
+                            <span class="label">@Html.LabelFor(m => m.RepairableSpareModel.RepairableSpareStatus)<small>*</small></span>
+                            <span class="inputText">
+                                @Html.ValidationMessageFor(m => m.RepairableSpareModel.RepairableSpareStatus, "", new { style = "display:none" })
+                                @Html.DropDownListFor(m => m.RepairableSpareModel.RepairableSpareStatus, Model.RepairableSpareStatusList, "--Select--", new { @class = "form-control select2picker", style = "width:100%;", id = "RepairableSpareStatus" })
+                            </span>
+                        </li>
+                        <li id="li_AssigntoAssetId" style="display:none">
+                            <span class="label">@Html.LabelFor(m => m.RepairableSpareModel.AssignedAssetClientlookupId)<small>*</small></span>
+                            <span class="inputText">
+                                <div class="dropdown dropTableOuter">
+                                    <div class="input-group">
+                                        @Html.ValidationMessageFor(m => m.RepairableSpareModel.AssignedAssetClientlookupId, "", new { style = "display:none" })
+
+                                        @Html.TextBoxFor(m => m.RepairableSpareModel.AssignedAssetClientlookupId, "", new
+                                        {
+                                            @class = "form-control search dropbtn readonly",
+                                            @readonly = "readonly",
+                                            autocomplete = "off",
+                                            style = "display:block;"
+                                        })
+                                        @Html.TextBoxFor(m => m.RepairableSpareModel.AssignedAssetId, new
+                                        {
+                                            @class = "form-control search dropbtn readonly",
+                                            @readonly = "readonly",
+                                            autocomplete = "off",
+                                            style = "display:none;"
+                                        })
+
+
+                                        <div class="input-group-btn">
+                                            <button class="btn btn-white btntxtInputGroup ClearRepSpareModalPopupGrid" type="button"
+                                                    data-textfield="RepairableSpareModel_AssignedAssetClientlookupId"
+                                                    data-valuefield="RepairableSpareModel_AssignedAssetId" style="display:none;">
+                                                <i id="srcicon" class="fa fa-close"></i>
+                                            </button>
+                                        </div>
+                                        <div class="input-group-btn">
+                                            <button class="btn btn-white btntxtInputGroup OpenRepSpareModalPopupGrid" type="button"
+                                                    data-textfield="RepairableSpareModel_AssignedAssetClientlookupId"
+                                                    data-valuefield="RepairableSpareModel_AssignedAssetId">
+                                                <i id="srcicon" class="fa fa-search"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </span>
+                        </li>
+
+                        <li id="li_Location" style="display:none">
+                            <span class="label">@Html.LabelFor(m => m.RepairableSpareModel.Location)<small>*</small></span>
+                            <span class="inputText">
+                                @Html.ValidationMessageFor(m => m.RepairableSpareModel.Location, "", new { style = "display:none" })
+                                @Html.TextBoxFor(m => m.RepairableSpareModel.Location, new { @class = "form-control m-input search ", @style = "color:black", autocomplete = "off", maxlength = "126" })
+                            </span>
+                        </li>
+
+                    </ul>
+                </div>
+                <div style="clear:both;"></div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+@Html.HiddenFor(m => m.IsAssigned, new { id = "hdnIsAssigned" })

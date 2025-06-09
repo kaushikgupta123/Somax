@@ -1,0 +1,14 @@
+﻿@model Client.Models.Configuration.MasterSanitationLibrary.MasterSanitationVM
+@{
+    ViewBag.Title = "Somax-Config | Master Sanitation";
+}
+@Styles.Render("~/Content/datatable")
+@section scripts {
+    @Scripts.Render("~/bundles/datatable")
+    <script src="~/Scripts/Pages/Configuration/MasterSanitationLibrary/MasterSanitationSearch.js"></script>
+}
+<div id="renderSaniLibrary">
+    @Html.Partial("~/Views/Configuration/MasterSanitationLibrary/_MasterSanitationSearch.cshtml", Model)
+</div>
+
+

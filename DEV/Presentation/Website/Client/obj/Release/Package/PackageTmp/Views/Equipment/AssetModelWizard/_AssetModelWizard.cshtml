@@ -1,0 +1,186 @@
+﻿@model Client.Models.EquipmentCombined
+@{
+    var SequenceCount = 1;
+}
+<div id="AssetModelWizardModal" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-info step-modal-box">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close btnWorkorderCompletionWizardCancel" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">@Model.Loc.Where(a => a.ResourceId == "spnGlobalAssetModelWizard").FirstOrDefault().Value.ToString()</h4>
+            </div>
+            <div class="modal-body">
+                <div class="m-portlet">
+                    <!--begin: Form Wizard-->
+                    <div class="m-wizard m-wizard--5 m-wizard--success m-wizard--step-first" id="m_wizard">
+                        <!--begin: Message container -->
+                        <div class="m-portlet__padding-x">
+                            <!-- Here you can put a message or alert -->
+                        </div>
+                        <!--end: Message container -->
+
+                        <div class="wizard-wrap-box">
+                            <!--begin: Form Wizard Head -->
+                            <div class="m-wizard__head m-portlet__padding-x">
+
+                                <!--begin: Form Wizard Nav -->
+                                <div class="m-wizard__nav">
+                                    <div class="m-wizard__steps">
+                                        @{
+                                            var currentTabCls = "m-wizard__step--current";
+                                        }
+                                        @{
+                                            <div class="m-wizard__step @currentTabCls" style="pointer-events:none;" data-wizard-target="#WoCompletionCriteriaStep">
+                                                <div class="m-wizard__step-info">
+                                                    <a class="m-wizard__step-number">
+                                                        <span class="m-wizard__step-seq">
+                                                            @SequenceCount
+                                                            @{
+                                                                SequenceCount = SequenceCount + 1;
+                                                            }
+                                                        </span>
+                                                        <span class="m-wizard__step-label">
+                                                            @Model.Loc.Where(a => a.ResourceId == "spnAssetInformation").FirstOrDefault().Value.ToString()
+                                                        </span>
+                                                        <span class="m-wizard__step-icon">
+                                                            <i class="la la-check"></i>
+                                                        </span>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                            currentTabCls = "";
+                                        }
+                                        <div class="m-wizard__step @currentTabCls" style="pointer-events:none;" data-wizard-target="#CompletionInformationStep">
+                                            <div class="m-wizard__step-info">
+                                                <a class="m-wizard__step-number">
+                                                    <span class="m-wizard__step-seq">
+                                                        @SequenceCount
+                                                        @{
+                                                            SequenceCount = SequenceCount + 1;
+                                                        }
+                                                    </span>
+                                                    <span class="m-wizard__step-label">
+                                                        @Model.Loc.Where(a => a.ResourceId == "spnGlobalAdditionalInformation").FirstOrDefault().Value.ToString()
+                                                    </span>
+                                                    <span class="m-wizard__step-icon">
+                                                        <i class="la la-check"></i>
+                                                    </span>
+                                                </a>
+                                            </div>
+                                        </div>
+                                        <div class="m-wizard__step" style="pointer-events:none;" data-wizard-target="#FinalStep">
+                                            <div class="m-wizard__step-info">
+                                                <a class="m-wizard__step-number">
+                                                    <span class="m-wizard__step-seq">
+                                                        @SequenceCount
+                                                        @{
+                                                            SequenceCount = SequenceCount + 1;
+                                                        }
+                                                    </span>
+                                                    <span class="m-wizard__step-label">
+                                                        @Model.Loc.Where(a => a.ResourceId == "spnConfirmation").FirstOrDefault().Value.ToString()
+                                                    </span>
+                                                    <span class="m-wizard__step-icon">
+                                                        <i class="la la-check"></i>
+                                                    </span>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--end: Form Wizard Nav -->
+
+                            </div>
+                            <!--end: Form Wizard Head -->
+                            <!--begin: Form Wizard Form-->
+                            <div class="m-wizard__form" id="AssetModelInformationWizardDiv">
+                                <!--
+                                    1) Use m-form--label-align-left class to alight the form input lables to the right
+                                    2) Use m-form--state class to highlight input control borders on form validation
+                                -->
+
+                            </div>
+                            <!--end: Form Wizard Form-->
+                        </div>
+                    </div>
+                    <!--end: Form Wizard-->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@Html.Partial("~/Views/Shared/LookupTypeTablePopup/_AccountPopupLookup.cshtml")
+@Html.Partial("~/Views/Shared/QR/_QrCodeReaderModal.cshtml")
+<style>
+
+    @@media (max-width: 1200px) {
+        .m-wizard.m-wizard--5 .m-wizard__head {
+            width: 300px !important;
+        }
+    }
+
+    @@media (max-width: 1000px) {
+
+        .m-wizard.m-wizard--5 .m-wizard__head .m-wizard__nav .m-wizard__steps .m-wizard__step .m-wizard__step-info .m-wizard__step-number .m-wizard__step-label {
+            font-size: 12px;
+        }
+
+        .m-wizard.m-wizard--5 .m-wizard__head {
+            width: 240px !important;
+        }
+
+        .m-wizard__form {
+            width: calc(100% - 260px);
+        }
+
+        .wizard-wrap-box .m-wizard__step-label {
+            padding: 0px !important;
+        }
+    }
+
+    @@media screen and (max-width: 650px) {
+
+        .step-modal-box {
+            width: auto !important;
+            max-width: auto !important;
+        }
+
+        .modal-header, .modal .modal-content .modal-body {
+            padding: 15px !important;
+        }
+
+        .wizard-wrap-box {
+            padding: 5px !important;
+        }
+
+        .m-wizard.m-wizard--5 .m-wizard__head {
+            width: 100% !important;
+            margin-bottom: 10px !important;
+        }
+
+        .m-wizard__form {
+            width: 100% !important;
+            margin: 0px !important;
+        }
+
+        .m-wizard.m-wizard--5 .m-wizard__head .m-wizard__nav .m-wizard__steps {
+            margin: 0px !important;
+        }
+
+            .m-wizard.m-wizard--5 .m-wizard__head .m-wizard__nav .m-wizard__steps .m-wizard__step .m-wizard__step-info .m-wizard__step-number .m-wizard__step-label {
+                font-size: 14px;
+            }
+
+        .modal-info .m-wizard__form-step .inputText {
+            width: calc(100% - 0px) !important;
+            margin: 0 auto 0px;
+        }
+
+        ul.listView.nobrd li span.inputText {
+            height: 40px;
+        }
+    }
+
+    @@media screen and (max-width: 479px) {
+    }
+</style>

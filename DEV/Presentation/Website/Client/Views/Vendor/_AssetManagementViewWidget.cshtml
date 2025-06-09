@@ -1,0 +1,112 @@
+﻿@model Client.Models.VendorsVM
+
+@{
+    var item = Model.VendorAssetManagementWidgetModel;
+    string statusclass = "";
+    string assetmanagementReq = "";
+    switch (Model.VendorAssetManagementWidgetModel.AssetMgtRequired)
+    {
+        case true:
+            statusclass = "m-badge m-badge--red m-badge--wide";
+            assetmanagementReq = "spnAssetMgtRequired";
+            break;
+        case false:
+            statusclass = "m-badge m-badge--blue m-badge--wide";
+            assetmanagementReq = "spnAssetMgtNotRequired";
+            break;
+
+    }
+
+}
+
+<div class="m-portlet padAdjst" id="m_portlet">
+    <div class="m-portlet__body  m-portlet__body--no-padding">
+        <div class="row m-row--col-separator-xl">
+            <div class="col-md-12">
+                <div class="row">
+                    <div class="col-lg-3 col-md-3">
+                        <div class="newDescription" style="width:100%;">
+                            <small class='@statusclass' style="margin-bottom:5px;">@UtilityFunction.GetMessageFromResource(assetmanagementReq, LocalizeResourceSetConstants.VendorDetails) </small>
+                            <p class="no-margin">
+                                @Model.Loc.Where(a => a.ResourceId == "GlobalExpire").FirstOrDefault().Value.ToString() :
+                                @if (item.AssetMgtExpireDate.HasValue && item.AssetMgtExpireDate.Value != default(DateTime))
+                                {
+                                    @item.AssetMgtExpireDate.Value.ToString("MM/dd/yyyy", CultureInfo.InvariantCulture)
+                                }
+                            </p>
+                        </div>
+                        <div style="clear:both;"></div>
+                    </div>
+                    <div class="col-lg-3 col-md-3">
+                        <div class="newDescription no-margin" style='line-height:17px;'>
+                            <p>
+                                @Model.Loc.Where(a => a.ResourceId == "spnCompany").FirstOrDefault().Value.ToString() :
+                                @item.Company
+                            </p>
+                            <p>
+                                @Model.Loc.Where(a => a.ResourceId == "spnContract").FirstOrDefault().Value.ToString() :
+                                @item.Contract
+                            </p>
+                            <p>
+                                @Model.Loc.Where(a => a.ResourceId == "spnContact").FirstOrDefault().Value.ToString() :
+                                @item.Contact
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-3">
+                        <div class="newDescription no-margin" style='line-height:17px;'>
+                            <p>
+                                @Model.Loc.Where(a => a.ResourceId == "spnOverride").FirstOrDefault().Value.ToString() :
+                                <span data-toggle="tooltip" style="line-height: 12px; margin-left:1px; position: relative; bottom: -2px;" >@Html.CheckBoxFor(m => m.VendorAssetManagementWidgetModel.AssetMgtOverride, new { onclick = "return false;" })</span>
+                            </p>
+                            <p>
+                                @Model.Loc.Where(a => a.ResourceId == "spnOverrideDate").FirstOrDefault().Value.ToString() :
+                                @if (item.AssetMgtOverrideDate.HasValue && item.AssetMgtOverrideDate.Value != default(DateTime))
+                                {
+                                    @item.AssetMgtOverrideDate.Value.ToString("MM/dd/yyyy", CultureInfo.InvariantCulture)
+                                }
+                            </p>
+                        </div>
+                    </div>
+                    @if (Model.VendorAssetManagementWidgetModel.AssetMgtRequired)
+                    {
+                        <div class="col-lg-3 col-md-3">
+                            <div class="newDescription" style='line-height:17px;'>
+                                <div class="btn-group bootstrap-select m-datatable__pager-size dropup show selectDrop actionNewDrop">
+                                    <button type="button" class="btn dropdown-toggle bs-placeholder btn-default actiondropdownbtn" data-toggle="dropdown" role="button" title=""><span class="filter-option pull-left">@Model.Loc.Where(a => a.ResourceId == "globalAction").FirstOrDefault().Value.ToString()</span>&nbsp;<span class="bs-caret"><span class="caret"></span></span></button>
+                                    <div class="dropdown-menu open" role="combobox">
+                                        <ul class="dropdown-menu inner" role="listbox" aria-expanded="false">
+
+                                            @if (Model.security.Vendor_AssetMgt_OverrideAssetMgt.Access && !Model.VendorAssetManagementWidgetModel.AssetMgtOverride)
+                                            {
+                                                <li id="overridevendorAssetMgt"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnOverrideAssetManagement").FirstOrDefault().Value.ToString()</a></li>
+                                            }
+                                            @if (Model.security.Vendor_AssetMgt_RemoveOverride.Access && Model.VendorAssetManagementWidgetModel.AssetMgtOverride)
+                                            {
+                                                <li id="removeoverridevendorAssetMgt"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnRemoveOverride").FirstOrDefault().Value.ToString()</a></li>
+                                            }
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<style>
+    .introTags {
+        left: 9px;
+    }
+
+    .newDescription.no-margin p:last-child{
+        padding-bottom:7px !important;
+    }
+</style>

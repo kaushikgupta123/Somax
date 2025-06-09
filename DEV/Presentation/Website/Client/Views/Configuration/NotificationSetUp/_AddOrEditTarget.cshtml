@@ -1,0 +1,100 @@
+﻿@model Client.Models.Configuration.NotificationSetUp.AlertTargetModel
+@{
+    Layout = null;
+}
+<div class="m-subheader fixedDiv1">
+    <div class="new-m-subheader">
+        <div class="PageTitle">
+            <div class="align-items-center separator">
+                <h3 class="m-subheader__title ">
+                    @Model.Loc.Where(a => a.ResourceId == "spnConfiguration").FirstOrDefault().Value.ToString()
+                </h3>
+            </div>
+        </div>
+        <div class="NewBreadcrumbArea">
+            <div class="newBreadcrumb">
+                <ul>
+                    <li><a href="/Configuration/Dashboard">&nbsp;</a></li>
+                    <li><a onclick="RedirectToNotificationDetail();">@Model.Loc.Where(a => a.ResourceId == "spnNotificationSetup").FirstOrDefault().Value.ToString()</a></li>
+                    @if (Model.AlertTargetId == 0)
+                    {
+                        <li class="active">@Model.Loc.Where(a => a.ResourceId == "spnAddTarget").FirstOrDefault().Value.ToString()</li>
+                    }
+                    else
+                    {
+                        <li class="active">@Model.Loc.Where(a => a.ResourceId == "spnUpdateTarget").FirstOrDefault().Value.ToString()</li>
+                    }
+                </ul>
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+        <div style="clear:both;"></div>
+    </div>
+</div>
+<div class="pushDiv1"></div>
+@Html.Partial("_ErrorDiv")
+@using (Ajax.BeginForm("AddOrUpadteTarget", "NotificationSetUp", new AjaxOptions { HttpMethod = "Post", OnSuccess = "AddOnSuccessTarget", OnBegin = "AjaxBeginFormBegin", OnComplete = "AjaxBeginFormComplete", OnFailure = "AjaxBeginFormFaillure" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="row">
+        <div class="col-xl-12">
+            <div class="m-portlet newPort" id="m_portlet" style="padding:15px;">
+                <div class="bottomBlock">
+                    <div class="tabsArea nobg">
+
+                        <ul class="listView nobrd">
+                            @if (Model.AlertTargetId == 0)
+                            {
+                                <li>
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnUserName").FirstOrDefault().Value.ToString():<small>*</small> </span>
+                                    <span class="inputText">
+                                        @Html.ValidationMessageFor(m => m.ClientLookupID, "", new { style = "display:none" })
+                                        @Html.DropDownListFor(m => m.ClientLookupID, Model.ClientLookupList, "--Select--", new { @class = "form-control search select2picker", style = "width:100%;" })
+                                    </span>
+                                </li>
+                            }
+                            else
+                            {
+                                <li>
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnPersonalClientLookupId").FirstOrDefault().Value.ToString():</span>
+                                    <span class="inputText">@Model.Personnel_ClientLookupId</span>
+                                </li>
+                                <li>
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnFirstName").FirstOrDefault().Value.ToString():</span>
+                                    <span class="inputText">@Model.FirstName</span>
+                                </li>
+                                <li>
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnLastName").FirstOrDefault().Value.ToString() :</span>
+                                    <span class="inputText">@Model.LastName</span>
+                                </li>
+                            }
+                            <li>
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnIsActive").FirstOrDefault().Value.ToString()</span>
+                                <span class="inputText">
+                                    @Html.CheckBoxFor(m => m.IsActive, new { @class = "form-control m-input", @style = "color:black; width: auto; margin-top: 12px;" })
+                                </span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div style="clear:both;"></div>
+
+                    <div class="idBttns" style="border-top: 1px solid #fff;">
+                        <div class="bttn_pagin">
+                            <div class="bttns2">
+                                <button type="submit" class="btn btn-blue mobBttn"><i class="fa fa-save faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+                            </div>
+                            <div class="bttns"><button type="button" class="btn btn-blue mobBttn" id="btnSTargetcancel"><i class="fa fa-close faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button></div>
+
+                            <div style="clear:both;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @Html.HiddenFor(x => x.AlertTargetId)
+    @Html.HiddenFor(x => x.AlertSetupId)
+    @Html.HiddenFor(x => x.AlertSiteId)
+    @Html.HiddenFor(x => x.PackageLevelDef)
+    @Html.HiddenFor(x => x.IsSuperUser)
+}

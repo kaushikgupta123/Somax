@@ -1,0 +1,89 @@
+﻿@model Client.Models.Devices.DeviceVM
+@using (Ajax.BeginForm("AddRecordReadingIoTDevice", "Devices", new AjaxOptions { HttpMethod = "POST", OnBegin = "AjaxBeginFormBegin", OnSuccess = "AddRecordReadingOnSuccess", OnFailure = "AjaxBeginFormFaillure", OnComplete = "AjaxBeginFormComplete" }))
+{
+    @Html.AntiForgeryToken()
+    <div id="addRecordReadingModalDetailsPage" class="modal fade" role="dialog" style="padding-right:0px !important;">
+        <div class="modal-dialog modal-info">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">@Model.Loc.Where(a => a.ResourceId == "globalTitleRecordReading").FirstOrDefault().Value.ToString()</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <ul class="listView nobrd" style="border-bottom:0;">
+                            <li style="margin-bottom:4px;">
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "GlobalDate").FirstOrDefault().Value.ToString() : <small>*</small></span>
+                                <span class="inputText">
+                                    @Html.ValidationMessageFor(m => m.addRecordReadingModal.ReadingDate, "", new { style = "display:none" })
+                                    @Html.TextBoxFor(m => m.addRecordReadingModal.ReadingDate, "{0:MM/dd/yyyy}", new { @class = "form-control search dtpickerNew", autocomplete = "off", @readonly = "readonly", id = "ReadingDate" })
+                                    @Html.TextBoxFor(m => m.addRecordReadingModal.ReadingTime, new { @class = "form-control search timerId", autocomplete = "off", id = "ReadingTime" })
+                                </span>
+                            </li>
+                            <li style="margin-bottom:4px;">
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "globalReading").FirstOrDefault().Value.ToString() : <small>*</small></span>
+                                <span class="inputText">
+                                    @Html.ValidationMessageFor(m => m.addRecordReadingModal.Reading, "", new { style = "display:none" })
+                                    @Html.TextBoxFor(m => m.addRecordReadingModal.Reading, "", new { @class = "form-control search", autocomplete = "off" })
+                                </span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="modal-footer" style="padding:15px 25px !important;">
+                    <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-close faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button>
+                    <button type="submit" class="btn btn-blue" style="float:right;" id="changeDevice" data-eqid="0"><i class="fa fa-save faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+                    <div style="clear:both;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @Html.HiddenFor(m => m.deviceModel.IoTDeviceId, new { id = "hdnDeviceId" })
+    @Html.HiddenFor(m => m.deviceModel.SensorUnit, new { id = "hdnSensorUnit" })
+    @Html.HiddenFor(m => m.deviceModel.EquipmentId, new { id = "hdnEquipmentId" })
+}
+
+<style type="text/css">
+    .ui-tooltip {
+        z-index: 1151 !important;
+    }
+
+    .errormessage {
+        margin-bottom: 1px !important;
+    }
+
+    .dtpickerNew { /*width: 120px;*/
+        width: 100px;
+        float: left;
+    }
+
+    .timerId { /*width: 100px;*/
+        width: 90px;
+        float: left;
+    }
+
+    .ui-datepicker-trigger {
+        float: left;
+        margin-left: -3px;
+        margin-right: 10px;
+    }
+
+    .errorMsgBlk {
+        background-color: #d86564;
+        font-size: 13px;
+        color: #fff;
+        font-weight: 400;
+        line-height: 37px;
+        padding: 0 10px;
+    }
+
+    .bootstrap-timepicker-widget.dropdown-menu.open {
+        z-index: 1152;
+    }
+
+    @@media screen and (max-width: 639px) {
+        .ui-datepicker-trigger {
+            height: 34px;
+        }
+    }
+</style>

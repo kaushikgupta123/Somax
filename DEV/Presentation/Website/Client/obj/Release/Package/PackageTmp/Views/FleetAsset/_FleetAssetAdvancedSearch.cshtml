@@ -1,0 +1,43 @@
+﻿@model Client.Models.FleetAsset.FleetAssetVM
+<nav id="sidebar">
+    <div id="dismiss">
+        <i class="fa fa-close"></i>
+    </div>
+    <div class="sidebar-header">
+        <h3><i class="fa fa-filter" style="position: relative; top: -2px;"></i>&nbsp; @Model.Loc.Where(a => a.ResourceId == "globalFilter").FirstOrDefault().Value.ToString() <span id="spnControlCounter">0</span></h3>
+        <button type="button" class="btn btn-blue filterSearch" id="btnFleetAssetDataAdvSrch"> @Model.Loc.Where(a => a.ResourceId == "GlobalApply").FirstOrDefault().Value.ToString()</button>
+    </div>
+    <div class="sidebar-content" id="advsearchsidebar">
+        <form action="#" method="post">
+            <div class="form-group">
+                <label for="EquipmentID" id="lblEquipmentID" name="EquipmentID">@Model.Loc.Where(a => a.ResourceId == "spnGlobalEquipmentId").FirstOrDefault().Value.ToString() </label>
+                <input type="text" class="form-control search adv-item" id="EquipmentID" autocomplete="off" style="color:#333;">
+            </div>
+            <div class="form-group">
+                <label for="Name" id="lblName">@Model.Loc.Where(a => a.ResourceId == "spnName").FirstOrDefault().Value.ToString() </label>
+                <input type="text" class="form-control search adv-item" id="Name" autocomplete="off" style="color:#333;">
+            </div>
+            <div class="form-group">
+                <label for="Make" id="lblMake">@Model.Loc.Where(a => a.ResourceId == "spnMake").FirstOrDefault().Value.ToString() </label>
+                <input type="text" class="form-control search adv-item" id="Make" autocomplete="off" style="color:#333;">
+            </div>
+            <div class="form-group">
+                <label for="ModelNumber" id="lblModel">@Model.Loc.Where(a => a.ResourceId == "GlobalModel").FirstOrDefault().Value.ToString() </label>
+                <input type="text" class="form-control search adv-item" id="ModelNumber" autocomplete="off" style="color:#333;">
+            </div>
+            <div class="form-group">
+                <label for="ddlVehicleType" id="lblType">@Model.Loc.Where(a => a.ResourceId == "spnVehicleType").FirstOrDefault().Value.ToString()  </label>
+                @Html.DropDownListFor(m => m.FleetAssetModel.VehicleType, Model.LookupVehicleTypeList, "--Select--", new { @class = "form-control search adv-item select2picker", style = "width:100%;", id = "ddlVehicleType" })
+            </div>
+            <div class="form-group">
+                <label for="VIN" id="lblVIN">@Model.Loc.Where(a => a.ResourceId == "spnVIN").FirstOrDefault().Value.ToString()  </label>
+                <input type="text" class="form-control search adv-item" id="VIN" autocomplete="off" style="color:#333;">
+            </div>
+            <div class="form-group">
+                <label for="ddlassetAvailability" id="lblAssetAvailability">@Model.Loc.Where(a => a.ResourceId == "spnAvailability").FirstOrDefault().Value.ToString()  </label>
+                @Html.DropDownListFor(m => m.FleetAssetModel.AssetAvailability, Model.LookupAssetAvailability, "--Select--", new { @class = "form-control search adv-item select2picker", style = "width:100%;", id = "ddlassetAvailability" })
+            </div>
+        </form>
+    </div>
+</nav>
+

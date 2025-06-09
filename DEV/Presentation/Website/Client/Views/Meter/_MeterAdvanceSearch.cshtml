@@ -1,0 +1,47 @@
+﻿@model Client.Models.Meters.MetersVM
+
+<nav id="sidebar">
+    <div id="dismiss">
+        <i class="fa fa-close"></i>
+    </div>
+    <div class="sidebar-header">
+        <h3><i class="fa fa-filter" style="position: relative; top: -2px;"></i>&nbsp;@Model.Loc.Where(a => a.ResourceId == "spnFilters").FirstOrDefault().Value.ToString()<span class="filteritemcount">0</span></h3>
+        <button type="button" class="btn btn-blue filterSearch" id="btnMeterAdvSrch"><i class="fa fa-search" style="margin-top:-3px;"></i> &nbsp;@Model.Loc.Where(a => a.ResourceId == "globalSearch").FirstOrDefault().Value.ToString()</button>
+    </div>
+    <div class="sidebar-content" id="advsearchsidebar">
+        <form action="#" method="post">
+            <div class="form-group">
+                <label for="meterid">@Model.Loc.Where(a => a.ResourceId == "spnMeterID").FirstOrDefault().Value.ToString()</label>
+                <input type="text" class="form-control search adv-item" id="meterid" autocomplete="off" style="color:#333;">
+            </div>
+            <div class="form-group">
+                <label for="meterName" id="lblName">@Model.Loc.Where(a => a.ResourceId == "spnName").FirstOrDefault().Value.ToString()</label>
+                <input type="text" class="form-control search adv-item" id="meterName" autocomplete="off" style="color:#333;">
+            </div>
+            <div class="form-group">
+                <label for="ReadingCurrent">@Model.Loc.Where(a => a.ResourceId == "spnReadingCurrent").FirstOrDefault().Value.ToString()</label>
+                <input type="text" class="form-control search adv-item decimalinput" id="ReadingCurrent" autocomplete="off" style="color:#333;">
+            </div>
+            <div class="form-group">
+                <label for="ReadingDate" id="lblLine">@Model.Loc.Where(a => a.ResourceId == "spnReadingDate").FirstOrDefault().Value.ToString()</label>
+                <input type="text" class="form-control search adv-item dtpicker" id="ReadingDate" autocomplete="off" style="color:#333;">
+            </div>
+            <div class="form-group">
+                <label for="ReadingBy" id="lblLine">@Model.Loc.Where(a => a.ResourceId == "spnReadingBy").FirstOrDefault().Value.ToString()</label>
+                <input type="text" class="form-control search adv-item" id="ReadingBy" autocomplete="off" style="color:#333;">
+            </div>
+            <div class="form-group">
+                <label for="ReadingLife" id="lblSystem">@Model.Loc.Where(a => a.ResourceId == "spnReadingLife").FirstOrDefault().Value.ToString()</label>
+                <input type="text" class="form-control search adv-item decimalinput" id="ReadingLife" autocomplete="off" style="color:#333;">
+            </div>
+            <div class="form-group">
+                <label for="MaxReading" id="lblSerialNumber">@Model.Loc.Where(a => a.ResourceId == "spnMaxReading").FirstOrDefault().Value.ToString()</label>
+                <input type="text" class="form-control search adv-item decimalinput" id="MaxReading" autocomplete="off" style="color:#333;">
+            </div>
+            <div class="form-group">
+                <label for="ReadingUnits" id="lblSerialNumber">@Model.Loc.Where(a => a.ResourceId == "spnReadingUnits").FirstOrDefault().Value.ToString()</label>
+                <input type="text" class="form-control search adv-item" id="ReadingUnits" autocomplete="off" style="color:#333;">
+            </div>
+        </form>
+    </div>
+</nav>

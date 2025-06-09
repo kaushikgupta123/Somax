@@ -1,0 +1,49 @@
+﻿@model Client.Models.PurchaseRequest.PurchaseRequestVM
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<body style="padding:0; margin:0; font-family: 'Roboto', sans-serif; font-size:14px; color:#737272;">
+    <table width="1000" border="0" cellspacing="0" cellpadding="0" align="center">
+        <tr>
+            <td align="left" valign="top" height="157">
+                    <table width="1000" border="0" cellspacing="0" cellpadding="0">
+                        <tr>
+                            <td width="557" height="157" align="left" valign="top" style="padding:0">
+                                <a href="#"><img src="@Model.purchaseRequestModel.AzureImageURL" alt="" style="height:157px; width:auto;" /></a>
+                            </td>
+                            <td width="108" height="157" align="left" valign="top" style="padding:0;"></td>
+                            <td width="310" height="132" align="left" valign="top" style="padding:25px 0 0 25px;">
+                                <h2 style="padding:0; margin:0 0 10px 0; font-size:28px; color:#264a7c;font-weight:normal;">@Model.Loc.Where(a => a.ResourceId == "spnPurchaseRequest").FirstOrDefault().Value.ToString()</h2>
+
+                                <p style="padding:0; margin:0 0 7px 0; font-size:18px; color:#5d5d5d; font-weight:normal;">
+                                    @Model.Loc.Where(a => a.ResourceId == "spnWrCreatedBy").FirstOrDefault().Value.ToString() :
+                                    <span style="color:#ff8400;">
+                                        @Model.purchaseRequestModel.Creator_PersonnelName
+                                    </span>
+                                </p>
+
+                                <p style="padding:0; margin:0 0 7px 0; font-size:18px; color:#5d5d5d; font-weight:normal;">
+                                    @Model.Loc.Where(a => a.ResourceId == "globalCreateDate").FirstOrDefault().Value.ToString() :
+                                    @if (Model.purchaseRequestModel.CreateDate.HasValue && Model.purchaseRequestModel.CreateDate.Value != default(DateTime))
+                                    {
+                                        <span style="color:#ff8400;">
+                                            @Model.purchaseRequestModel.CreateDate.Value.ToString("MM/dd/yyyy", CultureInfo.InvariantCulture)
+                                        </span>
+
+                                    }
+                                    else
+                                    {
+                                        <span style="color:#ff8400;"></span>
+                                    }
+                                </p>
+                                <p style="padding:0; margin:0 0 7px 0; font-size:18px; color:#5d5d5d; font-weight:normal;">@Model.Loc.Where(a => a.ResourceId == "spnPurchaseRequest").FirstOrDefault().Value.ToString() : <span style="color:#ff8400;">@Model.purchaseRequestModel.ClientLookupId</span></p>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+        </tr>
+    </table>
+</body>
+</html>

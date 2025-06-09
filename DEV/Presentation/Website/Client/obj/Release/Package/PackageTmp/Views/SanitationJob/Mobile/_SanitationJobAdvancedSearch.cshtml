@@ -1,0 +1,283 @@
+﻿@model Client.Models.Sanitation.SanitationVM
+<div class="slide-modal" id="sidebar">
+    <div class="slide-modal-head">
+        <a class="slide-back-btn SanitationJobDataAdvSrchclearstate"> <i class="fa fa-angle-left"></i> Back</a>
+        <div class="slide-back-title">
+            @Model.Loc.Where(a => a.ResourceId == "globalFilter").FirstOrDefault().Value.ToString()
+            <span class="filteritemcount">0</span>
+        </div>
+        <a id="btnSanitationJobDataAdvSrch" class="slide-back-btn right"> @Model.Loc.Where(a => a.ResourceId == "GlobalApply").FirstOrDefault().Value.ToString()</a>
+
+    </div>
+    <div class="slide-modal-body">
+        <div mbsc-page class="demo-responsive">
+            <div style="height:100%">
+                <div mbsc-form class="mbsc-form-grid">
+                    <div class="mbsc-grid">
+                        <div class="mbsc-row" id="advsearchsidebar">
+                            <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                <label>
+                                    @Model.Loc.Where(a => a.ResourceId == "spnJobID").FirstOrDefault().Value.ToString()
+                                    @Html.TextBoxFor(m => m.sanitationJobSearchModel.ClientLookupId, new
+                               {
+                                   @class = "form-control search adv-item",
+                                   @mbsc_input = "true",
+                                   @data_label_style = "floating",
+                                   @placeholder = Model.Loc.Where(a => a.ResourceId == "spnJobID").FirstOrDefault().Value.ToString(),
+                                   @data_input_style = "box",
+                                   autocomplete = "off",
+                                   id = "JobId"
+                               })
+                                </label>
+                            </div>
+                            <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                <label>
+                                    @Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString()
+                                    @Html.TextBoxFor(m => m.sanitationJobSearchModel.Description, new
+                               {
+                                   @class = "form-control search adv-item",
+                                   @mbsc_input = "true",
+                                   @data_label_style = "floating",
+                                   @placeholder = Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString(),
+                                   @data_input_style = "box",
+                                   autocomplete = "off",
+                                   id = "Description"
+                               })
+                                </label>
+                            </div>
+                            <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                <label>
+                                    @Model.Loc.Where(a => a.ResourceId == "GlobalChargeTo").FirstOrDefault().Value.ToString()
+                                    @Html.TextBoxFor(m => m.sanitationJobSearchModel.ChargeTo_ClientLookupId, new
+                               {
+                                   @class = "form-control search adv-item",
+                                   @mbsc_input = "true",
+                                   @data_label_style = "floating",
+                                   @placeholder = Model.Loc.Where(a => a.ResourceId == "GlobalChargeTo").FirstOrDefault().Value.ToString(),
+                                   @data_input_style = "box",
+                                   autocomplete = "off",
+                                   id = "ChargeTo"
+                               })
+                                </label>
+                            </div>
+                            <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                <label>
+                                    @Model.Loc.Where(a => a.ResourceId == "spnChargeToName").FirstOrDefault().Value.ToString()
+                                    @Html.TextBoxFor(m => m.sanitationJobSearchModel.ChargeTo_Name, new
+                               {
+                                   @class = "form-control search adv-item",
+                                   @mbsc_input = "true",
+                                   @data_label_style = "floating",
+                                   @placeholder = Model.Loc.Where(a => a.ResourceId == "spnChargeToName").FirstOrDefault().Value.ToString(),
+                                   @data_input_style = "box",
+                                   autocomplete = "off",
+                                   id = "ChargeToName"
+                               })
+                                </label>
+                            </div>
+                            <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                <label>
+                                    @Model.Loc.Where(a => a.ResourceId == "spnGlobalAssetLocation").FirstOrDefault().Value.ToString()
+                                    @Html.TextBoxFor(m => m.sanitationJobSearchModel.AssetLocation, new
+                               {
+                                   @class = "form-control search adv-item",
+                                   @mbsc_input = "true",
+                                   @data_label_style = "floating",
+                                   @placeholder = Model.Loc.Where(a => a.ResourceId == "spnGlobalAssetLocation").FirstOrDefault().Value.ToString(),
+                                   @data_input_style = "box",
+                                   autocomplete = "off",
+                                   id = "AssetLocation"
+                               })
+                                </label>
+                            </div>
+                            <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                <label>
+                                    @Model.Loc.Where(a => a.ResourceId == "spnStatus").FirstOrDefault().Value.ToString()
+                                    @Html.DropDownListFor(m => m.sanitationJobSearchModel.Status, Model.sanitationJobSearchModel.StatusList, "--Select--", new
+                               {
+                                   @class = "form-control search adv-item mobiscrollselect",
+                                   @style = "width:100%;",
+                                   @mbsc_dropdown = "true",
+                                   @data_label = Model.Loc.Where(a => a.ResourceId == "spnStatus").FirstOrDefault().Value.ToString(),
+                                   @data_input_style = "box",
+                                   @data_label_style = "floating",
+                                   @placeholder = Model.Loc.Where(a => a.ResourceId == "spnStatus").FirstOrDefault().Value.ToString(),
+                                   id = "Status"
+                               })
+                                </label>
+                            </div>
+                            <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                <label>
+                                    @Model.Loc.Where(a => a.ResourceId == "spnShift").FirstOrDefault().Value.ToString()
+                                    @Html.DropDownListFor(m => m.sanitationJobSearchModel.Shift, Model.sanitationJobSearchModel.ShiftList, "--Select--", new
+                               {
+                                   @class = "form-control search adv-item mobiscrollselect",
+                                   @style = "width:100%;",
+                                   @mbsc_dropdown = "true",
+                                   @data_label = Model.Loc.Where(a => a.ResourceId == "spnShift").FirstOrDefault().Value.ToString(),
+                                   @data_input_style = "box",
+                                   @data_label_style = "floating",
+                                   @placeholder = Model.Loc.Where(a => a.ResourceId == "spnShift").FirstOrDefault().Value.ToString(),
+                                   id = "Shift"
+                               })
+                                </label>
+                            </div>
+                            <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                <label>
+                                    @Model.sanitationJobModel.AssetGroup1Name
+                                    @Html.TextBoxFor(m => m.sanitationJobSearchModel.AssetGroup1_ClientLookUpId, new
+                               {
+                                   @class = "form-control search adv-item",
+                                   @mbsc_input = "true",
+                                   @data_label_style = "floating",
+                                   @placeholder = @Model.sanitationJobModel.AssetGroup1Name,
+                                   @data_input_style = "box",
+                                   autocomplete = "off",
+                                   id = "AssetGroup1ClientLookUpId"
+                               })
+                                </label>
+                            </div>
+                            <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                <label>
+                                    @Model.sanitationJobModel.AssetGroup2Name
+                                    @Html.TextBoxFor(m => m.sanitationJobSearchModel.AssetGroup2_ClientLookUpId, new
+                               {
+                                   @class = "form-control search adv-item",
+                                   @mbsc_input = "true",
+                                   @data_label_style = "floating",
+                                   @placeholder = @Model.sanitationJobModel.AssetGroup2Name,
+                                   @data_input_style = "box",
+                                   autocomplete = "off",
+                                   id = "AssetGroup2ClientLookUpId"
+                               })
+                                </label>
+                            </div>
+                            <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                <label>
+                                    @Model.sanitationJobModel.AssetGroup3Name
+                                    @Html.TextBoxFor(m => m.sanitationJobSearchModel.AssetGroup3_ClientLookUpId, new
+                               {
+                                   @class = "form-control search adv-item",
+                                   @mbsc_input = "true",
+                                   @data_label_style = "floating",
+                                   @placeholder = @Model.sanitationJobModel.AssetGroup3Name,
+                                   @data_input_style = "box",
+                                   autocomplete = "off",
+                                   id = "AssetGroup3ClientLookUpId"
+                               })
+                                </label>
+                            </div>
+                            <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                <label>
+                                    @Model.Loc.Where(a => a.ResourceId == "spnCreated").FirstOrDefault().Value.ToString()
+                                    @Html.TextBoxFor(m => m.sanitationJobModel.CreateDate, "{0:MM/dd/yyyy}", new { @class = "form-control search mobidtpicker adv-item", @mbsc_input = "true", @data_label_style = "floating", @placeholder = Model.Loc.Where(a => a.ResourceId == "spnCreated").FirstOrDefault().Value.ToString(), @data_input_style = "box", autocomplete = "off", id = "Created" })
+                                </label>
+                            </div>
+                            <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                <label>
+                                    @Model.Loc.Where(a => a.ResourceId == "spnCreateBy").FirstOrDefault().Value.ToString()
+                                    @Html.DropDownListFor(m => m.sanitationJobSearchModel.CreateBy, Model.sanitationJobSearchModel.CreateByList, "--Select--", new
+                               {
+                                   @class = "form-control search adv-item mobiscrollselect",
+                                   @style = "width:100%;",
+                                   @mbsc_dropdown = "true",
+                                   @data_label = Model.Loc.Where(a => a.ResourceId == "spnCreateBy").FirstOrDefault().Value.ToString(),
+                                   @data_input_style = "box",
+                                   @data_label_style = "floating",
+                                   @placeholder = Model.Loc.Where(a => a.ResourceId == "spnCreateBy").FirstOrDefault().Value.ToString(),
+                                   id = "CreateBy"
+                               })
+                                </label>
+                            </div>
+                            <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                <label>
+                                    @Model.Loc.Where(a => a.ResourceId == "spnAssigned").FirstOrDefault().Value.ToString()
+                                    @Html.DropDownListFor(m => m.sanitationJobSearchModel.Assigned, Model.sanitationJobSearchModel.AssignedList, "--Select--", new
+                               {
+                                   @class = "form-control search adv-item mobiscrollselect",
+                                   @style = "width:100%;",
+                                   @mbsc_dropdown = "true",
+                                   @data_label = Model.Loc.Where(a => a.ResourceId == "spnAssigned").FirstOrDefault().Value.ToString(),
+                                   @data_input_style = "box",
+                                   @data_label_style = "floating",
+                                   @placeholder = Model.Loc.Where(a => a.ResourceId == "spnAssigned").FirstOrDefault().Value.ToString(),
+                                   id = "Assigned"
+                               })
+                                </label>
+                            </div>
+                            <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                <label>
+                                    @Model.Loc.Where(a => a.ResourceId == "spnCompleteDate").FirstOrDefault().Value.ToString()
+                                    @Html.TextBoxFor(m => m.sanitationJobSearchModel.CompleteDate, "{0:MM/dd/yyyy}", new { @class = "form-control search mobidtpicker adv-item", @mbsc_input = "true", @data_label_style = "floating", @placeholder = @Model.Loc.Where(a => a.ResourceId == "spnCompleteDate").FirstOrDefault().Value.ToString(), @data_input_style = "box", autocomplete = "off", id = "CompleteDate" })
+                                </label>
+                            </div>
+                            <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                <label>
+                                    @Model.Loc.Where(a => a.ResourceId == "spnVeryfiedBy").FirstOrDefault().Value.ToString()
+                                    @Html.DropDownListFor(m => m.sanitationJobSearchModel.VerifiedBy, Model.sanitationJobSearchModel.VerifiedByList, "--Select--", new
+                               {
+                                   @class = "form-control search adv-item mobiscrollselect",
+                                   @style = "width:100%;",
+                                   @mbsc_dropdown = "true",
+                                   @data_label = Model.Loc.Where(a => a.ResourceId == "spnVeryfiedBy").FirstOrDefault().Value.ToString(),
+                                   @data_input_style = "box",
+                                   @data_label_style = "floating",
+                                   @placeholder = Model.Loc.Where(a => a.ResourceId == "spnVeryfiedBy").FirstOrDefault().Value.ToString(),
+                                   id = "VeryfiedBy"
+                               })
+                                </label>
+                            </div>
+                            <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                <label>
+                                    @Model.Loc.Where(a => a.ResourceId == "spnVeryfiedDate").FirstOrDefault().Value.ToString()
+                                    @Html.TextBoxFor(m => m.sanitationJobSearchModel.VerifiedDate,
+                                   "{0:MM/dd/yyyy}", new { @class = "form-control search mobidtpicker adv-item", @mbsc_input = "true", @data_label_style = "floating", @placeholder = Model.Loc.Where(a => a.ResourceId == "spnVeryfiedDate").FirstOrDefault().Value.ToString(), @data_input_style = "box", autocomplete = "off", id = "VeryfiedDate" })
+                                </label>
+                            </div>
+                            <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                @if(Model.JobDetailsModel.ExternalSanitation == true)
+                                {
+                                    <label>
+                                        @Model.Loc.Where(a => a.ResourceId == "spnExtracted").FirstOrDefault().Value.ToString()
+                                        @Html.DropDownListFor(m => m.sanitationJobSearchModel.Extracted, Model.sanitationJobSearchModel.SanitExtractedList, "--Select--", new
+                                   {
+                                       @class = "form-control search adv-item mobiscrollselect",
+                                       @style = "width:100%;",
+                                       @mbsc_dropdown = "true",
+                                       @data_label = Model.Loc.Where(a => a.ResourceId == "spnExtracted").FirstOrDefault().Value.ToString(),
+                                       @data_input_style = "box",
+                                       @data_label_style = "floating",
+                                       @placeholder = Model.Loc.Where(a => a.ResourceId == "spnExtracted").FirstOrDefault().Value.ToString(),
+                                       id = "Extracted"
+                                   })
+                                    </label>
+                                
+                                }
+                                else
+                                {
+                                    <label>
+                                        @Model.Loc.Where(a => a.ResourceId == "spnScheduledDate").FirstOrDefault().Value.ToString()
+                                        @Html.TextBoxFor(m => m.sanitationJobSearchModel.ScheduledDate, "{0:MM/dd/yyyy}", new { @class = "form-control search mobidtpicker adv-item", @mbsc_input = "true", @data_label_style = "floating", @placeholder = Model.Loc.Where(a => a.ResourceId == "spnScheduledDate").FirstOrDefault().Value.ToString(), @data_input_style = "box", autocomplete = "off",id = "ScheduledDate" })
+                                    </label>
+                                }
+                                </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="slide-modal-footer"></div>
+</div>
+<style>
+    #sidebar.slide-modal.slide-active {
+        width: 350px !important;
+        left: auto !important;
+        right: 0 !important;
+    }
+
+    .slide-back-btn.right {
+        left: auto;
+        right: 12px;
+    }
+</style>

@@ -1,0 +1,263 @@
+﻿@model Client.Models.Configuration.SecurityProfile.SecurityProfileVM
+@{
+    var secItemList = Model.SecurityItemModelList.Where(x => x.SingleItem.Equals(false));
+    var secISingletemList = Model.SecurityItemModelList.Where(x => x.SingleItem.Equals(true));
+}
+<link href="~/Content/customhtmltable.css" rel="stylesheet" />
+<div class="m-subheader">
+    <div class="new-m-subheader">
+        <div class="PageTitle">
+            <div class="align-items-center separator">
+                <h3 class="m-subheader__title ">
+                    @Model.Loc.Where(a => a.ResourceId == "spnSecurityProfile").FirstOrDefault().Value.ToString() 
+                </h3>
+            </div>
+        </div>
+
+        <div class="NewBreadcrumbArea">
+            <div class="newBreadcrumb">
+                <ul>
+                    <li><a href="/Configuration/Dashboard"> &nbsp;</a></li>
+                    <li><a href="/SecurityProfile/index?page=Security_Profiles"> @Model.Loc.Where(a => a.ResourceId == "spnSecurityProfileMaintenance").FirstOrDefault().Value.ToString()</a></li>
+                    <li class="active">@Model.securityProfileModel.Description</li>
+                </ul>
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+        <div style="clear:both;"></div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xl-3">
+        <div class="m-portlet">
+            <div class="sideMenuArea">
+                <ul class="vtabs" id="detmaintab">
+                    <li class="active" id="liModule"><a href="#Module">@Model.Loc.Where(a => a.ResourceId == "spnModule").FirstOrDefault().Value.ToString()</a></li>
+                    <li id="liProcess" onclick="openCity(event, 'Process')"><a href="#Process">@Model.Loc.Where(a => a.ResourceId == "spnProcessingPagesFunctions").FirstOrDefault().Value.ToString()</a></li>
+                </ul>
+            </div>
+            <div class="selectTabs" id="selectTabs">
+                <select class="form-control" id="colorselector">
+                    <option value="Module">@Model.Loc.Where(a => a.ResourceId == "spnModule").FirstOrDefault().Value.ToString()</option>
+                    <option value="Process">@Model.Loc.Where(a => a.ResourceId == "spnProcessingPagesFunctions").FirstOrDefault().Value.ToString()</option>
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-9">
+        <div class="row">
+            <div class="col-xl-12" id="btnnblock">
+                <div class="m-portlet" id="m_portlet" style="padding:15px;">
+                    <div class="tabsArea nobg" id="Module" style="display:block;">
+                        <div class="table-responsive">
+                            <table id="tasksModuleTable" class="table m-table eqpDtlTbl" style="width:100%;">
+                                <thead>
+                                    <tr>
+                                        <th width="40%">@Model.Loc.Where(a => a.ResourceId == "spnModule").FirstOrDefault().Value.ToString()</th>
+                                        <th width="15%">@Model.Loc.Where(a => a.ResourceId == "spnAccessView").FirstOrDefault().Value.ToString()</th>
+                                        <th width="15%">@Model.Loc.Where(a => a.ResourceId == "spnCreate").FirstOrDefault().Value.ToString()</th>
+                                        <th width="15%">@Model.Loc.Where(a => a.ResourceId == "globalEdit").FirstOrDefault().Value.ToString()</th>
+                                        <th width="15%">@Model.Loc.Where(a => a.ResourceId == "globalDelete").FirstOrDefault().Value.ToString()</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in secItemList)
+                                    {
+                                        <tr>
+                                            <td class="ItemName" style="display:none">@item.ItemName</td>
+                                            <td class="SecurityItemId" style="display:none">@item.SecurityItemId</td>
+                                            <td class="SortOrder" style="display:none">@item.SortOrder</td>
+                                            <td class="UpdateIndex" style="display:none">@item.UpdateIndex</td>
+                                            <td class="Protected" style="display:none">@item.Protected</td>
+                                            <td style="width:40%">@item.SecurityLocalizedName</td>
+                                            <td style="text-align:center;width:15%;">
+                                                <label class="m-checkbox m-checkbox--state-success">
+                                                    @if (item.ItemAccess)
+                                                    {
+                                                        if (item.Protected)
+                                                        {
+                                                            <input type="checkbox" class="chkaccess disabled" checked="checked"><span></span>
+                                                        }
+                                                        else
+                                                        {
+                                                            <input type="checkbox" class="chkaccess" checked="checked"><span></span>
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+                                                        if (item.Protected)
+                                                        {
+                                                            <input type="checkbox" class="chkaccess disabled"><span></span>
+                                                        }
+                                                        else
+                                                        {
+                                                            <input type="checkbox" class="chkaccess"><span></span>
+                                                        }
+                                                    }
+                                                </label>
+                                            </td>
+                                            <td style="text-align:center;width:15%;">
+                                                <label class="m-checkbox">
+                                                    @if (item.ItemCreate)
+                                                    {
+                                                        if (item.Protected)
+                                                        {
+                                                            <input type="checkbox" class="chkcreate disabled" checked="checked"><span></span>
+                                                        }
+                                                        else
+                                                        {
+                                                            <input type="checkbox" class="chkcreate" checked="checked"><span></span>
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+                                                        if (item.Protected)
+                                                        {
+                                                            <input type="checkbox" class="chkcreate disabled"><span></span>
+                                                        }
+                                                        else
+                                                        {
+                                                            <input type="checkbox" class="chkcreate"><span></span>
+                                                        }
+                                                    }
+                                                </label>
+                                            </td>
+                                            <td style="text-align:center;width:15%;">
+                                                <label class="m-checkbox m-checkbox--accent">
+                                                    @if (item.ItemEdit)
+                                                    {
+                                                        if (item.Protected)
+                                                        {
+                                                            <input type="checkbox" class="chkedit disabled" checked="checked"><span></span>
+                                                        }
+                                                        else
+                                                        {
+                                                            <input type="checkbox" class="chkedit" checked="checked"><span></span>
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+                                                        if (item.Protected)
+                                                        {
+                                                            <input type="checkbox" class="chkedit disabled"><span></span>
+                                                        }
+                                                        else
+                                                        {
+                                                            <input type="checkbox" class="chkedit"><span></span>
+                                                        }
+                                                    }
+                                                </label>
+                                            </td>
+                                            <td style="text-align:center;width:15%;">
+                                                <label class="m-checkbox m-checkbox--state-danger">
+                                                    @if (item.ItemDelete)
+                                                    {
+                                                        if (item.Protected)
+                                                        {
+                                                            <input type="checkbox" class="chkdel disabled" checked="checked"><span></span>
+                                                        }
+                                                        else
+                                                        {
+                                                            <input type="checkbox" class="chkdel" checked="checked"><span></span>
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+                                                        if (item.Protected)
+                                                        {
+                                                            <input type="checkbox" class="chkdel disabled"><span></span>
+                                                        }
+                                                        else
+                                                        {
+                                                            <input type="checkbox" class="chkdel"><span></span>
+                                                        }
+                                                    }
+                                                </label>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="idBttns" style="border-top: 1px solid #ccc;">
+                            <div class="bttn_pagin">
+                                <div class="bttns2">
+                                    <button type="button" class="btn btn-white mobBttn" data-toggle="" data-target="" id="btnrefreshModule"><i class="fa fa-refresh faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "spnRefresh").FirstOrDefault().Value.ToString()</button>
+                                    <button type="button" class="btn btn-blue mobBttn" data-toggle="" data-target="" id="btnSaveModule"><i class="fa fa-save faIcon"></i> &nbsp;@Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString() </button>
+                                    <div style="clear:both;"></div>
+                                </div>
+                            </div>
+                            <div style="clear:both;"></div>
+                        </div>
+                        </div>
+                    <div class="tabsArea nobg" id="Process" style="display:none;">
+                        <div class="table-responsive">
+                            <table id="tasksProcessTable" class="table m-table eqpDtlTbl" style="width:100%;">
+                                <thead>
+                                    <tr>
+                                        <th>@Model.Loc.Where(a => a.ResourceId == "spnModule").FirstOrDefault().Value.ToString()</th>
+                                        <th>@Model.Loc.Where(a => a.ResourceId == "spnAccessView").FirstOrDefault().Value.ToString()</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+
+                                    @foreach (var item in secISingletemList)
+                                    {
+                                        <tr>
+                                            <td class="ItemName" style="display:none">@item.ItemName</td>
+                                            <td class="SecurityItemId" style="display:none">@item.SecurityItemId</td>
+                                            <td class="SortOrder" style="display:none">@item.SortOrder</td>
+                                            <td class="UpdateIndex" style="display:none">@item.UpdateIndex</td>
+                                            <td class="Protected" style="display:none">@item.Protected</td>
+                                            <td>@item.SecurityLocalizedName</td>
+                                            <td style="text-align:center">
+                                                <label class="m-checkbox m-checkbox--state-success">
+                                                    @if (item.ItemAccess)
+                                                    {
+                                                        if (item.Protected)
+                                                        {
+                                                            <input type="checkbox" class="chkaccess disabled" checked="checked"><span></span>
+                                                        }
+                                                        else
+                                                        {
+                                                            <input type="checkbox" class="chkaccess" checked="checked"><span></span>
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+                                                        if (item.Protected)
+                                                        {
+                                                            <input type="checkbox" class="chkaccess disabled"><span></span>
+                                                        }
+                                                        else
+                                                        {
+                                                            <input type="checkbox" class="chkaccess"><span></span>
+                                                        }
+                                                    }
+                                                </label>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="idBttns">
+                            <div class="bttn_pagin">
+                                <div class="bttns2">
+                                    <button type="button" class="btn btn-white mobBttn" data-toggle="" data-target="" id="btnrefreshProcess"><i class="fa fa-refresh faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "spnRefresh").FirstOrDefault().Value.ToString()</button>
+                                    <button type="button" class="btn btn-blue mobBttn" data-toggle="" data-target="" id="btnSaveProcess"><i class="fa fa-save faIcon"></i> &nbsp;@Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString() </button>
+                                </div>
+                                <div style="clear:both;"></div>
+                            </div>
+                            <div style="clear:both;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<input type="hidden" id="currentsecprofileid" />
+<input type="hidden" id="currentsecprofiledes" />
+

@@ -1,0 +1,49 @@
+﻿@model Client.Models.Work_Order.WorkOrderVM
+
+<nav class="sidebar">
+    <div id="dismiss">
+        <i class="fa fa-close"></i>
+    </div>
+
+    <div class="sidebar-header">
+        <h3><i class="fa fa-filter" style="position: relative; top: -2px;"></i> @Model.Loc.Where(a => a.ResourceId == "spnFilters").FirstOrDefault().Value.ToString() <span class="purchasefilteritemcount">0</span></h3>
+        <button type="button" class="btn btn-blue filterSearch" id="btnPurchaseDataAdvSrch"><i class="fa fa-search" style="margin-top:-3px;"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalSearch").FirstOrDefault().Value.ToString()</button>
+    </div>
+
+    <div class="sidebar-content" id="purchasegridadvsearchsidebar">
+        <form action="#" method="post">
+            <div class="form-group">
+                <label for="advsearchPurchaseOrder">@Model.Loc.Where(a => a.ResourceId == "spnPurchaseOrder").FirstOrDefault().Value.ToString() :</label>
+                <input type="text" class="form-control search adv-item" autocomplete="off" id="advsearchPurchaseOrder">
+            </div>
+            <div class="form-group">
+                <label for="advsearchLineNo">@Model.Loc.Where(a => a.ResourceId == "spnLineNo").FirstOrDefault().Value.ToString() :</label>
+                <input type="text" class="form-control search adv-item longinput" autocomplete="off" id="advsearchLineNo">
+            </div>
+            <div class="form-group">
+                <label for="advsearchDescription">@Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString() :</label>
+                <input type="text" class="form-control search adv-item" autocomplete="off" id="advsearchDescription">
+            </div>
+            <div class="form-group">
+                <label for="advsearchOrderQty">@Model.Loc.Where(a => a.ResourceId == "spnOrderQty").FirstOrDefault().Value.ToString() :</label>
+                <input type="text" class="form-control search adv-item decimalinput" autocomplete="off" id="advsearchOrderQty">
+            </div>
+            <div class="form-group">
+                <label for="advsearchUOM">@Model.Loc.Where(a => a.ResourceId == "spnUOM").FirstOrDefault().Value.ToString() :</label>
+                <input type="text" class="form-control search adv-item" autocomplete="off" id="advsearchUOM">
+            </div>
+            <div class="form-group">
+                <label for="advsearchStatus">@Model.Loc.Where(a => a.ResourceId == "spnStatus").FirstOrDefault().Value.ToString() :</label>
+                <input type="text" class="form-control search adv-item" autocomplete="off" id="advsearchStatus">
+            </div>
+            <div class="form-group">
+                <label for="advsearchEstimatedDelivery">@Model.Loc.Where(a => a.ResourceId == "spnEstimatedDelivery").FirstOrDefault().Value.ToString():</label>
+                <input type="text" class="form-control search dtpicker adv-item" autocomplete="off" id="advsearchEstimatedDelivery">
+            </div>
+            <div class="form-group">
+                <label for="advsearchReceivedQuantity">@Model.Loc.Where(a => a.ResourceId == "spnReceivedQuantity ").FirstOrDefault().Value.ToString() :</label>
+                <input type="text" class="form-control search adv-item decimalinput" autocomplete="off" id="advsearchReceivedQuantity">
+            </div>
+        </form>
+    </div>
+</nav>

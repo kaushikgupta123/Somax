@@ -1,0 +1,143 @@
+﻿@model Client.Models.Parts.PartsVM
+
+<div class="slide-modal-head">
+    <a class="slide-back-btn btnpequipmentcancel_Mobile"> <i class="fa fa-angle-left"></i> Back</a>
+    <div class="slide-back-title">
+        @if (Model.equipmentPartXrefModel.Equipment_Parts_XrefId != 0)
+        {
+            @Model.Loc.Where(a => a.ResourceId == "spnEquipmentEdit").FirstOrDefault().Value.ToString()
+        }
+        else
+        {
+            @Model.Loc.Where(a => a.ResourceId == "spnEquipmentAdd").FirstOrDefault().Value.ToString()
+        }
+    </div>
+</div>
+
+@Html.Partial("_ErrorDiv")
+
+@using (Ajax.BeginForm("PartsEquipmentAdd", "Parts", new AjaxOptions { HttpMethod = "Post", OnSuccess = "PartsEquipmentAddOnSuccess", OnBegin = "AjaxBeginFormBegin", OnComplete = "AjaxBeginFormComplete", OnFailure = "AjaxBeginFormFaillure" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.Partial("_ErrorDiv")
+    <div class="slide-modal-body" style="overflow-y: auto; height: 100vh;">
+        <div mbsc-page class="demo-responsive">
+            <div style="height:100%">
+                <div mbsc-form class="mbsc-form-grid">
+                    <div class="mbsc-grid">
+                        <div class="mbsc-row">
+                            <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                <label>
+                                    @Model.Loc.Where(a => a.ResourceId == "spnGlobalEquipmentId").FirstOrDefault().Value.ToString()
+                                    @Html.TextBoxFor(m => m.equipmentPartXrefModel.Equipment_ClientLookupId, new
+                                    {
+                                   @class = "form-control search readonly",
+                                   @mbsc_input = "true",
+                                   @data_label_style = "floating",
+                                   @data_input_style = "box",
+                                   autocomplete = "off",
+                                   @readonly = "readonly"
+                               })
+                                </label>
+                                @Html.ValidationMessageFor(m => m.equipmentPartXrefModel.Equipment_ClientLookupId, "", new { })
+                            </div>
+                            <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                <div class=" design-box">
+                                    <div class="input-group-btn">
+                                        <button class="btn btn-white btntxtInputGroup mobBttn" type="button" id="openeqipgrid">
+                                            <i id="srcicon" class="fa fa-search"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                <label>
+                                    @Model.Loc.Where(a => a.ResourceId == "spnQuantityNeeded").FirstOrDefault().Value.ToString()
+                                    @Html.TextBoxFor(m => m.equipmentPartXrefModel.QuantityNeeded, new
+                                    {
+                                   @class = "form-control search decimalinput",
+                                   @mbsc_input = "true",
+                                   @data_label_style = "floating",
+                                   @data_input_style = "box",
+                                   autocomplete = "off"
+                               })
+                                </label>
+                                @Html.ValidationMessageFor(m => m.equipmentPartXrefModel.QuantityNeeded, "", new { })
+                            </div>
+
+                            <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                <label>
+                                    @Model.Loc.Where(a => a.ResourceId == "spnQuantityUsed").FirstOrDefault().Value.ToString()
+                                    @Html.TextBoxFor(m => m.equipmentPartXrefModel.QuantityUsed, new
+                                    {
+                                   @class = "form-control search decimalinput",
+                                   @mbsc_input = "true",
+                                   @data_label_style = "floating",
+                                   @data_input_style = "box",
+                                   autocomplete = "off"
+                               })
+                                </label>
+                                @Html.ValidationMessageFor(m => m.equipmentPartXrefModel.QuantityUsed, "", new { })
+                            </div>
+                            <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                <label>
+                                    @Model.Loc.Where(a => a.ResourceId == "spnLogComment").FirstOrDefault().Value.ToString()
+                                    @Html.TextBoxFor(m => m.equipmentPartXrefModel.Comment, new
+                                    {
+                                   @class = "form-control search",
+                                   @mbsc_input = "true",
+                                   @data_label_style = "floating",
+                                   @data_input_style = "box",
+                                   autocomplete = "off"
+                               })
+                                </label>
+                            </div>
+
+                            <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                <div class="design-box">
+
+                                    <div class="mbsc-button-group-block">
+                                        <button type="button" class="btn btn-blue mobBttn btnpequipmentcancel_Mobile"><i class="fa fa-close faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                <div class="design-box">
+                                    <div class="mbsc-button-group-block">
+                                        <button data-color="success" type="submit" class="btn btn-blue mobBttn" name="SaveType" value="Job_Demand"><i class="fa fa-save faIcon"></i> &nbsp;@Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    @Html.HiddenFor(m => m.equipmentPartXrefModel.PartId)
+    @Html.HiddenFor(m => m.equipmentPartXrefModel.Equipment_Parts_XrefId)
+}
+<div class="slide-modal" id="EquipmentTableModalPopup_Mobile">
+    <div class="slide-modal-head">
+        <a class="slide-back-btn" id="EquipmentTableModalPopupHide_Mobile"> <i class="fa fa-angle-left"></i> Back</a>
+        <div class="slide-back-title">
+            @Model.Loc.Where(a => a.ResourceId == "spnSelectEquipment").FirstOrDefault().Value.ToString()
+        </div>
+    </div>
+    <div class="slide-modal-body">
+        <div class="form-group" style="position:relative;">
+            <i class="fa fa-search txteqpSearchClick_Mobile" style="font-size: 1.1rem;position: absolute;top: 9px;left: 15px;"></i>
+            <a href="javascript:void(0)"><i class="fa fa-close clearTextBoxValue" data-txtboxid="txtPEquipmentSearch_Mobile" style="font-size: 1.1rem;position: absolute;top: 9px;right: 15px;"></i></a>
+            <input type="search" id="txtPEquipmentSearch_Mobile" class="form-control search unsortable" placeholder="Search..." style="padding: 0.65rem 2.75rem;" autocomplete="off">
+        </div>
+        <div id="DivEquipmentSearchScrollViewModal"></div>
+    </div>
+</div>
+<style type="text/css">
+    .ui-tooltip.ui-tooltip1 {
+        z-index: 98 !important;
+    }
+</style>
+

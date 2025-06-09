@@ -1,0 +1,99 @@
+﻿@model Client.Models.Configuration.CustomSecurityProfile.CustomSecurityProfileVM
+@using (Ajax.BeginForm("AddOrEditSecurityProfile", "CustomSecurityProfile", new AjaxOptions { HttpMethod = "Post", OnSuccess = "CustomSecurityProfileAddOnSuccess", OnBegin = "AjaxBeginFormBegin", OnComplete = "AjaxBeginFormComplete", OnFailure = "AjaxBeginFormFaillure" }, new { enctype = "multipart/form-data", id = "CustomSecurityProfileform" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close clearerrdiv" data-dismiss="modal">&times;</button>
+            @if (Model.customSecurityProfileModel.Pagetype == "Add")
+            {
+            <h4 class="modal-title">@Model.Loc.Where(a => a.ResourceId == "spnAddNewSecurityProfile").FirstOrDefault().Value.ToString()</h4>
+            }
+            else
+            {
+            <h4 class="modal-title">@Model.Loc.Where(a => a.ResourceId == "spnEditSecurityProfile").FirstOrDefault().Value.ToString()</h4>
+            }
+        </div>
+        @Html.Partial("_ErrorDiv")
+        <div class="modal-body">
+            <div class="form-group" style="margin-bottom:0;">
+                <div class="bottomBlock">
+                    <div class="tabsArea nobg">
+                        <ul class="listView nobrd" style="border-bottom:0;">
+                            <li>
+                                <span class="label" id="spnName">@Model.Loc.Where(a => a.ResourceId == "globalSubject").FirstOrDefault().Value.ToString() : <small>*</small></span>
+                                <span class="inputText">
+                                    @Html.ValidationMessageFor(m => m.customSecurityProfileModel.Name, "", new { style = "display:none" })
+                                    @Html.TextBoxFor(m => m.customSecurityProfileModel.Name, new { @class = "form-control search", maxlength = "63", autocomplete = "off" })
+
+                                </span>
+                            </li>
+                            <li>
+                                <span class="label" id="spnDescription">@Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString() : <small>*</small></span>
+                                <span class="inputText">
+                                    @Html.ValidationMessageFor(m => m.customSecurityProfileModel.Description, "", new { style = "display:none" })
+                                    @Html.TextBoxFor(m => m.customSecurityProfileModel.Description, new { @class = "form-control search", maxlength = "255", autocomplete = "off" })
+
+                                </span>
+                            </li>
+
+                        </ul>
+                    </div>
+                    <div style="clear:both;"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal-footer" style="padding:15px 25px !important;">
+            <div class="idBttns">
+                <div class="bttn_pagin">
+                    <div class="bttns2" style="margin:0;">
+                        <button type="submit" class="btn btn-blue mobBttn" onclick="$(document).find('.errormessage').css('display','none')" name="Command" style="cursor:pointer" value="save" id="btnSPRecord"><i class="fa fa-save faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+                    </div>
+                    <div class="bttns" style="margin:0;">
+                        <button type="button" class="btn btn-blue mobBttn" data-dismiss="modal" id="btncancel"><i class="fa fa-close faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button>
+                    </div>
+                    <div style="clear:both;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @Html.HiddenFor(m => m.customSecurityProfileModel.SecurityProfileId)
+   
+}
+
+<style type="text/css">
+    .dtpickerNew { /*width: 120px;*/
+        width: 95px;
+        float: left;
+    }
+
+    .timerId { /*width: 100px;*/
+        width: 90px;
+        float: left;
+    }
+
+    .ui-datepicker-trigger {
+        float: left;
+        margin-left: -3px;
+        margin-right: 10px;
+    }
+
+    .errorMsgBlk {
+        background-color: #d86564;
+        font-size: 13px;
+        color: #fff;
+        font-weight: 400;
+        line-height: 37px;
+        padding: 0 10px;
+    }
+
+    @@media screen and (max-width: 639px) {
+        .ui-datepicker-trigger {
+            height: 34px;
+        }
+    }
+</style>
+
+
+

@@ -1,0 +1,80 @@
+﻿@model Client.Models.FleetFuel.FleetFuelVM
+@{ Layout = null;}
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Somax | Fleet Fuel</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css" />
+    <style type="text/css">
+        thead, tfoot {
+            display: table-row-group;
+        }
+
+        .my-table {
+            width: 100%;
+        }
+
+        table, tr, td, th, tbody, thead, tfoot {
+            page-break-inside: avoid !important;
+        }
+            table thead.mainTableHead tr th:last-child{
+                border-right: 0 !important;
+            }          
+
+            table tbody.mainTableBody tr td:first-child {
+                border-left: 1px solid #d8d8d8 !important;
+            }
+    </style>
+  
+</head>
+
+<body style="padding:0; margin:0; font-family: 'Roboto', sans-serif; font-size:12px; color:#737272;">
+       <table border="0" cellspacing="0" cellpadding="0" align="center" style="width:100%;">
+        <tr>
+            <td align="left" valign="top" style="border-bottom: 2px solid #264a7c;">
+                <div style="min-height:.01%; overflow-x: auto;">
+                    <table border="0" cellspacing="0" cellpadding="0" style="width:100%;" class="my-table">
+                        <thead class="mainTableHead">
+                            <tr style="background:#264a7c;">
+                                <th width="32%" align="left" valign="middle" height="40" scope="col" style="border-right:1px solid #fff; font-size:12px;color:#fff; line-height:40px; font-weight:normal; padding:0 10px;">@Model.Loc.Where(a => a.ResourceId == "hdrTitle").FirstOrDefault().Value.ToString()</th>
+                                <th width="17%" align="center" valign="middle" height="40" scope="col" style="border-right:1px solid #fff; font-size:12px;color:#fff; line-height:40px; font-weight:normal;">@Model.Loc.Where(a => a.ResourceId == "spnReadingDate").FirstOrDefault().Value.ToString()</th>
+                                <th width="17%" align="right" valign="middle" height="40" scope="col" style="border-right:1px solid #fff; font-size:12px;color:#fff; line-height:40px; font-weight:normal; padding:0 10px;">@Model.Loc.Where(a => a.ResourceId == "spnAmount").FirstOrDefault().Value.ToString()</th>
+                                <th width="17%" align="right" valign="middle" height="40" scope="col" style="border-right:1px solid #fff; font-size:12px; color:#fff;line-height:40px; font-weight:normal; padding:0 10px;">@Model.Loc.Where(a => a.ResourceId == "spnUnitCost").FirstOrDefault().Value.ToString()</th>
+                                <th width="17%" align="right" valign="middle" height="40" scope="col" style="border-right:1px solid #fff; font-size:12px;color:#fff; line-height:40px; font-weight:normal; padding:0 10px;">@Model.Loc.Where(a => a.ResourceId == "spnTotalCost").FirstOrDefault().Value.ToString()</th>
+                            </tr>
+                        </thead>
+
+                        <tbody class="mainTableBody">
+                            @foreach (var item in Model.fleetFuelPDFPrintModel)
+                            {
+                            <tr style="background:#fff;">
+                                <td align="left" valign="middle" height="40" style="border-right:1px solid #ebe8f2; font-size:12px; font-weight:normal; padding:10px;">
+                                    <div style="float:left; margin-right:10px;"><img height="50" width="50"  src="@item.ImageUrl" style="border-radius:50%; border:0; outline:0;" /></div><div style="float:left; width:75%;"><h2 style="padding: 0; margin: 0 0 5px 0; font-size: 1rem; color: #3f4254 !important; font-weight: 500 !important; line-height:normal;">@item.ClientLookupId</h2><p style="padding: 0; margin: 0; font-weight: 400; color: #949494 !important; font-size: 13px; line-height:normal;">@item.Name</p></div>
+                                </td>                              
+                                <td align="center" valign="middle" height="40" style="border-right:1px solid #ebe8f2; font-size:12px; font-weight:normal; padding:0 10px;">@item.ReadingDate.Value.ToString("MM/dd/yyyy hh:mm tt", CultureInfo.InvariantCulture)</td>
+                                @if (item.FuelUnits == "Liters")
+                                {
+                                    <td align="right" valign="middle" height="40" style="border-right:1px solid #ebe8f2; font-size:12px; font-weight:normal; padding:0 10px;"><span style="display:block; font-size: 1rem; color: #3f4254 !important; font-weight: 500 !important; margin-bottom:5px;">@item.FuelAmount.ToString("0.###")</span> @Model.Loc.Where(a => a.ResourceId == "GlobalLiters").FirstOrDefault().Value.ToString()</td>
+                                }
+                                else if (item.FuelUnits == "Units")
+                                {
+                                    <td align="right" valign="middle" height="40" style="border-right:1px solid #ebe8f2; font-size:12px; font-weight:normal; padding:0 10px;"><span style="display:block; font-size: 1rem; color: #3f4254 !important; font-weight: 500 !important; margin-bottom:5px;">@item.FuelAmount.ToString("0.###")</span> @Model.Loc.Where(a => a.ResourceId == "GlobalUnit").FirstOrDefault().Value.ToString()</td>
+                                }
+                                else
+                                {
+                                    <td align="right" valign="middle" height="40" style="border-right:1px solid #ebe8f2; font-size:12px; font-weight:normal; padding:0 10px;"><span style="display:block; font-size: 1rem; color: #3f4254 !important; font-weight: 500 !important; margin-bottom:5px;">@item.FuelAmount.ToString("0.###")</span> @item.FuelUnits</td>
+                                }
+                                <td align="right" valign="middle" height="40" style="border-right:1px solid #ebe8f2; font-size:12px; font-weight:normal; padding:0 10px;">@item.UnitCost.ToString("0.###")</td>
+                                <td align="right" valign="middle" height="40" style="border-right:1px solid #ebe8f2; font-size:12px; font-weight:normal; padding:0 10px;"><span style="display:block; font-size: 1rem; color: #3f4254 !important; font-weight: 500 !important; margin-bottom:5px;">@item.TotalCost.ToString("0.###")</span></td>
+                            </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>
+

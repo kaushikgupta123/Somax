@@ -1,0 +1,24 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>
+        @ViewBag.Title
+    </title>
+    <link rel="shortcut icon" href="~/Scripts/Metronic/assets/login/demo/default/media/img/logo/favicon.png" />
+    <link href="~/Content/themes/base/jquery-ui.css" rel="stylesheet" />
+    <link href="~/Scripts/Metronic/assets/vendors/base/vendors.bundle.css" rel="stylesheet" />
+    <link href="~/Scripts/Metronic/assets/demo/default/base/style.bundle.css" rel="stylesheet" />
+    <link href="~/Scripts/Metronic/assets/demo/default/base/style_custom.css" rel="stylesheet" />
+    @Html.DevExpress().GetStyleSheets("Blue Light",
+    new StyleSheet { ExtensionSuite = ExtensionSuite.Dashboard }
+)
+    @Html.DevExpress().GetScripts(
+        new Script { ExtensionSuite = ExtensionSuite.Dashboard }
+    )
+</head>
+<body>
+    @RenderBody()
+    @RenderSection("scripts", false)
+</body>
+</html>

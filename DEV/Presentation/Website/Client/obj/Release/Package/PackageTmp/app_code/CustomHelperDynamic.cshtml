@@ -1,0 +1,77 @@
+﻿@helper GetLabel(string ColumnLabel, bool IsRequired)
+{
+    if (IsRequired)
+    {
+        <span class="label" style="color: #F00;"><strong>@ColumnLabel :</strong></span>
+    }
+    else
+    {
+        <span class="label">@ColumnLabel :</span>
+    }
+}
+
+@helper ViewLabelAndDisplayValue(string ColumnLabel, string Value, string Type = "Varchar")
+{
+    string LabelShown = ColumnLabel;
+    if (LabelShown.Length > 15)
+    {
+        LabelShown = LabelShown.Substring(0, 15) + "...";
+        <span class="label" title="@ColumnLabel">@LabelShown :</span>
+    }
+    else
+    {
+        <span class="label">@LabelShown :</span>
+    }
+    if (Type.ToLower() == "bit")
+    {
+        <span class="inputText">
+            <input onclick="return false;" type="checkbox" @(Value.ToLower() == "true" ? "checked" : "") value="@Value.ToLower()" />
+        </span>
+        <div style="clear:both;"></div>
+    }
+    else
+    {
+        if (Type.ToLower() == "date" && !string.IsNullOrEmpty(Value))
+        {
+            Value = Convert.ToDateTime(Value).ToString("MM/dd/yyyy", System.Globalization.CultureInfo.InvariantCulture);
+        }
+        <span class="inputText description-span" style="line-height:26px;">@Value</span>
+        <div style="clear:both;"></div>
+    }
+}
+@helper GetCountMessageLabel(int MaxLength, bool ViewOnly, string TextValue)
+{
+    if (MaxLength > 0 && !ViewOnly)
+    {
+        int RemainingCount = MaxLength, TextLength = 0;
+
+        if (!string.IsNullOrEmpty(TextValue))
+        {
+            TextLength = TextValue.Length;
+            RemainingCount = MaxLength - TextLength;
+            if (RemainingCount < 0)
+            {
+                RemainingCount = 0;
+            }
+        }
+        <p class="label textcountlabel">Total characters count: @TextLength Characters left: @RemainingCount</p>
+    }
+}
+@helper GetCountMessageLabelMobile(int MaxLength, bool ViewOnly, string TextValue)
+{
+    if (MaxLength > 0 && !ViewOnly)
+    {
+        int RemainingCount = MaxLength, TextLength = 0;
+
+        if (!string.IsNullOrEmpty(TextValue))
+        {
+            TextLength = TextValue.Length;
+            RemainingCount = MaxLength - TextLength;
+            if (RemainingCount < 0)
+            {
+                RemainingCount = 0;
+            }
+        }
+        <p class="label textcountlabel_mobile">Total characters count: @TextLength Characters left: @RemainingCount</p>
+    }
+}

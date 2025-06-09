@@ -1,0 +1,20 @@
+﻿@model Client.Models.PartCycleCount.PartCycleCountVM
+@{
+    ViewBag.Title = "Somax | Part Cycle Count";
+}
+
+@Styles.Render("~/Content/datatable")
+<style>
+    .select2-container--default .select2-selection--multiple {
+        height: auto !important;
+        min-height: 34px;
+    }
+</style>
+<link href="~/Scripts/Metronic/assets/demo/default/base/GlobalSearchGrid.css" rel="stylesheet" />
+@section scripts {
+    @Scripts.Render("~/bundles/datatable")
+    @Scripts.Render("~/bundles/PartCycleCount")
+}
+
+@Html.Partial("_PartCycleCountIndex")
+

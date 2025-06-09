@@ -1,0 +1,126 @@
+﻿@model Client.Models.VendorsVM
+
+<div class="m-subheader">
+    <div class="new-m-subheader">
+        <div class="PageTitle">
+            <div class="align-items-center separator">
+                <h3 class="m-subheader__title ">
+                    @Model.Loc.Where(a => a.ResourceId == "Vendor").FirstOrDefault().Value.ToString()
+                </h3>
+            </div>
+        </div>
+
+        <div class="NewBreadcrumbArea">
+            <div class="newBreadcrumb">
+                <ul>
+                    <li><a href="/Dashboard/Dashboard">&nbsp;</a></li>
+                    <li><a href="/Vendor/Index?page=Inventory_Vendors">@Model.Loc.Where(a => a.ResourceId == "VendorSearch").FirstOrDefault().Value.ToString()</a></li>
+                    <li><a href="javascript:void(0)" id="brdvendor" data-val="@Model.attachmentModel.ClientLookupId">@Model.attachmentModel.ClientLookupId</a></li>
+                    @if (Model.attachmentModel.AttachmentId != 0)
+                    {
+                        <li class="active">@Model.Loc.Where(a => a.ResourceId == "VendorUpdateAttachment").FirstOrDefault().Value.ToString()</li>
+                    }
+                    else
+                    {
+                        <li class="active">@Model.Loc.Where(a => a.ResourceId == "globalAddAttachment").FirstOrDefault().Value.ToString()</li>
+                    }
+
+                </ul>
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+        <div style="clear:both;"></div>
+    </div>
+</div>
+@Html.Partial("_ErrorDiv")
+<form id="frmattachmentadd" name="frmattachmentadd" method="post" enctype="multipart/form-data">
+    @Html.AntiForgeryToken()
+    <div class="row">
+        <div class="col-xl-12">
+            <div class="m-portlet newPort" id="m_portlet" style="padding:15px;">
+                <div class="bottomBlock">
+                    <div class="tabsArea nobg">
+                        @if (Model.attachmentModel.AttachmentId != 0)
+                        {
+                            <h3>@Model.Loc.Where(a => a.ResourceId == "VendorUpdateAttachment").FirstOrDefault().Value.ToString()</h3>
+                        }
+                        else
+                        {
+                            <h3>@Model.Loc.Where(a => a.ResourceId == "globalAddAttachment").FirstOrDefault().Value.ToString()</h3>
+                        }
+                        <ul class="listView nobrd">
+                            <li>
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "globalSubject").FirstOrDefault().Value.ToString() : </span>
+                                <span class="inputText">
+                                    @Html.TextBoxFor(m => m.attachmentModel.Subject, new { @class = "form-control search", autocomplete = "off" })
+                                </span>
+                            </li>
+                            <li>
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "globalFileName").FirstOrDefault().Value.ToString() : <small>*</small></span>
+                                <span class="inputText fileT">
+                                    @Html.SomaxAttachmentFileFor(m => m.attachmentModel.FileContent, new { autocomplete = "off", @class = "attfile" })
+                                    @Html.ValidationMessageFor(m => m.attachmentModel.FileContent, "", new { style = "display:none" })
+                                </span>
+                            </li>
+
+                        </ul>
+                    </div>
+                    <div style="clear:both;"></div>
+                    <div class="idBttns">
+                        <div class="bttn_pagin">
+                            <div class="bttns2">
+                                <button class="btn btn-blue mobBttn"><i class="fa fa-save faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+                            </div>
+                            <div class="bttns"><button type="button" class="btn btn-blue mobBttn" id="btnattachmentcancel"><i class="fa fa-close faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button></div>
+
+                            <div style="clear:both;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @Html.HiddenFor(m => m.attachmentModel.VendorId)
+    @Html.HiddenFor(m => m.attachmentModel.AttachmentId)
+</form>
+
+<script type="text/javascript">
+  
+    $("form").submit(function (e) {
+        e.preventDefault();
+        var form = document.querySelector('#frmattachmentadd');
+        if (!$('form').valid()) {
+            return;
+        }
+        var data = new FormData(form);
+        $.ajax({
+            type: "POST",
+            url: "/Vendor/AddAttachment",
+            data: data,
+            beforeSend: function () {
+                ShowLoader();
+            },
+            processData: false,
+            contentType: false,
+            success: function (data) {
+                if (data.Result == "success") {
+                    SuccessAlertSetting.text = getResourceValue("AddAttachmentAlerts");
+                    swal(SuccessAlertSetting, function () {
+                        RedirectToVendorDetail(data.vendorid, "attachment");
+                    });
+                }
+                else {
+                    ShowGenericErrorOnAddUpdate(data);
+                }
+                
+            },
+            complete: function () {
+                CloseLoader();
+            },
+            error: function (xhr) {
+                console.log(xhr);
+            }
+        });
+
+    });
+</script>

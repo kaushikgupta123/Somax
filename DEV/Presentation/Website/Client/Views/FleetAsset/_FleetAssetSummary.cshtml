@@ -1,0 +1,80 @@
+﻿@model Client.Models.FleetAsset.FleetAssetVM
+@{
+    string imageUrl = Model._FleetAssetSummaryModel.ImageUrl;
+    if (Model._FleetAssetSummaryModel.ClientOnPremise)
+    {
+        imageUrl = UtilityFunction.PhotoBase64ImgSrc(Model._FleetAssetSummaryModel.ImageUrl);
+    }
+
+}
+<div class="col-xl-12">
+    <div class="m-portlet padAdjst" id="m_portlet">
+        <div class="m-portlet__body  m-portlet__body--no-padding">
+            <div class="row m-row--col-separator-xl">
+                <div class="col-md-12">
+                    <div class="m-widget24 imageBox macHeights">
+                        <div class="imgThumbs equipImg">
+                            @if (!string.IsNullOrEmpty(imageUrl))
+                            {
+                                <img src="@imageUrl" class="equipImg"  id="EquipZoom" alt="Image" data-zoom-image="@imageUrl" />
+                            }
+                            else
+                            {
+                                <img src="~/Scripts/ImageZoom/images/NoImage.jpg" class="equipImg"  id="EquipZoom" alt="Image" data-zoom-image="/Scripts/ImageZoom/images/NoImage.jpg" />
+                            }
+                        </div>
+                        <div class="imgInfo" style="position:relative; height:65px;">
+                            @if (Model.FleetAssetModel.RemoveFromService == true)
+                            {
+                            <span class="outserv">@Model.Loc.Where(a => a.ResourceId == "spnOutofService").FirstOrDefault().Value.ToString()</span>
+                            }
+                            else
+                            {
+                            <span class="inserv">@Model.Loc.Where(a => a.ResourceId == "spnInService").FirstOrDefault().Value.ToString()</span>
+                            }
+                            <h2 style="line-height:normal;" data-toggle="tooltip" title="@(Model._FleetAssetSummaryModel.EquipmentName)">@(String.IsNullOrEmpty(Model._FleetAssetSummaryModel.EquipmentName) ? "" : (Model._FleetAssetSummaryModel.EquipmentName))</h2>
+                            <div style="width: 400px;">
+                                @if (Model.FleetAssetModel.Meter1Type != "")
+                                {
+                                    <span>@Model.FleetAssetModel.Meter1Type : <strong>@Model.FleetAssetModel.Meter1CurrentReading</strong></span>
+                                }
+                                @if (Model.FleetAssetModel.Meter2Type != "")
+                                {
+                                    <span>@Model.FleetAssetModel.Meter2Type : <strong>@Model.FleetAssetModel.Meter2CurrentReading</strong></span>
+                                }
+                                @if ((Model.FleetAssetModel.InactiveFlag == true))
+                                {
+                                    <span class="introTags2">@Model.Loc.Where(a => a.ResourceId == "globalInActive").FirstOrDefault().Value.ToString()</span>
+                                }
+                            </div>
+                        </div>
+                        <div style="clear:both;"></div>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .outserv {
+        /*background-color: red;*/
+        background-color: #f4516c;
+        color: white;
+        border-radius: 7px;
+        font-weight: 500;
+        padding: 0px 5px 1px 5px;
+        width: 175px;
+    }
+
+    .inserv {
+        /*background-color: green;*/
+        background-color: #34bfa3;
+        color: white;
+        border-radius: 7px;
+        font-weight: 500;
+        padding: 0px 5px 1px 5px;
+        width: 125px;
+    }
+</style>

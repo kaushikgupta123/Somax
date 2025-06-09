@@ -1,0 +1,116 @@
+﻿@model Client.Models.PurchaseRequest.PurchaseRequestVM
+<div class="overlay2"></div>
+<div class="modal-content">
+    <div class="modal-header">
+        <button type="button" class="close btnmaterialrequestclose" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title" id="hdrMaterialRequestTitle">@Model.Loc.Where(a => a.ResourceId == "spnAddMRItems").FirstOrDefault().Value.ToString()</h4>
+    </div>
+    <div class="modal-body">
+        <div class="row">
+            <div class="col-xl-12">
+                <div class="m-portlet" id="m_portlet" style="padding:15px; margin-bottom:0;">
+                    <div class="actionBar">
+                        <div class="pull-left">
+                            <button type="button" class="btn btn-white navbar-btn" id="MaterialRequestbarCollapse" title="Advance Search"><i class="fa fa-filter" style="font-size: 1.3rem;"></i></button>
+                            <ul class="filter_apply globalFilterAdjusted">
+                                <li class="textFilter" id="liSelectCountMaterialRequest"><span class="MaterialRequestfilteritemcount">0</span>&nbsp;@Model.Loc.Where(a => a.ResourceId == "globalFiltersAppiled").FirstOrDefault().Value.ToString() </li>
+                                <li class="textClear" id="MaterialRequestClearAdvSearchFilter"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "globalClear").FirstOrDefault().Value.ToString()</a></li>
+                            </ul>
+                            <div style="clear:both;"></div>
+                        </div>
+                        <div style="clear:both;"></div>
+                        <div id="MaterialRequestsearchfilteritems"></div>
+                        <div style="clear:both;"></div>
+                    </div>
+                    <div style="clear:both;"></div>
+                    <div class="table-responsive dropTableOuter clsmaterialrequest">
+                        <table id="MaterialRequestTable" class="eqpDtlTbl row-border custom-sort" style="width:100%;">
+                            <thead>
+                                <tr>
+                                    <th><input type="checkbox" id="prmaterialrequestselectall"></th>
+                                    <th>@Model.Loc.Where(a => a.ResourceId == "spnPartID").FirstOrDefault().Value.ToString()</th>
+                                    <th>@Model.Loc.Where(a => a.ResourceId == "spnPartDescription").FirstOrDefault().Value.ToString()</th>
+                                    <th>@Model.Loc.Where(a => a.ResourceId == "spnOrderQnt").FirstOrDefault().Value.ToString()</th>
+                                    <th>@Model.Loc.Where(a => a.ResourceId == "spnUnit").FirstOrDefault().Value.ToString()</th>
+                                    <th>@Model.Loc.Where(a => a.ResourceId == "spnCost").FirstOrDefault().Value.ToString()</th>
+                                    <th>@Model.Loc.Where(a => a.ResourceId == "spnGlobalWorkOrderID").FirstOrDefault().Value.ToString()</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div id="MaterialRequestadvsearchcontainer">
+                @Html.Partial("_MaterialRequestAdvanceSearch", Model)
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer" style="padding:15px 25px !important;">
+        <button type="button" class="btn btn-default btnmaterialrequestclose" data-dismiss="modal"><i class="fa fa-close faIcon"></i> &nbsp; @UtilityFunction.GetMessageFromResource("globalCancel", LocalizeResourceSetConstants.Global)</button>
+        <button type="button" class="btn btn-blue" style="float:right;" id="btnMaterialRequestProcess" disabled> &nbsp;@UtilityFunction.GetMessageFromResource("spnProcess", LocalizeResourceSetConstants.Global) </button>
+        <div style="clear:both;"></div>
+    </div>
+</div>
+
+<style>
+    .clsmaterialrequest {
+        max-height: 300px;
+    }
+    @@media(max-width:900px) {
+        .modal-body {
+            overflow-y: auto !important;
+        }
+        #MaterialRequestModalpopup .modal-body {
+            max-height: 350px !important;
+        }
+        .clsmaterialrequest {
+            max-height: 140px;
+        }
+    }
+
+    @@media(max-width:820px) {
+        .clsmaterialrequest {
+            max-height: 240px;
+        }
+    }
+
+    @@media(max-width:700px) {
+        .modal-body {
+            max-height: 153px !important;
+            overflow-y: auto !important;
+        }
+
+        .actionBar div.pull-left ul.filter_apply.globalFilterAdjusted {
+            width: auto;
+            margin: 0px 0 0 0 !important;
+        }
+
+        #MaterialRequestTable .actionBar div.pull-left .navbar-btn, .btn.btn-white.navbar-btn.filter-st, #MaterialRequestbarCollapse {
+            margin-top: 0px !important;
+            height: 36px;
+        }
+        #MaterialRequestModalpopup .modal-body {
+            max-height: 215px !important;
+        }
+    }
+
+    @@media(max-width:480px) {
+        #MaterialRequestModalpopup .modal-body {
+            max-height: 350px !important;
+        }
+ 
+    }
+</style>
+<script>
+    $(document).mouseup(function (e) {
+        var container = $("#MaterialRequestadvsearchcontainer");
+        if (container.length > 0 && e.target.id != 'MaterialRequestbarCollapse' && e.target.parentElement.id != 'MaterialRequestbarCollapse'
+            && (!container.is(e.target) && container.has(e.target).length === 0)) {
+
+            $('#MaterialRequestadvsearchcontainer').find('.sidebar').removeClass('active');
+            $(document).find('.overlay2').fadeOut();
+
+        }
+
+    });
+</script>

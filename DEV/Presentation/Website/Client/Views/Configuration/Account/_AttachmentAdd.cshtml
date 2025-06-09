@@ -1,0 +1,102 @@
+﻿@model Client.Models.Configuration.Account.AccountConfigVM
+<div class="m-subheader">
+    <div class="new-m-subheader">
+        <div class="PageTitle">
+            <div class="align-items-center separator">
+                <h3 class="m-subheader__title ">
+                    @Model.Loc.Where(a => a.ResourceId == "spnAccount").FirstOrDefault().Value.ToString()
+                </h3>
+            </div>
+        </div>
+
+        <div class="NewBreadcrumbArea">
+            <div class="newBreadcrumb">
+                <ul>
+                    <li><a href="/Configuration/Dashboard">&nbsp;</a></li>
+                    <li><a href="/Account/Index?page=Account">@Model.Loc.Where(a => a.ResourceId == "spnAccountSearch").FirstOrDefault().Value.ToString()</a></li>
+                    <li><a href="javascript:void(0)" id="brdAttach" data-val="@Model.attachmentModel.AccountID">@Model.attachmentModel.ClientLookupId</a></li>
+                    <li class="active">@Model.Loc.Where(a => a.ResourceId == "globalAddAttachment").FirstOrDefault().Value.ToString()</li>
+                </ul>
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+        <div style="clear:both;"></div>
+    </div>
+</div>
+@Html.Partial("_ErrorDiv")
+<form id="frmumattachmentadd" name="frmumattachmentadd" method="post" enctype="multipart/form-data">
+    @Html.AntiForgeryToken()
+    <div class="row">
+        <div class="col-xl-12">
+            <div class="m-portlet newPort" id="m_portlet" style="padding:15px;">
+                <div class="bottomBlock">
+                    <div class="tabsArea nobg">
+                        <ul class="listView nobrd">
+                            <li>
+                                <span class="label">
+                                    <label for="notesAccount"> @Model.Loc.Where(a => a.ResourceId == "globalSubject").FirstOrDefault().Value.ToString()</label> : 
+                                </span>
+                                <span class="inputText">
+                                    @Html.TextBoxFor(m => m.attachmentModel.Subject, new { @class = "form-control search", autocomplete = "off", maxlength = "255" })
+                                </span>
+                            </li>
+                            <li>
+                                <span class="label">
+                                    <label for="notesName"> @Model.Loc.Where(a => a.ResourceId == "noteContent").FirstOrDefault().Value.ToString()</label> : <small>*</small>
+                                </span>
+                                <span class="inputText">
+                                    <span class="inputText fileT">
+                                        @Html.SomaxAttachmentFileFor(m => m.attachmentModel.FileContent, new { autocomplete = "off", @class = "attfile" })
+                                        @Html.ValidationMessageFor(m => m.attachmentModel.FileContent, "", new { style = "display:none" })
+                                    </span>
+                                </span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div style="clear:both;"></div>
+
+                    <div class="bttn_pagin">
+                        <div class="bttns2">
+                            <button type="submit" class="btn btn-blue mobBttn"><i class="fa fa-save faIcon"></i> &nbsp;@Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+                        </div>
+                        <div class="bttns"><button type="button" class="btn btn-blue mobBttn" id="btnAttachcancel"><i class="fa fa-close faIcon"></i> &nbsp;@Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button></div>
+                        <div style="clear:both;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @Html.HiddenFor(m => m.attachmentModel.AccountID)
+</form>
+<script type="text/javascript">
+
+    $("form").submit(function (e) {
+        e.preventDefault();
+      
+        var form = document.querySelector('#frmumattachmentadd');
+        if (!$('form').valid()) {
+            return;
+        }
+        var data = new FormData(form);
+        $.ajax({
+            type: "POST",
+            url: "/Account/SaveAttachments",
+            data: data,
+            processData: false,
+            contentType: false,
+            beforeSend: function () {
+                ShowLoader();
+            },
+            success: function (data) {
+                AttachmentAddOnSuccess(data);
+            },
+            complete: function () {
+                CloseLoader();
+            },
+            error: function (xhr) {
+                console.log(xhr);
+            }
+        });
+
+    });
+</script>

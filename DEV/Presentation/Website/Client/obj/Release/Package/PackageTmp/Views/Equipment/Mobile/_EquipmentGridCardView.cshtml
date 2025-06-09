@@ -1,0 +1,343 @@
+﻿@model Client.Models.EquipmentCombined
+@{
+    string imageUrl = string.Empty;
+    int lastpage = 0;
+    int toRecords = 0;
+    int currentpage = Convert.ToInt32(ViewBag.CurrentPage); ;
+    int length = Convert.ToInt32(ViewBag.Length);
+    int start = Convert.ToInt32(ViewBag.Start);
+    int TotalRecords = Convert.ToInt32(ViewBag.TotalRecords);
+    int startRecords = Convert.ToInt32(ViewBag.Start) + 1;
+    if (start + length <= TotalRecords)
+    {
+        toRecords = start + length;
+    }
+    else
+    {
+        toRecords = TotalRecords;
+    }
+
+    int paginationdropval1 = length;
+    int paginationdropval2 = length + paginationdropval1;
+    int paginationdropval3 = length + paginationdropval2;
+    int paginationdropval4 = length + paginationdropval3;
+    int paginationdropval5 = length + paginationdropval4;
+
+    int startpage = 1;
+    int page2 = startpage + 1;
+    int page3 = startpage + 2;
+    int page4 = startpage + 3;
+    int page5 = startpage + 4;
+    int page6 = startpage + 5;
+    int modforlastpage = TotalRecords / length;
+    if (modforlastpage == 0 || TotalRecords % length == 0)
+    {
+        lastpage = TotalRecords / length;
+    }
+    else
+    {
+        lastpage = TotalRecords / length + 1;
+    }
+    int lastpage_1 = lastpage - 1;
+    int lastpage_2 = lastpage - 2;
+    int lastpage_3 = lastpage - 3;
+
+    int curremtpagetoshow = currentpage;
+    int precurremtpagetoshow = currentpage - 1;
+    int postcurremtpagetoshow = currentpage + 1;
+}
+
+@foreach (var item in Model.EquipmentCardList)
+{
+
+    imageUrl = item.imageURL;
+ 
+    <div class="m-portlet cardRow crdVu equip-card">
+        <div class="m-portlet__body gridList">
+            <div class="row equip-row">
+                <div class="col-md-2 ">
+                   
+                    <div class="gridImgBox">
+                        @if (!string.IsNullOrEmpty(imageUrl))
+                        {
+                            <img src="@imageUrl" id="EquipZoom" alt="Image" data-zoom-image="@imageUrl" />
+                        }
+                        else
+                        {
+                            <img src="~/Scripts/ImageZoom/images/NoImage.jpg" id="EquipZoom" alt="Image" data-zoom-image="/Scripts/ImageZoom/images/NoImage.jpg" />
+                        }
+                    </div>
+                    <div style="clear:both;"></div>
+                </div>
+                <div class="col-md-3">
+                    <div class="newDescription">
+                        <div class="orderId">
+                            @if (item.RemoveFromService == true)
+                            {
+                                <span class="outserv ">@Model.Loc.Where(a => a.ResourceId == "spnOutofService").FirstOrDefault().Value.ToString()</span>
+                            }
+                            else
+                            {
+                                <span class="inserv ">@Model.Loc.Where(a => a.ResourceId == "spnInService").FirstOrDefault().Value.ToString()</span>
+                            }
+
+                        </div>
+                        <div class="types">
+                            <a href="JavaScript:void(0);"><span class="lnk_Equipment_mobile" id=@item.EquipmentId clientlookupid=@item.ClientLookupId>@item.ClientLookupId</span></a> &nbsp;
+
+                        </div>
+                        <div class="types">
+                            <span class="scroll-box">@item.Name</span>
+                        </div>
+                        <div class="types">
+                            <span>@Model.Loc.Where(a => a.ResourceId == "GlobalType").FirstOrDefault().Value.ToString() : <span>@item.Type</span></span>
+                        </div>
+
+                        <div class="types">@Model.Loc.Where(a => a.ResourceId == "spnSerialNo").FirstOrDefault().Value.ToString() : @item.SerialNumber</div>
+
+
+                    </div>
+                </div>
+                <div class="col-md-7">
+                    <div class="gridStatus eq-data">
+                        <div class="types">@Model.Loc.Where(a => a.ResourceId == "spnMake").FirstOrDefault().Value.ToString() : @item.Make</div>
+                        <div class="types">@Model.Loc.Where(a => a.ResourceId == "GlobalModel").FirstOrDefault().Value.ToString() : @item.Model</div>
+                        <div class="types">@Model.Loc.Where(a => a.ResourceId == "spnLocation").FirstOrDefault().Value.ToString() : @item.Location</div>
+                        <div class="types">
+                            <span>
+                                @Model.EquipModel.AssetGroup1Name :
+
+                                @if (item.AssetGroup1ClientLookupId.Length > 18)
+                                {
+                                    @item.AssetGroup1ClientLookupId.Substring(0, 18)
+                                    <span style="color:#315a98;cursor:pointer" class="equipmentCardViewMoreDetailsPopup">
+                                        ... @Model.Loc.Where(a => a.ResourceId == "globalSpnMore").FirstOrDefault().Value.ToString()
+                                        <span style="display:none;">@item.AssetGroup1ClientLookupId</span>
+                                        <p style="display:none;">@Model.EquipModel.AssetGroup1Name</p>
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span>@item.AssetGroup1ClientLookupId</span>
+                                }
+                            </span>
+                        </div>
+
+                        <div class="types">
+                            <span>
+                                @Model.EquipModel.AssetGroup2Name :
+                                @if (item.AssetGroup2ClientLookupId.Length > 18)
+                                {
+                                    @item.AssetGroup2ClientLookupId.Substring(0, 18)
+                                    <span style="color:#315a98;cursor:pointer" class="equipmentCardViewMoreDetailsPopup">
+                                        ... @Model.Loc.Where(a => a.ResourceId == "globalSpnMore").FirstOrDefault().Value.ToString()
+                                        <span style="display:none;">@item.AssetGroup2ClientLookupId</span>
+                                        <p style="display:none;">@Model.EquipModel.AssetGroup2Name</p>
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span>@item.AssetGroup2ClientLookupId</span>
+                                }
+                            </span>
+
+                        </div>
+                        <div class="types">
+                            <span>
+                                @Model.EquipModel.AssetGroup3Name :
+                                @if (item.AssetGroup3ClientLookupId.Length > 18)
+                                {
+                                    @item.AssetGroup3ClientLookupId.Substring(0, 18)
+                                    <span style="color:#315a98;cursor:pointer" class="equipmentCardViewMoreDetailsPopup">
+                                        ... @Model.Loc.Where(a => a.ResourceId == "globalSpnMore").FirstOrDefault().Value.ToString()
+                                        <span style="display:none;">@item.AssetGroup3ClientLookupId</span>
+                                        <p style="display:none;">@Model.EquipModel.AssetGroup3Name</p>
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span>@item.AssetGroup3ClientLookupId</span>
+                                }
+                            </span>
+
+
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+}
+@if (Model.EquipmentCardList.Count < 1)
+{
+    <div class="m-portlet cardRow">
+        <div id="spnNoData" style="display:block; text-align:center; padding:5px;">
+            @UtilityFunction.GetMessageFromResource("GlobalNoDataAvailable", LocalizeResourceSetConstants.Global)
+        </div>
+    </div>
+}
+<div class="dataTables_wrapper CardPagination">
+    <div class="dataTables_length" id="" style="display: block;">
+        <label>
+            <select class="searchdt-menu" id="searchcardviewpagelengthdrp">
+                <option value="10">10</option>
+                <option value="20">20</option>
+                <option value="30">30</option>
+                <option value="40">40</option>
+                <option value="50">50</option>
+            </select>
+        </label>
+    </div>
+    @if (Model.EquipmentCardList.Count < 1)
+    {
+
+        <div class="dataTables_info" id="" role="status" aria-live="polite">Showing @String.Format("{0:n0}", 0) to @String.Format("{0:n0}", toRecords) of @String.Format("{0:n0}", TotalRecords) entries</div>
+    }
+    else
+    {
+
+        <div class="dataTables_info" id="" role="status" aria-live="polite">Showing @String.Format("{0:n0}", startRecords) to @String.Format("{0:n0}", toRecords) of @String.Format("{0:n0}", TotalRecords) entries</div>
+    }
+   
+    <div class="dataTables_paginate paging_input pagenavdiv" id="tblEquipmentMobileSearch_paginate" style="">
+        @if (TotalRecords > 0)
+        {
+            <span class="first paginate_button page-item disabled" id="tbl_first"><img src="../images/drop-grid-first.png"></span>
+            <span class="previous paginate_button page-item disabled" id="tbl_previous"><img src="../images/drop-grid-prev.png"></span>
+            <span>Page </span>
+            <input id="txtcurrentpage" class="paginate_input" type="text" value="@currentpage">
+            <span> of </span><span class="paginate_total" id="spntotalpages">@lastpage</span>
+            <span></span>
+            <span class="next paginate_button page-item" id="tbl_next"><img src="../images/drop-grid-next.png"></span>
+            <span class="last paginate_button page-item" id="tbl_last"><img src="../images/drop-grid-last.png"></span>
+        }
+    </div>
+</div>
+
+<style type="text/css">
+    .assignedFName {
+        display: block;
+        width: 100%;
+        white-space: nowrap;
+        overflow: hidden !important;
+        text-overflow: ellipsis;
+    }
+
+
+    /*New */
+    .eq-data span {
+        display: inline-block;
+    }
+    /*New */
+    .assignedItem {
+        position: relative;
+    }
+
+    .tooltipcards {
+        background: #d0e8fa;
+        padding: 5px;
+        border-radius: 5px;
+        position: absolute;
+        width: 100%;
+        height: auto;
+        left: 0;
+        top: 21px;
+        color: #000;
+        font-size: 13px;
+        font-weight: 500;
+        z-index: 9;
+        display: none !important;
+        cursor: pointer;
+    }
+
+    /*New CSS*/
+    .dropdown-toggle.newApprovesort2::after {
+        position: absolute;
+        right: 32px;
+        top: 15px;
+    }
+
+    .dropdown-menu.approveDropMenu.show {
+        width: 100%;
+        top: 2px !important;
+    }
+
+    .dropdown-toggle.newSchedulesort2::after {
+        position: absolute;
+        right: 23px;
+        top: 15px;
+    }
+
+    .newSchedulesort2 {
+        width: 100px !important;
+        text-align: left;
+        margin-top: 0px;
+    }
+
+    .newApprovesort2 {
+        width: 100px !important;
+        text-align: left;
+        margin-top: 0px;
+        margin-right: 10px;
+    }
+
+    .dropdown-menu.scheduleDropMenu.show {
+        width: 100%;
+        top: 2px !important;
+    }
+    /*New CSS*/
+    .gridImgBox img {
+        max-height: 160px;
+    }
+
+    @@media screen and (max-width:1180px) {
+        .gridImgBox img {
+            max-height: 94px;
+        }
+    }
+
+    @@media screen and (max-width: 639px) {
+        .actionBar div.pull-left {
+            width: 100%;
+        }
+
+        .actionBar div.pull-right {
+            float: left;
+            margin-top: 10px;
+        }
+        /*New */
+        .gridImgBox img {
+            max-height: 62px;
+        }
+
+        .m-body .m-content {
+            padding: 0px !important;
+        }
+
+        #ActiveCard .gridStatus span {
+            margin-bottom: 0px !important;
+        }
+        /*New */
+    }
+
+    @@media screen and (max-width: 410px) {
+        .actionBar#woGridAction div.pull-right #liCustomize {
+            margin-left: 0 !important;
+        }
+
+        .m-badge {
+            margin-top: 8px !important;
+        }
+    }
+    .scroll-box {
+        height: 25px;
+        overflow-y: scroll;
+        line-height: 18px;
+        padding: 5px 0px;
+        display: block;
+        max-width: 155px;
+        word-break: break-all;
+    }
+</style>

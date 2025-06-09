@@ -1,0 +1,99 @@
+﻿@model Client.Models.PersonnelVM
+
+<div class="m-subheader">
+    <div class="new-m-subheader">
+        <div class="PageTitle">
+            <div class="align-items-center separator">
+                <h3 class="m-subheader__title ">
+                    @Model.Loc.Where(a => a.ResourceId == "spnPersonnel").FirstOrDefault().Value.ToString()
+                </h3>
+            </div>
+        </div>
+
+        <div class="NewBreadcrumbArea">
+            <div class="newBreadcrumb">
+                <ul>
+                    <li><a href="/Dashboard/Dashboard">&nbsp;</a></li>
+                    <li><a href="/Personnel/Index?page=Personnel">@Model.Loc.Where(a => a.ResourceId == "spnPersonnel").FirstOrDefault().Value.ToString() </a></li>
+                    <li class="brdPersonnel" data-val="@Model.personnelModel.PersonnelId"><a href="javascript:void(0)">@Model.personnelModel.ClientLookupId</a></li>
+                    <li class="active">
+                        @Html.Raw(Model.personnelAvailabilityModel.PersonnelAvailabilityId > 0 ?
+                            Model.Loc.Where(a => a.ResourceId == "spnUpdateAvailability" && a.ResourceSet == LocalizeResourceSetConstants.PersonnelDetails).FirstOrDefault().Value.ToString()
+                            : Model.Loc.Where(a => a.ResourceId == "spnAddAvailability" && a.ResourceSet == LocalizeResourceSetConstants.PersonnelDetails).FirstOrDefault().Value.ToString())
+                    </li>
+                </ul>
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+        <div style="clear:both;"></div>
+    </div>
+</div>
+@Html.Partial("_ErrorDiv")
+@using (Ajax.BeginForm("AddAvailability", "Personnel", new AjaxOptions
+{
+    HttpMethod = "Post",
+    OnSuccess = "AddOnSuccessAvailability",
+    OnBegin = "AjaxBeginFormBegin",
+    OnComplete = "AjaxBeginFormComplete",
+    OnFailure = "AjaxBeginFormFaillure"
+}))
+{
+    @Html.AntiForgeryToken()
+    <div class="row">
+        <div class="col-xl-12">
+            <div class="m-portlet newPort" id="m_portlet" style="padding:15px;">
+                <div class="bottomBlock">
+                    <div class="tabsArea nobg">
+                        <ul class="listView nobrd">
+                            <li>
+                                <span class="label">
+                                    <label for="PersonnelAvailabilityDate"> @Model.Loc.Where(a => a.ResourceId == "GlobalDate").FirstOrDefault().Value.ToString()</label> : <small>*</small>
+                                </span>
+                                <span class="inputText">
+                                    @Html.ValidationMessageFor(m => m.personnelAvailabilityModel.PersonnelAvailabilityDate, "", new { style = "display:none" })
+                                    @Html.TextBoxFor(m => m.personnelAvailabilityModel.PersonnelAvailabilityDate, "{0:MM/dd/yyyy}", new
+                               {
+                                   @class = "form-control search dtpicker",
+                                   autocomplete = "off",
+                               })
+                                </span>
+                            </li>
+                            <li>
+                                <span class="label">
+                                    <label for="PAHours"> @Model.Loc.Where(a => a.ResourceId == "spnHours").FirstOrDefault().Value.ToString()</label> : <small>*</small>
+                                </span>
+                                <span class="inputText">
+                                    @Html.ValidationMessageFor(m => m.personnelAvailabilityModel.PAHours, "", new { style = "display:none" })
+                                    @Html.TextBoxFor(x => x.personnelAvailabilityModel.PAHours, new { @class = "form-control search decimalinput", autocomplete = "off" })
+                                </span>
+                            </li>
+                            <li>
+                                <span class="label">
+                                    <label for="PAShift"> @Model.Loc.Where(a => a.ResourceId == "spnShift").FirstOrDefault().Value.ToString()</label> :
+                                </span>
+                                <span class="inputText">
+                                    @Html.DropDownListFor(m => m.personnelAvailabilityModel.PAShift, Model.personnelModel.ShiftList,
+    "--Select--", new { @class = "form-control select2picker", style = "width:100%;" })
+                                    @Html.ValidationMessageFor(m => m.personnelAvailabilityModel.PAShift, "", new { style = "display:none" })
+                                </span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div style="clear:both;"></div>
+
+                    <div class="bttn_pagin">
+                        <div class="bttns2">
+                            <button type="submit" class="btn btn-blue mobBttn"><i class="fa fa-save faIcon"></i> &nbsp;@Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+                        </div>
+                        <div class="bttns"><button type="button" class="btn btn-blue mobBttn" id="btnAvailabilitycancel"><i class="fa fa-close faIcon"></i> &nbsp;@Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button></div>
+                        <div style="clear:both;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @Html.HiddenFor(m => m.personnelAvailabilityModel.PersonnelId, new { id = "AvailabilityPersonnelId" })
+    @Html.HiddenFor(m => m.personnelAvailabilityModel.PersonnelAvailabilityId, new { id = "PersonnelAvailabilityId" })
+}
+
+

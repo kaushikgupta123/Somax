@@ -1,0 +1,55 @@
+﻿@model Client.Models.Dashboard.DashboardVM
+
+<div class="slide-modal" id="cancelWOTaskModal">
+    <div class="slide-modal-head">
+        <a  class="slide-back-btn btnWoTaskCancel"> <i class="fa fa-angle-left"></i> Back</a>
+        <div class="slide-back-title">
+            @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()
+        </div>
+    </div>
+    @Html.Partial("_ErrorDiv")
+    <div class="slide-modal-body">
+        <div mbsc-page class="demo-responsive">
+            <div style="height:100%">
+                <div mbsc-form class="mbsc-form-grid">
+                    <div class="mbsc-grid">
+                        <div class="mbsc-row">
+                            <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                <label>
+                                    @Model.Loc.Where(a => a.ResourceId == "spnCancelReason").FirstOrDefault().Value.ToString() :
+
+                                    @Html.DropDownListFor(m => m.dashboardWoTaskModel.CancelReason, Model.dashboardWoTaskModel.CancelReasonList, "--Select--", new {
+                                        @class = "form-control search mobiscrollselect",
+                                        @style = "width:100%;",
+                                        @mbsc_dropdown = "true",
+                                        @data_label = Model.Loc.Where(a => a.ResourceId == "spnCancelReason").FirstOrDefault().Value.ToString(),
+                                        @data_input_style = "box",
+                                        @data_label_style = "floating",
+                                        @placeholder = Model.Loc.Where(a => a.ResourceId == "spnCancelReason").FirstOrDefault().Value.ToString(),
+                                    })
+
+                                    @*@Html.DropDownListFor(m => m.WoRequestModel.Type, Model.WoRequestModel.TypeList, "--Select--", new { @class = "form-control search select2picker", style = "width:100%;" })*@
+                                </label>
+                                @Html.ValidationMessageFor(m => m.dashboardWoTaskModel.CancelReason, "", new { })
+                            </div>
+                        </div>
+                        <div class="design-box">
+                            <div class="mbsc-row">
+                                <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                    <div class="mbsc-button-group-block">
+                                        <button data-color="success" type="button" class="btn btn-default mobBttn btnWoTaskCancel"><i class="fa fa-close"></i> &nbsp;@Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button>
+                                    </div>
+                                </div>
+                                <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                    <div class="mbsc-button-group-block">
+                                        <button data-color="success" type="button" class="btn btn-blue mobBttn" id="btnWoTaskCancelOk"><i class="fa fa-check"></i> &nbsp;@Model.Loc.Where(a => a.ResourceId == "globalOK").FirstOrDefault().Value.ToString()</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

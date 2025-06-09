@@ -1,0 +1,148 @@
+﻿@model Client.Models.Dashboard.DashboardVM
+@using Client.Models
+
+@Styles.Render("~/Content/datatable")
+@Styles.Render("~/Content/dashboardStyle")
+<link href="~/Scripts/Metronic/assets/demo/default/base/GlobalSearchGrid.css" rel="stylesheet" type="text/css">
+@{
+  ViewBag.Title = "Somax | Dashboard";
+  List<DashboardContentModel> DashbardList = new List<DashboardContentModel>();
+  if (Model.DashboardContentModelList != null && Model.DashboardContentModelList.Count() > 0)
+  {
+    var RequiredList = Model.DashboardContentModelList.Where(x => x.Required == true).ToList();
+    var DisplayList = Model.DashboardContentModelList.Where(x => x.Display == true).ToList();
+
+    if (DisplayList.Count() > 0 && RequiredList.Count() > 0)
+    {
+      DashbardList = DisplayList.Union(RequiredList).ToList();
+    }
+    else if (DisplayList.Count() > 0 && RequiredList.Count() == 0)
+    {
+      DashbardList = DisplayList.ToList();
+    }
+    else if (DisplayList.Count() == 0 && RequiredList.Count() > 0)
+    {
+      DashbardList = RequiredList.ToList();
+    }
+    DashbardList = DashbardList.OrderBy(x => x.Position).ToList();
+  }
+  string SourceWebServer;
+  if (System.Configuration.ConfigurationManager.AppSettings.AllKeys.Contains("SourceWebServer"))
+  {
+    SourceWebServer = System.Configuration.ConfigurationManager.AppSettings["SourceWebServer"].ToString();
+  }
+  else
+  {
+    SourceWebServer = Model.Loc.Where(a => a.ResourceId == "spnDashboard").FirstOrDefault().Value.ToString();
+  }
+
+  }
+
+@section scripts{
+    @Scripts.Render("~/bundles/datatable")
+    @Scripts.Render("~/bundles/FusionChart")
+    @Scripts.Render("~/bundles/Dashboard")
+    @Scripts.Render("~/bundles/imagezoom")
+    @Scripts.Render("~/bundles/SomaxCkEditor")
+    <script src="~/Scripts/treeTable.js"></script>
+    @*<link href="~/Content/sidebar_custom.css" rel="stylesheet" />*@
+    @if (DashbardList != null && DashbardList.Count() > 0)
+    {
+        foreach (var item in DashbardList.Select(x => x.JSPath))
+        {
+            @Scripts.Render(item)
+        }
+    }
+    <script>
+        com_github_culmat_jsTreeTable.register(this);
+
+        var dashboardcontentlistjson =@Html.Raw(Json.Encode(Model.DashboardContentModelList));
+        var dashboardcontentlistarr = @Html.Raw(Json.Encode(Model.DashboardContentModelList));
+        var isDefault = '@Model.IsDefault';
+        function SortByPosition(a, b) {
+            var aPosition = a.Position;
+            var bPosition = b.Position;
+            return ((aPosition < bPosition) ? -1 : ((aPosition > bPosition) ? 1 : 0));
+        }
+        var sortDashboardcontentlist= dashboardcontentlistjson.sort(SortByPosition);
+    </script>
+}
+
+<div id="mainwidget">
+    <div class="m-subheader ">
+        <div class="d-flex align-items-center">
+            <div class="mr-auto">
+                <h3 class="m-subheader__title ">@SourceWebServer</h3>
+                @*<h3 class="m-subheader__title ">@Model.Loc.Where(a => a.ResourceId == "spnDashboard").FirstOrDefault().Value.ToString()</h3>*@
+            </div>
+        </div>
+    </div>
+    <div class="m-portlet" id="DashboardList" style="display:none;">
+        <div class="m-portlet__body">
+            <div class="row">
+                <div class="col-xl-12">
+                    @*@if (Model.IsMultipleDashboardAccess)
+                        {*@
+                    @Html.DropDownListFor(m => m.DashboardDrop, ((List<SelectListItem>)Model.DashboardList).Select(x => new SelectListItem { Text = x.Text, Value = x.Value, Selected = (x.Value.ToString() == Model.DashboardlistingId.ToString()) }), new { id = "DashboardId", @class = "selectpicker m-datatable__pager-size", @onchange = "LoadDashboard()" })
+                    @*}*@
+                    <button type="button" class="btn btn-white" id="liCustomize" title="Customize" data-toggle="modal" data-target="#Dashboardcustomizemodal"><i class="fa fa-cog" style="font-size: 1.3rem;"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+    <div id="widget" class="row">
+        @{
+            if (DashbardList != null && DashbardList.Count() > 0)
+            {
+                for (int i = 0; i < DashbardList.Count;)
+                {
+                    var item = DashbardList[i];
+                    <div class="@item.ClassList" id="@item.WidgetListingId" data-display="@item.Display">
+                        @Html.Partial(item.ViewPath)
+                    </div>
+                    i++;
+                }
+            }
+        }
+    </div>
+</div>
+@Html.HiddenFor(m => m.DashboardlistingId, new { id = "DashboardlistingId" })
+@Html.Partial("~/Views/Dashboard/Widgets/CustomizeDashboardSetup/CustomizeDashboardSetup.cshtml")
+<style>
+    #m_chart_WO_BCK_LOG-legend.chart-legend li {
+        width: auto !important;
+        margin-right: 25px !important;
+    }
+
+    #widget .bootstrap-select:not([class*="col-"]):not([class*="form-control"]):not(.input-group-btn) {
+        width: 100% !important;
+        max-width: 294px !important;
+    }
+
+    .bootstrap-select.btn-group .dropdown-menu.inner > li.selected:hover > a {
+        background-color: #2e6da4 !important;
+        background-image: -webkit-linear-gradient(top, #337ab7 0%, #2e6da4 100%) !important;
+        background-image: -o-linear-gradient(top, #337ab7 0%, #2e6da4 100%) !important;
+        background-image: -webkit-gradient(linear, left top, left bottom, from(#337ab7), to(#2e6da4)) !important;
+        background-image: linear-gradient(to bottom, #337ab7 0%, #2e6da4 100%) !important;
+        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff337ab7', endColorstr='#ff2e6da4', GradientType=0) !important;
+        background-repeat: repeat-x !important;
+    }
+
+    @@media(max-width: 1100px) {
+        #widget .bootstrap-select:not([class*="col-"]):not([class*="form-control"]):not(.input-group-btn) {
+            margin-bottom: 5px;
+        }
+    }
+
+
+    @@media(max-width: 1023px) {
+        .row {
+            padding-top: 0px !important;
+        }
+    }
+</style>

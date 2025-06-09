@@ -1,0 +1,156 @@
+﻿@model Client.Models.Configuration.ShipToAddress.ShipToVM
+<div class="m-subheader">
+    <div class="new-m-subheader">
+        <div class="PageTitle">
+            <div class="align-items-center separator">
+                <h3 class="m-subheader__title ">
+                    @Model.Loc.Where(a => a.ResourceId == "globalShipToAddress").FirstOrDefault().Value.ToString()
+                </h3>
+            </div>
+        </div>
+        <div class="NewBreadcrumbArea">
+            <div class="newBreadcrumb">
+                <ul>
+                    <li><a href="/Configuration/Dashboard">&nbsp;</a></li>
+                    <li><a href="/ShipToAddress/Index?page=ShipTo_Master">@Model.Loc.Where(a => a.ResourceId == "globalSearchShipToAddress").FirstOrDefault().Value.ToString()</a></li>
+                    @if (Model.shipToModel.ShipToId == 0)
+                    {
+                        <li class="active">@Model.Loc.Where(a => a.ResourceId == "globalAddShipToAddress").FirstOrDefault().Value.ToString()</li>
+                    }
+                    else
+                    {
+                        <li class="active">@Model.Loc.Where(a => a.ResourceId == "globalEditShipToAddress").FirstOrDefault().Value.ToString()</li>
+                    }
+                </ul>
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+        <div style="clear:both;"></div>
+    </div>
+</div>
+@Html.Partial("_ErrorDiv")
+@using (Ajax.BeginForm("AddOrEditShipToAddress", "ShipToAddress", new AjaxOptions { HttpMethod = "Post", OnSuccess = "ShipToAddressAddOnSuccess", OnBegin = "AjaxBeginFormBegin", OnComplete = "AjaxBeginFormComplete", OnFailure = "AjaxBeginFormFaillure" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="row">
+        <div class="col-xl-12">
+            <div id="btnnblock">
+                <div class="m-portlet" id="m_portlet" style="padding:15px;">
+                    <div class="bottomBlock">
+                        <div class="tabsArea nobg" style="display:block;">
+                            <ul class="listView nobrd">
+                                <li>
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnShipToId").FirstOrDefault().Value.ToString(): <small>*</small></span>
+                                    <span class="inputText">                                     
+                                            @Html.ValidationMessageFor(m => m.shipToModel.ClientLookupId, "", new { style = "display:none" })
+                                            @Html.TextBoxFor(m => m.shipToModel.ClientLookupId, new { @class = "form-control search", autocomplete = "off", maxlength = "31" })                                      
+                                    </span>
+                                </li>
+                                <li>
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnAttnName").FirstOrDefault().Value.ToString() :</span>
+                                    <span class="inputText">
+                                        @Html.ValidationMessageFor(m => m.shipToModel.AttnName, "", new { style = "display:none" })
+                                        @Html.TextBoxFor(m => m.shipToModel.AttnName, new { @class = "form-control search", autocomplete = "off", maxlength = "63" })
+                                    </span>
+                                </li>
+                                <li>
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnEmail").FirstOrDefault().Value.ToString() : </span>
+                                    <span class="inputText">
+                                        @Html.ValidationMessageFor(m => m.shipToModel.EmailAddress, "", new { style = "display:none" })
+                                        @Html.TextBoxFor(m => m.shipToModel.EmailAddress, new { @class = "form-control search", autocomplete = "off", maxlength = "63" })
+                                    </span>
+                                </li>
+                                <li>
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnPhoneNumber").FirstOrDefault().Value.ToString() : </span>
+                                    <span class="inputText">
+                                        @Html.ValidationMessageFor(m => m.shipToModel.PhoneNumber, "", new { style = "display:none" })
+                                        @Html.TextBoxFor(m => m.shipToModel.PhoneNumber, new { @class = "form-control search", autocomplete = "off", maxlength = "31" })
+                                    </span>
+                                </li>
+                                <li>
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnFax").FirstOrDefault().Value.ToString() : </span>
+                                    <span class="inputText">
+                                        @Html.ValidationMessageFor(m => m.shipToModel.FaxNumber, "", new { style = "display:none" })
+                                        @Html.TextBoxFor(m => m.shipToModel.FaxNumber, new { @class = "form-control search", autocomplete = "off", maxlength = "31" })
+                                    </span>
+                                </li>
+                                <li>
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnAddress1").FirstOrDefault().Value.ToString() :</span>
+                                    <span class="inputText">
+                                        @Html.ValidationMessageFor(m => m.shipToModel.Address1, "", new { style = "display:none" })
+                                        @Html.TextBoxFor(m => m.shipToModel.Address1, new { @class = "form-control search", autocomplete = "off", maxlength = "63" })
+                                    </span>
+                                </li>
+                                <li>
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnAddress2").FirstOrDefault().Value.ToString() : </span>
+                                    <span class="inputText">
+                                        @Html.ValidationMessageFor(m => m.shipToModel.Address2, "", new { style = "display:none" })
+                                        @Html.TextBoxFor(m => m.shipToModel.Address2, new { @class = "form-control search", autocomplete = "off", maxlength = "63" })
+                                    </span>
+                                </li>
+                                <li>
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnAddress3").FirstOrDefault().Value.ToString() : </span>
+                                    <span class="inputText">
+                                        @Html.ValidationMessageFor(m => m.shipToModel.Address3, "", new { style = "display:none" })
+                                        @Html.TextBoxFor(m => m.shipToModel.Address3, new { @class = "form-control search", autocomplete = "off", maxlength = "63" })
+                                    </span>
+                                </li>
+                                <li>
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "GlobalCity").FirstOrDefault().Value.ToString() :</span>
+                                    <span class="inputText">
+                                        @Html.ValidationMessageFor(m => m.shipToModel.AddressCity, "", new { style = "display:none" })
+                                        @Html.TextBoxFor(m => m.shipToModel.AddressCity, new { @class = "form-control search", autocomplete = "off", maxlength = "63" })
+                                    </span>
+                                </li>
+                                <li>
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "GlobalState").FirstOrDefault().Value.ToString() :</span>
+                                    <span class="inputText">
+                                        @Html.ValidationMessageFor(m => m.shipToModel.AddressState, "", new { style = "display:none" })
+                                        @Html.TextBoxFor(m => m.shipToModel.AddressState, new { @class = "form-control search", autocomplete = "off", maxlength = "63" })
+                                    </span>
+                                </li>
+                                <li>
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnPostalCode").FirstOrDefault().Value.ToString() :</span>
+                                    <span class="inputText">
+                                        @Html.ValidationMessageFor(m => m.shipToModel.AddressPostCode, "", new { style = "display:none" })
+                                        @Html.TextBoxFor(m => m.shipToModel.AddressPostCode, new { @class = "form-control search", autocomplete = "off", maxlength = "31" })
+                                    </span>
+                                </li>
+                                <li>
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnCountry").FirstOrDefault().Value.ToString() :</span>
+                                    <span class="inputText">
+                                        @Html.ValidationMessageFor(m => m.shipToModel.AddressCountry, "", new { style = "display:none" })
+                                        @Html.TextBoxFor(m => m.shipToModel.AddressCountry, new { @class = "form-control search", autocomplete = "off", maxlength = "63" })
+                                    </span>
+                                </li>
+                            </ul>
+                        </div>
+                        <div style="clear:both;"></div>
+                        <div class="idBttns">
+                            <div class="bttn_pagin">
+                                <div class="bttns2">
+                                    @if (Model.shipToModel.ShipToId == 0)
+                                    {
+                                        <button class="btn btn-blue mobBttn" name="Command" value="saveAdd" id="btnSaveAddSTA"><i class="fa fa-save faIcon"></i> &nbsp;@Model.Loc.Where(a => a.ResourceId == "globalSaveAndAdd").FirstOrDefault().Value.ToString()</button>
+
+                                        <button class="btn btn-blue mobBttn" name="Command" value="save" id="btnSaveSTA"><i class="fa fa-save faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+                                    }
+                                    else
+                                    {
+                                        <button class="btn btn-blue mobBttn" name="Command" value="update" id="btnSaveSTA"><i class="fa fa-save faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalUpdate").FirstOrDefault().Value.ToString()</button>
+                                    }
+
+                                </div>
+                                <div class="bttns">
+                                    <button type="button" class="btn btn-blue mobBttn" id="btnCancelAddSTA"><i class="fa fa-close faIcon"></i> &nbsp;@Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button>
+                                </div>
+                                <div style="clear:both;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @Html.HiddenFor(m => m.shipToModel.ShipToId)
+}

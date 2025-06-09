@@ -1,0 +1,299 @@
+﻿@model Client.Models.MaterialRequest.MaterialRequestVM
+<link href="~/Scripts/Metronic/assets/demo/default/base/style_newCustom.css" rel="stylesheet" />
+<div class="m-subheader fixedDiv1">
+    <div class="new-m-subheader">
+        <div class="filterDescription">
+            <a href="javascript:void(0)" id="linkToSearch"><span id="spnlinkToSearch"></span></a> - @Model.MaterialRequestModel.MaterialRequestId
+        </div>
+        @*<div class="ActionBttnArea">
+
+                <div style="clear:both;"></div>
+            </div>*@
+        <div style="clear:both;"></div>
+    </div>
+</div>
+<div class="pushDiv1"></div>
+
+<div class="row fixedDiv2">
+    @Html.Partial("_MaterialRequestSummary", Model)
+</div>
+
+<div class="pushDiv2 partsAdjust"></div>
+
+<div class="row">
+
+    <div style="clear:both;"></div>
+
+    <div class="col-xl-12">
+        <div class="tabsArea nobg" id="MaterialRequestLineItem">
+            <div class="m-portlet" id="m_portlet" style="padding:15px; margin-bottom:0;">
+                <div class="m-portlet__head" style="padding:0; height:2.5rem; margin-bottom:15px;">
+                    <div class="m-portlet__head-caption">
+                        <div class="m-portlet__head-title">
+                            <h3 class="m-portlet__head-text" style="vertical-align:top;">
+                                @Model.Loc.Where(a => a.ResourceId == "spnMaterialRequestItems").FirstOrDefault().Value.ToString()
+                            </h3>
+                        </div>
+                    </div>
+                    <div class="pull-right" id="AdvanceSearchDesktop">
+                        <button type="button" class="btn btn-white navbar-btn" id="lineitemsidebarCollapse" title="Advance Search"><i class="fa fa-filter" style="font-size: 1.3rem;"></i></button>
+                        <ul class="filter_apply globalFilterAdjusted">
+                            <li class="textFilter"><span class="lifilteritemcount">0</span> @Model.Loc.Where(a => a.ResourceId == "globalFiltersAppiled").FirstOrDefault().Value.ToString()</li>
+                            <li class="textClear" id="lineitemClearAdvSearchFilter"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "globalClear").FirstOrDefault().Value.ToString()</a></li>
+                        </ul>
+                        <div style="clear:both;"></div>
+                    </div>
+                    <div style="clear:both;"></div>
+                </div>
+                <div class="actionBar" id="actionBar">
+                    <div class="pull-left" id="AdvanceSearchMobile">
+                        <button type="button" class="btn btn-white navbar-btn" id="lineitemsidebarCollapse" title="Advance Search"><i class="fa fa-filter" style="font-size: 1.3rem;"></i></button>
+                        <ul class="filter_apply globalFilterAdjusted">
+                            <li class="textFilter"><span class="lifilteritemcount">0</span> @Model.Loc.Where(a => a.ResourceId == "globalFiltersAppiled").FirstOrDefault().Value.ToString()</li>
+                            <li class="textClear" id="lineitemClearAdvSearchFilter"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "globalClear").FirstOrDefault().Value.ToString()</a></li>
+                        </ul>
+                        <div style="clear:both;"></div>
+                    </div>
+                    <div style="clear:both;"></div>
+                    <div id="lineitemadvsearchfilteritems"></div>
+                    <div style="clear:both;"></div>
+                </div>
+                <div style="clear:both;"></div>
+                <div class="table-responsive">
+                    <table id="tblLineItem" class="eqpDtlTbl row-border custom-sort" style="width:100%;">
+                        <thead>
+                            <tr>
+                                <th class="GPartClientLookupId">@Model.Loc.Where(a => a.ResourceId == "spnPart").FirstOrDefault().Value.ToString()</th>
+                                <th class="GDescription">@Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString()</th>
+                                <th class="GUnitCost" style="text-align:right !important;">@Model.Loc.Where(a => a.ResourceId == "spnUnitCost").FirstOrDefault().Value.ToString()</th>
+                                <th class="GOrderQuantity" style="text-align:right !important;">@Model.Loc.Where(a => a.ResourceId == "spnQuantity").FirstOrDefault().Value.ToString()</th>
+                                <th class="GTotalCost" style="text-align:right !important;">@Model.Loc.Where(a => a.ResourceId == "spnTotalCost").FirstOrDefault().Value.ToString()</th>
+                                <th class="Status" style="text-align:left !important;">@Model.Loc.Where(a => a.ResourceId == "spnStatus").FirstOrDefault().Value.ToString()</th>
+                                <th width="17%" style="text-align:center !important;">@Model.Loc.Where(a => a.ResourceId == "globalAction").FirstOrDefault().Value.ToString()</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+
+                <div class="bttns">
+
+                    <button type="button" id="addLineItem" class="btn btn-blue" data-toggle="modal" data-target="#AddLineItems" style="display:none; float:left; margin-right:10px;"><i class="fa fa-plus faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "spnAddMRItems").FirstOrDefault().Value.ToString()</button>
+                    @if (Model.ApprovalRouteModel.IsMaterialRequest)
+                    {
+                        <button type="button" id="sendmaterialrequestitemsforapproval" class="btn btn-blue" data-toggle="modal" data-target="#SendMaterialRequestItemsforApproval" style="float: left; margin-right: 10px; display: none;"><i class="fa fa-send-o"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "spnSendMRItemForApproval").FirstOrDefault().Value.ToString()</button>
+                    }
+                </div>
+                @*}*@
+                <div style="clear:both"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="AddLineItems" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-info">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">@Model.Loc.Where(a => a.ResourceId == "spnAddMRItems").FirstOrDefault().Value.ToString()</h4>
+            </div>
+
+            <div class="modal-body" style="text-align:center;">
+                <button type="button" class="btn btn-blue btnRqst" id="selectidpartininventory"><i class="fa fa-hand-pointer-o faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "spnMRPartInInventory").FirstOrDefault().Value.ToString()</button>
+                <button type="button" class="btn btn-blue btnRqst" id="selectidpartnotininventory"><i class="fa fa-file-text-o faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "spnMRPartnotinInventory").FirstOrDefault().Value.ToString()</button>
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+    </div>
+</div>
+@*V2-732*@
+<div id="StoreroomListModalpopup" class="modal fade" role="dialog">
+    <div class="modal-dialog" id="StoreroomListPopUp">
+    </div>
+</div>
+@*End*@
+<div id="AddPartNotInInventoryModalpopup" class="modal fade" role="dialog">
+    <div class="modal-dialog" id="PartNotInInventoryPopUp">
+    </div>
+</div>
+@if (Model.ApprovalRouteModel.IsMaterialRequest)
+{
+    <div id="SendForApprovalModalPopup" class="modal fade" role="dialog">
+        <div class="modal-dialog" id="SendForApprovalPopup">
+        </div>
+    </div>
+}
+@Html.HiddenFor(m => m.MaterialRequestModel.MaterialRequestId)
+@Html.HiddenFor(m => m.ApprovalRouteModel.IsMaterialRequest)
+@Html.HiddenFor(m => m.MaterialRequestModel.IsUseMultiStoreroom)
+@Html.Partial("_LineItemAdvanceSearch", Model)
+
+@Html.Partial("_MRSummaryDescription", Model)
+
+<style type="text/css">
+    .actionDrop.newAction {
+        width: 150px;
+        height: auto;
+        right: 0;
+    }
+
+    .btn-action.new {
+        width: 151px;
+        text-align: left;
+    }
+
+    .bootstrap-select.btn-group.show > .dropdown-toggle.btn-default,
+    .bootstrap-select.btn-group.show > .dropdown-toggle.btn-secondary {
+        border-color: #ccc;
+        -webkit-box-shadow: none;
+        -moz-box-shadow: none;
+        box-shadow: none;
+    }
+
+    .bootstrap-select.btn-group .dropdown-menu.inner > li > a {
+        padding: 7px 15px;
+    }
+
+    .disabled {
+        pointer-events: none;
+        opacity: 0.6;
+    }
+
+    #AdvanceSearchDesktop .btn-white {
+        padding: 0.5rem 0.7rem;
+        margin-top: 2px !important;
+    }
+
+    #AdvanceSearchMobile {
+        display: none;
+    }
+
+    #AdvanceSearchDesktop {
+        padding-bottom: 10px;
+        display: block;
+    }
+
+    #actionBar {
+        padding-top: 10px;
+        padding-bottom: 0;
+    }
+
+        #actionBar .tagTo {
+            margin-top: 0;
+            margin-bottom: 10px;
+        }
+
+    #MaterialRequestLineItem.tabsArea.nobg .m-portlet__head {
+        margin-bottom: 0 !important;
+    }
+
+    .filterDescription {
+        width: auto;
+        float: left;
+        font-size: 1.2rem;
+        color: #000;
+        font-weight: 500;
+        line-height: 33px;
+    }
+
+        .filterDescription a {
+            color: #36a3f7;
+            text-decoration: none !important;
+        }
+
+    @@media only screen and (min-width: 640px) and (max-width: 767px) {
+        #AdvanceSearchMobile {
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        #AdvanceSearchDesktop {
+            padding-bottom: 10px;
+            display: none;
+        }
+    }
+
+    @@media only screen and (min-width: 568px) and (max-width: 639px) {
+        #AdvanceSearchMobile {
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        #AdvanceSearchDesktop {
+            padding-bottom: 10px;
+            display: none;
+        }
+    }
+
+    @@media only screen and (min-width: 480px) and (max-width: 567px) {
+        #AdvanceSearchMobile {
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        #AdvanceSearchDesktop {
+            padding-bottom: 10px;
+            display: none;
+        }
+
+        .filterDescription {
+            float: none;
+        }
+    }
+
+    @@media only screen and (min-width: 360px) and (max-width: 479px) {
+        #AdvanceSearchMobile {
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        #AdvanceSearchDesktop {
+            padding-bottom: 10px;
+            display: none;
+        }
+
+        #AdvanceSearchMobile ul.filter_apply.globalFilterAdjusted {
+            margin: 0;
+        }
+    }
+
+    @@media only screen and (min-width: 320px) and (max-width: 359px) {
+        #AdvanceSearchMobile {
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        #AdvanceSearchDesktop {
+            padding-bottom: 10px;
+            display: none;
+        }
+
+        #AdvanceSearchMobile ul.filter_apply.globalFilterAdjusted {
+            margin: 0;
+        }
+    }
+
+    .dropTableOuter table.dataTable.PRToPO thead .sorting_asc {
+        background-image: url('/Scripts/Metronic/Images/upArrow1.png') !important;
+        background-repeat: no-repeat;
+        background-position: center right;
+    }
+
+    .dropTableOuter table.dataTable.PRToPO thead .sorting_desc {
+        background-image: url('/Scripts/Metronic/Images/downArrow1.png') !important;
+        background-repeat: no-repeat;
+        background-position: center right;
+    }
+
+    #ConvertPRToPOTable thead .sorting_asc {
+        background-image: url('/Scripts/Metronic/Images/upArrow1.png') !important;
+        background-repeat: no-repeat;
+        background-position: center right;
+    }
+
+    #ConvertPRToPOTable thead .sorting_desc {
+        background-image: url('/Scripts/Metronic/Images/downArrow1.png') !important;
+        background-repeat: no-repeat;
+        background-position: center right;
+    }
+</style>

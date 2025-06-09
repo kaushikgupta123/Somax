@@ -1,0 +1,21 @@
+﻿<div id="AddSanitationRequestDashboard" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-info">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Add Sanitation Request</h4>
+            </div>
+
+            <div class="modal-body" style="text-align:center;">
+                <button type="button" class="btn btn-blue btnRqst" onclick="location.href='@Url.Action("Add", "SanitationJob",new { addfor="Request", addtype="Demand"})';return false;"><i class="fa fa-plus faIcon"></i> &nbsp; Use On-Demand Procedure</button>
+                <button type="button" class="btn btn-blue btnRqst" onclick="location.href='@Url.Action("Add", "SanitationJob",new { addfor="Request", addtype="Describe"})';return false;"><i class="fa fa-plus faIcon"></i> &nbsp; Describe What You Need</button>
+                <div style="clear:both;"></div>
+            </div>
+
+            <div class="modal-footer" style="padding:15px 25px !important;">
+                <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-close faIcon"></i> &nbsp; Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+

@@ -1,0 +1,533 @@
+﻿@model Client.Models.Work_Order.WorkOrderVM
+
+<link href="~/Scripts/Metronic/assets/demo/default/base/style_newCustom.css" rel="stylesheet" />
+
+
+
+<div class="row">
+    <div class="col-xl-12">
+        <div class="m-portlet" id="m_portlet" style="padding:15px;">
+            <div id="WorkOrderImages" class="tabcontent" style="padding-top:11px;display:block;"></div>
+        </div>
+    </div>
+</div>
+
+<style type="text/css">
+    .cartIcon {
+        position: relative;
+        padding: 9px 10px 10px 5px;
+        border: 0;
+    }
+
+        .cartIcon i.fa-shopping-cart {
+            font-size: 1.5rem;
+            position: relative;
+            top: -1px;
+            left: -2px;
+        }
+
+    .cartBadges {
+        position: absolute;
+        top: -2px;
+        right: -2px;
+    }
+
+    .searchArea {
+        width: 570px;
+        float: left;
+        margin-right: 10px;
+        position: relative
+    }
+
+        .searchArea i.fa-search {
+            position: absolute;
+            left: 14px;
+            top: 9px;
+        }
+
+        .searchArea input.form-control.search {
+            padding: 0.65rem 1rem 0.65rem 2.7rem;
+        }
+
+    .searchTips {
+        padding-top: 10px;
+        border-bottom: 0;
+        margin: 0;
+        padding-bottom: 0;
+    }
+
+        .searchTips div.titleText {
+            width: 12%;
+        }
+
+        .searchTips div.infoText {
+            width: 88%;
+        }
+
+    .m-portlet-inner {
+        padding: 15px;
+        position: relative;
+    }
+
+    p.catalogText {
+        float: right;
+        color: red;
+        font-weight: 500;
+        position: absolute;
+        right: 10px;
+        top: 5px;
+    }
+
+    p.vendorcatalogText {
+        float: right;
+        color: red;
+        font-weight: 500;
+        position: absolute;
+        right: 10px;
+        top: 10px;
+    }
+
+    img.productImg {
+        width: 120px;
+        height: 70px;
+        margin-right: 10px; /*display:inline-block;*/
+        border-radius: 0;
+        float: left;
+    }
+
+    h2.productID {
+        font-size: 1.15rem;
+        font-weight: 500; /*vertical-align:middle;display:inline-block;*/
+        margin: 0;
+        display: flex;
+        align-items: center;
+        height: 70px;
+        /*V2-424*/
+        /*width: 70%;
+        float: left;*/
+        float: right;
+        /*V2-424*/
+        overflow: auto;
+    }
+
+    p.productDescription {
+        margin: 0;
+        padding: 10px 0;
+        font-size: 14px;
+        font-weight: 400;
+        line-height: 20px;
+        height: 45px;
+        margin-top: -30px;
+        overflow: auto;
+        /*V2-424*/
+        float: right;
+        /*V2-424*/
+    }
+
+    ul.productDetails {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+        ul.productDetails li {
+            padding: 5px 0;
+            font-size: 14px;
+            font-weight: 400;
+            color: #6d6d6d;
+        }
+
+            ul.productDetails li strong {
+                font-weight: 600;
+                color: #3e3e3e;
+            }
+
+
+            ul.productDetails li span {
+                float: right;
+            }
+
+    .qtyBox { /*width:240px;*/
+        margin: 6px 0;
+    }
+
+        .qtyBox label {
+            margin: 0;
+            font-size: 15px;
+            font-weight: 500;
+            line-height: 34px;
+            margin-right: 10px;
+            color: #3e3e3e;
+        }
+
+    .btn-minus {
+        border-radius: 0.25rem 0 0 0.25rem;
+        border-right: 0;
+        border-color: #b9c1c4 !important;
+    }
+
+        .btn-minus:hover {
+            background-color: #f4516c !important;
+        }
+
+            .btn-minus:hover i.fa {
+                color: #fff !important;
+            }
+
+    .btn-plus {
+        border-radius: 0 0.25rem 0.25rem 0;
+        border-left: 0;
+        border-color: #b9c1c4 !important;
+    }
+
+        .btn-plus:hover {
+            background-color: #34bfa3 !important;
+            color: #fff !important;
+        }
+
+            .btn-plus:hover i.fa {
+                color: #fff !important;
+            }
+
+    .productDetailsArea { /*-webkit-box-align:center !important;-ms-flex-align:center !important;*/
+        align-items: center !important; /*display:-webkit-box !important;display:-ms-flexbox !important;display:flex !important;margin-bottom:10px;*/
+    }
+
+    .symbol {
+        width: 40px;
+        height: 40px;
+        display: inline-block;
+        margin-right: 10px;
+        border-radius: 50%;
+        flex-shrink: 0;
+        float: left;
+    }
+
+        .symbol img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+        }
+
+    .dtlsBox { /*display:inline-block;*/
+        vertical-align: middle;
+        float: left;
+        width: 210px;
+    }
+
+        .dtlsBox h2 {
+            padding: 0;
+            margin: 0;
+            font-size: 1.08rem;
+            color: #3f4254 !important;
+            font-weight: 500 !important;
+        }
+
+        .dtlsBox p {
+            padding: 0;
+            margin: 0;
+            font-weight: 400;
+            color: #949494 !important;
+            font-size: 13px;
+            max-height: 43px;
+            height: auto;
+            overflow: auto;
+        }
+
+        .dtlsBox.tablePartId { /*width:357px;*/
+            width: 80%;
+        }
+
+            .dtlsBox.tablePartId p {
+                padding: 0;
+                margin: 0;
+                font-weight: 400;
+                color: #949494 !important;
+                font-size: 13px;
+                max-height: 60px;
+                height: auto;
+                overflow: auto;
+            }
+
+    .btn-cart {
+        display: inline-block;
+        position: relative;
+        top: -1px;
+        padding: 0.65rem;
+        background: #fff;
+        border-color: #f4516c;
+        color: #f4516c !important;
+    }
+
+        .btn-cart:hover, .btn-cart:focus, .btn-cart:active {
+            background: #f4516c;
+            border-color: #f4516c;
+            color: #fff !important;
+        }
+
+        .btn-cart i.fa {
+            font-size: 18px;
+            position: relative;
+            left: -1px;
+        }
+
+    .sidebar .sidebar-header h3 span {
+        background: #f4516c;
+        left: 70px;
+    }
+
+    .sidebarCartList {
+        border-bottom: 1px solid #ccc;
+        padding-bottom: 0;
+        margin-bottom: 10px;
+    }
+
+    .sidebar .sidebar-content .sidebarCartList:last-child {
+        border-bottom: 0px solid #ccc;
+        margin-bottom: 0px;
+    }
+
+    .sidebarSymbol {
+        width: 60px;
+        height: 60px; /*display:inline-block;*/
+        margin-left: 10px;
+        border-radius: 50%; /*flex-shrink:0;*/
+        float: right;
+    }
+
+        .sidebarSymbol img {
+            width: 100%;
+            height: 100%;
+            border-radius: 0.42rem;
+        }
+
+    .sidebarAction {
+        margin: 10px 0;
+    }
+
+    .sidebar-footer {
+        background: #fff;
+        border-top: 1px solid #b8c2c4;
+        position: fixed;
+        right: auto;
+        left: auto;
+        bottom: 0;
+        width: 300px;
+        padding: 20px;
+    }
+
+
+    .qtyothertext {
+        width: 105px !important;
+        display: inline-block;
+        margin-right: 7px;
+        text-align: center;
+        /*float: left;*/
+        float: right;
+    }
+
+    #advsearchsidebarWorkorder .qtyothertext,
+    #advsearchsidebarWorkorder .pricetext {
+        width: 90px !important;
+    }
+
+    .pricetext {
+        width: 105px !important;
+        display: inline-block;
+        margin-right: 7px;
+        text-align: center;
+        /*float: left;*/
+        float: right;
+    }
+
+    .searchArea {
+        width: 515px; /*float:left;margin-right:10px;position:relative;*/
+    }
+
+    .lblQty, .lblPrice {
+        float: left;
+    }
+
+    .addtoCartchkBoxColor {
+        color: greenyellow;
+    }
+
+    #tblpartlookup thead th:last-child {
+        width: 240px !important;
+    }
+
+    #tblpartlookup tbody td:last-child {
+        width: 240px !important;
+        justify-content: center;
+        min-height: 40px;
+        align-items: center
+    }
+
+    #tblpartlookup tbody td.lastActiontd:last-child {
+        width: 240px !important;
+        display: flex;
+        justify-content: center;
+        min-height: 40px;
+        align-items: center;
+    }
+
+    .dataTables_scroll .dataTables_scrollHeadInner thead th:last-child {
+        width: 240px !important;
+    }
+
+    #tblpartlookup tbody td input.qtyothertext {
+        float: none;
+    }
+
+    #tblpartlookup tbody td input.pricetext {
+        float: none;
+    }
+
+    .filterDescription {
+        width: auto;
+        float: left;
+        font-size: 1.2rem;
+        color: #000;
+        font-weight: 500;
+        line-height: 33px;
+    }
+
+        .filterDescription a {
+            color: #36a3f7;
+            text-decoration: none !important;
+        }
+
+
+    @@media only screen and (min-width: 1366px) and (max-width: 1599px) {
+        h2 .productID.clsClientLookupId {
+            /*V2-424*/
+            /*width: 62%;*/
+            float: right;
+            /*V2-424*/
+        }
+        /*.pricetext { width:74px !important; }*/
+        .dtlsBox.tablePartId { /*width: 297px;*/
+            width: auto;
+        }
+
+        .lblPrice {
+            margin-top: 5px;
+        }
+    }
+
+    @@media only screen and (width:1360px) {
+        .openMenu .actionBar .pull-right {
+            float: right !important;
+            margin-top: 0 !important;
+        }
+
+        h2.productID.clsClientLookupId {
+            /*V2-424*/
+            /*width: 62%;*/
+            float: right;
+            /*V2-424*/
+        }
+        /*.pricetext { width:74px !important; }*/
+    }
+
+    @@media only screen and (min-width: 1200px) and (max-width: 1365px) {
+        .openMenu .actionBar .pull-right {
+            float: left;
+            margin-top: 10px;
+        }
+
+        img.productImg {
+            float: none;
+        }
+
+        h2.productID {
+            height: auto;
+            /*V2-424*/
+            /*width: 100%;
+            float: none;*/
+            float: right;
+            /*V2-424*/
+            margin-top: 10px;
+        }
+
+        .lblPrice {
+            margin-top: 5px;
+        }
+    }
+
+    @@media only screen and (min-width: 1024px) and (max-width: 1199px) {
+        .openMenu .actionBar .pull-right, .closeMenu .actionBar .pull-right {
+            float: left !important;
+            margin-top: 10px !important;
+        }
+    }
+
+    @@media only screen and (min-width: 768px) and (max-width: 1023px) {
+        .actionBar div.pull-right {
+            float: left !important;
+            margin-top: 10px !important;
+        }
+    }
+
+    @@media only screen and (min-width: 640px) and (max-width: 767px) {
+        .searchArea {
+            width: 420px;
+        }
+    }
+
+    @@media only screen and (min-width: 568px) and (max-width: 639px) {
+        .searchArea {
+            width: 348px;
+        }
+    }
+
+    @@media only screen and (max-width: 567px) {
+        .searchArea {
+            width: 100%;
+            margin-bottom: 10px;
+        }
+    }
+
+    @@media only screen and (max-width: 410px) {
+        .searchArea {
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        img.productImg {
+            float: none;
+        }
+
+        h2.productID {
+            height: auto;
+            width: 100%;
+            float: none;
+            margin-top: 10px;
+        }
+
+        p.productDescription {
+            float: left;
+            margin-top: 0;
+        }
+
+        .lblPrice {
+            margin-top: 5px;
+        }
+    }
+
+    .menufacDtl {
+        width: 100%;
+    }
+
+    .priceDtl {
+        width: 100%;
+        float: right;
+    }
+
+    .newBreadcrumb {
+        padding: 0;
+    }
+</style>
+
+
+

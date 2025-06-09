@@ -1,0 +1,111 @@
+﻿@model Client.Models.PurchaseRequest.PurchaseRequestVM
+
+@{
+    ViewBag.Title = "Somax | Procurement Request";
+    ViewBag.PurchaseRequestFromApproval = Model.purchaseRequestModel.IsPurchaseRequestFromApproval;
+    ViewBag.PurchaseRequestId = Model.purchaseRequestModel.PurchaseRequestId;
+
+    string hColumnList = "";
+    string reqColumnList = "";
+    if (Model.hiddenColumnList != null && Model.hiddenColumnList.Count > 0)
+    {
+        foreach (var item in Model.hiddenColumnList)
+        {
+            hColumnList = hColumnList + item + ",";
+        }
+    }
+    if (Model.requiredColumnList != null && Model.requiredColumnList.Count > 0)
+    {
+        foreach (var item in Model.requiredColumnList)
+        {
+            reqColumnList = reqColumnList + item + ",";
+        }
+    }
+}
+
+@Styles.Render("~/Content/datatable")
+<link href="~/Content/sidebar_custom.css" rel="stylesheet" />
+<link href="~/Scripts/Metronic/assets/demo/default/base/GlobalSearchGrid.css" rel="stylesheet" />
+<link href="~/Scripts/Metronic/assets/demo/default/base/style_custom_tree.css" rel="stylesheet" />
+@Styles.Render("~/Content/daterangepickercustom")
+@section scripts {
+    @Scripts.Render("~/bundles/datatable")
+    @Scripts.Render("~/bundles/PurchaseRequest")
+    @Scripts.Render("~/bundles/PREditPopUp")
+    <script type="text/javascript">
+        com_github_culmat_jsTreeTable.register(this);
+            $(function () {
+    if ('@ViewBag.PurchaseRequestFromApproval' == 'True') {
+        generateLineiItemdataTable('@ViewBag.PurchaseRequestId', "");
+        $('#PurchaseRequestLineItem').show();
+    }
+        });
+
+
+    $(function () {
+        var v = "@hColumnList";
+        var str = v.split(",");
+        if (str != null && str != "") {
+            $.each(str, function (i, jvalue) {
+                var elementId = '#li' + jvalue;
+                $(document).find(elementId).hide();
+            });
+        }
+        var rq = "@reqColumnList";
+        var arr = rq.split(",");
+        if (arr!=null && arr!="")
+        {
+            $.each(arr, function (i, jvalue) {
+                var reqElementId = '#r' + jvalue;
+                if ($(reqElementId).length)
+                {
+                    $(document).find(reqElementId).css('visibility', 'visible');
+                }
+            });
+        }
+    });
+
+    </script>
+}
+<div id="renderpurchaserequest">
+ 
+    @if (!Model.purchaseRequestModel.IsRedirectFromPlusMenu && !Model.purchaseRequestModel.IsRedirectFromNotification && !Model.purchaseRequestModel.IsRedirectFromPart)
+    {
+   
+        if (Model.purchaseRequestModel.IsPurchaseRequestAdd)
+        {
+            @Html.Partial("_AddPurchaseRequest", Model)
+        }
+
+        if (Model.purchaseRequestModel.IsPurchaseRequestAddDynamic)
+        {
+            @Html.Partial("_PurchaseRequestAddDynamic", Model)
+        }
+
+        else if (Model.purchaseRequestModel.IsPurchaseRequestFromApproval || Model.purchaseRequestModel.IsPunchOut)
+        {
+            @Html.Partial("_PurchaseRequestDetails")
+        }
+        else if (Model.IsPunchOutCheckOut)
+        {
+            @Html.Partial("_PurchaseRequestShoppingCartSearch")
+            @Html.Partial("_PurchaseRequestPartPopup")
+            @Html.Partial("_AddAccountId")
+            @Html.Partial("_AddEquipmentId")
+            @Html.Partial("_AddWorkOrderId")
+            @Html.Partial("~/Views/Shared/LookupTypeTablePopup/_PartCategoryMasterPopup.cshtml")
+        }
+        else
+        {
+            @Html.Partial("_PurchaseRequestSearch")
+        }
+    }
+    @Html.HiddenFor(m => m.purchaseRequestModel.IsRedirectFromPart, new { id = "IsRedirectFromPart" })
+    @Html.HiddenFor(m => m.purchaseRequestModel.IsRedirectFromDetailPurchaseOrder, new { id = "IsRedirectFromDetailPurchaseOrder" })
+    @Html.HiddenFor(m => m.purchaseRequestModel.PurchaseRequestId, new { id = "PRId" })
+    @Html.HiddenFor(m => m.purchaseRequestModel.Status, new { id = "PRStatus" })
+    @Html.HiddenFor(m => m.purchaseRequestModel.IsRedirectFromPlusMenu, new { id = "IsRedirectFromPlusMenu" })
+    @Html.HiddenFor(m => m.purchaseRequestModel.IsRedirectFromNotification, new { id = "IsRedirectFromNotification" })
+    @Html.HiddenFor(m => m.purchaseRequestModel.AlertNameRedirectFromNotification, new { id = "AlertNameRedirectFromNotification" })
+
+</div>

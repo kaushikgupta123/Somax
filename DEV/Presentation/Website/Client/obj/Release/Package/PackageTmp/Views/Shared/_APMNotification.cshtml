@@ -1,0 +1,30 @@
+﻿@model Client.Models.Common.NotificationModelVM
+
+
+<div class="m-scrollable" data-scrollable="true" data-max-height="250" data-mobile-max-height="200" id="apmnotificationbody">
+    <div class="m-list-timeline m-list-timeline--skin-light">
+        <div class="m-list-timeline__items">
+            @foreach (var item in Model.NotificationList)
+            {
+                <div class="m-list-timeline__item">
+                    <span class="m-list-timeline__badge -m-list-timeline__badge--state-success"></span>
+                    <span class="m-list-timeline__text">
+                        @item.HeadLine
+                        <span class="notificationTime">@item.ActiveDate</span>
+                    </span>
+                    @if (!@item.IsRead)
+                    {
+                        <span class="m-nav__link-badge m-badge m-badge--dot m-badge--dot-small m-badge--danger m-animate-blink" id="notification-dot"></span>
+                    }
+                    <span class="m-list-timeline__time">
+                        <a href="javascript:void(0)" class="closeIcon" data-alertUser="@item.AlertUserId"><i class="fa fa-times-circle-o"></i></a>
+                    </span>
+                </div>
+            }
+
+        </div>
+    </div>
+</div>
+@Html.HiddenFor(m => m.NewNotificationCount)
+@Html.HiddenFor(m => m.NewNotificationSelectedtabCount)
+

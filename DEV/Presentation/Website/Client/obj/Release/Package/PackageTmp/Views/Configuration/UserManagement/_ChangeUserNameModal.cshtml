@@ -1,0 +1,66 @@
+﻿@model Client.Models.Configuration.UserManagement.UserManagementVM
+
+<div id="UMchangeUserNameModal" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-info">
+        @using (Ajax.BeginForm("ChangeUserName", "UserManagement", null, new AjaxOptions { HttpMethod = "Post", OnSuccess = "UserNameChangeOnSuccess", OnBegin = "AjaxBeginFormBegin", OnComplete = "AjaxBeginFormComplete", OnFailure = "AjaxBeginFormFaillure" }, new { id = "frmchangeusername" }))
+        {
+            @Html.AntiForgeryToken()
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">@Model.Loc.Where(a => a.ResourceId == "GlobalChangeUserName").FirstOrDefault().Value.ToString()</h4>
+                </div>
+                @Html.Partial("_ErrorDiv")
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>@Model.Loc.Where(a => a.ResourceId == "spnUserName").FirstOrDefault().Value.ToString() <small>*</small></label>
+                        @Html.ValidationMessageFor(m => m.userNameChangeModel.UserName, "", new { style = "display:none" })
+                        @Html.TextBoxFor(m => m.userNameChangeModel.UserName, new { @class = "form-control search", autocomplete = "off", maxlength = 63 })
+                    </div>
+                    <div class="form-group" style="margin-bottom:0;">
+                        <label class="pull-left">@Model.Loc.Where(a => a.ResourceId == "Password").FirstOrDefault().Value.ToString() :<small>*</small></label>
+                        @Html.ValidationMessageFor(m => m.userNameChangeModel.Password, "", new { style = "display:none" })
+                        @Html.TextBoxFor(m => m.userNameChangeModel.Password, new { autocomplete = "off", @class = "form-control search", type = "password" })
+                    </div>
+                    <div class="form-group" style="margin-bottom:0;">
+                        <label class="pull-left">@Model.Loc.Where(a => a.ResourceId == "spnconPass").FirstOrDefault().Value.ToString() :<small>*</small></label>
+                        @Html.ValidationMessageFor(m => m.userNameChangeModel.ConfirmPassword, "", new { style = "display:none" })
+                        @Html.TextBoxFor(m => m.userNameChangeModel.ConfirmPassword, new { autocomplete = "off", @class = "form-control search", @type = "password" })
+                    </div>
+                    
+                </div>
+                <div class="modal-footer" style="padding:15px 25px !important;">
+                    <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-close faIcon"></i> &nbsp;@Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString() </button>
+                    <button type="submit" class="btn btn-blue" style="float:right;" id="btnchangeUserName"><i class="fa fa-save faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString() </button>
+                    <div style="clear:both;"></div>
+                </div>
+            </div>
+            @Html.HiddenFor(m=>m.userNameChangeModel.UserInfoId)
+            @Html.HiddenFor(m => m.userNameChangeModel.DefaultSiteId)
+            @Html.HiddenFor(m => m.userNameChangeModel.DefaultPersonnelId)
+            //--------------Password setting fields-------
+            @Html.HiddenFor(model => model.userNameChangeModel.PWReqMinLength, new { @id = "PWReqMinLength" })
+            @Html.HiddenFor(model => model.userNameChangeModel.PWMinLength, new { @id = "PWMinLength" })
+            @Html.HiddenFor(model => model.userNameChangeModel.PWRequireNumber, new { @id = "PWRequireNumber" })
+            @Html.HiddenFor(model => model.userNameChangeModel.PWRequireAlpha, new { @id = "PWRequireAlpha" })
+            @Html.HiddenFor(model => model.userNameChangeModel.PWRequireMixedCase, new { @id = "PWRequireMixedCase" })
+            @Html.HiddenFor(model => model.userNameChangeModel.PWRequireSpecialChar, new { @id = "PWRequireSpecialChar" })
+            @Html.HiddenFor(model => model.userNameChangeModel.PWNoRepeatChar, new { @id = "PWNoRepeatChar" })
+            @Html.HiddenFor(model => model.userNameChangeModel.PWNotEqualUserName, new { @id = "PWNotEqualUserName" })
+            //---------------------------------------------
+        }
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        //$.validator.setDefaults({ ignore: ":hidden" });
+
+        $.validator.setDefaults({ ignore: null });
+        $.validator.unobtrusive.parse(document);
+        $('input, form').blur(function () {
+            $(this).valid();
+        });
+    });
+
+</script>

@@ -1,0 +1,75 @@
+﻿@model Client.Models.EquipmentCombined
+
+<form id="frmeqpattachmentadd" name="frmeqpattachmentadd" method="post" enctype="multipart/form-data">
+    @Html.AntiForgeryToken()
+    <div class="slide-modal-head">
+        <a class="slide-back-btn Attachmentclearstate"> <i class="fa fa-angle-left"></i>  @Model.Loc.Where(a => a.ResourceId == "spnBack").FirstOrDefault().Value.ToString()</a>
+        <div class="slide-back-title">
+            @Model.Loc.Where(a => a.ResourceId == "globalAddAttachment").FirstOrDefault().Value.ToString()
+        </div>
+
+    </div>
+    @Html.Partial("_ErrorDiv")
+    <div class="slide-modal-body">
+        <div mbsc-page class="demo-responsive">
+            <div style="height:100%">
+                <div mbsc-form class="mbsc-form-grid">
+                    <div class="mbsc-grid">
+                        <div class="mbsc-row">
+                            <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                <label>
+                                    @Model.Loc.Where(a => a.ResourceId == "globalSubject").FirstOrDefault().Value.ToString()
+                                    @Html.TextBoxFor(m => m.attachmentModel.Subject, "{0:MM/dd/yyyy}", new
+                                    {
+                                   @class = "form-control search",
+                                   @mbsc_input = "true",
+                                   @data_label_style = "floating",
+                                   @placeholder = Model.Loc.Where(a => a.ResourceId == "globalSubject").FirstOrDefault().Value.ToString(),
+                                   @data_input_style = "box",
+                                   autocomplete = "off"
+                               })
+                                </label>
+                            </div>
+                            <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                <label>
+                                    @Model.Loc.Where(a => a.ResourceId == "globalFileName").FirstOrDefault().Value.ToString()
+                                    @Html.SomaxAttachmentFileFor(m => m.attachmentModel.FileContent, new
+                                    {
+                                        @class = "attfile",
+                                        @mbsc_input = "true",
+                                        @data_label_style = "floating",
+                                   @placeholder = Model.Loc.Where(a => a.ResourceId == "globalFileName").FirstOrDefault().Value.ToString(),
+                                        @data_input_style = "box",
+                                        autocomplete = "off"
+                                    })
+                                </label>
+                                @Html.ValidationMessageFor(m => m.attachmentModel.FileContent, "", new { })
+                            </div>
+                        </div>
+                        <div class="mbsc-row">
+                            <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                <div class="design-box">
+                                    <div class="mbsc-button-group-block">
+                                        <button mbsc-button data-color="success" type="button" class="btn btn-blue mobBttn Attachmentclearstate" id="btnattachmentcancel"><i class="fa fa-close faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                <div class="design-box">
+                                    <div class="mbsc-button-group-block">
+                                        <button data-color="success" type="submit" class="btn btn-blue mobBttn" style="cursor:pointer" value="save"><i class="fa fa-save faIcon"></i> &nbsp;@Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="slide-modal-footer"></div>
+
+    @Html.HiddenFor(m => m.attachmentModel.EquipmentId)
+    @Html.HiddenFor(m => m.attachmentModel.AttachmentId)
+</form>
+

@@ -1,0 +1,104 @@
+﻿@model Client.Models.VendorsVM
+
+<div class="m-subheader">
+    <div class="new-m-subheader">
+        <div class="PageTitle">
+            <div class="align-items-center separator">
+                <h3 class="m-subheader__title ">
+                    @Model.Loc.Where(a => a.ResourceId == "Vendor").FirstOrDefault().Value.ToString()
+                </h3>
+            </div>
+        </div>
+
+        <div class="NewBreadcrumbArea">
+            <div class="newBreadcrumb">
+                <ul>
+                    <li><a href="/Dashboard/Dashboard">&nbsp;</a></li>
+                    <li><a href="/Vendor/Index?page=Inventory_Vendors">@Model.Loc.Where(a => a.ResourceId == "VendorSearch").FirstOrDefault().Value.ToString()</a></li>
+                    <li><a href="javascript:void(0)" id="brdvendor" data-val="@Model.contactModel.VendorId">@Model.contactModel.ClientLookupId</a></li>
+                    @if (Model.contactModel.ContactId != 0)
+                    {
+                        <li class="active">@Model.Loc.Where(a => a.ResourceId == "VendorUpdateContact").FirstOrDefault().Value.ToString()</li>
+                    }
+                    else
+                    {
+                        <li class="active">@Model.Loc.Where(a => a.ResourceId == "VendorAddContactString").FirstOrDefault().Value.ToString()</li>
+                    }
+                </ul>
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+        <div style="clear:both;"></div>
+    </div>
+</div>
+@Html.Partial("_ErrorDiv")
+@using (Ajax.BeginForm("AddContacts", "Vendor", new AjaxOptions { HttpMethod = "Post", OnSuccess = "ContactAddOnSuccess", OnBegin = "AjaxBeginFormBegin", OnComplete = "AjaxBeginFormComplete", OnFailure = "AjaxBeginFormFaillure" }, new { id = "frmcontactadd" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="row">
+        <div class="col-xl-12">
+            <div class="m-portlet newPort" id="m_portlet" style="padding:15px;">
+                <div class="bottomBlock">
+                    <div class="tabsArea nobg">
+                    <ul class="listView nobrd">
+                        <li>
+                            <span class="label">@Html.LabelFor(m => m.contactModel.Name) : <small>*</small></span>
+                            <span class="inputText">
+                                @Html.ValidationMessageFor(m => m.contactModel.Name, "", new { style = "display:none" })
+                                @Html.TextBoxFor(m => m.contactModel.Name, new { @class = "form-control search", autocomplete = "off" })
+                            </span>
+                        </li>
+                        <li>
+                            <span class="label">@Html.LabelFor(m => m.contactModel.Phone1) :</span>
+                            <span class="inputText">
+                                @Html.TextBoxFor(m => m.contactModel.Phone1, new { @class = "form-control search", autocomplete = "off" })
+                            </span>
+                        </li>
+                        <li>
+                            <span class="label">@Html.LabelFor(m => m.contactModel.Phone2) :</span>
+                            <span class="inputText">
+                                @Html.TextBoxFor(m => m.contactModel.Phone2, new { @class = "form-control search longinput", autocomplete = "off" })
+                            </span>
+                        </li>
+                        <li>
+                            <span class="label">@Html.LabelFor(m => m.contactModel.Phone3) :</span>
+                            <span class="inputText">
+                                @Html.TextBoxFor(m => m.contactModel.Phone3, new { @class = "form-control search", autocomplete = "off" })
+                            </span>
+                        </li>
+                        <li>
+                            <span class="label">@Html.LabelFor(m => m.contactModel.Email1) :</span>
+                            <span class="inputText">
+                                @Html.ValidationMessageFor(m => m.contactModel.Email1, "", new { style = "display:none" })
+                                @Html.TextBoxFor(m => m.contactModel.Email1, new { @class = "form-control search", autocomplete = "off" })
+                            </span>
+                        </li>
+                        <li>
+                            <span class="label">@Html.LabelFor(m => m.contactModel.Email2) :</span>
+                            <span class="inputText">
+                                @Html.ValidationMessageFor(m => m.contactModel.Email2, "", new { style = "display:none" })
+                                @Html.TextBoxFor(m => m.contactModel.Email2, new { @class = "form-control search", autocomplete = "off" })
+                            </span>
+                        </li>
+                    </ul>
+                </div>
+                <div style="clear:both;"></div>
+
+                <div class="idBttns">
+                    <div class="bttn_pagin">
+                        <div class="bttns2">
+                            <button type="submit" class="btn btn-blue mobBttn"><i class="fa fa-save faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+                        </div>
+                        <div class="bttns"><button type="button" class="btn btn-blue mobBttn" id="btncontactcancel"><i class="fa fa-close faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button></div>
+
+                        <div style="clear:both;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+    @Html.HiddenFor(m => m.contactModel.VendorId)
+    @Html.HiddenFor(m => m.contactModel.ContactId)
+    @Html.HiddenFor(m=>m.contactModel.updatedindex)
+}

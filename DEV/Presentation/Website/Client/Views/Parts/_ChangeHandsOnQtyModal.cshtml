@@ -1,0 +1,50 @@
+﻿@model Client.Models.Parts.PartsVM
+<div id="changeHandsOnQtyPopUp" class="modal fade" role="dialog" style="padding-right:0px !important;">
+    <div class="modal-dialog modal-info">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">@Model.Loc.Where(a => a.ResourceId == "AdjustOnHandQty").FirstOrDefault().Value.ToString()</h4>
+            </div>
+            @Html.Partial("_ErrorDiv")
+            @using (Ajax.BeginForm("SaveItemPhysicalInventory", "Parts", new AjaxOptions { HttpMethod = "Post", OnSuccess = "ValidationHanhsQtyOnSuccess", OnBegin = "AjaxBeginFormBegin", OnFailure = "AjaxBeginFormFaillure" }))
+            {
+                @Html.AntiForgeryToken()
+                <div class="modal-body">
+                    <div class="m-portlet newPort" id="m_portlet" style="padding:0; margin:0;">
+                        <div class="bottomBlock">
+                            <div>
+                                <ul class="listViewPart">
+                                    <li>
+                                        @Html.HiddenFor(m => m.inventoryModel.PartId)
+                                        @Html.HiddenFor(m => m.inventoryModel.PartClientLookupId)
+                                        @Html.HiddenFor(m => m.inventoryModel.PartUPCCode)
+                                        @Html.HiddenFor(m => m.inventoryModel.Description)
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnOnHandQty").FirstOrDefault().Value.ToString(): <small>*</small></span>
+                                        <span class="inputText">
+                                            @Html.ValidationMessageFor(m => m.inventoryModel.ReceiptQuantity, "", new { style = "display:none" })
+                                            @Html.TextBoxFor(m => m.inventoryModel.ReceiptQuantity, new { @class = "form-control search decimalinput", autocomplete = "off" })
+                                        </span>
+                                    </li>
+                                </ul>
+                                <div style="clear:both;"></div>
+                            </div>
+                            <div style="clear:both;"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer" style="padding:15px 25px !important;">
+                    <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-close faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button>
+                    <button class="btn btn-blue mobBttn" style="float:right;" id="btnRecordHandsQty"><i class="fa fa-save faIcon"></i> &nbsp;@Model.Loc.Where(a => a.ResourceId == "spnReccord").FirstOrDefault().Value.ToString()</button>
+                    <div style="clear:both;"></div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<style type="text/css">
+    ul.listViewPart li span.label,
+    ul.listViewPart li span.inputText { height: 34px; line-height: 34px; }
+    ul.listViewPart li { height: 34px; }
+</style>

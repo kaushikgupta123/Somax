@@ -1,0 +1,26 @@
+﻿<div id="AddWorkOrderModalPopup" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-info">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">@UtilityFunction.GetMessageFromResource("spnAddWorkorder", LocalizeResourceSetConstants.WorkOrderDetails)</h4>
+            </div>
+
+            <div class="modal-body" style="text-align:center;">
+                <button type="button" class="btn btn-blue btnRqst" onclick="location.href='@Url.Action("AddWorkOrderFromDashBoard", "WorkOrder",new { addtype="Demand"})';return false;"><i class="fa fa-hand-pointer-o faIcon"></i> &nbsp;@UtilityFunction.GetMessageFromResource("spnUseOn_DemandProcedure", LocalizeResourceSetConstants.Global)</button>
+                <button type="button" class="btn btn-blue btnRqst" onclick="location.href='@Url.Action("AddWorkOrderFromDashBoard", "WorkOrder",new { addtype="Describe"})';return false;"><i class="fa fa-file-text-o faIcon"></i> &nbsp;@UtilityFunction.GetMessageFromResource("spnDescribeWhatYouNeed", LocalizeResourceSetConstants.Global)</button>
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).find('.dtpicker_2').datepicker({
+        minDate: new Date(),
+        changeMonth: true,
+        changeYear: true,
+        "dateFormat": "mm/dd/yy",
+        autoclose: true
+    }).inputmask('mm/dd/yyyy');
+</script>

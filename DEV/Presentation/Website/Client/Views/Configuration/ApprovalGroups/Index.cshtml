@@ -1,0 +1,28 @@
+﻿@{
+    ViewBag.Title = "Somax-Config | Approval Group";
+}
+
+@section scripts {
+    @Scripts.Render("~/bundles/datatable")
+    @*@Styles.Render("~/Content/dropzone")*@
+    @Scripts.Render("~/bundles/ApprovalGroups")
+}
+@Styles.Render("~/Content/datatable")
+<link href="~/Content/sidebar_custom.css" rel="stylesheet" />
+<link href="~/Scripts/Metronic/assets/demo/default/base/GlobalSearchGrid.css" rel="stylesheet" />
+@*<link href="~/Scripts/dropzone/basic.min.css" rel="stylesheet" />*@
+<div id="renderApprovalGroups">
+    @Html.Partial("~/Views/Configuration/ApprovalGroups/_ApprovalGroupSetupSearch.cshtml")
+</div>
+
+<style>
+    tr.group, tr.group:hover {
+        background-color: #83cad0 !important;
+        color: #fff;
+        font-weight: 400;
+        font-size: 14px;
+    }
+    .pushDiv2.WOScheduleAdjust {
+        height: 80px !important;
+    }
+</style>

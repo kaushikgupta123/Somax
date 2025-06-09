@@ -1,0 +1,94 @@
+﻿@model Client.Models.PersonnelVM
+@{Layout = null;}
+
+<div class="m-subheader">
+    <div class="new-m-subheader">
+        <div class="PageTitle">
+            <div class="align-items-center separator">
+                <h3 class="m-subheader__title ">
+                    @Model.Loc.Where(a => a.ResourceId == "spnPersonnel").FirstOrDefault().Value.ToString()
+                </h3>
+            </div>
+        </div>
+
+        <div class="NewBreadcrumbArea">
+            <div class="newBreadcrumb">
+                <ul>
+                    <li><a href="/Dashboard/Dashboard">&nbsp;</a></li>
+                    <li><a href="/Personnel/Index?page=Personnel">@Model.Loc.Where(a => a.ResourceId == "spnPersonnel").FirstOrDefault().Value.ToString() </a></li>
+                    <li class="brdPersonnel" data-val="@Model.eventmodel.PersonnelId"><a href="javascript:void(0)">@Model.eventmodel.PersonnelClientLookupId</a></li>
+
+                    @if (Model.eventmodel.EventsId == 0)
+                    {
+                      <li class="active">@Model.Loc.Where(a => a.ResourceId == "spnAddEvent").FirstOrDefault().Value.ToString()</li>
+                    }
+                    else
+                    {
+                      <li class="active">@Model.Loc.Where(a => a.ResourceId == "spnEditEvent").FirstOrDefault().Value.ToString()</li>
+                    }
+                </ul>
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+        <div style="clear:both;"></div>
+    </div>
+</div>
+@using (Ajax.BeginForm("AddOrEditEvent", "Personnel", new AjaxOptions { HttpMethod = "Post", OnSuccess = "AddOnSuccessEvents", OnBegin = "AjaxBeginFormBegin", OnComplete = "AjaxBeginFormComplete", OnFailure = "AjaxBeginFormFaillure" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="row">
+        <div class="col-xl-12">
+            <div class="m-portlet newPort" id="m_portlet" style="padding:15px;">
+                <div class="bottomBlock">
+                    <div class="tabsArea nobg">
+                        <ul class="listView nobrd">
+                            <li>
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "GlobalType").FirstOrDefault().Value.ToString() :<small>*</small></span>
+                                <span class="inputText">
+                                    @Html.ValidationMessageFor(m => m.eventmodel.Type, "", new { style = "display:none" })
+                                    @Html.DropDownListFor(m => m.eventmodel.Type, Model.EventTypeList, "--Select--", new { @class = "form-control select2picker", style = "width:100%;" })
+                                </span>
+                            </li>
+                            <li>
+                                <span class="label">
+                                    <label for="Description">@Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString()</label> :
+                                </span>
+                                <span class="inputText">
+                                    @Html.TextBoxFor(m => m.eventmodel.Description, new { @class = "form-control search ", autocomplete = "off", maxlength = "255" })
+                                </span>
+                            </li>
+                            <li>
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "GlobalComplete").FirstOrDefault().Value.ToString() :<small>*</small></span>
+
+                                <span class="inputText">
+                                    @Html.ValidationMessageFor(m => m.eventmodel.CompleteDate, "", new { style = "display:none" })
+                                    @Html.TextBoxFor(m => m.eventmodel.CompleteDate, "{0:MM/dd/yyyy}", new { @class = "form-control search dtpicker_1", autocomplete = "off", id = "CompleteDate" })
+                                </span>
+                            </li>
+                            <li>
+                                <span class="label">
+                                    <label for="ExpiredDate">@Model.Loc.Where(a => a.ResourceId == "GlobalExpire").FirstOrDefault().Value.ToString()</label> :
+                                </span>
+                                <span class="inputText">
+                                    @Html.TextBoxFor(m => m.eventmodel.ExpireDate, new { @class = "form-control search dtpicker", autocomplete = "off", maxlength = "255" })
+                                </span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div style="clear:both;"></div>
+
+                    <div class="bttn_pagin">
+                        <div class="bttns2">
+                            <button type="submit" class="btn btn-blue mobBttn"><i class="fa fa-save faIcon"></i> &nbsp;@Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+                        </div>
+                        <div class="bttns"><button type="button" class="btn btn-blue mobBttn" id="btneventcancel"><i class="fa fa-close faIcon"></i> &nbsp;@Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button></div>
+                        <div style="clear:both;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @Html.HiddenFor(m => m.eventmodel.EventsId)
+    @Html.HiddenFor(m => m.eventmodel.PersonnelId)
+
+}

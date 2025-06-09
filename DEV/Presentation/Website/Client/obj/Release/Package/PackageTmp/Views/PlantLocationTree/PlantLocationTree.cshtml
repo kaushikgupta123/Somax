@@ -1,0 +1,88 @@
+﻿@model IEnumerable<DataContracts.PlantLocation>
+
+@{
+    ViewBag.Title = "PlantLocationTree";
+    Layout = "~/Views/Shared/_MasterPageLayout.cshtml";
+}
+
+@section scripts{
+    
+<script src="~/Scripts/treeTable.js"></script>
+<script type="text/javascript">
+    com_github_culmat_jsTreeTable.register(this);
+
+    treeTable($('#tblTree'));
+</script>
+    }
+
+<h2>PlantLocationTree</h2>
+
+
+<table id="tblTree" class="table table-rsp jsTT">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.PlantLocationId)
+        </th>
+
+        <th>
+            @Html.DisplayNameFor(model => model.ParentId)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.IsValid)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.AreaDescription)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DepartmentDescription)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.LineDescription)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.InActiveFlag)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Description)
+        </th>
+
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr data-tt-id="@item.PlantLocationId" data-tt-parent-id="@item.ParentId">
+            <td>
+                @Html.DisplayFor(modelItem => item.PlantLocationId)
+            </td>
+
+            <td>
+                @Html.DisplayFor(modelItem => item.ParentId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IsValid)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AreaDescription)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DepartmentDescription)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LineDescription)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.InActiveFlag)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.PlantLocationId }) |
+                @Html.ActionLink("Details", "Details", new { id = item.PlantLocationId }) |
+                @Html.ActionLink("Delete", "Delete", new { id = item.PlantLocationId })
+            </td>
+        </tr>
+    }
+
+</table>

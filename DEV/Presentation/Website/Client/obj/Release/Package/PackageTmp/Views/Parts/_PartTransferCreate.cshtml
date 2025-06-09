@@ -1,0 +1,125 @@
+﻿@model Client.Models.Parts.PartsVM
+<div class="m-subheader fixedDiv1">
+    <div class="new-m-subheader">
+        <div class="PageTitle">
+            <div class="align-items-center separator">
+                <h3 class="m-subheader__title ">
+                    @Model.Loc.Where(a => a.ResourceId == "spnPartTransferCreate").FirstOrDefault().Value.ToString()
+                </h3>
+            </div>
+        </div>
+
+        <div class="NewBreadcrumbArea">
+            <div class="newBreadcrumb">
+                <ul>
+                    <li><a href="/Dashboard/Dashboard">&nbsp;</a></li>
+                    <li><a href="/Parts/Index?page=Inventory_Parts">@Model.Loc.Where(a => a.ResourceId == "spnPartSearch").FirstOrDefault().Value.ToString()</a></li>
+                    <li><a href="javascript:void(0)" id="brdpart" data-val="@Model.partTransferModel.RequestPartId">@Model.partTransferModel.RequestClientLookupId</a></li>
+                    <li class="active">@Model.Loc.Where(a => a.ResourceId == "spnPartTransferCreate").FirstOrDefault().Value.ToString()</li>
+                </ul>
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+
+        <div style="clear:both;"></div>
+    </div>
+</div>
+<div class="pushDiv1"></div>
+<div class="row fixedDiv2">
+    @Html.Partial("_PartSummary", Model)
+</div>
+<div class="pushDiv2 partsAdjust"></div>
+@Html.Partial("_ErrorDiv")
+@using (Ajax.BeginForm("AddPartTransfer", "Parts", new AjaxOptions { HttpMethod = "Post", OnSuccess = "PartTransferAddOnSuccess", OnBegin = "AjaxBeginFormBegin", OnComplete = "AjaxBeginFormComplete", OnFailure = "AjaxBeginFormFaillure" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="row">
+        <div class="col-xl-12">
+            <div class="m-portlet newPort" id="m_portlet" style="padding:15px;">
+                <div class="bottomBlock">
+                    <div class="tabsArea nobg">
+                        <ul class="listView nobrd">
+                            <li>
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnPartID").FirstOrDefault().Value.ToString() : </span>
+                                <span class="inputText">
+                                    @Html.TextBoxFor(m => m.partTransferModel.RequestClientLookupId, new { @class = "form-control search readonly", @readonly = "readonly", autocomplete = "off" })
+                                </span>
+                            </li>
+                            <li style="height:auto;">
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString() : </span>
+                                <span class="inputText" style="height:auto;">
+                                    @Html.TextAreaFor(m => m.partTransferModel.RequestDescription, new { @class = "form-control search readonly", @readonly = "readonly", autocomplete = "off" })
+                                </span>
+                                <div style="clear:both"></div>
+                            </li>
+                            <li style="height:auto;">
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "GlobalReason").FirstOrDefault().Value.ToString() : </span>
+                                <span class="inputText" style="height:auto;">
+                                    @Html.TextAreaFor(m => m.partTransferModel.Reason, new { @class = "form-control search", autocomplete = "off" })
+                                </span>
+                                <div style="clear:both"></div>
+                            </li>
+                            <li>
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnQuantity").FirstOrDefault().Value.ToString() :<small>*</small> </span>
+                                <span class="inputText">
+                                    @Html.ValidationMessageFor(m => m.partTransferModel.Qty, "", new { style = "display:none" })
+                                    @Html.TextBoxFor(m => m.partTransferModel.Qty, new { @class = "form-control decimalinput search", autocomplete = "off" })
+                                </span>
+                            </li>
+                            <li>
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnShippingAccount").FirstOrDefault().Value.ToString():<small>*</small> </span>
+                                <span class="inputText">
+                                    @Html.ValidationMessageFor(m => m.partTransferModel.ShippingAccountId, "", new { style = "display:none" })
+                                    @Html.DropDownListFor(m => m.partTransferModel.ShippingAccountId, Model.partTransferModel.ShippingAccountList, "--Select--", new { @class = "form-control search select2picker", style = "width:100%;" })
+                                </span>
+                            </li>
+                            <li>
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnRequiredDate").FirstOrDefault().Value.ToString(): </span>
+                                <span class="inputText">
+                                    @Html.TextBoxFor(m => m.partTransferModel.RequiredDate, new { @class = "form-control dtpicker search", autocomplete = "off" })
+                                </span>
+                            </li>
+                            <li>
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnIssueSite").FirstOrDefault().Value.ToString(): </span>
+                                <span class="inputText">
+                                    @Html.TextBoxFor(m => m.partTransferModel.SiteName, new { @class = "form-control search readonly", @readonly = "readonly", autocomplete = "off" })
+                                </span>
+                            </li>
+                            <li>
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnPartID").FirstOrDefault().Value.ToString(): </span>
+                                <span class="inputText">@Html.TextBoxFor(m => m.partTransferModel.IssueClientLookupId, new { @class = "form-control search readonly", @readonly = "readonly", autocomplete = "off" })</span>
+                            </li>
+                            <li style="height:auto;">
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString(): </span>
+                                <span class="inputText" style="height:auto;">
+                                    @Html.TextAreaFor(m => m.partTransferModel.IssueDescription, new { @class = "form-control search readonly", @readonly = "readonly", autocomplete = "off" })
+                                </span>
+                                <div style="clear:both"></div>
+                            </li>
+                            <li>
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnQtyOnHand").FirstOrDefault().Value.ToString(): </span>
+                                <span class="inputText">
+                                    @Html.TextBoxFor(m => m.partTransferModel.QtyOnHand, new { @class = "form-control decimalinput search readonly", @readonly = "readonly", autocomplete = "off" })
+                                </span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div style="clear:both;"></div>
+
+                    <div class="idBttns">
+                        <div class="bttn_pagin">
+                            <div class="bttns2">
+                                <button type="submit" class="btn btn-blue mobBttn" name="Command" value="save"><i class="fa fa-save faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+                            </div>
+                            <div class="bttns"><button type="button" class="btn btn-blue mobBttn" id="btnPartTransfercancel"><i class="fa fa-close faIcon"></i> &nbsp;@Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button></div>
+                            <div style="clear:both;"></div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    @Html.HiddenFor(m => m.partTransferModel.IssuePartId)
+    @Html.HiddenFor(m => m.partTransferModel.RequestPartId)
+}

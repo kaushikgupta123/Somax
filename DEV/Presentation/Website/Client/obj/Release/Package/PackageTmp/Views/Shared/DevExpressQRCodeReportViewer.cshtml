@@ -1,0 +1,18 @@
+﻿@using DevExpress.XtraReports.Web.WebDocumentViewer
+@model XtraReport
+@{
+    ViewBag.Title = ViewBag.PageTitle;
+    Layout = "~/Views/Shared/_ReportLayout.cshtml";
+}
+@section scripts{
+    
+}
+@Html.DevExpress().WebDocumentViewer(settings =>
+{
+    settings.Name = "WebDocumentViewer";
+    settings.SettingsProgressBar.Position = ProgressBarPosition.TopRight;
+    settings.SettingsProgressBar.KeepOnVisibleArea = true;
+    settings.ClientSideEvents.CustomizeExportOptions = "onCustomizeExportOptions";
+    settings.ClientSideEvents.CustomizeMenuActions = "onCustomizeMenuActions";
+    settings.ClientSideEvents.BeforeRender = "onCustomizeBeforeRender";
+}).Bind(Model).GetHtml()

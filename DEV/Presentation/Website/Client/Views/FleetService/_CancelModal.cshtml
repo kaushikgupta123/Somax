@@ -1,0 +1,54 @@
+﻿
+@model Client.Models.FleetService.FleetServiceVM
+<div id="cancelModalDetailsPage" class="modal fade" data-backdrop="static" data-keyboard="false" role="dialog">
+    <div class="modal-dialog modal-info">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close Cancelclearerr" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title"> @Model.Loc.Where(a => a.ResourceId == "spnCancelJob").FirstOrDefault().Value.ToString()</h4>
+            </div>
+            @using (Ajax.BeginForm("CancelJob", "FleetService", new AjaxOptions { HttpMethod = "Post", OnSuccess = "CancelServiceAddOnSuccess", OnBegin = "AjaxBeginFormBegin", OnComplete = "AjaxBeginFormComplete", OnFailure = "AjaxBeginFormFaillure" }, new { enctype = "multipart/form-data", id = "fleetServiceCancelform" }))
+            {
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="Line" id="lblLine">@Model.Loc.Where(a => a.ResourceId == "spnCancelReason").FirstOrDefault().Value.ToString() :<small>*</small></label>
+                        @Html.ValidationMessageFor(m => m.CancelServiceOrderModal.CancelReasonSo, "", new { style = "display:none" })
+                        @Html.DropDownListFor(m => m.CancelServiceOrderModal.CancelReasonSo, Model.CancelServiceOrderModal.CancelReasonListSo, "--Select--", new { @class = "form-control search select2picker", style = "width:100%;", id = "txtCancelReasonSelect" })
+                    </div>
+                </div>
+                <div class="modal-footer" style="padding:15px 25px !important;">
+                    <button type="button" class="btn btn-default Cancelclearerr" data-dismiss="modal"><i class="fa fa-close buttonIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button>
+                    <button type="submit" class="btn btn-blue" style="float:right;" id="cancelServiceOrderJob"><i class="fa fa-save buttonIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+                    <div style="clear:both;"></div>
+                </div>
+                @Html.HiddenFor(m => m.CancelServiceOrderModal.ServiceOrderId)
+            }
+
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+
+        $.validator.setDefaults({ ignore: null });
+        $.validator.unobtrusive.parse(document);
+        $('input, form').blur(function () {
+            $(this).valid();
+        });
+        $('.select2picker, form').change(function () {
+            var areaddescribedby = $(this).attr('aria-describedby');
+            if ($(this).valid()) {
+                if (typeof areaddescribedby != 'undefined') {
+                    $('#' + areaddescribedby).hide();
+                }
+            }
+            else {
+                if (typeof areaddescribedby != 'undefined') {
+                    $('#' + areaddescribedby).show();
+                }
+            }
+        });
+        $(document).find('.select2picker').select2({});
+    });
+</script>

@@ -1,0 +1,28 @@
+﻿@model Client.Models.PartsManagement.PartsManagementRequest.PartsManagementRequestVM
+<nav id="sidebar">
+    <div id="dismiss">
+        <i class="fa fa-close"></i>
+    </div>
+    <div class="sidebar-header">
+        <h3><i class="fa fa-filter" style="position: relative; top: -2px;"></i>&nbsp;@Model.Loc.Where(a => a.ResourceId == "spnFilters").FirstOrDefault().Value.ToString()  <span class="filteritemcount">0</span></h3>
+        <button type="button" class="btn btn-blue filterSearch" id="btnPMReviewDataAdvSrch">
+            <i class="fa fa-search" style="margin-top:-3px;"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalSearch").FirstOrDefault().Value.ToString()
+        </button>
+    </div>
+    <div class="sidebar-content" id="rladvsearchsidebar">
+        <form action="#" method="post">
+            <div class="form-group">
+                <label for="ReviewedBy">@Model.Loc.Where(a => a.ResourceId == "spnReviewedBy").FirstOrDefault().Value.ToString():</label>
+                <input type="text" class="form-control search adv-item" id="ReviewedBy" autocomplete="off">
+            </div>
+            <div class="form-group">
+                <label for="Comments">@Model.Loc.Where(a => a.ResourceId == "spnLogComment").FirstOrDefault().Value.ToString()  :</label>
+                <input type="text" class="form-control search adv-item" id="Comments" autocomplete="off">
+            </div>
+            <div class="form-group">
+                <label for="ReviewDate">@Model.Loc.Where(a => a.ResourceId == "spnDate").FirstOrDefault().Value.ToString()  :</label>
+                <input type="text" class="form-control search adv-item dtpicker" id="ReviewDate" autocomplete="off">
+            </div>
+        </form>
+    </div>
+</nav>

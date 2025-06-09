@@ -1,0 +1,70 @@
+﻿@model Client.Models.VendorsVM
+
+@{
+    var fieldLabel = "";
+    var fieldName = "";
+    object Value = null;
+}
+@foreach (var data in Model.UIConfigurationDetails)
+{
+    if (data.Section == true)
+    {
+        <li>
+            <span class="label"><strong>@data.SectionName</strong></span>
+        </li>
+        continue;
+    }
+    if (string.IsNullOrEmpty(data.ColumnName))
+    {
+        continue;
+    }
+    else if (!string.IsNullOrEmpty(data.ColumnName))
+    {
+        string colName = UtilityFunction.ReturnPropertyNameWithoutCaseComparison(data.ColumnName, Model.ViewVendor);
+        if (string.IsNullOrEmpty(colName))
+        {
+            continue;
+        }
+        data.ColumnName = colName;
+    }
+
+    fieldLabel = data.ColumnLabel;
+
+    #region Column Name
+    fieldName = data.ColumnName;
+
+
+    if (data.ColumnName.ToLower() == "Select1".ToLower())
+    {
+        fieldName = "Select1Name";
+    }
+    else if (data.ColumnName.ToLower() == "Select2".ToLower())
+    {
+        fieldName = "Select2Name";
+    }
+    else if (data.ColumnName.ToLower() == "Select3".ToLower())
+    {
+        fieldName = "Select3Name";
+    }
+    else if (data.ColumnName.ToLower() == "Select4".ToLower())
+    {
+        fieldName = "Select4Name";
+    }
+
+    #endregion
+
+    #region Value
+    Value = Model.ViewVendor.GetType().GetProperty(fieldName).GetValue(Model.ViewVendor);
+    if (Value == null)
+    {
+        Value = "";
+    }
+
+    #endregion
+
+    <li style="height:auto;" class="dscrbtn">
+        @CustomHelperDynamic.ViewLabelAndDisplayValue(fieldLabel, Value.ToString(), data.ColumnType)
+    </li>
+}
+
+

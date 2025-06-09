@@ -1,0 +1,18 @@
+﻿@model Client.Models.PersonnelVM
+
+@{
+    ViewBag.Title = "Somax | Personnel";
+}
+
+@Styles.Render("~/Content/datatable")
+<link href="~/Scripts/Metronic/assets/demo/default/base/GlobalSearchGrid.css" rel="stylesheet" />
+
+@section scripts {
+    @Scripts.Render("~/bundles/datatable")
+    @Scripts.Render("~/bundles/personnel")
+
+}
+
+<div id="personnelcontainer">
+    @Html.Partial("PersonnelSearch", Model)
+</div>

@@ -1,0 +1,26 @@
+﻿@model Client.Models.Parts.PartsVM
+@foreach (var item in Model.partsHistoryModelList)
+{
+    <div class="kt-notes__item">
+        <div class="kt-notes__media">
+                <h3 class="kt-notes__user kt-font-brand kt-font-boldest activity-header-item">
+                    @item.PersonnelInitial
+                </h3>
+        </div>
+        <div class="kt-notes__content">
+            <div class="kt-notes__section">
+                <div class="kt-notes__info">
+                    <a href="#" class="kt-notes__title">
+                        @item.TransactionType
+                    </a>
+                    <span class="kt-notes__desc">
+                        @item.TransactionDate.Value.ToString("MMMM dd, yyyy h:mm tt")
+                    </span>
+                </div>
+            </div>
+            <span class="kt-notes__body">
+                Transaction Quantity:   @item.TransactionQuantity
+            </span>
+        </div>
+    </div>
+}

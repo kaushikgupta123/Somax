@@ -1,0 +1,64 @@
+﻿@model Client.Models.MaterialRequest.MaterialRequestVM
+
+@using (Ajax.BeginForm("AddPartNonInInventory", "MaterialRequest", new AjaxOptions { HttpMethod = "Post", OnSuccess = "AddPartNonInInventoryOnSuccess", OnBegin = "AjaxBeginFormBegin", OnComplete = "AjaxBeginFormComplete", OnFailure = "AjaxBeginFormFaillure" }, new { id = "frmPRPartNotInInventoryId" }))
+{
+    Model.PartNotInInventoryModel.IsAddPartNotInInventoryForm = false;
+    Model.PartNotInInventoryModel.IsAccountClientLookupIdReq = false;
+    Model.PartNotInInventoryModel.IsPartCategoryClientLookupIdReq = false;
+@Html.AntiForgeryToken()
+<div class="modal-content">
+    <div class="modal-header">
+        <button type="button" class="close clearstate" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">@Model.Loc.Where(a => a.ResourceId == "spnMRPartnotinInventory").FirstOrDefault().Value.ToString()</h4>
+    </div>
+    @Html.Partial("_ErrorDiv")
+    <div class="modal-body">
+        <div class="form-group" style="margin-bottom:0;">
+            <div class="bottomBlock">
+                <div class="tabsArea nobg">
+                    <ul class="listView nobrd" style="border-bottom:0;">
+                        <li style="margin-bottom:3px;">
+                            <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString(): <small>*</small></span>
+                            <span class="inputText">
+                                @Html.ValidationMessageFor(m => m.PartNotInInventoryModel.Description, "", new { style = "display:none" })
+                                @Html.TextBoxFor(m => m.PartNotInInventoryModel.Description, new { @class = "form-control search", autocomplete = "off" })
+                            </span>
+                        </li>
+
+                        <li style="margin-bottom:4px;">
+                            <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnQuantity").FirstOrDefault().Value.ToString() : <small>*</small></span>
+                            <span class="inputText">
+                                @Html.ValidationMessageFor(m => m.PartNotInInventoryModel.Quantity, "", new { style = "display:none" })
+                                @Html.TextBoxFor(m => m.PartNotInInventoryModel.Quantity, new { @class = "form-control search decimalinput", autocomplete = "off", maxlength = "16" })
+                            </span>
+                        </li>
+                    </ul>
+                </div>
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-footer" style="padding:15px 25px !important;">
+        <div class="idBttns">
+            <div class="bttn_pagin">
+                <div class="bttns2" style="margin:0;">
+                    <button type="submit" class="btn btn-blue mobBttn" style="cursor:pointer" value="save" id="btnPOPartNotInventorySave"><i class="fa fa-save faIcon"></i> &nbsp;@Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+                </div>
+                <div class="bttns" style="margin:0;"><button type="button" data-dismiss="modal" class="btn btn-blue mobBttn clearstate" id="btnPartNotInInventorycancel"><i class="fa fa-close faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button></div>
+
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@Html.HiddenFor(m => m.PartNotInInventoryModel.ObjectId)
+@Html.HiddenFor(m => m.PartNotInInventoryModel.IsAddPartNotInInventoryForm, new { id = "IsAddPartNotInInventoryForm" })
+@Html.HiddenFor(m => m.PartNotInInventoryModel.IsAccountClientLookupIdReq, new { id = "IsAccountClientLookupIdReq" })
+@Html.HiddenFor(m => m.PartNotInInventoryModel.IsPartCategoryClientLookupIdReq, new { id ="IsPartCategoryClientLookupIdReq" })
+
+}
+<script src="~/Scripts/Pages/Purchasing/poaccount-grid-dropdown.js"></script>
+<script src="~/Scripts/Pages/Purchasing/poequipment-grid-dropdown.js"></script>
+<script src="~/Scripts/Pages/Purchasing/poworkorder-grid-dropdown.js"></script>

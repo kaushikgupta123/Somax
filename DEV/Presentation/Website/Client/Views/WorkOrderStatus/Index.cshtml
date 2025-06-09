@@ -1,0 +1,23 @@
+﻿@using DevExpress.DashboardWeb.Mvc
+@{
+    ViewBag.Title = "Somax | Work Order Status";
+    Layout = "~/Views/Shared/_DevExpressDashboardLayout.cshtml";
+}
+@section scripts{
+
+}
+<script type="text/javascript">
+    function onBeforeRender(sender) {
+        var control = sender.GetDashboardControl();
+        control.registerExtension(new DevExpress.Dashboard.DashboardPanelExtension(control, { dashboardThumbnail: "./Content/DashboardThumbnail/{0}.png" }));
+    }
+</script>
+@Html.DevExpress().Dashboard(settings =>
+{
+    settings.Name = "Dashboard";
+    settings.ControllerName = "DefaultDashboard";
+    settings.Width = System.Web.UI.WebControls.Unit.Percentage(100);
+    settings.Height = System.Web.UI.WebControls.Unit.Percentage(1600);
+    //settings.ClientSideEvents.BeforeRender = "onBeforeRender";      //Uncomment this to load dashboard designer controls
+    settings.WorkingMode = DevExpress.DashboardWeb.WorkingMode.ViewerOnly;
+}).GetHtml()

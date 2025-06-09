@@ -1,0 +1,486 @@
+﻿@model Client.Models.Work_Order.WorkOrderVM
+@using Client.CustomValidation
+
+@if (Convert.ToString(Session["MenuState"]) == "" || Convert.ToString(Session["MenuState"]) == "open")
+{
+    <div class="m-subheader fixedDiv1">
+        <div class="new-m-subheader">
+            <div class="PageTitle">
+                <div class="align-items-center">
+                    <h3 class="m-subheader__title" style="padding:0;">
+                        <span class="dropToggle" id="spnDropToggle">
+                            <img src="~/Images/toggleMenu.png" />
+                        </span>
+                        <span style="line-height:35px;" id="wosearchtitle">
+                            @CustomHelper.LabelFor(Model.Loc, "GlobalWorkOrder")
+                        </span>
+                    </h3>
+                </div>
+            </div>
+
+            <div class="ActionBttnArea">
+                @if (Model.security.WorkOrders.Create && Model.IsMaintOnDemand)
+                {
+                    <button type="button" class="btn newBtn-add  pull-left" title="Add Workorder" data-toggle="modal" data-target="#AddWorkOrderModalPopup" id="btnWoAdd">@Model.Loc.Where(a => a.ResourceId == "spnNewWorkOrder").FirstOrDefault().Value.ToString()</button>
+                }
+                else if (Model.security.WorkOrders.Create)
+                {
+                    <button type="button" class="btn newBtn-add addWorkorder pull-left" title="Add Workorder" id="btnWoAdd">@Model.Loc.Where(a => a.ResourceId == "spnNewWorkOrder").FirstOrDefault().Value.ToString()</button>
+                }
+
+                <div style="clear:both;"></div>
+            </div>
+            <div style="clear:both;"></div>
+        </div>
+    </div>
+}
+else
+{
+    <div class="m-subheader fixedDiv1 fixupperpannel2">
+        <div class="new-m-subheader">
+            <div class="PageTitle">
+                <div class="align-items-center">
+                    <h3 class="m-subheader__title" style="padding:0;">
+                        <span class="dropToggle" id="spnDropToggle">
+                            <img src="~/Images/toggleMenu.png" />
+                        </span>
+                        <span style="line-height:35px;" id="wosearchtitle">
+                            @CustomHelper.LabelFor(Model.Loc, "GlobalWorkOrder")
+                        </span>
+                    </h3>
+                </div>
+            </div>
+
+            <div class="ActionBttnArea">
+                @if (Model.security.WorkOrders.Create && Model.IsMaintOnDemand)
+                {
+                    <button type="button" class="btn newBtn-add  pull-left" title="Add Workorder" data-toggle="modal" data-target="#AddWorkOrderModalPopup">@Model.Loc.Where(a => a.ResourceId == "spnNewWorkOrder").FirstOrDefault().Value.ToString()</button>
+                }
+                else
+                {
+                    <button type="button" class="btn newBtn-add addWorkorder pull-left" title="Add Workorder">@Model.Loc.Where(a => a.ResourceId == "spnNewWorkOrder").FirstOrDefault().Value.ToString()</button>
+                }
+                <div style="clear:both;"></div>
+            </div>
+            <div style="clear:both;"></div>
+        </div>
+    </div>
+}
+<div class="pushDiv1"></div>
+<div class="row">
+    <div class="col-xl-12">
+        <div class="m-portlet" id="m_portlet" style="padding:15px;">
+            <div class="actionBar" style="display:none" id="woGridAction">
+                <div class="pull-left" style="position:relative;">
+                    <button type="button" class="btn btn-white navbar-btn" title="Search" id="SrchBttnNew"><i class="fa fa-search" style="font-size: 1.1rem;position: relative;top: -2px;left: -2px;"></i>@Model.Loc.Where(a => a.ResourceId == "globalSearch").FirstOrDefault().Value.ToString()</button>
+                    <button type="button" class="btn btn-white navbar-btn" id="sidebarCollapse" title="Advance Search"><i class="fa fa-filter" style="font-size: 1.3rem;"></i></button>
+                    <ul class="filter_apply globalFilterAdjusted clsgridreset">
+                        <li class="textClear" id="liResetGridClearBtn"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "globalClear").FirstOrDefault().Value.ToString()</a></li>
+                    </ul>
+                    <div style="clear:both;"></div>
+                    <div class="searchBttnDrop desktop" id="searchBttnNewDrop" style="display:none;">
+                        <div class="form-group" style="position:relative;">
+                            <i class="fa fa-search txtSearchClick" style="font-size: 1.1rem;position: absolute;top: 9px;left: 15px;"></i>
+                            <a href="javascript:void(0)" id="cancelText"><i class="fa fa-close" style="font-size: 1.1rem;position: absolute;top: 9px;right: 15px;"></i></a>
+                            <input type="text" id="txtColumnSearch" class="form-control search" placeholder="Search..." style="padding: 0.65rem 2.75rem;" autocomplete="off">
+                        </div>
+
+                        <div class="searchTips">
+                            <div class="titleText">Search Tips</div>
+                            @if (Model.Loc.Any(a => a.ResourceId == SearchTipsType.WorkOrderSearchTips))
+                            {
+                                <div class="infoText">@Model.Loc.Where(a => a.ResourceId == SearchTipsType.WorkOrderSearchTips).FirstOrDefault().Value.ToString()</div>
+                            }
+                            else
+                            {
+                                <div class="infoText">Search for Work Orders by Work Order ID, Description, Charge To, and Charge To Name.</div>
+                            }
+
+                            <div style="clear:both;"></div>
+                        </div>
+
+                        <div class="searchInfo">
+                            <span class="recent">@Model.Loc.Where(a => a.ResourceId == "GlobalRecentlySearched").FirstOrDefault().Value.ToString()</span>
+                            <div class="searchList" id="wosearchList">
+                                <ul id="UlSearchList"></ul>
+                            </div>
+                            <span class="clear"><a href="javascript:void(0)" id="clearText">@Model.Loc.Where(a => a.ResourceId == "globalClear").FirstOrDefault().Value.ToString()</a></span>
+                            <div style="clear:both;"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pull-right">
+                    <div class="dropdown btn-sort" id="layoutDrop">
+                        <button class="btn btn-blue dropdown-toggle" type="button" id="layoutsortmenu" data-toggle="dropdown">@Model.Loc.Where(a => a.ResourceId == "GlobalLayout").FirstOrDefault().Value.ToString()</button>
+                        <ul class="dropdown-menu" role="menu" aria-labelledby="layoutsortmenu">
+                            <li role="presentation" id="tableviewliLayout" data-col="1"><a tabindex="-1" href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "GlobalTableView").FirstOrDefault().Value.ToString()</a></li>
+                            <li role="presentation" id="cardviewliLayout" data-col="0"><a tabindex="-1" href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "GlobalCardView").FirstOrDefault().Value.ToString()</a></li>
+                        </ul>
+                    </div>
+                    <button type="button" class="btn btn-white import-export" id="btnWoExport" onclick="funcShowExportbtn()">@Model.Loc.Where(a => a.ResourceId == "spnExport").FirstOrDefault().Value.ToString()</button>
+                    <button type="button" class="btn btn-white" id="liCustomize" title="Customize" data-toggle="modal" data-target="#gridcolumncustomizemodal"><i class="fa fa-cog" style="font-size: 1.3rem;"></i></button>
+
+                    <div style="clear:both;"></div>
+                </div>
+                <div style="clear:both;"></div>
+                <div id="advsearchfilteritems"></div>
+                <div style="clear:both;"></div>
+            </div>
+
+            <div class="updateArea WO_UDArea">
+                <div class="pull-left">
+                    <ul class="filter_apply2">
+                        <li><span class="itemcount">0</span>&nbsp;@Model.Loc.Where(a => a.ResourceId == "globalItemsSelected").FirstOrDefault().Value.ToString()</li>
+                    </ul>
+                    <button type="button" class="btn btn-blue" title="Print" id="PrintWoCheckListDevExpress" disabled="disabled" style="float: left; padding: 0.65rem; float: right; margin: 0 7px; "><i class="fa fa-print" style=" margin-top: -3px;"></i></button>
+                </div>
+
+                <div class="pull-right bttnDiv WOUpdateRight">
+                    @if (Model.security.WorkOrders.Cancel)
+                    {
+                        <button type="button" class="btn btn-blue" id="btnCancelWolist" title="Cancel" style="padding: 0.65rem; float:right;"><i class="fa fa-times" style="margin-top:-3px;"></i> @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button>
+                    }
+                    @if (Model.security.WorkOrders.Complete)
+                    {
+                        if (Model.UseWOCompletionWizard) //V2-634
+                        {
+                            <button type="button" class="btn btn-blue complete" title="Complete" id="CompleteWoCheckListWizard" disabled="disabled" style="padding: 0.65rem; float:right; margin:0 7px;"><i class="fa fa-check" style="margin-top:-3px;"></i> @Model.Loc.Where(a => a.ResourceId == "GlobalComplete").FirstOrDefault().Value.ToString()</button>
+                        }
+                        else
+                        {
+                            <button type="button" class="btn btn-blue complete" title="Complete" id="CompleteWoCheckList" disabled="disabled" style="padding: 0.65rem; float:right; margin:0 7px;"><i class="fa fa-check" style="margin-top:-3px;"></i> @Model.Loc.Where(a => a.ResourceId == "GlobalComplete").FirstOrDefault().Value.ToString()</button>
+                        }
+
+                    }
+                    @if (Model.security.WorkOrders.Scheduling) // As per comment on V2-576
+                    {
+
+                        <div class="dropdown btn-sort" id="scheduleDrop" style="float:right;">
+                            <button class="btn btn-blue dropdown-toggle newSchedulesort" type="button" id="schedulesortmenu" data-toggle="dropdown" style="margin-top:0;">@Model.Loc.Where(a => a.ResourceId == "spnGlobalSchedule").FirstOrDefault().Value.ToString()</button>
+                            <ul class="dropdown-menu scheduleDropMenu" role="menu" aria-labelledby="schedulesortmenu">
+                                <li role="presentation" id="ScheduleWoCheckList" data-col="1"><a tabindex="-1" href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnGlobalAddSchedule").FirstOrDefault().Value.ToString()</a></li>
+                                <li role="presentation" id="RemoveScheduleWoCheckList" data-col="0"><a tabindex="-1" href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnGlobalRemoveSchedule").FirstOrDefault().Value.ToString()</a></li>
+                            </ul>
+                        </div>
+                    }
+                    @if (((Model.security.WorkOrders.Approve) || (Model._userdata.Site.UsePlanning && Model.security.WorkOrders.PlanningRequired)) && !Model.IsWorkRequestApproval)
+                    {
+                        <div class="dropdown btn-sort topApprove" id="approveDrop" style="float:right; margin-right: 7px;">
+                            <button class="btn btn-blue dropdown-toggle newApprovesort" type="button" id="approvesortmenu" data-toggle="dropdown">@Model.Loc.Where(a => a.ResourceId == "spnGlobalApproval").FirstOrDefault().Value.ToString()</button>
+                            <ul class="dropdown-menu approveDropMenu" role="menu" aria-labelledby="approvesortmenu">
+                                @if (Model.security.WorkOrders.Approve)
+                                {
+                                    <li role="presentation" id="ApproveWoCheckList" data-col="1"><a tabindex="-1" href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "globalApprove").FirstOrDefault().Value.ToString()</a></li>
+                                    <li role="presentation" id="DenyWoCheckList" data-col="0"><a tabindex="-1" href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "globalDeny").FirstOrDefault().Value.ToString()</a></li>
+                                }
+                                @if (Model._userdata.Site.UsePlanning && Model.security.WorkOrders.PlanningRequired)
+                                {
+                                    <li role="presentation" id="PlanningCheckList" data-col="0"><a tabindex="-1" href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnPlanningRequired").FirstOrDefault().Value.ToString()</a></li>
+                                }
+
+                            </ul>
+                        </div>
+                    }
+
+                </div>
+                <div style="clear:both;"></div>
+            </div>
+            <div style="clear:both;"></div>
+
+            <div id="Active" class="tabcontent" style="display:block;">
+                <div class="table-responsive">
+                    <div id="tooltip"></div>
+                    <table id="tblworkorders" class="eqpDtlTbl row-border custom-sort tblMain tblDefaultSort" style="width:100%;">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th data-col="1" id="thWoId" class="th-WoId" data-th-index="0">@CustomHelper.LabelFor(Model.Loc, "spnWorkOrderId")</th>
+                                <th data-col="2" id="thWoDesc" data-th-index="1">@CustomHelper.LabelFor(Model.Loc, "spnDescription")</th>
+                                <th data-col="3" id="thWoCahrgeTo" data-th-index="2">@CustomHelper.LabelFor(Model.Loc, "GlobalChargeTo")</th>
+                                <th data-col="4" data-th-index="3">@CustomHelper.LabelFor(Model.Loc, "spnChargeToName")</th>
+                                <th data-col="5" data-th-index="4">@CustomHelper.LabelFor(Model.Loc, "spnGlobalAssetLocation")</th>
+                                <th data-col="6" id="thWoType" data-th-index="5">@CustomHelper.LabelFor(Model.Loc, "GlobalType")</th>
+                                <th data-col="7" id="thWoStatus" data-th-index="6">@CustomHelper.LabelFor(Model.Loc, "spnStatus")</th>
+                                <th data-col="8" data-th-index="7">@CustomHelper.LabelFor(Model.Loc, "spnShift")</th>
+                                <th data-col="9" data-th-index="8">@Model.workOrderModel.AssetGroup1Name</th>
+                                <th data-col="10" data-th-index="9">@Model.workOrderModel.AssetGroup2Name</th>
+                                <th data-col="11" data-th-index="10">@Model.workOrderModel.AssetGroup3Name</th>
+                                <th data-col="12" data-th-index="11">@CustomHelper.LabelFor(Model.Loc, "spnPriority")</th>
+                                <th data-col="13" data-th-index="12">@CustomHelper.LabelFor(Model.Loc, "globalCreateDate")</th>
+                                <th data-col="14" data-th-index="13">@CustomHelper.LabelFor(Model.Loc, "spnCreator")</th>
+                                <th data-col="15" data-th-index="14">@CustomHelper.LabelFor(Model.Loc, "spnAssigned")</th>
+                                <th data-col="16" data-th-index="15">@CustomHelper.LabelFor(Model.Loc, "spnScheduledStartDate")</th>
+                                <th data-col="17" data-th-index="16">@CustomHelper.LabelFor(Model.Loc, "spnFailureCode")</th>
+                                <th data-col="18" data-th-index="17">@CustomHelper.LabelFor(Model.Loc, "spnActualFinishDate")</th>
+                                <th data-col="19" data-th-index="18">@CustomHelper.LabelFor(Model.Loc, "spnActualDuration")</th>
+                                <th data-col="20" data-th-index="19">@CustomHelper.LabelFor(Model.Loc, "spnSource")</th> <!--Added on 23/06/2020-->
+                                <th data-col="21" data-th-index="20">@CustomHelper.LabelFor(Model.Loc, "spnRequiredDate")</th>
+                                <th data-col="22" data-th-index="21">@CustomHelper.LabelFor(Model.Loc, "spnProjectId")</th> @*V2-850*@
+                                <th data-col="23" data-th-index="22" width="5%">@Model.Loc.Where(a => a.ResourceId == "spnDownRequired").FirstOrDefault().Value.ToString()</th>
+                                <th data-col="24" data-th-index="23">@Model.Loc.Where(a => a.ResourceId == "globalPlanner").FirstOrDefault().Value.ToString()</th> @*V2-1078*@
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+            <div id="ActiveCard" class="tabcontent" style="display:none;"></div>
+        </div>
+    </div>
+</div>
+@Html.Partial("_CustomizeGridSetup")
+@Html.Partial("_Export")
+@Html.Partial("_WorkOrderAdvancedSearch")
+<!--V2-347-->
+@Html.Partial("_WODateRangeModal")
+<!--V2-347-->
+<!--V2-364-->
+@Html.Partial("_DateRangeModalForWOCreateDate")
+<!--V2-364-->
+@Html.Partial("_CancelWOListModal")
+@Html.Partial("_StatusDetailsLocalization")
+@Html.Hidden("hdnFoodSafetyPopup", Model.workOrderModel.BusinessType)
+@if (Model.security.WorkOrders.Complete && (Model.workOrderModel.Status != WorkOrderStatusConstants.Complete && Model.workOrderModel.Status != WorkOrderStatusConstants.Canceled))
+{
+    @Html.Partial("_CompleteModalSearch")
+}
+@Html.Partial("_DenyModel")
+@Html.Partial("_CompleteModal")
+@Html.Partial("_AssignedUsersModal")
+@if (Model.security.WorkOrders.Cancel)
+{
+    @Html.Partial("_CancelModal")
+}
+@if (Model.security.WorkOrders.Scheduling)  // As per comment on V2-576
+{
+    @Html.Partial("_ScheduleModal")
+}
+
+@Html.Partial("_DenySearchModal")
+
+@if (Model._userdata.Site.UsePlanning && Model.security.WorkOrders.PlanningRequired)
+{
+    @Html.Partial("_PlanningModal")
+}
+@if (Model.security.WorkOrders.Complete && Model.UseWOCompletionWizard)
+{
+    <div id="WorkorderCompletionWizardDiv"></div>
+}
+@Html.Partial("~/Views/Shared/PrintingProgressBar/_PrintingProgressBarModal.cshtml")
+@if (Convert.ToString(Session["MenuState"]) == "" || Convert.ToString(Session["MenuState"]) == "open")
+{
+    <div id="searcharea" class="slideToggleBar" style="display:none">
+        <div class="searchBoxArea">
+            <div class="form-group" style="margin-bottom:0; position:relative;">
+                <i class="fa fa-search" style="font-size: 1.1rem;position: absolute;top: 8px;left: 0px;"></i>
+                <input type="text" class="form-control searched" placeholder="Search for a view" id="wrsearctxtbox">
+            </div>
+        </div>
+
+        <div class="searchList">
+            <ul id="wosearchListul">
+                @foreach (var item in Model.workOrderModel.ScheduleWorkList)
+                {
+                    <li id="@item.Value" class="wrsearchdrpbox"><a href="javascript:void(0)">@item.Text</a></li>
+                }
+            </ul>
+        </div>
+    </div>
+}
+else
+{
+    <div id="searcharea" class="slideToggleBar" style="display:none;left:81px !important;">
+        <div class="searchBoxArea">
+            <div class="form-group" style="margin-bottom:0; position:relative;">
+                <i class="fa fa-search" style="font-size: 1.1rem;position: absolute;top: 8px;left: 0px;"></i>
+                <input type="text" class="form-control searched" placeholder="Search for a view" id="wrsearctxtbox">
+            </div>
+        </div>
+
+        <div class="searchList">
+            <ul id="wosearchListul">
+                @foreach (var item in Model.workOrderModel.ScheduleWorkList)
+                {
+                    <li id="@item.Value" class="wrsearchdrpbox"><a href="javascript:void(0)">@item.Text</a></li>
+                }
+            </ul>
+        </div>
+    </div>
+}
+
+<link href="~/Scripts/Metronic/assets/demo/default/base/style_newCustom.css" rel="stylesheet" />
+<style type="text/css">
+
+    #ScheduleModal .select2-container--default .select2-selection--multiple {
+        min-height: 34px !important;
+        height: auto;
+    }
+
+    #tooltip {
+        position: absolute;
+        z-index: 1001;
+        display: none;
+        border: 2px solid #ebebeb;
+        border-radius: 5px;
+        padding: 10px;
+        background-color: #cdf7d9;
+    }
+
+    .ghover {
+        position: relative;
+    }
+
+    .tooltipgrid {
+        background: #d0e8fa;
+        padding: 5px;
+        border-radius: 5px;
+        position: absolute;
+        width: 200px;
+        height: auto;
+        left: 10px;
+        top: 41px;
+        color: #000;
+        font-size: 13px;
+        font-weight: 500;
+        z-index: 9;
+        display: none !important;
+        cursor: pointer;
+    }
+
+    #layoutDrop {
+        z-index: 99;
+    }
+
+    /*New CSS*/
+    .dropdown-toggle.newApprovesort::after {
+        position: absolute;
+        right: 23px;
+        top: 15px;
+    }
+
+    .dropdown-menu.approveDropMenu.show {
+        width: 100%;
+        top: 2px !important;
+    }
+
+    .dropdown-toggle.newSchedulesort::after {
+        position: absolute;
+        right: 23px;
+        top: 15px;
+    }
+
+    .newSchedulesort, .newApprovesort {
+        width: 100px !important;
+        text-align: left;
+        margin-top: 0px;
+    }
+
+    .dropdown-menu.scheduleDropMenu.show {
+        width: 135px;
+        top: 2px !important;
+    }
+
+    #shortDrop ul.dropdown-menu.show {
+        z-index: 101 !important;
+    }
+    .paginate_input {
+        width: 35px;
+        text-align: right;
+        background-color: #ebe8f2;
+        border: #d0ced5 2px solid !important;
+        outline: 0;
+        height: 27px;
+        padding: 5px;
+        border-radius: 5px;
+        font-size: 12px;
+    }
+
+    .dataTables_paginate.paging_input {
+        font-size: 12px;
+    }
+
+    .dataTables_wrapper .dataTables_paginate {
+        padding-top: 18px !important;
+    }
+
+    .dataTables_wrapper .dataTables_length {
+        margin-top: 10px !important;
+    }
+
+    .dataTables_wrapper .dataTables_info {
+        padding: 28px 0 0 0 !important;
+    }
+    /*New CSS*/
+    @@media screen and (max-width: 639px) {
+        .actionBar div.pull-left {
+            width: 100%;
+        }
+
+        .actionBar div.pull-right {
+            float: left;
+            margin-top: 10px;
+        }
+
+        .WO_UDArea .pull-left {
+            width: 100%;
+        }
+
+        .WOUpdateRight {
+            float: left;
+            margin-top: 10px;
+        }
+
+        .updateArea .pull-right {
+            float: left !important;
+        }
+        #searchBttnNewDrop {
+            z-index: 999;
+        }
+    }
+
+    @@media screen and (max-width: 479px) {
+        .updateArea button.complete { /*width:100% !important;*/
+            margin: 0 !important;
+            float: left !important;
+        }
+
+        .WOUpdateRight {
+            margin-top: 0;
+        }
+    }
+
+    @@media screen and (max-width: 410px) {
+        #liCustomize {
+            margin-left: 0 !important;
+        }
+    }
+    .clsgridreset {
+        margin-top: 0px !important;
+    }
+    .clsgridreset li {
+        border-left: 1px solid #ccc;
+        border-right: 0px !important;
+        padding-left: 10px !important;
+    }
+    @@media(max-width:650px) {
+        .dataTables_wrapper .dataTables_paginate {
+            float: right !important;
+            width: 100%;
+            text-align: right;
+            padding-top: 10px !important;
+        }
+    }
+    /*@@media(min-width:800px) and (max-width:900px) {
+        #renderworkorder {
+            height: 98vh !important;
+            overflow: auto;
+        }
+    }*/
+
+
+
+    
+
+
+   
+</style>

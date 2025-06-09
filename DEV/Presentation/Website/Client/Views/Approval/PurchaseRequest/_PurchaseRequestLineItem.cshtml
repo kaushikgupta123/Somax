@@ -1,0 +1,25 @@
+﻿@model Client.Models.Approval.ApprovalVM
+
+<div class="table-responsive">
+    <table id="tblLineItem" class="eqpDtlTbl row-border custom-sort" style="width:100%;">
+        <thead>
+            <tr>
+                <th class="GLineNumber">@Model.Loc.Where(a => a.ResourceId == "spnPdLineNo").FirstOrDefault().Value.ToString()</th>
+                <th class="GPartClientLookupId">@Model.Loc.Where(a => a.ResourceId == "spnPartID").FirstOrDefault().Value.ToString()</th>
+                <th class="GDescription">@Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString()</th>
+                <th class="GOrderQuantity" style="text-align:right !important;">@Model.Loc.Where(a => a.ResourceId == "spnPdQuantity").FirstOrDefault().Value.ToString()</th>
+                <th class="GUnitofMeasure">@Model.Loc.Where(a => a.ResourceId == "spnPdUOM").FirstOrDefault().Value.ToString()</th>
+                <th class="GUnitCost" style="text-align:right !important;">@Model.Loc.Where(a => a.ResourceId == "spnUnitCost").FirstOrDefault().Value.ToString()</th>
+                <th class="GTotalCost" style="text-align:right !important;">@Model.Loc.Where(a => a.ResourceId == "spnPdTotalCost").FirstOrDefault().Value.ToString()</th>
+                <th class="GAccount_ClientLookupId">@Model.Loc.Where(a => a.ResourceId == "spnPdAccount").FirstOrDefault().Value.ToString()</th>
+                <th class="GRequiredDate">@Model.Loc.Where(a => a.ResourceId == "spnRequiredDate").FirstOrDefault().Value.ToString()</th>
+                <th class="GChargeToClientLookupId">@Model.Loc.Where(a => a.ResourceId == "GlobalChargeTo").FirstOrDefault().Value.ToString()</th>
+                @*<th width="17%" style="text-align:center !important;">@Model.Loc.Where(a => a.ResourceId == "globalAction").FirstOrDefault().Value.ToString()</th>*@
+            </tr>
+        </thead>
+        <tfoot id="tblLineItemfoot">
+
+        </tfoot>
+    </table>
+    
+</div>

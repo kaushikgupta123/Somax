@@ -1,0 +1,131 @@
+﻿@model Client.Models.Configuration.ShipToAddress.ShipToVM
+
+<div class="m-subheader">
+    <div class="new-m-subheader">
+        <div class="PageTitle">
+            <div class="align-items-center separator">
+                <h3 class="m-subheader__title ">
+                    @Model.Loc.Where(a => a.ResourceId == "globalShipToAddress").FirstOrDefault().Value.ToString()
+                </h3>
+            </div>
+        </div>
+
+        <div class="NewBreadcrumbArea">
+            <div class="newBreadcrumb">
+                <ul>
+                    <li><a href="/Configuration/Dashboard">&nbsp;</a></li>
+                    <li class="active">@Model.Loc.Where(a => a.ResourceId == "globalShipToAddress").FirstOrDefault().Value.ToString()</li>
+                </ul>
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+
+        <div class="ActionBttnArea">
+            @if (Model.security.ShipToAddress.Create)
+            {
+                <button type="button" class="btn newBtn-add addNewShipToAddress pull-left" title="Add Ship To Address">@Model.Loc.Where(a => a.ResourceId == "globalNewShipToAddress").FirstOrDefault().Value.ToString()</button>
+            }
+            <div style="clear:both;"></div>
+        </div>
+        <div style="clear:both;"></div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xl-12">
+        <div class="m-portlet" id="m_portlet" style="padding:15px; margin-bottom:0;">
+            <div class="actionBar" style="display:none;" id="shipTopoAddressAction">
+                <div class="pull-left">
+                    <button type="button" class="btn btn-white navbar-btn" id="sidebarCollapse" title="Advance Search"><i class="fa fa-filter" style="font-size: 1.3rem;"></i></button>
+                    <ul class="filter_apply">
+                        <li class="textFilter" id="liSelectCount">0 @Model.Loc.Where(a => a.ResourceId == "globalFiltersAppiled").FirstOrDefault().Value.ToString()</li>
+                        <li class="textClear" id="liClearAdvSearchFilter"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "globalClear").FirstOrDefault().Value.ToString() </a></li>
+                    </ul>
+
+                    <div style="clear:both;"></div>
+                </div>
+
+                <div class="pull-right">
+                    <button type="button" class="btn btn-white import-export" style="margin-right:0 !important;" disabled onclick="funcShowExportbtn()">@Model.Loc.Where(a => a.ResourceId == "spnExport").FirstOrDefault().Value.ToString()</button>
+                    <div style="clear:both;"></div>
+                </div>
+                <div style="clear:both;"></div>
+                <div id="dvFilterSearchSelect2"></div>
+                <div style="clear:both;"></div>
+            </div>
+            <div style="clear:both;"></div>
+
+            <div id="Active" class="tabcontent" style="display:block;">
+                <div class="table-responsive">
+                    <table id="shipToAddressSearch" class="eqpDtlTbl row-border custom-sort" style="width:100%;">
+                        <thead>
+                            <tr>
+                                <th data-th-index="0">@Model.Loc.Where(a => a.ResourceId == "spnName").FirstOrDefault().Value.ToString()</th>
+                                <th data-th-index="1">@Model.Loc.Where(a => a.ResourceId == "spnAddress1").FirstOrDefault().Value.ToString()</th>
+                                <th data-th-index="2">@Model.Loc.Where(a => a.ResourceId == "GlobalCity").FirstOrDefault().Value.ToString()</th>
+                                <th data-th-index="3">@Model.Loc.Where(a => a.ResourceId == "GlobalState").FirstOrDefault().Value.ToString()</th>
+                                <th data-th-index="4" width="17%" style="text-align:center !important;">@Model.Loc.Where(a => a.ResourceId == "globalAction").FirstOrDefault().Value.ToString()</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<nav id="sidebar">
+    <div id="dismiss">
+        <i class="fa fa-close"></i>
+    </div>
+    <div class="sidebar-header">
+        <h3><i class="fa fa-filter" style="position: relative; top: -2px;"></i>&nbsp;@Model.Loc.Where(a => a.ResourceId == "globalFilter").FirstOrDefault().Value.ToString()<span id="spnControlCounter">0</span></h3>
+        <button type="button" class="btn btn-blue filterSearch" id="btnShipToAddressDataAdvSrch"><i class="fa fa-search" style="margin-top:-3px;"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalSearch").FirstOrDefault().Value.ToString()</button>
+    </div>
+
+    <div class="sidebar-content" id="advsearchsidebar">
+        <form action="#" method="post">
+            <div class="form-group">
+                <label for="ShipToId">@Model.Loc.Where(a => a.ResourceId == "spnName").FirstOrDefault().Value.ToString():</label>
+                <input type="text" class="form-control adv-item search" autocomplete="off" id="ShipToId" style="color:#333;">
+            </div>
+            <div class="form-group">
+                <label for="Address1">@Model.Loc.Where(a => a.ResourceId == "spnAddress1").FirstOrDefault().Value.ToString():</label>
+                <input type="text" class="form-control adv-item  search" autocomplete="off" id="Address1" style="color:#333;">
+            </div>
+            <div class="form-group">
+                <label for="AddressCity">@Model.Loc.Where(a => a.ResourceId == "GlobalCity").FirstOrDefault().Value.ToString():</label>
+                <input type="text" class="form-control adv-item search" autocomplete="off" id="AddressCity" style="color:#333;">
+            </div>
+            <div class="form-group">
+                <label for="AddressState">@Model.Loc.Where(a => a.ResourceId == "GlobalState").FirstOrDefault().Value.ToString():</label>
+                <input type="text" class="form-control adv-item  search" autocomplete="off" id="AddressState" style="color:#333;">
+            </div>
+        </form>
+    </div>
+</nav>
+
+@Html.Partial("_Export")
+<style type="text/css">
+    #popupExport {
+        right: 30px !important;
+    }
+
+    @@media only screen and (width:1360px) {
+        #popupExport {
+            right: 272px !important;
+        }
+    }
+
+    @@media only screen and (min-width: 768px) and (max-width: 1023px) {
+        #popupExport {
+            top: 214px !important;
+        }
+      
+        tbody tr.DTFC_NoData {
+            background-color: transparent !important;
+            text-align: center;
+        }
+</style>
+
+

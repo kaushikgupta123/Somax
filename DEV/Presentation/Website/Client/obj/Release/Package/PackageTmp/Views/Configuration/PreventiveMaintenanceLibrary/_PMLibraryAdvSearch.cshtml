@@ -1,0 +1,39 @@
+﻿@model Client.Models.Configuration.PreventiveMaintenanceLibrary.PrevMaintLibraryVM
+<nav id="sidebar">
+    <div id="dismiss">
+        <i class="fa fa-close"></i>
+    </div>
+    <div class="sidebar-header">
+        <h3><i class="fa fa-filter" style="position: relative; top: -2px;"></i> @Model.Loc.Where(a => a.ResourceId == "spnFilters").FirstOrDefault().Value.ToString()<span class="filteritemcount">0</span></h3>
+        <button type="button" class="btn btn-blue filterSearch" id="btnPMLibraryDataAdvSrch"><i class="fa fa-search" style="margin-top:-3px;"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalSearch").FirstOrDefault().Value.ToString()</button>
+    </div>
+    <div class="sidebar-content" id="advsearchsidebarPMLibrary">
+        <div class="form-group">
+            <label for="PMLPmMasterId">@Model.Loc.Where(a => a.ResourceId == "spnPMMasterID").FirstOrDefault().Value.ToString():</label>
+            <input type="text" class="form-control search adv-item" id="PMLPmMasterId" autocomplete="off">
+        </div>
+        <div class="form-group">
+            <label for="PMLDescription">@Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString() :</label>
+            <input type="text" class="form-control search adv-item" id="PMLDescription" autocomplete="off">
+        </div>
+        <div class="form-group">
+            <label for="PMLDuration">@Model.Loc.Where(a => a.ResourceId == "spnPMDuration").FirstOrDefault().Value.ToString():</label>
+            <input type="text" class="form-control search decimalinput adv-item" id="PMLDuration" autocomplete="off">
+        </div>
+        <div class="form-group">
+            <label for="PMLFrequencyType">@Model.Loc.Where(a => a.ResourceId == "spnFrequencyType").FirstOrDefault().Value.ToString():</label>
+            <select id="PMLFrequencyType" style="width:100%;" class="form-control search adv-item select2picker"></select>
+        </div>
+        <div class="form-group">
+            <label for="PMLFrequency">@Model.Loc.Where(a => a.ResourceId == "spnFrequency").FirstOrDefault().Value.ToString():</label>
+            <input type="text" class="form-control search decimalinput adv-item" id="PMLFrequency" autocomplete="off">
+        </div>
+        <div class="form-group">
+            <label for="PMLCreated">@Model.Loc.Where(a => a.ResourceId == "spnCreated").FirstOrDefault().Value.ToString():</label>
+            <input type="text" class="form-control search dtpicker adv-item" id="PMLCreated" autocomplete="off">
+        </div>
+    </div>
+</nav>
+
+
+

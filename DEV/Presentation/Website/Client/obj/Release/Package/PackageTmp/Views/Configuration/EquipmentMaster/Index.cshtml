@@ -1,0 +1,12 @@
+﻿@{
+    ViewBag.Title = "Somax-Config | Equipment Master";
+}
+@Styles.Render("~/Content/datatable")
+
+@section scripts {
+    @Scripts.Render("~/bundles/datatable")
+    @Scripts.Render("~/bundles/EquipmentMaster")
+}
+<div id="renderequipmentmaster">
+    @Html.Partial("~/Views/Configuration/EquipmentMaster/_EquipmentMasterSearch.cshtml")
+</div>

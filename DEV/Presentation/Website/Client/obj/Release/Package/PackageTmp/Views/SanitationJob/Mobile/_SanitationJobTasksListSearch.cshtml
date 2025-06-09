@@ -1,0 +1,52 @@
+﻿@model Client.Models.Sanitation.SanitationVM
+<div class="row">
+    <div class="col-xl-12">
+        <div class="m-portlet" id="m_portlet" style="padding:15px;">
+            <div class="table-responsive">
+                <table id="SJTaskTable" class="eqpDtlTbl row-border custom-sort" style="width:100%;">
+                    <thead>
+                        <tr>
+                            <th style="text-align:center !important;">
+                                <input name="select_all" value="1" id="example-select-all-sensor" type="checkbox" />
+                            </th>
+                            <th>@Model.Loc.Where(a => a.ResourceId == "spnTaskID").FirstOrDefault().Value.ToString()</th>
+                            <th>@Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString()</th>
+                            <th>@Model.Loc.Where(a => a.ResourceId == "spnStatus").FirstOrDefault().Value.ToString()</th>
+                            <th width="17%" style="text-align:center !important;">@Model.Loc.Where(a => a.ResourceId == "globalAction").FirstOrDefault().Value.ToString()</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+           
+            <div class="mbsc-col-12 mbsc-col-md-12 mbsc-col-lg-12">
+                <div class="mbsc-button-group-block">
+                    <div class=" design-box">
+                        <button mbsc-button data-color="success" type="button" id="btnsjAddtaskMbl" class="btn btn-blue mobBttn addTaskBttnMbl" style="display:none"><i class="fa fa-plus faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "spnAddTask").FirstOrDefault().Value.ToString()</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mbsc-col-12 mbsc-col-md-12 mbsc-col-lg-12">
+                <div class="mbsc-button-group-block">
+                    <div class=" design-box">
+                        <button mbsc-button data-color="success" type="button" id="btnsjCompletetaskMbl" class="btn btn-blue mobBttn" style="display:none"><i class="fa fa-check faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "spnCompleteTask").FirstOrDefault().Value.ToString()</button>
+                    </div>
+                </div>
+            </div>
+            <div class="mbsc-col-12 mbsc-col-md-12 mbsc-col-lg-12">
+                <div class="mbsc-button-group-block">
+                    <div class=" design-box">
+                        <button mbsc-button data-color="success" type="button" data-toggle="modal" id="btnsjCanceltaskMbl" class="btn btn-blue mobBttn" style="display:none"><i class="fa fa-close faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "spnCancelTask").FirstOrDefault().Value.ToString()</button>
+                    </div>
+                </div>
+            </div>
+            <div class="mbsc-col-12 mbsc-col-md-12 mbsc-col-lg-12">
+                <div class="mbsc-button-group-block">
+                    <div class=" design-box">
+                        <button mbsc-button data-color="success" type="button" id="btnsjReOpentaskMbl" class="btn btn-blue mobBttn" style="display:none"><i class="fa fa-folder-open faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "spnReopenTask").FirstOrDefault().Value.ToString()</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

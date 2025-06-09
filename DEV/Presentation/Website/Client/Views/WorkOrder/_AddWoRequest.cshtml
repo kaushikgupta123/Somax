@@ -1,0 +1,127 @@
+﻿@model Client.Models.Work_Order.WorkOrderVM
+
+<div class="m-subheader">
+    <div class="new-m-subheader">
+        <div class="PageTitle">
+            <div class="align-items-center separator">
+                <h3 class="m-subheader__title ">
+                    @Model.Loc.Where(a => a.ResourceId == "spnWorkRequest").FirstOrDefault().Value.ToString()
+                </h3>
+            </div>
+        </div>
+
+        <div class="NewBreadcrumbArea">
+            <div class="newBreadcrumb">
+                <ul>
+                    <li><a href="/Dashboard/Dashboard">&nbsp;</a></li>
+                    <li><a href="/WorkOrder/Index?page=Maintenance_Work_Order_Search">@Model.Loc.Where(a => a.ResourceId == "spnWorkOrderSearch").FirstOrDefault().Value.ToString()</a></li>
+                    <li class="active">@Model.Loc.Where(a => a.ResourceId == "spnAddWorkRequest").FirstOrDefault().Value.ToString()</li>
+                </ul>
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+        <div style="clear:both;"></div>
+    </div>
+</div>
+
+@Html.Partial("_ErrorDiv")
+
+<div class="row">
+    <div class="col-xl-12">
+        <div class="m-portlet newPort" id="m_portlet" style="padding:15px;">
+            <div class="bottomBlock">
+                @using (Ajax.BeginForm("SaveWoRequset", "WorkOrder", new AjaxOptions { HttpMethod = "Post", OnSuccess = "WorksRequestAddOnSuccess", OnBegin = "AjaxBeginFormBegin", OnComplete = "AjaxBeginFormComplete", OnFailure = "AjaxBeginFormFaillure" }))
+                {
+                    @Html.AntiForgeryToken()
+                    <div class="tabsArea nobg">
+                        <ul class="listView nobrd">
+                            <li class="txtSrchArea txtSrch">
+                                <span class="label">@Html.LabelFor(m => m.woRequestModel.Type):</span>
+                                <span class="inputText wthAdjst">
+                                    @Html.DropDownListFor(m => m.woRequestModel.Type, Model.woRequestModel.TypeList, "--Select--", new { @class = "form-control search select2picker", style = "width:100%;" })
+                                </span>
+                            </li>
+
+                            @*Commented for V2-608*@
+                            @*<li class="txtSrchArea txtSrch">
+                        <span class="label">@Html.LabelFor(m => m.woRequestModel.ChargeType):</span>
+                        <span class="inputText wthAdjst">
+                            @Html.DropDownListFor(m => m.woRequestModel.ChargeType, Model.woRequestModel.ChargeTypeList, "--Select--", new { @class = "form-control search select2picker", style = "width:100%;" })
+                        </span>
+                    </li>*@
+                            <li style="position:relative">
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "GlobalChargeTo").FirstOrDefault().Value.ToString():</span>
+                                <span class="inputText wthAdjst">
+                                    <div class="dropdown dropTableOuter">
+                                        <div class="input-group">
+                                            @Html.ValidationMessageFor(m => m.woRequestModel.ChargeToClientLookupId, "", new { style = "display:none" })
+                                            @Html.TextBoxFor(m => m.woRequestModel.ChargeToClientLookupId, new { @id = "txtChargeTo", @class = "form-control search dropbtn readonly", autocomplete = "off", @readonly = "readonly" })
+                                            @Html.HiddenFor(m => m.woRequestModel.ChargeTo, new { id = "hdnChargeTo" })
+                                            <div class="input-group-btn">
+                                                <button class="btn btn-white btntxtInputGroup" type="button" id="woreqopengrid">
+                                                    <i id="srcicon" class="fa fa-search"></i>
+                                                </button>
+                                            </div>
+                                            <div class="input-group-btn">
+                                                &nbsp;&nbsp;<button type="button" class="btn btn-blue mobBttn" onclick="QrScannerEquipment('txtChargeTo','hdnChargeTo')" ><i class="fa fa-qrcode" style="margin-top:-2px;"></i></button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </span>
+                                @if (Model._userdata.DatabaseKey.Client.AssetTree == true)
+                                {
+                                    <i class="fa fa-tree chargeTree" id="imgChargeToTree" style="display:block"></i>
+                                }
+                            </li>
+                            <li style="height:auto;">
+                                <span class="label">@Html.LabelFor(m => m.woRequestModel.Description): <small>*</small></span>
+                                <span class="inputText wthAdjst" style="height:auto;">
+                                    @Html.ValidationMessageFor(m => m.woRequestModel.Description, "", new { style = "display:none" })
+                                    @Html.TextAreaFor(m => m.woRequestModel.Description, new { @class = "form-control search", style = "resize:none;", autocomplete = "off" })
+                                </span>
+                                <div style="clear:both;"></div>
+                            </li>
+                        </ul>
+                    </div>
+                    <div style="clear:both;"></div>
+                    <div class="idBttns">
+                        <div class="bttn_pagin">
+                            <div class="bttns2">
+                                <button type="submit" class="btn btn-white mobBttn" name="Command" id="btnSaveAnotherOpen" style="cursor:pointer" value="saveAdd"><i class="fa fa-save faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalSaveAndAdd").FirstOrDefault().Value.ToString()</button>
+                                <button type="submit" class="btn btn-blue mobBttn" name="Command" value="save"><i class="fa fa-save faIcon"></i> &nbsp;@Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+                            </div>
+
+                            <div class="bttns"><button type="button" class="btn btn-blue mobBttn" id="btnCancelAddWorkRequest"><i class="fa fa-close faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button></div>
+                            <div style="clear:both;"></div>
+                        </div>
+                    </div>
+                    @Html.HiddenFor(m => m.woRequestModel.ChargeToClientLookupId)
+                    @Html.HiddenFor(m => m.woRequestModel.PlantLocation, new { id = "WRPlantLocation" })
+                    @Html.Partial("~/Views/WorkOrder/_EmergencyOnDemandEquipmentPopUp.cshtml")
+                    @Html.Partial("~/Views/WorkOrder/_AddWOLocationPopUp.cshtml")
+                    @Html.Partial("~/Views/Shared/QR/_QrCodeReaderModal.cshtml")
+
+                }
+            </div>
+        </div>
+    </div>
+</div>
+@if (Model._userdata.DatabaseKey.Client.AssetTree == true)
+{
+    <div id="commonWOTreeModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title" id="hdrPlantLocation">@Model.Loc.Where(a => a.ResourceId == "spnGlobalEquipmentTreeLookup").FirstOrDefault().Value.ToString()</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="cntTree">
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+}
+

@@ -1,0 +1,134 @@
+﻿@model Client.Models.Dashboard.DashboardVM
+@{
+    ViewBag.Title = "Somax | Dashboard";
+}
+@Styles.Render("~/Content/datatable")
+@Styles.Render("~/Content/dashboardStyle")
+@section scripts{
+    <script src="~/Scripts/Pages/dashboard/DashboardAPMOnly.js"></script>
+    @Scripts.Render("~/bundles/datatable")
+}
+<div class="m-subheader ">
+    <div class="d-flex align-items-center">
+        <div class="mr-auto">
+            <h3 class="m-subheader__title ">@Model.Loc.Where(a => a.ResourceId == "spnDashboard").FirstOrDefault().Value.ToString()</h3>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xl-12">
+        <div class="m-portlet padAdjst" id="m_portlet">
+            <div class="m-portlet__body  m-portlet__body--no-padding">
+                <div class="row m-row--col-separator-xl">
+                    <div class="col-md-12 col-lg-6 col-xl-4">
+                        <div class="m-widget24">
+                            <div class="bgBox" style="background:#e48988;color: #fff !important;">
+                                <h2 class="iconTitle" id="hdrOpenWorkOrder" style="font-size:1.2rem; text-transform:none;">@Model.Loc.Where(a => a.ResourceId == "spnOpenEvents").FirstOrDefault().Value.ToString()</h2>
+                                <span class="newCount" id="OWOCount"></span>
+                                <div style="clear:both;"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12 col-lg-6 col-xl-4">
+                        <div class="m-widget24">
+                            <div class="bgBox" style="background: #716aca;color: #fff !important;">
+                                <h2 class="iconTitle" id="hdrWorkRequests" style="font-size:1.2rem; text-transform:none;">@Model.Loc.Where(a => a.ResourceId == "spnAssetsWithOpenEvents").FirstOrDefault().Value.ToString()</h2>
+                                <span class="newCount" id="WRCount"></span>
+                                <div style="clear:both;"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12 col-lg-6 col-xl-4">
+                        <div class="m-widget24">
+                            <div class="bgBox" style="background: #34bdcd;color: #fff !important;">
+                                <h2 class="iconTitle" id="hdrOverduePM" style="font-size:1.2rem; text-transform:none;">@Model.Loc.Where(a => a.ResourceId == "spnMonitoredAssets").FirstOrDefault().Value.ToString()</h2>
+                                <span class="newCount" id="OPMCount"></span>
+                                <div style="clear:both;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xl-6">
+        <div class="m-portlet m-portlet--full-height m-portlet--fit">
+            <div class="m-portlet__head">
+                <div class="m-portlet__head-caption">
+                    <div class="m-portlet__head-title">
+                        <h3 class="m-portlet__head-text">
+                            @Model.Loc.Where(a => a.ResourceId == "spnEventCountByFaultCode").FirstOrDefault().Value.ToString()
+                        </h3>
+                    </div>
+                </div>
+            </div>
+            <div class="m-portlet__body">
+                <div class="tab-content">
+                    <div class="dateRangeDrop">
+                        <div class="btn-group bootstrap-select m-datatable__pager-size dropup show selectDrop">
+                            @Html.DropDownListFor(m => m.APMDrop, new SelectList(Model.APMDropList, "Value", "Text"), null, new { id = "FCCDropdown", @class = "selectpicker m-datatable__pager-size" })
+                        </div>
+                        <div style="clear:both; height:15px;"></div>
+                    </div>
+                    <div class="chartBox" style="position:relative;">
+                        <div class="lds-ellipsis lds-adjust" id="EventCountbyFaultCodechartloader">
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                        </div>
+                        <div class="cntNoData"><h5>@Model.Loc.Where(a => a.ResourceId == "globalDataNotFound").FirstOrDefault().Value.ToString()</h5></div>
+                        <canvas id="EventCountbyFaultCode"></canvas>
+                        <div class="clear"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-6">
+        <div class="m-portlet m-portlet--full-height m-portlet--fit ">
+            <div class="m-portlet__head">
+                <div class="m-portlet__head-caption">
+                    <div class="m-portlet__head-title">
+                        <h3 class="m-portlet__head-text">
+                            @Model.Loc.Where(a => a.ResourceId == "spnEventCountByDisposition").FirstOrDefault().Value.ToString()
+                        </h3>
+                    </div>
+                </div>
+
+            </div>
+            <div class="m-portlet__body">
+                <div class="tab-content">
+                    <div class="dateRangeDrop">
+                        <div class="btn-group bootstrap-select m-datatable__pager-size dropup show selectDrop">
+                            @Html.DropDownListFor(m => m.APMDrop, new SelectList(Model.APMDropList, "Value", "Text"), null, new { id = "APMDropdown", @class = "selectpicker m-datatable__pager-size" })
+                        </div>
+                        <div style="clear:both; height:15px;"></div>
+                    </div>
+
+                    <div class="chartBox row" style="position:relative">
+                        <div class="lds-ellipsis lds-adjust" id="DoughnutbyEventDisChartloader">
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                        </div>
+                        <div style="width:100%;">
+                            <div class="cntNoData"><h5>@Model.Loc.Where(a => a.ResourceId == "globalDataNotFound").FirstOrDefault().Value.ToString()</h5></div>
+                            <canvas id="DoughnutbyEventDisChart"></canvas>
+                        </div>
+                        <div style="width:100%;">
+                            <div id="js-legend" class="chart-legend"></div>
+                        </div>
+                        <div class="clear"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

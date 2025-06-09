@@ -1,0 +1,41 @@
+﻿@model Client.Models.EquipmentCombined
+@*@{
+    var pl_id = ViewBag.EquipmentId != null ? Convert.ToInt32(Convert.ToString(ViewBag.EquipmentId)) : -1;
+}*@
+<input type="text" id="txtSearch" placeholder="Search" title="" class="form-control search" style="color:black;">
+<table id="tblTree" class="eqpDtlTbl row-border custom-sort tblMain hover haschild" style="width:100%;">
+    <thead>
+        <tr>
+            <th style="width:20px;"></th>
+            <th id="thEqupmentTree" data-col="1" class="th-EquipmentTree EquipmentId" data-th-index="0" data-th-prop="EquipmentId">@Model.Loc.Where(a => a.ResourceId == "spnGlobalEquipmentId").FirstOrDefault().Value.ToString()</th>
+            <th data-th-index="1" data-col="2" class="Description" data-th-prop="Description"></th>
+        </tr>
+    </thead>
+</table>
+
+
+<style type="text/css">
+
+    table#tblTree tbody tr ~ tr td {
+        padding-right: 0px !important;
+    }
+    table#tblTree tbody tr,
+    table#tblTree tbody tr.shown ~ tr td {
+        padding-right: 0 !important;
+    }
+    
+
+    table#tblTree tbody tr.shown ~ tr td table{ padding-right:0 !important; width: calc(100% - 10px);}
+    table#tblTree tbody tr.shown ~ tr td table tbody tr td{padding-left:10px; padding-right:0px !important;}
+    table#tblTree tbody tr.shown ~ tr td .row{margin:0;}
+    table#tblTree tbody tr.shown ~ tr td .row > div[class^="col-"]{padding:0;}
+
+    table#tblTree tbody tr td:first-child,
+    table#tblTree tbody tr td:last-child{width:40px; min-width: 40px;}
+
+    table#tblTree tbody tr td:last-child,
+    table#tblTree tbody tr.shown td:last-child{padding-right:0px !important;}
+
+    table#tblTree tbody tr td:not(:first-child,:last-child){width:100%;}
+
+</style>

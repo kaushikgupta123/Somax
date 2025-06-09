@@ -1,0 +1,18 @@
+﻿@model Client.Models.Dashboard.DashboardVM
+
+<div class="tabsArea nobg">
+    <div class="m-portlet" id="m_portlet" style="padding:10px;">
+        <div class="table-responsive">
+            <table id="MaintenanceAttachmentTable" class="eqpDtlTbl row-border custom-sort" style="width:100%;">
+                <thead>
+                    <tr>
+                        <th>@Model.Loc.Where(a => a.ResourceId == "globalSubject").FirstOrDefault().Value.ToString()</th>
+                        <th>@Model.Loc.Where(a => a.ResourceId == "globalFileName").FirstOrDefault().Value.ToString()</th>
+                        <th>@Model.Loc.Where(a => a.ResourceId == "globalCreateDate").FirstOrDefault().Value.ToString()</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+        <div style="clear:both;"></div>
+    </div>
+</div>

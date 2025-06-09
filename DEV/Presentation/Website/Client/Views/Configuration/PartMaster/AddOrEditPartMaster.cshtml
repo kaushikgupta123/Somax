@@ -1,0 +1,212 @@
+﻿@model Client.Models.Configuration.PartMaster.PartMasterVM
+
+<div class="m-subheader">
+    <div class="new-m-subheader">
+        <div class="PageTitle">
+            <div class="align-items-center separator">
+                <h3 class="m-subheader__title ">
+                    @Model.Loc.Where(a => a.ResourceId == "spnPartMaster").FirstOrDefault().Value.ToString()
+                </h3>
+            </div>
+        </div>
+
+        <div class="NewBreadcrumbArea">
+            <div class="newBreadcrumb">
+                <ul>
+                    <li><a href="/Configuration/Dashboard">&nbsp;</a></li>
+                    <li>
+                        <a href="/PartMaster/index?page=Masters_Part_Part_Master">
+                            @Model.Loc.Where(a => a.ResourceId == "spnPartMasterSearch").FirstOrDefault().Value.ToString()
+                        </a>
+                    </li>
+                    @if (Model.PartMasterModel.PartMasterId == 0)
+                    {
+                        <li class="active"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnAddPartMaster").FirstOrDefault().Value.ToString()</a></li>
+                    }
+                    else
+                    {
+                        <li><a href="javascript:void(0)" id="brdpartmaster" data-val="@Model.PartMasterModel.PartMasterId">@Model.PartMasterModel.ClientLookupId</a></li>
+                        <li class="active">@Model.Loc.Where(a => a.ResourceId == "spnUpdatePartMaster").FirstOrDefault().Value.ToString()</li>
+                    }
+                </ul>
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+        <div style="clear:both;"></div>
+    </div>
+</div>
+
+@Html.Partial("_ErrorDiv")
+
+@using (Ajax.BeginForm("AddPartMaster", "PartMaster", new AjaxOptions { HttpMethod = "Post", OnSuccess = "PartMasterAddOnSuccess", OnBegin = "AjaxBeginFormBegin", OnComplete = "AjaxBeginFormComplete", OnFailure = "AjaxBeginFormFaillure" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="row">
+        <div class="col-xl-12">
+            <div class="m-portlet newPort" id="m_portlet" style="padding:15px;">
+                <div class="bottomBlock">
+                    <div class="tabsArea nobg">
+                        <ul class="listView nobrd">
+                            <li style="height:auto;">
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnPartID").FirstOrDefault().Value.ToString()  : <small>*</small></span>
+                                <span class="inputText">
+                                    @if (Model.PartMasterModel.PartMasterId != 0)
+                                    {
+                                        @Html.TextBoxFor(m => m.PartMasterModel.ClientLookupId, new { @class = "form-control search readonly", @readonly = "readonly" })
+                                    }
+                                    else
+                                    {
+                                        @Html.ValidationMessageFor(m => m.PartMasterModel.ClientLookupId, "", new { style = "display:none" })
+                                        @Html.TextBoxFor(m => m.PartMasterModel.ClientLookupId, new { @class = "form-control search", autocomplete = "off", maxlength = "31" })
+                                    }
+                                </span>
+                                <div style="clear:both;"></div>
+                            </li>
+                            @if (Model.PartMasterModel.PartMasterId != 0)
+                            {
+                            <li>
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnAltPartID").FirstOrDefault().Value.ToString() : </span>
+                                <span class="inputText">
+                                    @Html.TextBoxFor(m => m.PartMasterModel.EXPartId, new { @class = "form-control search longinput", autocomplete = "off" })
+                                    @Html.ValidationMessageFor(m => m.PartMasterModel.EXPartId, "", new { style = "display:none" })
+                                </span>
+                            </li>
+                            <li>
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnUPCCode").FirstOrDefault().Value.ToString() : </span>
+                                <span class="inputText">
+                                    @Html.TextBoxFor(m => m.PartMasterModel.UPCCode, new { @class = "form-control search", autocomplete = "off", maxlength = "15" })
+                                </span>
+                            </li>
+                            }
+                            <li>
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnShortDescription").FirstOrDefault().Value.ToString() : <small>*</small></span>
+                                <span class="inputText">
+                                    @Html.ValidationMessageFor(m => m.PartMasterModel.ShortDescription, "", new { style = "display:none" })
+                                    @Html.TextBoxFor(m => m.PartMasterModel.ShortDescription, new { @class = "form-control search", autocomplete = "off", maxlength = "255" })
+                                </span>
+                            </li>
+                            @if (Model.PartMasterModel.PartMasterId != 0)
+                            {
+                            <li>
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnLongDescription").FirstOrDefault().Value.ToString() : </span>
+                                <span class="inputText">
+                                    @Html.TextBoxFor(m => m.PartMasterModel.LongDescription, new { @class = "form-control search", autocomplete = "off" })
+                                </span>
+                            </li>
+                            }
+                            <li id="mmdrop-region">
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnManufacturer").FirstOrDefault().Value.ToString(): </span>
+                                <span class="inputText">
+                                    <div class="dropdown dropTableOuter">
+                                        <div class="input-group">
+                                            @Html.TextBoxFor(m => m.PartMasterModel.Manufacturer, new { @class = "form-control search dropbtn", id = "txtmmid", autocomplete = "off" })
+                                            <div class="input-group-btn">
+                                                <button class="btn btn-white btntxtInputGroup" type="button" id="opengrid">
+                                                    <i id="srcicon" class="fa fa-search"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                        @*<div id="tbldropdown" class="dropdown-content tbl-dropdown">
+                                            <div class="table-responsive">
+                                                <table id="XrefMmTable" class="stripe dropTable globalDropTable" style="width:100%;">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Manufacturer Id</th>
+                                                            <th>Name</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tfoot id="tblmmfooter" style="display:none">
+                                                        <tr>
+                                                            <th style="position:relative;">Manufacturer Id</th>
+                                                            <th style="position:relative;">Name</th>
+                                                        </tr>
+                                                    </tfoot>
+                                                </table>
+                                            </div>
+                                        </div>*@
+                                    </div>
+                                </span>
+                            </li>
+                            <li>
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnManufacturerPartID").FirstOrDefault().Value.ToString(): </span>
+                                <span class="inputText">
+                                    @Html.TextBoxFor(m => m.PartMasterModel.ManufacturerId, new { @class = "form-control search", autocomplete = "off", maxlength = "63" })
+                                </span>
+                            </li>
+                            <li>
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnCategory").FirstOrDefault().Value.ToString(): </span>
+                                <span class="inputText">
+                                    @Html.DropDownListFor(m => m.PartMasterModel.Category, Model.PartMasterModel.CategoryDescriptionList, "--Select--", new { @class = "form-control search select2picker", style = "width:100%;" })
+                                </span>
+                            </li>
+                            <li>
+                                @if (Model.PartMasterModel.PartMasterId != 0)
+                                {
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnIssueUnit").FirstOrDefault().Value.ToString(): </span>
+                                }
+                                else
+                                {
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnUnitofMeasure").FirstOrDefault().Value.ToString(): </span>
+                                }
+                                <span class="inputText">
+                                    @Html.DropDownListFor(m => m.PartMasterModel.UnitOfMeasure, Model.PartMasterModel.UnitofMeasureList, "--Select--", new { @class = "form-control search select2picker", style = "width:100%;" })
+                                </span>
+                            </li>
+                            <li>
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnUnitCost").FirstOrDefault().Value.ToString():</span>
+                                <span class="inputText">
+                                    @Html.ValidationMessageFor(m => m.PartMasterModel.UnitCost, "", new { style = "display:none" })
+                                    @Html.TextBoxFor(m => m.PartMasterModel.UnitCost, new { @class = "form-control search decimalinput", autocomplete = "off" })
+                                </span>
+                            </li>
+                            @if(Model.PartMasterModel.PartMasterId != 0)
+                            {
+                            <li>
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "globalInActive").FirstOrDefault().Value.ToString(): </span>
+                                <span class="inputText">
+                                    @Html.CheckBoxFor(x => x.PartMasterModel.InactiveFlag)
+                                </span>
+                            </li>
+                            <li>
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnOEMPart").FirstOrDefault().Value.ToString(): </span>
+                                <span class="inputText">
+                                    @Html.CheckBoxFor(x => x.PartMasterModel.OEMPart)
+                                </span>
+                            </li>
+                            }
+                        </ul>
+                    </div>
+                    <div style="clear:both;"></div>
+                    <div class="idBttns" id="idBttns">
+                        <div class="bttn_pagin">
+                            <div class="bttns2">
+                                @if (Model.PartMasterModel.PartMasterId == 0)
+                                {
+                                    <button class="btn btn-white mobBttn" name="Command" value="saveAdd" id="btnSaveAnotherOpenPartMaster"><i class="fa fa-save faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalSaveAndAdd").FirstOrDefault().Value.ToString()</button>
+                                }
+                                &nbsp;&nbsp;
+                                <button type="submit" class="btn btn-blue mobBttn" name="Command" value="save" id="btnSavePartMaster"><i class="fa fa-save faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+
+                            </div>
+                            @if (Model.PartMasterModel.PartMasterId == 0)
+                            {
+                                <div class="bttns" id="btnAddCancelPartMaster"><button type="button" class="btn btn-blue mobBttn" id="btnCancelEditPartMaster"><i class="fa fa-close faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button></div>
+                            }
+                            else
+                            {
+                                <div class="bttns" id="btnEdtCancelPartMaster"><button type="button" class="btn btn-blue mobBttn" id="btnCancelEditPartMaster"><i class="fa fa-close faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button></div>
+                            }
+
+                            <div style="clear:both;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    if (Model.PartMasterModel.PartMasterId != 0)
+    {
+        @Html.HiddenFor(m => m.PartMasterModel.PartMasterId)
+    }
+    @Html.Partial("~/Views/Configuration/PartMaster/ManufacturerIdPopup.cshtml")
+}

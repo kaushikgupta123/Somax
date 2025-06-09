@@ -1,0 +1,32 @@
+﻿@model Client.Models.Work_Order.WorkOrderVM
+
+<div class="row">
+    <div class="col-xl-12">
+        <div style="padding:10px;text-align:center;font-size:16px; font-weight:bold !important">
+             @Model.WOCompletionCriteriaTitle 
+        </div>
+        <div class="kt-notes__body" style="padding: 0px; font-weight: bold !important; text-align: left;">
+            @Html.Raw(Model.WOCompletionCriteria)
+        </div>
+        <div style="padding-top:20px;font-weight: bold !important">
+
+            <div class="mbsc-grid">
+                <div class="mbsc-row">
+                    <div class="mbsc-col-2" style="padding:0px !important;">
+                   @Html.CheckBoxFor(m => m.WorkOrderCompletionWizard.CompletionCriteriaConfirm, new
+                   {
+                       @class = "mbsc-control",
+                       @id = "WoCriteriacompleteChk",
+                       @mbsc_checkbox = "true",
+                       
+                   })
+                    </div>
+                    <div class="mbsc-col-10  text-left">
+                        @Model.Loc.Where(a => a.ResourceId == "CompletionCriteriaCertify").FirstOrDefault().Value.ToString()
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div style="clear:both;"></div>
+    </div>
+</div>

@@ -1,0 +1,685 @@
+﻿@model Client.Models.FleetAsset.FleetAssetVM
+@{
+    string imageUrl = Model._FleetAssetSummaryModel.ImageUrl;
+    if (Model._FleetAssetSummaryModel.ClientOnPremise)
+    {
+        imageUrl = UtilityFunction.PhotoBase64ImgSrc(Model._FleetAssetSummaryModel.ImageUrl);
+    }
+
+}
+<link href="~/Scripts/Metronic/assets/demo/default/base/style_newCustom.css" rel="stylesheet" />
+@Styles.Render("~/Content/somaxcommentsection")
+<div class="m-subheader fixedDiv1">
+    <div class="new-m-subheader">
+        <div class="filterDescription">
+            <a href="javascript:void(0)" id="linkToSearch"><span id="spnlinkToSearch"></span></a> - @Model.FleetAssetModel.ClientLookupId
+        </div>
+
+        <div class="ActionBttnArea">
+            @if (Model.security.Fleet_Assets.Edit || Model.security.Fleet_Assets.Create)
+            {
+                if (Model.security.Fleet_Assets.Edit)
+                {
+                    <div class="actionDiv pull-left" id="ad1">
+                        <div class="btn-group bootstrap-select m-datatable__pager-size dropup show selectDrop actionNewDrop" style="margin-right:0;">
+                            <div class="btn-group bootstrap-select m-datatable__pager-size" style="width: 100%;">
+                                <button type="button" class="btn dropdown-toggle bs-placeholder btn-default" data-toggle="dropdown" role="button" title="">
+                                    <span class="filter-option pull-left">
+                                        @Model.Loc.Where(a => a.ResourceId == "globalAction").FirstOrDefault().Value.ToString()
+                                    </span>&nbsp;<span class="bs-caret"><span class="caret"></span></span>
+                                </button>
+                                <div class="dropdown-menu open" role="combobox">
+                                    <ul class="dropdown-menu inner" role="listbox" aria-expanded="false">
+                                        @if (Model.security.Fleet_Assets.Delete)
+                                        {
+                                            if (Model.FleetAssetModel.InactiveFlag == true)
+                                            {
+                                                <li id="ActivateInactivateFleetAsset" data-id=@Model.FleetAssetModel.EquID><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnGlobalActivate").FirstOrDefault().Value.ToString()</a></li>
+                                            }
+                                            if (Model.FleetAssetModel.InactiveFlag == false)
+                                            {
+                                                <li id="ActivateInactivateFleetAsset" data-id=@Model.FleetAssetModel.EquID><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnGlobalInactivate").FirstOrDefault().Value.ToString()</a></li>
+                                            }
+                                        }
+                                        @if (Model.security.Fleet_Assets.Edit)
+                                        {
+                                            <li data-toggle="modal" id="optchangeequipid"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnChangeEquipmentId").FirstOrDefault().Value.ToString()</a></li>
+                                        }
+                                        <li data-toggle="modal" data-target="#CreatedLastUpdatedModalDetailsPage"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnCreateLastUpdate").FirstOrDefault().Value.ToString()</a></li>
+                                        <li data-toggle="modal" data-target="#printFADetailsQrCodeModal"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "globalPrint").FirstOrDefault().Value.ToString()</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+                if (Model.security.Fleet_Assets.Create)
+                {
+                    <button type="button" class="btn newBtn-add AddFleetAsset innerBtn pull-left" id="AddFleetAsset" title="Add Fleet - Asset"><i class="fa fa-plus"></i></button>
+                }
+            }
+            else
+            {
+                <div class="actionDiv pull-left" id="ad1" style="margin-right:0;">
+                    <div class="btn-group bootstrap-select m-datatable__pager-size dropup show selectDrop actionNewDrop" style="margin-right:0;">
+                        <div class="btn-group bootstrap-select m-datatable__pager-size" style="width: 100%;margin-right:0;">
+                            <button type="button" class="btn dropdown-toggle bs-placeholder btn-default" data-toggle="dropdown" role="button" title=""><span class="filter-option pull-left">@Model.Loc.Where(a => a.ResourceId == "globalAction").FirstOrDefault().Value.ToString()</span>&nbsp;<span class="bs-caret"><span class="caret"></span></span></button>
+                            <div class="dropdown-menu open" role="combobox">
+                                <ul class="dropdown-menu inner" role="listbox" aria-expanded="false">
+                                    @if (Model.security.Fleet_Assets.Delete)
+                                    {
+                                        if (Model.FleetAssetModel.InactiveFlag == true)
+                                        {
+                                            <li id="InactivateEquipment" data-id=@Model.FleetAssetModel.EquID><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnGlobalInactivate").FirstOrDefault().Value.ToString()</a></li>
+                                        }
+                                        if (Model.FleetAssetModel.InactiveFlag == false)
+                                        {
+                                            <li id="ActivateEquipment" data-id=@Model.FleetAssetModel.EquID><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnGlobalActivate").FirstOrDefault().Value.ToString()</a></li>
+                                        }
+                                    }
+                                    <li data-toggle="modal" data-target="#CreatedLastUpdatedModalDetailsPage"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnCreateLastUpdate").FirstOrDefault().Value.ToString()</a></li>
+                                    <li data-toggle="modal" data-target="#printFADetailsQrCodeModal"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "globalPrint").FirstOrDefault().Value.ToString()</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+            <div style="clear:both;"></div>
+        </div>
+        <div style="clear:both;"></div>
+    </div>
+</div>
+<div class="pushDiv1"></div>
+
+<div class="row fixedDiv2">
+    @Html.Partial("_FleetAssetSummary", Model)
+</div>
+<div class="pushDiv2"></div>
+
+<div class="row">
+    <div class="col-xl-2">
+        <div class="m-portlet">
+            <div class="sideMenuArea nobg">
+                <ul class="vtabs" id="detmaintab">
+                    <li class="active" id="FleetAssetOverview"><a href="#FleetAssettab">@Model.Loc.Where(a => a.ResourceId == "spnFleetAssetOverview").FirstOrDefault().Value.ToString()</a></li>
+                    @if (Model.security.Fleet_Assets.Edit)
+                    {
+                        <li id="photot"><a href="#Photos" id="anchPhoto">@Model.Loc.Where(a => a.ResourceId == "anchPhoto").FirstOrDefault().Value.ToString()</a></li>
+                    }
+
+                    <li id="Attachmentt" onclick="openCity(event, 'Attachment')" style="position:relative;">
+                        <a href="#Attachment" id="anchAttachment">@Model.Loc.Where(a => a.ResourceId == "spnAttachments").FirstOrDefault().Value.ToString()</a>
+                        @if (Model.attachmentCount > 0)
+                        {
+                            <span class="m-badge m-badge--danger count-badge" id="asstAttachmentCount">@Model.attachmentCount</span>
+                        }
+                    </li>
+                    <li id="Partst" onclick="openCity(event, 'PartsContainer')"><a href="#PartsContainer" id="anchParts">@Model.Loc.Where(a => a.ResourceId == "anchParts").FirstOrDefault().Value.ToString()</a></li>
+                    <li id="ServiceOrder" onclick="openCity(event, 'SOContainer')"><a href="#SOContainer" id="anchSO">@Model.Loc.Where(a => a.ResourceId == "anchServiceOrders").FirstOrDefault().Value.ToString()</a></li>
+                    <li id="ScheduledService" onclick="openCity(event, 'ScheduledServiceContainer')"><a href="#ScheduledServiceContainer" id="anchSS">@Model.Loc.Where(a => a.ResourceId == "anchScheduledService").FirstOrDefault().Value.ToString()</a></li>
+                    <li id="Fuel" onclick="openCity(event, 'FuelContainer')"><a href="#FuelContainer" id="anchFuel">@Model.Loc.Where(a => a.ResourceId == "anchFuel").FirstOrDefault().Value.ToString()</a></li>
+                    <li id="FleetMeter" onclick="openCity(event, 'MeterContainer')"><a href="#MeterContainer" id="anchMeter">@Model.Loc.Where(a => a.ResourceId == "hrdFleetMeterTitle").FirstOrDefault().Value.ToString()</a></li>
+                    <li id="FleetIssue" onclick="openCity(event, 'FleetIssueContainer')"><a href="#FleetIssueContainer" id="anchIssue">@Model.Loc.Where(a => a.ResourceId == "anchIssues").FirstOrDefault().Value.ToString()</a></li>
+                </ul>
+            </div>
+            <div class="selectTabs" id="selectTabs">
+                <select class="form-control" id="colorselector">
+                    <option value="FleetAssettab">@Model.Loc.Where(a => a.ResourceId == "spnFleetAssetOverview").FirstOrDefault().Value.ToString()</option>
+                    if (Model.security.Fleet_Assets.Edit)
+                    {
+                    <option value="Photos">@Model.Loc.Where(a => a.ResourceId == "anchPhoto").FirstOrDefault().Value.ToString()</option>
+                    }
+                    <option value="Attachment">@Model.Loc.Where(a => a.ResourceId == "globalAttachment").FirstOrDefault().Value.ToString()</option>
+                    <option value="PartsContainer">@Model.Loc.Where(a => a.ResourceId == "anchParts").FirstOrDefault().Value.ToString()</option>
+                    <option value="SOContainer">@Model.Loc.Where(a => a.ResourceId == "anchServiceOrders").FirstOrDefault().Value.ToString()</option>
+                    <option value="ScheduledServiceContainer">@Model.Loc.Where(a => a.ResourceId == "anchScheduledService").FirstOrDefault().Value.ToString()</option>
+                    <option value="FuelContainer">@Model.Loc.Where(a => a.ResourceId == "anchFuel").FirstOrDefault().Value.ToString()</option>
+                    <option value="MeterContainer">@Model.Loc.Where(a => a.ResourceId == "hrdFleetMeterTitle").FirstOrDefault().Value.ToString()</option>
+                    <option value="FleetIssueContainer">@Model.Loc.Where(a => a.ResourceId == "anchIssues").FirstOrDefault().Value.ToString()</option>
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-10">
+        <div class="row">
+            <div class="col-xl-6" id="btnnblock">
+                <div class="m-portlet" id="m_portlet" style="padding:15px;">
+                    <div class="bottomBlock">
+                        <div class="tabsArea nobg" id="FleetAssettab" style="display:block;">
+                            <div class="tab">
+                                <button class="tablinks2 active" onclick="openCity2(event, 'Identification')" id="btnIdentification">@Model.Loc.Where(a => a.ResourceId == "btnIdentification").FirstOrDefault().Value.ToString()</button>
+                                <button class="tablinks2" onclick="openCity2(event, 'Dimensions')" id="btnDimensions">@Model.Loc.Where(a => a.ResourceId == "btnDimensions").FirstOrDefault().Value.ToString()</button>
+                                <button class="tablinks2" onclick="openCity2(event, 'EngineAndTransmission')" id="btnEngineAndTransmission">@Model.Loc.Where(a => a.ResourceId == "btnEngineandTransmission").FirstOrDefault().Value.ToString()</button>
+                                <button class="tablinks2" onclick="openCity2(event, 'WheelsAndTires')" id="btnWheelsAndTires">@Model.Loc.Where(a => a.ResourceId == "btnWheelsandTires").FirstOrDefault().Value.ToString()</button>
+                                <button class="tablinks2" onclick="openCity2(event, 'Fluids')" id="btnFluids">@Model.Loc.Where(a => a.ResourceId == "btnFluids").FirstOrDefault().Value.ToString()</button>
+                                <button class="tablinks2" onclick="openCity2(event, 'SetUp')" id="btnSetUp">SetUp</button>
+                            </div>
+                            <div class="selectTab">
+                                <select class="form-control search" id="tabselector">
+                                    <option value="Identification">@Model.Loc.Where(a => a.ResourceId == "btnIdentification").FirstOrDefault().Value.ToString()</option>
+                                    <option value="Dimensions">@Model.Loc.Where(a => a.ResourceId == "btnDimensions").FirstOrDefault().Value.ToString()</option>
+                                    <option value="EngineAndTransmission">@Model.Loc.Where(a => a.ResourceId == "btnEngineandTransmission").FirstOrDefault().Value.ToString()</option>
+                                    <option value="WheelsAndTires">@Model.Loc.Where(a => a.ResourceId == "btnWheelsandTires").FirstOrDefault().Value.ToString()</option>
+                                    <option value="Fluids">@Model.Loc.Where(a => a.ResourceId == "btnFluids").FirstOrDefault().Value.ToString()</option>
+                                    <option value="SetUp">SetUp</option>
+                                </select>
+                            </div>
+                            <div id="Identification" class="tabcontent2 tabcontentIdentification" style="display:block;">
+                                <ul class="listView">
+                                    <li>
+                                        <span class="label" id="spnEquipmentId">@Model.Loc.Where(a => a.ResourceId == "spnGlobalEquipmentId").FirstOrDefault().Value.ToString()</span>
+                                        <span class="inputText" title="@Model.FleetAssetModel.ClientLookupId">@(String.IsNullOrEmpty(Model.FleetAssetModel.ClientLookupId) ? "" : (Model.FleetAssetModel.ClientLookupId.Length > 12 ? (Model.FleetAssetModel.ClientLookupId.Substring(0, 12) + "...") : (Model.FleetAssetModel.ClientLookupId)))</span>
+                                    </li>
+                                    <li style="height:auto;">
+                                        <span class="label" id="spnName">@Model.Loc.Where(a => a.ResourceId == "spnName").FirstOrDefault().Value.ToString()</span>
+                                        <span class="inputText description-span">@Model.FleetAssetModel.Name</span>
+                                        <div style="clear:both;"></div>
+                                    </li>
+                                    <li style="height:auto;">
+                                        <span class="label" id="spnVin">@Model.Loc.Where(a => a.ResourceId == "spnVIN").FirstOrDefault().Value.ToString()</span>
+                                        <span class="inputText description-span">@Model.FleetAssetModel.VIN</span>
+                                        <div style="clear:both;"></div>
+                                    </li>
+                                    <li>
+                                        <span class="label" id="spnVehicleType">@Model.Loc.Where(a => a.ResourceId == "spnVehicleType").FirstOrDefault().Value.ToString()</span>
+                                        <span class="inputText">@Model.FleetAssetModel.VehicleType</span>
+                                    </li>
+                                    <li>
+                                        <span class="label" id="spnVehicleYear">@Model.Loc.Where(a => a.ResourceId == "spnVehicleYear").FirstOrDefault().Value.ToString()</span>
+                                        <span class="inputText">@Model.FleetAssetModel.VehicleYear</span>
+                                    </li>
+                                    <li style="height:auto;">
+                                        <span class="label" id="spnMake">@Model.Loc.Where(a => a.ResourceId == "spnMake").FirstOrDefault().Value.ToString()</span>
+                                        <span class="inputText description-span">@Model.FleetAssetModel.Make</span>
+                                        <div style="clear:both;"></div>
+                                    </li>
+                                    <li style="height:auto;">
+                                        <span class="label" id="spnModel">@Model.Loc.Where(a => a.ResourceId == "GlobalModel").FirstOrDefault().Value.ToString()</span>
+                                        <span class="inputText description-span">@Model.FleetAssetModel.Model</span>
+                                        <div style="clear:both;"></div>
+                                    </li>
+                                    <li style="height:auto;">
+                                        <span class="label" id="spnLicense">@Model.Loc.Where(a => a.ResourceId == "spnLicense").FirstOrDefault().Value.ToString()</span>
+                                        <span class="inputText description-span">@Model.FleetAssetModel.License</span>
+                                        <div style="clear:both;"></div>
+                                    </li>
+                                    <li style="height:auto;">
+                                        <span class="label" id="spnRegistrationLoc">@Model.Loc.Where(a => a.ResourceId == "spnRegistrationLoc").FirstOrDefault().Value.ToString()</span>
+                                        <span class="inputText description-span">@Model.FleetAssetModel.RegistrationLoc</span>
+                                        <div style="clear:both;"></div>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div id="Dimensions" class="tabcontent2">
+                                <ul class="listView">
+                                    <li style="height:auto;">
+                                        <span class="label" id="spnColor">@Model.Loc.Where(a => a.ResourceId == "spnColor").FirstOrDefault().Value.ToString()</span>
+                                        <span class="inputText description-span">@Model.FleetAssetModel.Color</span>
+                                        <div style="clear:both;"></div>
+                                    </li>
+                                    <li style="height:auto;">
+                                        <span class="label" id="spnBodyType">@Model.Loc.Where(a => a.ResourceId == "spnBodyType").FirstOrDefault().Value.ToString()</span>
+                                        <span class="inputText description-span">@Model.FleetAssetModel.BodyType</span>
+                                        <div style="clear:both;"></div>
+                                    </li>
+                                    <li>
+                                        <span class="label" id="spnWidth">@Model.Loc.Where(a => a.ResourceId == "spnWidth").FirstOrDefault().Value.ToString()</span>
+                                        <span class="inputText">@Model.FleetAssetModel.Width</span>
+                                    </li>
+                                    <li>
+                                        <span class="label" id="spnHeight">@Model.Loc.Where(a => a.ResourceId == "spnHeight").FirstOrDefault().Value.ToString()</span>
+                                        <span class="inputText">@Model.FleetAssetModel.Height</span>
+                                    </li>
+                                    <li>
+                                        <span class="label" id="spnLength">@Model.Loc.Where(a => a.ResourceId == "spnLength").FirstOrDefault().Value.ToString()</span>
+                                        <span class="inputText">@Model.FleetAssetModel.Length</span>
+                                    </li>
+                                    <li>
+                                        <span class="label" id="spnPassengerVolume">@Model.Loc.Where(a => a.ResourceId == "spnPassengerVolume").FirstOrDefault().Value.ToString()</span>
+                                        <span class="inputText">@Model.FleetAssetModel.PassengerVolume</span>
+                                    </li>
+                                    <li>
+                                        <span class="label" id="spnCargoVolume">@Model.Loc.Where(a => a.ResourceId == "spnCargoVolume").FirstOrDefault().Value.ToString()</span>
+                                        <span class="inputText">@Model.FleetAssetModel.CargoVolume</span>
+                                    </li>
+                                    <li>
+                                        <span class="label" id="spnGroundClearance">@Model.Loc.Where(a => a.ResourceId == "spnGroundClearance").FirstOrDefault().Value.ToString()</span>
+                                        <span class="inputText">@Model.FleetAssetModel.GroundClearance</span>
+                                    </li>
+                                    <li>
+                                        <span class="label" id="spnBedLength">@Model.Loc.Where(a => a.ResourceId == "spnBedLength").FirstOrDefault().Value.ToString()</span>
+                                        <span class="inputText">@Model.FleetAssetModel.BedLength</span>
+                                    </li>
+                                    <li>
+                                        <span class="label" id="spnCurbWeight">@Model.Loc.Where(a => a.ResourceId == "spnCurbWeight").FirstOrDefault().Value.ToString()</span>
+                                        <span class="inputText">@Model.FleetAssetModel.CurbWeight</span>
+                                    </li>
+                                    <li>
+                                        <span class="label" id="spnVehicleWeight">@Model.Loc.Where(a => a.ResourceId == "spnVehicleWeight").FirstOrDefault().Value.ToString()</span>
+                                        <span class="inputText">@Model.FleetAssetModel.VehicleWeight</span>
+                                    </li>
+                                    <li>
+                                        <span class="label" id="spnTowingCapacity">@Model.Loc.Where(a => a.ResourceId == "spnTowingCapacity").FirstOrDefault().Value.ToString()</span>
+                                        <span class="inputText">@Model.FleetAssetModel.TowingCapacity</span>
+                                    </li>
+                                    <li>
+                                        <span class="label" id="spnMaxPayload">@Model.Loc.Where(a => a.ResourceId == "spnMaxPayload").FirstOrDefault().Value.ToString()</span>
+                                        <span class="inputText">@Model.FleetAssetModel.MaxPayload</span>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div id="EngineAndTransmission" class="tabcontent2">
+                                <ul class="listView">
+                                    <li style="height:auto;">
+                                        <span class="label" id="spnEngineBrand">@Model.Loc.Where(a => a.ResourceId == "spnEngineBrand").FirstOrDefault().Value.ToString()</span>
+                                        <span class="inputText description-span">@Model.FleetAssetModel.EngineBrand</span>
+                                        <div style="clear:both;"></div>
+                                    </li>
+                                    <li style="height:auto;">
+                                        <span class="label" id="spnAspiration">@Model.Loc.Where(a => a.ResourceId == "spnAspiration").FirstOrDefault().Value.ToString()</span>
+                                        <span class="inputText description-span">@Model.FleetAssetModel.Aspiration</span>
+                                        <div style="clear:both;"></div>
+                                    </li>
+                                    <li>
+                                        <span class="label" id="spnBore">@Model.Loc.Where(a => a.ResourceId == "spnBore").FirstOrDefault().Value.ToString()</span>
+                                        <span class="inputText">@Model.FleetAssetModel.Bore</span>
+                                    </li>
+                                    <li style="height:auto;">
+                                        <span class="label" id="spnCam">@Model.Loc.Where(a => a.ResourceId == "spnCam").FirstOrDefault().Value.ToString()</span>
+                                        <span class="inputText description-span">@Model.FleetAssetModel.Cam</span>
+                                        <div style="clear:both;"></div>
+                                    </li>
+                                    <li>
+                                        <span class="label" id="spnCompression">@Model.Loc.Where(a => a.ResourceId == "spnCompression").FirstOrDefault().Value.ToString()</span>
+                                        <span class="inputText">@Model.FleetAssetModel.Compression</span>
+                                    </li>
+                                    <li>
+                                        <span class="label" id="spnCylinders">@Model.Loc.Where(a => a.ResourceId == "spnCylinders").FirstOrDefault().Value.ToString()</span>
+                                        <span class="inputText">@Model.FleetAssetModel.Cylinders</span>
+                                    </li>
+                                    <li>
+                                        <span class="label" id="spnDisplacement">@Model.Loc.Where(a => a.ResourceId == "spnDisplacement").FirstOrDefault().Value.ToString()</span>
+                                        <span class="inputText">@Model.FleetAssetModel.Displacement</span>
+                                    </li>
+                                    <li style="height:auto;">
+                                        <span class="label" id="spnFuelInduction">@Model.Loc.Where(a => a.ResourceId == "spnFuelInduction").FirstOrDefault().Value.ToString()</span>
+                                        <span class="inputText description-span">@Model.FleetAssetModel.FuelInduction</span>
+                                        <div style="clear:both;"></div>
+                                    </li>
+                                    <li>
+                                        <span class="label" id="spnFuelQuality">@Model.Loc.Where(a => a.ResourceId == "spnFuelQuality").FirstOrDefault().Value.ToString()</span>
+                                        <span class="inputText">@Model.FleetAssetModel.FuelQuality</span>
+                                    </li>
+                                    <li>
+                                        <span class="label" id="spnMaxHP">@Model.Loc.Where(a => a.ResourceId == "spnMaxHP").FirstOrDefault().Value.ToString()</span>
+                                        <span class="inputText">@Model.FleetAssetModel.MaxHP</span>
+                                    </li>
+                                    <li>
+                                        <span class="label" id="spnMaxTorque">@Model.Loc.Where(a => a.ResourceId == "spnMaxTorque").FirstOrDefault().Value.ToString()</span>
+                                        <span class="inputText">@Model.FleetAssetModel.MaxTorque</span>
+                                    </li>
+                                    <li>
+                                        <span class="label" id="spnRedlineRPM">@Model.Loc.Where(a => a.ResourceId == "spnRedlineRPM").FirstOrDefault().Value.ToString()</span>
+                                        <span class="inputText">@Model.FleetAssetModel.RedlineRPM</span>
+                                    </li>
+                                    <li>
+                                        <span class="label" id="spnStroke">@Model.Loc.Where(a => a.ResourceId == "spnStroke").FirstOrDefault().Value.ToString()</span>
+                                        <span class="inputText">@Model.FleetAssetModel.Stroke</span>
+                                    </li>
+                                    <li>
+                                        <span class="label" id="spnValves">@Model.Loc.Where(a => a.ResourceId == "spnValves").FirstOrDefault().Value.ToString()</span>
+                                        <span class="inputText">@Model.FleetAssetModel.Valves</span>
+                                    </li>
+                                    <li style="height:auto;">
+                                        <span class="label" id="spnTransmissionBrand">@Model.Loc.Where(a => a.ResourceId == "spnTransmissionBrand").FirstOrDefault().Value.ToString()</span>
+                                        <span class="inputText description-span">@Model.FleetAssetModel.TransmissionBrand</span>
+                                        <div style="clear:both;"></div>
+                                    </li>
+                                    <li style="height:auto;">
+                                        <span class="label" id="spnTransmissionType">@Model.Loc.Where(a => a.ResourceId == "spnTransmissionType").FirstOrDefault().Value.ToString()</span>
+                                        <span class="inputText description-span">@Model.FleetAssetModel.TransmissionType</span>
+                                        <div style="clear:both;"></div>
+                                    </li>
+                                    <li>
+                                        <span class="label" id="spnGears">@Model.Loc.Where(a => a.ResourceId == "spnGears").FirstOrDefault().Value.ToString()</span>
+                                        <span class="inputText">@Model.FleetAssetModel.Gears</span>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div id="WheelsAndTires" class="tabcontent2">
+                                <ul class="listView">
+                                    <li style="height:auto;">
+                                        <span class="label" id="spnBrakeSystem">@Model.Loc.Where(a => a.ResourceId == "spnBrakeSystem").FirstOrDefault().Value.ToString()</span>
+                                        <span class="inputText description-span">@Model.FleetAssetModel.BrakeSystem</span>
+                                        <div style="clear:both;"></div>
+                                    </li>
+                                    <li>
+                                        <span class="label" id="spnRearTrackWidth">@Model.Loc.Where(a => a.ResourceId == "spnRearTrackWidth").FirstOrDefault().Value.ToString()</span>
+                                        <span class="inputText">@Model.FleetAssetModel.RearTrackWidth</span>
+                                    </li>
+                                    <li>
+                                        <span class="label" id="spnWheelbase">@Model.Loc.Where(a => a.ResourceId == "spnWheelbase").FirstOrDefault().Value.ToString()</span>
+                                        <span class="inputText">@Model.FleetAssetModel.Wheelbase</span>
+                                    </li>
+                                    <li>
+                                        <span class="label" id="spnFrontWheelDiameter">@Model.Loc.Where(a => a.ResourceId == "spnFrontWheelDiameter").FirstOrDefault().Value.ToString()</span>
+                                        <span class="inputText">@Model.FleetAssetModel.FrontWheelDiameter</span>
+                                    </li>
+                                    <li>
+                                        <span class="label" id="spnRearWheelDiameter">@Model.Loc.Where(a => a.ResourceId == "spnRearWheelDiameter").FirstOrDefault().Value.ToString()</span>
+                                        <span class="inputText">@Model.FleetAssetModel.RearWheelDiameter</span>
+                                    </li>
+                                    <li>
+                                        <span class="label" id="spnFrontTirePSI">@Model.Loc.Where(a => a.ResourceId == "spnFrontTirePSI").FirstOrDefault().Value.ToString()</span>
+                                        <span class="inputText">@Model.FleetAssetModel.FrontTirePSI</span>
+                                    </li>
+                                    <li>
+                                        <span class="label" id="spnRearTirePSI">@Model.Loc.Where(a => a.ResourceId == "spnRearTirePSI").FirstOrDefault().Value.ToString()</span>
+                                        <span class="inputText">@Model.FleetAssetModel.RearTirePSI</span>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div id="Fluids" class="tabcontent2">
+                                <ul class="listView">
+                                    <li style="height:auto;">
+                                        <span class="label" id="spnFuelQuality">@Model.Loc.Where(a => a.ResourceId == "spnFleetFuelQuality").FirstOrDefault().Value.ToString()</span>
+                                        <span class="inputText description-span">@Model.FleetAssetModel.FleetFuelQuality</span>
+                                        <div style="clear:both;"></div>
+                                    </li>
+                                    <li>
+                                        <span class="label" id="spnFuelType">@Model.Loc.Where(a => a.ResourceId == "spnFuelType").FirstOrDefault().Value.ToString()</span>
+                                        <span class="inputText">@Model.FleetAssetModel.FuelType</span>
+                                    </li>
+                                    <li>
+                                        <span class="label" id="spnFuelTankCapacity1">@Model.Loc.Where(a => a.ResourceId == "spnFuelTank1Capacity").FirstOrDefault().Value.ToString()</span>
+                                        <span class="inputText">@Model.FleetAssetModel.FuelTankCapacity1</span>
+                                    </li>
+                                    <li>
+                                        <span class="label" id="spnFuelTankCapacity2">@Model.Loc.Where(a => a.ResourceId == "spnFuelTank2Capacity").FirstOrDefault().Value.ToString()</span>
+                                        <span class="inputText">@Model.FleetAssetModel.FuelTankCapacity2</span>
+                                    </li>
+                                    <li>
+                                        <span class="label" id="spnEPACity">@Model.Loc.Where(a => a.ResourceId == "spnEPACity").FirstOrDefault().Value.ToString()</span>
+                                        <span class="inputText">@Model.FleetAssetModel.EPACity</span>
+                                    </li>
+                                    <li>
+                                        <span class="label" id="spnEPAHighway">@Model.Loc.Where(a => a.ResourceId == "spnEPAHighway").FirstOrDefault().Value.ToString()</span>
+                                        <span class="inputText">@Model.FleetAssetModel.EPAHighway</span>
+                                    </li>
+                                    <li>
+                                        <span class="label" id="spnEPACombined">@Model.Loc.Where(a => a.ResourceId == "spnEPACombined").FirstOrDefault().Value.ToString()</span>
+                                        <span class="inputText">@Model.FleetAssetModel.EPACombined</span>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div id="SetUp" class="tabcontent2">
+                                <ul class="listView">
+                                    <li>
+                                        <span class="label" id="spnFuelUnits">Fuel Units</span>
+                                        <span class="inputText">@Model.FleetAssetModel.FuelUnits</span>
+                                    </li>
+                                    <li>
+                                        <span class="label" id="spnFuelUnits">Meter 1 Type</span>
+                                        <span class="inputText">@Model.FleetAssetModel.Meter1Type</span>
+                                    </li>
+                                    <li>
+                                        <span class="label" id="spnFuelUnits">Meter 1 Unit</span>
+                                        <span class="inputText">@Model.FleetAssetModel.Meter1Units</span>
+                                    </li>
+                                    <li>
+                                        <span class="label" id="spnFuelUnits">Meter 2 Type</span>
+                                        <span class="inputText">@Model.FleetAssetModel.Meter2Type</span>
+                                    </li>
+                                    <li>
+                                        <span class="label" id="spnFuelUnits">Meter 2 Unit</span>
+                                        <span class="inputText">@Model.FleetAssetModel.Meter2Units</span>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="editBttn">
+                                @if (Model.security.Fleet_Assets.Edit)
+                                {
+                                    <button type="button" class="btn btn-blue" id="fleetassetedit"><i class="fa fa-pencil" style="margin-top:-3px;"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalEdit").FirstOrDefault().Value.ToString()</button>
+                                    <div style="clear:both;"></div>
+                                }
+                            </div>
+                        </div>
+                        <div class="tabsArea nobg imageDropZone" id="Photos" style="display:none;">
+                            <div class="row">
+                                <div class="col-xl-4">
+                                    <div id="AzureImage" class="AzureImage">
+                                        @if (!string.IsNullOrEmpty(imageUrl))
+                                        {
+                                            <img src="@imageUrl" class="equipImg"  id="EquipZoom" alt="Image" data-zoom-image="@imageUrl" />
+                                        }
+                                        else
+                                        {
+                                            <img src="~/Scripts/ImageZoom/images/NoImage.jpg"  id="EquipZoom" class="equipImg" alt="Image" data-zoom-image="/Scripts/ImageZoom/images/NoImage.jpg" />
+                                        }
+                                        @if ((Model.security.Fleet_Assets.Edit && !Model._FleetAssetSummaryModel.ImageUrl.Contains("NoImage") && !string.IsNullOrEmpty(Model._FleetAssetSummaryModel.ImageUrl)))
+                                        {
+                                            <a href="javascript:void(0)" id="deleteImg" class="trashIcon" title="@Model.Loc.Where(a => a.ResourceId == "globalDelete").FirstOrDefault().Value.ToString()"><i class="fa fa-trash"></i></a>
+                                        }
+                                    </div>
+                                </div>
+                                <div class="col-xl-8">
+                                    <div class="hldDropzone">
+                                        @if (Model.security.Fleet_Assets.Edit)
+                                        {
+                                            <div class="dropzone" id="dropzoneForm">
+                                                <div class="fallback">
+                                                    <input name="file" type="file" multiple />
+                                                </div>
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="tabsArea nobg" id="Attachment" style="display:none;">
+                            <div class="table-responsive">
+                                <table id="AttachTable" class="eqpDtlTbl row-border custom-sort" style="width:100%;">
+                                    <thead>
+                                        <tr>
+                                            <th>@Model.Loc.Where(a => a.ResourceId == "globalSubject").FirstOrDefault().Value.ToString()</th>
+                                            <th>@Model.Loc.Where(a => a.ResourceId == "globalFileName").FirstOrDefault().Value.ToString()</th>
+                                            <th>@Model.Loc.Where(a => a.ResourceId == "globalFileSize").FirstOrDefault().Value.ToString()</th>
+                                            <th>@Model.Loc.Where(a => a.ResourceId == "globalOwner").FirstOrDefault().Value.ToString()</th>
+                                            <th>@Model.Loc.Where(a => a.ResourceId == "globalCreateDate").FirstOrDefault().Value.ToString()</th>
+                                            <th width="17%" style="text-align:center !important;">@Model.Loc.Where(a => a.ResourceId == "globalAction").FirstOrDefault().Value.ToString()</th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                            <div class="bttn_pagin">
+                                <div class="bttns"><button type="button" class="btn btn-blue" data-toggle="" data-target="" id="btnAddAttachment"><i class="fa fa-plus"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalAddAttachment").FirstOrDefault().Value.ToString()</button></div>
+                                <div style="clear:both;"></div>
+                            </div>
+                            <div style="clear:both;"></div>
+                        </div>
+                        <div id="PartsContainer" class="tabsArea nobg" style="display:none;">
+                            <div class="table-responsive">
+                                <table id="partsTable" class="eqpDtlTbl row-border custom-sort" style="width:100%;">
+                                    <thead>
+                                        <tr>
+                                            <th>@Model.Loc.Where(a => a.ResourceId == "spnPartID").FirstOrDefault().Value.ToString()</th>
+                                            <th>@Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString()</th>
+                                            <th>@Model.Loc.Where(a => a.ResourceId == "spnQtyNeeded").FirstOrDefault().Value.ToString()</th>
+                                            <th>@Model.Loc.Where(a => a.ResourceId == "spnQtyUsed").FirstOrDefault().Value.ToString()</th>
+                                            <th>@Model.Loc.Where(a => a.ResourceId == "spnLogComment").FirstOrDefault().Value.ToString()</th>
+                                            <th width="17%" style="text-align:center !important;">@Model.Loc.Where(a => a.ResourceId == "globalAction").FirstOrDefault().Value.ToString()</th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                            <div class="bttn_pagin">
+                                <div class="bttns"><button type="button" class="btn btn-blue" data-toggle="" data-target="" id="btnAddParts" style="display:none;"><i class="fa fa-plus"></i> &nbsp; Add Parts</button></div>
+                                <div style="clear:both;"></div>
+                            </div>
+                        </div>
+
+                        <div id="SOContainer" class="tabsArea nobg" style="display:none;">
+                            <div class="table-responsive">
+                                <table id="SOTable" class="eqpDtlTbl row-border custom-sort tblMain hover haschild" style="width:100%;">
+                                    <thead>
+                                        <tr>
+                                            <th style="width:20px;"></th>
+                                            <th id="thServiceOrder" class="ClientLookupId" data-th-index="0" data-th-prop="ClientLookupId"> @Model.Loc.Where(a => a.ResourceId == "GlobalServiceOrderID").FirstOrDefault().Value.ToString()</th>
+                                            <th id="thAssetId" class="EquipmentClientLookupId" data-th-index="1" data-th-prop="EquipmentClientLookupId">@Model.Loc.Where(a => a.ResourceId == "spnGlobalEquipmentId").FirstOrDefault().Value.ToString()</th>
+                                            <th id="thAssetName" class="AssetName" data-th-index="2" data-th-prop="AssetName">@Model.Loc.Where(a => a.ResourceId == "spnGlobalAssetName").FirstOrDefault().Value.ToString()</th>
+                                            <th class="Status" data-th-index="3" data-th-prop="Status">@Model.Loc.Where(a => a.ResourceId == "GlobalStatus").FirstOrDefault().Value.ToString()</th>
+                                            <th class="Type" data-th-index="4" data-th-prop="Type">@Model.Loc.Where(a => a.ResourceId == "GlobalType").FirstOrDefault().Value.ToString()</th>
+                                            <th class="CreateDateString" data-th-index="5" data-th-prop="CreateDateString">@Model.Loc.Where(a => a.ResourceId == "spnCreated").FirstOrDefault().Value.ToString()</th>
+                                            <th class="CompleteDateString" data-th-index="8" data-th-prop="CompleteDateString">@Model.Loc.Where(a => a.ResourceId == "spnGlobalCompleted").FirstOrDefault().Value.ToString()</th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div id="ScheduledServiceContainer" class="tabsArea nobg" style="display:none;">
+                            <div class="table-responsive">
+                                <table id="SSTable" class="eqpDtlTbl row-border custom-sort tblMain hover haschild" style="width:100%;">
+                                    <thead>
+                                        <tr>
+                                            <th id="thSTask" data-th-index="0">@Model.Loc.Where(a => a.ResourceId == "spnServiceTaskDesc").FirstOrDefault().Value.ToString()</th>
+                                            <th id="thSchedule" data-th-index="1">@Model.Loc.Where(a => a.ResourceId == "spnGlobalSchedule" && a.ResourceSet == "Global").FirstOrDefault().Value.ToString()</th>
+                                            <th id="thVehicletype" data-th-index="2">@Model.Loc.Where(a => a.ResourceId == "spnNextDue" && a.ResourceSet == "Global").FirstOrDefault().Value.ToString()</th>
+                                            <th data-th-index="3">@Model.Loc.Where(a => a.ResourceId == "spnLastCompleted").FirstOrDefault().Value.ToString()</th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div id="FuelContainer" class="tabsArea nobg" style="display:none;">
+                            <div class="table-responsive">
+                                <table id="FuelTable" class="eqpDtlTbl row-border custom-sort tblMain hover haschild" style="width:100%;">
+                                    <thead>
+                                        <tr>
+                                            <th>@Model.Loc.Where(a => a.ResourceId == "spnReadingDate").FirstOrDefault().Value.ToString()</th>
+                                            <th>@Model.Loc.Where(a => a.ResourceId == "spnAmount").FirstOrDefault().Value.ToString()</th>
+                                            <th>@Model.Loc.Where(a => a.ResourceId == "spnUnitCost").FirstOrDefault().Value.ToString()</th>
+                                            <th>@Model.Loc.Where(a => a.ResourceId == "spnTotalCost").FirstOrDefault().Value.ToString()</th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div id="MeterContainer" class="tabsArea nobg" style="display:none;">
+                            <div class="table-responsive">
+                                <table id="MeterTable" class="eqpDtlTbl row-border custom-sort tblMain hover haschild" style="width:100%;">
+                                    <thead>
+                                        <tr>
+                                            <th>@Model.Loc.Where(a => a.ResourceId == "spnReadingDate").FirstOrDefault().Value.ToString()</th>
+                                            <th style="text-align:right !important; min-width:200px;">@Model.Loc.Where(a => a.ResourceId == "spnReading").FirstOrDefault().Value.ToString()</th>
+                                            <th style="text-align:center !important;">@Model.Loc.Where(a => a.ResourceId == "spnSource").FirstOrDefault().Value.ToString()</th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div id="FleetIssueContainer" class="tabsArea nobg" style="display:none;">
+                            <div class="table-responsive">
+                                <table id="FleetIssueTable" class="eqpDtlTbl row-border custom-sort tblMain hover haschild" style="width:100%;">
+                                    <thead>
+                                        <tr>
+                                            <th>@Model.Loc.Where(a => a.ResourceId == "spnRecordDate").FirstOrDefault().Value.ToString()</th>
+                                            <th>@Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString()</th>
+                                            <th>@Model.Loc.Where(a => a.ResourceId == "spnStatus").FirstOrDefault().Value.ToString()</th>
+                                            <th>@Model.Loc.Where(a => a.ResourceId == "spnDefects").FirstOrDefault().Value.ToString()</th>
+                                            <th>@Model.Loc.Where(a => a.ResourceId == "GlobalComplete").FirstOrDefault().Value.ToString()</th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="lds-ellipsis lds-adjust" id="commentsdataloader">
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+            </div>
+            <div class="col-xl-6" id="auditlogcontainer">
+                @if (Model.FleetAssetModel.IsAssetAvailability)
+                {
+                    if (Model.FleetAssetModel.RemoveFromService == false)
+                    {
+                        @Html.Partial("_AssetAvailability")
+                    }
+                    else
+                    {
+                        @Html.Partial("_AssetAvailabilityOutOfService")
+                    }
+                }
+                @Html.Partial("_CommentLogs")
+            </div>
+        </div>
+    </div>
+</div>
+
+@Html.HiddenFor(m => m.Mode)
+@Html.HiddenFor(m => m.FleetAssetModel.EquID)
+@Html.HiddenFor(m => m.FleetAssetModel.ClientLookupId)
+@Html.HiddenFor(m => m.FleetAssetModel.Name)
+@Html.HiddenFor(m => m.FleetAssetModel.SerialNumber)
+@Html.HiddenFor(m => m.FleetAssetModel.Make)
+@Html.HiddenFor(m => m.FleetAssetModel.Model)
+@Html.HiddenFor(m => m.FleetAssetModel.InactiveFlag, new { id = "FleetAssetStatus" })
+@Html.HiddenFor(m => m.FleetAssetModel.RemoveFromService)
+@Html.HiddenFor(m => m.FleetAssetModel.ClientOnPremise)
+@Html.Partial("_FleetAssetDetailsQRCode")
+@Html.Partial("_StatusDetailsLocalization")
+
+<link href="~/Scripts/Metronic/assets/demo/default/base/style_newCustom.css" rel="stylesheet" />
+
+<style type="text/css">
+    .modal-open { overflow: hidden !important; }
+    table.dataTable thead th, table.dataTable thead td { border-bottom: 0px solid #fff; }
+    .loader { border: 5px solid #f3f3f3; border-radius: 50%; border-top: 5px solid #3498db; width: 30px; height: 30px; -webkit-animation: spin 2s linear infinite; /* Safari */ animation: spin 2s linear infinite; }
+    /* Safari */
+    @@-webkit-keyframes spin {
+        0% { -webkit-transform: rotate(0deg); }
+        100% { -webkit-transform: rotate(360deg); }
+    }
+    @@keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+    .padAdjstNew { padding: 0 10px 10px 10px; }
+    .count-badge { position: absolute; right: 30px; top: 7px; }
+    ul.listView li span.label { width: 55%; }
+    ul.listView li span.inputText { width: 45%; }
+    @@media only screen and (max-width: 1365px) and (min-width: 1200px) {
+        .macHeights { min-height: unset; }
+        .pushDiv2 { height: 105px; }
+        .count-badge { right: 10px; }
+    }
+    @@media screen and (max-width: 1199px) {
+        .count-badge { width: 20px; }
+    }
+    @@media screen and (max-width: 479px) {
+        .filterDescription { float: none !important; }
+    }
+    .filterDescription { width: auto; float: left; font-size: 1.2rem; color: #000; font-weight: 500; line-height: 33px; }
+    .filterDescription a { color: #36a3f7; text-decoration: none !important; }
+    .reason { border: solid 1px; padding: 2px 5px 4px 5px; width: 100%; }
+    .clsOutservice { padding: 0px 0px 0 185px; margin-top: -42px; }
+    .clsInservice { position: relative; margin: 0 auto; }
+</style>
+
+@Html.Partial("_CreatedLastUpdatedModal")
+@Html.Partial("_ChangeFleetAssetDModal")
+@if (Model.FleetAssetModel.IsAssetAvailability)
+{
+    @Html.Partial("_AssetAvailabilityModal")
+    @Html.Partial("_AssetAvailabilityLogPopup")
+}
+

@@ -1,0 +1,41 @@
+﻿@model Client.Models.Work_Order.WorkOrderVM
+<div id="planningModalIndexPage" class="modal fade" role="dialog">
+    <form id="planningForm">
+        <div class="modal-dialog modal-info">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close cleardesctxt cancelJobBtn" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">@Model.Loc.Where(a => a.ResourceId == "spnPlanningRequired").FirstOrDefault().Value.ToString()</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="Line" id="lblLine">@Model.Loc.Where(a => a.ResourceId == "spnPlannerPerson").FirstOrDefault().Value.ToString() :<small>*</small></label>
+                        @Html.DropDownListFor(m => m.wOPlannerModel.Planner_PersonnelId, new List<SelectListItem> { }, new { @class = "form-control search select2picker", id = "personnelselect", style = "width:100%;" })
+                        @Html.ValidationMessageFor(m => m.wOPlannerModel.Planner_PersonnelId, "", new { style = "display:none" })
+                    </div>
+                </div>
+                <div class="modal-footer" style="padding:15px 25px !important;">
+                    <button type="button" class="btn btn-default cleardesctxt cancelJobBtn" data-dismiss="modal"><i class="fa fa-close buttonIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button>
+                    <button type="button" class="btn btn-blue" style="float:right;" id="planningWorkOrderListJob"><i class="fa fa-save buttonIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+                    <div style="clear:both;"></div>
+                </div>
+            </div>
+        </div>
+        @Html.Hidden("hdnworkorderId")
+     </form>
+</div>
+<style>
+
+    #planningForm {
+        z-index: 1149 !important;
+    }
+
+    .ui-tooltip {
+        z-index: 1151 !important;
+    }
+
+    .errormessage {
+        margin-bottom: 1px !important;
+    }
+</style>
+

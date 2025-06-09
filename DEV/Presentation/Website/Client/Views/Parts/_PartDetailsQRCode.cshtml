@@ -1,0 +1,237 @@
+﻿@model Client.Models.Parts.PartsVM
+@*@{int i = 0;}
+    @foreach (var item in Model.qRCodeModel.PartIdsList)
+    {
+        var c = Model.qRCodeModel.PartIdsList.Count;
+        <div id="@("inputdata" + i)" class="QRrcode" height="50px" style="text-align:left" title="@item">
+        </div>
+        i++;
+    }*@
+@using (Ajax.BeginForm("SetPartIdlist", "Parts", new AjaxOptions { HttpMethod = "Post", OnSuccess = "PartsQROnSuccess", OnBegin = "AjaxBeginFormBegin", OnComplete = "AjaxBeginFormComplete", OnFailure = "AjaxBeginFormFaillure" }))
+{
+    @Html.AntiForgeryToken()
+    for (int loop = 0; loop < Model.qRCodeModel.PartIdsList.Count; loop++)
+    {
+        @Html.HiddenFor(m => m.qRCodeModel.PartIdsList[loop])
+    }
+    <div id="printDetailsPartQrCodeModal" class="modal fade" role="dialog">
+        <div class="modal-dialog modal-info">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">@Model.Loc.Where(a => a.ResourceId == "globalPrintLabels").FirstOrDefault().Value.ToString()</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-lg-12 col-sm-12">
+                            <p class="selectedText" style="display:none;"><span class="itemQRcount">0</span> @Model.Loc.Where(a => a.ResourceId == "globalItemsSelected").FirstOrDefault().Value.ToString()</p>
+                            <h5 class="secTitle">@Model.Loc.Where(a => a.ResourceId == "globalSelectPrintLabel").FirstOrDefault().Value.ToString()</h5>
+                            <ul class="levelSize">
+                                <li>
+                                    <div class="radio rdoBtn"><input type="radio" name="optradio" value="SmallLabel" id="SmallLabel" checked="checked"></div>
+                                    <div class="txtList">
+                                        <p class="first">@Model.Loc.Where(a => a.ResourceId == "globalSmallQRCode").FirstOrDefault().Value.ToString()</p>
+                                    </div>
+                                    <div style="clear:both;"></div>
+                                </li>
+                                <li>
+                                    <div class="radio rdoBtn"><input type="radio" name="optradio" value="LargeLabel" id="LargeLabel"></div>
+                                    <div class="txtList">
+                                        <p class="first">@Model.Loc.Where(a => a.ResourceId == "globalLargeQRCode").FirstOrDefault().Value.ToString()</p>
+                                    </div>
+                                    <div style="clear:both;"></div>
+                                </li>
+                            </ul>
+                        </div>
+                        <div style="clear:both;"></div>
+                    </div>
+                </div>
+                <div class="modal-footer" style="padding:15px 25px !important;">
+                    <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-close faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button>
+                    @*<button type="button" onclick="printPDF()" class="btn btn-blue" style="float:right;" id="btnPrintQr"><i class="fa fa-print faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalPrint").FirstOrDefault().Value.ToString()</button>*@
+                    <button type="submit" class="btn btn-blue" style="float:right;" id="btnPrintRotativaQr"><i class="fa fa-print faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalPrint").FirstOrDefault().Value.ToString()</button>
+                    <div style="clear:both;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@*<div style="width:auto;height:0;overflow:hidden;">
+    <div id="show_imagesSmall" style="width:600px; margin:0 auto;padding-left:100px">
+    </div>
+    <div id="show_imagesLarge" class="row" style="width:600px; margin:0 auto;padding-left:100px">
+    </div>
+
+</div>*@
+
+<script type="text/javascript">
+    //#region QR-Code
+    //var i = 1;
+    //var j = 1;
+    //var yGroup = [];
+    //var xGroup = [];
+    //var Tcount = $('.QRrcode').length;
+    //var lastdivId = '';
+    //var lastdivInnerId = '';
+    //lastdivId = "show_imagesLarge" + Tcount;
+    //lastdivInnerId = "show_imagesLargeInner2" + Tcount;
+    //$(document).find(".QRrcode").each(function () {
+    //    var title = $(this).attr('title');
+    //    var x = $("#show_imagesSmall");
+    //    var y = $("#show_imagesLarge");
+    //    $.ajax({
+    //        type: 'POST',
+    //        url: '/Parts/QrGenerate',
+    //        data: { value: title },
+    //        success: function (data) {
+    //            var innerX;
+    //            innerX = $('<div/>')
+    //                .attr("id", "show_imagesSmall" + i)
+    //                .attr("style", "padding-left:5px;color:#000; font-weight:400;")
+    //                .addClass("rows");
+    //            xGroup.push("show_imagesSmall" + i);
+
+    //            var PartIdSmall = data.value.split('][')[0];
+    //            PartIdSmall = PartIdSmall.length > 11 ? PartIdSmall.substring(0, 11) + "..." : PartIdSmall;
+    //            var DescriptionSmall = data.value.split('][')[1];
+    //            DescriptionSmall = DescriptionSmall.length > 30 ? DescriptionSmall.substring(0, 30) + "..." : DescriptionSmall;
+
+    //            var LocationSmall = data.value.split('][')[2];
+    //            var IssueUnitSmall = data.value.split('][')[3];
+    //            LocationSmall = LocationSmall.length > 5 ? LocationSmall.substring(0, 5) : LocationSmall;
+    //            IssueUnitSmall = IssueUnitSmall.length > 3 ? IssueUnitSmall.substring(0, 3) : IssueUnitSmall;
+    //            innerX.append("<div class='row'><div class='col-lg-2 col-sm-2' style='position:relative;left:-10px;' id='show_imagesInner1" + i + "'><img class='roll' src='" + data.QRCodeImagePath + "' width='80' height='80' /></div><div class='col-lg-10 col-sm-10 descriptionArea' style='padding-left: 15px; margin-top: 5px;left:-25px;position:relative;' ><p style='margin:0; padding:0 0 1px 0;'> " + PartIdSmall + "</p><p class='qrDescription'>" + DescriptionSmall + "</p><p style='margin:0; padding:0;'>Loc : <span style='width:40px !important;display: inline-block;'>" + LocationSmall + "</span>&nbsp; UOM :" + IssueUnitSmall + "</p></div><div class='clear'></div></div>");
+    //            x.append(innerX);
+    //            ++i;
+    //            var innerY;
+    //            innerY = $('<div/>')
+    //                .attr("id", "show_imagesLarge" + j)
+    //                .attr("style", "padding-left:0px; color:#000; font-weight:400;")
+    //                .addClass("rows");
+    //            yGroup.push("show_imagesLarge" + j);
+
+    //            var PartIdLarge = data.value.split('][')[0];
+    //            PartIdLarge = PartIdLarge.length > 26 ? PartIdLarge.substring(0, 26) + "..." : PartIdLarge;
+    //            var DescriptionLarge = data.value.split('][')[1];
+    //            DescriptionLarge = DescriptionLarge.length > 76 ? DescriptionLarge.substring(0, 76) + "..." : DescriptionLarge;
+
+    //            var LocationLarge = data.value.split('][')[2];
+    //            LocationLarge = LocationLarge.length > 14 ? LocationLarge.substring(0, 14) + ".." : LocationLarge;
+    //            var IssueUnitLarge = data.value.split('][')[3];
+    //            IssueUnitLarge = IssueUnitLarge.length > 7 ? IssueUnitLarge.substring(0, 7) + ".." : IssueUnitLarge;
+    //            var MinQuantityLarge = parseFloat(data.value.split('][')[4]);
+    //            var MaxQuantityLarge = parseFloat(data.value.split('][')[5]);
+    //            var ManufacturerLarge = data.value.split('][')[6];
+    //            ManufacturerLarge = ManufacturerLarge.length > 25 ? ManufacturerLarge.substring(0, 25) + "..." : ManufacturerLarge;
+    //            innerY.append("<div class='row'><div class='col-lg-2 col-sm-2' style='position:relative;left:-10px;' id='show_imagesInner2" + j + "' ><img class='roll' src='" + data.QRCodeImagePath + "' width='100' height='100' /></div><div class='col-lg-10 col-sm-10 descriptionArea2' style='padding-left: 60px;  margin-top: 0px;left:-35px;position:relative; line-height:17px;'  id='show_imagesLargeInner2" + j + "'><p> " + PartIdLarge + "</p><p class='qrDescription2'>" + DescriptionLarge + "</p><p >Loc :<span style='width:125px !important;display: inline-block;'>" + LocationLarge + "</span>&nbsp;&nbsp; UOM : " + IssueUnitLarge + "</p><p >Min : <span style='width:125px !important;display: inline-block;'>" + MinQuantityLarge + "</span>  &nbsp;&nbsp;Max : " + MaxQuantityLarge + "</p><p >Man : " + ManufacturerLarge + "</p></div><div class='clear'></div></div>");
+    //            y.append(innerY);
+    //            ++j;
+    //            if ($('#' + lastdivId).find('#' + lastdivInnerId + ':contains("Loc")').length > 0) {
+    //                $('#btnPrintQr').removeAttr("disabled");
+    //                CloseLoader();
+    //            }
+    //        }
+    //    });
+    //});
+    //function printPDF() {
+    //    var PartClientlookupid = PartToClientLookupIdQRcode[0].split('][')[0];
+    //    ShowLoader();
+    //    if (document.getElementById("SmallLabel").checked == true) {
+    //        //var doc = new jsPDF('l', 'pt', [155, 80]);
+    //        var doc = new jsPDF('l', 'mm', [54, 25]);
+    //        var count = $('#show_imagesSmall .rows').length;
+    //        $('#show_imagesSmall .rows').each(function (i, v) {
+    //            html2canvas(document.querySelector("#" + $(this).prop('id'))).then(canvas => {
+    //                var imgData = canvas.toDataURL(
+    //                    'image/png');
+    //                var imgWidth = 210;
+    //                var pageHeight = 295;
+    //                var width = doc.internal.pageSize.width;
+    //                var height = doc.internal.pageSize.height;
+    //                var imgHeight = canvas.height * imgWidth / canvas.width;
+    //                var heightLeft = imgHeight;
+    //                var position = 0;
+    //                doc.addImage(imgData, 'JPEG', 0, 0);
+    //                if (!--count) {
+    //                    var url = URL.createObjectURL(doc.output("blob"));
+    //                    window.open(url, "_blank");
+    //                    $('#printDetailsPartQrCodeModal').modal('hide');
+    //                    CloseLoader();
+    //                    partToQR = [];
+    //                    PartToClientLookupIdQRcode = [];
+
+    //                } else {
+    //                    doc.addPage();
+    //                }
+    //            });
+    //        });
+    //    }
+    //    else if (document.getElementById("LargeLabel").checked == true) {
+    //        //var doc = new jsPDF('l', 'pt', [252, 84.50]);
+    //        var doc = new jsPDF('l', 'mm', [89, 28]);
+    //        var count = $('#show_imagesLarge .rows').length;
+    //        $('#show_imagesLarge .rows').each(function (i, v) {
+    //            html2canvas(document.querySelector("#" + $(this).prop('id'))).then(canvas => {
+    //                var imgData = canvas.toDataURL(
+    //                    'image/png');
+    //                var imgWidth = 210;
+    //                var pageHeight = 295;
+    //                var width = doc.internal.pageSize.width;
+    //                var height = doc.internal.pageSize.height;
+    //                var imgHeight = canvas.height * imgWidth / canvas.width;
+    //                var heightLeft = imgHeight;
+    //                var position = 0;
+    //                doc.addImage(imgData, 'JPEG', 0, 0);
+    //                if (!--count) {
+    //                    var url = URL.createObjectURL(doc.output("blob"));
+    //                    window.open(url, "_blank");
+    //                    generatePartsDataTable(dtviewstatus, "");
+    //                    $(document).find('.DTFC_LeftBodyLiner').find('.chksearch').prop('checked', false);
+    //                    $('#printDetailsPartQrCodeModal').modal('hide');
+    //                    CloseLoader();
+    //                    partToQR = [];
+    //                    PartToClientLookupIdQRcode = [];
+    //                } else {
+    //                    doc.addPage();
+    //                }
+    //            });
+    //        });
+    //    }
+    //}
+
+//#endregion
+</script>
+
+<style type="text/css">
+    p {
+        margin: 0;
+    }
+
+    .descriptionArea {
+        position: relative;
+        left: -15px;
+    }
+
+    .descriptionArea2 {
+        position: relative;
+        left: -20px;
+    }
+
+    p.qrDescription {
+        margin: 0;
+        padding: 0 0 1px 0;
+        width: 120px;
+        word-break: break-all;
+    }
+
+    p.qrDescription2 {
+        margin: 0;
+        padding: 0 0 0px 0;
+        width: 240px;
+        word-break: break-all;
+    }
+</style>
+
+
+

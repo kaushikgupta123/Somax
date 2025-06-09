@@ -1,0 +1,243 @@
+﻿@model Client.Models.FleetScheduledService.FleetScheduledServiceVM
+@Html.Partial("_ErrorDiv")
+@using (Ajax.BeginForm("ScheduledServicelAddOrEdit", "FleetScheduledService", new AjaxOptions { HttpMethod = "Post", OnSuccess = "FleetScheduledServiceAddOnSuccess", OnBegin = "AjaxBeginFormBegin", OnComplete = "AjaxBeginFormComplete", OnFailure = "AjaxBeginFormFaillure" }, new { enctype = "multipart/form-data", id = "scServiceform" }))
+{
+    List<SelectListItem> VMRSSystemList = Model.VMRSSystemList
+                                               .Select(x => new { x.Level1Value, x.Level1Description })
+                                               .Distinct()
+                                               .Select(x => new SelectListItem { Text = x.Level1Value + " - " + x.Level1Description, Value = x.Level1Value })
+                                               .ToList();
+
+    List<SelectListItem> AssemblyList = Model.VMRSSystemList
+                                         .Select(x => new { x.Level1Value, x.Level2Value, x.Level2Description })
+                                         .Distinct()
+                                         .Where(x => x.Level1Value == Model.ScheduledServiceModel.System)
+                                         .Select(x => new SelectListItem { Text = x.Level2Value + " - " + x.Level2Description, Value = x.Level2Value })
+                                         .OrderBy(x => x.Value)
+                                         .ToList();
+    @Html.AntiForgeryToken()
+    <div class="modal-content">
+        <div class="modal-header">
+            @*<button type="button" class="close clearerrdiv" data-dismiss="modal">×</button>*@
+            <button type="button" class="close" id="btnFleetScheduledServiceClose">&times;</button>
+            @if (Model.ScheduledServiceModel.Pagetype == "Add")
+            {
+                <h4 class="modal-title">@Model.Loc.Where(a => a.ResourceId == "hrdAddScheduledServiceTitle").FirstOrDefault().Value.ToString()</h4>
+            }
+            else
+            {
+                <h4 class="modal-title">@Model.Loc.Where(a => a.ResourceId == "hrdEditScheduledServiceTitle").FirstOrDefault().Value.ToString()</h4>
+            }
+        </div>
+        <div class="modal-body" id="NewScheduleService">
+            <div class="form-group" style="margin-bottom:0;">
+                <div class="bottomBlock">
+                    <div class="tabsArea nobg">
+                        <ul class="listView nobrd" style="border-bottom:0;">
+                            <li>
+                                <span class="label">@Html.LabelFor(m => m.ScheduledServiceModel.ClientLookupId) : <small>*</small></span>
+                                <span class="inputText">
+                                    <div class="dropdown dropTableOuter">
+                                        <div class="input-group">
+                                            @Html.ValidationMessageFor(m => m.ScheduledServiceModel.ClientLookupId, "", new { style = "display:none" })
+                                            @Html.TextBoxFor(m => m.ScheduledServiceModel.ClientLookupId, new { @class = "form-control search dropbtn readonly", autocomplete = "off", @readonly = "readonly" })
+                                            <div class="input-group-btn" id="divSearch">
+                                                <button class="btn btn-white btntxtInputGroup" type="button" id="opengrid">
+                                                    <i id="srcicon" class="fa fa-search"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </span>
+                            </li>
+                            <li class="hiddenInitialServiceTask" style="display:none">
+                                <span class="label">@Html.LabelFor(m => m.ScheduledServiceModel.ServiceTaskId): <small>*</small> </span>
+                                <span class="inputText">
+                                    @Html.ValidationMessageFor(m => m.ScheduledServiceModel.ServiceTaskId, "", new { style = "display:none" })
+                                    @Html.DropDownListFor(m => m.ScheduledServiceModel.ServiceTaskId, Model.ScheduledServiceModel.LookUpServiceTypeList, "--Select--", new { @class = "form-control search select2picker flt_fue", style = "width:100%;" })
+                                </span>
+                            </li>
+                            <li class="hiddenRepairReason" style="display:none">
+                                <span class="label">@Html.LabelFor(m => m.ScheduledServiceModel.RepairReason): <small>*</small> </span>
+                                <span class="inputText">
+                                    @Html.ValidationMessageFor(m => m.ScheduledServiceModel.RepairReason, "", new { style = "display:none" })
+                                    @Html.DropDownListFor(m => m.ScheduledServiceModel.RepairReason, Model.LookUpRepairReasonList, "--Select--", new { @class = "form-control search select2picker", style = "width:100%;" })
+                                </span>
+                            </li>
+                            <li class="hiddenSystem" style="display:none">
+                                <span class="label">@Html.LabelFor(m => m.ScheduledServiceModel.System): <small>*</small> </span>
+                                <span class="inputText">
+                                    @Html.ValidationMessageFor(m => m.ScheduledServiceModel.System, "", new { style = "display:none" })
+                                    @Html.DropDownListFor(m => m.ScheduledServiceModel.System, VMRSSystemList, "--Select--", new { @class = "form-control search select2picker", style = "width:100%;" })
+                                </span>
+                            </li>
+                            <li class="hiddenAssembly" style="display:none">
+                                <span class="label">@Html.LabelFor(m => m.ScheduledServiceModel.Assembly): <small>*</small> </span>
+                                <span class="inputText">
+                                    @Html.ValidationMessageFor(m => m.ScheduledServiceModel.Assembly, "", new { style = "display:none" })
+                                    @Html.DropDownListFor(m => m.ScheduledServiceModel.Assembly, AssemblyList, "--Select--", new { @class = "form-control search select2picker", style = "width:100%;" })
+                                </span>
+                            </li>
+                            <li class="hiddenInitialMeter1" style="display:none">
+                                <span class="label" id="spnMeter1Interval"></span>
+                                <span class="inputText">
+                                    @Html.ValidationMessageFor(m => m.ScheduledServiceModel.Meter1Interval, "", new { style = "display:none" })
+                                    @Html.TextBoxFor(m => m.ScheduledServiceModel.Meter1Interval, new { @class = "form-control search decimalinput", autocomplete = "off", value = "0.0" })
+                                    <i class="Chckerror" style="color:red;display:none;margin: -8px 0px 0px 21px;"></i>
+                                </span>
+                                <span class="smallText" id="spnMeter1IntervalType"></span>
+                                @Html.HiddenFor(m => m.ScheduledServiceModel.Meter1Type, new { id = "hidMeter1Type" })
+                                @Html.HiddenFor(m => m.ScheduledServiceModel.Meter2Type, new { id = "hidMeter2Type" })
+                                @Html.HiddenFor(m => m.ScheduledServiceModel.Meter1Units, new { id = "hidMeter1Units" })
+                                @Html.HiddenFor(m => m.ScheduledServiceModel.Meter2Units, new { id = "hidMeter2Units" })
+                            </li>
+                            <li class="hiddenInitialMeter2" style="display:none">
+                                <span class="label" id="spnMeter2Interval"> </span>
+                                <span class="inputText">
+                                    @Html.ValidationMessageFor(m => m.ScheduledServiceModel.Meter2Interval, "", new { style = "display:none" })
+                                    @Html.TextBoxFor(m => m.ScheduledServiceModel.Meter2Interval, new { @class = "form-control search decimalinput resetText", autocomplete = "off" })
+                                </span>
+                                <span class="smallText" id="spnMeter2IntervalType"></span>
+                            </li>
+
+
+                            <li class="hiddenInitialTimeInterval" style="display:none">
+                                <span class="label" id="spnTimeInterval">@Html.LabelFor(m => m.ScheduledServiceModel.TimeInterval) : </span>
+                                <span class="inputText timeField">
+                                    @Html.ValidationMessageFor(m => m.ScheduledServiceModel.TimeInterval, "", new { style = "display:none" })
+                                    @Html.TextBoxFor(m => m.ScheduledServiceModel.TimeInterval, "", new { @class = "form-control search integerinput", autocomplete = "off" })
+                                </span>
+                                <span class="inputText timeDrop">
+                                    @Html.ValidationMessageFor(m => m.ScheduledServiceModel.TimeIntervalType, "", new { style = "display:none" })
+                                    @Html.DropDownListFor(m => m.ScheduledServiceModel.TimeIntervalType, Model.ScheduledServiceModel.LookUpTimeTypeList, new { @class = "form-control search select2picker", style = "width:100%;" })
+                                </span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="tabsArea nobg hiddenInitialDueSoonSettings" style="background:#ebe8f2; padding:10px;display:none">
+                        <h4 class="newTitle" id="DueSoonSettings"> @Model.Loc.Where(a => a.ResourceId == "spnDueSoonSettings").FirstOrDefault().Value.ToString()</h4>
+                        <ul class="listView nobrd" style="border-bottom:0;">
+                            <li class="hiddenInitialMeter1" style="display:none">
+                                <span class="label" id="spnMeter1Threshold"></span>
+                                <span class="inputText">
+                                    @Html.ValidationMessageFor(m => m.ScheduledServiceModel.Meter1Threshold, "", new { style = "display:none" })
+                                    @Html.TextBoxFor(m => m.ScheduledServiceModel.Meter1Threshold, new { @class = "form-control search decimalinput resetText", autocomplete = "off", value = "0.0" })
+                                    <i class="Chckerror" style="color:red;display:none;margin: -8px 0px 0px 21px;"></i>
+                                </span>
+
+                                <span class="smallText" id="spnMeter1ThresholdType"></span>
+                            </li>
+
+                            <li class="hiddenInitialMeter2" style="display:none">
+                                <span class="label" id="spnMeter2Threshold"></span>
+                                <span class="inputText">
+                                    @Html.ValidationMessageFor(m => m.ScheduledServiceModel.Meter2Threshold, "", new { style = "display:none" })
+                                    @Html.TextBoxFor(m => m.ScheduledServiceModel.Meter2Threshold, new { @class = "form-control search decimalinput resetText", autocomplete = "off" })
+                                </span>
+
+                                <span class="smallText" id="spnMeter2ThresholdType"></span>
+                            </li>
+                            <li class="hiddenInitialTimeThreshold" style="display:none">
+                                <span class="label" id="spnTimeThreshold">@Html.LabelFor(m => m.ScheduledServiceModel.TimeThreshold) : </span>
+                                <span class="inputText timeField">
+                                    @Html.ValidationMessageFor(m => m.ScheduledServiceModel.TimeThreshold, "", new { style = "display:none" })
+                                    @Html.TextBoxFor(m => m.ScheduledServiceModel.TimeThreshold, new { @class = "form-control search integerinput", autocomplete = "off", value = "0.0" })
+                                </span>
+                                <span class="inputText timeDrop">
+                                    @Html.ValidationMessageFor(m => m.ScheduledServiceModel.TimeThresoldType, "", new { style = "display:none" })
+                                    @Html.DropDownListFor(m => m.ScheduledServiceModel.TimeThresoldType, Model.ScheduledServiceModel.LookUpTimeTypeList, new { @class = "form-control search select2picker", style = "width:100%;" })
+                                </span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div style="clear:both;"></div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer hiddenInitialbtnSave" style="padding:15px 25px !important;">
+            <div class="idBttns">
+                <div class="bttn_pagin">
+                    <div class="bttns2" style="margin:0;">
+                        <button type="submit" class="btn btn-blue mobBttn" name="Command" style="cursor:pointer" value="save" id="btnScheduleServiceRecord"><i class="fa fa-save faIcon"></i> &nbsp;@Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+                    </div>
+                    <div class="bttns" style="margin:0;"><button type="button" class="btn btn-blue mobBttn" id="btnScheduleServicecancel"><i class="fa fa-close faIcon"></i> &nbsp; Cancel</button></div>
+
+                    <div style="clear:both;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    @Html.HiddenFor(m => m.ScheduledServiceModel.ScheduledServiceId)
+    @Html.HiddenFor(m => m.ScheduledServiceModel.Pagetype)
+    @Html.HiddenFor(m => m.ScheduledServiceModel.EquipmentId)
+}
+
+<style type="text/css">
+    .dtpickerNew { width: 120px; float: left; }
+    .timerId { width: 100px; float: left; }
+    .ui-datepicker-trigger { float: left; margin-left: -3px; margin-right: 10px; }
+    .errorMsgBlk { background-color: #d86564; font-size: 13px; color: #fff; font-weight: 400; line-height: 37px; padding: 0 10px; }
+    #NewScheduleService { padding: 0 !important; }
+    #NewScheduleService .tabsArea.nobg { padding: 15px 25px !important; }
+    #NewScheduleService ul.listView li span.inputText { width: 58%; }
+    #NewScheduleService ul.listView li span.smallText { width: 10%; height: 34px; line-height: 34px; display: block; float: left; font-weight: 400; margin-left: 10px; }
+    #NewScheduleService ul.listView li span.inputText.timeField { width: 23%; margin-right: 16px; }
+    #NewScheduleService ul.listView li span.inputText.timeDrop { width: 33%; margin-top:-2px; }
+    h4.newTitle { padding: 0; margin: 0 0 10px 0; line-height: 1.5; font-weight: 400; font-size: 1.2rem; color: #3f4047; }
+
+    @@media only screen and (max-width: 1023px) and (min-width: 768px) {
+        #NewScheduleService ul.listView li span.inputText.timeDrop { width: 32.5%; }
+    }
+    @@media only screen and (max-width: 767px) and (min-width: 640px) {
+        #NewScheduleService ul.listView li span.inputText.timeDrop { width: 32%; }
+    }
+    @@media only screen and (max-width: 639px) and (min-width: 568px) {
+        #NewScheduleService ul.listView li span.inputText.timeDrop { width: 32%; }
+    }
+    @@media only screen and (max-width: 567px) and (min-width: 480px) {
+        #NewScheduleService ul.listView li span.inputText { width: 55%; }
+        #NewScheduleService ul.listView li span.inputText.timeDrop { width: 28.5%; }
+    }
+    @@media screen and (max-width: 479px) {
+        #NewScheduleService ul.listView li span.inputText.timeField { width:49% !important; margin-right: 0; display: inline-block !important; }
+        #NewScheduleService ul.listView li span.inputText.timeDrop { width: 48% !important; float: right !important; }
+        ul.listView.nobrd li.hiddenInitial, ul.listView.nobrd li.hiddenInitialMeter1 {position: relative;}
+        ul.listView.nobrd li.hiddenInitial, ul.listView.nobrd li.hiddenInitialMeter2 { position:relative; }
+        #NewScheduleService ul.listView li span.smallText { width: 25%; position: absolute; right: 0; top: 1px; text-align:right; }
+    }
+</style>
+
+<script>
+    $(function () {
+        $(".dtpickerNew").datepicker({
+            showOn: 'button',
+            buttonImageOnly: true,
+            maxDate: new Date(),
+            buttonImage: '/Images/calender.png'
+        });
+     if ('@Model.ScheduledServiceModel.Pagetype' === "Add") {
+            $('.dtpickerNew').datepicker('setDate', new Date());
+        }
+        var timerVal = moment().format('hh:mm A');
+        $('.timerId').timepicker(
+            {
+                template: 'dropdown',
+                minuteStep: 1,
+                // secondStep: 1,
+                showMeridian: true,
+                defaultTime: timerVal
+            });
+    });
+    $(function () {
+        $('.restkey').bind('keyup keydown keypress', function (evt) {
+
+            return false;
+        });
+
+        $(document).find('form').find("#FleetFuelModel_ClientLookupId").removeClass("input-validation-error");
+    });
+</script>
+

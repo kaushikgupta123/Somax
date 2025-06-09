@@ -1,0 +1,117 @@
+﻿@model Client.Models.FleetAsset.FleetAssetVM
+
+<ul class="listView nobrd">
+    <li>
+        <span class="label" id="spnEngineBrand">@Html.LabelFor(m => m.FleetAssetModel.EngineBrand)</span>
+        <span class="inputText">
+            @Html.TextBoxFor(m => m.FleetAssetModel.EngineBrand, new { @class = "form-control search m-input flt_eng", @style = "color:black", autocomplete = "off", maxlength = "30" })
+        </span>
+    </li>
+    <li>
+        <span class="label" id="spnAspiration">@Html.LabelFor(m => m.FleetAssetModel.Aspiration)</span>
+        <span class="inputText">
+            @Html.TextBoxFor(m => m.FleetAssetModel.Aspiration, new { @class = "form-control search m-input flt_eng", @style = "color:black", autocomplete = "off", maxlength = "30" })
+        </span>
+    </li>
+    <li>
+        <span class="label" id="spnWidth">@Html.LabelFor(m => m.FleetAssetModel.Bore)</span>
+        <span class="inputText">
+            @Html.ValidationMessageFor(m => m.FleetAssetModel.Bore, "", new { style = "display:none" })
+            @Html.TextBoxFor(m => m.FleetAssetModel.Bore, new { @class = "form-control search decimalinput flt_engdec", @style = "color:black", autocomplete = "off" })
+        </span>
+    </li>
+    <li>
+        <span class="label" id="spnCam">@Html.LabelFor(m => m.FleetAssetModel.Cam)</span>
+        <span class="inputText">
+            @Html.TextBoxFor(m => m.FleetAssetModel.Cam, new { @class = "form-control search m-input flt_eng", @style = "color:black", autocomplete = "off", maxlength = "30" })
+        </span>
+    </li>
+    <li>
+        <span class="label" id="spnCompression">@Html.LabelFor(m => m.FleetAssetModel.Compression)</span>
+        <span class="inputText">
+            @Html.ValidationMessageFor(m => m.FleetAssetModel.Compression, "", new { style = "display:none" })
+            @Html.TextBoxFor(m => m.FleetAssetModel.Compression, new { @class = "form-control search decimalinput flt_engdec", @style = "color:black", autocomplete = "off" })
+        </span>
+    </li>
+    <li>
+        <span class="label" id="spnCylinders">@Html.LabelFor(m => m.FleetAssetModel.Cylinders)</span>
+        <span class="inputText">
+            @Html.ValidationMessageFor(m => m.FleetAssetModel.Cylinders, "", new { style = "display:none" })
+            @Html.TextBoxFor(m => m.FleetAssetModel.Cylinders, new { @class = "form-control search decimalinput flt_engdec", @style = "color:black", autocomplete = "off" })
+        </span>
+    </li>
+    <li>
+        <span class="label" id="spnDisplacement">@Html.LabelFor(m => m.FleetAssetModel.Displacement)</span>
+        <span class="inputText">
+            @Html.ValidationMessageFor(m => m.FleetAssetModel.Displacement, "", new { style = "display:none" })
+            @Html.TextBoxFor(m => m.FleetAssetModel.Displacement, new { @class = "form-control search decimalinput flt_engdec", @style = "color:black", autocomplete = "off" })
+        </span>
+    </li>
+    <li>
+        <span class="label" id="spnFuelInduction">@Html.LabelFor(m => m.FleetAssetModel.FuelInduction)</span>
+        <span class="inputText">
+            @Html.TextBoxFor(m => m.FleetAssetModel.FuelInduction, new { @class = "form-control search m-input flt_eng", @style = "color:black", autocomplete = "off", maxlength = "30" })
+        </span>
+    </li>
+    <li>
+        <span class="label" id="spnFuelQuality">@Html.LabelFor(m => m.FleetAssetModel.FuelQuality)</span>
+        <span class="inputText">
+            @Html.ValidationMessageFor(m => m.FleetAssetModel.FuelQuality, "", new { style = "display:none" })
+            @Html.TextBoxFor(m => m.FleetAssetModel.FuelQuality, new { @class = "form-control search decimalinput flt_engdec", @style = "color:black", autocomplete = "off" })
+        </span>
+    </li>
+    <li>
+        <span class="label" id="spnMaximumHP">@Html.LabelFor(m => m.FleetAssetModel.MaxHP)</span>
+        <span class="inputText">
+            @Html.ValidationMessageFor(m => m.FleetAssetModel.MaxHP, "", new { style = "display:none" })
+            @Html.TextBoxFor(m => m.FleetAssetModel.MaxHP, new { @class = "form-control search decimalinput flt_engdec", @style = "color:black", autocomplete = "off" })
+        </span>
+    </li>
+    <li>
+        <span class="label" id="spnMaximumTorque">@Html.LabelFor(m => m.FleetAssetModel.MaxTorque)</span>
+        <span class="inputText">
+            @Html.ValidationMessageFor(m => m.FleetAssetModel.MaxTorque, "", new { style = "display:none" })
+            @Html.TextBoxFor(m => m.FleetAssetModel.MaxTorque, new { @class = "form-control search decimalinput flt_engdec", @style = "color:black", autocomplete = "off" })
+        </span>
+    </li>
+    <li>
+        <span class="label" id="spnRedlineRPM">@Html.LabelFor(m => m.FleetAssetModel.RedlineRPM)</span>
+        <span class="inputText">
+            @Html.ValidationMessageFor(m => m.FleetAssetModel.RedlineRPM, "", new { style = "display:none" })
+            @Html.TextBoxFor(m => m.FleetAssetModel.RedlineRPM, new { @class = "form-control search decimalinput flt_engdec", @style = "color:black", autocomplete = "off" })
+        </span>
+    </li>
+    <li>
+        <span class="label" id="spnStroke">@Html.LabelFor(m => m.FleetAssetModel.Stroke)</span>
+        <span class="inputText">
+            @Html.ValidationMessageFor(m => m.FleetAssetModel.Stroke, "", new { style = "display:none" })
+            @Html.TextBoxFor(m => m.FleetAssetModel.Stroke, new { @class = "form-control search decimalinput flt_engdec", @style = "color:black", autocomplete = "off" })
+        </span>
+    </li>
+    <li>
+        <span class="label" id="spnValves">@Html.LabelFor(m => m.FleetAssetModel.Valves)</span>
+        <span class="inputText">
+            @Html.ValidationMessageFor(m => m.FleetAssetModel.Valves, "", new { style = "display:none" })
+            @Html.TextBoxFor(m => m.FleetAssetModel.Valves, new { @class = "form-control search decimalinput flt_engdec", @style = "color:black", autocomplete = "off" })
+        </span>
+    </li>
+    <li>
+        <span class="label" id="spnTransmissionBrand">@Html.LabelFor(m => m.FleetAssetModel.TransmissionBrand)</span>
+        <span class="inputText">
+            @Html.TextBoxFor(m => m.FleetAssetModel.TransmissionBrand, new { @class = "form-control search m-input flt_eng", @style = "color:black", autocomplete = "off", maxlength = "30" })
+        </span>
+    </li>
+    <li>
+        <span class="label" id="spnTransmissionType">@Html.LabelFor(m => m.FleetAssetModel.TransmissionType)</span>
+        <span class="inputText">
+            @Html.TextBoxFor(m => m.FleetAssetModel.TransmissionType, new { @class = "form-control search m-input flt_eng", @style = "color:black", autocomplete = "off", maxlength = "30" })
+        </span>
+    </li>
+    <li>
+        <span class="label" id="spnGears">@Html.LabelFor(m => m.FleetAssetModel.Gears)</span>
+        <span class="inputText">
+            @Html.ValidationMessageFor(m => m.FleetAssetModel.Gears, "", new { style = "display:none" })
+            @Html.TextBoxFor(m => m.FleetAssetModel.Gears, new { @class = "form-control search decimalinput flt_engdec", @style = "color:black", autocomplete = "off" })
+        </span>
+    </li>
+</ul>

@@ -1,0 +1,53 @@
+﻿@model Client.Models.Configuration.UIConfiguration.UiConfigurationVM
+<div id="addEditUDFLookupModal" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-info">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close cancelUdflook">&times;</button>
+                <h4 class="modal-title"> @Model.Loc.Where(a => a.ResourceId == "spnAddUDFLookup").FirstOrDefault().Value.ToString()</h4>
+            </div>
+            @Html.Partial("_ErrorDiv")
+            @using (Ajax.BeginForm("AddEditUDFLookupList", "UiConfiguration", new AjaxOptions { HttpMethod = "Post", OnSuccess = "AddEditLookupOnSuccess", OnBegin = "AjaxBeginFormBegin", OnComplete = "AjaxBeginFormComplete", OnFailure = "AjaxBeginFormFaillure" }, new { enctype = "multipart/form-data", id = "addSectionform" }))
+            {
+                @Html.AntiForgeryToken()
+                <div class="modal-body">
+                    <div class="form-group">
+                        <ul class="listView nobrd" style="border-bottom:0;">
+                            <li>
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnValue").FirstOrDefault().Value.ToString() : <small>*</small></span>
+                                <span class="inputText">
+                                    @if (Model.udfLookuplistModel.LookupListId == 0)
+                                    {
+                                        @Html.ValidationMessageFor(m => m.udfLookuplistModel.ListValue, "", new { style = "display:none" })
+                                        @Html.TextBoxFor(m => m.udfLookuplistModel.ListValue, new { @class = "form-control search m-input", maxlength = "15", @style = "color:black", autocomplete = "off" })
+                                    }
+                                    else
+                                    {
+                                        @Html.ValidationMessageFor(m => m.udfLookuplistModel.ListValue, "", new { style = "display:none" })
+                                        @Html.TextBoxFor(m => m.udfLookuplistModel.ListValue, new { @class = "form-control search m-input", maxlength = "15", @style = "color:black", autocomplete = "off", @readonly = "readonly" })
+                                    }
+                                </span>
+                            </li>
+                            <li>
+                                <span class="label">Description : <small>*</small></span>
+                                <span class="inputText">
+                                    @Html.ValidationMessageFor(m => m.udfLookuplistModel.Description, "", new { style = "display:none" })
+                                    @Html.TextBoxFor(m => m.udfLookuplistModel.Description, new { @class = "form-control search m-input", maxlength = "63", @style = "color:black", autocomplete = "off" })
+                                </span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="modal-footer" style="padding:15px 25px !important;">
+                    <button type="button" class="btn btn-default cancelUdflook" id="cancelUdf"><i class="fa fa-close buttonIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button>
+                    <button type="submit" class="btn btn-blue" style="float:right;" id="btnAddUdfLookup"><i class="fa fa-save buttonIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+                    <div style="clear:both;"></div>
+                </div>
+                @Html.HiddenFor(m => m.udfLookuplistModel.LookupListId);
+                @Html.HiddenFor(m => m.udfLookuplistModel.ListName);
+                @Html.HiddenFor(m => m.udfLookuplistModel.UpdateIndex)
+            }
+
+        </div>
+    </div>
+</div>

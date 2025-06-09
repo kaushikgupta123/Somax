@@ -1,0 +1,681 @@
+﻿@model Client.Models.Devices.DeviceVM
+
+@if (Convert.ToString(Session["MenuState"]) == "" || Convert.ToString(Session["MenuState"]) == "open")
+{
+    <div class="m-subheader fixedDiv1">
+        <div class="new-m-subheader">
+            <div class="PageTitle">
+                <div class="align-items-center">
+                    <h3 class="m-subheader__title" style="padding:0;">
+                        <span class="dropToggle" id="spnDropToggle">
+                            <img src="~/Images/toggleMenu.png" />
+                        </span>
+                        <span style="line-height:35px;" id="devicesearchtitle">
+                            @Model.Loc.Where(a => a.ResourceId == "spnDevices").FirstOrDefault().Value.ToString()
+                        </span>
+                    </h3>
+                </div>
+            </div>
+            @if (Model.APMval)
+            {
+                <div class="ActionBttnArea">
+                    <div class="forRes" style="clear:both;"></div>
+                    <button type="button" class="btn newBtn-add AddDevice pull-left" title="Add Device">@Model.Loc.Where(a => a.ResourceId == "spnAddDevice").FirstOrDefault().Value.ToString()</button>
+                    <div style="clear:both;"></div>
+                </div>
+            }
+            <div style="clear:both;"></div>
+        </div>
+    </div>
+}
+else
+{
+    <div class="m-subheader fixedDiv1 fixupperpannel2">
+        <div class="new-m-subheader">
+            <div class="PageTitle">
+                <div class="align-items-center">
+                    <h3 class="m-subheader__title" style="padding:0;">
+                        <span class="dropToggle" id="spnDropToggle">
+                            <img src="~/Images/toggleMenu.png" />
+                        </span>
+                        <span style="line-height:35px;" id="wosearchtitle">
+                            @Model.Loc.Where(a => a.ResourceId == "spnDevice").FirstOrDefault().Value.ToString()
+
+                        </span>
+                    </h3>
+                </div>
+            </div>
+            @if (Model.APMval)
+            {
+                <div class="ActionBttnArea">
+                    <div class="forRes" style="clear:both;"></div>
+                    <button type="button" class="btn newBtn-add AddDevice pull-left" title="Add Device">@Model.Loc.Where(a => a.ResourceId == "spnAddDevice").FirstOrDefault().Value.ToString()</button>
+                    <div style="clear:both;"></div>
+                </div>
+            }
+            <div style="clear:both;"></div>
+        </div>
+    </div>
+}
+<div class="pushDiv1"></div>
+<div class="row">
+    <div class="col-xl-12">
+        <div class="m-portlet" id="m_portlet" style="padding:15px;">
+            <div class="actionBar" style="display:block" id="dvGridAction">
+                <div class="pull-left" style="position:relative;">
+                    <button type="button" class="btn btn-white navbar-btn" title="Search" id="SrchBttnDevice"><i class="fa fa-search" style="font-size: 1.1rem;position: relative;top: -2px;left: -2px;"></i> @Model.Loc.Where(a => a.ResourceId == "globalSearch").FirstOrDefault().Value.ToString() </button>
+                    <button type="button" class="btn btn-white navbar-btn" id="sidebarCollapse" title="Advance Search"><i class="fa fa-filter" style="font-size: 1.3rem;"></i></button>
+                    <div style="clear:both;"></div>
+                    <div class="searchBttnDrop" id="searchBttnNewDrop" style="display:none;">
+                        <div class="form-group" style="position:relative;">
+                            <i class="fa fa-search txtSearchClick" style="font-size: 1.1rem;position: absolute;top: 9px;left: 15px;"></i>
+                            <a href="javascript:void(0)" id="cancelText"><i class="fa fa-close" style="font-size: 1.1rem;position: absolute;top: 9px;right: 15px;"></i></a>
+                            <input type="text" id="txtColumnSearch" class="form-control search" placeholder="Search..." style="padding: 0.65rem 2.75rem;" autocomplete="off">
+                        </div>
+                        <div class="searchInfo">
+                            <span class="recent">@Model.Loc.Where(a => a.ResourceId == "GlobalRecentlySearched").FirstOrDefault().Value.ToString() </span>
+                            <span class="clear"><a href="javascript:void(0)" id="clearText">@Model.Loc.Where(a => a.ResourceId == "globalClear").FirstOrDefault().Value.ToString() </a></span>
+                            <div style="clear:both;"></div>
+                        </div>
+                        <div class="searchList" id="wosearchList">
+                            <ul id="UlSearchList"></ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pull-right">
+                    <button type="button" class="btn btn-white import-export" id="btnDeviceExport" onclick="funcShowExportbtn()">Export</button>
+                    @*<div class="dropdown btn-sort" id="shortDrop" style="margin-right:0 !important;">
+                            <button class="btn btn-blue dropdown-toggle" type="button" id="btnsortmenu" data-toggle="dropdown">Sorting</button>
+                            <ul class="dropdown-menu" role="menu" aria-labelledby="btnsortmenu">
+                                <li role="presentation" class="srtpartcolumn" data-col="0" data-order="asc"><a role="menuitem" tabindex="-1" href="javascript:void(0)"> @Model.Loc.Where(a => a.ResourceId == "spnDeviceID").FirstOrDefault().Value.ToString() </a></li>
+                                <li role="presentation" class="srtpartcolumn" data-col="1" data-order="asc"><a role="menuitem" tabindex="-1" href="javascript:void(0)"> @Model.Loc.Where(a => a.ResourceId == "spnName").FirstOrDefault().Value.ToString() </a></li>
+                                <li role="presentation" class="srtpartcolumn" data-col="2" data-order="asc"><a role="menuitem" tabindex="-1" href="javascript:void(0)"> @Model.Loc.Where(a => a.ResourceId == "spnCategory").FirstOrDefault().Value.ToString() </a></li>
+                                <li role="presentation" class="srtpartcolumn" data-col="3" data-order="asc"><a role="menuitem" tabindex="-1" href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnSensorType").FirstOrDefault().Value.ToString()</a></li>
+                                <li role="presentation" class="srtpartcolumn" data-col="4" data-order="asc"><a role="menuitem" tabindex="-1" href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnGlobalEquipmentId").FirstOrDefault().Value.ToString()</a></li>
+                                <li role="presentation" class="srtpartcolumn" data-col="5" data-order="asc"><a role="menuitem" tabindex="-1" href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnAssetName").FirstOrDefault().Value.ToString()</a></li>
+                                <li role="presentation" class="srtpartcolumn" data-col="6" data-order="asc"><a role="menuitem" tabindex="-1" href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnLastReading").FirstOrDefault().Value.ToString()</a></li>
+                            </ul>
+                        </div>*@
+                    <div style="clear:both;"></div>
+                </div>
+                <div style="clear:both;"></div>
+                <div id="advsearchfilteritems"></div>
+                <div style="clear:both;"></div>
+            </div>
+            <div style="clear:both;"></div>
+
+            <div id="Active" class="tabcontent" style="display:block;">
+                <div class="table-responsive">
+                    <table id="tblDevices" class="eqpDtlTbl row-border custom-sort tblMain tblDefaultSort" style="width:100%;">
+                        <thead>
+                            <tr>
+                                <th id="thDeviceId" data-col="0" data-th-index="0">@Model.Loc.Where(a => a.ResourceId == "spnDeviceID").FirstOrDefault().Value.ToString() </th>
+                                <th id="thName" data-col="1" data-th-index="1">@Model.Loc.Where(a => a.ResourceId == "spnName").FirstOrDefault().Value.ToString() </th>
+                                <th id="thSensorType" data-col="2" data-th-index="2">@Model.Loc.Where(a => a.ResourceId == "GlobalType").FirstOrDefault().Value.ToString()</th>
+                                <th id="thAssetID" data-col="3" data-th-index="3">@Model.Loc.Where(a => a.ResourceId == "spnGlobalEquipmentId").FirstOrDefault().Value.ToString()</th>
+                                <th id="thAssetName" data-col="4" data-th-index="4">@Model.Loc.Where(a => a.ResourceId == "spnAssetName").FirstOrDefault().Value.ToString()</th>
+                                <th id="thLastReading" data-col="5" data-th-index="5" style="text-align:right !important;">@Model.Loc.Where(a => a.ResourceId == "spnLastReading").FirstOrDefault().Value.ToString()</th>
+                                <th id="thLastReadingDate" data-col="6" data-th-index="6" style="text-align:right !important;">@Model.Loc.Where(a => a.ResourceId == "spnLastReadingDate").FirstOrDefault().Value.ToString()</th>
+                                <th id="Inactive" data-col="7" data-th-index="7" style="text-align:right !important;">@Model.Loc.Where(a => a.ResourceId == "globalInActive").FirstOrDefault().Value.ToString()</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@Html.Partial("_DeviceAdvancedSearch")
+@Html.Partial("_StatusDetailsLocalization")
+@Html.Partial("_Export")
+@if (Convert.ToString(Session["MenuState"]) == "" || Convert.ToString(Session["MenuState"]) == "open")
+{
+    <div id="searcharea" class="slideToggleBar" style="display:none">
+        <div class="searchBoxArea">
+            <div class="form-group" style="margin-bottom:0; position:relative;">
+                <i class="fa fa-search" style="font-size: 1.1rem;position: absolute;top: 8px;left: 0px;"></i>
+                <input type="text" class="form-control searched" placeholder="Search for a view" id="devicesearctxtbox">
+            </div>
+        </div>
+
+        <div class="searchList">
+            <ul id="devicesearchListul">
+                @foreach (var item in Model.deviceModel.DeviceCategoryList)
+                {
+                    <li id="@item.Value" class="dvsearchdrpbox"><a href="javascript:void(0)">@item.Text</a></li>
+                }
+            </ul>
+        </div>
+    </div>
+}
+else
+{
+    <div id="searcharea" class="slideToggleBar" style="display:none;left:81px !important;">
+        <div class="searchBoxArea">
+            <div class="form-group" style="margin-bottom:0; position:relative;">
+                <i class="fa fa-search" style="font-size: 1.1rem;position: absolute;top: 8px;left: 0px;"></i>
+                <input type="text" class="form-control searched" placeholder="Search for a view" id="devicesearctxtbox">
+            </div>
+        </div>
+
+        <div class="searchList">
+            <ul id="devicesearchListul">
+                @foreach (var item in Model.deviceModel.DeviceCategoryList)
+                {
+                    <li id="@item.Value" class="dvsearchdrpbox"><a href="javascript:void(0)">@item.Text</a></li>
+                }
+            </ul>
+        </div>
+    </div>
+}
+
+@*V2-536*@
+<div id="DeviceCatagoryListModalpopup" class="modal fade" role="dialog">
+    <div class="modal-dialog" id="DeviceCatagoryListPopUp">
+    </div>
+</div>
+@*V2-536 end*@
+<style type="text/css">
+    #popupExport {
+        right: 38px !important;
+    }
+
+    button.complete {
+        float: left;
+        margin-right: 10px;
+        background: #34bfa3;
+        color: #fff;
+        border: 1px solid #34bfa3;
+    }
+
+        button.complete:hover,
+        button.complete:active,
+        button.complete:focus {
+            background: #1f917a;
+            color: #fff;
+            border: 1px solid #1f917a;
+        }
+
+    #layoutDrop {
+        float: left;
+        margin-right: 10px;
+    }
+
+    #layoutsortmenu {
+        width: 160px;
+        text-align: left;
+    }
+
+    .dropdown-toggle#layoutsortmenu::after {
+        margin-left: 1.255em;
+    }
+
+    .dropToggle {
+        display: block;
+        float: left;
+        margin-right: 7px;
+        margin-top: 4px;
+        padding: 3px 5px;
+        border: 1px solid transparent;
+        border-radius: 0.25rem;
+        background: #f1f1f1;
+        border: 1px solid #b9c1c4;
+        cursor: pointer;
+    }
+
+        .dropToggle:hover {
+            background: #fff;
+            border: 1px solid #3f4047;
+        }
+
+    .slideToggleBar {
+        position: fixed;
+        left: 256px;
+        top: 61px;
+        z-index: 101;
+        background: #fff;
+        width: 260px;
+        height: 100%;
+        box-shadow: 0 0 15px 2px #c1c1c1;
+    }
+
+    .searchBoxArea {
+        padding: 10px;
+        border-bottom: 2px solid #315a98;
+    }
+
+    .searchList {
+    }
+
+        .searchList ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+            .searchList ul li {
+                font-weight: 400;
+                font-size: 1.02rem;
+                text-transform: initial;
+                color: #575962;
+            }
+
+                .searchList ul li a {
+                    display: block;
+                    padding: 7px 10px;
+                    color: #575962;
+                    text-decoration: none;
+                    margin-bottom: 1px;
+                }
+
+                    .searchList ul li:hover,
+                    .searchList ul li a:hover,
+                    .searchList ul li a:focus {
+                        background: #ebe8f2;
+                        color: #575962;
+                        text-decoration: none;
+                    }
+
+                    .searchList ul li a:active,
+                    .searchList ul li.activeState a {
+                        background: transparent url('../../Images/hoverTick.png') no-repeat right center;
+                        color: #315a98;
+                        text-decoration: none;
+                    }
+
+    .form-control.searched {
+        border: 0px solid #b9c1c4;
+        padding: 0.65rem 1rem 0.65rem 1.65rem;
+        color: #333;
+    }
+
+    .searchBttnDrop {
+        background: #fff;
+        box-shadow: 0 0 15px #c1c1c1;
+        width: 250px;
+        padding: 10px;
+        position: absolute;
+        left: 0;
+        top: 36px;
+        z-index: 9;
+        border-radius: 5px;
+    }
+
+    .searchInfo {
+        margin-bottom: 0.5rem;
+    }
+
+        .searchInfo span.recent {
+            font-weight: 500;
+            font-size: 1.02rem;
+            text-transform: initial;
+            color: #575962;
+            display: block;
+            width: auto;
+            float: left;
+        }
+
+        .searchInfo span.clear {
+            font-weight: 400;
+            font-size: 1.02rem;
+            text-transform: initial;
+            color: #2a5ec4;
+            display: block;
+            width: auto;
+            float: right;
+        }
+
+            .searchInfo span.clear a {
+                color: #2a5ec4;
+                text-decoration: none;
+            }
+
+    .m-portlet.cardRow {
+        border: 1px solid #cfd7df;
+        border-radius: 0.25rem;
+        margin-bottom: 15px;
+    }
+    /*.m-portlet.cardRow:last-child { margin-bottom: 20px; }*/
+    .gridList {
+        padding: 0.75rem;
+    }
+
+        .gridList:hover {
+            background: #eceff1;
+        }
+
+    .gridImgBox {
+        border-radius: 5px;
+        width: 85%;
+        float: left;
+    }
+
+        .gridImgBox img {
+            border-radius: 5px;
+            height: 121px !important;
+        }
+
+    .gridCheck {
+        width: 15%;
+        float: left;
+        height: 100%;
+        padding: 44px 0;
+    }
+
+    .newDescription {
+        font-size: 1.1rem;
+        color: #575962;
+        font-weight: 400;
+    }
+
+        .newDescription span.orderId {
+            display: block;
+            margin-bottom: 7px;
+        }
+
+            .newDescription span.orderId a {
+                color: #315a98;
+                font-weight: 400;
+            }
+
+    .types {
+        margin-bottom: 7px;
+    }
+
+    .newDescription p {
+        padding: 0 0 7px 0;
+        margin: 0;
+    }
+
+        .newDescription p:last-child {
+            padding: 0;
+        }
+
+    .gridStatus {
+        font-size: 1.1rem;
+        color: #575962;
+        font-weight: 400;
+        position: relative;
+        height: 100%;
+    }
+
+        .gridStatus span {
+            display: block;
+            margin-bottom: 7px;
+        }
+
+            .gridStatus span.newStatus {
+                color: #575962;
+                margin-bottom: 0;
+                position: absolute;
+                bottom: 0;
+            }
+
+    .CardPagination {
+    }
+
+    #layoutDrop .dropdown-menu.show {
+        top: 1px !important;
+        width: 159px !important;
+    }
+
+    @@media only screen and (min-width: 1366px) and (max-width: 1599px) {
+        .openMenu .gridList button.complete {
+            margin-right: 0 !important;
+            width: 70%;
+        }
+
+        .openMenu .gridList button.btn-blue.wobtngrdcancel {
+            margin-top: 10px;
+            width: 70%;
+        }
+    }
+
+    @@media only screen and (min-width: 1360px) and (max-width: 1365px) {
+        .openMenu .gridList button.complete {
+            margin-right: 0 !important;
+            width: 70%;
+        }
+
+        .openMenu .gridList button.btn-blue.wobtngrdcancel {
+            margin-top: 10px;
+            width: 70%;
+        }
+    }
+
+    @@media only screen and (min-width: 1200px) and (max-width: 1359px) {
+        .openMenu .gridList button.complete {
+            margin-right: 0 !important;
+            width: 80%;
+        }
+
+        .closeMenu .gridList button.complete {
+            margin-right: 0 !important;
+            width: 65%;
+        }
+
+        .openMenu .gridList button.btn-blue.wobtngrdcancel {
+            margin-top: 10px;
+            width: 80%;
+        }
+
+        .closeMenu .gridList button.btn-blue.wobtngrdcancel {
+            margin-top: 10px;
+            width: 65%;
+        }
+    }
+
+    @@media only screen and (min-width: 1024px) and (max-width: 1199px) {
+        .openMenu .actionBar div.pull-right {
+            float: right;
+            margin-top: 0px;
+        }
+
+        .openMenu .gridList button.complete {
+            margin-right: 0 !important;
+            width: 100%;
+        }
+
+        .closeMenu .gridList button.complete {
+            margin-right: 0 !important;
+            width: 77%;
+        }
+
+        .openMenu .gridList button.btn-blue.wobtngrdcancel {
+            margin-top: 10px;
+            width: 100%;
+        }
+
+        .closeMenu .gridList button.btn-blue.wobtngrdcancel {
+            margin-top: 10px;
+            width: 77%;
+        }
+    }
+
+    @@media only screen and (min-width: 768px) and (max-width: 1023px) {
+        .PageTitle {
+            float: left;
+        }
+
+        .ActionBttnArea {
+            float: right;
+        }
+
+        .actionBar div.pull-right {
+            float: right;
+            margin-top: 0;
+        }
+
+        .gridList button.complete {
+            margin-right: 0 !important;
+            width: 100%;
+        }
+
+        .gridList button.btn-blue.wobtngrdcancel {
+            margin-top: 10px;
+            width: 100%;
+        }
+
+        .slideToggleBar {
+            left: 0
+        }
+    }
+
+    @@media only screen and (min-width: 640px) and (max-width: 767px) {
+        .PageTitle {
+            float: left;
+        }
+
+        .ActionBttnArea {
+            float: right;
+        }
+
+        .newDescription {
+            margin-top: 15px;
+        }
+
+        .gridStatus span.newStatus {
+            position: relative;
+        }
+
+        .slideToggleBar {
+            left: 0
+        }
+    }
+
+    @@media only screen and (min-width: 568px) and (max-width: 639px) {
+        .PageTitle {
+            float: left;
+        }
+
+        .ActionBttnArea {
+            float: right;
+        }
+
+        .newDescription {
+            margin-top: 15px;
+        }
+
+        .gridStatus span.newStatus {
+            position: relative;
+        }
+
+        .slideToggleBar {
+            left: 0
+        }
+    }
+
+    @@media only screen and (min-width: 480px) and (max-width: 567px) {
+        .ActionBttnArea {
+            float: left;
+            margin-top: 8px;
+        }
+
+        #shortDrop {
+            margin-top: 10px;
+            margin-right: 0 !important;
+        }
+
+        .newDescription {
+            margin-top: 15px;
+        }
+
+        .gridStatus span.newStatus {
+            position: relative;
+        }
+
+        .slideToggleBar {
+            left: 0
+        }
+    }
+
+    @@media only screen and (min-width: 360px) and (max-width: 479px) {
+        .ActionBttnArea {
+            float: left;
+            margin-top: 8px;
+        }
+
+        .actionBar div.pull-right {
+            float: left;
+            margin-top: 10px;
+        }
+
+        #shortDrop {
+            margin-top: 10px;
+            margin-right: 0 !important;
+        }
+
+        .newDescription {
+            margin-top: 15px;
+        }
+
+        .gridStatus {
+            margin-bottom: 15px;
+        }
+
+            .gridStatus span.newStatus {
+                position: relative;
+            }
+
+        .updateArea ul.filter_apply2 {
+            width: auto !important;
+        }
+
+        .updateArea .pull-right {
+            float: left !important;
+        }
+
+        .slideToggleBar {
+            left: 0
+        }
+    }
+
+    @@media only screen and (min-width: 320px) and (max-width: 359px) {
+        .ActionBttnArea {
+            float: left;
+            margin-top: 8px;
+        }
+
+        .actionBar div.pull-right {
+            float: left;
+            margin-top: 10px;
+        }
+
+        #shortDrop {
+            margin-top: 10px;
+            margin-right: 0 !important;
+        }
+
+        #liCustomize {
+            margin-top: 10px !important;
+            margin-left: 10px !important;
+        }
+
+        .newDescription {
+            margin-top: 15px;
+        }
+
+        .gridStatus {
+            margin-bottom: 15px;
+        }
+
+            .gridStatus span.newStatus {
+                position: relative;
+            }
+
+        .updateArea ul.filter_apply2 {
+            width: auto !important;
+        }
+
+        .updateArea .pull-right {
+            float: left !important;
+        }
+
+        .slideToggleBar {
+            left: 0
+        }
+    }
+</style>

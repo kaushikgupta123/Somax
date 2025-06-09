@@ -1,0 +1,80 @@
+﻿@using DataContracts;
+@{
+    string AssetGroup1Name = "Asset Group 1";
+    string AssetGroup2Name = "Asset Group 2";
+    string AssetGroup3Name = "Asset Group 3";
+
+    var data = HttpContext.Current.Session["userData"];
+    if (data != null)
+    {
+        var userData = (UserData)data;
+
+        AssetGroup1Name = String.IsNullOrEmpty(userData.Site.AssetGroup1Name) ? "Asset Group 1" : userData.Site.AssetGroup1Name;
+        AssetGroup2Name = String.IsNullOrEmpty(userData.Site.AssetGroup2Name) ? "Asset Group 2" : userData.Site.AssetGroup2Name;
+        AssetGroup3Name = String.IsNullOrEmpty(userData.Site.AssetGroup3Name) ? "Asset Group 3" : userData.Site.AssetGroup3Name;
+    }
+}
+<div id="AssetLookupModal" class="modal fade dropdown-modal" role="dialog" style="display:none;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close btnEqChildrenClose" onclick="$('#AssetLookupModal').modal('hide');">&times;</button>
+                <h4 class="modal-title" id="popEquipmentWOTable">@UtilityFunction.GetMessageFromResource("GlobalSelectEquipment", LocalizeResourceSetConstants.Global)</h4>
+            </div>
+            <div class="modal-body">
+                <div id="tbldropdown" class="dropdown-content tbl-dropdown" style="display:block;">
+                    <div class="table-responsive dropTableOuter">
+                        <table id="tblAssetLookup" class="stripe dropTable globalDropTable" style="width:100%;">
+                            <thead>
+                                <tr>
+                                    <th>@UtilityFunction.GetMessageFromResource("spnGlobalEquipmentId", LocalizeResourceSetConstants.Global)</th>
+                                    <th>@UtilityFunction.GetMessageFromResource("spnName", LocalizeResourceSetConstants.Global)</th>
+                                    <th>@UtilityFunction.GetMessageFromResource("GlobalModel", LocalizeResourceSetConstants.Global)</th>
+                                    <th>@UtilityFunction.GetMessageFromResource("GlobalType", LocalizeResourceSetConstants.Global)</th>
+                                    <th style="white-space: nowrap;">@AssetGroup1Name</th>
+                                    <th style="white-space: nowrap;">@AssetGroup2Name</th>
+                                    <th style="white-space: nowrap;">@AssetGroup3Name</th>
+                                    <th>@UtilityFunction.GetMessageFromResource("GlobalSerialNumber", LocalizeResourceSetConstants.Global)</th>
+                                </tr>
+                            </thead>
+                            <tfoot id="tblAssetLookupfooter" style="display:none">
+                                <tr>
+                                    <th style="position:relative;">@UtilityFunction.GetMessageFromResource("spnGlobalEquipmentId", LocalizeResourceSetConstants.Global)</th>
+                                    <th style="position:relative;">@UtilityFunction.GetMessageFromResource("spnName", LocalizeResourceSetConstants.Global)</th>
+                                    <th style="position:relative;">@UtilityFunction.GetMessageFromResource("GlobalModel", LocalizeResourceSetConstants.Global)</th>
+                                    <th style="position:relative;">@UtilityFunction.GetMessageFromResource("GlobalType", LocalizeResourceSetConstants.Global)</th>
+                                    <th style="position:relative;">@AssetGroup1Name</th>
+                                    <th style="position:relative;">@AssetGroup2Name</th>
+                                    <th style="position: relative;">@AssetGroup3Name</th>
+                                    <th style="position: relative;">@UtilityFunction.GetMessageFromResource("GlobalSerialNumber", LocalizeResourceSetConstants.Global)</th>
+
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="padding:15px 25px !important;">
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style type="text/css">
+    .dropdown-content {
+        height: 438px !important;
+    }
+
+    .EquipmentPRPopup {
+        overflow-x: auto;
+    }
+
+    .dropTableOuter table.dataTable thead .sorting_asc {
+        background-image: url('/Scripts/Metronic/Images/upArrow1.png') !important;
+    }
+
+    .dropTableOuter table.dataTable thead .sorting_desc {
+        background-image: url('/Scripts/Metronic/Images/downArrow1.png') !important;
+    }
+</style>

@@ -1,0 +1,155 @@
+﻿@model Client.Models.Meters.MetersVM
+@*@{int i = 0;}
+    @foreach (var item in Model.qRCodeModel.MeterIdsList)
+    {
+        var c = Model.qRCodeModel.MeterIdsList.Count;
+        <div id="@("inputdata" + i)" class="QRrcode" height="50px" style="text-align:left" title="@item">
+        </div>
+        i++;
+    }*@
+
+@using (Ajax.BeginForm("SetMeterIdlist", "Meter", new AjaxOptions { HttpMethod = "Post", OnSuccess = "MeterQROnSuccess", OnBegin = "AjaxBeginFormBegin", OnComplete = "AjaxBeginFormComplete", OnFailure = "AjaxBeginFormFaillure" }))
+{
+    @Html.AntiForgeryToken()
+    for (int loop = 0; loop < Model.qRCodeModel.MeterIdsList.Count; loop++)
+    {
+        @Html.HiddenFor(m => m.qRCodeModel.MeterIdsList[loop])
+    }
+    <div id="printDetailsMeterQrCodeModal" class="modal fade" role="dialog">
+        <div class="modal-dialog modal-info">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">@Model.Loc.Where(a => a.ResourceId == "globalPrintLabels").FirstOrDefault().Value.ToString()</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-lg-12 col-sm-12">
+                            <ul class="levelSize">
+                                <li>
+                                    <div class="txtList">
+                                        <p>
+                                            @Model.Loc.Where(a => a.ResourceId == "globalSmallQRCode").FirstOrDefault().Value.ToString()
+                                        </p>
+                                    </div>
+                                    <div style="clear:both;"></div>
+                                </li>
+
+                            </ul>
+                        </div>
+                        <div style="clear:both;"></div>
+                    </div>
+                </div>
+                <div class="modal-footer" style="padding:15px 25px !important;">
+                    <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-close faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button>
+                    <button type="submit" class="btn btn-blue" style="float:right;" id="btnPrintRotativaQr"><i class="fa fa-print faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalPrint").FirstOrDefault().Value.ToString()</button>
+                    <div style="clear:both;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+    <div style="width:auto;height:0;overflow:hidden;">
+        <div id="show_imagesSmall" style="width:600px; margin:0 auto;padding-left:100px">
+        </div>
+
+
+    </div>
+
+    @*<script type="text/javascript">
+            //#region QR-Code
+            var i = 1;
+            var j = 1;
+            var yGroup = [];
+            var xGroup = [];
+            var Tcount = $('.QRrcode').length;
+            var lastdivId = '';
+            var lastdivInnerId = '';
+            lastdivId = "show_imagesLarge" + Tcount;
+            lastdivInnerId = "show_imagesLargeInner2" + Tcount;
+            $(document).find(".QRrcode").each(function () {
+                var title = $(this).attr('title');
+                var x = $("#show_imagesSmall");
+                $.ajax({
+                    type: 'POST',
+                    url: '/Meter/QrGenerate',
+                    data: { value: title },
+                    success: function (data) {
+                        var innerX;
+                        innerX = $('<div/>')
+                            .attr("id", "show_imagesSmall" + i)
+                            .attr("style", "padding-left:5px;color:#000; font-weight:400;")
+                            .addClass("rows");
+                        xGroup.push("show_imagesSmall" + i);
+                         var MeterId = data.value.split('][')[0];
+                        MeterId = MeterId.length > 11 ? MeterId.substring(0, 11) + "..." : MeterId;
+
+                        var NameSmall = data.value.split('][')[1];
+                        NameSmall = NameSmall.length > 35 ? NameSmall.substring(0, 35) + "..." : NameSmall;
+                        innerX.append("<div class='row'><div class='col-lg-2 col-sm-2' id='show_imagesInner1" + i + "'><img class='roll' src='" + data.QRCodeImagePath + "' width='80' height='80' /></div><div class='col-lg-10 col-sm-10 descriptionArea' style='padding-left: 25px; margin-top: 10px;' ><p style='margin:0; padding:0 0 5px 0;'> " + MeterId + "</p><p class='qrDescription'>" + NameSmall + "</p></div><div class='clear'></div></div>");
+                        x.append(innerX);
+                        ++i;
+                        if ($('#' + lastdivId).find('#' + lastdivInnerId + ':contains("Location")').length > 0) {
+                            $('#btnPrintQr').removeAttr("disabled");
+                            CloseLoader();
+                        }
+                    }
+                });
+            });
+            function printPDF() {
+                var MeterClientlookupid = MeterToClientLookupIdQRcode[0].split('][')[0];
+                ShowLoader();
+                var doc = new jsPDF('l', 'in', [1, 2]);
+                    var count = $('#show_imagesSmall .rows').length;
+                    $('#show_imagesSmall .rows').each(function (i, v) {
+                        html2canvas(document.querySelector("#" + $(this).prop('id'))).then(canvas => {
+                            var imgData = canvas.toDataURL(
+                                'image/png');
+                            var imgWidth = 210;
+                            var pageHeight = 295;
+                            var width = doc.internal.pageSize.width;
+                            var height = doc.internal.pageSize.height;
+                            var imgHeight = canvas.height * imgWidth / canvas.width;
+                            var heightLeft = imgHeight;
+                            var position = 0;
+                            doc.addImage(imgData, 'JPEG', 0, 0);
+                            if (!--count) {
+                               var url = URL.createObjectURL(doc.output("blob"));
+                               window.open(url, "_blank");
+                                $('#printDetailsMeterQrCodeModal').modal('hide');
+                                CloseLoader();
+                                meterToQR = [];
+                                MeterToClientLookupIdQRcode = [];
+
+                            } else {
+                                doc.addPage();
+                            }
+                        });
+                    });
+
+
+            }
+
+        //#endregion
+        </script>
+
+        <style type="text/css">
+            p {
+                margin: 0;
+            }
+
+            .descriptionArea {
+                position: relative;
+                left: -15px;
+            }
+
+            p.qrDescription {
+                margin: 0;
+                padding: 0 0 1px 0;
+                width: 100px;
+                word-break: break-all;
+            }
+
+
+        </style>*@
+

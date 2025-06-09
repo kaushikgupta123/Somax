@@ -1,0 +1,198 @@
+﻿@model Client.Models.Configuration.PartMaster.PartMasterVM
+@{
+    string imageUrl = Model.PartMasterModel.ImageURL;
+    if (Model.PartMasterModel.ClientOnPremise)
+    {
+        imageUrl = UtilityFunction.PhotoBase64ImgSrc(Model.PartMasterModel.ImageURL);
+    }
+
+}
+<div class="m-subheader">
+    <div class="new-m-subheader">
+        <div class="PageTitle">
+            <div class="align-items-center separator">
+                <h3 class="m-subheader__title ">
+                    @Model.Loc.Where(a => a.ResourceId == "spnPartMaster").FirstOrDefault().Value.ToString()
+                </h3>
+            </div>
+        </div>
+        <div class="NewBreadcrumbArea">
+            <div class="newBreadcrumb">
+                <ul>
+                    <li><a href="/Configuration/Dashboard">&nbsp;</a></li>
+                    <li>
+                        <a href="/PartMaster/index?page=Masters_Part_Part_Master">
+                            @Model.Loc.Where(a => a.ResourceId == "spnPartMasterSearch").FirstOrDefault().Value.ToString()
+                        </a>
+                    </li>
+                    <li class="active">@Model.PartMasterModel.ClientLookupId</li>
+                </ul>
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+        <div class="ActionBttnArea">
+            @if (Model.security.PartMaster.Create)
+            {
+                <button type="button" class="btn newBtn-add AddPartMaster pull-left" title="Add Part Master"><i class="fa fa-plus"></i></button>
+            }
+            <div style="clear:both;"></div>
+        </div>
+        <div style="clear:both;"></div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xl-3">
+        <div class="m-portlet">
+            <div class="sideMenuArea">
+                <ul class="vtabs" id="detmaintab">
+                    <li class="active" id="PartMasterOverview"><a href="#PartMaster">@Model.Loc.Where(a => a.ResourceId == "spnPartMasterOverview").FirstOrDefault().Value.ToString()</a></li>
+                    <li id="photot" onclick="openCity(event, 'Photos')"><a href="#Photos" id="anchPhoto">@Model.Loc.Where(a => a.ResourceId == "spnPhoto").FirstOrDefault().Value.ToString()</a></li>
+                </ul>
+            </div>
+            <div class="selectTabs" id="selectTabs">
+                <select class="form-control" id="colorselector">
+                    <option value="PartMaster">@Model.Loc.Where(a => a.ResourceId == "spnPartMasterOverview").FirstOrDefault().Value.ToString()</option>
+                    <option value="Photos">@Model.Loc.Where(a => a.ResourceId == "spnPhoto").FirstOrDefault().Value.ToString()</option>
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-9">
+        <div class="row">
+            <div class="col-xl-12" id="btnnblock">
+                <div class="m-portlet" id="m_portlet" style="padding:15px;">
+                    <div class="bottomBlock">
+                        <div class="tabsArea nobg" id="PartMaster" style="display:block;">
+                            <ul class="listView">
+                                <li>
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnPartID").FirstOrDefault().Value.ToString()  :</span>
+                                    <span class="inputText">@Model.PartMasterModel.ClientLookupId</span>
+                                </li>
+                                <li>
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnAltPartID").FirstOrDefault().Value.ToString()  :</span>
+                                    <span class="inputText">@Model.PartMasterModel.EXPartId</span>
+                                </li>
+                                <li>
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnUPCCode").FirstOrDefault().Value.ToString()  :</span>
+                                    <span class="inputText">@Model.PartMasterModel.UPCCode</span>
+                                </li>
+                                <li>
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnManufacturer").FirstOrDefault().Value.ToString()  :</span>
+                                    <span class="inputText">@Model.PartMasterModel.Manufacturer</span>
+                                </li>
+                                <li>
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnManufacturerPartID").FirstOrDefault().Value.ToString()  :</span>
+                                    <span class="inputText">@Model.PartMasterModel.ManufacturerId</span>
+                                </li>
+                                <li style="height:auto;">
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnShortDescription").FirstOrDefault().Value.ToString()  :</span>
+                                    <span class="inputText description-span">@Model.PartMasterModel.ShortDescription</span>
+                                    <div style="clear:both"></div>
+                                </li>
+                                <li style="height:auto;">
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnLongDescription").FirstOrDefault().Value.ToString()  :</span>
+                                    <span class="inputText description-span">@Model.PartMasterModel.LongDescription</span>
+                                    <div style="clear:both"></div>
+                                </li>
+                                <li>
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnIssueUnit").FirstOrDefault().Value.ToString()  :</span>
+                                    <span class="inputText">@Model.PartMasterModel.UnitOfMeasure - @Model.PartMasterModel.UnitofMeasureDescription</span>
+                                </li>
+                                <li>
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnUnitCost").FirstOrDefault().Value.ToString()  :</span>
+                                    <span class="inputText">@Model.PartMasterModel.UnitCost</span>
+                                </li>
+                                <li>
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnCategory").FirstOrDefault().Value.ToString()  :</span>
+                                    <span class="inputText">@Model.PartMasterModel.Category - @Model.PartMasterModel.CategoryDescription</span>
+                                </li>
+                                <li>
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "globalInActive").FirstOrDefault().Value.ToString()  :</span>
+                                    <span class="inputText">@Html.CheckBoxFor(x => x.PartMasterModel.InactiveFlag, new { @disabled = "disabled" })</span>
+                                </li>
+                                <li>
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnOEMPart").FirstOrDefault().Value.ToString()  :</span>
+                                    <span class="inputText">@Html.CheckBoxFor(x => x.PartMasterModel.OEMPart, new { @disabled = "disabled" })</span>
+                                </li>
+                            </ul>
+                            <div class="editBttn">
+                                @if (Model.security.PartMaster.Edit)
+                                {
+                                    <button type="button" class="btn btn-blue" id="btnEditPartMaster"><i class="fa fa-pencil" style="margin-top:-3px;"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalEdit").FirstOrDefault().Value.ToString()</button>
+                                }
+                            </div>
+                        </div>
+
+                        <div class="tabsArea nobg imageDropZone" id="Photos" style="display:none;">
+                            <div class="row">
+                                <div class="col-xl-4">
+                                    <div id="AzureImage" class="AzureImage">
+                                        @if (!string.IsNullOrEmpty(imageUrl))
+                                        {
+                                            <img src="@imageUrl"  class="equipImg" id="EquipZoom" alt="Image" data-zoom-image="@imageUrl" />
+                                        }
+                                        else
+                                        {
+                                            <img src="~/Scripts/ImageZoom/images/NoImage.jpg"  class="equipImg" id="EquipZoom" alt="Image" data-zoom-image="/Scripts/ImageZoom/images/NoImage.jpg" />
+                                        }
+                                        @if (!Model.delf)
+                                        {
+                                            if (!string.IsNullOrEmpty(Model.PartMasterModel.ImageURL) && Model.security.Equipment.Edit && !Model.PartMasterModel.ImageURL.Contains("NoImage"))
+                                            {
+                                                <a href="javascript:void(0)" id="deleteImg" class="trashIcon" title="@Model.Loc.Where(a => a.ResourceId == "globalDelete").FirstOrDefault().Value.ToString()"><i class="fa fa-trash"></i></a>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            if (Model.security.PartMaster.Edit && !Model.PartMasterModel.ImageURL.Contains("NoImage") && !string.IsNullOrEmpty(Model.PartMasterModel.ImageURL))
+                                            {
+                                                <a href="javascript:void(0)" id="deleteImg" class="trashIcon" title="@Model.Loc.Where(a => a.ResourceId == "globalDelete").FirstOrDefault().Value.ToString()"><i class="fa fa-trash"></i></a>
+                                            }
+                                        }
+
+                                    </div>
+                                </div>
+                                <div class="col-xl-8">
+                                    <div class="hldDropzone">
+                                        @if (Model.security.Equipment.Edit)
+                                        {
+                                            <div class="dropzone" id="dropzoneForm">
+                                                <div class="fallback">
+                                                    <input name="file" type="file" multiple />
+                                                </div>
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div style="clear:both;"></div>
+<style type="text/css">
+    .trashIcon {
+        z-index: 101;
+    }
+</style>
+@Html.HiddenFor(m => m.PartMasterModel.ClientLookupId)
+@Html.HiddenFor(m => m.PartMasterModel.PartMasterId)
+@Html.HiddenFor(m => m.PartMasterModel.Manufacturer)
+@Html.HiddenFor(m => m.PartMasterModel.ManufacturerId)
+@Html.HiddenFor(m => m.PartMasterModel.Category)
+@Html.HiddenFor(m => m.PartMasterModel.UnitCost)
+@Html.HiddenFor(m => m.PartMasterModel.UnitOfMeasure)
+@Html.HiddenFor(m => m.PartMasterModel.InactiveFlag)
+@Html.HiddenFor(m => m.PartMasterModel.ShortDescription)
+@Html.HiddenFor(m => m.PartMasterModel.LongDescription)
+@Html.HiddenFor(m => m.PartMasterModel.OEMPart)
+@Html.HiddenFor(m => m.PartMasterModel.EXPartId)
+@Html.HiddenFor(m => m.PartMasterModel.UPCCode)
+@Html.HiddenFor(m => m.PartMasterModel.ClientOnPremise)
+@Html.HiddenFor(m => m.delf)
+@Html.HiddenFor(m => m.ShowDeleteBtnAfterUpload)

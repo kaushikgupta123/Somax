@@ -1,0 +1,119 @@
+﻿@model Client.Models.VendorsVM
+
+@{
+    var item = Model.VendorInsuranceWidgetModel;
+    string statusclass = "";
+    string insuranceReq="";
+    switch (Model.VendorInsuranceWidgetModel.InsuranceRequired)
+    {
+        case true:
+            statusclass = "m-badge m-badge--red m-badge--wide";
+            insuranceReq = "spnInsuranceRequired";
+            break;
+        case false:
+            statusclass = "m-badge m-badge--blue m-badge--wide";
+            insuranceReq = "spnInsuranceNotRequired";
+            break;
+
+    }
+}
+
+<div class="m-portlet padAdjst" id="m_portlet">
+    <div class="m-portlet__body  m-portlet__body--no-padding">
+        <div class="row m-row--col-separator-xl">
+            <div class="col-md-12">
+                    <div class="row">
+                        <div class="col-lg-2 col-md-2">
+                            <div class="gridImgBox" style="width:100%;">
+                                <small class='@statusclass' style="margin-bottom:5px;">@UtilityFunction.GetMessageFromResource(insuranceReq, LocalizeResourceSetConstants.VendorDetails) </small>
+                                <p>
+                                    @Model.Loc.Where(a => a.ResourceId == "GlobalExpire").FirstOrDefault().Value.ToString() :
+                                    @if (item.InsuranceExpireDate.HasValue && item.InsuranceExpireDate.Value != default(DateTime))
+                                    {
+                                        @item.InsuranceExpireDate.Value.ToString("MM/dd/yyyy", CultureInfo.InvariantCulture)
+                                    }
+                                </p>
+                            </div>
+                            <div style="clear:both;"></div>
+                        </div>
+                        <div class="col-lg-2 col-md-2">
+                            <div class="newDescription" style='line-height:17px;'>
+                                <p>
+                                    @Model.Loc.Where(a => a.ResourceId == "spnNAICSCode").FirstOrDefault().Value.ToString() :
+                                    @item.NAICSCode
+                                </p>
+                                <p>
+                                    @Model.Loc.Where(a => a.ResourceId == "spnSICCode").FirstOrDefault().Value.ToString() :
+                                    @item.SICCode
+                                </p>
+                                <p>
+                                    @Model.Loc.Where(a => a.ResourceId == "spnClassCode").FirstOrDefault().Value.ToString() :
+                                    @item.ClassCode
+                                </p>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-3">
+                            <div class="newDescription" style='line-height:17px;'>
+                                <p>
+                                    @Model.Loc.Where(a => a.ResourceId == "spnExpModRate").FirstOrDefault().Value.ToString() :
+                                    <span data-toggle="tooltip" title="@(item.ExpModRate)">@string.Format("{0:N2}", item.ExpModRate)</span>
+                                </p>
+                                <p>
+                                    @Model.Loc.Where(a => a.ResourceId == "spnOSHAIncidentRate").FirstOrDefault().Value.ToString() :
+                                    <span data-toggle="tooltip" title="@(item.OSHARate)">@string.Format("{0:N2}", item.OSHARate)</span>
+                                </p>
+                            </div>
+                        </div>
+                        <div class="col-lg-2 col-md-2">
+                            <div class="newDescription" style='line-height:17px;'>
+                                <p>
+                                    @Model.Loc.Where(a => a.ResourceId == "spnOverride").FirstOrDefault().Value.ToString() :
+                                    <span data-toggle="tooltip">@Html.CheckBoxFor(m => m.VendorInsuranceWidgetModel.InsuranceOverride, new { onclick = "return false;" })</span>
+                                </p>
+                                <p>
+                                    @Model.Loc.Where(a => a.ResourceId == "spnOverrideDate").FirstOrDefault().Value.ToString() :
+                                    @if (item.InsuranceOverrideDate.HasValue && item.InsuranceOverrideDate.Value != default(DateTime))
+                                    {
+                                        @item.InsuranceOverrideDate.Value.ToString("MM/dd/yyyy", CultureInfo.InvariantCulture)
+                                    }
+                                </p>
+                            </div>
+                        </div>
+                        @if (Model.VendorInsuranceWidgetModel.InsuranceRequired && (Model.security.Vendor_Insurance.Create || (Model.security.Vendor_Insurance_OverrideInsurance.Access && !Model.VendorInsuranceWidgetModel.InsuranceOverride) || (Model.security.Vendor_Insurance_RemoveOverride.Access && Model.VendorInsuranceWidgetModel.InsuranceOverride)))
+                        {
+                            <div class="col-lg-3 col-md-3">
+                                <div class="newDescription" style='line-height:17px;'>
+                                    <div class="btn-group bootstrap-select m-datatable__pager-size dropup show selectDrop actionNewDrop">
+                                        <button type="button" class="btn dropdown-toggle bs-placeholder btn-default actiondropdownbtn" data-toggle="dropdown" role="button" title=""><span class="filter-option pull-left">@Model.Loc.Where(a => a.ResourceId == "globalAction").FirstOrDefault().Value.ToString()</span>&nbsp;<span class="bs-caret"><span class="caret"></span></span></button>
+                                        <div class="dropdown-menu open" role="combobox">
+                                            <ul class="dropdown-menu inner" role="listbox" aria-expanded="false">
+                                                @if (Model.security.Vendor_Insurance.Create)
+                                                {
+                                                    <li id="editvendorinsurance"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "globalEdit").FirstOrDefault().Value.ToString()</a></li>
+                                                }
+                                                @if (Model.security.Vendor_Insurance_OverrideInsurance.Access && !Model.VendorInsuranceWidgetModel.InsuranceOverride)
+                                                {
+                                                    <li id="overridevendorinsurance"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnOverrideInsurance").FirstOrDefault().Value.ToString()</a></li>
+                                                }
+                                                @if (Model.security.Vendor_Insurance_RemoveOverride.Access && Model.VendorInsuranceWidgetModel.InsuranceOverride)
+                                                {
+                                                    <li id="removeoverridevendorinsurance"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnRemoveOverride").FirstOrDefault().Value.ToString()</a></li>
+                                                }
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                        </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<style>
+    .introTags {
+        left: 9px;
+    }
+</style>

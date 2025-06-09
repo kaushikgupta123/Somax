@@ -1,0 +1,107 @@
+﻿@model Client.Models.NewLaborScheduling.NewLaborSchedulingVM
+@using (Ajax.BeginForm("EditScheduleCalendar", "LaborScheduling", new AjaxOptions { HttpMethod = "Post", OnSuccess = "EditScheduleCalendarOnSuccess", OnBegin = "AjaxBeginFormBegin", OnComplete = "AjaxBeginFormComplete", OnFailure = "AjaxBeginFormFaillure" }, new { id = "frmEditScheduleCalendar" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(m => m.EditSchedlingCalendarModal.WorkOrderID)
+    @Html.HiddenFor(m => m.EditSchedlingCalendarModal.WorkOrderScheduledID)
+    @Html.HiddenFor(m => m.EditSchedlingCalendarModal.ClientLookupId)
+    @Html.HiddenFor(m => m.EditSchedlingCalendarModal.Description)
+    @Html.HiddenFor(m => m.EditSchedlingCalendarModal.PersonnelName)
+    @*@Html.HiddenFor(m => m.AddSchedlingCalendarModal.Personnels)*@
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close closeEditcheduleModal" data-dismiss="modal">&times;</button>
+            <button type="button" class="close iconTrash RemoveSchedule" style="right: 90px; top: 6px; padding: 1rem 0.5rem; color: red;" data-workorderid="@Model.EditSchedlingCalendarModal.WorkOrderID"
+                    data-workorderscheduledid="@Model.EditSchedlingCalendarModal.WorkOrderScheduledID">
+                <i class="fa fa-trash faIcon"></i>
+            </button>
+            <button type="submit" class="close iconSave" style="cursor: pointer; right: 63px; top: 6px; padding: 1rem 0.5rem; color: green;" value="save"><i class="fa fa-save faIcon"></i></button>
+            <h4 class="modal-title">@Model.Loc.Where(a => a.ResourceId == "spnGlobalEditSchedule").FirstOrDefault().Value.ToString()</h4>
+        </div>
+        @Html.Partial("_ErrorDiv")
+        <div class="modal-body">
+            <div class="form-group" style="margin-bottom:0;">
+                <div class="bottomBlock">
+                    <div class="tabsArea nobg">
+                        <ul class="listView nobrd" style="border-bottom:0;">
+                            <li class="common" style="height: auto; line-height: normal;">
+                                <span class="inputText descriptionaddschedule" style="font-size: 1.12rem; font-weight: 500; width: 100% !important; height: auto !important; float: none !important; line-height: 18px;">
+                                    <i id="PersonnelColor" class="fa fa-square faIcon"></i>
+                                    @Html.DisplayFor(m => m.EditSchedlingCalendarModal.ClientLookupId, new { })
+                                    @Html.DisplayFor(m => m.EditSchedlingCalendarModal.Description)
+                                </span>
+                            </li>
+                            <li>
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnScheduledDate").FirstOrDefault().Value.ToString() : </span>
+                                <span class="inputText">
+                                    @Html.ValidationMessageFor(m => m.EditSchedlingCalendarModal.ScheduleDate, "", new { style = "display:none" })
+                                    @Html.TextBoxFor(m => m.EditSchedlingCalendarModal.ScheduleDate, "{0:MM/dd/yyyy}", new { @class = "form-control search dtpicker", autocomplete = "off" })
+                                </span>
+                            </li>
+                            <li class="common" style="height: 18px;">
+                                <span class="inputText" style="height: 18px; line-height: 18px;">
+                                    @Html.DisplayFor(m => m.EditSchedlingCalendarModal.PersonnelName)
+                                </span>
+                            </li>
+                            <li>
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnGlobalEstimateHrs").FirstOrDefault().Value.ToString() : </span>
+                                <span class="inputText">
+                                    @Html.ValidationMessageFor(m => m.EditSchedlingCalendarModal.Hours, "", new { style = "display:none" })
+                                    @Html.TextBoxFor(m => m.EditSchedlingCalendarModal.Hours, new { @class = "form-control search decimalinput", autocomplete = "off" })
+                                </span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div style="clear:both;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+<style type="text/css">
+    /*.modal .modal-content .modal-header .close.iconSave:before, .modal .modal-content .modal-header .close.iconTrash:before {
+        display: none;
+    }*/
+
+    /*.modal .modal-content .modal-header .close.iconSave {
+        right: 63px;
+        top: 6px;
+        padding: 1rem 0.5rem;
+        color: green;
+    }
+
+    .modal .modal-content .modal-header .close.iconTrash {
+        right: 90px;
+        top: 6px;
+        padding: 1rem 0.5rem;
+        color: red;
+    }*/
+
+    /*ul.listView.nobrd li.common {
+        height: 18px;
+    }*/
+
+        /*ul.listView.nobrd li.common span.inputText {
+            height: 18px;
+            line-height: 18px;
+        }*/
+
+/*    .descriptionaddschedule {
+        font-size: 1.12rem;
+        font-weight: 500;
+        width: 100% !important;
+        height: auto !important;
+        float: none !important;
+    }*/
+
+    #ui-datepicker-div.ui-datepicker.ui-widget.ui-widget-content {
+        z-index: 1153 !important;
+        top: 156px !important;
+    }
+</style>
+
+@*<script>
+    $(function () {
+        $(document).find('form').find("#EditSchedlingCalendarModal_Hours").removeClass("input-validation-error");
+    });
+</script>*@

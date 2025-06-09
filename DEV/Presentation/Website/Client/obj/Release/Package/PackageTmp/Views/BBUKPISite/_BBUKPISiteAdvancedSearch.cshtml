@@ -1,0 +1,43 @@
+﻿@model Client.Models.BBUKPISite.BBUKPISiteVM
+
+<nav id="sidebar">
+    <div id="dismiss">
+        <i class="fa fa-close"></i>
+    </div>
+    <div class="sidebar-header">
+        <h3><i class="fa fa-filter" style="position: relative; top: -2px;"></i>&nbsp; @Model.Loc.Where(a => a.ResourceId == "globalFilter").FirstOrDefault().Value.ToString() <span id="spnControlCounter">0</span></h3>
+        <button type="button" class="btn btn-blue filterSearch" id="btnSiteDataAdvSrch"> @Model.Loc.Where(a => a.ResourceId == "GlobalApply").FirstOrDefault().Value.ToString()</button>
+    </div>
+    <div class="sidebar-content" id="advsearchsidebar">
+        <form action="#" method="post">
+            <div class="form-group">
+                <label for="Week" id="lblWeek" name="Week">Week Number </label>
+                <input type="text" class="form-control search adv-item" id="Week" autocomplete="off" style="color:#333;">
+            </div>
+            <div class="form-group">
+                <label for="Year" id="lblYear">Year </label>
+                <input type="text" class="form-control search adv-item" id="Year" autocomplete="off" style="color:#333;">
+            </div>
+            <div class="form-group">
+                <label for="Status" id="lblStatus">Status </label>
+                <input type="text" class="form-control search adv-item" id="Status" autocomplete="off" style="color:#333;">
+            </div>
+            <div class="form-group">
+                <label for="Created" id="lblCreated">Created </label>
+                <input type="text" class="form-control search adv-item dtpicker" id="Created" autocomplete="off" style="color:#333;">
+            </div>
+            <div class="form-group">
+                <label for="PMPercentCompleted" id="lblPMPercentCompleted">PM Percent Completed </label>
+                <input type="text" class="form-control search adv-item" id="PMPercentCompleted" autocomplete="off" style="color:#333;">
+            </div>
+            <div class="form-group">
+                <label for="WOBacklogCount" id="lblWOBacklogCount">WO Backlog Count </label>
+                <input type="text" class="form-control search adv-item" id="WOBacklogCount" autocomplete="off" style="color:#333;">
+            </div>
+            <div class="form-group">
+                <label for="SubmitDate" id="lblSubmitDate">SubmitDate </label>
+                <input type="text" class="form-control search adv-item dtpicker" id="SubmitDate" autocomplete="off" style="color:#333;">
+            </div>
+        </form>
+    </div>
+</nav>

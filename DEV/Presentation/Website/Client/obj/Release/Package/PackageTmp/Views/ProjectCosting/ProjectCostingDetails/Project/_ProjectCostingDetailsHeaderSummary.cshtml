@@ -1,0 +1,87 @@
+﻿@model Client.Models.ProjectCosting.ProjectCostingVM
+<div class="row">
+    <div class="col-xl-12">
+        <div class="m-portlet padAdjst" id="m_portlet" style="padding:10px;">
+            <div class="m-portlet__body  m-portlet__body--no-padding">
+                <div class="row m-row--col-separator-xl">
+                    <div class="col-md-12">
+                        <!--#region Header section-->
+                        <div class="cardRow" style="margin-bottom:0; border:0;">
+                            <div class="gridList" style="padding:0;">
+                                <div class="row summaryview">
+                                    <div class="col-lg-4 col-md-6">
+                                        <div class="newDescription">
+                                            <span class="orderId">
+                                                <span>@Model.projectHeaderSummaryModel.ClientlookupId</span>
+                                                &nbsp;
+                                                <small class="m-badge m-badge--blue m-badge--wide"> @Model.projectHeaderSummaryModel.Status</small>
+                                            </span>
+                                            <div class="types">
+                                                <span>
+                                                    <strong>
+                                                        @if (Model.projectHeaderSummaryModel.Description.Length > 15)
+                                                        {
+                                                            @Model.projectHeaderSummaryModel.Description.Substring(0, 15) <span data-des="@Model.projectHeaderSummaryModel.Description" style="color:#315a98;cursor:pointer" id="ProjectCostreaddescription">... More</span>
+                                                        }
+                                                        else
+                                                        {
+                                                            @Model.projectHeaderSummaryModel.Description
+                                                        }
+                                                    </strong>
+                                                </span>
+                                            </div>
+                                            <div class="types">
+                                                <span>@Model.Loc.Where(a => a.ResourceId == "spnCoordinator").FirstOrDefault().Value.ToString() : <strong>@Model.projectHeaderSummaryModel.Coordinator</strong></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4 col-md-6">
+                                        <div class="gridStatus">
+                                            <span>
+                                                @Model.Loc.Where(a => a.ResourceId == "globalScheduledStart").FirstOrDefault().Value.ToString() :
+                                                <strong>
+                                                    @Model.projectHeaderSummaryModel.ScheduleStart
+                                                </strong>
+                                            </span>
+                                            <span>
+                                                @Model.Loc.Where(a => a.ResourceId == "spnScheduledFinish").FirstOrDefault().Value.ToString() :
+                                                <strong>
+                                                    @Model.projectHeaderSummaryModel.ScheduleFinish
+                                                </strong>
+                                            </span>
+                                            <span>
+                                                @Model.Loc.Where(a => a.ResourceId == "spnGlobalCompleted").FirstOrDefault().Value.ToString() :
+                                                <strong>
+                                                    @Model.projectHeaderSummaryModel.CompleteDate
+                                                </strong>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4 col-md-6">
+                                        <div class="gridStatus">
+                                            <span>
+                                                @Model.Loc.Where(a => a.ResourceId == "spnBudget").FirstOrDefault().Value.ToString() :
+                                                <strong>
+                                                    @Model.projectHeaderSummaryModel.Budget
+                                                </strong>
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <!--#endregion-->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@Html.HiddenFor(m => Model.projectHeaderSummaryModel.ClientlookupId)
+@Html.Partial("ProjectCostingDetails/Project/_ProjectCostingSummaryDescription", Model)
+@* @Html.Partial("ProjectDetails/_WOProjectLookupListPopUp", Model)*@
+
+
+
+

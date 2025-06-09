@@ -1,0 +1,100 @@
+﻿@model Client.Models.PartsManagement.PartsManagementRequest.PartsManagementRequestVM
+
+<div class="m-subheader">
+    <div class="new-m-subheader">
+        <div class="PageTitle">
+            <div class="align-items-center separator">
+                <h3 class="m-subheader__title ">
+                    @Model.PageHeader
+                </h3>
+            </div>
+        </div>
+        <div class="NewBreadcrumbArea">
+            <div class="newBreadcrumb">
+                <ul>
+                    <li><a href="/Dashboard/Dashboard">&nbsp;</a></li>
+                    <li><a href="/PartsManagementRequest/Index?page=Inventory_Parts_Management_Parts_Management_Requests" id="anchPagename">@Model.Loc.Where(a => a.ResourceId == "spnPartMasterRequestSearch").FirstOrDefault().Value.ToString()</a></li>
+                    <li class="active"><a href="javascript:void(0)"><span id="brdreplsxId" class="clsbrd"></span></a></li>
+                </ul>
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+        <div style="clear:both;"></div>
+    </div>
+</div>
+@Html.Partial("_ErrorDiv")
+@using (Ajax.BeginForm("ReplaceSXPart", "PartsManagementRequest", null, new AjaxOptions { HttpMethod = "Post", OnSuccess = "ReplaceSXPartMasterOnSuccess", OnBegin = "AjaxBeginFormBegin", OnComplete = "AjaxBeginFormComplete", OnFailure = "AjaxBeginFormFaillure" }, new { id = "frmuserprofile" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="row">
+        <div class="col-xl-12">
+            <div class="m-portlet newPort" id="m_portlet" style="padding:15px;">
+                <div class="bottomBlock">
+                    <div class="tabsArea nobg">
+                        <ul class="listView nobrd">
+                            <li>
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnSXPartToReplace").FirstOrDefault().Value.ToString() : <small>*</small></span>
+                                <span class="inputText">
+                                    <div class="dropdown dropTableOuter">
+                                        <div class="input-group">
+                                            @Html.ValidationMessageFor(m => m.replaceSXPartModel.SXPartToReplace, "", new { style = "display:none" })
+                                            @Html.TextBoxFor(m => m.replaceSXPartModel.SXPartToReplace, new { @class = "form-control search dropbtn repltxt", autocomplete = "off" })
+                                            <div class="input-group-btn">
+                                                <button class="btn btn-white btntxtInputGroup" type="button" id="SXreplopengrid">
+                                                    <i id="srcicon" class="fa fa-search"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </span>
+                            </li>
+                            <li>
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnReplaceWith").FirstOrDefault().Value.ToString() : <small>*</small></span>
+                                <span class="inputText">
+                                    <div class="dropdown dropTableOuter">
+                                        <div class="input-group">
+                                            @Html.ValidationMessageFor(m => m.replaceSXPartModel.SXPartToReplace, "", new { style = "display:none" })
+                                            @Html.TextBoxFor(m => m.replaceSXPartModel.ReplaceWith, new { @class = "form-control search dropbtn mastidtxt", autocomplete = "off" })
+                                            <div class="input-group-btn">
+                                                <button class="btn btn-white btntxtInputGroup" type="button" id="SXassopengrid">
+                                                    <i id="srcicon" class="fa fa-search"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </span>
+                            </li>
+
+                            <li style="height:auto;">
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnJustification").FirstOrDefault().Value.ToString() : <small>*</small></span>
+                                <span class="inputText" style="height:auto;">
+                                    @Html.ValidationMessageFor(m => m.replaceSXPartModel.Justification, "", new { style = "display:none" })
+                                    @Html.TextAreaFor(m => m.replaceSXPartModel.Justification, new { @class = "form-control search", rows = "3" })
+                                </span>
+                                <div style="clear:both;"></div>
+                            </li>
+                        </ul>
+                    </div>
+                    <div style="clear:both;"></div>
+
+                    <div class="bttn_pagin">
+                        <div class="bttns2">
+                            <button type="submit" class="btn btn-blue mobBttn"><i class="fa fa-save faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+                        </div>
+                        <div class="bttns"><button type="button" class="btn btn-blue mobBttn" id="btnPmSxCancel"><i class="fa fa-close faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button></div>
+                        <div style="clear:both;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @Html.Partial("~/Views/PartsManagementRequest/_PartReplacementIdPopup.cshtml")
+    @Html.Partial("~/Views/PartsManagementRequest/_PartMasterIdPopup.cshtml")
+   @Html.HiddenFor(m => m.replaceSXPartModel.RequestType)
+}
+
+<style type="text/css">
+    #ReplaceSXPart .errormessage {
+        margin: 10px 25px 1px !important;
+    }
+</style>

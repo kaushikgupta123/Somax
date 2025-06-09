@@ -1,0 +1,77 @@
+﻿@model Client.Models.InventoryCheckout.InventoryCheckVM
+<link href="~/Scripts/Metronic/assets/demo/default/base/style_newCustom.css" rel="stylesheet" />
+<div class="m-subheader">
+    <div class="new-m-subheader">
+        <div class="PageTitle">
+            <div class="align-items-center separator">
+                <h3 class="m-subheader__title ">
+                    @Model.Loc.Where(a => a.ResourceId == "spnPartCheckout").FirstOrDefault().Value.ToString()
+                </h3>
+            </div>
+        </div>
+
+        <div class="NewBreadcrumbArea">
+            <div class="newBreadcrumb">
+                <ul>
+                    <li><a href="/Dashboard/Dashboard">&nbsp;</a></li>
+                    <li>@Model.Loc.Where(a => a.ResourceId == "spnPartCheckout").FirstOrDefault().Value.ToString()</li>
+                </ul>
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+        <div style="clear:both;"></div>
+    </div>
+</div>
+
+<div class="m-portlet" id="m_portlet" style="padding:15px;">
+    <div class="row">
+        <div class="col-xl-12">
+
+            <div class="tab" style="margin-bottom: 8px;">
+                <button class="tablinks IC-det-tab active" data-tab="IssueParts">@Model.Loc.Where(a => a.ResourceId == "spnGlobalIssueparts").FirstOrDefault().Value.ToString()</button>
+                <button class="tablinks IC-det-tab" data-tab="ReturnParts">@Model.Loc.Where(a => a.ResourceId == "spnGlobalReturnParts").FirstOrDefault().Value.ToString()</button>
+            </div>
+
+        </div>
+        <div class="col-xl-12">
+            @Html.Partial("_ErrorDiv")
+        </div>
+        <div class="col-xl-12">
+            <div id="IssueParts" class="tabcontent" style="display:block;"></div>
+            <div id="ReturnParts" class="tabcontent"></div>
+        </div>
+    </div>
+</div>
+    @Html.HiddenFor(m => m.inventoryCheckoutModel.ClientLookupId)
+
+    @Html.Partial("~/Views/InventoryCheckout/_AddEquipmentPopUp.cshtml")
+    @Html.Partial("~/Views/InventoryCheckout/_AddWOPopUp.cshtml")
+    @Html.Partial("~/Views/InventoryCheckout/_AddLocationPopUp.cshtml")
+    @Html.Partial("~/Views/InventoryCheckout/_AddPartPopUp.cshtml")
+    
+
+
+
+    <div id="inventoryCheckoutTreeModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title" id="hdrPlantLocation">@Model.Loc.Where(a => a.ResourceId == "spnEquipmentTreeLookup").FirstOrDefault().Value.ToString()</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="cntTree">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style type="text/css">
+        
+
+        .closeMenu .chargeTree {
+            right: 260px;
+        }
+    </style>
+

@@ -1,0 +1,59 @@
+﻿@model Client.Models.LocalisationBaseVM
+<div id="gridcolumncustomizemodal" class="modal fade" role="dialog">
+    <div class="modal-dialog gridModal">
+        <div class="modal-content s-modal-wrap" style="max-height:650px;">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">@Model.Loc.Where(a => a.ResourceId == "globalChooseColumn").FirstOrDefault().Value.ToString()</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="control-label">@Model.Loc.Where(a => a.ResourceId == "globalAllColumns").FirstOrDefault().Value.ToString()</label>
+                        <select multiple class="form-control cntSource" id="StaffList"></select>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="newRightPopArea">
+                            <label class="control-label">@Model.Loc.Where(a => a.ResourceId == "globalSelectedColumns").FirstOrDefault().Value.ToString() (<span id="lblCounter">@Model.Loc.Where(a => a.ResourceId == "globalNone").FirstOrDefault().Value.ToString()</span>)</label>
+                            <div class="cntPresenter">
+                                <ul id="PresenterList"></ul>
+                            </div>
+                        </div>
+                        <div style="margin-top:10px;">
+                            <button type="button" class="btn btn-white" id="btnAvengerUp">
+                                <i class="fa fa-caret-up" aria-hidden="true"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalMoveUp").FirstOrDefault().Value.ToString()
+                            </button>
+                            <button type="button" class="btn btn-white" id="btnAvengerDown">
+                                <i class="fa fa-caret-down" aria-hidden="true"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalMoveDown").FirstOrDefault().Value.ToString()
+                            </button>
+                            <button type="button" class="btn btn-white" id="btnRemoveAvenger">
+                                <i class="fa fa-close" aria-hidden="true"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalRemove").FirstOrDefault().Value.ToString()
+                            </button>
+                        </div>
+                    </div>
+                    <div style="clear:both;"></div>
+                </div>
+
+            </div>
+            <div class="modal-footer" style="padding-top:15px !important;">
+                <button type="button" data-dismiss="modal" class="btn btn-white saveConfig" style="float:right;">
+                    <i class="fa fa-save faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()
+                </button>
+                <button type="button" class="btn btn-white" data-dismiss="modal">
+                    <i class="fa fa-close faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()
+                </button>
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<link href="~/Content/_CustomizeGridSetup.css" rel="stylesheet" />
+<style>
+    @@media(max-width:999px) {
+        .s-modal-wrap .btn {
+            padding: 6px 10px;
+        }
+    }
+</style>

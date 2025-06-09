@@ -1,0 +1,55 @@
+﻿@model Client.Models.EquipmentCombined
+<div class="m-portlet padAdjstNew" id="m_portlet">
+    <div class="m-portlet__head" style="padding:0; margin-bottom:10px;">
+        <div class="m-portlet__head-caption">
+            <div class="m-portlet__head-title">
+                <h3 class="m-portlet__head-text" style="font-size: 1.2rem; line-height:3.55;">
+                    @Model.Loc.Where(a => a.ResourceId == "spnAvailability").FirstOrDefault().Value.ToString()
+                </h3>
+            </div>
+        </div>
+    </div>
+
+    <div style="padding-top:5px;">
+        <div style="padding-bottom:10px;">
+            <div style="padding: 0 5px;">
+                <div class="servContainer">
+                    <div class="vertical-center">
+                        <h2 class="m-portlet__head-text inserv clsInservice inservBig">
+                            @Model.Loc.Where(a => a.ResourceId == "spnInService").FirstOrDefault().Value.ToString()
+                        </h2>
+                    </div>
+                </div>
+                <div class="form-group" style="margin-bottom:0;">
+                    <button type="button" class="btn btn-blue mobBttn" id="btnAstRemove" data-toggle="modal" data-target="#RemoveAssetAvailabilityModal" style="cursor:pointer; float:right;"><i class="fa fa-remove"></i>&nbsp;@Model.Loc.Where(a => a.ResourceId == "globalRemove").FirstOrDefault().Value.ToString()</button>
+                    <button type="button" class="btn btn-blue mobBttn" id="btnAstViewLog" style="cursor:pointer; float:left;"><i class="fa fa-history"></i>&nbsp;@Model.Loc.Where(a => a.ResourceId == "spnViewLog").FirstOrDefault().Value.ToString()</button>
+                    <div style="clear:both;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style type="text/css">
+    .servContainer {
+        height: 150px;
+        position: relative;
+        margin-bottom: 15px;
+    }
+
+    .vertical-center {
+        margin: 0;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        -ms-transform: translate(-50%, -50%);
+        transform: translate(-50%, -50%);
+    }
+
+    .inservBig {
+        padding: 3px 15px;
+        width: auto;
+        font-size: 18px;
+        border-radius: 5px;
+    }
+</style>

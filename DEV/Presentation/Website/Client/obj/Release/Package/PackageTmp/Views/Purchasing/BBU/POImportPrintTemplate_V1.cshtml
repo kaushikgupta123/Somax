@@ -1,0 +1,386 @@
+﻿@model Client.Models.PurchaseOrder.PurchaseOrderVM
+
+@{ Layout = null;}
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>@Model.Loc.Where(a => a.ResourceId == "spnPoPurchaseOrder").FirstOrDefault().Value.ToString()</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css" />
+    <link rel="shortcut icon" href="~/Scripts/Metronic/assets/login/demo/default/media/img/logo/favicon.png" />
+</head>
+
+<body style="padding:0; margin:0; font-family: 'Calibri', sans-serif; font-size:14px; color:#737272;">
+    <table width="1000" border="0" cellspacing="0" cellpadding="0" align="center">
+        @*<tr>
+            <td align="left" valign="top" height="20"><img src="../Content/images/space.png" alt="" /></td>
+        </tr>
+
+        <tr>
+            <td align="center" valign="middle" style="font-size:18px; color:#222;">
+                <strong>Standard Purchase Order <span>#BBU076520000</span></strong>
+            </td>
+        </tr>
+        <tr>
+            <td align="center" valign="middle" style="font-size:18px; color:#222;">
+                <strong>Rev. <span>008024</span></strong>
+            </td>
+        </tr>
+
+        <tr>
+            <td align="left" valign="top" height="10" style="border-bottom:1px solid #222;"><img src="../Content/images/space.png" alt="" /></td>
+        </tr>*@
+
+        <tr>
+            <td align="left" valign="top">
+                <table width="1000" border="0" cellspacing="0" cellpadding="0">
+                    <tr>
+                        <td align="left" valign="top">
+                            <table width="1000" border="0" cellspacing="0" cellpadding="0">
+                                <tr>
+                                    <th width="1000" colspan="3" align="center" valign="middle" height="40" scope="col" style="border-right:1px solid #fff; font-size:20px; color:#222; line-height:40px; font-weight:600; text-transform:uppercase; padding-bottom: 10px;">@Model.Loc.Where(a => a.ResourceId == "spnBimboBakeries").FirstOrDefault().Value.ToString()</th>
+                                </tr>
+                                <tr>
+                                    <td align="left" valign="top" style="font-size:14px; color:#737272; line-height:25px; font-weight:normal; ">
+                                        <table width="333" border="0" cellspacing="0" cellpadding="0">
+                                            <tr>
+                                                <td width="100" align="left" valign="top" style="padding-left:15px; font-size:14px; color:#222; font-weight:600;">@Model.Loc.Where(a => a.ResourceId == "GlobalVendor").FirstOrDefault().Value.ToString()</td>
+                                                <td width="6" align="left" valign="top" style="font-size:14px; color:#222; font-weight:500;">:</td>
+                                                <td width="334" align="left" valign="top" style="padding-left:15px; font-size:14px; color:#222; font-weight:normal;">@Model.PurchaseOrderModel.VendorName</td>
+                                            </tr>
+                                            <tr>
+                                                <td align="left" valign="top" style="padding-left:15px; font-size:14px; color:#222; font-weight:500;"></td>
+                                                <td align="left" valign="top" style="font-size:14px; color:#222; font-weight:500;"></td>
+                                                <td align="left" valign="top" style="padding-left:15px; font-size:14px; color:#222; font-weight:normal;">@Model.PurchaseOrderModel.VendorAddress1</td>
+                                            </tr>
+                                            @{
+                                                if (@Model.PurchaseOrderModel.VendorAddress2 != "")
+                                                {
+                                                    <tr>
+                                                        <td align="left" valign="top" style="padding-left:15px; font-size:14px; color:#222; font-weight:500;"></td>
+                                                        <td align="left" valign="top" style="font-size:14px; color:#222; font-weight:500;"></td>
+                                                        <td align="left" valign="top" style="padding-left:15px; font-size:14px; color:#222; font-weight:normal;">@Model.PurchaseOrderModel.VendorAddress2</td>
+                                                    </tr>
+                                                }
+                                                if (@Model.PurchaseOrderModel.VendorAddress3 != "")
+                                                {
+                                                    <tr>
+                                                        <td align="left" valign="top" style="padding-left:15px; font-size:14px; color:#222; font-weight:500;"></td>
+                                                        <td align="left" valign="top" style="font-size:14px; color:#222; font-weight:500;"></td>
+                                                        <td align="left" valign="top" style="padding-left:15px; font-size:14px; color:#222; font-weight:normal;">@Model.PurchaseOrderModel.VendorAddress3</td>
+                                                    </tr>
+                                                }
+                                            }
+
+                                            <tr>
+                                                <td align="left" valign="top" style="padding-left:15px; font-size:14px; color:#222; font-weight:500;"></td>
+                                                <td align="left" valign="top" style="font-size:14px; color:#222; font-weight:500;"></td>
+                                                <td align="left" valign="top" style="padding-left:15px; font-size:14px; color:#222; font-weight:normal;">@Model.PurchaseOrderModel.VendorAddressCity, @Model.PurchaseOrderModel.VendorAddressState, @Model.PurchaseOrderModel.VendorAddressPostCode</td>
+                                            </tr>
+                                            <tr>
+                                                <td align="left" valign="top" style="padding-left:15px; font-size:14px; color:#222; font-weight:500;"></td>
+                                                <td align="left" valign="top" style="font-size:14px; color:#222; font-weight:500;"></td>
+                                                <td align="left" valign="top" style="padding-left:15px; font-size:14px; color:#222; font-weight:normal;">@Model.PurchaseOrderModel.VendorAddressCountry</td>
+                                            </tr>
+                                        </table>
+
+                                    </td>
+
+                                    <td align="left" valign="top" style="font-size:14px; color:#737272; line-height:25px; font-weight:normal;">
+                                        <table width="333" border="0" cellspacing="0" cellpadding="0">
+                                            <tr>
+                                                <td width="100" align="left" valign="top" style="padding-left:15px; font-size:14px; color:#222; font-weight:600;">@Model.Loc.Where(a => a.ResourceId == "spnPoBillTo").FirstOrDefault().Value.ToString()</td>
+                                                <td width="6" align="left" valign="top" style="font-size:14px; color:#222; font-weight:500;">:</td>
+                                                <td width="334" align="left" valign="top" style="padding-left:15px; font-size:14px; color:#222; font-weight:normal;">@Model.PurchaseOrderModel.SiteBillToName</td>
+                                            </tr>
+                                            @*<tr>
+                                                <td align="left" valign="top" style="padding-left:15px; font-size:14px; color:#222; font-weight:500;"></td>
+                                                <td align="left" valign="top" style="font-size:14px; color:#222; font-weight:500;"></td>
+                                                <td align="left" valign="top" style="padding-left:15px; font-size:14px; color:#222; font-weight:normal;"></td>
+                                            </tr>*@
+                                            <tr>
+                                                <td align="left" valign="top" style="padding-left:15px; font-size:14px; color:#222; font-weight:500;"></td>
+                                                <td align="left" valign="top" style="font-size:14px; color:#222; font-weight:500;"></td>
+                                                <td align="left" valign="top" style="padding-left:15px; font-size:14px; color:#222; font-weight:normal;">@Model.PurchaseOrderModel.SiteBillToAddress1</td>
+                                            </tr>
+                                            @{
+                                                if (Model.PurchaseOrderModel.SiteBillToAddress2 != "")
+                                                {
+                                                    <tr>
+                                                        <td align="left" valign="top" style="padding-left:15px; font-size:14px; color:#222; font-weight:500;"></td>
+                                                        <td align="left" valign="top" style="font-size:14px; color:#222; font-weight:500;"></td>
+                                                        <td align="left" valign="top" style="padding-left:15px; font-size:14px; color:#222; font-weight:normal;">@Model.PurchaseOrderModel.SiteBillToAddress2</td>
+                                                    </tr>
+                                                }
+                                                if (Model.PurchaseOrderModel.SiteBillToAddress3 != "")
+                                                {
+                                                    <tr>
+                                                        <td align="left" valign="top" style="padding-left:15px; font-size:14px; color:#222; font-weight:500;"></td>
+                                                        <td align="left" valign="top" style="font-size:14px; color:#222; font-weight:500;"></td>
+                                                        <td align="left" valign="top" style="padding-left:15px; font-size:14px; color:#222; font-weight:normal;">@Model.PurchaseOrderModel.SiteBillToAddress3</td>
+                                                    </tr>
+                                                }
+                                            }
+
+                                            <tr>
+                                                <td align="left" valign="top" style="padding-left:15px; font-size:14px; color:#222; font-weight:500;"></td>
+                                                <td align="left" valign="top" style="font-size:14px; color:#222; font-weight:500;"></td>
+                                                <td align="left" valign="top" style="padding-left:15px; font-size:14px; color:#222; font-weight:normal;">@Model.PurchaseOrderModel.SiteBillToAddressCity, @Model.PurchaseOrderModel.SiteBillToAddressState, @Model.PurchaseOrderModel.SiteBillToAddressPostCode</td>
+                                            </tr>
+                                            <tr>
+                                                <td align="left" valign="top" style="padding-left:15px; font-size:14px; color:#222; font-weight:500;"></td>
+                                                <td align="left" valign="top" style="font-size:14px; color:#222; font-weight:500;"></td>
+                                                <td align="left" valign="top" style="padding-left:15px; font-size:14px; color:#222; font-weight:normal;">@Model.PurchaseOrderModel.SiteBillToAddressCountry</td>
+                                            </tr>
+                                        </table>
+
+                                    </td>
+
+                                    <td align="left" valign="top" style="font-size:14px; color:#737272; line-height:25px; font-weight:normal;">
+                                        <table width="333" border="0" cellspacing="0" cellpadding="0">
+                                            <tr>
+                                                <td width="160" align="left" valign="top" style="padding-left:15px; font-size:14px; color:#222; font-weight:500;">@Model.Loc.Where(a => a.ResourceId == "spnDate").FirstOrDefault().Value.ToString()</td>
+                                                <td width="6" align="left" valign="top" style="font-size:14px; color:#222; font-weight:500;">:</td>
+                                                <td width="334" align="left" valign="top" style="padding-left:15px; font-size:14px; color:#222; font-weight:normal;">@String.Format("{0:dd-MMM-yyyy}", Model.PurchaseOrderModel.CreateDate)</td>
+                                            </tr>
+                                            <tr>
+                                                <td align="left" valign="top" style="padding-left:15px; font-size:14px; color:#222; font-weight:500;">@Model.Loc.Where(a => a.ResourceId == "spnPaymentTerms").FirstOrDefault().Value.ToString()</td>
+                                                <td align="left" valign="top" style="font-size:14px; color:#222; font-weight:500;">:</td>
+                                                <td align="left" valign="top" style="padding-left:15px; font-size:14px; color:#222; font-weight:normal;">@Model.PurchaseOrderModel.PaymentTerms</td>
+                                            </tr>
+                                            <tr>
+                                                <td align="left" valign="top" style="padding-left:15px; font-size:14px; color:#222; font-weight:500;">@Model.Loc.Where(a => a.ResourceId == "spnFreightTerms").FirstOrDefault().Value.ToString()</td>
+                                                <td align="left" valign="top" style="font-size:14px; color:#222; font-weight:500;">:</td>
+                                                <td align="left" valign="top" style="padding-left:15px; font-size:14px; color:#222; font-weight:normal;">@Model.PurchaseOrderModel.FOB</td>
+                                            </tr>
+                                            <tr>
+                                                <td align="left" valign="top" style="padding-left:15px; font-size:14px; color:#222; font-weight:500;">@Model.Loc.Where(a => a.ResourceId == "spnShipVia").FirstOrDefault().Value.ToString()</td>
+                                                <td align="left" valign="top" style="font-size:14px; color:#222; font-weight:500;">:</td>
+                                                <td align="left" valign="top" style="padding-left:15px; font-size:14px; color:#222; font-weight:normal;">@Model.PurchaseOrderModel.Carrier</td>
+                                            </tr>
+                                            <tr>
+                                                <td align="left" valign="top" style="padding-left:15px; font-size:14px; color:#222; font-weight:500;">@Model.Loc.Where(a => a.ResourceId == "spnContact").FirstOrDefault().Value.ToString()</td>
+                                                <td align="left" valign="top" style="font-size:14px; color:#222; font-weight:500;">:</td>
+                                                <td align="left" valign="top" style="padding-left:15px; font-size:14px; color:#222; font-weight:normal;">@Model.PurchaseOrderModel.Creator_PersonnelName</td>
+                                            </tr>
+                                            <tr>
+                                                <td align="left" valign="top" style="padding-left:15px; font-size:14px; color:#222; font-weight:500;"></td>
+                                                <td align="left" valign="top" style="font-size:14px; color:#222; font-weight:500;"></td>
+                                                <td align="left" valign="top" style="padding-left:15px; font-size:14px; color:#222; font-weight:normal;">@Model.PurchaseOrderModel.PersonnelEmail</td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="left" valign="top" style="font-size:14px; color:#737272; line-height:25px; font-weight:normal;">
+                            <table width="1000" border="0" cellspacing="0" cellpadding="0">
+                                <tr>
+                                    <td width="60" align="left" valign="top" style="padding-left:15px; font-size:14px; color:#222; font-weight:500;">@Model.Loc.Where(a => a.ResourceId == "spnComment").FirstOrDefault().Value.ToString()</td>
+                                    <td width="6" align="left" valign="top" style="font-size:14px; color:#222; font-weight:500;">:</td>
+                                    <td align="left" valign="top" style="padding-left:15px; font-size:14px; color:#222; font-weight:normal;">
+                                        <p style="padding:0; margin:0;">@Model.PurchaseOrderModel.MessageToVendor</p>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="left" valign="top" height="10" style="border-bottom:1px solid #222;"><img src="../Content/images/space.png" alt="" /></td>
+                    </tr>
+                    <tr>
+                        <td align="left" valign="top" height="5"><img src="../Content/images/space.png" alt="" /></td>
+                    </tr>
+
+                    <tr>
+                        <td align="left" valign="top">
+                            <table width="1000" border="0" cellspacing="0" cellpadding="0">
+                                <tr>
+                                    <td align="left" valign="top" style="font-size:14px; color:#737272; line-height:25px; font-weight:normal;">
+                                        <table width="333" border="0" cellspacing="0" cellpadding="0">
+                                            @*<tr>
+                                                <td width="130" align="left" valign="top" style="padding-left:15px; font-size:14px; color:#222; font-weight:500;">@Model.Loc.Where(a => a.ResourceId == "spnComment").FirstOrDefault().Value.ToString()</td>
+                                                <td width="6" align="left" valign="top" style="font-size:14px; color:#222; font-weight:500;">:</td>
+                                                <td width="334" align="left" valign="top" style="padding-left:15px; font-size:14px; color:#222; font-weight:normal;">
+                                                    <p style="padding:0; margin:0;">@Model.PurchaseOrderModel.MessageToVendor</p>
+                                                </td>
+                                            </tr>*@
+                                        </table>
+                                    </td>
+
+                                    <td align="left" valign="top" style="font-size:16px; color:#737272; line-height:25px; font-weight:normal;">
+                                        <table width="333" border="0" cellspacing="0" cellpadding="0">
+                                            <tr>
+                                                <td width="95" align="left" valign="top" style="padding-left:15px; font-size:16px; color:#222; font-weight:600;">@Model.Loc.Where(a => a.ResourceId == "GlobalShipTo").FirstOrDefault().Value.ToString()</td>
+                                                <td width="6" align="left" valign="top" style="font-size:16px; color:#222; font-weight:500;">:</td>
+                                                <td width="390" align="left" valign="top" style="padding-left:15px; font-size:16px; color:#222; font-weight:normal;">@Model.PurchaseOrderModel.SiteName</td>
+                                            </tr>
+                                            <tr>
+                                                <td align="left" valign="top" style="padding-left:15px; font-size:16px; color:#222; font-weight:500;"></td>
+                                                <td align="left" valign="top" style="font-size:16px; color:#222; font-weight:500;"></td>
+                                                <td align="left" valign="top" style="padding-left:15px; font-size:16px; color:#222; font-weight:normal;">@Model.PurchaseOrderModel.SiteAddress1</td>
+                                            </tr>
+                                            @{
+                                                if (Model.PurchaseOrderModel.SiteAddress2 != "")
+                                                {
+                                                    <tr>
+                                                        <td align="left" valign="top" style="padding-left:15px; font-size:16px; color:#222; font-weight:500;"></td>
+                                                        <td align="left" valign="top" style="font-size:16px; color:#222; font-weight:500;"></td>
+                                                        <td align="left" valign="top" style="padding-left:15px; font-size:16px; color:#222; font-weight:normal;">@Model.PurchaseOrderModel.SiteAddress2</td>
+                                                    </tr>
+                                                }
+
+                                                if (Model.PurchaseOrderModel.SiteAddress3 != "")
+                                                {
+                                                    <tr>
+                                                        <td align="left" valign="top" style="padding-left:15px; font-size:16px; color:#222; font-weight:500;"></td>
+                                                        <td align="left" valign="top" style="font-size:16px; color:#222; font-weight:500;"></td>
+                                                        <td align="left" valign="top" style="padding-left:15px; font-size:16px; color:#222; font-weight:normal;">@Model.PurchaseOrderModel.SiteAddress3</td>
+                                                    </tr>
+                                                }
+                                            }
+
+
+                                            <tr>
+                                                <td align="left" valign="top" style="padding-left:15px; font-size:16px; color:#222; font-weight:500;"></td>
+                                                <td align="left" valign="top" style="font-size:16px; color:#222; font-weight:500;"></td>
+                                                <td align="left" valign="top" style="padding-left:15px; font-size:16px; color:#222; font-weight:normal;">@Model.PurchaseOrderModel.SiteAddressCity, @Model.PurchaseOrderModel.SiteAddressState, @Model.PurchaseOrderModel.SiteAddressPostCode</td>
+                                            </tr>
+                                            <tr>
+                                                <td align="left" valign="top" style="padding-left:15px; font-size:16px; color:#222; font-weight:500;"></td>
+                                                <td align="left" valign="top" style="font-size:16px; color:#222; font-weight:500;"></td>
+                                                <td align="left" valign="top" style="padding-left:15px; font-size:16px; color:#222; font-weight:normal;">@Model.PurchaseOrderModel.SiteAddressCountry</td>
+                                            </tr>
+                                        </table>
+                                    </td>
+
+                                    <td align="left" valign="top" style="font-size:14px; color:#737272; line-height:25px; font-weight:normal; ">
+                                        <table width="333" border="0" cellspacing="0" cellpadding="0">
+                                            <tr>
+                                                <td width="130" align="left" valign="top" style="padding-left:15px; font-size:14px; color:#222; font-weight:500;"></td>
+                                                <td width="6" align="left" valign="top" style="font-size:14px; color:#222; font-weight:500;"></td>
+                                                <td width="334" align="left" valign="top" style="padding-left:15px; font-size:14px; color:#222; font-weight:normal;"></td>
+                                            </tr>
+                                            <tr>
+                                                <td align="left" valign="top" style="padding-left:15px; font-size:14px; color:#222; font-weight:500;"></td>
+                                                <td align="left" valign="top" style="font-size:14px; color:#222; font-weight:500;"></td>
+                                                <td align="left" valign="top" style="padding-left:15px; font-size:14px; color:#222; font-weight:normal;"></td>
+                                            </tr>
+                                            <tr>
+                                                <td align="left" valign="top" style="padding-left:15px; font-size:14px; color:#222; font-weight:500;"></td>
+                                                <td align="left" valign="top" style="font-size:14px; color:#222; font-weight:500;"></td>
+                                                <td align="left" valign="top" style="padding-left:15px; font-size:14px; color:#222; font-weight:normal;"></td>
+                                            </tr>
+                                            <tr>
+                                                <td align="left" valign="top" style="padding-left:15px; font-size:14px; color:#222; font-weight:500;"></td>
+                                                <td align="left" valign="top" style="font-size:14px; color:#222; font-weight:500;"></td>
+                                                <td align="left" valign="top" style="padding-left:15px; font-size:14px; color:#222; font-weight:normal;"></td>
+                                            </tr>
+                                            <tr>
+                                                <td align="left" valign="top" style="padding-left:15px; font-size:14px; color:#222; font-weight:500;"></td>
+                                                <td align="left" valign="top" style="font-size:14px; color:#222; font-weight:500;"></td>
+                                                <td align="left" valign="top" style="padding-left:15px; font-size:14px; color:#222; font-weight:normal;"></td>
+                                            </tr>
+                                            <tr>
+                                                <td align="left" valign="top" style="padding-left:15px; font-size:14px; color:#222; font-weight:500;"></td>
+                                                <td align="left" valign="top" style="font-size:14px; color:#222; font-weight:500;"></td>
+                                                <td align="left" valign="top" style="padding-left:15px; font-size:14px; color:#222; font-weight:normal;"></td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td align="left" valign="top" height="1" style="border-bottom:1px solid #222;"></td>
+        </tr>
+        <tr>
+            <td align="left" valign="top" height="10"><img src="../Content/images/space.png" alt="" /></td>
+        </tr>
+
+        <tr>
+            <td align="left" valign="top">
+                <table width="1000" border="0" cellspacing="0" cellpadding="0">
+                    <tr>
+                        <td align="left" valign="top" style="">
+                            <table width="1000" border="0" cellspacing="0" cellpadding="0" >
+                                <tr style="background:#fff;">
+                                    <th width="50" align="right" valign="middle" height="40" scope="col" style="padding-right:10px; border-right:1px solid #fff; font-size:16px; color:#222; line-height:40px; font-weight:600; border-bottom:1px solid #222;">@Model.Loc.Where(a => a.ResourceId == "globalLine").FirstOrDefault().Value.ToString() #</th>
+                                    <th width="100" align="left" valign="middle" height="40" scope="col" style="border-right:1px solid #fff; font-size:16px; color:#222; line-height:40px; font-weight:600; border-bottom:1px solid #222;">@Model.Loc.Where(a => a.ResourceId == "spnItem").FirstOrDefault().Value.ToString() #</th>
+                                    <th width="229" align="left" valign="middle" height="40" scope="col" style="border-right:1px solid #fff; font-size:16px; color:#222; line-height:40px; font-weight:600; padding-left:15px; border-bottom:1px solid #222;">@Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString()</th>
+                                    <th width="100" align="left" valign="middle" height="40" scope="col" style="border-right:1px solid #fff; font-size:16px; color:#222; line-height:40px; font-weight:600; border-bottom:1px solid #222;">@Model.Loc.Where(a => a.ResourceId == "spnVendorItem").FirstOrDefault().Value.ToString() #</th>
+                                    <th width="100" align="right" valign="middle" height="40" scope="col" style="border-right:1px solid #fff; font-size:16px; color:#222; line-height:40px; font-weight:600; border-bottom:1px solid #222;">@Model.Loc.Where(a => a.ResourceId == "spnQty").FirstOrDefault().Value.ToString()</th>
+                                    <th width="100" align="right" valign="middle" height="40" scope="col" style="border-right:1px solid #fff; font-size:16px; color:#222; line-height:40px; font-weight:600; border-bottom:1px solid #222;">@Model.Loc.Where(a => a.ResourceId == "spnPdUOM").FirstOrDefault().Value.ToString()</th>
+                                    <th width="100" align="right" valign="middle" height="40" scope="col" style="border-right:1px solid #fff; font-size:16px; color:#222; line-height:40px; font-weight:600; border-bottom:1px solid #222;">@Model.Loc.Where(a => a.ResourceId == "spnPoPrice").FirstOrDefault().Value.ToString()</th>
+                                    <th width="100" align="right" valign="middle" height="40" scope="col" style="padding-right:10px; border-right:1px solid #fff; font-size:16px; color:#222; line-height:40px; font-weight:600; border-bottom:1px solid #222;">@Model.Loc.Where(a => a.ResourceId == "spnSubTotal").FirstOrDefault().Value.ToString()</th>
+                                    <th width="100" align="left" valign="middle" height="40" scope="col" style="font-size:16px; color:#222; line-height:40px; font-weight:600; border-bottom:1px solid #222;">@Model.Loc.Where(a => a.ResourceId == "spnDueDate").FirstOrDefault().Value.ToString()</th>
+                                </tr>
+                                @{
+                                    int i = 2;
+                                    decimal total = 0;
+                                    decimal linetot = 0;
+                                    foreach (var item in Model.POLineItemList)
+                                    {
+                                       
+                                        <tr>
+                                            <td align="right" valign="middle" height="15" style="padding-right:10px; border-right:1px solid #fff; font-size:16px; color:#222; line-height:40px; font-weight:normal;">@item.LineNumber</td>
+                                            <td align="left" valign="middle" height="15" style="border-right:1px solid #fff; font-size:16px; color:#222; line-height:22px; font-weight:normal;">@item.PartClientLookupId</td>
+                                            <td align="left" valign="top" height="15" style="border-right:1px solid #fff; font-size:16px; color:#222; line-height:20px; font-weight:normal; padding-left:15px; padding-top:15px;">@item.Description</td>
+                                            <td align="left" valign="middle" height="15" style="border-right:1px solid #fff; font-size:16px; color:#222; line-height:40px; font-weight:normal;">@item.PartNumber</td>
+                                            <td align="right" valign="middle" height="15" style="border-right:1px solid #fff; font-size:16px; color:#222; line-height:40px; font-weight:normal;">@String.Format("{0:n2}", item.PurchaseQuantity)</td>
+                                            <td align="right" valign="middle" height="15" style="border-right:1px solid #fff; font-size:16px; color:#222; line-height:40px; font-weight:normal;">@item.PurchaseUOM</td>
+                                            <td align="right" valign="middle" height="15" style="border-right:1px solid #fff; font-size:16px; color:#222; line-height:40px; font-weight:normal;">@String.Format("{0:n2}", item.PurchaseCost)</td>
+                                            <td align="right" valign="middle" height="15" style="padding-right:10px;border-right:1px solid #fff; font-size:16px; color:#222; line-height:40px; font-weight:normal;">@String.Format("{0:n2}", item.LineTotal)</td>
+                                            <td align="left" valign="middle" height="15" style="font-size:16px; color:#222; line-height:40px;">@String.Format("{0:dd-MMM-yyyy}", item.EstimatedDelivery)</td>
+                                        </tr>
+                                        i = i + 1;
+                                        total = total + Convert.ToDecimal(item.LineTotal);
+                                    }
+                                }
+                               
+                                <tr>
+                                    <td height="30" colspan="6" align="center" valign="middle" style="border-right:1px solid #fff; border-top:1px solid #222;"></td>
+                                    <td height="30" colspan="2" align="right" valign="middle" style="border-right:1px solid #fff;border-top:1px solid #222; font-size:16px; color:#222; line-height:40px;  font-weight:600; border-bottom:1px solid #fff; padding-right:15px;">@Model.Loc.Where(a => a.ResourceId == "spnSubTotal").FirstOrDefault().Value.ToString()</td>
+                                    <td align="right" valign="middle" height="30" style="font-size:16px; color:#000; line-height:30px; font-weight:500; border-bottom:1px solid #fff;border-top:1px solid #222; border-right:1px solid #fff; padding-right:15px;">@String.Format("{0:n2}", total)</td>
+                                </tr>
+                                <tr>
+                                    <td height="30" colspan="6" align="center" valign="middle" style="border-right:1px solid #fff;"></td>
+                                    <td height="30" colspan="2" align="right" valign="middle" style="border-right:1px solid #fff; font-size:16px; color:#222; line-height:20px;  font-weight:600; border-bottom:1px solid #fff; padding-right:15px;">@Model.Loc.Where(a => a.ResourceId == "spnTotalTax").FirstOrDefault().Value.ToString()</td>
+                                    <td align="right" valign="middle" height="30" style="font-size:16px; color:#000; line-height:30px; font-weight:500; border-bottom:1px solid #fff; border-right:1px solid #fff; padding-right:15px;">0</td>
+                                </tr>
+                                <tr>
+                                    <td height="30" colspan="6" align="center" valign="middle" style="border-right:1px solid #fff;"></td>
+                                    <td height="30" colspan="2" align="right" valign="middle" style="border-right:1px solid #fff; font-size:16px; color:#222; line-height:20px;  font-weight:600; border-bottom:1px solid #fff; padding-right:15px;">@Model.Loc.Where(a => a.ResourceId == "spnTotalFreight").FirstOrDefault().Value.ToString()</td>
+                                    <td align="right" valign="middle" height="30" style="font-size:16px; color:#000; line-height:30px; font-weight:500; border-bottom:1px solid #fff; border-right:1px solid #fff; padding-right:15px;">0</td>
+                                </tr>
+                                <tr>
+                                    <td height="30" colspan="6" align="center" valign="middle" style="border-right:1px solid #fff;"></td>
+                                    <td height="30" colspan="2" align="right" valign="middle" style="border-right:1px solid #fff; font-size:16px; color:#222; line-height:20px;  font-weight:600; border-bottom:1px solid #fff; padding-right:15px;">@Model.Loc.Where(a => a.ResourceId == "spnTotalPOAmount").FirstOrDefault().Value.ToString()</td>
+                                    <td align="right" valign="middle" height="30" style="font-size:16px; color:#000; line-height:30px; font-weight:500; border-bottom:1px solid #fff; border-right:1px solid #fff; padding-right:15px;">@String.Format("{0:n2}", total)</td>
+                                </tr>
+                                <tr>
+                                    <td height="30" colspan="6" align="center" valign="middle" style="border-right:1px solid #fff;"></td>
+                                    <td height="30" colspan="2" align="right" valign="middle" style="border-right:1px solid #fff; font-size:16px; color:#222; line-height:20px;  font-weight:600; border-bottom:1px solid #fff; padding-right:15px;">@Model.Loc.Where(a => a.ResourceId == "spnCurrency").FirstOrDefault().Value.ToString()</td>
+                                    <td align="right" valign="middle" height="30" style="font-size:16px; color:#000; line-height:30px; font-weight:500; border-bottom:1px solid #fff; border-right:1px solid #fff; padding-right:15px;">@Model.PurchaseOrderModel.Currency</td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+
+        <tr>
+          <td align="left" valign="top" height="50"><img src="../Content/images/space.png" alt="" /></td>
+        </tr>
+    </table>
+
+</body>
+</html>
+

@@ -1,0 +1,50 @@
+﻿@model Client.Models.Dashboard.DashboardWROnlyVM
+@using Client.CustomValidation
+<nav class="sidebar" id="wradvancesearchsidebar">
+    <div id="dismiss">
+        <i class="fa fa-close"></i>
+    </div>
+    <div class="sidebar-header">
+        <h3><i class="fa fa-filter" style="position: relative; top: -2px;"></i> @CustomHelper.LabelFor(Model.Loc, "spnFilters") <span class="filteritemcount">0</span></h3>
+        <button type="button" id="btnDataAdvSrchworkorder" class="btn btn-blue filterSearch"><i class="fa fa-search" style="margin-top:-3px;"></i> &nbsp;@CustomHelper.LabelFor(Model.Loc, "globalSearch")</button>
+    </div>
+    <div class="sidebar-content" id="advsearchsidebarWorkorder">
+        <div class="form-group">
+            <label for="gridadvsearchworkorder">@Model.Loc.Where(a => a.ResourceId == "spnGlobalWorkOrderID").FirstOrDefault().Value.ToString():</label>
+            <input type="text" class="form-control search adv-item" id="gridadvsearchworkorder" autocomplete="off">
+        </div>
+        <div class="form-group">
+            <label for="gridadvsearchdescription">@Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString() :</label>
+            <input type="text" class="form-control search adv-item" id="gridadvsearchdescription" autocomplete="off">
+        </div>
+        <div class="form-group">
+            <label for="gridadvsearchChargeto">@Model.Loc.Where(a => a.ResourceId == "GlobalChargeTo").FirstOrDefault().Value.ToString() :</label>
+            <input type="text" class="form-control search adv-item" id="gridadvsearchChargeto" autocomplete="off">
+        </div>
+        <div class="form-group">
+            <label for="gridadvsearchChargetoname">@Model.Loc.Where(a => a.ResourceId == "spnGlobalChargeToName").FirstOrDefault().Value.ToString() :</label>
+            <input type="text" class="form-control search adv-item" id="gridadvsearchChargetoname" autocomplete="off">
+        </div>
+        <div class="form-group">
+            <label for="gridadvsearchstatus">@Model.Loc.Where(a => a.ResourceId == "GlobalStatus").FirstOrDefault().Value.ToString() :</label>
+            <select id="gridadvsearchstatus" style="width:100%;" class="form-control search adv-item select2picker"></select>
+        </div>
+        <div class="form-group">
+            <label for="dtgridadvsearchCreated">@Model.Loc.Where(a => a.ResourceId == "spnCreated").FirstOrDefault().Value.ToString() :</label>
+            <input type="text" class="form-control search dtpicker adv-item" id="dtgridadvsearchCreated" autocomplete="off">
+        </div>
+        <div class="form-group">
+            <label for="gridadvsearchassigned">@Model.Loc.Where(a => a.ResourceId == "spnGlobalAssigned").FirstOrDefault().Value.ToString() :</label>
+            <input type="text" class="form-control search adv-item" id="gridadvsearchassigned" autocomplete="off">
+        </div>
+        <div class="form-group">
+            <label for="dtgridadvsearchScheduled">@Model.Loc.Where(a => a.ResourceId == "spnGlobalScheduled").FirstOrDefault().Value.ToString():</label>
+            <input type="text" class="form-control search dtpicker adv-item" id="dtgridadvsearchScheduled" autocomplete="off">
+        </div>
+        <div class="form-group">
+            <label for="gridadvsearcomplete">@Model.Loc.Where(a => a.ResourceId == "spnGlobalCompleted").FirstOrDefault().Value.ToString() :</label>
+            <input type="text" class="form-control search adv-item" id="gridadvsearcomplete" autocomplete="off">
+        </div>
+       
+    </div>
+</nav>

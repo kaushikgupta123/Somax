@@ -1,0 +1,167 @@
+﻿@model Client.Models.Dashboard.DashboardVM
+
+
+
+@using (Ajax.BeginForm("AddDescribeWorkOrder_Mobile", "Dashboard", new AjaxOptions { HttpMethod = "Post", OnSuccess = "WorksEmergencyOnSuccess", OnBegin = "AjaxBeginFormBegin", OnComplete = "AjaxBeginFormComplete", OnFailure = "AjaxBeginFormFaillure" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="slide-modal-head">
+        <a class="slide-back-btn btnCancelDescribe"> <i class="fa fa-angle-left"></i> Back</a>
+        <div class="slide-back-title">
+            @Model.Loc.Where(a => a.ResourceId == "spnAddNewUnPlanedWorkOrder").FirstOrDefault().Value.ToString()
+        </div>
+    </div>
+    @Html.Partial("_ErrorDiv")
+    <div class="slide-modal-body" style="overflow-y: auto; height: 90vh;">
+        <div mbsc-page class="demo-responsive">
+            <div style="overflow-y: scroll;">
+                <div mbsc-form class="mbsc-form-grid">
+                    <div class="mbsc-grid">
+                        <div class="mbsc-row mob">
+                            @if (Model._userdata.Security.MaintenanceCompletionWorkbenchWidget_Photos.Access && Model._userdata.Security.MaintenanceCompletionWorkbenchWidget_Photos.Create)
+                            {
+                                <div class="mbsc-col-12 mbsc-col-md-12 mbsc-col-lg-12" style="padding:15px;">
+                                    <div class="img-radio bttns takePic">
+                                        <img src="~/Scripts/ImageZoom/images/NoImage.jpg" class="productImg clsproductImg" id="addphotowodescribe" style="border: #f5f7f7 1px solid; border-radius: 5px; width: 100%; height: 250px; padding-bottom: 10px ">
+
+                                        <button type="button" class="btn btn-blue btn-addimg" title="Take Picture" style="padding: 0.65rem; float:right;">
+                                            <label for="add_photosWODescribe" class="lbl-addphoto" >@Model.Loc.Where(a => a.ResourceId == "spnAddPhotos").FirstOrDefault().Value.ToString()</label>
+                                            <input id="add_photosWODescribe" class="addphotoWorkorder" style="display:none;" type="file" value="" accept="image/*" capture="">
+                                        </button>
+                                    </div>
+                                </div>
+
+
+                            }
+                            <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                <label>
+                                    @Model.Loc.Where(a => a.ResourceId == "GlobalType").FirstOrDefault().Value.ToString() :
+
+                                    @Html.DropDownListFor(m => m.WoEmergencyDescribeModel.Type, Model.WoEmergencyDescribeModel.TypeList, "--Select--", new
+                                    {
+                                   @class = "form-control search mobiscrollselect",
+                                   @style = "width:100%;",
+                                   @mbsc_dropdown = "true",
+                                   @data_label = Model.Loc.Where(a => a.ResourceId == "GlobalType").FirstOrDefault().Value.ToString(),
+                                   @data_input_style = "box",
+                                   @data_label_style = "floating",
+                                   @placeholder = Model.Loc.Where(a => a.ResourceId == "GlobalType").FirstOrDefault().Value.ToString(),
+                               })
+
+                                    @*@Html.DropDownListFor(m => m.WoRequestModel.Type, Model.WoRequestModel.TypeList, "--Select--", new { @class = "form-control search select2picker", style = "width:100%;" })*@
+                                </label>
+                                @Html.ValidationMessageFor(m => m.WoEmergencyDescribeModel.Type, "", new { })
+                            </div>
+                            <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                <label>
+                                    @Model.Loc.Where(a => a.ResourceId == "GlobalChargeTo").FirstOrDefault().Value.ToString() :
+
+
+                                    @Html.TextBoxFor(m => m.WoEmergencyDescribeModel.ChargeToClientLookupId, new { @class = "form-control search dropbtn readonly", id = "txtChargeTo", autocomplete = "off", @readonly = "readonly", @mbsc_input = "true", @data_input_style = "box", @data_label_style = "floating", @placeholder = Model.Loc.Where(a => a.ResourceId == "GlobalChargeTo").FirstOrDefault().Value.ToString() })
+                                </label>
+                                @Html.ValidationMessageFor(m => m.WoEmergencyDescribeModel.ChargeToClientLookupId, "", new { })
+                            </div>
+                            <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                <div class=" design-box">
+                                    <div class="input-group-btn">
+                                        <button class="btn btn-white mobBttn btntxtInputGroup" type="button" id="opendescribewogrid">
+                                            <i id="srcicon" class="fa fa-search"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                <div class=" design-box">
+                                    <div class="input-group-btn">
+                                        <button type="button" class="btn btn-blue mobBttn" onclick="QrScannerEquipment_Mobile('txtChargeTo','')">
+                                            <i class="fa fa-qrcode" style="margin-top:-2px;"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            @if (Model._userdata.DatabaseKey.Client.AssetTree == true)
+                            {
+                                <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                    <div class=" design-box">
+                                        <div class="input-group-btn">
+                                            <button type="button" class="btn btn-blue mobBttn" data-assignedid="txtChargeTo" id="imgChargeToTree" style="display:block;">
+                                                <i id="srcicon" class="fa fa-tree chargeTree" style="display:block;"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+
+                            <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                <label>
+                                    @Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString()
+
+                                    @Html.TextAreaFor(m => m.WoEmergencyDescribeModel.Description, new { @class = "form-control", style = "resize:none;", autocomplete = "off", @mbsc_textarea = "true", @data_label_style = "floating", @placeholder = Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString(), @data_input_style = "box" })
+                                </label>
+                                @Html.ValidationMessageFor(m => m.WoEmergencyDescribeModel.Description, "", new { })
+                            </div>
+
+                            <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                <div class=" design-box">
+                                    <div class="mbsc-button-group-block">
+                                        <button type="button" class="btn btn-blue mobBttn btnCancelDescribe"><i class="fa fa-close faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                <div class=" design-box">
+                                    <div class="mbsc-button-group-block">
+                                        <button data-color="success" type="submit" class="btn btn-blue mobBttn" name="SaveType" value="Request_Demand"><i class="fa fa-save faIcon"></i> &nbsp;@Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="slide-modal-footer"></div>
+}
+
+<style>
+    .btn-addimg {
+        width: 100% !important;
+        float: none !important;
+    }
+
+    .takePic {
+        text-align: center;
+        width: 100%;
+        max-width: 400px;
+        margin: 0 auto;
+        float: none;
+    }
+
+        .takePic img {
+            width: auto;
+            height: 100px;
+        }
+
+    .lbl-addphoto {
+        width: 100% !important;
+        max-width: 100% !important;
+        text-align: center !important;
+        padding-left: 0px !important;
+    }
+
+    .btn-addimg input[type=text] {
+        display: none;
+    }
+
+    .mbsc-input-ic.mbsc-right-ic.mbsc-ic.mbsc-ic-upload {
+        top: 15px !important;
+    }
+
+    @@media screen and (min-width: 481px) and (max-width: 740px) {
+        .mbsc-row.mob {
+            height: 280px;
+        }
+    }
+</style>

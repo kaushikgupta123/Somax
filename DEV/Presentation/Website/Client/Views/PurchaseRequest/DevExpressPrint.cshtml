@@ -1,0 +1,38 @@
+﻿@using DevExpress.XtraReports.Web.WebDocumentViewer
+@model IEnumerable<Client.Models.PurchaseRequest.PurchaseRequestDevExpressPrintModel>
+@{
+    ViewBag.Title = "Somax | Purchase Request Print";
+    Layout = "~/Views/Shared/_ReportLayout.cshtml";
+}
+@section scripts{
+    
+}
+@{
+    var PrintTemplate = new Client.DevExpressReport.PurchaseRequestPrintTemplate();
+    PrintTemplate.DataSource = Model;
+    #region  set the name of the exported PDF file when exporting the Purchase Request
+
+    if (Session["PrintPRList"] != null && Model != null)
+    {
+        var PurchaseOrderIds = (List<long>)Session["PrintPRList"];
+        if (PurchaseOrderIds.Count > 0)
+        {
+            if (PurchaseOrderIds.Count == 1 && Model.ToList().Count > 0)
+            {
+                PrintTemplate.ExportOptions.PrintPreview.DefaultFileName = "Purchase Request - " + @Model.ToList()[0].ClientlookupId;
+            }
+        }
+    }
+
+    #endregion
+    var xtraReports = new DevExpress.XtraReports.Web.CachedReportSourceWeb(PrintTemplate);
+}
+@Html.DevExpress().WebDocumentViewer(settings =>
+{
+    settings.Name = "WebDocumentViewer";
+    settings.SettingsProgressBar.Position = ProgressBarPosition.TopRight;
+    settings.SettingsProgressBar.KeepOnVisibleArea = true;
+    settings.ClientSideEvents.CustomizeExportOptions = "onCustomizeExportOptions";
+    settings.ClientSideEvents.CustomizeMenuActions = "onCustomizeMenuActions";
+    settings.ClientSideEvents.BeforeRender = "onCustomizeBeforeRender";
+}).Bind(xtraReports).GetHtml()

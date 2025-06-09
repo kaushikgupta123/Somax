@@ -1,0 +1,211 @@
+﻿@model Client.Models.Work_Order.WorkOrderVM
+<div class="m-subheader fixedDiv1">
+    <div class="new-m-subheader">
+        <div class="PageTitle">
+            <div class="align-items-center separator">
+                <h3 class="m-subheader__title ">
+                    @Model.Loc.Where(a => a.ResourceId == "WorkOrderInformation").FirstOrDefault().Value.ToString()
+                </h3>
+            </div>
+        </div>
+
+        <div class="NewBreadcrumbArea">
+            <div class="newBreadcrumb">
+                <ul>
+                    <li><a href="/Dashboard/Dashboard">&nbsp;</a></li>
+                    <li><a href="/Approvalworkbench/Index?page=Maintenance_Work_Order_Approval">@Model.Loc.Where(a => a.ResourceId == "spnApprovalWorkBench").FirstOrDefault().Value.ToString()</a></li>
+                    <li class="active">@Model.WOInfoModel.ClientLookupId</li>
+                </ul>
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+        <div style="clear:both;"></div>
+    </div>
+</div>
+<div class="pushDiv1"></div>
+
+<div class="row fixedDiv2">
+    @Html.Partial("_WorkOrderSummary", Model)
+</div>
+<div class="pushDiv2 AppAdjust"></div>
+
+@Html.Partial("_ErrorDiv")
+
+@using (Ajax.BeginForm("AddWorkOrderInfo", "ApprovalWorkbench", new AjaxOptions { HttpMethod = "Post", OnSuccess = "WOInfoOnSuccess", OnBegin = "AjaxBeginFormBegin", OnComplete = "AjaxBeginFormComplete", OnFailure = "AjaxBeginFormFaillure" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="row">
+        <div class="col-xl-12">
+            <div class="m-portlet newPort" id="m_portlet" style="padding:15px;">
+                <div class="bottomBlock">
+                    <div class="tabsArea nobg">
+                        <h3>@Model.Loc.Where(a => a.ResourceId == "WorkOrderInformation").FirstOrDefault().Value.ToString()</h3>
+                        <ul class="listView nobrd">
+                            <li>
+                                <span class="label">@Html.LabelFor(m => m.WOInfoModel.ClientLookupId) : <small></small></span>
+                                <span class="inputText">@Html.TextBoxFor(m => m.WOInfoModel.ClientLookupId, new { @class = "form-control search readonly", autocomplete = "off", @readonly = "readonly", id = "WOLookUpId" })  </span>
+                            </li>
+
+                            <li style="height:auto;">
+                                <span class="label">@Html.LabelFor(m => m.WOInfoModel.Description) : </span>
+                                <span class="inputText" style="height:auto;">
+                                    @Html.TextAreaFor(m => m.WOInfoModel.Description, new { @class = "form-control search readonly", autocomplete = "off", @readonly = "readonly", id = "Description" })
+                                </span>
+                                <div style="clear:both;"></div>
+                            </li>
+                            <li>
+                                <span class="label">@Html.LabelFor(m => m.WOInfoModel.ChargeType) :</span>
+                                <span class="inputText">
+                                    @Html.ValidationMessageFor(m => m.WOInfoModel.ChargeType, "", new { style = "display:none" })
+                                    @Html.DropDownListFor(m => m.WOInfoModel.ChargeType, Model.WOInfoModel.ChargeTypeList, "--Select--", new { @class = "form-control search select2picker", id = "ChargeType", style = "width:100%;" })
+                                </span>
+                            </li>
+                            <li style="position:relative;">
+                                <span class="label">@Html.LabelFor(m => m.WOInfoModel.ChargeToClientLookupId) :</span>
+                                @if (Model.WOInfoModel.ChargeType != null && Model.WOInfoModel.ChargeType.Equals("Equipment"))
+                                {
+                                    if (Model._userdata.DatabaseKey.Client.AssetTree == true)
+                                    {
+                                        <span class="inputText wthAdjstNew2">
+                                            @Html.DropDownListFor(m => m.WOInfoModel.ChargeToClientLookupId, Model.WOInfoModel.ChargeTypelookUpList, "--Select--", new { @class = "form-control search select2picker", id = "ChargeToClientLookupId", style = "width:100%;" })
+                                            @*@Html.DropDownListFor(m => m.WOInfoModel.ChargeToId, Model.WOInfoModel.ChargeTypelookUpList, "--Select--", new { @class = "form-control search select2picker", id = "ChargeToId", style = "width:100%;" })*@
+                                        </span>
+                                        @*<span class="lookupTree_workorder"><a href="javascript:void(0)" id="imgChargeToTreeLineItem"><i class="fa fa-tree" style="margin-top:-3px;"></i></a></span>*@
+                                        <i class="fa fa-tree chargeTree TreeAdjustNew" id="imgChargeToTreeLineItem" style="display:block;"></i>
+                                    }
+                                    else
+                                    {
+                                        <span class="inputText wthAdjstNew2">
+                                            @*@Html.DropDownListFor(m => m.WOInfoModel.ChargeToId, Model.WOInfoModel.ChargeTypelookUpList, "--Select--", new { @class = "form-control search select2picker", id = "ChargeToId", style = "width:100%;" })*@
+                                            @Html.DropDownListFor(m => m.WOInfoModel.ChargeToClientLookupId, Model.WOInfoModel.ChargeTypelookUpList, "--Select--", new { @class = "form-control search select2picker", id = "ChargeToClientLookupId", style = "width:100%;" })
+                                        </span>
+
+                                    }
+                                }
+                                else
+                                {
+                                    <span class="inputText wthAdjstNew2">
+                                        @Html.DropDownListFor(m => m.WOInfoModel.ChargeToClientLookupId, Model.WOInfoModel.ChargeTypelookUpList, "--Select--", new { @class = "form-control search select2picker", id = "ChargeToClientLookupId", style = "width:100%;" })
+                                        @*@Html.DropDownListFor(m => m.WOInfoModel.ChargeToId, Model.WOInfoModel.ChargeTypelookUpList, "--Select--", new { @class = "form-control search select2picker", id = "ChargeToId", style = "width:100%;" })*@
+                                    </span>
+                                    if (Model._userdata.DatabaseKey.Client.AssetTree == true)
+                                    {
+                                        @*<span class="lookupTree_workorder"><a href="javascript:void(0)" id="imgChargeToTreeLineItem"><i class="fa fa-tree" style="margin-top:-3px;"></i></a></span>*@
+                                        <i class="fa fa-tree chargeTree TreeAdjustNew" id="imgChargeToTreeLineItem" style="display:none;"></i>
+                                    }
+
+                                }
+
+                            </li>
+                            <li>
+                                <span class="label">@Html.LabelFor(m => m.WOInfoModel.ChargeTo_Name) :</span>
+                                <span class="inputText">@Html.TextBoxFor(m => m.WOInfoModel.ChargeTo_Name, new { @class = "form-control search readonly", autocomplete = "off", @readonly = "readonly", id = "ChargeToName" }) </span>
+                            </li>
+                            <li>
+                                <span class="label">@Html.LabelFor(m => m.WOInfoModel.Shift) :</span>
+                                <span class="inputText">
+                                    @Html.DropDownListFor(m => m.WOInfoModel.Shift, Model.WOInfoModel.ShiftList, "--Select--", new { @class = "form-control search select2picker", id = "shift", style = "width:100%;" })
+                                </span>
+                            </li>
+                            <li>
+                                <span class="label">@Html.LabelFor(m => m.WOInfoModel.Type) :</span>
+                                <span class="inputText">
+                                    @Html.DropDownListFor(m => m.WOInfoModel.Type, Model.WOInfoModel.TypeList, "--Select--", new { @class = "form-control search select2picker", id = "Type", style = "width:100%;" })
+                                </span>
+                            </li>
+                            <li>
+                                <span class="label">@Html.LabelFor(m => m.WOInfoModel.Priority) :</span>
+                                <span class="inputText">
+                                    @Html.DropDownListFor(m => m.WOInfoModel.Priority, Model.WOInfoModel.PriorityList, "--Select--", new { @class = "form-control search select2picker", id = "Priority", style = "width:100%;" })
+                                </span>
+                            </li>
+                            <li>
+                                <span class="label">@Html.LabelFor(m => m.WOInfoModel.WorkAssigned_PersonnelId) :</span>
+                                <span class="inputText">
+                                    @Html.ValidationMessageFor(m => m.WOInfoModel.WorkAssigned_PersonnelId, "", new { style = "display:none" })
+                                    @Html.DropDownListFor(m => m.WOInfoModel.WorkAssigned_PersonnelId, Model.WOInfoModel.WorkAssignedLookUpList, "--Select--", new { @class = "form-control search select2picker", id = "WorkAssigned_PersonnelId", style = "width:100%;" })
+                                </span>
+                            </li>
+                            <li>
+                                <span class="label">@Html.LabelFor(m => m.WOInfoModel.ScheduledStartDate) :</span>
+                                <span class="inputText">
+                                    @Html.ValidationMessageFor(m => m.WOInfoModel.ScheduledStartDate, "", new { style = "display:none" })
+                                    @Html.TextBoxFor(m => m.WOInfoModel.ScheduledStartDate, "{0:MM/dd/yyyy}", new { @class = "form-control search dtpicker", autocomplete = "off", id = "ScheduledStartDate" })
+                                </span>
+                            </li>
+                            <li>
+                                <span class="label">@Html.LabelFor(m => m.WOInfoModel.ScheduledDuration) :</span>
+                                <span class="inputText">
+                                    @Html.ValidationMessageFor(m => m.WOInfoModel.ScheduledDuration, "", new { style = "display:none" })
+                                    @Html.TextBoxFor(m => m.WOInfoModel.ScheduledDuration, "", new { @class = "form-control search decimalinput", autocomplete = "off", id = "ScheduleDuration" })
+                                </span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div style="clear:both;"></div>
+                    <div class="idBttns">
+                        <div class="bttn_pagin">
+                            <div class="bttns2">
+                                <button type="submit" class="btn btn-blue mobBttn"><i class="fa fa-check faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalApprove").FirstOrDefault().Value.ToString()</button>
+                            </div>
+                            <div class="bttns">
+                                <button type="button" class="btn btn-blue mobBttn" id="btncancel"><i class="fa fa-close faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button>
+                            </div>
+                            <div style="clear:both;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @Html.HiddenFor(m => m.WOInfoModel.WorkOrderId)
+    @Html.HiddenFor(m => m.treeHeaderVal)
+    @*@Html.HiddenFor(m => m.WOInfoModel.ChargeToId, new { id = "hdnApprovalChargeTo" })*@
+    @Html.HiddenFor(m => m.WOInfoModel.ChargeToClientLookupId, new { id = "hdnApprovalChargeToClientLookupId" })
+    <input type="hidden" id="hdnassettreeval" value="@Model._userdata.DatabaseKey.Client.AssetTree.ToString()" />
+}
+<div id="woEquipTreeModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                @if (String.IsNullOrEmpty(Model.treeHeader))
+                {
+                    <h4 class="modal-title" id="hdrPlantLocation">@Model.Loc.Where(a => a.ResourceId == "spnGlobalEquipmentTreeLookup").FirstOrDefault().Value.ToString()</h4>
+                }
+                else
+                {
+                    <h4 class="modal-title" id="hdrPlantLocation">@Model.treeHeader</h4>
+                }
+            </div>
+            <div class="modal-body">
+                <div class="cntTree">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<style type="text/css">
+    /*.lookupTree_workorder { text-align: center; position: absolute; right: 20px; top: 9px; }*/
+    .chargeTree { right: 0px; }
+    .inputText.wthAdjstNew2 { width: 68% !important; }
+    .inputText.wthAdjstNew2 .select2-container { width: 100% !important; }
+    @@media only screen and (min-width: 568px) and (max-width: 639px) {
+       .inputText.wthAdjstNew2 { width: 65% !important; }
+    }
+    ul.listView li span.inputText {
+        width: calc(100% - 360px);
+    }
+    ul.listView li span.label {
+        width: 360px;
+    }
+    ul.listView li span.inputText.wthAdjstNew2 {
+        width: calc(100% - 384px) !important;
+    }
+    @@media(max-width: 1199px) {
+        ul.listView li span.inputText.wthAdjstNew2 {
+            width: calc(100% - 384px) !important;
+        }
+    }
+</style>

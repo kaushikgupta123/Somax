@@ -1,0 +1,96 @@
+﻿@model Client.Models.BusinessIntelligenceVM
+@using Client.Common
+
+@{
+    string Prompt1Source = Model.reportListingModel.Prompt1Source;
+    string Prompt1Type = Model.reportListingModel.Prompt1Type;
+    string Prompt1ListSource = Model.reportListingModel.Prompt1ListSource;
+    string Prompt1ListList = Model.reportListingModel.Prompt1List;
+
+    string Prompt2Source = Model.reportListingModel.Prompt2Source;
+    string Prompt2Type = Model.reportListingModel.Prompt2Type;
+    string Prompt2ListSource = Model.reportListingModel.Prompt2ListSource;
+    string Prompt2ListList = Model.reportListingModel.Prompt2List;
+}
+
+<div id="promptModal" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-info">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title" id="modaltitle">@Model.reportListingModel.ReportName</h4>
+            </div>
+            <div class="modal-body">
+                @if (!string.IsNullOrEmpty(Prompt1Source) && !string.IsNullOrEmpty(Prompt1Type))
+                {
+                    if (Prompt1Type.ToUpper() == ReportConstants.DATERANGE)
+                    {
+                        <div class="form-group" id="daterangecontainer1">
+                            <label id="lbl-prompt1">@Model.reportListingModel.Prompt1Source</label>
+                            <select style="width:100%;" class="form-control search select2picker cmbdaterange" id="cmbdaterange1">
+                                <option value="">--Select--</option>
+                                @foreach (var item in Model.DateRangeDropListForReport)
+                                {
+                                    <option value="@item.Value">@item.Text</option>
+                                }
+                            </select>
+                            <div style="padding:10px 0 0 10px; border-left: 1px dashed #b9c1c4;display:none;" class="timeperiodcontainer" id="timeperiodcontainer1">
+                                <label for="">@Model.Loc.Where(a => a.ResourceId == "spnGlobalTimePeriod").FirstOrDefault().Value.ToString() :</label>
+                                <input type="text" class="form-control search adv-item dtrangepicker rptdaterange" id="rptdaterange1" autocomplete="off">
+                            </div>
+                        </div>
+                    }
+                    else if (Prompt1Type.ToUpper() == ReportConstants.MULTISELECT && !string.IsNullOrEmpty(Prompt1ListSource) && !string.IsNullOrEmpty(Prompt1ListList))
+                    {
+                        <div class="form-group" id="multiselectcontainer1">
+                            <label id="lbl-prompt1">@Model.reportListingModel.Prompt1Source</label>
+                            <select id="multisectprompt1" style="width:100%;" class="form-control search adv-item select2picker" multiple="multiple">
+                                @foreach (var item in Model.multiSelectPrompt1)
+                                {
+                                    <option value="@item.value">@item.text</option>
+                                }
+                            </select>
+                        </div>
+                    }
+                }
+                @if (!string.IsNullOrEmpty(Prompt2Source) && !string.IsNullOrEmpty(Prompt2Type))
+                {
+                    if (Prompt2Type.ToUpper() == ReportConstants.DATERANGE)
+                    {
+                        <div class="form-group" id="daterangecontainer2">
+                            <label id="lbl-prompt2">@Model.reportListingModel.Prompt2Source</label>
+                            <select style="width:100%;" class="form-control search select2picker cmbdaterange" id="cmbdaterange2">
+                                <option value="">--Select--</option>
+                                @foreach (var item in Model.DateRangeDropListForReport)
+                                {
+                                    <option value="@item.Value">@item.Text</option>
+                                }
+                            </select>
+                            <div style="padding:10px 0 0 10px; border-left: 1px dashed #b9c1c4;display:none;" class="timeperiodcontainer" id="timeperiodcontainer2">
+                                <label>@Model.Loc.Where(a => a.ResourceId == "spnGlobalTimePeriod").FirstOrDefault().Value.ToString() :</label>
+                                <input type="text" class="form-control search adv-item dtrangepicker rptdaterange" id="rptdaterange2" autocomplete="off">
+                            </div>
+                        </div>
+                    }
+                    else if (Prompt2Type.ToUpper() == ReportConstants.MULTISELECT && !string.IsNullOrEmpty(Prompt2ListSource) && !string.IsNullOrEmpty(Prompt2ListList))
+                    {
+                        <div class="form-group" id="multiselectcontainer2">
+                            <label id="lbl-prompt2">@Model.reportListingModel.Prompt2Source</label>
+                            <select id="multisectprompt2" style="width:100%;" class="form-control search adv-item select2picker" multiple="multiple">
+                                @foreach (var item in Model.multiSelectPrompt2)
+                                {
+                                    <option value="@item.value">@item.text</option>
+                                }
+                            </select>
+                        </div>
+                    }
+                }
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-close buttonIcon"></i> &nbsp;@Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button>
+                <button type="button" class="btn btn-blue" style="float:right;" id="btngetreport"><i class="fa fa-save buttonIcon"></i> &nbsp;@Model.Loc.Where(a => a.ResourceId == "globalOK").FirstOrDefault().Value.ToString()</button>
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+    </div>
+</div>

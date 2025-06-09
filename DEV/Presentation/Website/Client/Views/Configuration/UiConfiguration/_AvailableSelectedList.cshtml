@@ -1,0 +1,136 @@
+﻿@model Client.Models.Configuration.UIConfiguration.UiConfigurationVM
+
+<div class="row">
+    <div class="col-xl-12 text-center">
+        <h5>@Model.uiViewModel.uiViewDetails.Description</h5>
+    </div>
+</div>
+
+<div class="row-wrap">
+    <div class="row">
+        <div class="col-xl-12">
+
+
+            <div class="row">
+                <div class="col-xl-5">
+                    <h4 class=" text-center">
+                        @Model.Loc.Where(a => a.ResourceId == "spnAvailable").FirstOrDefault().Value.ToString()
+
+                        <div class="drop-down-box">
+
+                            <a class="btn  gridinnerbutton add-left btn-outline-primary addlookuplist   btn  dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Add"> <i class="fa fa-plus"></i></a>
+                            <div class="dropdown-menu">
+                                <ul>
+                                    <li><a href="javascript:void(0)" id="linkAddSection">@Model.Loc.Where(a => a.ResourceId == "spnSection").FirstOrDefault().Value.ToString()</a></li>
+                                    @if (Model.uiViewModel.uiViewDetails.ViewType == "Add")
+                                    {
+                                        <li><a href="javascript:void(0)" id="linkAddUserDefineField">@Model.Loc.Where(a => a.ResourceId == "spnUserDefinedField").FirstOrDefault().Value.ToString()</a></li>
+                                    }
+                                </ul>
+                            </div>
+                        </div>
+                    </h4>
+
+                    <div class="card-group connectedSortable" id="sortable1">
+                        @if (Model.AvailableListModel.Count > 0)
+                        {
+                            for (int i = 0; i < Model.AvailableListModel.Count; i++)
+                            {
+
+                                <div class="card-box white" data-systemreq="@Model.AvailableListModel[i].SystemRequired" id="@Model.AvailableListModel[i].UIConfigurationId">
+                                    <div class="left-box">
+                                        <span class="icon-drag dragableicon"></span> @(String.IsNullOrEmpty(Model.AvailableListModel[i].ColumnLabel) ? Model.AvailableListModel[i].SectionName : Model.AvailableListModel[i].ColumnLabel)
+                                    </div>
+                                </div>
+                            }
+                        }
+
+
+                    </div>
+
+
+                </div>
+
+                <div class="col-xl-7">
+                    <h4 class=" text-center">@Model.Loc.Where(a => a.ResourceId == "spnSelected").FirstOrDefault().Value.ToString()</h4>
+
+                    <div class="card-group connectedSortable" id="sortable2">
+                        @if (Model.SelectedListModel.Count > 0)
+                        {
+                            for (int j = 0; j < Model.SelectedListModel.Count; j++)
+                            {
+                                if (Model.SelectedListModel[j].SystemRequired)
+                                {
+                                    <div class="card-box" data-systemreq="@Model.SelectedListModel[j].SystemRequired" id="@Model.SelectedListModel[j].UIConfigurationId">
+                                        <div class="left-box"><span class="icon-drag dragableicon"></span><span class="Columntext">@Model.SelectedListModel[j].ColumnLabel</span> <span class="red-required">@Model.Loc.Where(a => a.ResourceId == "spnRequired").FirstOrDefault().Value.ToString()</span></div>
+                                    </div>
+                                }
+                                else
+                                {
+                                    if (Model.SelectedListModel[j].Required)
+                                    {
+                                        <div class="card-box white" data-systemreq="@Model.SelectedListModel[j].SystemRequired" id="@Model.SelectedListModel[j].UIConfigurationId">
+                                            <div class="left-box"><span class="icon-drag dragableicon"></span><span class="Columntext">@Model.SelectedListModel[j].ColumnLabel</span>  <span class="red-required">Required</span></div>
+                                            <div class="icon-box">
+                                                <a class="click-btn removeUIconfig" href="javascript:void(0)" data-UIconfigId="@Model.SelectedListModel[j].UIConfigurationId"><i class="fa fa-window-close" data-configId="@Model.SelectedListModel[j].UIConfigurationId" data-order="@Model.SelectedListModel[j].Order" aria-hidden="true"></i></a>
+                                                @if (Model.uiViewModel.uiViewDetails.ViewType != "Widget")
+                                                {
+                                                    <a class="click-btn UIColumnconfig" href="javascript:void(0)" data-ColumnLabel="@Model.SelectedListModel[j].ColumnLabel" data-isRequired="@Model.SelectedListModel[j].Required.ToString().ToLower()"
+                                                       data-ColumnName="@Model.SelectedListModel[j].ColumnName" data-DataDictId="@Model.SelectedListModel[j].DataDictionaryId" data-configId="@Model.SelectedListModel[j].UIConfigurationId"
+                                                       data-udf="@Model.SelectedListModel[j].UDF" data-columntype="@Model.SelectedListModel[j].ColumnType" data-LookupName="@Model.SelectedListModel[j].LookupName" data-DisplayonForm="@Model.SelectedListModel[j].DisplayonForm.ToString().ToLower()">
+                                                        <i class="fa fa-cog" data-order="@Model.SelectedListModel[j].Order" aria-hidden="true"></i>
+                                                    </a>
+                                                }
+                                            </div>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="card-box white" data-systemreq="@Model.SelectedListModel[j].SystemRequired" id="@Model.SelectedListModel[j].UIConfigurationId">
+                                            <div class="left-box"><span class="icon-drag dragableicon"></span><span class="Columntext">@(String.IsNullOrEmpty(Model.SelectedListModel[j].ColumnLabel) ? Model.SelectedListModel[j].SectionName : Model.SelectedListModel[j].ColumnLabel)</span></div>
+                                            <div class="icon-box">
+                                                <a class="click-btn removeUIconfig" href="javascript:void(0)" data-UIconfigId="@Model.SelectedListModel[j].UIConfigurationId"> <i class="fa fa-window-close" style="display:@(Model.SelectedListModel[j].Section?"none":"block")" data-configId="@Model.SelectedListModel[j].UIConfigurationId" data-order="@Model.SelectedListModel[j].Order" aria-hidden="true"></i></a>
+                                                @if (Model.uiViewModel.uiViewDetails.ViewType != "Widget")
+                                                {
+                                                    <a class="click-btn UIColumnconfig" href="javascript:void(0)" data-ColumnLabel="@Model.SelectedListModel[j].ColumnLabel" data-isRequired="@Model.SelectedListModel[j].Required.ToString().ToLower()"
+                                                       data-ColumnName="@Model.SelectedListModel[j].ColumnName" data-DataDictId="@Model.SelectedListModel[j].DataDictionaryId" data-configId="@Model.SelectedListModel[j].UIConfigurationId" data-udf="@Model.SelectedListModel[j].UDF"
+                                                       data-columntype="@Model.SelectedListModel[j].ColumnType" data-LookupName="@Model.SelectedListModel[j].LookupName" data-DisplayonForm="@Model.SelectedListModel[j].DisplayonForm.ToString().ToLower()">
+                                                        <i class="fa fa-cog" style="display:@(Model.SelectedListModel[j].Section?"none":"block")" data-order="@Model.SelectedListModel[j].Order" aria-hidden="true"></i>
+                                                    </a>
+                                                }
+
+                                            </div>
+                                        </div>
+                                    }
+                                }
+
+                            }
+                        }
+
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xl-12">
+        <div class="idBttns">
+            <div class="bttn_pagin">
+                <div class="bttns2">
+                    <button type="submit" class="btn btn-blue mobBttn" id="btnsubmit" disabled><i class="fa fa-save faIcon"></i> &nbsp; Save</button>
+                </div>
+                <div class="bttns"><button type="button" class="btn btn-blue mobBttn" id="btnLookUpListcancel"><i class="fa fa-close faIcon"></i> &nbsp; Cancel</button></div>
+
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+@*<script src="~/Scripts/Common/jquery.ui.touch-punch.min.js"></script>*@

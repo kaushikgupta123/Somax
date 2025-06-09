@@ -1,0 +1,99 @@
+﻿@model Client.Models.MasterSanitationSchedule.MasterScheduleVM
+<div class="m-subheader">
+    <div class="new-m-subheader">
+        <div class="PageTitle">
+            <div class="align-items-center separator">
+                <h3 class="m-subheader__title ">
+                   @Model.Loc.Where(a => a.ResourceId == "spnMasterSanitationSchedule").FirstOrDefault().Value.ToString() 
+                </h3>
+            </div>
+        </div>
+
+        <div class="NewBreadcrumbArea">
+            <div class="newBreadcrumb">
+                <ul>
+                    <li><a href="/Dashboard/Dashboard">&nbsp;</a></li>
+                    <li><a href="/MasterSanitationSchedule/Index">@Model.Loc.Where(a => a.ResourceId == "spnMasterSanitationScheduleSearch").FirstOrDefault().Value.ToString() </a></li>
+                    <li><a href="javascript:void(0)" id="brdMsTask" data-val="@Model.MasterSanTaskModel.SanitationMasterId">@Model.MasterSanitModel.Description</a></li>
+                    
+                    @if (Model.MasterSanTaskModel.SanitationMasterTaskId == 0)
+                    {
+                    <li class="active">@Model.Loc.Where(a => a.ResourceId == "spnAddTask").FirstOrDefault().Value.ToString() </li>
+                    }
+                    else
+                    {
+                        <li class="active">@Model.Loc.Where(a => a.ResourceId == "spnEditTask").FirstOrDefault().Value.ToString()</li>
+                    }
+                </ul>
+                    <div style="clear:both;"></div>
+                </div>
+            </div>
+            <div style="clear:both;"></div>
+        </div>
+    </div>
+    @Html.Partial("_ErrorDiv")
+    @using (Ajax.BeginForm("SaveTask", "MasterSanitationSchedule", new AjaxOptions { HttpMethod = "Post", OnSuccess = "MsTaskAddOnSuccess", OnBegin = "AjaxBeginFormBegin", OnComplete = "AjaxBeginFormComplete", OnFailure = "AjaxBeginFormFaillure" }))
+    {
+        @Html.AntiForgeryToken()
+        <div class="row">
+            <div class="col-xl-12">
+                <div class="m-portlet newPort" id="m_portlet" style="padding:15px;">
+                    <div class="bottomBlock">
+                        <div class="tabsArea nobg">
+                            @if (Model.MasterSanTaskModel.SanitationMasterTaskId != 0)
+                            {
+                                    @Html.HiddenFor(m => m.MasterSanTaskModel.UpdateIndex)
+                            }
+                            <ul class="listView nobrd">
+                                <li style="height:auto;">
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString()  :<small>*</small></span>
+                                    <span class="inputText" style="height:auto;">
+                                        @Html.ValidationMessageFor(m => m.MasterSanTaskModel.Description, "", new { style = "display:none" })
+                                        @Html.TextAreaFor(m => m.MasterSanTaskModel.Description, new { @class = "form-control search", autocomplete = "off" })
+                                    </span>
+                                    <div style="clear:both;"></div>
+                                </li>
+                                <li>
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnOrder").FirstOrDefault().Value.ToString() :</span>
+                                    <span class="inputText">
+                                        @Html.TextBoxFor(m => m.MasterSanTaskModel.TaskId, new { @class = "form-control search", autocomplete = "off", @MaxLength = "3" })
+                                    </span>
+                                </li>
+                                @*--commented for jira issue v2-243--*@
+                                @*<li>
+                                    <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnPerform").FirstOrDefault().Value.ToString() :</span>
+                                    <span class="inputText">
+                                        @Html.TextBoxFor(m => m.MasterSanTaskModel.PerformTime, new { @class = "form-control search ", autocomplete = "off", maxlength = "10" })
+                                    </span>
+                                </li>*@
+                                @*@if (Model.MasterSanTaskModel.SanitationMasterTaskId != 0)
+                                {
+                                    <li>
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "globalInActive").FirstOrDefault().Value.ToString()  : </span>
+                                        <span class="inputText">
+                                            @Html.CheckBoxFor(m => m.MasterSanTaskModel.InactiveFlag)
+                                        </span>
+                                    </li>
+                                }*@
+                            </ul>
+                        </div>
+                        <div style="clear:both;"></div>
+
+                        <div class="idBttns">
+                            <div class="bttn_pagin">
+                                <div class="bttns2">
+                                    <button type="submit" class="btn btn-blue mobBttn"><i class="fa fa-save faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString() </button>
+                                </div>
+                                <div class="bttns"><button type="button" class="btn btn-blue mobBttn" id="btnmstaskcancel"><i class="fa fa-close faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString() </button></div>
+                                <div style="clear:both;"></div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+            @Html.HiddenFor(m => m.MasterSanTaskModel.SanitationMasterId)
+            @Html.HiddenFor(m => m.MasterSanTaskModel.TaskId)
+            @Html.HiddenFor(m => m.MasterSanTaskModel.SanitationMasterTaskId)
+    }

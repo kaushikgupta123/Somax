@@ -1,0 +1,52 @@
+﻿@model Client.Models.PartTransfer.PartTransferVM
+<div id="DenyModal" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-info">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">@Model.Loc.Where(a => a.ResourceId == "spnDenyPartTransfer").FirstOrDefault().Value.ToString()</h4>
+            </div>
+            @Html.Partial("_ErrorDiv")
+            @using (Ajax.BeginForm("PartsTransferDeny", "PartTransfer", new AjaxOptions { HttpMethod = "Post", OnSuccess = "PartsTransferDenyOnSuccess", OnBegin = "AjaxBeginFormBegin", OnComplete = "AjaxBeginFormComplete", OnFailure = "AjaxBeginFormFaillure" }))
+            {
+                @Html.AntiForgeryToken()
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>@Model.Loc.Where(a => a.ResourceId == "spnDenyReason").FirstOrDefault().Value.ToString():<small>*</small></label>
+                        @Html.ValidationMessageFor(m => m.partTransferDenyModel.DenyReasonId, "", new { style = "display:none" })
+                       @Html.DropDownListFor(m => m.partTransferDenyModel.DenyReasonId, Model.partTransferDenyModel.DenyReasonIdList, "--Select--", new { @class = "form-control search select2picker", style = "width:100%;" })
+                    </div>
+                    <div class="form-group">
+                        <label>@Model.Loc.Where(a => a.ResourceId == "spnLogComment").FirstOrDefault().Value.ToString() :<small>*</small></label>
+                        @Html.ValidationMessageFor(m => m.partTransferDenyModel.Comment, "", new { style = "display:none" })
+                        @Html.TextAreaFor(m => m.partTransferDenyModel.Comment, new { @class = "form-control search ", autocomplete = "off" })
+                    </div>
+                </div>
+                <div class="modal-footer" style="padding:15px 25px !important;">
+                    <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-close buttonIcon"></i> &nbsp;@Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString() </button>
+                    <button type="submit" class="btn btn-blue" style="float:right;"><i class="fa fa-save buttonIcon"></i> &nbsp;@Model.Loc.Where(a => a.ResourceId == "globalDeny").FirstOrDefault().Value.ToString() </button>
+                    <div style="clear:both;"></div>
+                </div>
+              @Html.HiddenFor(m => m.partTransferDenyModel.PartTransferId)
+            }
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        $.validator.unobtrusive.parse(document);
+    });
+    $("#partTransferDenyModel_DenyReasonId").change(function () {       
+        var tlen = $(document).find("#partTransferDenyModel_DenyReasonId").val();
+        if (tlen.length > 0) {
+            var areaddescribedby = $(document).find("#partTransferDenyModel_DenyReasonId").attr('aria-describedby');
+            $('#' + areaddescribedby).hide();
+            $(document).find('form').find("#partTransferDenyModel_DenyReasonId").removeClass("input-validation-error");
+        }
+        else {
+            var areaddescribedby = $(document).find("#partTransferDenyModel_DenyReasonId").attr('aria-describedby');
+            $('#' + areaddescribedby).show();
+            $(document).find('form').find("#partTransferDenyModel_DenyReasonId").addClass("input-validation-error");
+        }
+    });
+</script>

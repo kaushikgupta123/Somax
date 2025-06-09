@@ -1,0 +1,193 @@
+﻿@model Client.Models.Work_Order.WorkOrderVM
+
+<div class="m-subheader">
+    <div class="new-m-subheader">
+        <div class="PageTitle">
+            <div class="align-items-center separator">
+                <h3 class="m-subheader__title ">
+                    @Model.Loc.Where(a => a.ResourceId == "spnFollowUpWorkorder").FirstOrDefault().Value.ToString()
+                </h3>
+            </div>
+        </div>
+
+        <div class="NewBreadcrumbArea">
+            <div class="newBreadcrumb">
+                <ul>
+                    <li><a href="/Dashboard/Dashboard">&nbsp;</a></li>
+                    <li><a href="/WorkOrder/Index?page=Maintenance_Work_Order_Search">@Model.Loc.Where(a => a.ResourceId == "spnWorkOrderSearch").FirstOrDefault().Value.ToString()</a></li>
+                    <li><a href="javascript:void(0)" id="brdfollowupwo" data-val="@Model.woRequestModel.WorkOrderId">@Model.woRequestModel.ClientLookupId</a></li>
+                    <li class="active">@Model.Loc.Where(a => a.ResourceId == "spnAddFollowUpWorkOrder").FirstOrDefault().Value.ToString()</li>
+                </ul>
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+        <div style="clear:both;"></div>
+    </div>
+</div>
+@Html.Partial("_ErrorDiv")
+<div class="row">
+    <div class="col-xl-12">
+        <div id="btnnblock">
+            <div class="m-portlet" id="m_portlet" style="padding:15px;">
+                <div class="bottomBlock">
+                    @using (Ajax.BeginForm("FollowUpWorkOrder", "WorkOrder", new AjaxOptions { HttpMethod = "Post", OnSuccess = "AddFollowUpOnSuccess", OnBegin = "AjaxBeginFormBegin", OnFailure = "AjaxBeginFormFaillure" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        <div class="tabsArea nobg" id="RequestCharge" style="display:block;">
+                            <ul class="listView nobrd list-module rt-part">
+                                <li>
+                                    <span class="label"><label for="Line" id="lblLine">@Html.LabelFor(m => m.woRequestModel.Type)</label> : </span>
+                                    <span class="inputText wthAdjst">
+                                        @Html.DropDownListFor(m => m.woRequestModel.Type, Model.woRequestModel.TypeList, "--Select--", new { @class = "form-control search select2picker", style = "width:100%;" })
+                                    </span>
+                                </li>
+                                @*commented for v2-608*@
+                                @*<li>
+                        <span class="label"><label for="Line" id="lblLine">@Html.LabelFor(m => m.woRequestModel.ChargeType)</label>: </span>
+                        <span class="inputText wthAdjst">
+                            @Html.DropDownListFor(m => m.woRequestModel.ChargeType, Model.woRequestModel.ChargeTypeList, "--Select--", new { @id = "woFollowupChargeTo", @class = "form-control search select2picker", style = "width:100%;" })
+                        </span>
+                    </li>*@
+                                <li class="tree-option">
+                                    <span class="label"><label for="Line" id="lblLine">@Model.Loc.Where(a => a.ResourceId == "GlobalChargeTo").FirstOrDefault().Value.ToString()</label>:</span>
+                                    <span class="inputText wthAdjst">
+                                        <div class="dropdown dropTableOuter">
+                                            <div class="input-group">
+                                                @Html.ValidationMessageFor(m => m.woRequestModel.ChargeToClientLookupId, "", new { style = "display:none" })
+                                                @Html.TextBoxFor(m => m.woRequestModel.ChargeToClientLookupId, new { @id = "txtChargeTo", @class = "form-control search dropbtn readonly", autocomplete = "off", @readonly = "readonly" })
+                                                @Html.HiddenFor(m => m.woRequestModel.ChargeTo, new { id = "hdnChargeTo" })
+                                                <div class="input-group-btn">
+                                                    <button class="btn btn-white btntxtInputGroup" type="button" id="openfollowwogrid">
+                                                        <i id="srcicon" class="fa fa-search"></i>
+                                                    </button>
+                                                </div>
+                                                <div class="input-group-btn qr-scan-gp m-left">
+                                                    <button type="button" class="btn btn-blue mobBttn" onclick="QrScannerEquipment('txtChargeTo','hdnChargeTo')"><i class="fa fa-qrcode" style="margin-top:-2px;"></i></button>
+                                                </div>
+                                                <div class="treebox">
+                                                    @if (Model._userdata.DatabaseKey.Client.AssetTree == true)
+                                                    {
+                                                        <i class="fa fa-tree chargeTree" id="imgChargeToTree" style="display:block;"></i>
+                                                    }
+                                                </div>
+                                                </div>
+                                            </div>
+                                    </span>
+                                </li>
+                                <li style="height:auto;">
+                                    <span class="label"><label for="Line" id="lblLine">@Html.LabelFor(m => m.woRequestModel.Description)</label> : <small>*</small></span>
+                                    <span class="inputText wthAdjst">
+                                        @Html.TextAreaFor(m => m.woRequestModel.Description, new { @class = "form-control search", style = "resize:none;", autocomplete = "off" })
+                                        @Html.ValidationMessageFor(m => m.woRequestModel.Description, "", new { style = "display:none" })
+                                    </span>
+                                    <div style="clear:both;"></div>
+                                </li>
+                            </ul>
+                        </div>
+                        <div style="clear:both;"></div>
+                        <div class="idBttns">
+                            <div class="bttn_pagin">
+                                <div class="bttns2">
+                                    <button type="submit" class="btn btn-blue" style="float:right;"><i class="fa fa-save faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+                                </div>
+                                <div class="bttns">
+                                    <button type="button" id="btnCancelAddFollowUp" class="btn btn-blue mobBttn"><i class="fa fa-close faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button>
+                                </div>
+                                <div style="clear:both;"></div>
+                            </div>
+                        </div>
+                        @Html.HiddenFor(m => m.woRequestModel.WorkOrderId)
+                        @Html.HiddenFor(m => m.woRequestModel.ChargeToClientLookupId)
+                        @Html.Partial("~/Views/WorkOrder/_EmergencyOnDemandEquipmentPopUp.cshtml")
+                        @Html.Partial("~/Views/WorkOrder/_AddWOLocationPopUp.cshtml")
+                        @Html.Partial("~/Views/Shared/QR/_QrCodeReaderModal.cshtml")
+                    }
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+<div id="commonWOTreeModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title" id="hdrPlantLocation">@Model.Loc.Where(a => a.ResourceId == "spnGlobalEquipmentTreeLookup").FirstOrDefault().Value.ToString()</h4>
+            </div>
+            <div class="modal-body">
+                <div class="cntTree">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style type="text/css">
+    .ui-tooltip {
+        z-index: 1151 !important;
+    }
+
+    .errormessage {
+        margin-bottom: 1px !important;
+    }
+    .list-module li {
+        width: 100% !important;
+    }
+
+        .list-module li .mobBttn {
+            margin-top: 1px !important;
+        }
+
+        .list-module li span.wthAdjst {
+            width: calc(100% - 225px) !important;
+        }
+
+    .list-module .input-group {
+        align-items: center !important;
+    }
+
+    .list-module .chargeTree {
+        position: relative !important;
+        left: auto !important;
+        top: 7px !important;
+        right: -14px !important;
+    }
+
+    .list-module .treebox {
+        width: 37px;
+        height: 33px;
+    }
+
+    ul.listView.list-module li span.label {
+        width: 225px !important;
+    }
+</style>
+<script>
+    $(document).ready(function () {
+        $(document).find('.select2picker').select2({});
+        $.validator.setDefaults({ ignore: null });
+        $.validator.unobtrusive.parse(document);
+        $('input, form').blur(function () {
+            $(this).valid();
+        });
+        $(".modal").on("hidden.bs.modal", function () {
+            $('.errormessage').html('').hide();
+            $("#menuFollowModalDetailsPage").find("select").each(function () {
+                $(this).val('').trigger('change');
+                if ($(this).hasClass('input-validation-error')) {
+                    $(this).removeClass('input-validation-error');
+                }
+            });
+            $("#menuFollowModalDetailsPage").find("textarea").each(function () {
+                $(this).val('');
+                if ($(this).hasClass('input-validation-error')) {
+                    $(this).removeClass('input-validation-error');
+                }
+            });
+        });
+    });
+</script>
+

@@ -1,0 +1,106 @@
+﻿@model Client.Models.Parts.PartsVM
+
+<div class="slide-modal-head">
+    <a class="slide-back-btn btnCancelAddAttachment_Mobile"> <i class="fa fa-angle-left"></i> Back</a>
+    <div class="slide-back-title">
+        @Model.Loc.Where(a => a.ResourceId == "globalAddAttachment").FirstOrDefault().Value.ToString()
+    </div>
+</div>
+<form id="frmpattachmentadd" name="frmpattachmentadd" method="post" enctype="multipart/form-data">
+    @Html.AntiForgeryToken()
+    @Html.Partial("_ErrorDiv")
+    <div class="slide-modal-body" style="overflow-y: auto; height: 100vh;">
+        <div mbsc-page class="demo-responsive">
+            <div style="height:100%">
+                <div mbsc-form class="mbsc-form-grid">
+                    <div class="mbsc-grid">
+                        <div class="mbsc-row">
+                            <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                <label>
+                                    @Model.Loc.Where(a => a.ResourceId == "globalSubject").FirstOrDefault().Value.ToString()
+                                    @Html.TextBoxFor(m => m.attachmentModel.Subject, "{0:MM/dd/yyyy}", new
+                                    {
+                                   @class = "form-control search",
+                                   @mbsc_input = "true",
+                                   @data_label_style = "floating",
+                                   @placeholder = Model.Loc.Where(a => a.ResourceId == "globalSubject").FirstOrDefault().Value.ToString(),
+                                   @data_input_style = "box",
+                                   autocomplete = "off"
+                               })
+                                </label>
+                            </div>
+                            <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                <label>
+                                    @Model.Loc.Where(a => a.ResourceId == "globalFileName").FirstOrDefault().Value.ToString()
+                                    @Html.SomaxAttachmentFileFor(m => m.attachmentModel.FileContent, new
+                                    {
+                                        @class = "attfile",
+                                        @mbsc_input = "true",
+                                        @data_label_style = "floating",
+                                   @placeholder = Model.Loc.Where(a => a.ResourceId == "globalFileName").FirstOrDefault().Value.ToString(),
+                                        @data_input_style = "box",
+                                        autocomplete = "off"
+                                    })
+                                </label>
+                                @Html.ValidationMessageFor(m => m.attachmentModel.FileContent, "", new { })
+                            </div>
+
+                            <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                <div class="design-box">
+
+                                    <div class="mbsc-button-group-block">
+                                        <button type="button" class="btn btn-blue mobBttn btnCancelAddAttachment_Mobile"><i class="fa fa-close faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                <div class="design-box">
+                                    <div class="mbsc-button-group-block">
+                                        <button data-color="success" type="submit" class="btn btn-blue mobBttn" name="SaveType" value="Job_Demand"><i class="fa fa-save faIcon"></i> &nbsp;@Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @Html.HiddenFor(m => m.attachmentModel.PartId)
+    @Html.HiddenFor(m => m.attachmentModel.AttachmentId)
+</form>
+
+<script type="text/javascript">
+
+    $("form").submit(function (e) {
+        e.preventDefault();
+        var form = document.querySelector('#frmpattachmentadd');
+        if (!$('form').valid()) {
+            return;
+        }
+        var data = new FormData(form);
+        $.ajax({
+            type: "POST",
+            url: "/Parts/AddPAttachment",
+            data: data,
+            processData: false,
+            contentType: false,
+            beforeSend: function () {
+                ShowLoader();
+            },
+            success: function (data) {
+                AttachmentPAddOnSuccess_Mobile(data);
+            },
+            complete: function () {
+                CloseLoader();
+            },
+            error: function (xhr) {
+                console.log(xhr);
+            }
+        });
+
+    });
+</script>
+

@@ -1,0 +1,45 @@
+﻿@model Client.Models.Configuration.Dashboard.ConfigDashboardVM
+
+<div class="col-xl-12">
+    <div class="m-portlet m-portlet--full-height m-portlet--fit">
+        <div class="m-portlet__head">
+            <div class="m-portlet__head-caption">
+                <div class="m-portlet__head-title">
+                    <h3 class="m-portlet__head-text">
+                        @Model.Loc.Where(a => a.ResourceId == "spnEngagement").FirstOrDefault().Value.ToString()
+                    </h3>
+                </div>
+            </div>
+        </div>
+
+        <div class="m-portlet__body">
+            <div class="tab-content">
+                <div class="row">
+                    <div class="col-xl-1">
+                        <div class="dateRangeDrop">
+                            <div class="btn-group bootstrap-select m-datatable__pager-size dropup show selectDrop">
+                                <div class="btn-group bootstrap-select m-datatable__pager-size">
+                                    @Html.DropDownListFor(m => m.selectedDateRangeVal, Model.DateRangeDropListForActivity, new { @class = "form-control search select2picker", style = "width:42%;", id = "engagement-daterangeselector" })
+                                </div>
+                            </div>
+                            <div style="clear:both; height:15px;"></div>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-11">
+                        <div class="chartBox" style="position: relative; min-height: 300px; margin-top:0;">
+                            <div class="lds-ellipsis lds-adjust" id="engagement-chart-loader">
+                                <div></div>
+                                <div></div>
+                                <div></div>
+                                <div></div>
+                            </div>
+                            <div id="engagementchartnodata" class="cntNoData"><h5>@Model.Loc.Where(a => a.ResourceId == "globalDataNotFound").FirstOrDefault().Value.ToString()</h5></div>
+                            <div id="engagementchart"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

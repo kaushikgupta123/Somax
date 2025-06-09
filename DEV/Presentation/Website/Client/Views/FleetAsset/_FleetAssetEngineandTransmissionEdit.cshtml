@@ -1,0 +1,117 @@
+﻿@model Client.Models.FleetAsset.FleetAssetVM
+
+<ul class="listView nobrd">
+    <li>
+        <span class="label" id="spnEngineBrand">@Model.Loc.Where(a => a.ResourceId == "spnEngineBrand").FirstOrDefault().Value.ToString()</span>
+        <span class="inputText">
+            @Html.TextBoxFor(m => m.FleetAssetModel.EngineBrand, new { @class = "form-control search m-input flt_eng", @style = "color:black", autocomplete = "off", maxlength = "30" })
+        </span>
+    </li>
+    <li>
+        <span class="label" id="spnAspiration">@Model.Loc.Where(a => a.ResourceId == "spnAspiration").FirstOrDefault().Value.ToString()</span>
+        <span class="inputText">
+            @Html.TextBoxFor(m => m.FleetAssetModel.Aspiration, new { @class = "form-control search m-input flt_eng", @style = "color:black", autocomplete = "off", maxlength = "30" })
+        </span>
+    </li>
+    <li>
+        <span class="label" id="spnWidth">@Model.Loc.Where(a => a.ResourceId == "spnWidth").FirstOrDefault().Value.ToString()</span>
+        <span class="inputText">
+            @Html.ValidationMessageFor(m => m.FleetAssetModel.Bore, "", new { style = "display:none" })
+            @Html.TextBoxFor(m => m.FleetAssetModel.Bore, new { @class = "form-control search decimalinput flt_engdec", @style = "color:black", autocomplete = "off" })
+        </span>
+    </li>
+    <li>
+        <span class="label" id="spnCam">@Model.Loc.Where(a => a.ResourceId == "spnCam").FirstOrDefault().Value.ToString()</span>
+        <span class="inputText">
+            @Html.TextBoxFor(m => m.FleetAssetModel.Cam, new { @class = "form-control search m-input flt_eng", @style = "color:black", autocomplete = "off", maxlength = "30" })
+        </span>
+    </li>
+    <li>
+        <span class="label" id="spnCompression">@Model.Loc.Where(a => a.ResourceId == "spnCompression").FirstOrDefault().Value.ToString()</span>
+        <span class="inputText">
+            @Html.ValidationMessageFor(m => m.FleetAssetModel.Compression, "", new { style = "display:none" })
+            @Html.TextBoxFor(m => m.FleetAssetModel.Compression, new { @class = "form-control search decimalinput flt_engdec", @style = "color:black", autocomplete = "off" })
+        </span>
+    </li>
+    <li>
+        <span class="label" id="spnCylinders">@Model.Loc.Where(a => a.ResourceId == "spnCylinders").FirstOrDefault().Value.ToString()</span>
+        <span class="inputText">
+            @Html.ValidationMessageFor(m => m.FleetAssetModel.Cylinders, "", new { style = "display:none" })
+            @Html.TextBoxFor(m => m.FleetAssetModel.Cylinders, new { @class = "form-control search decimalinput flt_engdec", @style = "color:black", autocomplete = "off" })
+        </span>
+    </li>
+    <li>
+        <span class="label" id="spnDisplacement">@Model.Loc.Where(a => a.ResourceId == "spnDisplacement").FirstOrDefault().Value.ToString()</span>
+        <span class="inputText">
+            @Html.ValidationMessageFor(m => m.FleetAssetModel.Displacement, "", new { style = "display:none" })
+            @Html.TextBoxFor(m => m.FleetAssetModel.Displacement, new { @class = "form-control search decimalinput flt_engdec", @style = "color:black", autocomplete = "off" })
+        </span>
+    </li>
+    <li>
+        <span class="label" id="spnFuelInduction">@Model.Loc.Where(a => a.ResourceId == "spnFuelInduction").FirstOrDefault().Value.ToString()</span>
+        <span class="inputText">
+            @Html.TextBoxFor(m => m.FleetAssetModel.FuelInduction, new { @class = "form-control search m-input flt_eng", @style = "color:black", autocomplete = "off", maxlength = "30" })
+        </span>
+    </li>
+    <li>
+        <span class="label" id="spnFuelQuality">@Model.Loc.Where(a => a.ResourceId == "spnFuelQuality").FirstOrDefault().Value.ToString()</span>
+        <span class="inputText">
+            @Html.ValidationMessageFor(m => m.FleetAssetModel.FuelQuality, "", new { style = "display:none" })
+            @Html.TextBoxFor(m => m.FleetAssetModel.FuelQuality, new { @class = "form-control search decimalinput flt_engdec", @style = "color:black", autocomplete = "off" })
+        </span>
+    </li>
+    <li>
+        <span class="label" id="spnMaxHP">@Model.Loc.Where(a => a.ResourceId == "spnMaxHP").FirstOrDefault().Value.ToString()</span>
+        <span class="inputText">
+            @Html.ValidationMessageFor(m => m.FleetAssetModel.MaxHP, "", new { style = "display:none" })
+            @Html.TextBoxFor(m => m.FleetAssetModel.MaxHP, new { @class = "form-control search decimalinput flt_engdec", @style = "color:black", autocomplete = "off" })
+        </span>
+    </li>
+    <li>
+        <span class="label" id="spnMaxTorque">@Model.Loc.Where(a => a.ResourceId == "spnMaxTorque").FirstOrDefault().Value.ToString()</span>
+        <span class="inputText">
+            @Html.ValidationMessageFor(m => m.FleetAssetModel.MaxTorque, "", new { style = "display:none" })
+            @Html.TextBoxFor(m => m.FleetAssetModel.MaxTorque, new { @class = "form-control search decimalinput flt_engdec", @style = "color:black", autocomplete = "off" })
+        </span>
+    </li>
+    <li>
+        <span class="label" id="spnRedlineRPM">@Model.Loc.Where(a => a.ResourceId == "spnRedlineRPM").FirstOrDefault().Value.ToString()</span>
+        <span class="inputText">
+            @Html.ValidationMessageFor(m => m.FleetAssetModel.RedlineRPM, "", new { style = "display:none" })
+            @Html.TextBoxFor(m => m.FleetAssetModel.RedlineRPM, new { @class = "form-control search decimalinput flt_engdec", @style = "color:black", autocomplete = "off" })
+        </span>
+    </li>
+    <li>
+        <span class="label" id="spnStroke">@Model.Loc.Where(a => a.ResourceId == "spnStroke").FirstOrDefault().Value.ToString()</span>
+        <span class="inputText">
+            @Html.ValidationMessageFor(m => m.FleetAssetModel.Stroke, "", new { style = "display:none" })
+            @Html.TextBoxFor(m => m.FleetAssetModel.Stroke, new { @class = "form-control search decimalinput flt_engdec", @style = "color:black", autocomplete = "off" })
+        </span>
+    </li>
+    <li>
+        <span class="label" id="spnValves">@Model.Loc.Where(a => a.ResourceId == "spnValves").FirstOrDefault().Value.ToString()</span>
+        <span class="inputText">
+            @Html.ValidationMessageFor(m => m.FleetAssetModel.Valves, "", new { style = "display:none" })
+            @Html.TextBoxFor(m => m.FleetAssetModel.Valves, new { @class = "form-control search decimalinput flt_engdec", @style = "color:black", autocomplete = "off" })
+        </span>
+    </li>
+    <li>
+        <span class="label" id="spnTransmissionBrand">@Model.Loc.Where(a => a.ResourceId == "spnTransmissionBrand").FirstOrDefault().Value.ToString()</span>
+        <span class="inputText">
+            @Html.TextBoxFor(m => m.FleetAssetModel.TransmissionBrand, new { @class = "form-control search m-input flt_eng", @style = "color:black", autocomplete = "off", maxlength = "30" })
+        </span>
+    </li>
+    <li>
+        <span class="label" id="spnTransmissionType">@Model.Loc.Where(a => a.ResourceId == "spnTransmissionType").FirstOrDefault().Value.ToString()</span>
+        <span class="inputText">
+            @Html.TextBoxFor(m => m.FleetAssetModel.TransmissionType, new { @class = "form-control search m-input flt_eng", @style = "color:black", autocomplete = "off", maxlength = "30" })
+        </span>
+    </li>
+    <li>
+        <span class="label" id="spnGears"> @Model.Loc.Where(a => a.ResourceId == "spnGears").FirstOrDefault().Value.ToString()</span>
+        <span class="inputText">
+            @Html.ValidationMessageFor(m => m.FleetAssetModel.Gears, "", new { style = "display:none" })
+            @Html.TextBoxFor(m => m.FleetAssetModel.Gears, new { @class = "form-control search decimalinput flt_engdec", @style = "color:black", autocomplete = "off" })
+        </span>
+    </li>
+</ul>

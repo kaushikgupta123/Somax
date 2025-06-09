@@ -1,0 +1,43 @@
+﻿@model Client.Models.Devices.DeviceVM
+@using Client.CustomValidation
+<nav class="sidebar">
+    <div id="dismiss">
+        <i class="fa fa-close"></i>
+    </div>
+    <div class="sidebar-header">
+        <h3><i class="fa fa-filter" style="position: relative; top: -2px;"></i>&nbsp; @Model.Loc.Where(a => a.ResourceId == "globalFilter").FirstOrDefault().Value.ToString() <span id="filteritemcount" class="filteritemcount">0</span></h3>
+        <button type="button" id="btnDataAdvSrchdevice" class="btn btn-blue filterSearch"><i class="fa fa-search" style="margin-top:-3px;"></i> &nbsp;@Model.Loc.Where(a => a.ResourceId == "GlobalApply").FirstOrDefault().Value.ToString()</button>
+    </div>
+    <div class="sidebar-content" id="advsearchsidebarDevice">
+        <div class="form-group">
+            <label for="txtDeviceId">@Model.Loc.Where(a => a.ResourceId == "spnDeviceID").FirstOrDefault().Value.ToString() :</label>
+            <input type="text" class="form-control search adv-item" id="txtDeviceId" autocomplete="off">
+        </div>
+        <div class="form-group">
+            <label for="txtName">@Model.Loc.Where(a => a.ResourceId == "spnName").FirstOrDefault().Value.ToString() :</label>
+            <input type="text" class="form-control search adv-item" id="txtName" autocomplete="off">
+        </div>      
+        @*<div class="form-group">
+            <label for="advancedSearchAssetCategory">@Model.Loc.Where(a => a.ResourceId == "spnCategory").FirstOrDefault().Value.ToString()  :</label>
+            <select id="advancedSearchAssetCategory" style="width:100%;" class="form-control search adv-item select2picker"></select>
+        </div>*@
+    <div class="form-group">
+        <label for="advancedSearchSensorType">@Model.Loc.Where(a => a.ResourceId == "GlobalType").FirstOrDefault().Value.ToString()  :</label>
+        @*<select id="advancedSearchSensorType" style="width:100%;" class="form-control search adv-item select2picker"></select>*@
+        @Html.DropDownListFor(m => m.deviceModel.SensorType, Model.deviceModel.SensorTypeList, "--Select--", new { @class = "form-control search adv-item select2picker", style = "width:100%;", id = "advancedSearchSensorType" })
+
+    </div>
+        <div class="form-group">
+            <label for="txtAssetId">@Model.Loc.Where(a => a.ResourceId == "spnGlobalEquipmentId").FirstOrDefault().Value.ToString()  :</label>
+            <input type="text" class="form-control search adv-item" id="txtAssetId" autocomplete="off">
+        </div>
+        @*<div class="form-group">
+            <label for="txtAssetName">@Model.Loc.Where(a => a.ResourceId == "spnAssetName").FirstOrDefault().Value.ToString() :</label>
+            <input type="text" class="form-control search adv-item" id="txtAssetName" autocomplete="off">
+        </div>
+        <div class="form-group">
+            <label for="txtLastReading">@Model.Loc.Where(a => a.ResourceId == "spnLastReading").FirstOrDefault().Value.ToString() :</label>
+            <input type="text" class="form-control search adv-item" id="txtLastReading" autocomplete="off">
+        </div>*@  
+    </div>
+</nav>

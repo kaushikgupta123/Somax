@@ -1,0 +1,57 @@
+﻿@model Client.Models.PurchaseOrder.PurchaseOrderVM
+    @{ 
+        var action = "";
+        action = Model.udata.DatabaseKey.Client.ClientId == 4 ? "UpdateEmailStatus" : "UpdateEmailStatusDevexpresss";
+    } 
+<div id="emailModal" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-info">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">@Model.Loc.Where(a => a.ResourceId == "spnPoEmailtoVendor").FirstOrDefault().Value.ToString()</h4>
+            </div>
+            @using (Ajax.BeginForm(action, "Purchasing", new AjaxOptions { HttpMethod = "Post", OnSuccess = "EmailSuccess", OnBegin = "onLoginBegin", OnFailure = "onLoginFailure" }, new { enctype = "multipart/form-data", id = "eqpaddform" }))
+            {
+                <div class="modal-body">
+                    @Html.AntiForgeryToken()
+                    <div class="form-group">
+                        <label for="Line" id="lblLine">@Model.Loc.Where(a => a.ResourceId == "spnPoTo").FirstOrDefault().Value.ToString()<small>*</small></label>
+                        @Html.ValidationMessageFor(m => m.POEmailModel.ToEmailId, "", new { style = "display:none" })
+                        @Html.TextBoxFor(m => m.POEmailModel.ToEmailId, new { @class = "form-control search m-input", autocomplete = "off" })
+                    </div>
+                    <div class="form-group">
+                        <label for="Line" id="lblLine">@Model.Loc.Where(a => a.ResourceId == "spnCC").FirstOrDefault().Value.ToString()</label>
+                        @Html.ValidationMessageFor(m => m.POEmailModel.CcEmailId, "", new { style = "display:none" })
+                        @Html.TextBoxFor(m => m.POEmailModel.CcEmailId, new { @class = "form-control search m-input", autocomplete = "off" })
+                    </div>
+                    <div class="form-group">
+                        <label for="Line" id="lblLine">@Model.Loc.Where(a => a.ResourceId == "spnPoComments").FirstOrDefault().Value.ToString()</label>
+                        @Html.TextBoxFor(m => m.POEmailModel.MailBodyComments, new { @class = "form-control search m-input", autocomplete = "off" })
+                    </div>
+                </div>
+                <div class="modal-footer" style="padding:15px 25px !important;">
+                    <div class="bttn_pagin">
+                        <div class="bttns2">
+                            <button type="submit" class="btn btn-blue mobBttn" name="Command" id="btnSave" style="cursor:pointer" value="save"><i class="fa fa-envelope-o faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalSend").FirstOrDefault().Value.ToString()</button>
+                        </div>
+                        <div class="bttns"><button type="button" class="btn btn-blue mobBttn" id="btnCancelSendEmail" style="cursor:pointer"><i class="fa fa-close faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button></div>
+
+                        <div style="clear:both;"></div>
+                    </div>
+                    <div style="clear:both;"></div>
+                </div>
+                @Html.HiddenFor(m => m.PurchaseOrderModel.PurchaseOrderId)
+            }
+        </div>
+    </div>
+</div>
+
+@Html.HiddenFor(m => m.POEmailModel.ToEmailId, new { @id = "hdnToEmailId" })
+@Html.HiddenFor(m => m.POEmailModel.CcEmailId, new { @id = "hdnCcEmailId" })
+
+<script>
+
+    $(document).ready(function () {
+        $.validator.unobtrusive.parse(document);
+    });
+</script>

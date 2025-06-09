@@ -1,0 +1,44 @@
+﻿@model Client.Models.PreventiveMaintenance.PrevMaintVM
+<nav class="sidebar">
+    <div class="dismiss">
+        <i class="fa fa-close"></i>
+    </div>
+    <div class="sidebar-header">
+        <h3><i class="fa fa-filter" style="position: relative; top: -2px;"></i> @Model.Loc.Where(a => a.ResourceId == "spnFilters").FirstOrDefault().Value.ToString()<span class="filteritemcount">0</span></h3>
+        <button type="button" class="btn btn-blue filterSearch" id="btnPMGeneratedDataAdvSrch"><i class="fa fa-search" style="margin-top:-3px;"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalSearch").FirstOrDefault().Value.ToString()</button>
+    </div>
+    <div class="sidebar-content" id="advsearchsidebarPMGenerated">
+        <div class="form-group">
+            <label for="PMGBEDueDate">@Model.Loc.Where(a => a.ResourceId == "spnDueDate").FirstOrDefault().Value.ToString():</label>
+            <input type="text" class="form-control search dtpicker adv-item" id="PMGBEDueDate">
+        </div>
+        <div class="form-group">
+            <label for="PMGEquipmentClientLookupId">@Model.Loc.Where(a => a.ResourceId == "spnAssetID").FirstOrDefault().Value.ToString() :</label>
+            <input type="text" class="form-control search adv-item" id="PMGEquipmentClientLookupId">
+        </div>
+        <div class="form-group">
+            <label for="PMGEquipmentName">@Model.Loc.Where(a => a.ResourceId == "spnAssetName").FirstOrDefault().Value.ToString() :</label>
+            <input type="text" class="form-control search  adv-item" id="PMGEquipmentName">
+        </div>
+        <div class="form-group">
+            <label for="PMGMAssetJobID">@Model.Loc.Where(a => a.ResourceId == "spnPrevMstrId").FirstOrDefault().Value.ToString() :</label>
+            <input type="text" class="form-control search adv-item" id="PMGMAssetJobID">
+        </div>
+        <div class="form-group">
+            <label for="PMGPMDesc">@Model.Loc.Where(a => a.ResourceId == "spnPMDescription").FirstOrDefault().Value.ToString() :</label>
+            <input type="text" class="form-control search adv-item" id="PMGPMDesc">
+        </div>
+        <div class="form-group">
+            <label for="txtDownRequired">@Model.Loc.Where(a => a.ResourceId == "spnDownRequired").FirstOrDefault().Value.ToString():</label>
+            @Html.DropDownListFor(m => m.pMGenerateWorkOrdersModel.DownRequired, Model.pMGenerateWorkOrdersModel.DownRequiredInactiveFlagList,"--Select--", new { @class = "form-control search adv-item select2picker", style = "width:100%;", id = "txtDownRequired" })
+        </div>
+
+        <div class="form-group">
+            <label for="gridadvsearchshift">@Model.Loc.Where(a => a.ResourceId == "spnShift").FirstOrDefault().Value.ToString():</label>
+            @Html.DropDownListFor(m => m.pMGenerateWorkOrdersModel.Shift, Model.pMGenerateWorkOrdersModel.ShiftList, new { @class = "form-control search adv-item select2picker", style = "width:100%;", @id = "gridadvsearchshift", multiple = "multiple" })
+        </div>
+
+    </div>
+</nav>
+
+

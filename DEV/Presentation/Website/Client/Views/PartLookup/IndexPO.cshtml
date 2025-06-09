@@ -1,0 +1,755 @@
+﻿@model Client.Models.PartLookup.PartLookupVM
+@{
+    var spnPurchaseReq = @Model.Loc.Where(a => a.ResourceId == "spnPurchaseRequest").FirstOrDefault().Value.ToString();
+    var spnPurchaseOrd = @Model.Loc.Where(a => a.ResourceId == "spnPurchaseOrder").FirstOrDefault().Value.ToString();
+    var spnPartLookUp = @Model.Loc.Where(a => a.ResourceId == "spnPartLookUp").FirstOrDefault().Value.ToString();
+}
+<link href="~/Scripts/Metronic/assets/demo/default/base/style_newCustom.css" rel="stylesheet" />
+<div class="m-subheader fixedDiv1">
+    <div class="new-m-subheader">
+        @if (Model.PurchaseRequestId > 0)
+        {
+            <div class="NewBreadcrumbArea">
+                <div class="newBreadcrumb">
+                    <ul>
+                        <li><a href="/Dashboard/Dashboard">&nbsp;</a></li>
+                        <li>
+                            <a href="javascript:void(0)" id="lnk_psearchplup">@spnPurchaseReq</a>
+                        </li>
+                        <li><a href="javascript:void(0)" id="lnk_psearchdtls">@Model.ClientLookupId</a></li>
+                        <li class="active">@spnPartLookUp</li>
+                    </ul>
+                    <div style="clear:both;"></div>
+                </div>
+            </div>
+        }
+        else if (Model.PurchaseOrderId > 0)
+        {
+            <div class="NewBreadcrumbArea">
+                <div class="newBreadcrumb">
+                    <ul>
+                        <li><a href="/Dashboard/Dashboard">&nbsp;</a></li>
+                        <li>
+                            <a href="javascript:void(0)" id="lnk_psearchplup"><span id="spnlinkToSearch">@spnPurchaseOrd</span></a>
+                        </li>
+                        <li><a href="javascript:void(0)" id="lnk_psearchdtls"><span id="spnlinkToSearch">@Model.ClientLookupId</span></a></li>
+                        <li class="active">@spnPartLookUp</li>
+                    </ul>
+                    <div style="clear:both;"></div>
+                </div>
+            </div>
+        }
+        <div style="clear:both;"></div>
+    </div>
+</div>
+<div class="pushDiv1"></div>
+
+<div class="row">
+    <div class="col-xl-12">
+        <div class="m-portlet" id="m_portlet" style="padding:15px;">
+            <div class="actionBar" style="padding-bottom:0;">
+                <div class="pull-left" style="position:relative;">
+                    <div class="searchArea"><input type="text" class="form-control search" id="txtsearch" autocomplete="off" placeholder="Search Here..."><i class="fa fa-search" aria-hidden="true" id="icon-search"></i></div>
+                    <button type="button" class="btn btn-white navbar-btn" title="Process" id="btnprocess"><i class="fa fa-check" style="font-size: 1.1rem; position: relative; top: -2px;"></i>&nbsp; @Model.Loc.Where(a => a.ResourceId == "spnPLProcess").FirstOrDefault().Value.ToString()</button>
+                    <button type="button" class="btn btn-white cartIcon" id="sidebarCollapse" title="Add To Cart">
+                        <i class="fa fa-shopping-cart"></i>
+                        <span class="m-badge m-badge--danger cartBadges">0</span>
+                    </button>
+                    <div style="clear:both;"></div>
+                    <div class="searchTips">
+                        <div class="titleText">@Model.Loc.Where(a => a.ResourceId == "spnSearchTips").FirstOrDefault().Value.ToString()</div>
+                        <div class="infoText">@Model.Loc.Where(a => a.ResourceId == "PartLookUpSearchTips").FirstOrDefault().Value.ToString()</div>
+                        <div style="clear:both;"></div>
+                    </div>
+                </div>
+
+                <div class="pull-right">
+                    <div class="dropdown btn-sort" id="layoutDrop">
+                        <button class="btn btn-blue dropdown-toggle" type="button" id="layoutsortmenu" data-toggle="dropdown">@Model.Loc.Where(a => a.ResourceId == "GlobalCardLayout").FirstOrDefault().Value.ToString()</button>
+                        <ul class="dropdown-menu" role="menu" aria-labelledby="layoutsortmenu">
+                            <li role="presentation" id="tableviewliLayout" data-col="1"><a tabindex="-1" href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "GlobalTableView").FirstOrDefault().Value.ToString()</a></li>
+                            <li role="presentation" id="cardviewliLayout" data-col="0"><a tabindex="-1" href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "GlobalCardView").FirstOrDefault().Value.ToString()</a></li>
+                        </ul>
+                    </div>
+                    <div class="dropdown btn-sort" id="shortDrop" style="margin-right:0 !important;">
+                        <button class="btn btn-blue dropdown-toggle" type="button" id="btnsortmenu" data-toggle="dropdown">@Model.Loc.Where(a => a.ResourceId == "GlobalSorting").FirstOrDefault().Value.ToString() : </button>
+                        <ul class="dropdown-menu" role="menu" aria-labelledby="btnsortmenu">
+                            <li role="presentation" class="srtWOcolumn" data-col="1"><a role="menuitem" tabindex="-1" href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnPartID").FirstOrDefault().Value.ToString()</a></li>
+                            <li role="presentation" class="srtWOcolumn" data-col="2"><a role="menuitem" tabindex="-1" href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString()</a></li>
+                            <li role="presentation" class="srtWOcolumn" data-col="3"><a role="menuitem" tabindex="-1" href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnManufacturer").FirstOrDefault().Value.ToString()</a></li>
+                            <li style="border-top:1px solid #ccc; margin: 0 10px;"></li>
+                            <li role="presentation" data-mode="asc" class="srtWOorder"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "globalAscending").FirstOrDefault().Value.ToString()</a></li>
+                            <li role="presentation" data-mode="desc" class="srtWOorder"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "globalDescending").FirstOrDefault().Value.ToString()</a></li>
+                        </ul>
+                    </div>
+                    <div style="clear:both;"></div>
+                </div>
+                <div style="clear:both;"></div>
+
+                <div class="updateArea" style="display:none;">
+                    <div class="pull-left">
+                        <ul class="filter_apply2">
+                            <li><span class="chkitemcount">0</span> @Model.Loc.Where(a => a.ResourceId == "globalItemsSelected").FirstOrDefault().Value.ToString() </li>
+                        </ul>
+
+                    </div>
+                    <div class="pull-right">
+                        @if (Model.IsOnOderCheck)
+                        {
+                            <div style="float:right;"><button type="button" class="btn btn-info btn-cart btn-AllAddToCart IsOnOderCheck" style="display:none" id="btnAllAddToCart" data-Alladdtocart-id="Alladdtocart-id" title="@Model.Loc.Where(a => a.ResourceId == "spnAddToCart").FirstOrDefault().Value.ToString()"><span class="glyphicon glyphicon-shopping-cart"></span> @Model.Loc.Where(a => a.ResourceId == "spnAddToCart").FirstOrDefault().Value.ToString()</button></div>
+                        }
+                        else
+                        {
+                            <div style="float:right;"><button type="button" class="btn btn-info btn-cart btn-AllAddToCart" style="display:none" id="btnAllAddToCart" data-Alladdtocart-id="Alladdtocart-id" title="@Model.Loc.Where(a => a.ResourceId == "spnAddToCart").FirstOrDefault().Value.ToString()"><span class="glyphicon glyphicon-shopping-cart"></span> @Model.Loc.Where(a => a.ResourceId == "spnAddToCart").FirstOrDefault().Value.ToString()</button></div>
+                        }
+                    </div>
+                    <div style="clear:both;"></div>
+                </div>
+
+
+                <div id="searchfilteritems" style="display:none;">
+                    <span class="label label-primary tagTo" id="spnsearchbtn"></span>
+                </div>
+                <div style="clear:both;"></div>
+            </div>
+
+            <!--Table View Start-->
+            <div id="tableView" style="padding-top:11px;display:none;" class="tabcontent">
+                <div class="table-responsive">
+                    <table id="tblpartlookup" class="eqpDtlTbl row-border custom-sort tblMain" style="width:100%;">
+                        <thead>
+                            <tr>
+                                <th style="width:20px;" class="select-checkbox dt-body-center" data-dt-row="0" data-dt-column="0"></th>
+                                <th>@Model.Loc.Where(a => a.ResourceId == "spnPart").FirstOrDefault().Value.ToString()</th>
+                                <th @*style="width:300px;"*@>@Model.Loc.Where(a => a.ResourceId == "spnManufacturer").FirstOrDefault().Value.ToString()</th>
+                                <th class="prPrice">@Model.Loc.Where(a => a.ResourceId == "spnPLPrice").FirstOrDefault().Value.ToString()</th>
+                                <th style="width:300px !important; padding-left:25px">
+
+                                    <table id="innerheaderPR" style="width:300px;border-collapse: collapse;">
+                                        <tbody>
+                                            <tr class="">
+                                                <td style="width:114px;white-space: normal !important;padding:0px;border-bottom: none;"><div style="margin :0px;text-align:center">@Model.Loc.Where(a => a.ResourceId == "spnOrderQnt").FirstOrDefault().Value.ToString()</div></td>
+                                                <td style="width: 85px; text-align: center; margin: 0px; border-bottom: none;"> <div style="margin :0px; padding-left:10px; text-align:center">@Model.Loc.Where(a => a.ResourceId == "spnUnitCost").FirstOrDefault().Value.ToString()</div></td>
+                                                <td style="width:80px;margin:0px;border-bottom: none;text-align:right;"><div style="margin: 0px; text-align: right;">@Model.Loc.Where(a => a.ResourceId == "spnAddToCart").FirstOrDefault().Value.ToString()</div></td>
+                                            </tr>
+
+                                        </tbody>
+                                    </table>
+
+                                </th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+            <!--Table View End-->
+            <div id="ActiveCard" class="tabcontent" style="padding-top:11px;display:block;"></div>
+        </div>
+    </div>
+</div>
+@Html.HiddenFor(m => m.PurchaseRequestId)
+@Html.HiddenFor(m => m.PurchaseOrderId)
+@Html.HiddenFor(m => m.ClientLookupId)
+@Html.HiddenFor(m => m.VendorId)
+@Html.HiddenFor(m => m.ShoppingCart)
+@Html.HiddenFor(m => m.StoreroomId)
+@Html.Partial("/Views/PartLookUp/_PartLookUPSummaryDescription.cshtml")
+@*@Html.Partial("/Views/PartLookUp/_AdditionalCatalogItems.cshtml")*@
+@Html.HiddenFor(m => m.IsOnOderCheck)
+@if (Model.IsOnOderCheck)
+{
+    @Html.Partial("/Views/PartLookUp/_LineitemLookuplist.cshtml")
+}
+<div id="PartImageViewModal" class="modal fade dropdown-modal" role="dialog" style="display:none;">
+    <div class="modal-dialog partPopup" style="max-width:650px!important;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title" id="hdrPopVendor">@Model.Loc.Where(a => a.ResourceId == "spnImagePreview").FirstOrDefault().Value.ToString() <span id="HeaderIds"></span></h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <img id="popupimgView" />
+                </div>
+            </div>
+            <div class="modal-footer" style="padding:15px 25px !important;">
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Sidebar Start-->
+<nav class="sidebar">
+    <div class="dismiss">
+        <i class="fa fa-close"></i>
+    </div>
+
+    <div class="sidebar-header">
+        <h3><i class="fa fa-shopping-cart" style="position:relative; top:-1px; font-size:18px;"></i> @Model.Loc.Where(a => a.ResourceId == "spnCart").FirstOrDefault().Value.ToString() <span class="filteritemcount">0</span></h3>
+        <button type="button" class="btn btn-blue filterSearch" id="btnProcessCartData"><i class="fa fa-check" style="font-size:1.1rem; position:relative; top:-2px;"></i>  @Model.Loc.Where(a => a.ResourceId == "spnPLProcess").FirstOrDefault().Value.ToString()</button>
+    </div>
+
+    <div class="sidebar-content" id="advsearchsidebarWorkorder" style="padding-bottom:150px;">
+
+    </div>
+
+</nav>
+<!--Sidebar End-->
+
+<style type="text/css">
+    .cartIcon {
+        position: relative;
+        padding: 9px 10px 10px 5px;
+        border: 0;
+    }
+
+        .cartIcon i.fa-shopping-cart {
+            font-size: 1.5rem;
+            position: relative;
+            top: -1px;
+            left: -2px;
+        }
+
+    .cartBadges {
+        position: absolute;
+        top: -2px;
+        right: -2px;
+    }
+
+    .searchArea {
+        width: 570px;
+        float: left;
+        margin-right: 10px;
+        position: relative
+    }
+
+        .searchArea i.fa-search {
+            position: absolute;
+            left: 14px;
+            top: 9px;
+        }
+
+        .searchArea input.form-control.search {
+            padding: 0.65rem 1rem 0.65rem 2.7rem;
+        }
+
+    .searchTips {
+        padding-top: 10px;
+        border-bottom: 0;
+        margin: 0;
+        padding-bottom: 0;
+    }
+
+        .searchTips div.titleText {
+            width: 12%;
+        }
+
+        .searchTips div.infoText {
+            width: 88%;
+        }
+
+    .m-portlet-inner {
+        padding: 15px;
+        position: relative;
+    }
+
+    p.catalogText {
+        float: right;
+        color: red;
+        font-weight: 500;
+        position: absolute;
+        right: 10px;
+        top: 5px;
+    }
+
+    p.vendorcatalogText {
+        float: right;
+        color: #4278cb;
+        font-weight: 500;
+        position: absolute;
+        right: 10px;
+        top: 10px;
+    }
+
+    img.productImg {
+        width: 70px;
+        height: 70px;
+        margin-right: 10px; /*display:inline-block;*/
+        border-radius: 50%;
+        float: left;
+    }
+
+    h2.productID {
+        font-size: 12px;
+        font-weight: 500; /*vertical-align:middle;display:inline-block;*/
+        margin: 0;
+        display: flex;
+        align-items: center;
+        /*height: 70px;
+        V2-424*/
+        /*width: 70%;
+        float: left;*/
+        /*float: right;
+        V2-424*/
+        /*   overflow: auto;*/
+        height: 58px;
+        width: calc(100% - 90px);
+        float: right;
+    }
+
+    p.productDescription {
+        margin: 0;
+        padding: 10px 0;
+        font-size: 12px;
+        font-weight: 400;
+        line-height: 20px;
+        height: 45px;
+        margin-top: -41px;
+        /*  overflow: auto;*/
+        /*V2-424*/
+        float: right;
+        /*V2-424*/
+        width: calc(100% - 90px);
+    }
+
+    ul.productDetails {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+        ul.productDetails li {
+            padding: 5px 0;
+            font-size: 14px;
+            font-weight: 400;
+            color: #6d6d6d;
+        }
+
+            ul.productDetails li strong {
+                font-weight: 600;
+                color: #3e3e3e;
+            }
+
+
+            ul.productDetails li span {
+                float: right;
+            }
+
+    .qtyBox { /*width:240px;*/
+        margin: 6px 0;
+    }
+
+        .qtyBox label {
+            margin: 0;
+            font-size: 15px;
+            font-weight: 500;
+            line-height: 34px;
+            margin-right: 10px;
+            color: #3e3e3e;
+        }
+
+    .btn-minus {
+        border-radius: 0.25rem 0 0 0.25rem;
+        border-right: 0;
+        border-color: #b9c1c4 !important;
+    }
+
+        .btn-minus:hover {
+            background-color: #f4516c !important;
+        }
+
+            .btn-minus:hover i.fa {
+                color: #fff !important;
+            }
+
+    .btn-plus {
+        border-radius: 0 0.25rem 0.25rem 0;
+        border-left: 0;
+        border-color: #b9c1c4 !important;
+    }
+
+        .btn-plus:hover {
+            background-color: #34bfa3 !important;
+            color: #fff !important;
+        }
+
+            .btn-plus:hover i.fa {
+                color: #fff !important;
+            }
+
+    .productDetailsArea { /*-webkit-box-align:center !important;-ms-flex-align:center !important;*/
+        align-items: center !important; /*display:-webkit-box !important;display:-ms-flexbox !important;display:flex !important;margin-bottom:10px;*/
+    }
+
+    .symbol {
+        width: 40px;
+        height: 40px;
+        display: inline-block;
+        margin-right: 10px;
+        border-radius: 50%;
+        flex-shrink: 0;
+        float: left;
+    }
+
+        .symbol img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+        }
+
+    .dtlsBox { /*display:inline-block;*/
+        vertical-align: middle;
+        float: left;
+        width: 210px;
+    }
+
+        .dtlsBox h2 {
+            padding: 0;
+            margin: 0;
+            font-size: 1.08rem;
+            color: #3f4254 !important;
+            font-weight: 500 !important;
+        }
+
+        .dtlsBox p {
+            padding: 0;
+            margin: 0;
+            font-weight: 400;
+            color: #949494 !important;
+            font-size: 13px;
+            max-height: 43px;
+            height: auto;
+            overflow: auto;
+        }
+
+        .dtlsBox.tablePartId { /*width:357px;*/
+            width: 80%;
+        }
+
+            .dtlsBox.tablePartId p {
+                padding: 0;
+                margin: 0;
+                font-weight: 400;
+                color: #949494 !important;
+                font-size: 13px;
+                max-height: 60px;
+                height: auto;
+                overflow: auto;
+            }
+
+    .btn-cart {
+        display: inline-block;
+        position: relative;
+        top: -1px;
+        padding: 0.65rem;
+        background: #fff;
+        border-color: #f4516c;
+        color: #f4516c !important;
+    }
+
+        .btn-cart:hover, .btn-cart:focus, .btn-cart:active {
+            background: #f4516c;
+            border-color: #f4516c;
+            color: #fff !important;
+        }
+
+        .btn-cart i.fa {
+            font-size: 18px;
+            position: relative;
+            left: -1px;
+        }
+
+    .sidebar .sidebar-header h3 span {
+        background: #f4516c;
+        left: 70px;
+    }
+
+    .sidebarCartList {
+        border-bottom: 1px solid #ccc;
+        padding-bottom: 0;
+        margin-bottom: 10px;
+    }
+
+    .sidebar .sidebar-content .sidebarCartList:last-child {
+        border-bottom: 0px solid #ccc;
+        margin-bottom: 0px;
+    }
+
+    .sidebarSymbol {
+        width: 60px;
+        height: 60px; /*display:inline-block;*/
+        margin-left: 10px;
+        border-radius: 50%; /*flex-shrink:0;*/
+        float: right;
+    }
+
+        .sidebarSymbol img {
+            width: 100%;
+            height: 100%;
+            border-radius: 0.42rem;
+        }
+
+    .sidebarAction {
+        margin: 10px 0;
+    }
+
+    .sidebar-footer {
+        background: #fff;
+        border-top: 1px solid #b8c2c4;
+        position: fixed;
+        right: auto;
+        left: auto;
+        bottom: 0;
+        width: 300px;
+        padding: 20px;
+    }
+
+
+    .qtyothertext {
+        width: 105px !important;
+        display: inline-block;
+        margin-right: 7px;
+        text-align: center;
+        /*float: left;*/
+        float: right;
+    }
+
+    #advsearchsidebarWorkorder .qtyothertext,
+    #advsearchsidebarWorkorder .pricetext {
+        width: 90px !important;
+    }
+
+    .pricetext {
+        width: 105px !important;
+        display: inline-block;
+        margin-right: 7px;
+        text-align: center;
+        /*float: left;*/
+        float: right;
+    }
+
+    .searchArea {
+        width: 515px; /*float:left;margin-right:10px;position:relative;*/
+    }
+
+    .lblQty, .lblPrice {
+        float: left;
+    }
+
+    .addtoCartchkBoxColor {
+        color: greenyellow;
+    }
+
+    #tblpartlookup thead th:last-child {
+        width: 240px !important;
+    }
+
+    #tblpartlookup tbody td:last-child {
+        width: 300px !important;
+        justify-content: center;
+        min-height: 40px;
+        align-items: center
+    }
+
+    #tblpartlookup tbody td.lastActiontd:last-child {
+        width: 254px !important;
+        display: flex;
+        padding-left: 30px !important;
+        justify-content: space-between;
+        min-height: 40px;
+        align-items: center;
+    }
+
+    .dataTables_scroll .dataTables_scrollHeadInner thead th:last-child {
+        width: 300px !important;
+    }
+
+    #tblpartlookup tbody td input.qtyothertext {
+        float: none;
+    }
+
+    #tblpartlookup tbody td input.pricetext {
+        float: none;
+    }
+
+    .filterDescription {
+        width: auto;
+        float: left;
+        font-size: 1.2rem;
+        color: #000;
+        font-weight: 500;
+        line-height: 33px;
+    }
+
+        .filterDescription a {
+            color: #36a3f7;
+            text-decoration: none !important;
+        }
+
+
+    @@media only screen and (min-width: 1366px) and (max-width: 1599px) {
+        h2 .productID.clsClientLookupId {
+            /*V2-424*/
+            /*width: 62%;*/
+            float: right;
+            /*V2-424*/
+        }
+        /*.pricetext { width:74px !important; }*/
+        .dtlsBox.tablePartId { /*width: 297px;*/
+            width: auto;
+        }
+
+        .lblPrice {
+            margin-top: 5px;
+        }
+    }
+
+    @@media only screen and (width:1360px) {
+        .openMenu .actionBar .pull-right {
+            float: right !important;
+            margin-top: 0 !important;
+        }
+
+        h2.productID.clsClientLookupId {
+            /*V2-424*/
+            /*width: 62%;*/
+            float: right;
+            /*V2-424*/
+        }
+        /*.pricetext { width:74px !important; }*/
+    }
+
+    @@media only screen and (min-width: 1200px) and (max-width: 1365px) {
+        .openMenu .actionBar .pull-right {
+            float: left;
+            margin-top: 10px;
+        }
+
+        img.productImg {
+            float: none;
+        }
+
+        h2.productID {
+            height: auto;
+            /*V2-424*/
+            /*width: 100%;
+            float: none;*/
+            float: right;
+            /*V2-424*/
+            margin-top: 10px;
+        }
+
+        .lblPrice {
+            margin-top: 5px;
+        }
+    }
+
+    @@media only screen and (min-width: 1024px) and (max-width: 1199px) {
+        .openMenu .actionBar .pull-right, .closeMenu .actionBar .pull-right {
+            float: left !important;
+            margin-top: 10px !important;
+        }
+    }
+
+    @@media only screen and (min-width: 768px) and (max-width: 1023px) {
+        .actionBar div.pull-right {
+            float: left !important;
+            margin-top: 10px !important;
+        }
+    }
+
+    @@media only screen and (min-width: 640px) and (max-width: 767px) {
+        .searchArea {
+            width: 420px;
+        }
+    }
+
+    @@media only screen and (min-width: 568px) and (max-width: 639px) {
+        .searchArea {
+            width: 348px;
+        }
+    }
+
+    @@media only screen and (max-width: 567px) {
+        .searchArea {
+            width: 100%;
+            margin-bottom: 10px;
+        }
+    }
+
+    @@media only screen and (max-width: 410px) {
+        .searchArea {
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        img.productImg {
+            float: none;
+        }
+
+        h2.productID {
+            height: auto;
+            width: 100%;
+            float: none;
+            margin-top: 10px;
+        }
+
+        p.productDescription {
+            float: left;
+            margin-top: 0;
+        }
+
+        .lblPrice {
+            margin-top: 5px;
+        }
+    }
+
+    .menufacDtl {
+        width: 100%;
+    }
+
+    .priceDtl {
+        width: 100%;
+        float: right;
+    }
+
+    .newBreadcrumb {
+        padding: 0;
+    }
+    /*925*/
+    .text-left.sorting_1 {
+        display: flex;
+    }
+
+    .dtlsBox.tablePartId {
+        width: calc(100% - 60px);
+    }
+
+    .eqpDtlTbl th:nth-child(4), .eqpDtlTbl tr td:nth-child(4) {
+        text-align: right !important;
+    }
+
+    #innerheaderPR td:last-child {
+        text-align: center !important;
+    }
+
+    .btn-addToCartTable {
+        margin: 0 15px 0 10px !important
+    }
+
+    .eqpDtlTbl.dataTable thead th.prPrice {
+        text-align: right !important;
+    }
+
+    .priceDtl {
+        text-align: right !important;
+    }
+
+    #popupimgView {
+        max-width: 100%;
+        width: 100%;
+        max-height: 500px;
+        object-fit: cover;
+    }
+</style>

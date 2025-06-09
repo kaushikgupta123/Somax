@@ -1,0 +1,104 @@
+﻿@model Client.Models.EquipmentCombined
+
+<div id="UpdateAssetAvailabilityModal" class="modal fade" role="dialog" style="padding-right:0px !important;">
+    <div class="modal-dialog modal-info">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close Cancelclearerr" data-dismiss="modal">&times;</button>
+
+                <h4 class="modal-title">@Model.Loc.Where(a => a.ResourceId == "spnUpdateAvailabilityStatus").FirstOrDefault().Value.ToString()</h4>
+            </div>
+            @using (Ajax.BeginForm("UpdateAssetAvailability", "Equipment", new AjaxOptions { HttpMethod = "Post", OnSuccess = "UpdateAvailabilityUpdateOnSuccess", OnBegin = "AjaxBeginFormBegin", OnComplete = "AjaxBeginFormComplete", OnFailure = "AjaxBeginFormFaillure" }, new { enctype = "multipart/form-data", id = "EquipAvailabilityformUpdate" }))
+            {
+                @Html.AntiForgeryToken()
+                <div class="modal-body">
+                    <div class="form-group" style="position:relative;">
+                        <label for="Line" id="lblexpRet">@Model.Loc.Where(a => a.ResourceId == "spnExpectedReturn").FirstOrDefault().Value.ToString() :<small>*</small></label>
+                        @Html.ValidationMessageFor(m => m._AssetAvailabilityUpdateModel.ExpectedReturnToService, "", new { style = "display:none" })
+                        @Html.TextBoxFor(m => m._AssetAvailabilityUpdateModel.ExpectedReturnToService, "{0:MM/dd/yyyy}", new { @class = "form-control search dtpickerNew restkey", autocomplete = "off" ,Id="datePic"})
+                        <div style="clear:both;"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="Line" id="lblComment">@Model.Loc.Where(a => a.ResourceId == "spnComment").FirstOrDefault().Value.ToString() :<small>*</small></label>
+                        @Html.ValidationMessageFor(m => m._AssetAvailabilityUpdateModel.RemoveFromServiceReason, "", new { style = "display:none" })
+                        @Html.TextAreaFor(m => m._AssetAvailabilityUpdateModel.RemoveFromServiceReason, new { @class = "form-control search", autocomplete = "off" })
+
+                    </div>
+                </div>
+                <div class="modal-footer" style="padding:15px 25px !important;">
+                    <button type="button" class="btn btn-default mobBttn Cancelclearerr" data-dismiss="modal"> <i class="fa fa-close faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button>
+                    <button type="submit" class="btn btn-blue mobBttn" name="Command" style="cursor:pointer;float:right" value="save"><i class="fa fa-save faIcon"></i> &nbsp;@Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+                    <div style="clear:both;"></div>
+                </div>
+                @Html.HiddenFor(m => m._AssetAvailabilityUpdateModel.EquipmentId)               
+            }
+
+        </div>
+    </div>
+</div>
+
+<style type="text/css">
+    .ui-tooltip {
+        z-index: 1151 !important;
+    }
+
+    .errormessage {
+        margin-bottom: 1px !important;
+    }
+
+    .form-control.search.restkey {
+        width: 100%;
+    }
+
+    .ui-datepicker-trigger { 
+        position: absolute !important;
+        right: 0 !important;
+        top: 34px !important;
+    }
+
+    .ui-datepicker.ui-widget.ui-widget-content {      
+        top: 161.047px !important;
+    }
+
+    .modal-footer > .btn {
+        margin-right: 0;
+    }
+
+    @@media screen and (max-width: 767px) {
+        .ui-datepicker.ui-widget.ui-widget-content {           
+        }
+    }
+
+    @@media screen and (max-width: 479px) {
+        #btnUpdate {
+            margin-right: 0 !important;
+        }
+    }
+</style>
+<script>
+
+    $(function () {
+        $('input, form').blur(function () {
+            $(this).valid();
+        });
+        $.validator.setDefaults({ ignore: null });
+        $.validator.unobtrusive.parse(document);
+       
+        $(".dtpickerNew").datepicker({
+            changeMonth: true,
+            changeYear: true,
+            autoclose: true,
+            showOn: 'button',
+            buttonImageOnly: true,
+            minDate: new Date(),
+            buttonImage: '/Images/calender.png',
+            buttonText: "Calender",
+            onSelect: function (dateText, inst) {
+                $(document).find('#datePic').removeClass('input-validation-error');
+            }
+
+        });
+
+    });
+
+</script>

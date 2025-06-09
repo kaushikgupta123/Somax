@@ -1,0 +1,245 @@
+﻿@model Client.Models.Approval.ApprovalVM
+
+@{
+    ViewBag.Title = "Somax | Approval";
+}
+
+@Styles.Render("~/Content/datatable")
+<link href="~/Scripts/Metronic/assets/demo/default/base/GlobalSearchGrid.css" rel="stylesheet" />
+<link href="~/Content/sidebar_custom.css" rel="stylesheet" />
+<link href="~/Scripts/Metronic/assets/demo/default/base/style_newCustom.css" rel="stylesheet" />
+@section scripts {
+    @Scripts.Render("~/bundles/datatable")
+    @Scripts.Render("~/bundles/ApprovalRequest")
+    @if (Model.isPurchaseRequestApproval == true)
+    {
+        @Scripts.Render("~/bundles/ApprovalPurchaseRequest")
+    }
+    @if (Model.isWorkRequestApproval == true)
+    {
+        @Scripts.Render("~/bundles/ApprovalWorkRequest")
+    }
+    @if (Model.isMaterialRequestApproval == true)
+    {
+        @Scripts.Render("~/bundles/ApprovalMaterialRequest")
+    }
+}
+<div id="Approvalheader">
+    <div class="m-subheader fixedDiv1">
+        <div class="new-m-subheader">
+            <div class="filterDescription">
+                @Model.Loc.Where(a => a.ResourceId == "spnGlobalApproval").FirstOrDefault().Value.ToString()
+            </div>
+            <div style="clear:both;"></div>
+        </div>
+    </div>
+    <div class="pushDiv1"></div>
+
+    <div class="row">
+        <div class="col-xl-12">
+            <div class="m-portlet" id="m_portlet" style="padding:15px;">
+                <div class="tab" id="tabinfo">
+                    @{
+                        var tabActive = "active";
+
+                    }
+                    @if (Model.isPurchaseRequestApproval)
+                    {
+                    <button class="tablinks Approval-det-tab @tabActive" data-tab="PurchaseRequest">
+                        @Model.Loc.Where(a => a.ResourceId == "spnPurchaseRequest").FirstOrDefault().Value.ToString()
+                        @if (Model.NumberOfPurchaseRequests > 0)
+                        {
+                            <span class="badge badge-light rounded-circle tabBadge" id="spnNumberOfPurchaseRequests">
+                                @Model.NumberOfPurchaseRequests
+                            </span>
+                        }
+                        else
+                        {
+                            <span class="" id="spnNumberOfPurchaseRequests">
+                               
+                            </span>
+                        }
+                    </button>
+                        tabActive = "";
+                    }
+                    @if (Model.isWorkRequestApproval)
+                    {
+                <button class="tablinks Approval-det-tab @tabActive" data-tab="WorkRequest">
+                    @Model.Loc.Where(a => a.ResourceId == "spnWorkRequest").FirstOrDefault().Value.ToString()
+                    @if (Model.NumberOfWorkRequests > 0)
+                    {
+                        <span class="badge badge-light rounded-circle tabBadgeWR" id="spnNumberOfWorkRequests">
+                            @Model.NumberOfWorkRequests
+                        </span>
+                    }
+                    else
+                    {
+                        <span class="" id="spnNumberOfWorkRequests">
+                            
+                        </span>
+                    }
+                </button>
+                        tabActive = "";
+                    }
+                    @if (Model.isMaterialRequestApproval)
+                    {
+                <button class="tablinks Approval-det-tab @tabActive" data-tab="MaterialRequest">
+                    @Model.Loc.Where(a => a.ResourceId == "spnMaterialRequest").FirstOrDefault().Value.ToString()
+                    @if (Model.NumberOfMaterialRequests > 0)
+                    {
+                        <span class="badge badge-light rounded-circle tabBadgeMat" id="spnNumberOfMaterialRequests">
+                            @Model.NumberOfMaterialRequests
+                        </span>
+                    }
+                    else
+                    {
+                        <span class="" id="spnNumberOfMaterialRequests">
+                           
+                        </span>
+                    }
+                </button>
+                        
+                    }
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-12">
+            @{
+                var clsdisplay = "block";
+            }
+            @if (Model.isPurchaseRequestApproval)
+            {
+                <div id="PurchaseRequest" class="tabcontent" style="display:@clsdisplay;">
+                    <div class="row">
+                        <div class="col-xl-4">
+                            <div class="tabsArea nobg">
+                                <ul class="listView nobrd">
+                                    <li>
+                                        <span class="inputText">
+                                            @Html.DropDownListFor(m => m.FilterTypePR, Model.FilterTypePRList, new { @class = "form-control search select2picker", @style = "width:200px" })
+                                        </span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xl-12">
+                            <div id="PurchaseRequestDiv"></div>
+                        </div>
+                    </div>
+                </div>
+                clsdisplay = "none";
+            }
+            @if (Model.isWorkRequestApproval)
+            {
+                <div id="WorkRequest" class="tabcontent" style="display:@clsdisplay;">
+                    <div class="row">
+                        <div class="col-xl-4">
+                            <div class="tabsArea nobg">
+                                <ul class="listView nobrd">
+                                    <li>
+                                        <span class="inputText">
+                                            @Html.DropDownListFor(m => m.FilterTypeWR, Model.FilterTypeWRList, new { @class = "form-control search select2picker" ,@style = "width:200px" })
+                                        </span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xl-12">
+                            <div id="WorkRequestDiv"></div>
+                        </div>
+                    </div>
+                </div>
+                clsdisplay = "none";
+            }
+            @if (Model.isMaterialRequestApproval)
+            {
+                <div id="MaterialRequest" class="tabcontent" style="display:@clsdisplay;">
+                    <div class="row">
+                        <div class="col-xl-4">
+                            <div class="tabsArea nobg">
+                                <ul class="listView nobrd">
+                                    <li>
+                                        <span class="inputText">
+                                            @Html.DropDownListFor(m => m.FilterTypeMR, Model.FilterTypeMRList, new { @class = "form-control search select2picker", @style = "width:200px" })
+                                        </span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xl-12">
+                            <div id="MaterialRequestDiv"></div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+
+    </div>
+</div>
+@Html.HiddenFor(m => m.ApproverId, new { @id = "hdnApporverId" })
+<style>
+    .tabBadge {
+        background-color: #87CEEB;
+        color: white;
+    }
+
+    .filterDescription {
+        width: auto;
+        float: left;
+        font-size: 1.2rem;
+        color: #000;
+        font-weight: 500;
+        line-height: 33px;
+    }
+
+        .filterDescription a {
+            color: #36a3f7;
+            text-decoration: none !important;
+        }
+
+    .tab {
+        border-bottom: 0;
+    }
+
+        .tab button {
+            margin-bottom: 0;
+        }
+
+    ul.listView.clsoverview {
+        height: 200px;
+        overflow: auto;
+    }
+
+        ul.listView.clsoverview li span.label {
+            line-height: 35px;
+        }
+
+        ul.listView.clsoverview li span.inputText.description-span {
+            padding-top: 6px;
+        }
+
+
+        ul.listView.clsoverview li span.inputText {
+            line-height: 23px;
+            height: 30px;
+        }
+
+    #popupExport {
+        top: 290px !important
+    }
+    .tabBadgeWR {
+        background-color: purple;
+        color: white;
+    }
+    .tabBadgeMat {
+        background-color: orange;
+        color: white;
+    }
+</style>
+

@@ -1,0 +1,108 @@
+﻿@model Client.Models.Dashboard.DashboardVM
+
+@using (Ajax.BeginForm("SendMRForApproval_Mobile", "Dashboard", new AjaxOptions { HttpMethod = "Post", OnSuccess = "SendMRForApprovalOnSuccess", OnBegin = "AjaxBeginFormBegin", OnComplete = "AjaxBeginFormComplete", OnFailure = "AjaxBeginFormFaillure" }, new { id = "frmSendForApprovalId" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="slide-modal-head">
+        <a class="slide-back-btn SendMaterialRequestclearstate"> <i class="fa fa-angle-left"></i> Back</a>
+        <div class="slide-back-title">
+            @Model.Loc.Where(a => a.ResourceId == "globalSendforApproval").FirstOrDefault().Value.ToString() 
+        </div>
+        @*}*@
+
+    </div>
+    @Html.Partial("_ErrorDiv")
+    <div class="slide-modal-body">
+        <div mbsc-page class="demo-responsive">
+            <div style="height:100%">
+                <div mbsc-form class="mbsc-form-grid">
+                    <div class="mbsc-grid">
+                        <div class="mbsc-row">
+                            <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                <label>
+                                    @Model.Loc.Where(a => a.ResourceId == "spnComment").FirstOrDefault().Value.ToString()
+                                    @Html.TextBoxFor(m => m.ApprovalRouteModel.Comments, new
+                               {
+                                   @class = "form-control search",
+                                   @mbsc_input = "true",
+                                   @data_label_style = "floating",
+                                   @placeholder = Model.Loc.Where(a => a.ResourceId == "spnComment").FirstOrDefault().Value.ToString(),
+                                   @data_input_style = "box",
+                                   autocomplete = "off",
+                                   maxlength = "200"
+                               })
+                                </label>
+                                @Html.ValidationMessageFor(m => m.ApprovalRouteModel.Comments, "", new { })
+                            </div>
+                            <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                @if (Model.ApprovalRouteModel.ApproverCount == 1)
+                                {
+                                    <label>
+                                        @Model.Loc.Where(a => a.ResourceId == "globalApprover").FirstOrDefault().Value.ToString() : 
+                                        @Html.DropDownListFor(m => m.ApprovalRouteModel.ApproverId, Model.ApprovalRouteModel.ApproverList, new {
+                                       @class = "form-control search mobiscrollselect",
+                                       @style = "width:100%;",
+                                       @mbsc_dropdown = "true",
+                                       @data_label = Model.Loc.Where(a => a.ResourceId == "globalApprover").FirstOrDefault().Value.ToString(),
+                                       @data_input_style = "box",
+                                       @data_label_style = "floating",
+                                       @placeholder = Model.Loc.Where(a => a.ResourceId == "globalApprover").FirstOrDefault().Value.ToString(),
+                                       @id="ApproverId"
+                                   })
+                                    </label>
+                                    @Html.ValidationMessageFor(m => m.ApprovalRouteModel.ApproverId, "", new { })
+                                }
+                                else
+                                {
+                                    <label>
+                                        @Model.Loc.Where(a => a.ResourceId == "globalApprover").FirstOrDefault().Value.ToString() : 
+                                        @Html.DropDownListFor(m => m.ApprovalRouteModel.ApproverId, Model.ApprovalRouteModel.ApproverList, "--Select--", new
+                                   {
+                                       @class = "form-control search mobiscrollselect",
+                                       @style = "width:100%;",
+                                       @mbsc_dropdown = "true",
+                                       @data_label = Model.Loc.Where(a => a.ResourceId == "globalApprover").FirstOrDefault().Value.ToString(),
+                                       @data_input_style = "box",
+                                       @data_label_style = "floating",
+                                       @placeholder = Model.Loc.Where(a => a.ResourceId == "globalApprover").FirstOrDefault().Value.ToString(),
+                                       @id = "ApproverId"
+                                   })
+                                    </label>
+                                    @Html.ValidationMessageFor(m => m.ApprovalRouteModel.ApproverId, "", new { })
+                                }
+                            </div>
+                        </div>
+                        <div class="mbsc-row">
+                            <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                <div class="design-box">
+                                    <div class="mbsc-button-group-block">
+                                        <button mbsc-button data-color="success" type="button" class="btn btn-blue mobBttn SendMaterialRequestclearstate" id="btncancelsendForApproval"><i class="fa fa-close faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                <div class="design-box">
+                                    <div class="mbsc-button-group-block">
+                                        <button data-color="success" type="submit" class="btn btn-blue mobBttn" style="cursor:pointer" value="save"><i class="fa fa-save faIcon"></i> &nbsp;@Model.Loc.Where(a => a.ResourceId == "globalSubmit").FirstOrDefault().Value.ToString()</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="slide-modal-footer"></div>
+
+
+    @Html.HiddenFor(m => m.ApprovalRouteModel.ObjectId)
+
+    @Html.HiddenFor(m => m.ApprovalRouteModel.ApproverCount)
+}
+
+<script src="~/Scripts/Pages/Purchasing/poaccount-grid-dropdown.js"></script>
+<script src="~/Scripts/Pages/Purchasing/poequipment-grid-dropdown.js"></script>
+<script src="~/Scripts/Pages/Purchasing/poworkorder-grid-dropdown.js"></script>
+
+@Scripts.Render("~/bundles/PREditPopUp")

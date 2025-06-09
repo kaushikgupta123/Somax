@@ -1,0 +1,169 @@
+﻿@model Client.Models.Configuration.ApprovalGroups.ApprovalGroupsVM
+<link href="~/Scripts/Metronic/assets/demo/default/base/style_newCustom.css" rel="stylesheet" />
+<style>
+    /*.pushDiv2 {
+        height: 70px !important;
+    }*/
+    .fixedDiv1 {
+        z-index: 99;
+    }
+    .fixedDiv2 {
+        z-index: 999;
+    }
+</style>
+<div class="m-subheader fixedDiv1">
+    <div class="new-m-subheader">
+        <div class="PageTitle">
+            <div class="align-items-center separator">
+                <h3 class="m-subheader__title ">
+                   @Model.Loc.Where(l => l.ResourceId=="spnApprovalGroupMaster").FirstOrDefault().Value.ToString()
+                </h3>
+            </div>
+        </div>
+
+        <div class="NewBreadcrumbArea">
+            <div class="newBreadcrumb">
+                <ul>
+                    <li><a href="/Configuration/Dashboard">&nbsp;</a></li>
+                    <li><a href="/ApprovalGroups/Index?page=Approval_Groups">@Model.Loc.Where(a => a.ResourceId == "spnApprovalGroupSearch").FirstOrDefault().Value.ToString()</a></li>
+                    <li class="active">@Model.ApprovalGroupsModel.ApprovalGroupId</li>
+
+                </ul>
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+
+        <div class="ActionBttnArea">
+            @if (Model.security.ApprovalGroupsConfiguration.Access)
+            {
+                <button type="button" class="btn newBtn-add innerBtn pull-left addNewApprovalGroup" title="Add Approval Group" data-toggle="" data-target="AddWorkOrderModalPopup"><i class="fa fa-plus"></i></button>
+            }
+            <div style="clear:both;"></div>
+        </div>
+        <div style="clear:both;"></div>
+    </div>
+</div>
+<div class="pushDiv1"></div>
+
+<div class="row fixedDiv2">
+    @Html.Partial("~/Views/Configuration/ApprovalGroups/_ApprovalGroupSummary.cshtml", Model)
+</div>
+<div class="pushDiv2 WOScheduleAdjust"></div>
+
+<div class="row">
+    <div class="col-xl-2">
+        <div class="m-portlet">
+            <div class="sideMenuArea nobg">
+                <ul class="vtabs" id="detmaintab">
+                    <li class="active"><a href="#Overview">@Model.Loc.Where(a => a.ResourceId == "globalOverview").FirstOrDefault().Value.ToString()</a></li>
+                    <li onclick="openCity(event, 'ApprovalGroupDetails')"><a href="#ApprovalGroupDetails">@Model.Loc.Where(a => a.ResourceId == "spnDetails").FirstOrDefault().Value.ToString()</a></li>
+                    <li onclick="openCity(event, 'ApprovalGroupRequestors')"><a href="#ApprovalGroupRequestors">@Model.Loc.Where(a => a.ResourceId == "GlobalRequestor").FirstOrDefault().Value.ToString()</a></li>
+                </ul>
+            </div>
+            <div class="selectTabs" id="selectTabs">
+                <select class="form-control" id="colorselector">
+                    <option value="Overview">@Model.Loc.Where(a => a.ResourceId == "globalOverview").FirstOrDefault().Value.ToString()</option>
+                    <option value="ApprovalGroupDetails">@Model.Loc.Where(a => a.ResourceId == "spnDetails").FirstOrDefault().Value.ToString()</option>
+                    <option value="ApprovalGroupRequestors">@Model.Loc.Where(a => a.ResourceId == "GlobalRequestor").FirstOrDefault().Value.ToString()</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-10">
+        <div class="row">
+            <div class="col-xl-12" id="btnnblock">
+                <div class="tabsArea nobg" id="Overview" style="display:block;">
+                    <div class="m-portlet" id="m_portlet" style="padding:10px;">
+                        <ul class="listView">
+                            <li>
+                                <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString() :</span>
+                                <span class="inputText description-span" style="line-height:26px;">@Model.ApprovalGroupsModel.Description</span>
+                                <div style="clear:both;"></div>
+                            </li>
+                            <li>
+                                <span class="label">@Model.ApprovalGroupMasterModel.AssetGroup1ClientLookupId :</span>
+                                <span class="inputText">@Model.ApprovalGroupsModel.AssetGroup1ClientLookupId</span>
+                            </li>
+                            <li>
+                                <span class="label">@Model.ApprovalGroupMasterModel.AssetGroup2ClientLookupId :</span>
+                                <span class="inputText">@Model.ApprovalGroupsModel.AssetGroup2ClientLookupId</span>
+                            </li>
+                            <li>
+                                <span class="label">@Model.ApprovalGroupMasterModel.AssetGroup3ClientLookupId :</span>
+                                <span class="inputText">@Model.ApprovalGroupsModel.AssetGroup3ClientLookupId</span>
+                            </li>
+
+                        </ul>
+                        <div class="editBttn">
+                            
+                            <button type="button" class="btn btn-blue" id="btnEditApprovalGroup" name="Command" value="update"><i class="fa fa-pencil" style="margin-top:-3px;"></i>&nbsp;@Model.Loc.Where(a => a.ResourceId == "globalEdit").FirstOrDefault().Value.ToString()</button>
+                           
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="tabsArea nobg" id="ApprovalGroupDetails" style="display:none;">
+                    <div class="m-portlet" id="m_portlet" style="padding:10px;">
+                        <div class="table-responsive">
+                            <table id="AppGroupApprovalDetail" class="eqpDtlTbl row-border custom-sort" style="width:100%;">
+                                <thead>
+                                    <tr>
+                                        <th>@Model.Loc.Where(l=>l.ResourceId=="globalApprover").FirstOrDefault().Value.ToString()</th>
+                                        <th style="text-align:right !important;">@Model.Loc.Where(l=>l.ResourceId=="globalLimit").FirstOrDefault().Value.ToString()</th>
+                                        <th>@Model.Loc.Where(l => l.ResourceId=="globalLevelName").FirstOrDefault().Value.ToString()</th>
+                                        <th width="17%" style="text-align:center !important;">@Model.Loc.Where(a => a.ResourceId == "globalAction").FirstOrDefault().Value.ToString()</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                        <div class="bttn_pagin">
+                            <div class="bttns"><button type="button" class="btn btn-blue" id="btnAddAppGroupApproval" style="display:none"><i class="fa fa-plus faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "spnAddApprover").FirstOrDefault().Value.ToString()</button></div>
+                            <div style="clear:both;"></div>
+                        </div>
+                        <div style="clear:both;"></div>
+                    </div>
+                </div>
+                <div class="tabsArea nobg" id="ApprovalGroupRequestors" style="display:none;">
+                    @*Requestors*@
+
+                    <div class="m-portlet" id="m_portlet" style="padding:10px;">
+                        <div class="table-responsive">
+                            <table id="AppGroupRequestors" class="eqpDtlTbl row-border custom-sort" style="width:100%;">
+                                <thead>
+                                    <tr>
+                                        <th>@Model.Loc.Where(l => l.ResourceId=="GlobalRequestor").FirstOrDefault().Value.ToString()</th>
+                                        <th style="text-align:center !important;">@Model.Loc.Where(a => a.ResourceId == "globalAction").FirstOrDefault().Value.ToString()</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                        <div class="bttn_pagin">
+                            <div class="bttns"><button type="button" class="btn btn-blue" data-toggle="" data-target="" id="btnAddRequestor" style="display:none"><i class="fa fa-plus faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "spnAddRequestor").FirstOrDefault().Value.ToString()</button></div>
+                            <div style="clear:both;"></div>
+                        </div>
+                        <div style="clear:both;"></div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@Html.HiddenFor(m => m.ApprovalGroupsModel.ApprovalGroupId)
+@Html.HiddenFor(m => m.ApprovalGroupsModel.RequestType)
+@Html.HiddenFor(m => m.ApprovalGroupsModel.Description)
+@Html.HiddenFor(m => m.ApprovalGroupsModel.RequestType)
+@Html.HiddenFor(m => m.ApprovalGroupsModel.AssetGroup1Id)
+@Html.HiddenFor(m => m.ApprovalGroupsModel.AssetGroup2Id)
+@Html.HiddenFor(m => m.ApprovalGroupsModel.AssetGroup3Id)
+
+@* add approver model *@
+<div id="AddEditApproverModalpopup" class="modal fade" role="dialog">
+    <div class="modal-dialog" id="AddEditApproverModalDialog">
+    </div>
+</div>
+@Html.Partial("~/Views/Configuration/ApprovalGroups/_AddRequestorToApprovalGroupPopup.cshtml")

@@ -1,0 +1,897 @@
+﻿@model Client.Models.EquipmentCombined
+@{
+    var AttachedModelName = "EditEquipment";
+    var fieldName = "";
+    var fieldId = "";
+    var EmptyLookupList = new List<SelectListItem> { new SelectListItem { } };
+    const string constVendor = "Vendor";
+    const string constAccount = "Account";
+    const string constAsset = "Asset";
+    object Value = null;
+    string[] AccountColumns = { "material_accountid", "labor_accountid" };
+    string[] VendorColumns = { "maint_vendorid", "purch_vendorid" };
+    string[] AssetColumns = { "electricalparent" };
+
+
+}
+@if (Model._userdata.DatabaseKey.Client.AssetTree == true)
+{
+    <div class="slide-modal" id="wrEquipTreeModal" style="z-index:1200 !important;">
+        <div class="slide-modal-head ">
+            <a id="wrEquipTreeModalHide" class="slide-back-btn"> <i class="fa fa-angle-left"></i>  @Model.Loc.Where(a => a.ResourceId == "spnBack").FirstOrDefault().Value.ToString()</a>
+            <div class="slide-back-title">
+                @Model.Loc.Where(a => a.ResourceId == "spnGlobalEquipmentTreeLookup").FirstOrDefault().Value.ToString()
+            </div>
+        </div>
+        <div class="slide-modal-body">
+            <div class="table-responsive cntTreeWR">
+            </div>
+        </div>
+        <div class="slide-modal-footer"></div>
+    </div>
+}
+
+
+@if (Model.UIConfigurationDetails != null && Model.UIConfigurationDetails.Count > 0)
+{
+    using (Ajax.BeginForm("UpdateEquipmentDynamicInfo_Mobile", "Equipment", new AjaxOptions { HttpMethod = "Post", OnSuccess = "EquipmentEditDynamicOnSuccess_Mobile", OnBegin = "AjaxBeginFormBegin", OnComplete = "AjaxBeginFormComplete", OnFailure = "AjaxBeginFormFaillure" }))
+    {
+        @Html.AntiForgeryToken()
+<div class="slide-modal" id="EditEquipmentModalDialog">
+    <div class="slide-modal-head">
+        <a class="slide-back-btn btnCancelEditEquipment"> <i class="fa fa-angle-left"></i> Back</a>
+        <div class="slide-back-title">
+            @Model.Loc.Where(a => a.ResourceId == "globalEdit").FirstOrDefault().Value.ToString() @Model.Loc.Where(a => a.ResourceId == "spnAsset").FirstOrDefault().Value.ToString()
+        </div>
+    </div>
+    @Html.Partial("_ErrorDiv")
+    <div class="slide-modal-body">
+        <div mbsc-page class="demo-responsive">
+            <div style="height:100%">
+                <div mbsc-form class="mbsc-form-grid">
+                    <div class="mbsc-grid">
+                        <div class="mbsc-row">
+                            @foreach (var data in Model.UIConfigurationDetails)
+                            {
+                                if (data.Section == true)
+                                {
+                                    <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                        <span class="label px-4 d-flex mb-2"><strong>@data.SectionName</strong></span>
+                                    </div>
+                                    continue;
+                                }
+                                if (string.IsNullOrEmpty(data.ColumnName))
+                                {
+                                    continue;
+                                }
+                                else if (!string.IsNullOrEmpty(data.ColumnName))
+                                {
+                                    string colName = UtilityFunction.ReturnPropertyNameWithoutCaseComparison(data.ColumnName, Model.EditEquipment);
+                                    if (string.IsNullOrEmpty(colName))
+                                    {
+                                        continue;
+                                    }
+                                    data.ColumnName = colName;
+                                }
+
+                                fieldName = AttachedModelName + "." + data.ColumnName;
+                                fieldId = data.ColumnName;
+                                Value = Model.EditEquipment.GetType().GetProperty(data.ColumnName).GetValue(Model.EditEquipment);
+
+                                if (data.SystemRequired == true)
+                                {
+                                    data.Required = true;
+                                }
+
+                                if (data.ColumnName.ToLower() == "AssetGroup1".ToLower())
+                                {
+
+                                    if (data.ViewOnly == true)
+                                    {
+                                        string TextBoxValue = "", TextBoxId = "";
+                                        if (Model.AssetGroup1List.Any(x => x.Value == Value.ToString()))
+                                        {
+                                            TextBoxValue = Model.AssetGroup1List
+                                                        .Where(x => x.Value == Value.ToString())
+                                                        .FirstOrDefault()
+                                                        .Text;
+                                        }
+                                        TextBoxId = fieldId + "TextBox";
+                                        <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                            <label>
+                                                <span class="mbsc-label">
+                                                    @CustomHelperDynamic.GetLabel(Model.AssetGroup1Label, data.Required)
+                                                    </span>
+                                                    @Html.TextBox(TextBoxId, TextBoxValue, new
+                                               {
+                                                   //id = fieldId,
+                                                   @class = "form-control search dropbtn readonly",
+                                                   @readonly = "readonly",
+                                                   autocomplete = "off",
+                                                   @mbsc_input = "true",
+                                                   @data_input_style = "box",
+                                                   @data_label_style = "floating",
+                                                   @placeholder = CustomHelperDynamic.GetLabel(Model.AssetGroup1Label, data.Required)
+                                               })
+                                            </label>
+                                            @Html.Hidden(fieldName, Value, new { @id = fieldId })
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                            <label>
+                                                <span class="mbsc-label">
+                                                    @CustomHelperDynamic.GetLabel(Model.AssetGroup1Label, data.Required)
+                                                    </span>
+                                                    @Html.DropDownList(fieldName, Model.AssetGroup1List, "--Select--", new
+                                               {
+                                                   id = fieldId,
+                                                   @class = "form-control search mobiscrollselect",
+                                                   style = "width:100%;",
+                                                   @mbsc_dropdown = "true",
+                                                   @data_label = @CustomHelperDynamic.GetLabel(Model.AssetGroup1Label, data.Required),
+                                                   @data_input_style = "box",
+                                                   @data_label_style = "floating",
+                                                   @placeholder = @CustomHelperDynamic.GetLabel(Model.AssetGroup1Label, data.Required)
+                                               })
+                                            </label>
+                                            @Html.ValidationMessage(fieldName, new { })
+                                        </div>
+                                    }
+
+
+                                }
+                                else if (data.ColumnName.ToLower() == "AssetGroup2".ToLower())
+                                {
+
+                                    if (data.ViewOnly == true)
+                                    {
+                                        string TextBoxValue = "", TextBoxId = "";
+                                        if (Model.AssetGroup2List.Any(x => x.Value == Value.ToString()))
+                                        {
+                                            TextBoxValue = Model.AssetGroup2List
+                                                        .Where(x => x.Value == Value.ToString())
+                                                        .FirstOrDefault()
+                                                        .Text;
+                                        }
+                                        TextBoxId = fieldId + "TextBox";
+                                        <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                            <label>
+                                                <span class="mbsc-label">
+                                                    @CustomHelperDynamic.GetLabel(Model.AssetGroup2Label, data.Required)
+                                                    </span>
+                                                    @Html.TextBox(TextBoxId, TextBoxValue, new
+                                               {
+                                                   //id = fieldId,
+                                                   @class = "form-control search dropbtn readonly",
+                                                   @readonly = "readonly",
+                                                   autocomplete = "off",
+                                                   @mbsc_input = "true",
+                                                   @data_input_style = "box",
+                                                   @data_label_style = "floating",
+                                                   @placeholder = CustomHelperDynamic.GetLabel(Model.AssetGroup2Label, data.Required)
+                                               })
+                                            </label>
+                                            @Html.Hidden(fieldName, Value, new { @id = fieldId })
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                            <label>
+                                                <span class="mbsc-label">
+                                                    @CustomHelperDynamic.GetLabel(Model.AssetGroup2Label, data.Required)
+                                                    </span>
+                                                    @Html.DropDownList(fieldName, Model.AssetGroup2List, "--Select--", new
+                                               {
+                                                   id = fieldId,
+                                                   @class = "form-control search mobiscrollselect",
+                                                   style = "width:100%;",
+                                                   @mbsc_dropdown = "true",
+                                                   @data_label = CustomHelperDynamic.GetLabel(Model.AssetGroup2Label, data.Required),
+                                                   @data_input_style = "box",
+                                                   @data_label_style = "floating"
+
+                                               })
+                                            </label>
+                                            @Html.ValidationMessage(fieldName, new { })
+                                        </div>
+                                    }
+
+                                }
+                                else if (data.ColumnName.ToLower() == "AssetGroup3".ToLower())
+                                {
+                                    if (data.ViewOnly == true)
+                                    {
+                                        string TextBoxValue = "", TextBoxId = "";
+                                        if (Model.AssetGroup3List.Any(x => x.Value == Value.ToString()))
+                                        {
+                                            TextBoxValue = Model.AssetGroup3List
+                                                        .Where(x => x.Value == Value.ToString())
+                                                        .FirstOrDefault()
+                                                        .Text;
+                                        }
+                                        TextBoxId = fieldId + "TextBox";
+                                        <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                            <label>
+                                                <span class="mbsc-label">
+                                                    @CustomHelperDynamic.GetLabel(Model.AssetGroup3Label, data.Required)
+                                                    </span>
+                                                    @Html.TextBox(TextBoxId, TextBoxValue, new
+                                                   {
+                                                       //id = fieldId,
+                                                       @class = "form-control search dropbtn readonly",
+                                                       @readonly = "readonly",
+                                                       autocomplete = "off",
+                                                       @mbsc_input = "true",
+                                                       @data_input_style = "box",
+                                                       @data_label_style = "floating",
+                                                       @placeholder = data.ColumnLabel
+                                                   })
+                                            </label>
+                                            @Html.Hidden(fieldName, Value, new { @id = fieldId })
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                            <label>
+                                                <span class="mbsc-label">
+                                                    @CustomHelperDynamic.GetLabel(Model.AssetGroup3Label, data.Required)
+                                                </span>
+                                               
+                                                @Html.DropDownList(fieldName, Model.AssetGroup3List, "--Select--", new
+                                                   {
+                                                       id = fieldId,
+                                                       @class = "form-control search mobiscrollselect",
+                                                       style = "width:100%;",
+                                                       @mbsc_dropdown = "true",
+                                                       @data_label = data.ColumnLabel,
+                                                       @data_input_style = "box",
+                                                       @data_label_style = "floating"
+                                                   })
+                                            </label>
+                                            @Html.ValidationMessage(fieldName, new { })
+                                        </div>
+                                    }
+
+                                }
+                                else if (data.ColumnName.ToLower() == "AssetCategory".ToLower())
+                                {
+                                    if (data.ViewOnly == true)
+                                    {
+                                        string TextBoxValue = "", TextBoxId = "";
+                                        if (Model.AssetCategoryList.Any(x => x.Value == Value.ToString()))
+                                        {
+                                            TextBoxValue = Model.AssetCategoryList
+                                                        .Where(x => x.Value == Value.ToString())
+                                                        .FirstOrDefault()
+                                                        .Text;
+                                        }
+                                        TextBoxId = fieldId + "TextBox";
+                                        <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                            <label>
+                                                @data.ColumnLabel :
+
+                                                @Html.TextBox(TextBoxId, TextBoxValue, new
+                                               {
+                                                   //id = fieldId,
+                                                   @class = "form-control search dropbtn readonly",
+                                                   @readonly = "readonly",
+                                                   autocomplete = "off",
+                                                   @mbsc_input = "true",
+                                                   @data_input_style = "box",
+                                                   @data_label_style = "floating",
+                                                   @placeholder = data.ColumnLabel
+                                               })
+                                            </label>
+                                            @Html.Hidden(fieldName, Value, new { @id = fieldId })
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                            <label>
+                                                @data.ColumnLabel
+                                                @Html.DropDownList(fieldName, Model.AssetCategoryList, "--Select--", new
+                                                   {
+                                                       id = fieldId,
+                                                       @class = "form-control search mobiscrollselect",
+                                                       style = "width:100%;",
+                                                       @mbsc_dropdown = "true",
+                                                       @data_label = data.ColumnLabel,
+                                                       @data_input_style = "box",
+                                                       @data_label_style = "floating",
+                                                       @placeholder = data.ColumnLabel
+                                                   })
+                                            </label>
+                                            @Html.ValidationMessage(fieldName, new { })
+                                        </div>
+                                    }
+
+                                }
+                                else if (data.LookupType == DataDictionaryLookupTypeConstant.Table && data.LookupName.ToLower() == constAccount.ToLower() &&
+                                     AccountColumns.Contains(data.ColumnName.ToLower()))
+                                {
+
+                                    string TextFieldName = "", TextFieldId = "", TextFieldValue = "";
+                                    if (data.ColumnName == "Material_AccountId")
+                                    {
+                                        TextFieldId = "Material_AccountName";
+                                    }
+                                    else if (data.ColumnName == "Labor_AccountId")
+                                    {
+                                        TextFieldId = "Labor_AccountName";
+                                    }
+                                    TextFieldName = AttachedModelName + "." + TextFieldId;
+                                    TextFieldValue = Model.EditEquipment.GetType().GetProperty(TextFieldId).GetValue(Model.EditEquipment).ToString();
+                                    if (Value != null)
+                                    {
+                                        <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6" style="display:none;">
+                                            <label>
+                                                @data.ColumnLabel :
+
+                                                @Html.TextBox(fieldName, Value, new
+                                           {
+                                               id = fieldId,
+                                               @class = "form-control search dropbtn readonly",
+                                               @readonly = "readonly",
+                                               autocomplete = "off",
+                                               @mbsc_input = "true",
+                                               @data_input_style = "box",
+                                               @data_label_style = "floating",
+                                               @placeholder = data.ColumnLabel
+                                           })
+                                            </label>
+                                            @Html.ValidationMessage(fieldName, new { })
+                                        </div>
+                                        <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                            <label>
+                                                @data.ColumnLabel :
+
+                                                @Html.TextBox(TextFieldName, TextFieldValue, new
+                                           {
+                                               id = TextFieldId,
+                                               @class = "form-control search dropbtn readonly",
+                                               @readonly = "readonly",
+                                               autocomplete = "off",
+                                               @mbsc_input = "true",
+                                               @data_input_style = "box",
+                                               @data_label_style = "floating",
+                                               @placeholder = data.ColumnLabel
+                                           })
+                                            </label>
+                                            @Html.ValidationMessage(fieldName, new { })
+                                        </div>
+                                        if (data.ViewOnly == false)
+                                        {
+                                            <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+
+                                                <div class="input-group-btn">
+                                                    <div class=" design-box">
+                                                        <button class="btn btn-white btntxtInputGroup ClearAccountModalPopupGridData" type="button" data-textfield="@TextFieldId"
+                                                                data-valuefield="@fieldId" style="display:none">
+                                                            <i id="srcicon" class="fa fa-close"></i>
+                                                        </button>
+                                                    </div>
+                                                    <div class=" design-box">
+                                                        <button class="btn btn-white btntxtInputGroup mobBttn OpenAccountModalPopupGrid" type="button" data-textfield="@TextFieldId"
+                                                                data-valuefield="@fieldId">
+                                                            <i id="srcicon" class="fa fa-search"></i>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                                <label>
+                                                    @data.ColumnLabel :
+
+                                                    @Html.TextBox(fieldName, Value, new
+                                               {
+                                                   id = fieldId,
+                                                   @class = "form-control search dropbtn readonly",
+                                                   @readonly = "readonly",
+                                                   autocomplete = "off",
+                                                   @mbsc_input = "true",
+                                                   @data_input_style = "box",
+                                                   @data_label_style = "floating",
+                                                   @placeholder = data.ColumnLabel
+                                               })
+                                                </label>
+                                                @Html.ValidationMessage(fieldName, new { })
+                                            </div>
+                                            <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6" style="display:none;">
+                                                <label>
+                                                    @data.ColumnLabel :
+
+                                                    @Html.TextBox(TextFieldName, TextFieldValue, new
+                                               {
+                                                   id = TextFieldId,
+                                                   @class = "form-control search dropbtn readonly",
+                                                   @readonly = "readonly",
+                                                   autocomplete = "off",
+                                                   @mbsc_input = "true",
+                                                   @data_input_style = "box",
+                                                   @data_label_style = "floating",
+                                                   @placeholder = data.ColumnLabel
+                                               })
+                                                </label>
+
+                                            </div>
+                                            if (data.ViewOnly == false)
+                                            {
+                                                <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+
+                                                    <div class="input-group-btn">
+                                                        <div class=" design-box">
+                                                            <button class="btn btn-white btntxtInputGroup ClearAccountModalPopupGridData" type="button" data-textfield="@TextFieldId"
+                                                                    data-valuefield="@fieldId" style="display:none">
+                                                                <i id="srcicon" class="fa fa-close"></i>
+                                                            </button>
+                                                        </div>
+                                                        <div class=" design-box">
+                                                            <button class="btn btn-white btntxtInputGroup mobBttn OpenAccountModalPopupGrid" type="button" data-textfield="@TextFieldId"
+                                                                    data-valuefield="@fieldId">
+                                                                <i id="srcicon" class="fa fa-search"></i>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            }
+                                        }
+                                    }
+
+                                }
+                                else if (data.LookupType.ToLower() == DataDictionaryLookupTypeConstant.LookupList.ToLower() &&
+                                !string.IsNullOrEmpty(data.LookupName))
+                                {
+                                    var LookUpList = Model.AllRequiredLookUplist
+                                                    .Where(x => x.lookupname == data.LookupName)
+                                                    .Select(x => new SelectListItem { Text = x.text, Value = x.value })
+                                                    .ToList();
+
+                                    if (LookUpList != null && LookUpList.Count() > 0)
+                                    {
+                                        if (data.ViewOnly == true)
+                                        {
+                                            string TextBoxValue = "", TextBoxId = "";
+                                            if (Model.AllRequiredLookUplist.Any(x => x.lookupname == data.LookupName && x.value == Value.ToString()))
+                                            {
+                                                TextBoxValue = Model.AllRequiredLookUplist
+                                                            .Where(x => x.lookupname == data.LookupName && x.value == Value.ToString())
+                                                            .FirstOrDefault()
+                                                            .text;
+                                            }
+                                            TextBoxId = fieldId + "TextBox";
+                                            <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                                <label>
+                                                    @data.ColumnLabel :
+
+                                                    @Html.TextBox(TextBoxId, TextBoxValue, new
+                                               {
+                                                   //id = fieldId,
+                                                   @class = "form-control search dropbtn readonly",
+                                                   @readonly = "readonly",
+                                                   autocomplete = "off",
+                                                   @mbsc_input = "true",
+                                                   @data_input_style = "box",
+                                                   @data_label_style = "floating",
+                                                   @placeholder = data.ColumnLabel
+                                               })
+                                                </label>
+                                                @Html.Hidden(fieldName, Value, new { @id = fieldId })
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                                <label>
+                                                    @data.ColumnLabel
+                                                    @Html.DropDownList(fieldName, LookUpList, "--Select--", new
+                                               {
+                                                   id = fieldId,
+                                                   @class = "form-control search mobiscrollselect",
+                                                   style = "width:100%;",
+                                                   @mbsc_dropdown = "true",
+                                                   @data_label = data.ColumnLabel,
+                                                   @data_input_style = "box",
+                                                   @data_label_style = "floating",
+                                                   @placeholder = data.ColumnLabel
+                                               })
+                                                </label>
+                                                @Html.ValidationMessage(fieldName, new { })
+                                            </div>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                            <label>
+                                                @data.ColumnLabel
+                                                @Html.DropDownList(fieldName, EmptyLookupList, "--Select--", new
+                                           {
+                                               id = fieldId,
+                                               @class = "form-control search mobiscrollselect",
+                                               style = "width:100%;",
+                                               @mbsc_dropdown = "true",
+                                               @data_label = data.ColumnLabel,
+                                               @data_input_style = "box",
+                                               @data_label_style = "floating",
+                                               @placeholder = data.ColumnLabel
+                                           })
+                                            </label>
+                                            @Html.ValidationMessage(fieldName, new { })
+                                        </div>
+                                    }
+
+                                }
+                                else if (data.LookupType == DataDictionaryLookupTypeConstant.Table && data.LookupName.ToLower() == constVendor.ToLower() &&
+                                    VendorColumns.Contains(data.ColumnName.ToLower()))
+                                {
+
+                                    string TextFieldName = "", TextFieldId = "", TextFieldValue = "";
+                                    if (data.ColumnName == "Maint_VendorId")
+                                    {
+                                        TextFieldId = "Maint_VendorName";
+                                    }
+                                    else if (data.ColumnName == "Purch_VendorId")
+                                    {
+                                        TextFieldId = "Purch_VendorName";
+                                    }
+                                    TextFieldName = AttachedModelName + "." + TextFieldId;
+                                    TextFieldValue = Model.EditEquipment.GetType().GetProperty(TextFieldId).GetValue(Model.EditEquipment).ToString();
+                                    if (Value != null)
+                                    {
+                                        <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6" style="display:none;">
+                                            <label>
+                                                @data.ColumnLabel :
+
+                                                @Html.TextBox(fieldName, Value, new
+                                           {
+                                               id = fieldId,
+                                               @class = "form-control search dropbtn readonly",
+                                               @readonly = "readonly",
+                                               autocomplete = "off",
+                                               @mbsc_input = "true",
+                                               @data_input_style = "box",
+                                               @data_label_style = "floating",
+                                               @placeholder = data.ColumnLabel
+                                           })
+                                            </label>
+                                            @Html.ValidationMessage(fieldName, new { })
+                                        </div>
+                                        <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                            <label>
+                                                @data.ColumnLabel :
+
+                                                @Html.TextBox(TextFieldName, TextFieldValue, new
+                                           {
+                                               id = TextFieldId,
+                                               @class = "form-control search dropbtn readonly",
+                                               @readonly = "readonly",
+                                               autocomplete = "off",
+                                               @mbsc_input = "true",
+                                               @data_input_style = "box",
+                                               @data_label_style = "floating",
+                                               @placeholder = data.ColumnLabel
+                                           })
+                                            </label>
+                                            @Html.ValidationMessage(fieldName, new { })
+                                        </div>
+                                        if (data.ViewOnly == false)
+                                        {
+                                            <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                                <div class="input-group-btn">
+                                                    <div class=" design-box">
+                                                        <button class="btn btn-white btntxtInputGroup ClearVendorModalPopupGridData" type="button" data-textfield="@TextFieldId"
+                                                                data-valuefield="@fieldId" style="display:none">
+                                                            <i id="srcicon" class="fa fa-close"></i>
+                                                        </button>
+                                                    </div>
+                                                    <div class=" design-box">
+                                                        <button class="btn btn-white btntxtInputGroup mobBttn OpenVendorModalPopupGrid" type="button" data-textfield="@TextFieldId"
+                                                                data-valuefield="@fieldId">
+                                                            <i id="srcicon" class="fa fa-search"></i>
+                                                        </button>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                            <label>
+                                                @data.ColumnLabel :
+
+                                                @Html.TextBox(fieldName, Value, new
+                                           {
+                                               id = fieldId,
+                                               @class = "form-control search dropbtn readonly",
+                                               @readonly = "readonly",
+                                               autocomplete = "off",
+                                               @mbsc_input = "true",
+                                               @data_input_style = "box",
+                                               @data_label_style = "floating",
+                                               @placeholder = data.ColumnLabel
+                                           })
+                                            </label>
+                                            @Html.ValidationMessage(fieldName, new { })
+                                        </div>
+                                        <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6" style="display:none;">
+                                            <label>
+                                                @data.ColumnLabel :
+
+                                                @Html.TextBox(TextFieldName, TextFieldValue, new
+                                           {
+                                               id = TextFieldId,
+                                               @class = "form-control search dropbtn readonly",
+                                               @readonly = "readonly",
+                                               autocomplete = "off",
+                                               @mbsc_input = "true",
+                                               @data_input_style = "box",
+                                               @data_label_style = "floating",
+                                               @placeholder = data.ColumnLabel
+                                           })
+                                            </label>
+                                            @Html.ValidationMessage(fieldName, new { })
+                                        </div>
+                                        if (data.ViewOnly == false)
+                                        {
+                                            <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                                <div class="input-group-btn">
+                                                    <div class=" design-box">
+                                                        <button class="btn btn-white btntxtInputGroup ClearVendorModalPopupGridData" type="button" data-textfield="@TextFieldId"
+                                                                data-valuefield="@fieldId" style="display:none">
+                                                            <i id="srcicon" class="fa fa-close"></i>
+                                                        </button>
+                                                    </div>
+                                                    <div class=" design-box">
+                                                        <button class="btn btn-white btntxtInputGroup mobBttn OpenVendorModalPopupGrid" type="button" data-textfield="@TextFieldId"
+                                                                data-valuefield="@fieldId">
+                                                            <i id="srcicon" class="fa fa-search"></i>
+                                                        </button>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        }
+                                    }
+
+                                }
+                                else if (data.LookupType == DataDictionaryLookupTypeConstant.Table && data.LookupName.ToLower() == constAsset.ToLower() &&
+                                                                       (data.ColumnName == "ElectricalParent"))
+                                {
+
+
+                                    string TextFieldName = "", TextFieldId = "", TextFieldValue = "";
+                                    TextFieldId = "ElectricalParent_ClientLookupId";
+                                    TextFieldName = AttachedModelName + "." + TextFieldId;
+                                    TextFieldValue = Model.EditEquipment.GetType().GetProperty(TextFieldId).GetValue(Model.EditEquipment).ToString();
+                                    if (Value != null)
+                                    {
+                                        <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6" style="display:none;">
+                                            <label>
+                                                @data.ColumnLabel :
+
+                                                @Html.TextBox(fieldName, Value, new
+                                           {
+                                               id = fieldId,
+                                               @class = "form-control search dropbtn readonly",
+                                               @readonly = "readonly",
+                                               autocomplete = "off",
+                                               @mbsc_input = "true",
+                                               @data_input_style = "box",
+                                               @data_label_style = "floating",
+                                               @placeholder = data.ColumnLabel
+                                           })
+                                            </label>
+                                            @Html.ValidationMessage(fieldName, new { })
+                                        </div>
+                                        <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                            <label>
+                                                @data.ColumnLabel :
+
+                                                @Html.TextBox(TextFieldName, TextFieldValue, new
+                                           {
+                                               id = TextFieldId,
+                                               @class = "form-control search dropbtn readonly",
+                                               @readonly = "readonly",
+                                               autocomplete = "off",
+                                               @mbsc_input = "true",
+                                               @data_input_style = "box",
+                                               @data_label_style = "floating",
+                                               @placeholder = data.ColumnLabel
+                                           })
+                                            </label>
+                                            @Html.ValidationMessage(fieldName, new { })
+                                        </div>
+
+                                    }
+                                    else
+                                    {
+                                        <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                            <label>
+                                                @data.ColumnLabel :
+
+                                                @Html.TextBox(fieldName, Value, new
+                                           {
+                                               id = fieldId,
+                                               @class = "form-control search dropbtn readonly",
+                                               @readonly = "readonly",
+                                               autocomplete = "off",
+                                               @mbsc_input = "true",
+                                               @data_input_style = "box",
+                                               @data_label_style = "floating",
+                                               @placeholder = data.ColumnLabel
+                                           })
+                                            </label>
+                                            @Html.ValidationMessage(fieldName, new { })
+                                        </div>
+                                        <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6" style="display:none;">
+                                            <label>
+                                                @data.ColumnLabel :
+
+                                                @Html.TextBox(TextFieldName, TextFieldValue, new
+                                           {
+                                               id = TextFieldId,
+                                               @class = "form-control search dropbtn readonly",
+                                               @readonly = "readonly",
+                                               autocomplete = "off",
+                                               @mbsc_input = "true",
+                                               @data_input_style = "box",
+                                               @data_label_style = "floating",
+                                               @placeholder = data.ColumnLabel
+                                           })
+                                            </label>
+
+                                        </div>
+
+                                    }
+                                    if (data.ViewOnly == false)
+                                    {
+                                        <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                            <div class=" design-box">
+                                                <div class="input-group-btn">
+                                                    <button class="btn btn-white btntxtInputGroup mobBttn OpenAssetModalPopupGridoverEquipmentModal" type="button"
+                                                            data-textfield="@TextFieldId" data-valuefield="@fieldId">
+                                                        <i id="srcicon" class="fa fa-search"></i>
+                                                    </button>
+
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                            <div class=" design-box">
+                                                <div class="input-group-btn">
+                                                    <button type="button" class="btn btn-blue mobBttn" onclick="QrScannerEquipment_Mobile('@TextFieldId','@fieldId')">
+                                                        <i class="fa fa-qrcode" style="margin-top:-2px;"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        if (Model._userdata.DatabaseKey.Client.AssetTree == true)
+                                        {
+                                            <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                                <div class=" design-box">
+                                                    <div class="input-group-btn">
+
+                                                        <button type="button" class="btn btn-blue mobBttn" data-textfield="@TextFieldId"
+                                                                data-valuefield="@fieldId" id="imgChargeToTreeGridOverWorkReqModal">
+                                                            <i id="srcicon" class="fa fa-tree chargeTree TreeAdjustNew" style="display:block;"></i>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
+                                    }
+
+
+                                }
+                                else
+                                {
+                                    <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+
+                                        <label id="label-wrap">
+                                            @data.ColumnLabel :
+
+                                            @Html.UIConfigControl_Mobiscroll(fieldName, fieldId, data.ColumnType.ToLower(), data.MaxLength, data.ViewOnly, null, data.ColumnLabel)
+                                        </label>
+                                        @CustomHelperDynamic.GetCountMessageLabelMobile(data.MaxLength, data.ViewOnly, Convert.ToString(Value))
+                                        @Html.ValidationMessage(fieldName, new { })
+                                    </div>
+
+                                }
+                            }
+                        </div>
+
+                        <div class="mbsc-row">
+                            <div class="mbsc-col-12 mbsc-col-md-6 mbsc-col-lg-6">
+                                <div class=" design-box">
+                                    <div class="mbsc-button-group-block">
+                                        <button mbsc-button data-color="success" type="button" class="btn btn-blue mobBttn btnCancelEditEquipment"><i class="fa fa-close faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="mbsc-col-12 mbsc-col-md-12 mbsc-col-lg-12">
+                                <div class="mbsc-button-group-block">
+                                    <div class=" design-box">
+
+                                        <button mbsc-button data-color="success" type="submit" class="btn btn-blue mobBttn" name="Command" value="save"><i class="fa fa-save faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="slide-modal-footer"></div>
+</div>
+
+
+        @Html.HiddenFor(m => m.EditEquipment.EquipmentId)
+        @Html.HiddenFor(m => m.PlantLocation, new { id = "PlantLocation" })
+        @Html.HiddenFor(m => m.HiddenType)
+    }
+}
+<div class="slide-modal" id="EquipmentWOModal">
+    <div class="slide-modal-head">
+        <a class="slide-back-btn" id="EquipmentWOModalHide"> <i class="fa fa-angle-left"></i>  @Model.Loc.Where(a => a.ResourceId == "spnBack").FirstOrDefault().Value.ToString()</a>
+        <div class="slide-back-title">
+            @Model.Loc.Where(a => a.ResourceId == "GlobalSelectEquipment").FirstOrDefault().Value.ToString()
+        </div>
+    </div>
+    <div class="slide-modal-body">
+        <div class="form-group" style="position:relative;">
+            <i class="fa fa-search txtSearchClickComp" style="font-size: 1.1rem;position: absolute;top: 9px;left: 15px;"></i>
+            <a href="javascript:void(0)"><i class="fa fa-close clearTextBoxValue" data-txtboxid="txtEquipmentSearch_Mobile" style="font-size: 1.1rem;position: absolute;top: 9px;right: 15px;"></i></a>
+            <input type="search" id="txtEquipmentSearch_Mobile" class="form-control search unsortable" placeholder="Search..." style="padding: 0.65rem 2.75rem;" autocomplete="off">
+        </div>
+        <div id="DivEquipmentSearchScrollViewModal"></div>
+    </div>
+</div>
+
+<div class="slide-modal" id="AccountTableModalPopup">
+    <div class="slide-modal-head">
+        <a class="slide-back-btn" id="AccountTableModalPopupHide"> <i class="fa fa-angle-left"></i> @Model.Loc.Where(a => a.ResourceId == "spnBack").FirstOrDefault().Value.ToString()</a>
+        <div class="slide-back-title">
+            @Model.Loc.Where(a => a.ResourceId == "GlobalAccount").FirstOrDefault().Value.ToString()
+        </div>
+    </div>
+    <div class="slide-modal-body">
+        <div class="form-group" style="position:relative;">
+            <i class="fa fa-search txtSearchClickComp" style="font-size: 1.1rem;position: absolute;top: 9px;left: 15px;"></i>
+            <a href="javascript:void(0)"><i class="fa fa-close clearTextBoxValue" data-txtboxid="txtAccountSearch_Mobile" style="font-size: 1.1rem;position: absolute;top: 9px;right: 15px;"></i></a>
+            <input type="search" id="txtAccountSearch_Mobile" class="form-control search unsortable" placeholder="Search..." style="padding: 0.65rem 2.75rem;" autocomplete="off">
+        </div>
+        <div id="DivAccountSearchScrollViewModal"></div>
+    </div>
+</div>
+<div class="slide-modal" id="VendorTableModalPopup">
+    <div class="slide-modal-head">
+        <a class="slide-back-btn" id="VendorTableModalPopupHide"> <i class="fa fa-angle-left"></i>  @Model.Loc.Where(a => a.ResourceId == "spnBack").FirstOrDefault().Value.ToString()</a>
+        <div class="slide-back-title">
+            @Model.Loc.Where(a => a.ResourceId == "spnSelectVendor").FirstOrDefault().Value.ToString()
+        </div>
+    </div>
+    <div class="slide-modal-body">
+        <div class="form-group" style="position:relative;">
+            <i class="fa fa-search txtSearchClickComp" style="font-size: 1.1rem;position: absolute;top: 9px;left: 15px;"></i>
+            <a href="javascript:void(0)"><i class="fa fa-close clearTextBoxValue" data-txtboxid="txtVendorSearch_Mobile" style="font-size: 1.1rem;position: absolute;top: 9px;right: 15px;"></i></a>
+            <input type="search" id="txtVendorSearch_Mobile" class="form-control search unsortable" placeholder="Search..." style="padding: 0.65rem 2.75rem;" autocomplete="off">
+        </div>
+        <div id="DivVendorSearchScrollViewModal"></div>
+    </div>
+</div>
+@Html.Partial("~/Views/Equipment/Mobile/_QrCodeReaderModal.cshtml")
+

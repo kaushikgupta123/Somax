@@ -1,0 +1,30 @@
+﻿@model Client.Models.PurchaseOrder.PurchaseOrderVM
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<body style="padding: 0; margin: 0; font-family: 'Calibri', sans-serif; font-size: 14px; color: #737272;">
+    <table width="1000" border="0" cellspacing="0" cellpadding="0" align="center">
+       
+        <tr>
+            <td align="left" valign="top" height="10"><img src='@Url.Content("~/Content/images/space.png")' alt="" /></td>
+        </tr>
+
+        <tr>
+            <td align="center" valign="middle" style="font-size:18px; color:#222;">
+                <strong>Standard Purchase Order # <span>@Model.PurchaseOrderModel.ClientLookupId</span><strong>     Rev. <span>@Model.PurchaseOrderModel.Revision</span></strong></strong>
+            </td>
+        </tr>
+        @*<tr>
+            <td align="center" valign="middle" style="font-size:18px; color:#222;">
+                <strong>Rev. <span>@Model.PurchaseOrderModel.Revision</span></strong>
+            </td>
+        </tr>*@
+
+        <tr>
+            <td align="left" valign="top" height="10" style="border-bottom:1px solid #222;"><img src='@Url.Content("~/Content/images/space.png")' alt="" /></td>
+        </tr>
+    </table>
+</body>
+</html>

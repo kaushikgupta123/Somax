@@ -1,0 +1,35 @@
+﻿@model Client.Models.PreventiveMaintenance.PrevMaintVM
+<div id="ExclusionDaysModalDialog" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-info">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close cancelExclusionDaysModal" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">@Model.Loc.Where(a => a.ResourceId == "spnExclude").FirstOrDefault().Value.ToString()</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group tag-days">
+                    @Html.ListBoxFor(m => m.scheduleRecords.ExclusionDaysString, Model.scheduleRecords.DaysOfWeekList, new { @id= "ExclusionDaysString", @class = "form-control search multi-select2picker", multiple = "multiple", style = "width:100%;" })
+                </div>
+            </div>
+            
+        </div>
+    </div>
+</div>
+
+<style>
+    .tag-days ul.select2-selection__rendered {
+        padding: 0px !important;
+    }
+
+    .tag-days ul.select2-selection__rendered li {
+    padding: 0px;
+    margin: 2px 0px 2px 5px !important;
+    height:27px !important;
+    }
+    .tag-days ul.select2-selection__rendered li .select2-selection__choice__remove {
+    top: -1px !important;
+    }
+    .tag-days .select2-selection {
+        height: auto !important;
+    }
+</style>
