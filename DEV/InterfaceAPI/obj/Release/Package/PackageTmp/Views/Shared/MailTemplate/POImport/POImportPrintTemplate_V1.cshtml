@@ -1,0 +1,381 @@
+﻿@model InterfaceAPI.Models.BBU.POImport.POImportModel
+@{ Layout = null;}
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>PurchaseOrder</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css" />
+    <link rel="shortcut icon" href="~/Scripts/Metronic/assets/login/demo/default/media/img/logo/favicon.png" />
+</head>
+
+<body style="padding:0; margin:0; font-family: 'Calibri', sans-serif; font-size:14px; color:#737272;">
+    <table width="1000" border="0" cellspacing="0" cellpadding="0" align="center">
+        <tr>
+            <td align="left" valign="top" height="20"><img src="../Content/images/space.png" alt="" /></td>
+        </tr>
+
+        <tr>
+            <td align="center" valign="middle" style="font-size:18px; color:#222;">
+                <strong>Standard Purchase Order # <span>@Model.ClientLookupId</span></strong><strong>      Rev. <span> @Model.Revision</span></strong>
+            </td>
+        </tr>
+        @*<tr>
+            <td align="center" valign="middle" style="font-size:18px; color:#222;">
+                <strong>Rev. <span>@Model.Revision</span></strong>
+            </td>
+        </tr>*@
+
+        <tr>
+            <td align="left" valign="top" height="10" style="border-bottom:1px solid #222;"><img src="../Content/images/space.png" alt="" /></td>
+        </tr>
+
+        <tr>
+            <td align="left" valign="top">
+                <table width="1000" border="0" cellspacing="0" cellpadding="0">
+                    <tr>
+                        <td align="left" valign="top">
+                            <table width="1000" border="0" cellspacing="0" cellpadding="0">
+                                <tr>
+                                    <th width="1000" colspan="3" align="center" valign="middle" height="40" scope="col" style="border-right:1px solid #fff; font-size:20px; color:#222; line-height:40px; font-weight:600; text-transform:uppercase; padding-bottom: 10px;">BIMBO Bakeries USA INC.</th>
+                                </tr>
+                                <tr>
+                                    <td align="left" valign="top" style="font-size:14px; color:#737272; line-height:25px; font-weight:normal;">
+                                        <table width="333" border="0" cellspacing="0" cellpadding="0">
+                                            <tr>
+                                                <td width="100" align="left" valign="top" style="padding-left:15px; font-size:14px; color:#222; font-weight:600;">Vendor</td>
+                                                <td width="6" align="left" valign="top" style="font-size:14px; color:#222; font-weight:500;">:</td>
+                                                <td width="334" align="left" valign="top" style="padding-left:15px; font-size:14px; color:#222; font-weight:normal;">@Model.VendorName</td>
+                                            </tr>
+                                            <tr>
+                                                <td align="left" valign="top" style="padding-left:15px; font-size:14px; color:#222; font-weight:500;"></td>
+                                                <td align="left" valign="top" style="font-size:14px; color:#222; font-weight:500;"></td>
+                                                <td align="left" valign="top" style="padding-left:15px; font-size:14px; color:#222; font-weight:normal;">@Model.VendorAddress1</td>
+                                            </tr>
+                                            @{
+                                                if (@Model.VendorAddress2 != "")
+                                                {
+                                                    <tr>
+                                                        <td align="left" valign="top" style="padding-left:15px; font-size:14px; color:#222; font-weight:500;"></td>
+                                                        <td align="left" valign="top" style="font-size:14px; color:#222; font-weight:500;"></td>
+                                                        <td align="left" valign="top" style="padding-left:15px; font-size:14px; color:#222; font-weight:normal;">@Model.VendorAddress2</td>
+                                                    </tr>
+                                                }
+                                                if (@Model.VendorAddress3 != "")
+                                                {
+                                                    <tr>
+                                                        <td align="left" valign="top" style="padding-left:15px; font-size:14px; color:#222; font-weight:500;"></td>
+                                                        <td align="left" valign="top" style="font-size:14px; color:#222; font-weight:500;"></td>
+                                                        <td align="left" valign="top" style="padding-left:15px; font-size:14px; color:#222; font-weight:normal;">@Model.VendorAddress3</td>
+                                                    </tr>
+                                                }
+                                            }
+
+                                            <tr>
+                                                <td align="left" valign="top" style="padding-left:15px; font-size:14px; color:#222; font-weight:500;"></td>
+                                                <td align="left" valign="top" style="font-size:14px; color:#222; font-weight:500;"></td>
+                                                <td align="left" valign="top" style="padding-left:15px; font-size:14px; color:#222; font-weight:normal;">@Model.VendorAddressCity, @Model.VendorAddressState, @Model.VendorAddressPostCode</td>
+                                            </tr>
+                                            <tr>
+                                                <td align="left" valign="top" style="padding-left:15px; font-size:14px; color:#222; font-weight:500;"></td>
+                                                <td align="left" valign="top" style="font-size:14px; color:#222; font-weight:500;"></td>
+                                                <td align="left" valign="top" style="padding-left:15px; font-size:14px; color:#222; font-weight:normal;">@Model.VendorAddressCountry</td>
+                                            </tr>
+                                        </table>
+
+                                    </td>
+
+                                    <td align="left" valign="top" style="font-size:14px; color:#737272; line-height:25px; font-weight:normal;">
+                                        <table width="333" border="0" cellspacing="0" cellpadding="0">
+                                            <tr>
+                                                <td width="100" align="left" valign="top" style="padding-left:15px; font-size:14px; color:#222; font-weight:600;">Bill To</td>
+                                                <td width="6" align="left" valign="top" style="font-size:14px; color:#222; font-weight:500;">:</td>
+                                                <td width="334" align="left" valign="top" style="padding-left:15px; font-size:14px; color:#222; font-weight:normal;">@Model.BillToName</td>
+                                            </tr>
+                                            @*<tr>
+                                                <td align="left" valign="top" style="padding-left:15px; font-size:14px; color:#222; font-weight:500;"></td>
+                                                <td align="left" valign="top" style="font-size:14px; color:#222; font-weight:500;"></td>
+                                                <td align="left" valign="top" style="padding-left:15px; font-size:14px; color:#222; font-weight:normal;"></td>
+                                            </tr>*@
+                                            <tr>
+                                                <td align="left" valign="top" style="padding-left:15px; font-size:14px; color:#222; font-weight:500;"></td>
+                                                <td align="left" valign="top" style="font-size:14px; color:#222; font-weight:500;"></td>
+                                                <td align="left" valign="top" style="padding-left:15px; font-size:14px; color:#222; font-weight:normal;">@Model.BillToAddress1</td>
+                                            </tr>
+                                            @{
+                                                if (Model.BillToAddress2 != "")
+                                                {
+                                                    <tr>
+                                                        <td align="left" valign="top" style="padding-left:15px; font-size:14px; color:#222; font-weight:500;"></td>
+                                                        <td align="left" valign="top" style="font-size:14px; color:#222; font-weight:500;"></td>
+                                                        <td align="left" valign="top" style="padding-left:15px; font-size:14px; color:#222; font-weight:normal;">@Model.BillToAddress2</td>
+                                                    </tr>
+                                                }
+                                                if (Model.BillToAddress3 != "")
+                                                {
+                                                    <tr>
+                                                        <td align="left" valign="top" style="padding-left:15px; font-size:14px; color:#222; font-weight:500;"></td>
+                                                        <td align="left" valign="top" style="font-size:14px; color:#222; font-weight:500;"></td>
+                                                        <td align="left" valign="top" style="padding-left:15px; font-size:14px; color:#222; font-weight:normal;">@Model.BillToAddress3</td>
+                                                    </tr>
+                                                }
+                                            }
+
+                                            <tr>
+                                                <td align="left" valign="top" style="padding-left:15px; font-size:14px; color:#222; font-weight:500;"></td>
+                                                <td align="left" valign="top" style="font-size:14px; color:#222; font-weight:500;"></td>
+                                                <td align="left" valign="top" style="padding-left:15px; font-size:14px; color:#222; font-weight:normal;">@Model.BillToAddressCity, @Model.BillToAddressState, @Model.BillToAddressPostCode</td>
+                                            </tr>
+                                            <tr>
+                                                <td align="left" valign="top" style="padding-left:15px; font-size:14px; color:#222; font-weight:500;"></td>
+                                                <td align="left" valign="top" style="font-size:14px; color:#222; font-weight:500;"></td>
+                                                <td align="left" valign="top" style="padding-left:15px; font-size:14px; color:#222; font-weight:normal;">@Model.BillToAddressCountry</td>
+                                            </tr>
+                                        </table>
+
+                                    </td>
+
+                                    <td align="left" valign="top" style="font-size:14px; color:#737272; line-height:25px; font-weight:normal;">
+                                        <table width="333" border="0" cellspacing="0" cellpadding="0">
+                                            <tr>
+                                                <td width="160" align="left" valign="top" style="padding-left:15px; font-size:14px; color:#222; font-weight:500;">Date</td>
+                                                <td width="6" align="left" valign="top" style="font-size:14px; color:#222; font-weight:500;">:</td>
+                                                <td width="334" align="left" valign="top" style="padding-left:15px; font-size:14px; color:#222; font-weight:normal;">@String.Format("{0:dd-MMM-yyyy}", Model.CreateDate)</td>
+                                            </tr>
+                                            <tr>
+                                                <td align="left" valign="top" style="padding-left:15px; font-size:14px; color:#222; font-weight:500;">PaymentTerms</td>
+                                                <td align="left" valign="top" style="font-size:14px; color:#222; font-weight:500;">:</td>
+                                                <td align="left" valign="top" style="padding-left:15px; font-size:14px; color:#222; font-weight:normal;">@Model.PaymentTerms</td>
+                                            </tr>
+                                            <tr>
+                                                <td align="left" valign="top" style="padding-left:15px; font-size:14px; color:#222; font-weight:500;">FreightTerms</td>
+                                                <td align="left" valign="top" style="font-size:14px; color:#222; font-weight:500;">:</td>
+                                                <td align="left" valign="top" style="padding-left:15px; font-size:14px; color:#222; font-weight:normal;">@Model.FOB</td>
+                                            </tr>
+                                            <tr>
+                                                <td align="left" valign="top" style="padding-left:15px; font-size:14px; color:#222; font-weight:500;">ShipVia</td>
+                                                <td align="left" valign="top" style="font-size:14px; color:#222; font-weight:500;">:</td>
+                                                <td align="left" valign="top" style="padding-left:15px; font-size:14px; color:#222; font-weight:normal;">@Model.Carrier</td>
+                                            </tr>
+                                            <tr>
+                                                <td align="left" valign="top" style="padding-left:15px; font-size:14px; color:#222; font-weight:500;">Contact</td>
+                                                <td align="left" valign="top" style="font-size:14px; color:#222; font-weight:500;">:</td>
+                                                <td align="left" valign="top" style="padding-left:15px; font-size:14px; color:#222; font-weight:normal;">@Model.Creator_PersonnelName</td>
+                                            </tr>
+                                            <tr>
+                                                <td align="left" valign="top" style="padding-left:15px; font-size:14px; color:#222; font-weight:500;"></td>
+                                                <td align="left" valign="top" style="font-size:14px; color:#222; font-weight:500;"></td>
+                                                <td align="left" valign="top" style="padding-left:15px; font-size:14px; color:#222; font-weight:normal;">@Model.PersonnelEmail</td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="left" valign="top" style="font-size:14px; color:#737272; line-height:25px; font-weight:normal;">
+                            <table width="1000" border="0" cellspacing="0" cellpadding="0">
+                                <tr>
+                                    <td width="60" align="left" valign="top" style="padding-left:15px; font-size:14px; color:#222; font-weight:500;">Comment</td>
+                                    <td width="6" align="left" valign="top" style="font-size:14px; color:#222; font-weight:500;">:</td>
+                                    <td align="left" valign="top" style="padding-left:15px; font-size:14px; color:#222; font-weight:normal;">
+                                        <p style="padding:0; margin:0;">@Model.MessageToVendor</p>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="left" valign="top" height="10" style="border-bottom:1px solid #222;"><img src="../Content/images/space.png" alt="" /></td>
+                    </tr>
+                    <tr>
+                        <td align="left" valign="top" height="5"><img src="../Content/images/space.png" alt="" /></td>
+                    </tr>
+
+                    <tr>
+                        <td align="left" valign="top">
+                            <table width="1000" border="0" cellspacing="0" cellpadding="0">
+                                <tr>
+                                    <td align="left" valign="top" style="font-size:14px; color:#737272; line-height:25px; font-weight:normal;">
+                                        <table width="333" border="0" cellspacing="0" cellpadding="0">
+                                            @*<tr>
+                                                <td width="130" align="left" valign="top" style="padding-left:15px; font-size:14px; color:#222; font-weight:500;">@Model.Loc.Where(a => a.ResourceId == "spnComment").FirstOrDefault().Value.ToString()</td>
+                                                <td width="6" align="left" valign="top" style="font-size:14px; color:#222; font-weight:500;">:</td>
+                                                <td width="334" align="left" valign="top" style="padding-left:15px; font-size:14px; color:#222; font-weight:normal;">
+                                                    <p style="padding:0; margin:0;">@Model.MessageToVendor</p>
+                                                </td>
+                                            </tr>*@
+                                        </table>
+                                    </td>
+
+                                    <td align="left" valign="top" style="font-size:16px; color:#737272; line-height:25px; font-weight:normal;">
+                                        <table width="333" border="0" cellspacing="0" cellpadding="0">
+                                            <tr>
+                                                <td width="95" align="left" valign="top" style="padding-left:15px; font-size:16px; color:#222; font-weight:600;">ShipTo</td>
+                                                <td width="6" align="left" valign="top" style="font-size:16px; color:#222; font-weight:500;">:</td>
+                                                <td width="379" align="left" valign="top" style="padding-left:15px; font-size:16px; color:#222; font-weight:normal;">@Model.SiteName</td>
+                                            </tr>
+                                            <tr>
+                                                <td align="left" valign="top" style="padding-left:15px; font-size:16px; color:#222; font-weight:500;"></td>
+                                                <td align="left" valign="top" style="font-size:16px; color:#222; font-weight:500;"></td>
+                                                <td align="left" valign="top" style="padding-left:15px; font-size:16px; color:#222; font-weight:normal;">@Model.ShipToAddress1</td>
+                                            </tr>
+                                            @{
+                                                if (Model.ShipToAddress2 != "")
+                                                {
+                                                    <tr>
+                                                        <td align="left" valign="top" style="padding-left:15px; font-size:16px; color:#222; font-weight:500;"></td>
+                                                        <td align="left" valign="top" style="font-size:16px; color:#222; font-weight:500;"></td>
+                                                        <td align="left" valign="top" style="padding-left:15px; font-size:16px; color:#222; font-weight:normal;">@Model.ShipToAddress2</td>
+                                                    </tr>
+                                                }
+
+                                                if (Model.ShipToAddress3 != "")
+                                                {
+                                                    <tr>
+                                                        <td align="left" valign="top" style="padding-left:15px; font-size:16px; color:#222; font-weight:500;"></td>
+                                                        <td align="left" valign="top" style="font-size:16px; color:#222; font-weight:500;"></td>
+                                                        <td align="left" valign="top" style="padding-left:15px; font-size:16px; color:#222; font-weight:normal;">@Model.ShipToAddress3</td>
+                                                    </tr>
+                                                }
+                                            }
+
+
+                                            <tr>
+                                                <td align="left" valign="top" style="padding-left:15px; font-size:16px; color:#222; font-weight:500;"></td>
+                                                <td align="left" valign="top" style="font-size:16px; color:#222; font-weight:500;"></td>
+                                                <td align="left" valign="top" style="padding-left:15px; font-size:16px; color:#222; font-weight:normal;">@Model.ShipToAddressCity, @Model.ShipToAddressState, @Model.ShipToAddressPostCode</td>
+                                            </tr>
+                                            <tr>
+                                                <td align="left" valign="top" style="padding-left:15px; font-size:16px; color:#222; font-weight:500;"></td>
+                                                <td align="left" valign="top" style="font-size:16px; color:#222; font-weight:500;"></td>
+                                                <td align="left" valign="top" style="padding-left:15px; font-size:16px; color:#222; font-weight:normal;">@Model.ShipToAddressCountry</td>
+                                            </tr>
+                                        </table>
+                                    </td>
+
+                                    <td align="left" valign="top" style="font-size:14px; color:#737272; line-height:25px; font-weight:normal;">
+                                        <table width="333" border="0" cellspacing="0" cellpadding="0">
+                                            <tr>
+                                                <td width="130" align="left" valign="top" style="padding-left:15px; font-size:14px; color:#222; font-weight:500;"></td>
+                                                <td width="6" align="left" valign="top" style="font-size:14px; color:#222; font-weight:500;"></td>
+                                                <td width="334" align="left" valign="top" style="padding-left:15px; font-size:14px; color:#222; font-weight:normal;"></td>
+                                            </tr>
+                                            <tr>
+                                                <td align="left" valign="top" style="padding-left:15px; font-size:14px; color:#222; font-weight:500;"></td>
+                                                <td align="left" valign="top" style="font-size:14px; color:#222; font-weight:500;"></td>
+                                                <td align="left" valign="top" style="padding-left:15px; font-size:14px; color:#222; font-weight:normal;"></td>
+                                            </tr>
+                                            <tr>
+                                                <td align="left" valign="top" style="padding-left:15px; font-size:14px; color:#222; font-weight:500;"></td>
+                                                <td align="left" valign="top" style="font-size:14px; color:#222; font-weight:500;"></td>
+                                                <td align="left" valign="top" style="padding-left:15px; font-size:14px; color:#222; font-weight:normal;"></td>
+                                            </tr>
+                                            <tr>
+                                                <td align="left" valign="top" style="padding-left:15px; font-size:14px; color:#222; font-weight:500;"></td>
+                                                <td align="left" valign="top" style="font-size:14px; color:#222; font-weight:500;"></td>
+                                                <td align="left" valign="top" style="padding-left:15px; font-size:14px; color:#222; font-weight:normal;"></td>
+                                            </tr>
+                                            <tr>
+                                                <td align="left" valign="top" style="padding-left:15px; font-size:14px; color:#222; font-weight:500;"></td>
+                                                <td align="left" valign="top" style="font-size:14px; color:#222; font-weight:500;"></td>
+                                                <td align="left" valign="top" style="padding-left:15px; font-size:14px; color:#222; font-weight:normal;"></td>
+                                            </tr>
+                                            <tr>
+                                                <td align="left" valign="top" style="padding-left:15px; font-size:14px; color:#222; font-weight:500;"></td>
+                                                <td align="left" valign="top" style="font-size:14px; color:#222; font-weight:500;"></td>
+                                                <td align="left" valign="top" style="padding-left:15px; font-size:14px; color:#222; font-weight:normal;"></td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td align="left" valign="top" height="1" style="border-bottom:1px solid #222;"></td>
+        </tr>
+        <tr>
+            <td align="left" valign="top" height="10"><img src="../Content/images/space.png" alt="" /></td>
+        </tr>
+
+        <tr>
+            <td align="left" valign="top">
+                <table width="1000" border="0" cellspacing="0" cellpadding="0">
+                    <tr>
+                        <td align="left" valign="top">
+                            <table width="1000" border="0" cellspacing="0" cellpadding="0" >
+                                <tr style="background:#fff;">
+                                    <th width="50" align="right" valign="middle" height="40" scope="col" style="padding-right:10px;border-right:1px solid #fff; font-size:16px; color:#222; line-height:40px; font-weight:600; border-bottom:1px solid #222;">Line #</th>
+                                    <th width="100" align="left" valign="middle" height="40" scope="col" style="border-right:1px solid #fff; font-size:16px; color:#222; line-height:40px; font-weight:600; border-bottom:1px solid #222;">Item #</th>
+                                    <th width="229" align="left" valign="middle" height="40" scope="col" style="border-right:1px solid #fff; font-size:16px; color:#222; line-height:40px; font-weight:600; padding-left:15px; border-bottom:1px solid #222;">Description</th>
+                                    <th width="100" align="left" valign="middle" height="40" scope="col" style="border-right:1px solid #fff; font-size:16px; color:#222; line-height:40px; font-weight:600; border-bottom:1px solid #222;">VendorItem #</th>
+                                    <th width="100" align="right" valign="middle" height="40" scope="col" style="border-right:1px solid #fff; font-size:16px; color:#222; line-height:40px; font-weight:600; border-bottom:1px solid #222;">Qty</th>
+                                    <th width="100" align="right" valign="middle" height="40" scope="col" style="border-right:1px solid #fff; font-size:16px; color:#222; line-height:40px; font-weight:600; border-bottom:1px solid #222;">UOM</th>
+                                    <th width="100" align="right" valign="middle" height="40" scope="col" style="border-right:1px solid #fff; font-size:16px; color:#222; line-height:40px; font-weight:600; border-bottom:1px solid #222;">Price</th>
+                                    <th width="100" align="right" valign="middle" height="40" scope="col" style="padding-right:10px;border-right:1px solid #fff; font-size:16px; color:#222; line-height:40px; font-weight:600; border-bottom:1px solid #222;">SubTotal</th>
+                                    <th width="100" align="left" valign="middle" height="40" scope="col" style="font-size:16px; color:#222; line-height:40px; font-weight:600; border-bottom:1px solid #222;">DueDate</th>
+                                </tr>
+                                @{
+                                    int i = 2;
+                                    decimal total = 0;
+                                    decimal linetot = 0;
+                                    foreach (var item in Model.poImportLineItemsModel)
+                                    {
+                                       
+                                        <tr>
+                                            <td align="right" valign="top" height="15" style="padding-right:10px; border-right:1px solid #fff; font-size:14px; color:#222; line-height:25px; font-weight:normal;">@item.LineNumber</td>
+                                            <td align="left" valign="top" height="15" style="border-right:1px solid #fff; font-size:16px; color:#222; line-height:25px; font-weight:normal;">@item.PartClientLookupId</td>
+                                            <td align="left" valign="top" height="15" style="border-right:1px solid #fff; font-size:16px; color:#222; line-height:25px; font-weight:normal; padding-left:15px;">@item.Description</td>
+                                            <td align="left" valign="top" height="15" style="border-right:1px solid #fff; font-size:16px; color:#222; line-height:25px; font-weight:normal;">@item.PartNumber</td>
+                                            <td align="right" valign="top" height="15" style="border-right:1px solid #fff; font-size:16px; color:#222; line-height:25px; font-weight:normal;">@String.Format("{0:n2}", item.PurchaseQuantity)</td>
+                                            <td align="right" valign="top" height="15" style="border-right:1px solid #fff; font-size:16px; color:#222; line-height:25px; font-weight:normal;">@item.PurchaseUOM</td>
+                                            <td align="right" valign="top" height="15" style="border-right:1px solid #fff; font-size:16px; color:#222; line-height:25px; font-weight:normal;">@String.Format("{0:n2}", item.PurchaseCost)</td>
+                                            <td align="right" valign="top" height="15" style="padding-right:10px; border-right:1px solid #fff; font-size:16px; color:#222; line-height:25px; font-weight:normal;">@String.Format("{0:n2}", item.LineTotal)</td>
+                                            <td align="left" valign="top" height="15" style="font-size:16px; color:#222; line-height:25px;">@String.Format("{0:dd-MMM-yyyy}", item.EstimatedDelivery)</td>
+                                        </tr>
+                                        i = i + 1;
+                                        total = total + Convert.ToDecimal(item.LineTotal);
+                                    }
+                                }
+                               
+                                <tr>
+                                    <td height="30" colspan="6" align="center" valign="middle" style="border-right:1px solid #fff; border-top:1px solid #222;"></td>
+                                    <td height="30" colspan="2" align="right" valign="middle" style="border-right:1px solid #fff;border-top:1px solid #222; font-size:16px; color:#222; line-height:40px;  font-weight:600; border-bottom:1px solid #fff; padding-right:15px;">SubTotal</td>
+                                    <td align="right" valign="middle" height="30" style="font-size:16px; color:#000; line-height:30px; font-weight:500; border-bottom:1px solid #fff;border-top:1px solid #222; border-right:1px solid #fff; padding-right:15px;">@String.Format("{0:n2}", total)</td>
+                                </tr>
+                                <tr>
+                                    <td height="30" colspan="6" align="center" valign="middle" style="border-right:1px solid #fff;"></td>
+                                    <td height="30" colspan="2" align="right" valign="middle" style="border-right:1px solid #fff; font-size:16px; color:#222; line-height:20px;  font-weight:600; border-bottom:1px solid #fff; padding-right:15px;">TotalTax</td>
+                                    <td align="right" valign="middle" height="30" style="font-size:16px; color:#000; line-height:30px; font-weight:500; border-bottom:1px solid #fff; border-right:1px solid #fff; padding-right:15px;">0</td>
+                                </tr>
+                                <tr>
+                                    <td height="30" colspan="6" align="center" valign="middle" style="border-right:1px solid #fff;"></td>
+                                    <td height="30" colspan="2" align="right" valign="middle" style="border-right:1px solid #fff; font-size:16px; color:#222; line-height:20px;  font-weight:600; border-bottom:1px solid #fff; padding-right:15px;">TotalFreight</td>
+                                    <td align="right" valign="middle" height="30" style="font-size:16px; color:#000; line-height:30px; font-weight:500; border-bottom:1px solid #fff; border-right:1px solid #fff; padding-right:15px;">0</td>
+                                </tr>
+                                <tr>
+                                    <td height="30" colspan="6" align="center" valign="middle" style="border-right:1px solid #fff;"></td>
+                                    <td height="30" colspan="2" align="right" valign="middle" style="border-right:1px solid #fff; font-size:16px; color:#222; line-height:20px;  font-weight:600; border-bottom:1px solid #fff; padding-right:15px;">Total PO Amount</td>
+                                    <td align="right" valign="middle" height="30" style="font-size:16px; color:#000; line-height:30px; font-weight:500; border-bottom:1px solid #fff; border-right:1px solid #fff; padding-right:15px;">@String.Format("{0:n2}", total)</td>
+                                </tr>
+                                <tr>
+                                    <td height="30" colspan="6" align="center" valign="middle" style="border-right:1px solid #fff;"></td>
+                                    <td height="30" colspan="2" align="right" valign="middle" style="border-right:1px solid #fff; font-size:16px; color:#222; line-height:20px;  font-weight:600; border-bottom:1px solid #fff; padding-right:15px;">Currency</td>
+                                    <td align="right" valign="middle" height="30" style="font-size:16px; color:#000; line-height:30px; font-weight:500; border-bottom:1px solid #fff; border-right:1px solid #fff; padding-right:15px;">@Model.Currency</td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>       
+    </table>
+
+</body>
+</html>
+
