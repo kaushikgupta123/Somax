@@ -1,0 +1,35 @@
+﻿@model Admin.Models.KnowledgebaseCombined
+<nav id="sidebar">
+    <div id="dismiss">
+        <i class="fa fa-close"></i>
+    </div>
+    <div class="sidebar-header">
+        <h3><i class="fa fa-filter" style="position: relative; top: -2px;"></i>&nbsp; @Model.Loc.Where(a => a.ResourceId == "globalFilter").FirstOrDefault().Value.ToString() <span id="spnControlCounter">0</span></h3>
+        <button type="button" class="btn btn-blue filterSearch" id="btnKnbDataAdvSrch"> @Model.Loc.Where(a => a.ResourceId == "GlobalApply").FirstOrDefault().Value.ToString()</button>
+    </div>
+    <div class="sidebar-content" id="advsearchsidebar">
+        <form action="#" method="post">
+            <div class="form-group">
+                <label for="Title" id="lblTitle">@Model.Loc.Where(a => a.ResourceId == "spnTitle").FirstOrDefault().Value.ToString() </label>
+                <input type="text" class="form-control search adv-item" id="Title" autocomplete="off" style="color:#333;">
+            </div>
+            <div class="form-group">
+                <label for="ddlCategory" id="lblCategory">@Model.Loc.Where(a => a.ResourceId == "spnCategory").FirstOrDefault().Value.ToString() </label>
+                @Html.DropDownListFor(m => m.KBTopicsModel.Category, Model.KBTopicsModel.KBTopicsCategoryList, "--Select--", new { @class = "form-control search adv-item select2picker", style = "width:100%;", id = "ddlCategory" })
+            </div>
+
+            <div class="form-group">
+                <label for="ddlUser" id="lblddlUser">@Model.Loc.Where(a => a.ResourceId == "spnTags").FirstOrDefault().Value.ToString() </label>
+                @Html.TextBoxFor(m => m.KBTopicsModel.KbTopicsTags, new { @class = "form-control search adv-item som-tagify", style = "width:100%;", id = "ddlUser" })
+            </div>
+            <div class="form-group">
+                <label for="Folder" id="lblFolder">@Model.Loc.Where(a => a.ResourceId == "spnFolder").FirstOrDefault().Value.ToString() </label>
+                <input type="text" class="form-control search adv-item" id="Folder" autocomplete="off" style="color:#333;">
+            </div>
+
+        </form>
+    </div>
+</nav>
+
+
+

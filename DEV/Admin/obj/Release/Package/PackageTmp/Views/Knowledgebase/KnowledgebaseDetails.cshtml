@@ -1,0 +1,134 @@
+﻿@model Admin.Models.KnowledgebaseCombined
+@using Admin.Common.Constants
+
+<script async charset="utf-8" src="//cdn.embedly.com/widgets/platform.js"></script>
+
+
+<div class="m-subheader fixedDiv1">
+    <div class="new-m-subheader">
+        <div class="filterDescription">
+            <a href="javascript:void(0)" id="linkToSearch"><span id="spnlinkToSearch"></span></a> - @Model.KBTopicsModel.KBTopicsId
+        </div>
+
+        <div class="ActionBttnArea">
+            <button type="button" class="btn newBtn-add AddKBTopics innerBtn pull-left" id="AddKbTopics" title="Add Topic"><i class="fa fa-plus"></i></button>
+            <div style="clear:both;"></div>
+        </div>
+        <div style="clear:both;"></div>
+    </div>
+</div>
+<div class="pushDiv1"></div>
+
+<div class="row">
+
+    <div class="col-xl-12">
+        <div class="row">
+            <div class="col-xl-12" id="btnnblock">
+
+                <div class="tabsArea nobg" id="Knowledgebase" style="display:block;">
+                    <div class="row">
+                        <div class="col-xl-12">
+                            <div class="m-portlet" id="m_portlet" style="padding:0 15px 15px 15px;">
+                                <ul class="listView">
+                                    <li>
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnTitle").FirstOrDefault().Value.ToString() :</span>
+                                        <span class="inputText">@Model.KBTopicsModel.Title</span>
+                                    </li>
+                                    <li style="height:auto;">
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnCategory").FirstOrDefault().Value.ToString() :</span>
+                                        <span class="inputText description-span">@Model.KBTopicsModel.CategoryName</span>
+                                        <div style="clear:both;"></div>
+                                    </li>
+                                    <li style="height:auto;">
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnFolder").FirstOrDefault().Value.ToString() :</span>
+                                        <span class="inputText description-span">@Model.KBTopicsModel.Folder</span>
+                                        <div style="clear:both;"></div>
+                                    </li>
+                                    <li style="height:auto;">
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString() :</span>
+                                        <span class="inputText description-span descspan">@Html.Raw(Model.KBTopicsModel.Description)</span>
+                                        <div style="clear:both;"></div>
+                                    </li>
+                                    <li style="height:auto;">
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnTags").FirstOrDefault().Value.ToString() :</span>
+                                        <span class="inputText description-span">@Model.KBTopicsModel.Tags</span>
+                                        <div style="clear:both;"></div>
+                                    </li>
+
+
+                                </ul>
+                                <div class="editBttn">
+
+                                    <a style="cursor:pointer" id="editKbTopics"><button type="button" class="btn btn-blue"><i class="fa fa-pencil" style="margin-top:-3px;"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalEdit").FirstOrDefault().Value.ToString()</button></a>
+
+                                </div>
+                                <div style="clear:both;"></div>
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div style="clear:both;"></div>
+</div>
+@Html.HiddenFor(m => m.Mode)
+@Html.HiddenFor(m => m.KBTopicsModel.KBTopicsId)
+
+
+<script>
+    $(document).ready(function () {
+        $('form').each(function () {
+            if ($(this).data('validator')) {
+                $(this).data('validator').settings.ignore = ".ck";
+            }
+        });
+    });
+
+
+
+</script>
+
+<style>
+    .filterDescription {
+        width: auto;
+        float: left;
+        font-size: 1.2rem;
+        color: #000;
+        font-weight: 500;
+        line-height: 33px;
+    }
+
+        .filterDescription a {
+            color: #36a3f7;
+            text-decoration: none !important;
+        }
+
+    .descspan {
+        height: auto !important;
+    }
+    @@media screen and (max-width: 479px) {
+        .filterDescription {
+            float: none !important;
+        }
+        .ActionBttnArea {
+            float: left !important;
+            margin-top: 8px !important;
+        }
+    }
+    .media{
+        display:block !important;
+    }
+    .descspan table, tr, th, td {
+        border: 1px solid black;
+        border-top: 1px solid black !important;
+    }
+    .descspan img {
+        width: auto;
+        max-width: 100%;
+        height: auto;
+    }
+</style>

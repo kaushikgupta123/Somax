@@ -1,0 +1,474 @@
+﻿@model Admin.Models.Client.ClientVM
+
+<link href="~/Scripts/Metronic/assets/demo/default/base/style_newCustom.css" rel="stylesheet" />
+
+
+<div class="m-subheader fixedDiv1">
+    <div class="new-m-subheader">
+            
+        <div class="filterDescription">
+            <a href="javascript:void(0)" id="linkToSearch"><span id="spnlinkToSearch"></span></a>
+                
+            - @Model.ClientModel.ClientId
+        </div>
+
+        <div class="ActionBttnArea">
+            <div class="actionDiv pull-left" id="ad1">
+                <div class="btn-group bootstrap-select m-datatable__pager-size dropup show selectDrop actionNewDrop" style="margin-right:0;">
+                    <div class="btn-group bootstrap-select m-datatable__pager-size" style="width: 100%;">
+                        <button type="button" class="btn dropdown-toggle bs-placeholder btn-default" data-toggle="dropdown" role="button" title=""><span class="filter-option pull-left">@Model.Loc.Where(a => a.ResourceId == "globalAction").FirstOrDefault().Value.ToString()</span>&nbsp;<span class="bs-caret"><span class="caret"></span></span></button>
+                        <div class="dropdown-menu open" role="combobox">
+                            <ul class="dropdown-menu inner" role="listbox" aria-expanded="false">
+                                @if (Model.ClientModel.Status == "Inactive")
+                                {
+                                    <li id="actinctivateclient"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnGlobalActivate").FirstOrDefault().Value.ToString()</a></li>
+                                }
+                                @if (Model.ClientModel.Status == "Active")
+                                {
+                                    <li id="actinctivateclient"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnGlobalInactivate").FirstOrDefault().Value.ToString()</a></li>
+                                }
+                            </ul>
+                            <ul class="dropdown-menu inner" role="listbox" aria-expanded="false">
+                                <li id="actionSiteMaintainence">
+                                    <a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnWebSiteMaintenanceMessage").FirstOrDefault().Value.ToString() </a>
+                                </li>
+                            </ul>
+                            <ul class="dropdown-menu inner" role="listbox" aria-expanded="false">
+                                <li id="actionMessageSelectedClient">
+                                    <a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnMessageSelectedClient").FirstOrDefault().Value.ToString() </a>
+                                </li>
+                            </ul>
+                            <ul class="dropdown-menu inner" role="listbox" aria-expanded="false">
+                                <li id="actionMessageAllClients">
+                                    <a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnMessageAllClients").FirstOrDefault().Value.ToString() </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <button type="button" class="btn newBtn-add AddClient pull-left" id="AddClient" title="Add Client "><i class="fa fa-plus"></i></button>
+
+            <div style="clear:both;"></div>
+        </div>
+        
+    </div>
+</div>
+
+<div class="pushDiv1" style="height:76px !important;"></div>
+<div class="row">
+    <div class="col-xl-2">
+        <div class="m-portlet">
+            <div class="sideMenuArea nobg">
+                <ul class="vtabs" id="detmaintab">
+                    <li class="tablinks active" id="clientSidebar" onclick="openCity(event, 'ClientOverview')"><a href="#ClientOverview">@Model.Loc.Where(a => a.ResourceId == "globalOverview").FirstOrDefault().Value.ToString()</a></li>
+
+                    <li id="clientsites" class="tablinks" onclick="openCity(event, 'ClientSites')"><a href="#ClientSites">@Model.Loc.Where(a => a.ResourceId == "spnSites").FirstOrDefault().Value.ToString()</a></li>
+
+                </ul>
+            </div>
+
+            <div class="selectTabs" id="selectTabs">
+                <select class="form-control" id="colorselector">
+                    <option value="ClientOverview">@Model.Loc.Where(a => a.ResourceId == "globalOverview").FirstOrDefault().Value.ToString()</option>
+
+                    <option value="ClientSites">@Model.Loc.Where(a => a.ResourceId == "spnSites").FirstOrDefault().Value.ToString()</option>
+
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-10">
+        <div class="row">
+            <div class="col-xl-12" id="btnnblock">
+                <div class="tabsArea nobg" id="ClientOverview" style="display:block;">
+                    <div class="row">
+                        <div class="col-xl-12">
+
+                            <div class="m-portlet" id="m_portlet" style="padding:10px;">
+                                <div>
+                                    <ul class="listView flexlist">
+                                        <li>
+                                            <span class="label">@Html.LabelFor(m => m.ClientModel.ClientId) :</span>
+                                            <span class="inputText">@Model.ClientModel.ClientId</span>
+                                        </li>
+                                        <li>
+                                            <span class="label">@Html.LabelFor(m => m.ClientModel.Name) :</span>
+                                            <span class="inputText">@Model.ClientModel.Name</span>
+                                        </li>
+                                        <li>
+                                            <span class="label">@Html.LabelFor(m => m.ClientModel.Contact) :</span>
+                                            <span class="inputText">@Model.ClientModel.Contact</span>
+                                        </li>
+                                        <li>
+                                            <span class="label">@Html.LabelFor(m => m.ClientModel.Email) :</span>
+                                            <span class="inputText">@Model.ClientModel.Email</span>
+                                        </li>
+                                        <li>
+                                            <span class="label">@Html.LabelFor(m => m.ClientModel.BusinessType) :</span>
+                                            <span class="inputText">@Model.ClientModel.BusinessType</span>
+                                        </li>
+                                        <li>
+                                            <span class="label">@Html.LabelFor(m => m.ClientModel.PackageLevel) :</span>
+                                            <span class="inputText">@Model.ClientModel.PackageLevel</span>
+                                        </li>
+                                        <li>
+                                            <span class="label">@Html.LabelFor(m => m.ClientModel.Status) :</span>
+                                            <span class="inputText">@Model.ClientModel.Status</span>
+                                        </li>
+                                        <li>
+                                            <span class="label">@Model.Loc.Where(a => a.ResourceId == "globalCreateDate").FirstOrDefault().Value.ToString() :</span>
+                                            <span class="inputText">
+                                                @if (Model.ClientModel.CreateDate.HasValue && Model.ClientModel.CreateDate.Value != default(DateTime))
+                                                {
+                                                    @Model.ClientModel.CreateDate.Value.ToString("MM/dd/yyyy", CultureInfo.InvariantCulture)
+                                                }
+                                            </span>
+                                        </li>
+                                        <li>
+                                            <span class="label">@Html.LabelFor(m => m.ClientModel.SiteControl) :</span>
+                                            <span class="inputText">@Html.CheckBoxFor(m => m.ClientModel.SiteControl, new { @class = "form-control m-input", onclick = "return false;", @style = "color:black; width: auto; margin-top: 12px;" })</span>
+                                        </li>
+                                        <li>
+                                            <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnClientAppUsers").FirstOrDefault().Value.ToString() :</span>
+                                            <span class="inputText">@Model.ClientModel.AppUsers</span>
+                                        </li>
+                                        <li>
+                                            <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnClientMaxAppUsers").FirstOrDefault().Value.ToString() :</span>
+                                            <span class="inputText">@Model.ClientModel.MaxAppUsers</span>
+                                        </li>
+                                        <li>
+                                            <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnClientWorkRequestUsers").FirstOrDefault().Value.ToString() :</span>
+                                            <span class="inputText">@Model.ClientModel.WorkRequestUsers</span>
+                                        </li>
+                                        <li>
+                                            <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnClientMaxWorkRequestUsers").FirstOrDefault().Value.ToString() :</span>
+                                            <span class="inputText">@Model.ClientModel.MaxWorkRequestUsers</span>
+                                        </li>
+                                        <li>
+                                            <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnClientSanitationUsers").FirstOrDefault().Value.ToString() :</span>
+                                            <span class="inputText">@Model.ClientModel.SanitationUsers</span>
+                                        </li>
+                                        <li>
+                                            <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnClientMaxSanitationUsers").FirstOrDefault().Value.ToString() :</span>
+                                            <span class="inputText">@Model.ClientModel.MaxSanitationUsers</span>
+                                        </li>
+                                        <li>
+                                            <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnClientProductionUsers").FirstOrDefault().Value.ToString() :</span>
+                                            <span class="inputText">@Model.ClientModel.ProdAppUsers</span>
+                                        </li>
+                                        <li>
+                                            <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnClientMaxProductionUsers").FirstOrDefault().Value.ToString() :</span>
+                                            <span class="inputText">@Model.ClientModel.MaxProdAppUsers</span>
+                                        </li>
+                                        <li>
+                                            <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnSites").FirstOrDefault().Value.ToString() :</span>
+                                            <span class="inputText">@Model.ClientModel.Sites</span>
+                                        </li>
+                                        <li>
+                                            <span class="label">@Html.LabelFor(m => m.ClientModel.MaxSites) :</span>
+                                            <span class="inputText">@Model.ClientModel.MaxSites</span>
+                                        </li>
+                                        <li>
+                                            <span class="label">@Model.Loc.Where(a => a.ResourceId == "globalLocalisation").FirstOrDefault().Value.ToString() :</span>
+                                            <span class="inputText">@Model.ClientModel.Localization</span>
+                                        </li>
+                                        <li>
+                                            <span class="label">@Html.LabelFor(m => m.ClientModel.MaxAttempts) :</span>
+                                            <span class="inputText">@Model.ClientModel.MaxAttempts</span>
+                                        </li>
+                                        <li>
+                                            <span class="label">@Html.LabelFor(m => m.ClientModel.MaxTimeOut) :</span>
+                                            <span class="inputText">@Model.ClientModel.MaxTimeOut</span>
+                                        </li>
+                                        <li class="content-col">
+                                            <span class="label">@Html.LabelFor(m => m.ClientModel.ConnectionString) :</span>
+                                            <span class="inputText" style="height: 40px !important; overflow: scroll !important;">@Model.ClientModel.ConnectionString</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="editBttn">
+                                    <button type="button" id="btnclientedit" class="btn btn-blue"><i class="fa fa-pencil" style="margin-top:-3px;"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalEdit").FirstOrDefault().Value.ToString()</button>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+
+
+
+                <div class="tabsArea nobg" id="ClientSites" style="display:none;">
+                    <div class="m-portlet" id="m_portlet" style="padding:10px;">
+                        <div class="table-responsive">
+                            <table id="ClientSiteTable" class="eqpDtlTbl row-border custom-sort" style="width:100%;">
+                                <thead>
+                                    <tr>
+                                        <th>@Model.Loc.Where(a => a.ResourceId == "globalSiteID").FirstOrDefault().Value.ToString()</th>
+                                        <th>@Model.Loc.Where(a => a.ResourceId == "spnSiteNameGlobal").FirstOrDefault().Value.ToString()</th>
+                                        <th>@Model.Loc.Where(a => a.ResourceId == "spnStatus").FirstOrDefault().Value.ToString()</th>
+                                        <th>@Model.Loc.Where(a => a.ResourceId == "GlobalAPM").FirstOrDefault().Value.ToString()</th>
+                                        <th>@Model.Loc.Where(a => a.ResourceId == "GlobalCMMS").FirstOrDefault().Value.ToString()</th>
+                                        <th>@Model.Loc.Where(a => a.ResourceId == "spnGlobalSanitation").FirstOrDefault().Value.ToString()</th>
+                                        <th width="17%" style="text-align:center !important;">@Model.Loc.Where(a => a.ResourceId == "globalAction").FirstOrDefault().Value.ToString()</th>
+                                    </tr>
+                                </thead>
+
+                            </table>
+                        </div>
+                        
+                        <div style="clear:both;"></div>
+                    </div>
+                    <div class="row">
+                        <div id="SiteDetail" class="col-md-6">
+                            
+                        </div>
+                        <div id="SiteSubscription" class="col-md-6">
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div style="clear:both;"></div>
+    <div class="col-xl-12">
+        <div class="tabsArea nobg" id="ClientActivity" style="margin-top:20px;">
+            <div class="m-portlet" id="m_portlet" style="padding:15px; margin-bottom:0;">
+                <div class="m-portlet__head" style="padding:0; height:2.5rem; margin-bottom:15px;">
+                    <div class="m-portlet__head-caption">
+                        <div class="m-portlet__head-title">
+                            <h3 class="m-portlet__head-text" style="vertical-align:top;">
+                                @Model.Loc.Where(a => a.ResourceId == "GlobalActivity").FirstOrDefault().Value.ToString()
+                            </h3>
+                        </div>
+                    </div>
+                    <div style="clear:both;"></div>
+                </div>
+                
+                <div style="clear:both;"></div>
+                <div class="table-responsive">
+                    <table id="ActivityTable" class="eqpDtlTbl row-border custom-sort" style="width:100%;">
+                        <thead>
+                            <tr>
+                                <th class="CreateDate">@Model.Loc.Where(a => a.ResourceId == "GlobalDate").FirstOrDefault().Value.ToString()</th>
+                                <th class="UserInfoId">@Model.Loc.Where(a => a.ResourceId == "spnGlobalUserInfoID").FirstOrDefault().Value.ToString()</th>
+                                <th class="SessionId">@Model.Loc.Where(a => a.ResourceId == "spnGlobalSessionID").FirstOrDefault().Value.ToString()</th>
+                                <th class="Browser">@Model.Loc.Where(a => a.ResourceId == "spnGlobalBrowser").FirstOrDefault().Value.ToString()</th>
+                                <th class="IPAddress">@Model.Loc.Where(a => a.ResourceId == "spnAddress").FirstOrDefault().Value.ToString()</th>
+
+                            </tr>
+                        </thead>
+                        
+                    </table>
+                </div>
+                <div style="clear:both"></div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-12">
+        <div class="tabsArea nobg" id="ClientEventLogItem" style="margin-top:20px;">
+            <div class="m-portlet" id="m_portlet" style="padding:15px; margin-bottom:0;">
+                <div class="m-portlet__head" style="padding:0; height:2.5rem; margin-bottom:15px;">
+                    <div class="m-portlet__head-caption">
+                        <div class="m-portlet__head-title">
+                            <h3 class="m-portlet__head-text" style="vertical-align:top;">
+                                @Model.Loc.Where(a => a.ResourceId == "spnEventLog").FirstOrDefault().Value.ToString()
+                            </h3>
+                        </div>
+                    </div>
+                    
+                    <div style="clear:both;"></div>
+                </div>
+                
+                <div style="clear:both;"></div>
+                <div class="table-responsive">
+                    <table id="ClientEventLogTable" class="eqpDtlTbl row-border custom-sort" style="width:100%;">
+                        <thead>
+                            <tr>
+                                <th class="TransactionDate">@Model.Loc.Where(a => a.ResourceId == "spnDate").FirstOrDefault().Value.ToString()</th>
+                                <th class="EventlogId">@Model.Loc.Where(a => a.ResourceId == "spnEventID").FirstOrDefault().Value.ToString()</th>
+                                <th class="SiteName">@Model.Loc.Where(a => a.ResourceId == "spnSiteGlobal").FirstOrDefault().Value.ToString()</th>
+                                <th class="Event">@Model.Loc.Where(a => a.ResourceId == "GlobalEvent").FirstOrDefault().Value.ToString()</th>
+                                <th class="Comments">@Model.Loc.Where(a => a.ResourceId == "spnLogComment").FirstOrDefault().Value.ToString()</th>
+
+                            </tr>
+                        </thead>
+                        
+                    </table>
+                </div>
+
+
+                <div style="clear:both"></div>
+            </div>
+        </div>
+    </div>
+    
+    
+    </div>
+<div id="WebSiteMainteneceMessageGrid"></div>
+<div id="MessageSelectedClientMessageGrid"></div>
+<div id="MessageAllClientMessageGrid"></div>
+    @Html.HiddenFor(m => m.ClientModel.ClientId, new { id = "ClientId" })
+    @Html.HiddenFor(m => m.ClientModel.Status, new { id = "ClientStatus" })
+    <style type="text/css">
+        .filterDescription {
+            width: auto;
+            float: left;
+            font-size: 1.2rem;
+            color: #000;
+            font-weight: 500;
+            line-height: 33px;
+        }
+
+        .filterDescription a {
+            color: #36a3f7;
+            text-decoration: none !important;
+        }
+        @@media only screen and (max-width: 1365px) and (min-width: 1200px) {
+            #popupExport {
+                right: 170px !important;
+            }
+        }
+
+        @@media only screen and (max-width: 639px) and (min-width: 568px) {
+            .actionBar div.pull-right {
+                float: right;
+                margin-top: 0;
+            }
+        }
+
+        @@media only screen and (max-width: 767px) and (min-width: 640px) {
+            .actionBar div.pull-left {
+                width: auto;
+            }
+
+            .actionBar div.pull-right {
+                width: auto;
+                float: right;
+                margin-top: 0;
+            }
+        }
+
+        @@media only screen and (width:1360px) {
+            #popupExport {
+                right: 171px !important;
+            }
+        }
+
+        @@media screen and (max-width: 567px) {
+            #shortDrop {
+                margin-top: 0;
+                margin-right: 10px !important;
+            }
+        }
+
+        @@media screen and (max-width: 410px) {
+            #shortDrop {
+                margin-top: 10px !important;
+                margin-right: 0px !important;
+            }
+        }
+
+        @@media only screen and (max-width: 359px) and (min-width: 320px) {
+            #liCustomize {
+                margin-top: 0px !important;
+                margin-left: 0px !important;
+            }
+        }
+        .maskaction { /* create are mask */
+            position: fixed;
+            top: 0;
+            left: 0;
+            background: rgba(0,0,0,0.6);
+            z-index: 500;
+            width: 100%;
+            height: 100%;
+            display: none;
+            transition: all 0.3s;
+        }
+
+        .actionbtndiv { /* create are mask */
+            width: 195px;
+            /* margin: 0 auto; */
+            background: white;
+            /* color: black; */
+            padding: 10px;
+            position: sticky;
+            /*top: 40px;*/
+            right: 110px !important;
+            z-index: 1000;
+            /* display: none; */
+            border-radius: 3px;
+            /* box-shadow: 3px 3px 5px rgb(0 0 0 / 30%); */
+            /* transition: all 0.3s; */
+            display: block;
+            /*height:74px;*/
+            /*overflow:scroll;*/
+            /*margin-top:-40px;*/
+        }
+
+        .actionbtndiv .btn-blue {
+            width: 100%;
+            float: none;
+            margin-bottom: 2px;
+        }
+
+        .content-col {
+            height: 100% !important;
+            overflow: hidden;
+        }
+        .content-col span.inputText {
+            line-height: 25px !important;
+            padding: 10px 0;
+            height: 100% !important;
+            word-break: break-all !important;
+            text-overflow: inherit !important;
+            white-space: normal !important;
+            overflow: hidden !important;
+        }
+
+        @@media(max-width:900px) {
+            .new-m-subheader {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                width: 100%;
+            }
+        }
+        .flexlist li {
+            height: auto;
+            display: flex;
+            padding-top: 10px;
+            padding-bottom: 10px;
+            min-height: 48px;
+            height: auto !important;
+        }
+
+
+
+        .flexlist li .inputText input {
+            margin-top: 5px !important;
+        }
+
+        .flexlist li.content-col span.inputText {
+            padding-top: 0px !important;
+            padding-bottom: 0px !important;
+        }
+
+        ul.listView.flexlist li span.inputText, ul.listView.flexlist li span.label {
+            float: none !important;
+            height: auto !important;
+            line-height: 20px !important;
+        }
+
+        ul.listView.flexlist li span.inputText {
+            height: auto !important;
+        }
+
+        ul.listView.flexlist li span.label {
+            padding-right: 15px;
+        }
+</style>

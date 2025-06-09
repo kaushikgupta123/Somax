@@ -1,0 +1,288 @@
+﻿@model Admin.Models.Site.SiteVM
+
+<div class="m-subheader">
+    <div class="new-m-subheader">
+        <div class="PageTitle">
+            <div class="align-items-center separator">
+                <h3 class="m-subheader__title ">
+                    @Model.Loc.Where(a => a.ResourceId == "GlobalEditSite").FirstOrDefault().Value.ToString()
+                </h3>
+            </div>
+        </div>
+
+        <div class="NewBreadcrumbArea">
+            <div class="newBreadcrumb">
+                <ul>
+                    <li><a href="/Admin/Dashboard/Dashboard">&nbsp;</a></li>
+                    <li><a href="/Admin/Site/Index?page=Sites">@Model.Loc.Where(a => a.ResourceId == "globalSearch").FirstOrDefault().Value.ToString()</a></li>
+                    <li class="active">@Model.Loc.Where(a => a.ResourceId == "GlobalEditSite").FirstOrDefault().Value.ToString()</li>
+                </ul>
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+        <div style="clear:both;"></div>
+    </div>
+</div>
+
+@Html.Partial("_ErrorDiv")
+
+@using (Ajax.BeginForm("AddorEditSite", "Site", new AjaxOptions { HttpMethod = "Post", OnSuccess = "SiteAddEditOnSuccess", OnBegin = "onLoginBegin", OnFailure = "onLoginFailure" }, new { enctype = "multipart/form-data", id = "sitepaddform" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="row">
+        <div class="col-xl-3">
+            <div class="m-portlet">
+                <div class="sideMenuArea nobg">
+                    <ul class="vtabs" id="detmaintab">
+                        <li id="SiteInformationtab" class="active"><a href="#SiteInformation">@Model.Loc.Where(a => a.ResourceId == "GlobalSiteInformation").FirstOrDefault().Value.ToString()</a></li>
+                        <li id="AddressInformationtab"><a href="#AddressInformation">@Model.Loc.Where(a => a.ResourceId == "GlobalAddressInformation").FirstOrDefault().Value.ToString()</a></li>
+                        <li id="SystemInformationtab"><a href="#SystemInformation">@Model.Loc.Where(a => a.ResourceId == "GlobalSystemInformation").FirstOrDefault().Value.ToString()</a></li>
+                    </ul>
+                </div>
+
+                <div class="selectTabs" id="selectTabs">
+                    <select class="form-control" id="colorselector">
+                        <option value="SiteInformation">@Model.Loc.Where(a => a.ResourceId == "GlobalSiteInformation").FirstOrDefault().Value.ToString()</option>
+                        <option value="AddressInformation">@Model.Loc.Where(a => a.ResourceId == "GlobalAddressInformation").FirstOrDefault().Value.ToString()</option>
+                        <option value="SystemInformation">@Model.Loc.Where(a => a.ResourceId == "GlobalSystemInformation").FirstOrDefault().Value.ToString()</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-9">
+            <div class="row">
+                <div class="col-xl-12" id="btnnblock">
+                    <div class="m-portlet" id="m_portlet" style="padding:15px;">
+                        <div class="bottomBlock">
+                            <div class="tabsArea nobg" id="SiteInformation" style="display:block;">
+                                <ul class="listView nobrd">
+                                    <li>
+                                        <span class="label" id="spnClientName">@Model.Loc.Where(a => a.ResourceId == "GlobalClient").FirstOrDefault().Value.ToString()</span>
+                                        <span class="inputText">
+                                            @Html.TextBoxFor(m => m.SiteModel.ClientName, new { @class = "form-control search readonly", @readonly = "readonly", autocomplete = "off" })
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label" id="spnName">@Model.Loc.Where(a => a.ResourceId == "spnName").FirstOrDefault().Value.ToString()<small>*</small></span>
+                                        <span class="inputText">
+                                            @Html.ValidationMessageFor(m => m.SiteModel.Name, "", new { style = "display:none" })
+                                            @Html.TextBoxFor(m => m.SiteModel.Name, new { @class = "form-control search m-input", @style = "color:black", autocomplete = "off", maxlength = "63" })
+                                        </span>
+                                    </li>
+                                    <li style="height:auto;">
+                                        <span class="label" id="spnDescription">@Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString()<small>*</small></span>
+                                        <span class="inputText" style="height:auto;">
+                                            @Html.ValidationMessageFor(m => m.SiteModel.Description, "", new { style = "display:none" })
+                                            @Html.TextAreaFor(m => m.SiteModel.Description, new { @class = "form-control search", autocomplete = "off", maxlength = "255" })
+                                        </span>
+                                        <div style="clear:both;"></div>
+                                    </li>
+                                    <li>
+                                        <span class="label" id="spnLocalizationLanguage">@Model.Loc.Where(a => a.ResourceId == "GlobalLocalizationLanguage").FirstOrDefault().Value.ToString()<small>*</small></span>
+                                        <span class="inputText">
+                                            @Html.ValidationMessageFor(m => m.SiteModel.Localization, "", new { style = "display:none" })
+                                            @Html.DropDownListFor(m => m.SiteModel.Localization, Model.SiteModel.LocalizationList, "--Select--", new { @class = "form-control search select2picker", style = "width:100%;" })
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label" id="spnUIConfigurationLocation">@Model.Loc.Where(a => a.ResourceId == "GlobalUIConfigurationLocation").FirstOrDefault().Value.ToString()</span>
+                                        <span class="inputText">
+                                            @Html.TextBoxFor(m => m.SiteModel.UIConfigurationLocation, new { @class = "form-control search", @style = "color:black", autocomplete = "off", maxlength = "63" })
+                                        </span>
+                                    </li>
+
+                                    <li>
+                                        <span class="label" id="spnUIConfigurationCompany">@Model.Loc.Where(a => a.ResourceId == "GlobalUIConfigurationCompany").FirstOrDefault().Value.ToString()</span>
+                                        <span class="inputText">
+                                            @Html.TextBoxFor(m => m.SiteModel.UIConfigurationCompany, new { @class = "form-control search m-input", @style = "color:black", autocomplete = "off", maxlength = "63" })
+                                        </span>
+                                    </li>
+
+                                    <li>
+                                        <span class="label" id="spnStatus">@Model.Loc.Where(a => a.ResourceId == "GlobalStatus").FirstOrDefault().Value.ToString()<small>*</small></span>
+                                        <span class="inputText">
+                                            @Html.ValidationMessageFor(m => m.SiteModel.Status, "", new { style = "display:none" })
+                                            @Html.DropDownListFor(m => m.SiteModel.Status, Model.SiteModel.InactiveFlagList, "--Select--", new { @class = "form-control search select2picker", style = "width:100%;" })
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label" id="spnTimeZone"> @Model.Loc.Where(a => a.ResourceId == "GlobalTimeZone").FirstOrDefault().Value.ToString()<small>*</small></span>
+                                        <span class="inputText">
+                                            @Html.ValidationMessageFor(m => m.SiteModel.TimeZone, "", new { style = "display:none" })
+                                            @Html.DropDownListFor(m => m.SiteModel.TimeZone, Model.SiteModel.TimeZoneList, "--Select--", new { @class = "form-control search select2picker", style = "width:100%;" })
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label" id="spnAPM"> @Model.Loc.Where(a => a.ResourceId == "GlobalAPM").FirstOrDefault().Value.ToString()</span>
+                                        <span class="inputText">
+                                            @Html.CheckBoxFor(m => m.SiteModel.APM, new { @class = "form-control m-input", @style = "color:black; width: auto; margin-top: 12px;" })
+                                        </span>
+                                    </li>
+
+                                    <li>
+                                        <span class="label" id="spnCMMS"> @Model.Loc.Where(a => a.ResourceId == "GlobalCMMS").FirstOrDefault().Value.ToString()</span>
+                                        <span class="inputText">
+                                            @Html.CheckBoxFor(m => m.SiteModel.CMMS, new { @class = "form-control m-input", @style = "color:black; width: auto; margin-top: 12px;" })
+                                        </span>
+                                    </li>
+
+                                    <li>
+                                        <span class="label" id="spnSanitation">@Model.Loc.Where(a => a.ResourceId == "spnGlobalSanitation").FirstOrDefault().Value.ToString()</span>
+                                        <span class="inputText">
+                                            @Html.CheckBoxFor(m => m.SiteModel.Sanitation, new { @class = "form-control m-input", @style = "color:black; width: auto; margin-top: 12px;" })
+                                        </span>
+                                    </li>
+
+                                    <li>
+                                        <span class="label" id="spnPMLibrary">@Model.Loc.Where(a => a.ResourceId == "GlobalPMLibrary").FirstOrDefault().Value.ToString()</span>
+                                        <span class="inputText">
+                                            @Html.CheckBoxFor(m => m.SiteModel.PMLibrary, new { @class = "form-control m-input", @style = "color:black; width: auto; margin-top: 12px;" })
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label" id="spnUsePunchOutControl">@Model.Loc.Where(a => a.ResourceId == "spnUsePunchOut").FirstOrDefault().Value.ToString() :</span>
+                                        <span class="inputText">@Html.CheckBoxFor(m => m.SiteModel.UsePunchOut, new { @class = "form-control m-input", id = "UsePunchOutControl", @style = "color:black; width: auto; margin-top: 12px;" })</span>
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <div class="tabsArea nobg" id="AddressInformation" style="display:none;">
+                                <ul class="listView nobrd">
+                                    <li>
+                                        <span class="label" id="spnAddress1"> @Model.Loc.Where(a => a.ResourceId == "GlobalAddress1").FirstOrDefault().Value.ToString()</span>
+                                        <span class="inputText">
+                                            @Html.TextBoxFor(m => m.SiteModel.Address1, new { @class = "form-control search", @style = "color:black", autocomplete = "off", maxlength = "63" })
+                                        </span>
+                                    </li>
+
+                                    <li>
+                                        <span class="label" id="spnAddress2">@Model.Loc.Where(a => a.ResourceId == "GlobalAddress2").FirstOrDefault().Value.ToString()</span>
+                                        <span class="inputText">
+                                            @Html.TextBoxFor(m => m.SiteModel.Address2, new { @class = "form-control search", @style = "color:black", autocomplete = "off", maxlength = "63" })
+                                        </span>
+                                    </li>
+
+                                    <li>
+                                        <span class="label" id="spnAddress3">@Model.Loc.Where(a => a.ResourceId == "GlobalAddress3").FirstOrDefault().Value.ToString()</span>
+                                        <span class="inputText">
+                                            @Html.TextBoxFor(m => m.SiteModel.Address3, new { @class = "form-control search", @style = "color:black", autocomplete = "off", maxlength = "63" })
+                                        </span>
+                                    </li>
+
+                                    <li>
+                                        <span class="label" id="spnAddressCity">@Model.Loc.Where(a => a.ResourceId == "GlobalAddressCity").FirstOrDefault().Value.ToString()</span>
+                                        <span class="inputText">
+                                            @Html.TextBoxFor(m => m.SiteModel.AddressCity, new { @class = "form-control search", @style = "color:black", autocomplete = "off", maxlength = "63" })
+                                        </span>
+                                    </li>
+
+                                    <li>
+                                        <span class="label" id="spnAddressState"> @Model.Loc.Where(a => a.ResourceId == "GlobalAddressState").FirstOrDefault().Value.ToString()</span>
+                                        <span class="inputText">
+                                            @Html.TextBoxFor(m => m.SiteModel.AddressState, new { @class = "form-control search", @style = "color:black", autocomplete = "off", maxlength = "31" })
+                                        </span>
+                                    </li>
+
+                                    <li>
+                                        <span class="label" id="spnAddressCountry">@Model.Loc.Where(a => a.ResourceId == "GlobalAddressCountry").FirstOrDefault().Value.ToString()</span>
+                                        <span class="inputText">
+                                            @Html.TextBoxFor(m => m.SiteModel.AddressCountry, new { @class = "form-control search", @style = "color:black", autocomplete = "off", maxlength = "63" })
+                                        </span>
+                                    </li>
+
+                                    <li>
+                                        <span class="label" id="spnAddressPincode">@Model.Loc.Where(a => a.ResourceId == "GlobalAddressPostcode").FirstOrDefault().Value.ToString()</span>
+                                        <span class="inputText">
+                                            @Html.TextBoxFor(m => m.SiteModel.AddressPostCode, new { @class = "form-control search", @style = "color:black", autocomplete = "off", maxlength = "31" })
+                                        </span>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="tabsArea nobg" id="SystemInformation" style="display:none;">
+                                <ul class="listView nobrd">
+                                    @if (Model.SiteModel.ClientSiteControl)
+                                    {
+                                        <li>
+                                            <span class="label" id="spnMaxAppUsers">@Model.Loc.Where(a => a.ResourceId == "GlobalMaxAppUsers").FirstOrDefault().Value.ToString()<small>*</small></span>
+                                            <span class="inputText">
+                                                @Html.ValidationMessageFor(m => m.SiteModel.MaxAppUsers, "", new { style = "display:none" })
+                                                @Html.TextBoxFor(m => m.SiteModel.MaxAppUsers, new { @class = "form-control search", @style = "color:black", autocomplete = "off", maxlength = "63" })
+                                            </span>
+                                        </li>
+                                        <li>
+                                            <span class="label" id="spnMaxWorkRequestUsers">@Model.Loc.Where(a => a.ResourceId == "GlobalMaxWorkRequestUsers").FirstOrDefault().Value.ToString()</span>
+                                            <span class="inputText">
+                                                @Html.TextBoxFor(m => m.SiteModel.MaxWorkRequestUsers, new { @class = "form-control search", @style = "color:black", autocomplete = "off", maxlength = "63" })
+                                            </span>
+                                        </li>
+                                        <li>
+                                            <span class="label" id="spnMaxLimitedUsers">@Model.Loc.Where(a => a.ResourceId == "GlobalMaxLimitedUsers").FirstOrDefault().Value.ToString()<small>*</small></span>
+                                            <span class="inputText">
+                                                @Html.ValidationMessageFor(m => m.SiteModel.MaxLimitedUsers, "", new { style = "display:none" })
+                                                @Html.TextBoxFor(m => m.SiteModel.MaxLimitedUsers, new { @class = "form-control search", @style = "color:black", autocomplete = "off", maxlength = "63" })
+                                            </span>
+                                        </li>
+                                        <li>
+                                            <span class="label" id="spnMaxSuperUsers">@Model.Loc.Where(a => a.ResourceId == "GlobalMaxSuperUsers").FirstOrDefault().Value.ToString()</span>
+                                            <span class="inputText">
+                                                @Html.TextBoxFor(m => m.SiteModel.MaxSuperUsers, new { @class = "form-control search", @style = "color:black", autocomplete = "off", maxlength = "63" })
+                                            </span>
+                                        </li>
+                                    }
+                                    <li>
+                                        <span class="label" id="spnAppUsers">@Model.Loc.Where(a => a.ResourceId == "GlobalAppUsers").FirstOrDefault().Value.ToString()</span>
+                                        <span class="inputText">
+                                            @Html.TextBoxFor(m => m.SiteModel.AppUsers, new { @class = "form-control search readonly", @readonly = "readonly", @style = "color:black", autocomplete = "off", maxlength = "63" })
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label" id="spnWorkRequestUsers">@Model.Loc.Where(a => a.ResourceId == "GlobalWorkRequestUsers").FirstOrDefault().Value.ToString()</span>
+                                        <span class="inputText">
+                                            @Html.TextBoxFor(m => m.SiteModel.WorkRequestUsers, new { @class = "form-control search readonly", @readonly = "readonly", @style = "color:black", autocomplete = "off", maxlength = "63" })
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label" id="spnLimitedUsers">@Model.Loc.Where(a => a.ResourceId == "GlobalLimitedUsers").FirstOrDefault().Value.ToString()</span>
+                                        <span class="inputText">
+                                            @Html.TextBoxFor(m => m.SiteModel.LimitedUsers, new { @class = "form-control search readonly", @readonly = "readonly", @style = "color:black", autocomplete = "off", maxlength = "63" })
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label" id="spnSuperUsers">@Model.Loc.Where(a => a.ResourceId == "GlobalSuperUsers").FirstOrDefault().Value.ToString()</span>
+                                        <span class="inputText">
+
+                                            @Html.TextBoxFor(m => m.SiteModel.SuperUsers, new { @class = "form-control search readonly", @readonly = "readonly", @style = "color:black", autocomplete = "off", maxlength = "63" })
+                                        </span>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div style="clear:both;"></div>
+
+                            <div class="idBttns">
+                                <div class="bttn_pagin">
+                                    <div class="bttns2">
+                                        <button type="submit" class="btn btn-blue mobBttn" name="Command" id="btnSave" style="cursor:pointer" value="save"><i class="fa fa-save faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+                                    </div>
+                                    <div class="bttns"><button type="button" class="btn btn-blue mobBttn" id="btnCancelEditSite" style="cursor:pointer"><i class="fa fa-close faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button></div>
+
+                                    <div style="clear:both;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @Html.HiddenFor(m => m.SiteModel.SiteId)
+    @Html.HiddenFor(m => m.SiteModel.ClientId)
+    @Html.HiddenFor(m => m.SiteModel.UpdateIndex)
+    @Html.HiddenFor(m => m.SiteModel.ClientSiteControl, new { id = "ClientSiteControl" })
+}
+<style type="text/css">
+    .select2-container--default .select2-selection--single .select2-selection__rendered {
+        padding-right: 30px;
+    }
+</style>
+

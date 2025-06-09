@@ -1,0 +1,16 @@
+﻿@model Admin.Models.Site.SiteVM
+@{
+    ViewBag.Title = "Somax | Site";
+}
+@Styles.Render("~/Content/datatable")
+
+<link href="~/Content/sidebar_custom.css" rel="stylesheet" />
+<link href="~/Scripts/Metronic/assets/demo/default/base/GlobalSearchGrid.css" rel="stylesheet" />
+@section scripts {
+    @Scripts.Render("~/bundles/datatable")   
+    @Scripts.Render("~/bundles/Site")
+   
+}
+<div id="sitemaincontainer">
+    @Html.Partial("_SiteSearch", Model)
+</div>

@@ -1,0 +1,238 @@
+﻿@model Admin.Models.SupportTicket.SupportTicketVM
+<link href="~/Scripts/Metronic/assets/demo/default/base/style_newCustom.css" rel="stylesheet" />
+
+@if (Convert.ToString(Session["AdminMenuState"]) == "" || Convert.ToString(Session["AdminMenuState"]) == "open")
+{
+    <div class="m-subheader fixedDiv1">
+        <div class="new-m-subheader">
+            <div class="PageTitle">
+                <div class="align-items-center">
+                    <h3 class="m-subheader__title" style="padding:0;">
+                        <span class="dropToggle" id="spnDropToggle">
+                            <img src="~/Images/toggleMenu.png" />
+                        </span>
+                        <span style="line-height:35px;" id="stsearchtitle">
+                            @Model.Loc.Where(a => a.ResourceId == "spnSupportTicket").FirstOrDefault().Value.ToString()
+                        </span>
+                    </h3>
+                </div>
+            </div>
+
+
+            <div class="ActionBttnArea">
+                <button type="button" class="btn newBtn-add AddSupportTicket pull-left" id="AddTicket" title="Add Ticket ">@Model.Loc.Where(a => a.ResourceId == "spnNewTicket").FirstOrDefault().Value.ToString()</button>
+
+                <div style="clear:both;"></div>
+            </div>
+            <div style="clear:both;"></div>
+        </div>
+    </div>
+}
+else
+{
+    <div class="m-subheader fixedDiv1 fixupperpannel2">
+        <div class="new-m-subheader">
+            <div class="PageTitle">
+                <div class="align-items-center">
+                    <h3 class="m-subheader__title" style="padding:0;">
+                        <span class="dropToggle" id="spnDropToggle">
+                            <img src="~/Images/toggleMenu.png" />
+                        </span>
+                        <span style="line-height:35px;" id="stsearchtitle">
+                            @Model.Loc.Where(a => a.ResourceId == "spnSupportTicket").FirstOrDefault().Value.ToString()
+                        </span>
+                    </h3>
+                </div>
+            </div>
+
+            <div class="ActionBttnArea">
+
+                <button type="button" class="btn newBtn-add AddClient pull-left" id="AddClient" title="Add Client">@Model.Loc.Where(a => a.ResourceId == "spnNewTicket").FirstOrDefault().Value.ToString()</button>
+
+                <div style="clear:both;"></div>
+            </div>
+            <div style="clear:both;"></div>
+        </div>
+    </div>
+}
+<div class="pushDiv1"></div>
+<div class="row">
+    <div class="col-xl-12">
+        <div class="m-portlet" id="m_portlet" style="padding:15px;">
+            <div class="actionBar" style="display:block" id="ClientGridAction">
+                <div class="pull-left" style="position:relative;">
+                    <button type="button" class="btn btn-white navbar-btn" title="Search" id="SrchBttnNew"><i class="fa fa-search" style="font-size: 1.1rem;position: relative;top: -2px;left: -2px;"></i> @Model.Loc.Where(a => a.ResourceId == "globalSearch").FirstOrDefault().Value.ToString()</button>
+                    <button type="button" class="btn btn-white navbar-btn" id="sidebarCollapse" title="Advance Search"><i class="fa fa-filter" style="font-size: 1.3rem;"></i></button>
+                    <div style="clear:both;"></div>
+                    <div class="searchBttnDrop desktop" id="searchBttnNewDrop" style="display:none;">
+                        <div class="form-group" style="position:relative;">
+                            <i class="fa fa-search txtSearchClick" style="font-size: 1.1rem;position: absolute;top: 9px;left: 15px;"></i>
+                            <a href="javascript:void(0)" id="cancelText"><i class="fa fa-close" style="font-size: 1.1rem;position: absolute;top: 9px;right: 15px;"></i></a>
+                            <input type="text" id="txtColumnSearch" class="form-control search" placeholder="Search..." style="padding: 0.65rem 2.75rem;" autocomplete="off">
+                        </div>
+                        <div class="searchTips">
+                            <div class="titleText">@Model.Loc.Where(a => a.ResourceId == "spnSearchTips").FirstOrDefault().Value.ToString()</div>
+                            <div class="infoText">@Model.Loc.Where(a => a.ResourceId == "SupportTicketSearchTips").FirstOrDefault().Value.ToString()</div>
+                            <div style="clear:both;"></div>
+                        </div>
+
+                        <div class="searchInfo">
+                            <span class="recent">
+                                @Model.Loc.Where(a => a.ResourceId == "GlobalRecentlySearched").FirstOrDefault().Value.ToString()
+                            </span>
+                            <div class="searchList" id="wosearchList">
+                                <ul id="UlSearchList"></ul>
+                            </div>
+                            <span class="clear">
+                                <a href="javascript:void(0)" id="clearText">
+                                    @Model.Loc.Where(a => a.ResourceId == "globalClear").FirstOrDefault().Value.ToString()
+                                </a>
+                            </span>
+                            <div style="clear:both;"></div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="pull-right">
+                    <button type="button" class="btn btn-white import-export" id="btnSTExport" onclick="funcShowExportbtn()">
+                        @Model.Loc.Where(a => a.ResourceId == "spnExport").FirstOrDefault().Value.ToString()
+                    </button>
+                    <div style="clear:both;"></div>
+                </div>
+                <div style="clear:both;"></div>
+                <div id="dvFilterSearchSelect2"></div>
+                <div style="clear:both;"></div>
+            </div>
+
+            <div style="clear:both;"></div>
+
+            <div id="Active" class="tabcontent" style="display:block;">
+                <div class="table-responsive">
+                    <table id="SupportTicketSearch" class="eqpDtlTbl row-border custom-sort tblMain tblDefaultSort" style="width:100%;">
+                        <thead>
+                            <tr>
+                                <th id="thSupportTicket" data-col="0" class="th-SupportTicket SupportTicketId" data-th-index="0" data-th-prop="SupportTicketId">@Model.Loc.Where(a => a.ResourceId == "spnTicketID").FirstOrDefault().Value.ToString()</th>
+                                <th data-th-index="1" data-col="1" class="Subject" data-th-prop="Subject">@Model.Loc.Where(a => a.ResourceId == "globalSubject").FirstOrDefault().Value.ToString()</th>
+                                <th data-th-index="2" data-col="2" class="Contact" data-th-prop="Contact">@Model.Loc.Where(a => a.ResourceId == "spnContact").FirstOrDefault().Value.ToString()</th>
+                                <th data-th-index="3" data-col="3" class="Status" data-th-prop="Status">@Model.Loc.Where(a => a.ResourceId == "GlobalStatus").FirstOrDefault().Value.ToString()</th>
+                                <th id="thMaterialStatus" data-col="4" class="Agent" data-th-index="4" data-th-prop="Status">@Model.Loc.Where(a => a.ResourceId == "spnAgent").FirstOrDefault().Value.ToString()</th>
+                                <th data-th-index="5" data-col="5" class="CreateDate" data-th-prop="CreateDateString">
+                                    @Model.Loc.Where(a => a.ResourceId == "spnCreated").FirstOrDefault().Value.ToString()
+                                </th>
+                                <th id="thMaterialComleteDate" data-col="6" class="CompleteDate" data-th-index="6" data-th-prop="CompleteDateString">@Model.Loc.Where(a => a.ResourceId == "spnGlobalCompleted").FirstOrDefault().Value.ToString()</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@if (Convert.ToString(Session["AdminMenuState"]) == "" || Convert.ToString(Session["AdminMenuState"]) == "open")
+{
+    <div id="searcharea" class="slideToggleBar" style="display:none">
+        <div class="searchBoxArea">
+            <div class="form-group" style="margin-bottom:0; position:relative;">
+                <i class="fa fa-search" style="font-size: 1.1rem;position: absolute;top: 8px;left: 0px;"></i>
+                <input type="text" class="form-control searched" placeholder="Search for a view" id="stsearctxtbox">
+            </div>
+        </div>
+
+        <div class="searchList">
+            <ul id="stsearchListul">
+                @foreach (var item in Model.CustomQueryDisplayList)
+                {
+                    <li id="@item.Value" class="stsearchdrpbox"><a href="javascript:void(0)">@item.Text</a></li>
+                }
+            </ul>
+        </div>
+    </div>
+}
+else
+{
+    <div id="searcharea" class="slideToggleBar" style="display:none;left:81px !important;">
+        <div class="searchBoxArea">
+            <div class="form-group" style="margin-bottom:0; position:relative;">
+                <i class="fa fa-search" style="font-size: 1.1rem;position: absolute;top: 8px;left: 0px;"></i>
+                <input type="text" class="form-control searched" placeholder="Search for a view" id="stsearctxtbox">
+            </div>
+        </div>
+
+        <div class="searchList">
+            <ul id="stsearchListul">
+                @foreach (var item in Model.CustomQueryDisplayList)
+                {
+                    <li id="@item.Value" class="stsearchdrpbox"><a href="javascript:void(0)">@item.Text</a></li>
+                }
+            </ul>
+        </div>
+    </div>
+}
+@Html.Partial("_CustomizeGridSetup")
+@Html.Partial("_Export")
+@Html.Partial("_SupportTicketAdvancedSearch")
+<style type="text/css">
+
+    #popupExport {
+        right: 30px !important;
+    }
+
+    .pull-right #btnSTExport {
+        margin-right: 0px !important;
+    }
+
+    @@media only screen and (max-width: 960px) and (min-width: 768px) {
+        #popupExport {
+            right: 37px !important;
+        }
+    }
+
+    @@media only screen and (max-width: 639px) and (min-width: 568px) {
+        .actionBar div.pull-right {
+            float: right;
+            margin-top: 0;
+        }
+    }
+
+    @@media only screen and (max-width: 767px) and (min-width: 640px) {
+        .actionBar div.pull-left {
+            width: auto;
+        }
+
+        .actionBar div.pull-right {
+            width: auto;
+            float: right;
+            margin-top: 0;
+        }
+    }
+
+    @@media screen and (max-width: 567px) {
+        #shortDrop {
+            margin-top: 0;
+            margin-right: 10px !important;
+        }
+    }
+
+    @@media screen and (max-width: 410px) {
+        #shortDrop {
+            margin-top: 10px !important;
+            margin-right: 0px !important;
+        }
+    }
+
+    @@media only screen and (max-width: 359px) and (min-width: 320px) {
+        #liCustomize {
+            margin-top: 0px !important;
+            margin-left: 0px !important;
+        }
+    }
+
+    .tblMain.dataTable thead .sorting_asc {
+        background-image: url(../Scripts/Metronic/Images/upArrow1.png) !important;
+    }
+
+    .tblMain.dataTable thead .sorting_desc {
+        background-image: url(../Scripts/Metronic/Images/downArrow1.png) !important;
+    }
+</style>

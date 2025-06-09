@@ -1,0 +1,49 @@
+﻿@model Admin.Models.SupportTicket.SupportTicketVM
+
+@foreach (var item in Model.STNotesList)
+{
+    <div class="kt-notes__item @item.Type">
+        <div class="kt-notes__content">
+            <div class="kt-notes__section">
+                <div class="kt-notes__info" style="margin-bottom:10px">
+                    <a href="javascript:void(0)" class="kt-notes__title">
+
+                    </a>
+                    <span class="kt-notes__desc">
+                        @item.CreateDate.ToString("MMMM dd, yyyy h:mm tt")
+                    </span>
+                </div>
+            </div>
+            <span class="kt-notes__body">
+                @{
+                    string origialContent = item.Content;
+                    string FinalContent = item.Content; /*UtilityFunction.GetModifiedContactChipContent(Model.userMentionDatas, item.Content);*/
+                    <span class="originalContent" style="display:none">@Html.Raw(origialContent)</span>
+                }
+                @Html.Raw(@FinalContent)
+
+            </span>
+                <div class="ckeditorarea" style="display:none"></div>
+                <div class="commenteditdelearea">
+                    <a href="javascript:void(0);" class="editcomments" id="@item.STNotesId"><i class="fa fa-pencil" style="margin-top:-3px;font-size: .91rem;"></i> &nbsp;@Model.Loc.Where(a => a.ResourceId == "globalEdit").FirstOrDefault().Value.ToString()&nbsp;<span style="color:#000 !important;">|</span></a>
+                    <a href="javascript:void(0);" class="deletecomments" id="@item.STNotesId"><i class="fa fa-trash" style="font-size: .91rem;"></i>&nbsp;@Model.Loc.Where(a => a.ResourceId == "globalDelete").FirstOrDefault().Value.ToString()</a>
+                </div>
+        </div>
+    </div>
+}
+<link href="~/Content/contactchip.css" rel="stylesheet" />
+
+
+<style>
+    .Reply {
+        background-color: #b1cef552;
+        padding: 15px;
+    }
+    .Note {
+        background-color: #e7601752;
+        padding: 15px;
+    }
+    #auditlogcontainer h3.kt-notes__user.kt-font-brand.kt-font-boldest.comment-header-item {
+        border: 0 !important;
+    }
+</style>

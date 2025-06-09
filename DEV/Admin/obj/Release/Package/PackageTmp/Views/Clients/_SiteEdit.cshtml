@@ -1,0 +1,205 @@
+﻿@model Admin.Models.Client.ClientVM
+
+<div class="m-subheader">
+    <div class="new-m-subheader">
+        <div class="PageTitle">
+            <div class="align-items-center separator">
+                <h3 class="m-subheader__title ">
+                    @Model.Loc.Where(a => a.ResourceId == "spnSiteGlobal").FirstOrDefault().Value.ToString()
+                </h3>
+            </div>
+        </div>
+
+        <div class="NewBreadcrumbArea">
+            <div class="newBreadcrumb">
+                <ul>
+                    <li><a href="/Admin/Dashboard/Dashboard">&nbsp;</a></li>
+                    <li><a href="/Admin/Clients/Index?page=Clients" id="anchPagename">@Model.Loc.Where(a => a.ResourceId == "spnClient").FirstOrDefault().Value.ToString()</a></li>
+                    <li class="lithisclient" data-val="@Model.SiteModelView.ClientId"><a href="javascript:void(0)">@Model.SiteModelView.ClientId</a></li>
+                    <li class="active">@Model.Loc.Where(a => a.ResourceId == "GlobalEditSite").FirstOrDefault().Value.ToString()</li>
+                </ul>
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+        <div style="clear:both;"></div>
+    </div>
+</div>
+@Html.Partial("_ErrorDiv")
+
+@using (Ajax.BeginForm("EditSite", "Clients", new AjaxOptions { HttpMethod = "Post", OnSuccess = "SiteEditOnSuccess", OnBegin = "onLoginBegin", OnFailure = "onLoginFailure" }, new { enctype = "multipart/form-data", id = "editsite" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="row">
+        <div class="col-xl-12">
+            <div class="row">
+                <div class="col-xl-12" id="btnnblock">
+                    <div class="m-portlet" id="m_portlet" style="padding:15px;">
+                        <div class="bottomBlock">
+                            <div class="tabsArea nobg" id="Identifications" style="display:block;">
+                                <ul class="listView nobrd">
+                                    <li>
+                                        <span class="label" id="spnName">@Model.Loc.Where(a => a.ResourceId == "spnName").FirstOrDefault().Value.ToString() :<small>*</small></span>
+                                        <span class="inputText">
+                                            @Html.ValidationMessageFor(m => m.SiteModelView.Name, "", new { style = "display:none" })
+                                            @Html.TextBoxFor(m => m.SiteModelView.Name, new { @class = "form-control search m-input", @style = "color:black", autocomplete = "off", maxlength = "63" })
+                                        </span>
+                                    </li>
+
+                                    <li>
+                                        <span class="label" id="spnDescription">@Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString() :<small> *</small></span>
+                                        <span class="inputText">
+                                            @Html.ValidationMessageFor(m => m.SiteModelView.Description, "", new { style = "display:none" })
+                                            @Html.TextBoxFor(m => m.SiteModelView.Description, new { @class = "form-control search m-input", @style = "color:black", autocomplete = "off", maxlength = "255" })
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label" id="spnDefaultTimeZone">@Html.LabelFor(m => m.SiteModelView.TimeZone)<small>*</small></span>
+                                        <span class="inputText">
+                                            @Html.ValidationMessageFor(m => m.SiteModelView.TimeZone, "", new { style = "display:none" })
+                                            @Html.DropDownListFor(m => m.SiteModelView.TimeZone, Model.TimeZonelist, "--Select--", new { @class = "form-control search  select2picker", style = "width:100%;" })
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label" id="spnAPMControl">@Model.Loc.Where(a => a.ResourceId == "GlobalAPM").FirstOrDefault().Value.ToString() :</span>
+                                        <span class="inputText">@Html.CheckBoxFor(m => m.SiteModelView.APM, new { @class = "form-control m-input", id = "APMControl", @style = "color:black; width: auto; margin-top: 12px;" })</span>
+                                    </li>
+                                    <li>
+                                        <span class="label" id="spnCMMSControl">@Model.Loc.Where(a => a.ResourceId == "GlobalCMMS").FirstOrDefault().Value.ToString() :</span>
+                                        <span class="inputText">@Html.CheckBoxFor(m => m.SiteModelView.CMMS, new { @class = "form-control m-input", id = "CMMSControl", @style = "color:black; width: auto; margin-top: 12px;" })</span>
+                                    </li>
+                                    <li>
+                                        <span class="label" id="spnSanitationControl">@Model.Loc.Where(a => a.ResourceId == "spnGlobalSanitation").FirstOrDefault().Value.ToString() :</span>
+                                        <span class="inputText">@Html.CheckBoxFor(m => m.SiteModelView.Sanitation, new { @class = "form-control m-input", id = "SanitationControl", @style = "color:black; width: auto; margin-top: 12px;" })</span>
+                                    </li>
+                                    <li>
+                                        <span class="label" id="spnProductionControl">@Html.LabelFor(m => m.SiteModelView.Production) :</span>
+                                        <span class="inputText">@Html.CheckBoxFor(m => m.SiteModelView.Production, new { @class = "form-control m-input", id = "ProductionControl", @style = "color:black; width: auto; margin-top: 12px;" })</span>
+                                    </li>
+                                    <li>
+                                        <span class="label" id="spnUsePunchOutControl">@Model.Loc.Where(a => a.ResourceId == "spnUsePunchOut").FirstOrDefault().Value.ToString() :</span>
+                                        <span class="inputText">@Html.CheckBoxFor(m => m.SiteModelView.UsePunchOut, new { @class = "form-control m-input", id = "UsePunchOutControl", @style = "color:black; width: auto; margin-top: 12px;" })</span>
+                                    </li>
+                                    <li>
+                                        <span class="label" id="spnMaxAppUsers">@Model.Loc.Where(a => a.ResourceId == "spnSiteMaxAppUsers").FirstOrDefault().Value.ToString() :</span>
+                                        <span class="inputText">
+                                            @Html.ValidationMessageFor(m => m.SiteModelView.MaxAppUsers, "", new { style = "display:none" })
+                                            @Html.TextBoxFor(m => m.SiteModelView.MaxAppUsers, new { @class = "form-control search integerinput", @style = "color:black", autocomplete = "off" })
+                                        </span>
+                                    </li>
+
+                                    <li>
+                                        <span class="label" id="spnMaxWorkRequestUsers">@Model.Loc.Where(a => a.ResourceId == "spnSiteMaxWorkRequestUsers").FirstOrDefault().Value.ToString() :</span>
+                                        <span class="inputText">
+                                            @Html.ValidationMessageFor(m => m.SiteModelView.MaxWorkRequestUsers, "", new { style = "display:none" })
+                                            @Html.TextBoxFor(m => m.SiteModelView.MaxWorkRequestUsers, new { @class = "form-control search integerinput", @style = "color:black", autocomplete = "off" })
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label" id="spnMaxSanitationUsers">@Model.Loc.Where(a => a.ResourceId == "spnSiteMaxSanitationUsers").FirstOrDefault().Value.ToString() :</span>
+                                        <span class="inputText">
+                                            @Html.ValidationMessageFor(m => m.SiteModelView.MaxSanitationUsers, "", new { style = "display:none" })
+                                            @Html.TextBoxFor(m => m.SiteModelView.MaxSanitationUsers, new { @class = "form-control search integerinput", @style = "color:black", autocomplete = "off" })
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label" id="spnMaxProdAppUsers">@Model.Loc.Where(a => a.ResourceId == "spnSiteMaxProductionUsers").FirstOrDefault().Value.ToString() :</span>
+                                        <span class="inputText">
+                                            @Html.ValidationMessageFor(m => m.SiteModelView.MaxProdAppUsers, "", new { style = "display:none" })
+                                            @Html.TextBoxFor(m => m.SiteModelView.MaxProdAppUsers, new { @class = "form-control search integerinput", @style = "color:black", autocomplete = "off" })
+                                        </span>
+                                    </li>
+
+                                </ul>
+                            </div>
+
+                            <div style="clear:both;"></div>
+
+                            <div class="idBttns">
+                                <div class="bttn_pagin">
+                                    <div class="bttns2">
+                                        <button type="submit" class="btn btn-blue mobBttn" name="Command" id="btnSave" style="cursor:pointer" value="save"><i class="fa fa-save faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+                                    </div>
+                                    <div class="bttns"><button type="button" class="btn btn-blue mobBttn" id="btnCancelEditSite" style="cursor:pointer"><i class="fa fa-close faIcon"></i> &nbsp;  @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button></div>
+                                    <div style="clear:both;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @Html.HiddenFor(m => m.SiteModelView.SiteId, new { id = "SiteId" })
+    @Html.HiddenFor(m => m.SiteModelView.ClientId, new { id = "ClientId" })
+    @Html.HiddenFor(m => m.SiteModelView.UpdateIndex, new { id = "UpdateIndex" })
+
+}
+<style type="text/css">
+    .select2-container--default .select2-selection--single .select2-selection__rendered {
+        padding-right: 30px;
+    }
+
+    .ui-tooltip.ui-tooltip1 {
+        z-index: 101 !important;
+    }
+
+    .testConnectionBtn {
+        float: right;
+    }
+
+    .openMenu .inputText.inputAdjust {
+        width: 53.5% !important;
+    }
+
+    .closeMenu .inputText.inputAdjust {
+        width: 55.5% !important;
+    }
+
+    @@media screen and (max-width: 1599px) {
+        .openMenu .inputText.inputAdjust {
+            width: 49.5% !important;
+        }
+
+        .closeMenu .inputText.inputAdjust {
+            width: 52.5% !important;
+        }
+    }
+
+    @@media screen and (max-width: 1359px) {
+        .openMenu .inputText.inputAdjust {
+            width: 45.5% !important;
+        }
+
+        .closeMenu .inputText.inputAdjust {
+            width: 49.5% !important;
+        }
+    }
+
+    @@media screen and (max-width: 1199px) {
+        .openMenu .inputText.inputAdjust {
+            width: 48% !important;
+        }
+
+        .closeMenu .inputText.inputAdjust {
+            width: 52.4% !important;
+        }
+    }
+
+    @@media screen and (max-width: 1023px) {
+        .testConnectionBtn {
+            margin-top: 10px;
+        }
+    }
+
+    @@media screen and (max-width: 639px) {
+        ul.listView.nobrd li:last-child span.label {
+            line-height: normal;
+        }
+    }
+
+    @@media screen and (max-width: 479px) {
+        .testConnectionBtn {
+            float: none;
+        }
+    }
+</style>

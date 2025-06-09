@@ -1,0 +1,333 @@
+﻿@model Admin.Models.SiteMaintenanceModel
+@{
+    ViewBag.Title = "UnderConstruction";
+    Layout = null;
+
+}
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <style>
+        @@charset "utf-8";
+/* CSS Document */
+
+html, body, body div, span, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, abbr,
+address, cite, code, del, dfn, em, img, ins, kbd, q, samp, small, strong, sub, sup, var, b, i,
+dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr,
+th, td, article, aside, figure, footer, header, hgroup, menu, nav, section, time, mark, audio, video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	outline: 0;
+	font-size: 100%;
+	/*vertical-align: baseline;
+	background: transparent;*/
+}
+
+/* HTML5 display-role reset for older browsers */
+article, aside, figure, footer, header, hgroup, nav, section {display: block;}
+
+/*img, object, embed {max-width: 100%;}*/
+ul {list-style: none;}
+blockquote, q {quotes: none;}
+blockquote:before, blockquote:after, q:before, q:after {content: ''; content: none;}
+a {margin: 0; padding: 0; font-size: 100%; vertical-align: baseline;}
+del {text-decoration: line-through;}
+abbr[title], dfn[title] {border-bottom: 1px dotted #000; cursor: help;}
+
+body {line-height:1;}
+
+/* tables still need cellspacing="0" in the markup */
+table {border-collapse: collapse; border-spacing: 0;}
+th {font-weight: bold; vertical-align: bottom;}
+td {font-weight: normal; vertical-align: top;}
+hr {display: block; height: 1px; border: 0; border-top: 1px solid #ccc; margin: 1em 0; padding: 0;}
+
+/* Form Elements */
+input, select {vertical-align: middle;}
+input[type="radio"] {vertical-align: text-bottom;}
+input[type="checkbox"] {vertical-align: bottom;}
+.ie6 input {vertical-align: text-bottom;}
+select, input, textarea {font: 99% sans-serif;}
+
+a:hover, a:active, a:focus {outline: 0;}
+small {font-size: 85%;}
+strong, th {font-weight: bold;}
+td, td img {vertical-align: top;}
+
+sub, sup {font-size: 75%; line-height: 0; position: relative;}
+sup {top: -0.5em;}
+sub {bottom: -0.25em;}
+
+/* standardize any monospaced elements */
+pre, code, kbd, samp {font-family: monospace, sans-serif;}
+
+/* hand cursor on clickable elements */
+.clickable, input[type=button], input[type=submit], button {cursor: pointer;}
+label {cursor: text;}
+
+/* Webkit browsers add a 2px margin outside the chrome of form elements */
+button, input, select, textarea {margin: 0;}
+
+/* make buttons play nice in IE */
+button {width: auto; overflow: visible;}
+
+a, img a, img, a img {border:0;	outline:0; text-decoration:none;}
+
+/* FLOAT-elements */
+.fltleft {float:left;}
+.fltright {float:right;}
+
+/* let's clear some floats */
+.clearfix:before, .clearfix:after { content: "\0020"; display: block; height: 0; overflow: hidden; }
+.clearfix:after { clear: both; }
+
+/* only to clear floats - to be used with any class as addition */
+.clear { clear: both; }
+
+/* clear float with blank <div>or <br>*/
+.clrflt { clear:both; line-height:1px; font-size:1px; overflow: hidden; }
+
+/* MAIN */
+body
+{
+	font-family: 'Open Sans', sans-serif;
+	font-size:14px;
+	font-weight
+	color:#333333;
+	line-height:normal;
+	overflow-x:hidden;
+}
+
+html, body
+{
+	width:100%;
+	height:100%;
+	padding:0;
+	margin:0;
+}
+
+img { max-width:100%; height:auto !important; }
+
+/*========== TimeOut ==========*/
+
+.bodyBg
+{
+	background:#1a3965 url(images/bgTheme.png) no-repeat center center;
+}
+
+        .constructionBox {
+            background: #0c264a;
+            width: 50%;
+            /*height:320px;*/
+            height: 390px;
+            border-radius: 10px;
+            border: 2px solid #fff;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            margin-left: -25%;
+            margin-top: -160px;
+            text-align: center;
+        }
+
+.underConstructionIcon
+{
+	width:100px;
+	height:100px;
+	position:absolute;
+	left:50%;
+	top:-50px;
+	margin-left:-50px;
+}
+
+h2.title {
+    font-family: 'Roboto', sans-serif;
+    padding: 85px 0 0 0;
+    margin: 0;
+    font-size: 45px;
+    font-weight: 700;
+    color: #fff;
+}
+
+h3.subTitle {
+    font-family: 'Roboto', sans-serif;
+    padding: 30px 0 0 0;
+    margin: 0;
+    font-size: 24px;
+    font-weight: 400;
+    color: #fff;
+}
+
+h4.contentTitle {
+    font-family: 'Roboto', sans-serif;
+    padding: 40px 0 40px 0;
+    margin: 0;
+    font-size: 20px;
+    font-weight: 400;
+    color: #fff;
+}
+
+.btnLogin
+{
+	border: 1px solid transparent;
+	line-height: 1.25;
+	transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+	color: #fff;
+	background-color: #e64006;
+	border-color: #e64006;
+	box-shadow: none !important;
+	font-size: 1rem;
+	font-weight: 400;
+	font-family: 'Roboto', sans-serif;
+	text-align: center;
+	padding: 1.2rem 3rem;
+	cursor:pointer;
+	border-radius: 60px;
+}
+
+.btnLogin:hover {
+    color: #fff;
+    background-color: #a72d03;
+    border-color: #a72d03;
+}
+
+.constractionLogo {
+    text-align: center;
+    margin: 0 auto 6rem auto;
+}
+
+/*****************************************************************************************************************************************************************************************/
+
+@@media only screen and (min-width: 1366px) and (max-width: 1599px)
+{
+	/*Time Out*/
+}
+
+@@media only screen and (min-width: 1200px) and (max-width: 1365px)
+{
+	/*Time Out*/
+}
+
+@@media only screen and (min-width: 1024px) and (max-width: 1199px)
+{
+	/*Time Out*/
+	.constructionBox { width:60%; margin-left:-30%; }
+	h2.title { font-size:45px; }
+}
+
+/*@@media only screen and (min-width: 966px) and (max-width: 1023px)
+{
+}*/
+
+@@media only screen and (min-width: 768px) and (max-width: 1023px)
+{
+	/*Time Out*/
+	.constructionBox { width:76%; margin-left:-38%; }
+	h2.title { font-size:45px; }
+}
+
+@@media only screen and (min-width: 640px) and (max-width: 767px)
+{
+	/* Galaxy Note3 */
+	/*Time Out*/
+	.bodyBg { background:#1a3965 url(images/bgTheme2.png) no-repeat center center; }
+	.constructionBox { width:76%; height:280px; margin-left:-38%; /*margin-top:-140px;*/ margin-top:-124px; }
+	.underConstructionIcon { width:86px; height:86px; margin-left:-43px; top:-43px; }
+	h2.title { font-size: 40px; padding: 50px 0 0 0; }
+	h3.subTitle { font-size: 25px; padding: 10px 0 0 0; }
+	h4.contentTitle { font-size: 20px; padding: 15px 0 20px 0; }
+}
+
+/*@@media only screen and (min-width: 603px) and (max-width: 639px)
+{
+}*/
+
+@@media only screen and (min-width: 568px) and (max-width: 639px)
+{
+	/* For Iphone5 */
+	/*Time Out*/
+	.bodyBg { background:#1a3965 url(images/bgTheme2.png) no-repeat center center; }
+	.constructionBox { width:76%; height:270px; margin-left:-38%; /*margin-top:-135px;*/ margin-top:-118px; }
+	.underConstructionIcon { width:86px; height:86px; margin-left:-43px; top:-43px; }
+	h2.title { font-size: 35px; padding: 50px 0 0 0; }
+	h3.subTitle { font-size: 23px; padding: 10px 0 0 0; }
+	h4.contentTitle { font-size: 18px; padding: 15px 0 20px 0; }
+}
+
+@@media only screen and (min-width: 480px) and (max-width: 567px)
+{
+	/*Time Out*/
+	.bodyBg { background:#1a3965 url(images/bgTheme2.png) no-repeat center center; }
+	.constructionBox { width:76%; height:260px; margin-left:-38%; /*margin-top:-130px;*/ margin-top:-114px; }
+	.underConstructionIcon { width:86px; height:86px; margin-left:-43px; top:-43px; }
+	h2.title { font-size: 30px; padding: 50px 0 0 0; }
+	h3.subTitle { font-size: 20px; padding: 10px 0 0 0; }
+	h4.contentTitle { font-size: 16px; padding: 15px 0 20px 0; }
+}
+
+/*@@media only screen and (min-width: 460px) and (max-width: 479px)
+{
+}*/
+
+@@media only screen and (min-width: 360px) and (max-width: 479px)
+{
+	/* Galaxy S5 */
+	/*Time Out*/
+	.bodyBg { background:#1a3965 url(images/bgTheme2.png) no-repeat center center; }
+	.constructionBox { width:84%; height:240px; margin-left:-42%; /*margin-top:-130px;*/ margin-top:-120px; }
+	.underConstructionIcon { width:86px; height:86px; margin-left:-43px; top:-43px; }
+	h2.title { font-size: 25px; padding: 50px 0 0 0; }
+	h3.subTitle { font-size: 17px; padding: 10px 0 0 0; }
+	h4.contentTitle { font-size: 14px; padding: 15px 0 20px 0; }
+	.btnLogin { padding: 1rem 2.5rem; }
+}
+
+@@media only screen and (min-width: 320px) and (max-width: 359px)
+{
+	/*Time Out*/
+	.bodyBg { background:#1a3965 url(images/bgTheme2.png) no-repeat center center; }
+	.constructionBox { width:84%; height:222px; margin-left:-42%; /*margin-top:-130px;*/ margin-top:-111px; }
+	.underConstructionIcon { width:86px; height:86px; margin-left:-43px; top:-43px; }
+	h2.title { font-size: 22px; padding: 50px 0 0 0; }
+	h3.subTitle { font-size: 14.5px; padding: 10px 0 0 0; }
+	h4.contentTitle { font-size: 12px; padding: 15px 0 20px 0; }
+	.btnLogin { padding: 0.75rem 2rem; }
+
+}
+
+/*@@media only screen and (min-width: 240px) and (max-width: 319px)
+{
+}*/
+    </style>
+
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Somax | Under Construction</title>
+  
+    <script src="https://ajax.googleapis.com/ajax/libs/webfont/1.6.16/webfont.js"></script>
+    <script>
+        WebFont.load({
+            google: { "families": ["Poppins:300,400,500,600,700", "Roboto:300,400,500,600,700"] },
+            active: function () {
+                sessionStorage.fonts = true;
+            }
+        });
+    </script>
+</head>
+
+<body class="bodyBg">
+    <div class="constructionBox">
+        <div class="underConstructionIcon"><img src="~/Images/under-construction.png" alt="" /></div>
+        @*<h2 class="title">Under Construction</h2>
+        <h3 class="subTitle">Our website is under construction. We'll be back soon with our new awesome site.</h3>
+        <h3 class="subTitle" style="padding-top:15px;">Thank you for your patience.</h3>*@
+        <h2 class="title">@Model.HeaderText</h2>
+        <h3 class="subTitle">@Model.MessageText</h3>
+        <h3 class="subTitle">@ViewBag.MaintainenceMsg</h3>
+        <h3 class="subTitle" style="padding-top:15px;">Thank you for your patience.</h3>
+    </div>
+</body>
+</html>
+

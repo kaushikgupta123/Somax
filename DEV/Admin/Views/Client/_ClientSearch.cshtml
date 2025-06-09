@@ -1,0 +1,231 @@
+﻿@model Admin.Models.Client.ClientVM
+<link href="~/Scripts/Metronic/assets/demo/default/base/style_newCustom.css" rel="stylesheet" />
+
+@if (Convert.ToString(Session["AdminMenuState"]) == "" || Convert.ToString(Session["AdminMenuState"]) == "open")
+{
+    <div class="m-subheader fixedDiv1">
+        <div class="new-m-subheader">
+            <div class="PageTitle">
+                <div class="align-items-center">
+                    <h3 class="m-subheader__title" style="padding:0;">
+                        <span class="dropToggle" id="spnDropToggle">
+                            <img src="~/Images/toggleMenu.png" />
+                        </span>
+                        <span style="line-height:35px;" id="clientsearchtitle">
+                            @Model.Loc.Where(a => a.ResourceId == "spnClient").FirstOrDefault().Value.ToString()
+                        </span>
+                    </h3>
+                </div>
+            </div>
+
+
+            <div class="ActionBttnArea">
+                   <button type="button" class="btn newBtn-add AddClient pull-left" id="AddClient" title="Add Client ">@Model.Loc.Where(a => a.ResourceId == "spnAddClient").FirstOrDefault().Value.ToString()</button>
+                
+                <div style="clear:both;"></div>
+            </div>
+            <div style="clear:both;"></div>
+        </div>
+    </div>
+}
+else
+{
+    <div class="m-subheader fixedDiv1 fixupperpannel2">
+        <div class="new-m-subheader">
+            <div class="PageTitle">
+                <div class="align-items-center">
+                    <h3 class="m-subheader__title" style="padding:0;">
+                        <span class="dropToggle" id="spnDropToggle">
+                            <img src="~/Images/toggleMenu.png" />
+                        </span>
+                        <span style="line-height:35px;" id="clientsearchtitle">
+                           @Model.Loc.Where(a => a.ResourceId == "spnClient").FirstOrDefault().Value.ToString()
+                        </span>
+                    </h3>
+                </div>
+            </div>
+
+            <div class="ActionBttnArea">
+                
+                    <button type="button" class="btn newBtn-add AddClient pull-left" id="AddClient" title="Add Client">@Model.Loc.Where(a => a.ResourceId == "spnAddClient").FirstOrDefault().Value.ToString()</button>
+                
+                <div style="clear:both;"></div>
+            </div>
+            <div style="clear:both;"></div>
+        </div>
+    </div>
+}
+<div class="pushDiv1"></div>
+<div class="row">
+    <div class="col-xl-12">
+        <div class="m-portlet" id="m_portlet" style="padding:15px;">
+            <div class="actionBar" style="display:block" id="ClientGridAction">
+                <div class="pull-left" style="position:relative;">
+                    <button type="button" class="btn btn-white navbar-btn" title="Search" id="SrchBttnNew"><i class="fa fa-search" style="font-size: 1.1rem;position: relative;top: -2px;left: -2px;"></i> @Model.Loc.Where(a => a.ResourceId == "globalSearch").FirstOrDefault().Value.ToString()</button>
+                    <button type="button" class="btn btn-white navbar-btn" id="sidebarCollapse" title="Advance Search"><i class="fa fa-filter" style="font-size: 1.3rem;"></i></button>
+                    <div style="clear:both;"></div>
+                    <div class="searchBttnDrop desktop" id="searchBttnNewDrop" style="display:none;">
+                        <div class="form-group" style="position:relative;">
+                            <i class="fa fa-search txtSearchClick" style="font-size: 1.1rem;position: absolute;top: 9px;left: 15px;"></i>
+                            <a href="javascript:void(0)" id="cancelText"><i class="fa fa-close" style="font-size: 1.1rem;position: absolute;top: 9px;right: 15px;"></i></a>
+                            <input type="text" id="txtColumnSearch" class="form-control search" placeholder="Search..." style="padding: 0.65rem 2.75rem;" autocomplete="off">
+                        </div>
+                        <div class="searchTips">
+                            <div class="titleText">@Model.Loc.Where(a => a.ResourceId == "spnSearchTips").FirstOrDefault().Value.ToString()</div>
+                            <div class="infoText">@Model.Loc.Where(a => a.ResourceId == "ClientSearchTips").FirstOrDefault().Value.ToString()</div>
+                            <div style="clear:both;"></div>
+                        </div>
+
+                        <div class="searchInfo">
+                            <span class="recent">
+                                @Model.Loc.Where(a => a.ResourceId == "GlobalRecentlySearched").FirstOrDefault().Value.ToString()
+                            </span>
+                            <div class="searchList" id="wosearchList">
+                                <ul id="UlSearchList"></ul>
+                            </div>
+                            <span class="clear">
+                                <a href="javascript:void(0)" id="clearText">
+                                    @Model.Loc.Where(a => a.ResourceId == "globalClear").FirstOrDefault().Value.ToString()
+                                </a>
+                            </span>
+                            <div style="clear:both;"></div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="pull-right">
+                    <button type="button" class="btn btn-white import-export" id="btnClientExport" onclick="funcShowExportbtn()">
+                        @Model.Loc.Where(a => a.ResourceId == "spnExport").FirstOrDefault().Value.ToString()
+                    </button>
+                    <button type="button" class="btn btn-white" id="liCustomize" title="Customize" data-toggle="modal" data-target="#gridcolumncustomizemodal"><i class="fa fa-cog" style="font-size: 1.3rem;"></i></button>
+                    <div class="dropdown btn-sort" id="shortDrop">
+                        <button class="btn btn-blue dropdown-toggle" type="button" id="btnsortmenu" data-toggle="dropdown">
+                            @Model.Loc.Where(a => a.ResourceId == "GlobalSorting").FirstOrDefault().Value.ToString()
+                        </button>
+                        <ul class="dropdown-menu" role="menu" aria-labelledby="btnsortmenu">
+                            <li role="presentation" class="srtclientcolumn" data-col="0">
+                                <a role="menuitem" tabindex="-1" href="javascript:void(0)">
+                                   @Model.Loc.Where(a => a.ResourceId == "spnClientId").FirstOrDefault().Value.ToString()
+                                </a>
+                            </li>
+                            <li role="presentation" class="srtclientcolumn" data-col="1">
+                                <a role="menuitem" tabindex="-1" href="javascript:void(0)">
+                                    @Model.Loc.Where(a => a.ResourceId == "spnName").FirstOrDefault().Value.ToString()
+                                </a>
+                            </li>
+                            <li role="presentation" class="srtclientcolumn" data-col="2">
+                                <a role="menuitem" tabindex="-1" href="javascript:void(0)">
+                                    @Model.Loc.Where(a => a.ResourceId == "spnContact").FirstOrDefault().Value.ToString()
+                                </a>
+                            </li>
+                            
+                            <li style="border-top:1px solid #ccc; margin: 0 10px;"></li>
+                            <li role="presentation" data-mode="asc" class="srtclientcolumnorder">
+                                <a href="javascript:void(0)">
+                                    @Model.Loc.Where(a => a.ResourceId == "globalAscending").FirstOrDefault().Value.ToString()
+                                </a>
+                            </li>
+                            <li role="presentation" data-mode="desc" class="srtclientcolumnorder">
+                                <a href="javascript:void(0)">
+                                    @Model.Loc.Where(a => a.ResourceId == "globalDescending").FirstOrDefault().Value.ToString()
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div style="clear:both;"></div>
+                </div>
+                <div style="clear:both;"></div>
+                <div id="dvFilterSearchSelect2"></div>
+                <div style="clear:both;"></div>
+            </div>
+
+            <div style="clear:both;"></div>
+
+            <div id="Active" class="tabcontent" style="display:block;">
+                <div class="table-responsive">
+                    <table id="clientSearch" class="eqpDtlTbl row-border custom-sort tblMain" style="width:100%;">
+                        <thead>
+                            <tr>
+                                <th id="thClientId" class="th-ClientId" data-th-index="0">@Model.Loc.Where(a => a.ResourceId == "spnClientId").FirstOrDefault().Value.ToString()</th>
+                                <th id="thName" data-th-index="1">@Model.Loc.Where(a => a.ResourceId == "spnName").FirstOrDefault().Value.ToString()</th>
+                                <th id="thContact" data-th-index="2">@Model.Loc.Where(a => a.ResourceId == "spnContact").FirstOrDefault().Value.ToString()</th>
+                                <th id="thEmail" data-th-index="3">@Model.Loc.Where(a => a.ResourceId == "spnEmail").FirstOrDefault().Value.ToString()</th>
+                                <th data-th-index="4">@Model.Loc.Where(a => a.ResourceId == "spnBusinessType").FirstOrDefault().Value.ToString()</th>
+                                <th data-th-index="5">@Model.Loc.Where(a => a.ResourceId == "spnPackageLevel").FirstOrDefault().Value.ToString()</th>
+                                <th data-th-index="6">@Model.Loc.Where(a => a.ResourceId == "spnCreateDate").FirstOrDefault().Value.ToString()</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@if (Convert.ToString(Session["AdminMenuState"]) == "" || Convert.ToString(Session["AdminMenuState"]) == "open")
+{
+    <div id="searcharea" class="slideToggleBar" style="display:none">
+        <div class="searchBoxArea">
+            <div class="form-group" style="margin-bottom:0; position:relative;">
+                <i class="fa fa-search" style="font-size: 1.1rem;position: absolute;top: 8px;left: 0px;"></i>
+                <input type="text" class="form-control searched" placeholder="Search for a view" id="clientsearctxtbox">
+            </div>
+        </div>
+
+        <div class="searchList">
+            <ul id="clientsearchListul">
+                @foreach (var item in Model.InactiveFlagList)
+                {
+                    <li id="@item.Value" class="clientsearchdrpbox"><a href="javascript:void(0)">@item.Text</a></li>
+                }
+            </ul>
+        </div>
+    </div>
+}
+else
+{
+    <div id="searcharea" class="slideToggleBar" style="display:none;left:81px !important;">
+        <div class="searchBoxArea">
+            <div class="form-group" style="margin-bottom:0; position:relative;">
+                <i class="fa fa-search" style="font-size: 1.1rem;position: absolute;top: 8px;left: 0px;"></i>
+                <input type="text" class="form-control searched" placeholder="Search for a view" id="clientsearctxtbox">
+            </div>
+        </div>
+
+        <div class="searchList">
+            <ul id="clientsearchListul">
+                @foreach (var item in Model.InactiveFlagList)
+                {
+                    <li id="@item.Value" class="clientsearchdrpbox"><a href="javascript:void(0)">@item.Text</a></li>
+                }
+            </ul>
+        </div>
+    </div>
+}
+@Html.Partial("_CustomizeGridSetup")
+@Html.Partial("_Export")
+@Html.Partial("_ClientAdvancedSearch")
+<style type="text/css">
+    @@media only screen and (max-width: 1365px) and (min-width: 1200px) {
+        #popupExport { right: 170px !important; }    
+	} 
+    @@media only screen and (max-width: 639px) and (min-width: 568px) {
+        .actionBar div.pull-right { float: right; margin-top: 0; }
+    }
+    @@media only screen and (max-width: 767px) and (min-width: 640px) {
+        .actionBar div.pull-left { width:auto; }
+        .actionBar div.pull-right { width:auto; float: right; margin-top: 0; }
+    }
+    @@media only screen and (width:1360px) {
+        #popupExport { right: 171px !important; }
+    }
+    @@media screen and (max-width: 567px) {
+        #shortDrop { margin-top: 0; margin-right: 10px !important; }
+    }
+    @@media screen and (max-width: 410px) {
+        #shortDrop { margin-top: 10px !important; margin-right: 0px !important; }
+    }
+    @@media only screen and (max-width: 359px) and (min-width: 320px) {
+        #liCustomize { margin-top: 0px !important; margin-left: 0px !important; }
+    }
+</style>

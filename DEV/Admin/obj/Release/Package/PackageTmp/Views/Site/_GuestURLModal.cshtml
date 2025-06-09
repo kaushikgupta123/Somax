@@ -1,0 +1,16 @@
+﻿@model Admin.Models.Site.SiteVM
+
+<div id="guestURLModal" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-info">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">@Model.Loc.Where(a => a.ResourceId == "spnGuestURL").FirstOrDefault().Value.ToString()</h4>
+            </div>
+            <div class="modal-body">
+                <span id="guestUrl"></span><button type="button" class="btn btn-blue mobBttn" id="copyToClipboard" style="cursor:pointer;float:right"><i class="fa fa-copy"></i></button>
+            </div>
+        </div>
+    </div>
+</div>
+

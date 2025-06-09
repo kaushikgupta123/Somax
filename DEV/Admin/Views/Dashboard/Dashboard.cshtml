@@ -1,0 +1,148 @@
+﻿@model Admin.Models.Dashboard.DashBoardVM
+@{
+    ViewBag.Title = "Dashboard";
+}
+@Styles.Render("~/Content/datatable")
+@section scripts{
+    <script src="~/Scripts/Pages/Dashboard/Dashboard.js"></script>
+    @Scripts.Render("~/bundles/datatable")
+}
+
+<link href="~/Scripts/Metronic/assets/demo/default/base/GlobalSearchGrid.css" rel="stylesheet" />
+<link href="~/Scripts/Metronic/assets/demo/default/base/style_newCustom.css" rel="stylesheet" />
+<div class="m-subheader ">
+    <div class="d-flex align-items-center">
+        <div class="mr-auto">
+            <h3 class="m-subheader__title ">@Model.Loc.Where(a => a.ResourceId == "spnDashboard").FirstOrDefault().Value.ToString()</h3>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-xl-12">
+        <div class="m-portlet m-portlet--full-height m-portlet--fit">
+            <div class="m-portlet__head">
+                <div class="m-portlet__head-caption">
+                    <div class="m-portlet__head-title">
+                        <h3 class="m-portlet__head-text">
+                            @Model.Loc.Where(a => a.ResourceId == "spnGlobalMaintenance").FirstOrDefault().Value.ToString()
+                        </h3>
+                    </div>
+                </div>
+            </div>
+
+            <div class="m-portlet__body">
+                <div class="tab-content">
+                    <div class="dateRangeDrop">
+                        <div class="btn-group bootstrap-select m-datatable__pager-size dropup show selectDrop">
+                            @Html.DropDownListFor(m => m.DashboardGridHours, new SelectList(Model.DashboardGridHoursList, "Value", "Text"), null, new { id = "MaintenanceDropdown", @class = "selectpicker m-datatable__pager-size" })
+                        </div>
+                        <div style="clear:both; height:15px;"></div>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table id="MaintenanceTable" class="eqpDtlTbl row-border custom-sort tblMain" style="width:100%;">
+                            <thead>
+                                <tr>
+                                    <th>@Model.Loc.Where(a => a.ResourceId == "spnClientGlobal").FirstOrDefault().Value.ToString()</th>
+                                    <th> @Model.Loc.Where(a => a.ResourceId == "spnSiteGlobal").FirstOrDefault().Value.ToString()</th>
+                                    <th style="text-align:right !important;"> @Model.Loc.Where(a => a.ResourceId == "spnWorkOrdersCreated").FirstOrDefault().Value.ToString()</th>
+                                    <th style="text-align:right !important;">@Model.Loc.Where(a => a.ResourceId == "spnWorkOrdersCompleted").FirstOrDefault().Value.ToString()</th>
+                                    <th style="text-align:right !important;">@Model.Loc.Where(a => a.ResourceId == "spnLaborHours").FirstOrDefault().Value.ToString()</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xl-12">
+        <div class="m-portlet m-portlet--full-height m-portlet--fit">
+            <div class="m-portlet__head">
+                <div class="m-portlet__head-caption">
+                    <div class="m-portlet__head-title">
+                        <h3 class="m-portlet__head-text">
+                            @Model.Loc.Where(a => a.ResourceId == "spnInventory").FirstOrDefault().Value.ToString()
+                        </h3>
+                    </div>
+                </div>
+            </div>
+
+            <div class="m-portlet__body">
+                <div class="tab-content">
+
+                    <div class="table-responsive">
+                        <table id="InventoryTable" class="eqpDtlTbl row-border custom-sort tblMain" style="width:100%;">
+                            <thead>
+                                <tr>
+                                    <th>@Model.Loc.Where(a => a.ResourceId == "spnClientGlobal").FirstOrDefault().Value.ToString()</th>
+                                    <th>@Model.Loc.Where(a => a.ResourceId == "spnSiteGlobal").FirstOrDefault().Value.ToString()</th>
+                                    <th style="text-align:right !important;">@Model.Loc.Where(a => a.ResourceId == "spnValuation").FirstOrDefault().Value.ToString()</th>
+                                    <th style="text-align:right !important;">@Model.Loc.Where(a => a.ResourceId == "globalLowParts").FirstOrDefault().Value.ToString()</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xl-12">
+        <div class="m-portlet m-portlet--full-height m-portlet--fit">
+            <div class="m-portlet__head">
+                <div class="m-portlet__head-caption">
+                    <div class="m-portlet__head-title">
+                        <h3 class="m-portlet__head-text">
+                            @Model.Loc.Where(a => a.ResourceId == "spnPurchasing").FirstOrDefault().Value.ToString()
+                        </h3>
+                    </div>
+                </div>
+            </div>
+
+            <div class="m-portlet__body">
+                <div class="tab-content">
+                    <div class="dateRangeDrop">
+
+                        <div class="btn-group bootstrap-select m-datatable__pager-size dropup show selectDrop">
+                            @Html.DropDownListFor(m => m.DashboardGridHours, new SelectList(Model.DashboardGridHoursList, "Value", "Text"), null, new { id = "PurchasingDropdown", @class = "selectpicker m-datatable__pager-size" })
+                        </div>
+                        <div style="clear:both; height:15px;"></div>
+                    </div>
+                    <div class="table-responsive">
+                        <table id="PurchasingTable" class="eqpDtlTbl row-border custom-sort tblMain" style="width:100%;">
+                            <thead>
+                                <tr>
+                                    <th>@Model.Loc.Where(a => a.ResourceId == "spnClientGlobal").FirstOrDefault().Value.ToString()</th>
+                                    <th>@Model.Loc.Where(a => a.ResourceId == "spnSiteGlobal").FirstOrDefault().Value.ToString()</th>
+                                    <th style="text-align:right !important;">@Model.Loc.Where(a => a.ResourceId == "spnPurchaseOrdersCreated").FirstOrDefault().Value.ToString()</th>
+                                    <th style="text-align:right !important;">@Model.Loc.Where(a => a.ResourceId == "spnPurchaseOrdersCompleted").FirstOrDefault().Value.ToString()</th>
+                                    <th style="text-align:right !important;">@Model.Loc.Where(a => a.ResourceId == "spnReceivedAmount").FirstOrDefault().Value.ToString()</th>
+                                </tr>
+                            </thead>
+                            <tfoot>
+                                <tr>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th style="text-align:right !important;font-weight: 500 !important;background: #b3b1b7 !important;"></th>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<style type="text/css">
+    table.dataTable tfoot th, table.dataTable tfoot td {
+        border: 1px solid #ddd !important;
+    }
+</style>

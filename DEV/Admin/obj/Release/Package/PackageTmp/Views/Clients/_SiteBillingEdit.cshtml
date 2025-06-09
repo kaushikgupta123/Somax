@@ -1,0 +1,179 @@
+﻿@model Admin.Models.Client.ClientVM
+<div class="m-subheader">
+    <div class="new-m-subheader">
+        <div class="PageTitle">
+            <div class="align-items-center separator">
+                <h3 class="m-subheader__title ">
+                    @Model.Loc.Where(a => a.ResourceId == "spnSiteGlobal").FirstOrDefault().Value.ToString()
+                </h3>
+            </div>
+        </div>
+
+        <div class="NewBreadcrumbArea">
+            <div class="newBreadcrumb">
+                <ul>
+                    <li><a href="/Admin/Dashboard/Dashboard">&nbsp;</a></li>
+                    <li><a href="/Admin/Clients/Index?page=Clients" id="anchPagename">@Model.Loc.Where(a => a.ResourceId == "spnClient").FirstOrDefault().Value.ToString()</a></li>
+                    <li class="lithisclient" data-val="@Model.SiteBillingModelView.ClientId"><a href="javascript:void(0)">@Model.SiteBillingModelView.ClientId</a></li>
+                    <li class="active">@Model.Loc.Where(a => a.ResourceId == "GlobalEditSiteBilling").FirstOrDefault().Value.ToString()</li>
+                </ul>
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+        <div style="clear:both;"></div>
+    </div>
+</div>
+@Html.Partial("_ErrorDiv")
+
+@using (Ajax.BeginForm("EditSiteBilling", "Clients", new AjaxOptions { HttpMethod = "Post", OnSuccess = "SiteBillingAddOnSuccess", OnBegin = "onLoginBegin", OnFailure = "onLoginFailure" }, new { enctype = "multipart/form-data", id = "editsitebilling" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="row">
+        <div class="col-xl-12">
+            <div class="row">
+                <div class="col-xl-12" id="btnnblock">
+                    <div class="m-portlet" id="m_portlet" style="padding:15px;">
+                        <div class="bottomBlock">
+                            <div class="tabsArea nobg" id="Identifications" style="display:block;">
+                                <ul class="listView nobrd">
+                                    <li>
+                                        <span class="label" id="spnAnniversaryDate">@Model.Loc.Where(a => a.ResourceId == "spnGlobalAnniversaryDate").FirstOrDefault().Value.ToString() :</span>
+                                        <span class="inputText">
+                                           @Html.TextBoxFor(m => m.SiteBillingModelView.AnniversaryDate, "{0:MM/dd/yyyy}", new { @class = "form-control search dtpicker", autocomplete = "off", @id = "AnniversaryDate" })
+                                        </span>
+                                    </li>
+
+                                    <li>
+                                        <span class="label" id="spnInvoiceFreq">@Model.Loc.Where(a => a.ResourceId == "spnGlobalInvoiceFreq").FirstOrDefault().Value.ToString() :</span>
+                                        <span class="inputText">
+
+                                            @Html.TextBoxFor(m => m.SiteBillingModelView.InvoiceFreq, new { @class = "form-control search m-input", @style = "color:black", autocomplete = "off", maxlength = "15" })
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label" id="spnTerms">@Model.Loc.Where(a => a.ResourceId == "spnGlobalTerms").FirstOrDefault().Value.ToString() :</span>
+                                        <span class="inputText">
+
+                                            @Html.TextBoxFor(m => m.SiteBillingModelView.Terms, new { @class = "form-control search m-input", @style = "color:black", autocomplete = "off", maxlength = "31" })
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label" id="spnCurrentInvoice">@Model.Loc.Where(a => a.ResourceId == "spnCurrentInvoice").FirstOrDefault().Value.ToString() :</span>
+                                        <span class="inputText">
+
+                                            @Html.TextBoxFor(m => m.SiteBillingModelView.CurrentInvoice, new { @class = "form-control search m-input", @style = "color:black", autocomplete = "off", maxlength = "15" })
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label" id="spnInvoiceDate">@Model.Loc.Where(a => a.ResourceId == "spnInvoiceDate").FirstOrDefault().Value.ToString() :</span>
+                                        <span class="inputText">
+                                            
+                                            @Html.TextBoxFor(m => m.SiteBillingModelView.InvoiceDate, "{0:MM/dd/yyyy}", new { @class = "form-control search dtpicker", autocomplete = "off", @id = "InvoiceDate" })
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label" id="spnNextInvoiceDate">@Model.Loc.Where(a => a.ResourceId == "spnNextInvoiceDate").FirstOrDefault().Value.ToString() :</span>
+                                        <span class="inputText">
+                                           
+                                            @Html.TextBoxFor(m => m.SiteBillingModelView.NextInvoiceDate, "{0:MM/dd/yyyy}", new { @class = "form-control search dtpicker", autocomplete = "off", @id = "NextInvoiceDate" })
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label" id="spnQuoteRequired">@Model.Loc.Where(a => a.ResourceId == "spnQuoteRequired").FirstOrDefault().Value.ToString() :</span>
+                                        <span class="inputText">@Html.CheckBoxFor(m => m.SiteBillingModelView.QuoteRequired, new { @class = "form-control m-input", id = "QuoteRequiredControl", @style = "color:black; width: auto; margin-top: 12px;" })</span>
+                                    </li>
+
+
+                                </ul>
+                            </div>
+
+                            <div style="clear:both;"></div>
+
+                            <div class="idBttns">
+                                <div class="bttn_pagin">
+                                    <div class="bttns2">
+                                        <button type="submit" class="btn btn-blue mobBttn" name="Command" id="btnSave" style="cursor:pointer" value="save"><i class="fa fa-save faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+                                    </div>
+                                    <div class="bttns"><button type="button" class="btn btn-blue mobBttn" id="btnCancelEditSiteBilling" style="cursor:pointer"><i class="fa fa-close faIcon"></i> &nbsp;  @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button></div>
+                                    <div style="clear:both;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @Html.HiddenFor(m => m.SiteBillingModelView.SiteId, new { id = "SiteId" })
+    @Html.HiddenFor(m => m.SiteBillingModelView.ClientId, new { id = "ClientId" })
+    @Html.HiddenFor(m => m.SiteBillingModelView.SiteBillingId, new { id = "SiteBillingId" })
+}
+<style type="text/css">
+    .select2-container--default .select2-selection--single .select2-selection__rendered {
+        padding-right: 30px;
+    }
+
+    .ui-tooltip.ui-tooltip1 {
+        z-index: 101 !important;
+    }
+
+    .testConnectionBtn {
+        float: right;
+    }
+
+    .openMenu .inputText.inputAdjust {
+        width: 53.5% !important;
+    }
+
+    .closeMenu .inputText.inputAdjust {
+        width: 55.5% !important;
+    }
+
+    @@media screen and (max-width: 1599px) {
+        .openMenu .inputText.inputAdjust {
+            width: 49.5% !important;
+        }
+
+        .closeMenu .inputText.inputAdjust {
+            width: 52.5% !important;
+        }
+    }
+
+    @@media screen and (max-width: 1359px) {
+        .openMenu .inputText.inputAdjust {
+            width: 45.5% !important;
+        }
+
+        .closeMenu .inputText.inputAdjust {
+            width: 49.5% !important;
+        }
+    }
+
+    @@media screen and (max-width: 1199px) {
+        .openMenu .inputText.inputAdjust {
+            width: 48% !important;
+        }
+
+        .closeMenu .inputText.inputAdjust {
+            width: 52.4% !important;
+        }
+    }
+
+    @@media screen and (max-width: 1023px) {
+        .testConnectionBtn {
+            margin-top: 10px;
+        }
+    }
+
+    @@media screen and (max-width: 639px) {
+        ul.listView.nobrd li:last-child span.label {
+            line-height: normal;
+        }
+    }
+
+    @@media screen and (max-width: 479px) {
+        .testConnectionBtn {
+            float: none;
+        }
+    }
+</style>

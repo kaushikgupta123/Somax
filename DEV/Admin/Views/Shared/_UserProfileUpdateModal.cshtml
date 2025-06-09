@@ -1,0 +1,140 @@
+﻿<div id="profileModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">My Profile</h4>
+            </div>
+            @Html.Partial("_ErrorDiv")
+            @using (Ajax.BeginForm("UpdateUserProfile", "UserProfile", null, new AjaxOptions { HttpMethod = "Post", OnSuccess = "UpdateUserProfileOnSuccess", OnBegin = "AjaxBeginFormBegin", OnComplete = "AjaxBeginFormComplete", OnFailure = "AjaxBeginFormFaillure" }, new { id = "frmuserprofile" }))
+            {
+                @Html.AntiForgeryToken()
+                <div class="modal-body">
+                    <div class="tab">
+                        <button class="profile-tablinks active" type="button" onclick="ToogleUserProfileTab(event, 'EditLogin')" id="Editlogintabbutton"><i class="fa fa-user"></i> &nbsp;Edit Login</button>
+                        <button class="profile-tablinks" type="button" onclick="ToogleUserProfileTab(event, 'UpdatePassword')" style="margin-right:0;" id="UpdatePasswordtabbutton"><i class="fa fa-shield"></i> &nbsp;Update Password</button>
+                    </div>
+                    <div id="EditLogin" class="profile-tabcontent" style="display:block;">
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <ul class="listView profileField">
+                                    <li>
+                                        <span class="label"><label>@UtilityFunction.GetMessageFromResource("FirstName", LocalizeResourceSetConstants.UserDetails) <small>*</small></label></span>                                        
+                                        <span class="inputText">
+                                            <span class="field-validation-valid" data-valmsg-for="UserProfileFirstName" data-valmsg-replace="true" style="display:none"></span>
+                                            <input type="text" class="form-control search" name="UserProfileFirstName" id="UserProfileFirstName" autocomplete="off" data-val="true" data-val-required="@UtilityFunction.GetMessageFromResource("GlobalFirstNameErrorMessage", LocalizeResourceSetConstants.Global)">
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label"><label>@UtilityFunction.GetMessageFromResource("MiddleName", LocalizeResourceSetConstants.UserDetails)</label></span>
+                                        <span class="inputText">
+                                            <input type="text" class="form-control search" name="UserProfileMiddleName" id="UserProfileMiddleName" autocomplete="off">
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label"><label>@UtilityFunction.GetMessageFromResource("LastName", LocalizeResourceSetConstants.UserDetails) <small>*</small></label></span>
+                                        <span class="inputText">
+                                            <span class="field-validation-valid" data-valmsg-for="UserProfileLastName" data-valmsg-replace="true" style="display:none"></span>
+                                            <input type="text" class="form-control search" name="UserProfileLastName" id="UserProfileLastName" autocomplete="off" data-val="true" data-val-required="@UtilityFunction.GetMessageFromResource("UserLastNameErrorMessage", LocalizeResourceSetConstants.UserDetails)">
+                                        </span>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="col-lg-6">
+                                <ul class="listView profileField mobAdjust">
+                                    <li>
+                                        <span class="label"><label>@UtilityFunction.GetMessageFromResource("Email", LocalizeResourceSetConstants.UserDetails)</label></span>
+                                        <span class="inputText">
+                                            <span class="field-validation-valid" data-valmsg-for="UserProfileEmailAddress" data-valmsg-replace="true" style="display:none"></span>
+                                            <input type="text" class="form-control search" name="UserProfileEmailAddress" id="UserProfileEmailAddress" data-val="true" data-val-email="@UtilityFunction.GetMessageFromResource("UserEmailErrorMessage", LocalizeResourceSetConstants.UserDetails)">
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label"><label>@UtilityFunction.GetMessageFromResource("spnSiteGlobal", LocalizeResourceSetConstants.Global)</label></span>
+                                        <span class="inputText"><input type="text" class="form-control search readonly" readonly="readonly" name="UserProfileSiteName" id="UserProfileSiteName"></span>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div style="clear:both;"></div>
+                        </div>
+                    </div>
+
+                    <div id="UpdatePassword" class="profile-tabcontent" style="display:none;">
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <ul class="listView profileField">
+                                    <li>
+                                        <span class="label"><label>@UtilityFunction.GetMessageFromResource("spnGlobalCurrentPassword", LocalizeResourceSetConstants.Global)</label></span>
+                                        <span class="inputText">
+                                            <input type="password" class="form-control search" name="UserProfileCurrentPassword" autocomplete="off">
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label"><label>@UtilityFunction.GetMessageFromResource("spnGlobalNewPassword", LocalizeResourceSetConstants.Global)</label></span>
+                                        <span class="inputText">
+                                            <input type="password" class="form-control search" name="UserProfileNewPassword" autocomplete="off">
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label"><label>@UtilityFunction.GetMessageFromResource("spnconPass", LocalizeResourceSetConstants.UserDetails)</label></span>
+                                        <span class="inputText">
+                                            <span class="field-validation-valid" data-valmsg-for="UserProfileConfirmPassword" data-valmsg-replace="true" style="display:none"></span>
+                                            <input type="text" class="form-control search" autocomplete="off" name="UserProfileConfirmPassword" data-val="true" data-val-equalto="@UtilityFunction.GetMessageFromResource("UserPasswordMismatchErrorMessage", LocalizeResourceSetConstants.UserDetails)" data-val-equalto-other="*.UserProfileNewPassword">
+                                        </span>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="col-lg-6">
+                                <ul class="listView profileField mobAdjust">
+                                    <li>
+                                        <span class="label"><label>@UtilityFunction.GetMessageFromResource("SecurityQuestion", LocalizeResourceSetConstants.UserDetails) <small>*</small></label></span>
+                                        <span class="inputText">
+                                            <span class="field-validation-valid" data-valmsg-for="UserProfileSecurityQuestion" data-valmsg-replace="true" style="display:none"></span>
+                                            <input type="text" class="form-control search" autocomplete="off" name="UserProfileSecurityQuestion" id="UserProfileSecurityQuestion" data-val="true" data-val-required="@UtilityFunction.GetMessageFromResource("UserSecurityQuestionErrorMessage", LocalizeResourceSetConstants.UserDetails)">
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label"><label>@UtilityFunction.GetMessageFromResource("SecurityResponse", LocalizeResourceSetConstants.UserDetails) <small>*</small></label></span>
+                                        <span class="inputText">
+                                            <span class="field-validation-valid" data-valmsg-for="UserProfileSecurityAnswer" data-valmsg-replace="true" style="display:none"></span>
+                                            <input type="text" class="form-control search" autocomplete="off" name="UserProfileSecurityAnswer" id="UserProfileSecurityAnswer" data-val="true" data-val-required="@UtilityFunction.GetMessageFromResource("UserSecurityResponseErrorMessage", LocalizeResourceSetConstants.UserDetails)">
+                                        </span>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div style="clear:both;"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="bttns2" style="margin-top:0;">
+                        <button type="submit" class="btn btn-blue mobBttn" id="btnUpdateUserProfile" style="cursor:pointer" value="save"><i class="fa fa-edit faIcon"></i> &nbsp; Update</button>
+                    </div>
+                    <div class="bttns" style="margin-top:0;">
+                        <button type="button" class="btn btn-default mobBttn" data-dismiss="modal"><i class="fa fa-times faIcon"></i> &nbsp;Cancel</button>
+                    </div>
+                    <div style="clear:both;"></div>
+                </div>
+                <input type="hidden" name="UserInfoUpdateIndex" id="UserInfoUpdateIndex" />
+                <input type="hidden" name="LoginInfoUpdateIndex" id="LoginInfoUpdateIndex" />
+            }
+        </div>
+    </div>
+</div>
+<style type="text/css">
+    #profileModal { padding-right:0 !important; }
+    #EditLogin, #UpdatePassword { background: rgb(233, 235, 238); padding: 0px 15px; margin-bottom: 10px; border: 1px solid rgb(38, 74, 124); }
+    #profileModal .tab { border-bottom: none; }
+    #profileModal .tab button { border-radius: 3px 3px 0 0; margin-bottom: 0px; border-bottom:0; }
+    #profileModal h4.modal-title { line-height: 32px; }
+    #profileModal .modal-body { padding: 10px 25px 0px !important; }
+    #profileModal .modal-footer { padding: 10px 25px !important; }
+    #profileModal .modal-dialog { max-width: 850px; }
+    ul.profileField { padding-top: 10px; }
+    ul.profileField li { border: none; height: 35px; margin-bottom: 10px; }
+    ul.profileField li span.label { height: 35px; line-height: 35px; width: 35%; }
+    ul.profileField li span.inputText { width:65%; }
+    #profileModal .errormessage {margin: 10px 25px 1px !important;}
+    #profileModal .alert.m-alert--outline.alert-danger { margin-bottom:0 !important; }
+    .ui-tooltip { z-index: 1151 !important; }
+</style>

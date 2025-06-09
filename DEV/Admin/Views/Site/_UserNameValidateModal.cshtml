@@ -1,0 +1,41 @@
+﻿@model Admin.Models.Site.SiteVM
+@using (Ajax.BeginForm("ValidateUserExist", "Site", new AjaxOptions { HttpMethod = "POST", OnBegin = "AjaxBeginFormBegin", OnSuccess = "createPartIssueURLOnSuccess", OnFailure = "AjaxBeginFormFaillure", OnComplete = "AjaxBeginFormComplete" }))
+{
+@Html.AntiForgeryToken()
+<div id="userNameValidateModal" class="modal fade" role="dialog" style="padding-right:0px !important;">
+    <div class="modal-dialog modal-info">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">@Model.Loc.Where(a => a.ResourceId == "spnCreatePartIssueUrlMsg").FirstOrDefault().Value.ToString()</h4>
+            </div>
+
+            <div class="modal-body">                
+                @Html.Partial("_ErrorDiv")
+                <div class="form-group">
+                    <label for="Line" id="lblLine">@Model.Loc.Where(a => a.ResourceId == "UserName").FirstOrDefault().Value.ToString():<small>*</small></label>
+                    @Html.ValidationMessageFor(m => m.UserValidateModel.UserName, "", new { style = "display:none" })
+                    @Html.TextBoxFor(m => m.UserValidateModel.UserName, new { @class = "form-control search", autocomplete = "off", id = "txtUserName", maxlength = 63 })
+                </div>
+            </div>
+            <div class="modal-footer" style="padding:15px 25px !important;">
+                <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-close faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button>
+                <button type="submit" class="btn btn-blue" style="float:right;"><i class="fa fa-save faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+    </div>
+</div>
+@Html.HiddenFor(m => m.UserValidateModel.ClientId)
+@Html.HiddenFor(m => m.UserValidateModel.SiteId)
+}
+<style type="text/css">
+    .ui-tooltip {
+        z-index: 1151 !important;
+    }
+
+    .errormessage {
+        margin-bottom: 1px !important;
+    }
+</style>
+

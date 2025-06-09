@@ -1,0 +1,137 @@
+﻿@model Admin.Models.KnowledgebaseCombined
+<div class="m-subheader">
+    <div class="new-m-subheader">
+        <div class="PageTitle">
+            <div class="align-items-center separator">
+                <h3 class="m-subheader__title ">
+                    @Model.Loc.Where(a => a.ResourceId == "hdrTitle").FirstOrDefault().Value.ToString()
+                </h3>
+            </div>
+        </div>
+        <div class="NewBreadcrumbArea">
+            <div class="newBreadcrumb">
+                <ul>
+                    <li><a href="/Admin/Dashboard/Dashboard">&nbsp;</a></li>
+                    <li><a href="/Admin/Knowledgebase/Index?page=Knowledgebase_Search" id="anchPagename">@Model.Loc.Where(a => a.ResourceId == "TopicSearch").FirstOrDefault().Value.ToString()</a></li>
+                    <li class="lithisKbTopics" data-val="@Model.KBTopicsModel.KBTopicsId"><a href="javascript:void(0)">@Model.KBTopicsModel.KBTopicsId</a></li>
+                    <li class="active">@Model.Loc.Where(a => a.ResourceId == "globalEdit").FirstOrDefault().Value.ToString()</li>
+                </ul>
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+        <div style="clear:both;"></div>
+    </div>
+</div>
+
+@Html.Partial("_ErrorDiv")
+@using (Ajax.BeginForm("UpdateKbTopics", "Knowledgebase", new AjaxOptions { HttpMethod = "Post", OnSuccess = "KbTopicsEditOnSuccess", OnBegin = "AjaxBeginFormBegin", OnComplete = "AjaxBeginFormComplete", OnFailure = "AjaxBeginFormFaillure" }, new { enctype = "multipart/form-data", id = "topiceditform" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="row">
+
+        <div class="col-xl-12">
+            <div class="row">
+                <div class="col-xl-12" id="btnnblock">
+                    <div class="m-portlet" id="m_portlet" style="padding:15px;">
+                        <div class="bottomBlock">
+                            <div class="tabsArea nobg" id="Identifications" style="display:block;">
+                                <ul class="listView nobrd">
+                                    <li>
+                                        <span class="label" id="spnTitle">@Html.LabelFor(m => m.KBTopicsModel.KBTopicsId)</span>
+                                        <span class="inputText readOnlyEdit">
+                                            @Html.TextBoxFor(m => m.KBTopicsModel.KBTopicsId, new { @class = "form-control search m-input", @style = "color:black", @Id = "TpoicId", autocomplete = "off", @readonly = "readonly" })
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label" id="spnTitle">@Html.LabelFor(m => m.KBTopicsModel.Title)<small>*</small></span>
+                                        <span class="inputText">
+                                            @Html.ValidationMessageFor(m => m.KBTopicsModel.Title, "", new { style = "display:none" })
+                                            @Html.TextBoxFor(m => m.KBTopicsModel.Title, new { @class = "form-control search m-input", maxlength = "63", @style = "color:black", autocomplete = "off" })
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label" id="spnCategory">@Html.LabelFor(m => m.KBTopicsModel.Category)<small>*</small></span>
+                                        <span class="inputText">
+                                            @Html.ValidationMessageFor(m => m.KBTopicsModel.Category, "", new { style = "display:none" })
+                                            @Html.DropDownListFor(m => m.KBTopicsModel.Category, Model.KBTopicsModel.KBTopicsCategoryList, "--Select--", new { @class = "form-control search select2picker", style = "width:100%;" })
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label" id="spnFolder">@Html.LabelFor(m => m.KBTopicsModel.Folder)<small>*</small></span>
+                                        <span class="inputText">
+                                            @Html.ValidationMessageFor(m => m.KBTopicsModel.Folder, "", new { style = "display:none" })
+                                            @Html.TextBoxFor(m => m.KBTopicsModel.Folder, new { @class = "form-control search m-input", @style = "color:black", autocomplete = "off", maxlength = "63" })
+                                        </span>
+                                    </li>
+
+                                    <li id="lblTopicDesc">
+                                        <span class="label" id="spnDescription">@Html.LabelFor(m => m.KBTopicsModel.Description)<small>*</small></span>
+                                        <span class="inputText" style="height:auto;">
+                                            @Html.ValidationMessageFor(m => m.KBTopicsModel.Description, "", new { style = "display:none" })
+                                            <main>
+                                                <div class="document-editor">
+                                                    <div class="toolbar-container"></div>
+                                                    <div class="content-container form-control">
+                                                        <div id="editor">@Html.Raw(Model.KBTopicsModel.Description)</div>
+                                                        @Html.HiddenFor(x => x.KBTopicsModel.Description)
+
+                                                    </div>
+                                                </div>
+                                            </main>
+                                        </span>
+                                        <div style="clear:both;"></div>
+                                    </li>
+                                    <li style="height:auto;">
+                                        <span class="label" id="spnTags">Tags</span>
+                                        <span class="inputText" style="height:auto;">
+                                            @Html.TextBoxFor(m => m.KBTopicsModel.KbTopicsTags, new { @class = "form-control search som-tagify", style = "width:100%;", id = "ddlUser", placeholder = "write some tags" })
+                                        </span>
+                                        <div style="clear:both;"></div>
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <div style="clear:both;"></div>
+
+                            <div class="idBttns">
+                                <div class="bttn_pagin">
+                                    <div class="bttns2">
+                                        <button type="submit" class="btn btn-blue mobBttn" id="btneditkbtopics"><i class="fa fa-save faIcon"></i> &nbsp;  @Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+                                    </div>
+                                    <div class="bttns"><button type="button" class="btn btn-blue mobBttn" id="btnkbtopicseditcancel"><i class="fa fa-close faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button></div>
+
+                                    <div style="clear:both;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @Html.HiddenFor(m => m.KBTopicsModel.KBTopicsId)
+    @Html.HiddenFor(m => m.KBTopicsModel.Tags);
+}
+<script>
+    $(document).ready(function () {
+        $('form').each(function () {
+            if ($(this).data('validator')) {
+                $(this).data('validator').settings.ignore = ".ck";
+            }
+        });
+    });
+</script>
+<style>
+    #kbtopicsmaincontainer .select2-selection__choice { min-height: 25px !important; height: auto; }
+    .readOnlyEdit { background: #f5f4f4 !important; }
+    .ck.ck-editor__editable_inline[dir=ltr] { min-height: 450px; max-height: 450px; }
+    .ck.ck-button .ck-button__label { font-size: 16px !important }
+    div.ck-font-size-dropdown > .ck-dropdown__panel-visible, 
+    div.ck-font-family-dropdown > .ck-dropdown__panel-visible { height: 200px; overflow-y: auto; }
+    .ck.ck-list__item { min-width: 5em; }
+    .ui-tooltip.ui-tooltip1 { z-index: 101 !important; }
+    @@media screen and (max-width: 479px) {
+        ul.listView.nobrd li#lblTopicDesc { height: auto !important; }
+    }
+</style>

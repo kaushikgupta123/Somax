@@ -1,0 +1,149 @@
+﻿@model Admin.Models.Client.ClientVM
+<div class="row">
+    <div class="col-xl-12">
+        <div class="m-portlet" id="m_portlet" style="padding:15px;">
+            <div>
+                <ul class="listView flexlist">
+                    <li>
+                        <h3>
+                            <span>
+                                @Model.Loc.Where(a => a.ResourceId == "spnDetails").FirstOrDefault().Value.ToString()</span>
+                        </h3>
+                    </li>
+                    <li>
+                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "globalSiteID").FirstOrDefault().Value.ToString() :</span>
+                        <span class="inputText">@Model.SiteModelView.SiteId</span>
+                    </li>
+                    <li>
+                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnName").FirstOrDefault().Value.ToString() :</span>
+                        <span class="inputText">@Model.SiteModelView.Name</span>
+                    </li>
+                    <li>
+                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString() :</span>
+                        <span class="inputText">@Model.SiteModelView.Description</span>
+                    </li>
+                    <li>
+                        <span class="label">@Html.LabelFor(m => m.SiteModelView.TimeZone) :</span>
+                        <span class="inputText">@Model.SiteModelView.TimeZone</span>
+                    </li>
+                    <li>
+                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "GlobalAPM").FirstOrDefault().Value.ToString() :</span>
+                        <span class="inputText">
+                            @Html.CheckBoxFor(m => m.SiteModelView.APM, new { @class = "form-control m-input", style = "color:black; width: auto;", onclick = "return false;" })
+                        </span>
+                    </li>
+                    <li>
+                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "GlobalCMMS").FirstOrDefault().Value.ToString() :</span>
+                        <span class="inputText">
+                            @Html.CheckBoxFor(m => m.SiteModelView.CMMS, new { @class = "form-control m-input", style = "color:black; width: auto;", onclick = "return false;" })
+                        </span>
+                    </li>
+                    <li>
+                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnGlobalSanitation").FirstOrDefault().Value.ToString() :</span>
+                        <span class="inputText">
+                            @Html.CheckBoxFor(m => m.SiteModelView.Sanitation, new { @class = "form-control m-input", style = "color:black; width: auto;", onclick = "return false;" })
+                        </span>
+                    </li>
+                    <li>
+                        <span class="label">@Html.LabelFor(m => m.SiteModelView.Production) :</span>
+                        <span class="inputText">
+                            @Html.CheckBoxFor(m => m.SiteModelView.Production, new { @class = "form-control m-input", style = "color:black; width: auto;", onclick = "return false;" })
+                        </span>
+                    </li>
+                    <li>
+                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnStatus").FirstOrDefault().Value.ToString() :</span>
+                        <span class="inputText">@Model.SiteModelView.Status</span>
+                    </li>
+                    <li>
+                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "globalCreateDate").FirstOrDefault().Value.ToString() :</span>
+                        <span class="inputText">
+                            @if (Model.SiteModelView.CreateDate.HasValue && Model.SiteModelView.CreateDate.Value != default(DateTime))
+                            {
+                                @Model.SiteModelView.CreateDate.Value.ToString("MM/dd/yyyy", CultureInfo.InvariantCulture)
+                            }
+                        </span>
+                    </li>
+                    <li>
+                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnUsePunchOut").FirstOrDefault().Value.ToString() :</span>
+                        <span class="inputText">
+                            @Html.CheckBoxFor(m => m.SiteModelView.UsePunchOut, new { @class = "form-control m-input", style = "color:black; width: auto;", onclick = "return false;" })
+                        </span>
+                    </li>
+                    <li>
+                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnSiteAppUsers").FirstOrDefault().Value.ToString() :</span>
+                        <span class="inputText">@Model.SiteModelView.AppUsers</span>
+                    </li>
+                    <li>
+                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnSiteMaxAppUsers").FirstOrDefault().Value.ToString() :</span>
+                        <span class="inputText">@Model.SiteModelView.MaxAppUsers</span>
+                    </li>
+                    <li>
+                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnSiteWorkRequestUsers").FirstOrDefault().Value.ToString() :</span>
+                        <span class="inputText">@Model.SiteModelView.WorkRequestUsers</span>
+                    </li>
+                    <li>
+                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnSiteMaxWorkRequestUsers").FirstOrDefault().Value.ToString() :</span>
+                        <span class="inputText">@Model.SiteModelView.MaxWorkRequestUsers</span>
+                    </li>
+                    <li>
+                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnSiteSanitationUsers").FirstOrDefault().Value.ToString() :</span>
+                        <span class="inputText">@Model.SiteModelView.SanitationUsers</span>
+                    </li>
+                    <li>
+                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnSiteMaxSanitationUsers").FirstOrDefault().Value.ToString() :</span>
+                        <span class="inputText">@Model.SiteModelView.MaxSanitationUsers</span>
+                    </li>
+                    <li>
+                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnSiteProductionUsers").FirstOrDefault().Value.ToString() :</span>
+                        <span class="inputText">@Model.SiteModelView.ProdAppUsers</span>
+                    </li>
+                    <li>
+                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnSiteMaxProductionUsers").FirstOrDefault().Value.ToString() :</span>
+                        <span class="inputText">@Model.SiteModelView.MaxProdAppUsers</span>
+                    </li>
+
+                </ul>
+            </div>
+            <div class="editBttn">
+
+                <button type="button" class="btn btn-blue" id="btnEditSite"><i class="fa fa-pencil" style="margin-top:-3px;"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalEdit").FirstOrDefault().Value.ToString()</button>
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+    </div>
+</div>
+@Html.HiddenFor(m => m.SiteModelView.SiteId, new { id = "SiteId" })
+
+
+<style>
+    .flexlist li {
+        height: auto;
+        display: flex;
+        padding-top: 10px;
+        padding-bottom:10px;
+        min-height: 48px;
+        height:auto !important;
+    }
+
+
+
+    .flexlist li .inputText input {
+        margin-top: 5px !important;
+    }
+
+    ul.listView.flexlist li span.inputText, ul.listView.flexlist li span.label {
+        float: none !important;
+        height: auto !important;
+        line-height: 20px !important;
+    }
+
+    ul.listView.flexlist li span.inputText {
+        height: auto !important;
+    }
+
+    ul.listView.flexlist li span.label {
+        padding-right: 15px;
+    }
+
+
+</style>

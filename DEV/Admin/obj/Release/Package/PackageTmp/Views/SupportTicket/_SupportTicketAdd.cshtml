@@ -1,0 +1,257 @@
+﻿@model Admin.Models.SupportTicket.SupportTicketVM
+
+@if (Model.SupportTicketModel.SupportTicketId == 0)
+{
+    <div class="m-subheader">
+        <div class="new-m-subheader">
+            <div class="PageTitle">
+                <div class="align-items-center separator">
+                    <h3 class="m-subheader__title ">
+                        @Model.Loc.Where(a => a.ResourceId == "spnSupportTicket").FirstOrDefault().Value.ToString()
+                    </h3>
+                </div>
+            </div>
+
+            <div class="NewBreadcrumbArea">
+                <div class="newBreadcrumb">
+                    <ul>
+                        <li><a href="/Admin/Dashboard/Dashboard">&nbsp;</a></li>
+                        <li><a href="/Admin/SupportTicket/Index?page=SupportTicket" id="anchPagename">@Model.Loc.Where(a => a.ResourceId == "spnSupportTicket").FirstOrDefault().Value.ToString()</a></li>
+                        <li class="active">@Model.Loc.Where(a => a.ResourceId == "spnAddNewTicket").FirstOrDefault().Value.ToString()</li>
+                    </ul>
+                    <div style="clear:both;"></div>
+                </div>
+            </div>
+            <div style="clear:both;"></div>
+        </div>
+    </div>
+}
+else
+{
+    <div class="m-subheader">
+        <div class="new-m-subheader">
+            <div class="PageTitle">
+                <div class="align-items-center separator">
+                    <h3 class="m-subheader__title ">
+                        @Model.Loc.Where(a => a.ResourceId == "spnSupportTicket").FirstOrDefault().Value.ToString()
+                    </h3>
+                </div>
+            </div>
+
+            <div class="NewBreadcrumbArea">
+                <div class="newBreadcrumb">
+                    <ul>
+                        <li><a href="/Admin/Dashboard/Dashboard">&nbsp;</a></li>
+                        <li><a href="/Admin/SupportTicket/Index?page=SupportTicket" id="anchPagename">@Model.Loc.Where(a => a.ResourceId == "spnSupportTicket").FirstOrDefault().Value.ToString()</a></li>
+                        <li><a href="javascript:void(0)" id="brdsupportticket" data-val="@Model.SupportTicketModel.SupportTicketId">@Model.SupportTicketModel.SupportTicketId</a></li>
+                        <li class="active">@Model.Loc.Where(a => a.ResourceId == "spnEditTicket").FirstOrDefault().Value.ToString()</li>
+                    </ul>
+                    <div style="clear:both;"></div>
+                </div>
+            </div>
+            <div style="clear:both;"></div>
+        </div>
+    </div>
+}
+@Html.Partial("_ErrorDiv")
+
+@using (Ajax.BeginForm("AddSupportTicket", "SupportTicket", new AjaxOptions { HttpMethod = "Post", OnSuccess = "SupportTicketAddOnSuccess", OnBegin = "onLoginBegin", OnFailure = "onLoginFailure" }, new { enctype = "multipart/form-data", id = "ticketpaddform" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="row">
+        <div class="col-xl-12">
+            <div class="row">
+                <div class="col-xl-12" id="btnnblock">
+                    <div class="m-portlet" id="m_portlet" style="padding:15px;">
+                        <div class="bottomBlock">
+                            <div class="tabsArea nobg" id="Identifications" style="display:block;">
+                                <ul class="listView nobrd" style="overflow:auto">
+                                    <li>
+                                        <span class="label" id="spnName">@Model.Loc.Where(a => a.ResourceId == "spnClientGlobal").FirstOrDefault().Value.ToString()<small>*</small></span>
+                                        <span class="inputText">
+                                            @Html.ValidationMessageFor(m => m.SupportTicketModel.ClientId, "", new { style = "display:none" })
+                                            @Html.DropDownListFor(m => m.SupportTicketModel.ClientId, Model.SupportTicketModel.ClientList, "--Select--", new { @class = "form-control search select2picker", @id = "ddlClient", style = "width:100%;" })
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label" id="spnName">@Model.Loc.Where(a => a.ResourceId == "spnSiteGlobal").FirstOrDefault().Value.ToString()<small>*</small></span>
+                                        <span class="inputText">
+                                            @Html.ValidationMessageFor(m => m.SupportTicketModel.SiteId, "", new { style = "display:none" })
+                                            <select id="ddlSite" style="width:100%;" class="form-control search select2picker" name="SupportTicketModel.SiteId" data-val="true" data-val-required="">
+                                                <option value="">--Select--</option>
+                                            </select>
+                                        </span>
+                                    </li>
+                                    @if (Model.SupportTicketModel.SupportTicketId != 0)
+                                    {
+                                        <li>
+                                            <span class="label" id="spnName">@Model.Loc.Where(a => a.ResourceId == "spnAgent").FirstOrDefault().Value.ToString()<small>*</small></span>
+                                            <span class="inputText">
+                                                @Html.ValidationMessageFor(m => m.SupportTicketModel.Agent_PersonnelId, "", new { style = "display:none" })
+                                                <select id="ddlAgent" style="width:100%;" class="form-control search select2picker" name="SupportTicketModel.Agent_PersonnelId" data-val="true" data-val-required="">
+                                                    <option value="">--Select--</option>
+                                                </select>
+                                            </span>
+                                        </li>
+                                    }
+                                    <li>
+                                        <span class="label" id="spnName">@Model.Loc.Where(a => a.ResourceId == "spnContact").FirstOrDefault().Value.ToString()<small>*</small></span>
+                                        <span class="inputText">
+                                            @Html.ValidationMessageFor(m => m.SupportTicketModel.Contact_PersonnelId, "", new { style = "display:none" })
+                                            <select id="ddlContact" style="width:100%;" class="form-control search select2picker" name="SupportTicketModel.Contact_PersonnelId" data-val="true" data-val-required="">
+                                                <option value="">--Select--</option>
+                                            </select>
+                                        </span>
+                                    </li>
+
+                                    <li>
+                                        <span class="label" id="spnLegalName">@Model.Loc.Where(a => a.ResourceId == "globalSubject").FirstOrDefault().Value.ToString()<small>*</small></span>
+                                        <span class="inputText">
+                                            @Html.ValidationMessageFor(m => m.SupportTicketModel.Subject, "", new { style = "display:none" })
+                                            @Html.TextBoxFor(m => m.SupportTicketModel.Subject, new { @class = "form-control search m-input", @style = "color:black", autocomplete = "off", maxlength = "63" })
+                                        </span>
+                                    </li>
+                                    @if (Model.SupportTicketModel.SupportTicketId == 0)
+                                    {
+                                        <li id="lblTopicDesc">
+                                            <span class="label" id="spnContact">@Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString()<small> *</small></span>
+                                            <span class="inputText" style="height:auto;">
+                                                @Html.ValidationMessageFor(m => m.SupportTicketModel.Description, "", new { style = "display:none" })
+                                                <main>
+                                                    <div class="document-editor">
+                                                        <div class="toolbar-container"></div>
+                                                        <div class="content-container form-control">
+                                                            <div id="editor"></div>
+                                                            @Html.HiddenFor(x => x.SupportTicketModel.Description)
+                                                            @*@Html.TextAreaFor(m => m.KBTopicsModel.Description, new { @class = "form-control search m-input", @style = "color:black;zIndex:999", autocomplete = "off", @rows = "2" })*@
+                                                        </div>
+                                                    </div>
+                                                </main>
+                                            </span>
+                                        </li>
+                                    }
+                                    else
+                                    {
+                                        <li id="lblTopicDesc">
+                                            <span class="label" id="spnDescription">@Model.Loc.Where(a => a.ResourceId == "spnDescription").FirstOrDefault().Value.ToString()<small>*</small></span>
+                                            <span class="inputText" style="height:auto;">
+                                                @Html.ValidationMessageFor(m => m.SupportTicketModel.Description, "", new { style = "display:none" })
+                                                <main>
+                                                    <div class="document-editor">
+                                                        <div class="toolbar-container"></div>
+                                                        <div class="content-container form-control">
+                                                            <div id="editor">@Html.Raw(Model.SupportTicketModel.Description)</div>
+                                                            @Html.HiddenFor(x => x.SupportTicketModel.Description)
+
+                                                        </div>
+                                                    </div>
+                                                </main>
+                                            </span>
+                                            <div style="clear:both;"></div>
+                                        </li>
+                                    }
+                                    <li>
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "GlobalType").FirstOrDefault().Value.ToString()<small>*</small></span>
+                                        <span class="inputText">
+                                            @Html.ValidationMessageFor(m => m.SupportTicketModel.Type, "", new { style = "display:none" })
+                                            @Html.DropDownListFor(m => m.SupportTicketModel.Type, Model.SupportTicketModel.TypeList, "--Select--", new { @class = "form-control search select2picker", style = "width:100%;" })
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnTags").FirstOrDefault().Value.ToString()</span>
+                                        <span class="inputText">
+                                            @Html.TextBoxFor(m => m.SupportTicketModel.Tags, new { @class = "form-control search som-tagify", style = "width:100%;", id = "ddlTag" })
+                                        </span>
+                                    </li>
+
+                                </ul>
+                            </div>
+
+                            <div style="clear:both;"></div>
+
+                            <div class="idBttns">
+                                <div class="bttn_pagin">
+                                    <div class="bttns2">
+                                        @if (Model.SupportTicketModel.SupportTicketId == 0)
+                                        {
+                                            <button type="submit" class="btn btn-white mobBttn" name="Command" id="btnSaveAnotherOpen" style="cursor:pointer" value="saveAdd"><i class="fa fa-save faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalSaveAndAdd").FirstOrDefault().Value.ToString()</button>
+                                        }
+                                        <button type="submit" class="btn btn-blue mobBttn" name="Command" id="btnSave" style="cursor:pointer" value="save"><i class="fa fa-save faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+                                    </div>
+                                    <div class="bttns"><button type="button" class="btn btn-blue mobBttn" id="btnCancelAddClient" style="cursor:pointer"><i class="fa fa-close faIcon"></i> &nbsp;  @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button></div>
+                                    <div style="clear:both;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @Html.HiddenFor(m => m.SupportTicketModel.SupportTicketId)
+    if (Model.SupportTicketModel.SupportTicketId != 0)
+    {
+        @Html.HiddenFor(m => m.SupportTicketModel.Agent_PersonnelId)
+    }
+    @Html.HiddenFor(m => m.SupportTicketModel.SiteId)
+    @Html.HiddenFor(m => m.SupportTicketModel.Contact_PersonnelId, new { @class = "form-control search m-input" })
+}
+@if (Model.SupportTicketModel.SupportTicketId != 0)
+{
+    @Html.HiddenFor(m => m.SupportTicketModel.ClientId, new { @id = "EditPageClientId" })
+    @Html.HiddenFor(m => m.SupportTicketModel.SiteId, new { @id = "EditPageSiteId" })
+}
+
+<style type="text/css">
+    #ui-datepicker-div.ui-datepicker.ui-widget.ui-widget-content {
+        z-index: 1153 !important;
+        top: 235px !important;
+    }
+
+    #supportticketmaincontainer .select2-selection__choice {
+        min-height: 25px !important;
+        height: auto;
+    }
+
+    .ck.ck-editor__editable_inline[dir=ltr] {
+        min-height: 450px;
+        max-height: 450px;
+    }
+
+    .ck.ck-button .ck-button__label {
+        font-size: 16px !important
+    }
+    /*    .ck.ck-dropdown .ck-dropdown__panel.ck-dropdown__panel_se.ck-dropdown__panel-visible {
+            height: 200px;
+            overflow-y: auto;
+        }*/
+    div.ck-font-size-dropdown > .ck-dropdown__panel-visible, div.ck-font-family-dropdown > .ck-dropdown__panel-visible {
+        height: 200px;
+        overflow-y: auto;
+    }
+
+    .ck.ck-list__item {
+        min-width: 5em;
+    }
+
+    .ui-tooltip.ui-tooltip1 {
+        z-index: 101 !important;
+    }
+
+    @@media screen and (max-width: 479px) {
+        ul.listView.nobrd li#lblTopicDesc {
+            height: auto !important;
+        }
+    }
+</style>
+<script>
+    $(document).ready(function () {
+        $('form').each(function () {
+            if ($(this).data('validator')) {
+                $(this).data('validator').settings.ignore = ".ck";
+            }
+        });
+    });
+
+
+</script>

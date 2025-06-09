@@ -1,0 +1,381 @@
+﻿@model Admin.Models.Client.ClientVM
+
+<div class="m-subheader">
+    <div class="new-m-subheader">
+        <div class="PageTitle">
+            <div class="align-items-center separator">
+                <h3 class="m-subheader__title ">
+                    @Model.Loc.Where(a => a.ResourceId == "spnClient").FirstOrDefault().Value.ToString()
+                </h3>
+            </div>
+        </div>
+
+        <div class="NewBreadcrumbArea">
+            <div class="newBreadcrumb">
+                <ul>
+                    <li><a href="/Admin/Dashboard/Dashboard">&nbsp;</a></li>
+                    <li><a href="/Admin/Client/Index?page=Clients" id="anchPagename">@Model.Loc.Where(a => a.ResourceId == "spnClient").FirstOrDefault().Value.ToString()</a></li>
+                    <li class="lithisclient" data-val="@Model.ClientModel.ClientId"><a href="javascript:void(0)">@Model.ClientModel.ClientId</a></li>
+                    <li class="active">@Model.Loc.Where(a => a.ResourceId == "globalEdit").FirstOrDefault().Value.ToString()</li>
+                </ul>
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+        <div style="clear:both;"></div>
+    </div>
+</div>
+@Html.Partial("_ErrorDiv")
+
+@using (Ajax.BeginForm("UpdateClient", "Client", new AjaxOptions { HttpMethod = "Post", OnSuccess = "ClientEditOnSuccess", OnBegin = "onLoginBegin", OnFailure = "onLoginFailure" }, new { enctype = "multipart/form-data", id = "eqpaddform" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="row">
+        <div class="col-xl-3">
+            <div class="m-portlet">
+                <div class="sideMenuArea nobg">
+                    <ul class="vtabs" id="detmaintab">
+                        <li id="ClientInformationtab" class="active"><a href="#Identifications">@Model.Loc.Where(a => a.ResourceId == "spnClientInformation").FirstOrDefault().Value.ToString()</a></li>
+                        <li id="DefualtLocalizationInformationtab"><a href="#DefualtLocalizationInformation">@Model.Loc.Where(a => a.ResourceId == "spnDefualtLocalizationInformation").FirstOrDefault().Value.ToString() </a></li>
+                        <li id="DefaultUIConfigurationInformationtab"><a href="#DefaultUIConfigurationInformation">@Model.Loc.Where(a => a.ResourceId == "spnDefaultUIConfigurationInformation").FirstOrDefault().Value.ToString()</a></li>
+                        <li id="SystemInformationtab"><a href="#SystemInformation">@Model.Loc.Where(a => a.ResourceId == "spnSystemInformation").FirstOrDefault().Value.ToString()</a></li>
+                    </ul>
+                </div>
+
+                <div class="selectTabs" id="selectTabs">
+                    <select class="form-control" id="colorselector">
+                        <option value="Identifications">@Model.Loc.Where(a => a.ResourceId == "spnClientInformation").FirstOrDefault().Value.ToString()</option>
+                        <option value="DefualtLocalizationInformation">@Model.Loc.Where(a => a.ResourceId == "spnDefualtLocalizationInformation").FirstOrDefault().Value.ToString()</option>
+                        <option value="DefaultUIConfigurationInformation">@Model.Loc.Where(a => a.ResourceId == "spnDefaultUIConfigurationInformation").FirstOrDefault().Value.ToString()</option>
+                        <option value="SystemInformation">@Model.Loc.Where(a => a.ResourceId == "spnSystemInformation").FirstOrDefault().Value.ToString()</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-9">
+            <div class="row">
+                <div class="col-xl-12" id="btnnblock">
+                    <div class="m-portlet" id="m_portlet" style="padding:15px;">
+                        <div class="bottomBlock">
+                            <div class="tabsArea nobg" id="Identifications" style="display:block;">
+                                <ul class="listView nobrd">
+                                    <li>
+                                        <span class="label" id="spnClientId">@Html.LabelFor(m => m.ClientModel.ClientId)</span>
+                                        <span class="inputText readOnlyEdit">
+                                            @Html.TextBoxFor(m => m.ClientModel.ClientId, new { @class = "form-control search m-input", @style = "color:black", @Id = "ClientId", autocomplete = "off", @readonly = "readonly" })
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label" id="spnName">@Html.LabelFor(m => m.ClientModel.Name)<small>*</small></span>
+                                        <span class="inputText">
+                                            @Html.ValidationMessageFor(m => m.ClientModel.Name, "", new { style = "display:none" })
+                                            @Html.TextBoxFor(m => m.ClientModel.Name, new { @class = "form-control search m-input", @style = "color:black", autocomplete = "off", maxlength = "63" })
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label" id="spnLegalName">@Html.LabelFor(m => m.ClientModel.LegalName) <small> *</small></span>
+                                        <span class="inputText">
+                                            @Html.ValidationMessageFor(m => m.ClientModel.LegalName, "", new { style = "display:none" })
+                                            @Html.TextBoxFor(m => m.ClientModel.LegalName, new { @class = "form-control search m-input", @style = "color:black", autocomplete = "off", maxlength = "63" })
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label" id="spnContact">@Html.LabelFor(m => m.ClientModel.Contact)<small> *</small></span>
+                                        <span class="inputText">
+                                            @Html.ValidationMessageFor(m => m.ClientModel.Contact, "", new { style = "display:none" })
+                                            @Html.TextBoxFor(m => m.ClientModel.Contact, new { @class = "form-control search m-input", @style = "color:black", autocomplete = "off", maxlength = "30" })
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label">@Html.LabelFor(m => m.ClientModel.Email)<small>*</small></span>
+                                        <span class="inputText">
+                                            @Html.ValidationMessageFor(m => m.ClientModel.Email, "", new { style = "display:none" })
+                                            @Html.TextBoxFor(m => m.ClientModel.Email, new { @class = "form-control search m-input", @style = "color:black", autocomplete = "off", maxlength = "100" })
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label">@Html.LabelFor(m => m.ClientModel.BusinessType)</span>
+                                        <span class="inputText">
+                                            @Html.DropDownListFor(m => m.ClientModel.BusinessType, Model.ClientModel.BusinessTypeList, "--Select--", new { @class = "form-control search select2picker", style = "width:100%;" })
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label" id="spnWebsite">@Html.LabelFor(m => m.ClientModel.Website)</span>
+                                        <span class="inputText">
+                                            @Html.TextBoxFor(m => m.ClientModel.Website, new { @class = "form-control search m-input", @style = "color:black", autocomplete = "off", maxlength = "31" })
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label" id="spnAnnualSales">@Html.LabelFor(m => m.ClientModel.AnnualSales)</span>
+                                        <span class="inputText">
+                                            @Html.TextBoxFor(m => m.ClientModel.AnnualSales, new { @class = "form-control search m-input integerinput", @style = "color:black", autocomplete = "off", maxlength = "63" })
+                                        </span>
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <div class="tabsArea nobg " id="DefualtLocalizationInformation" style="display:none;">
+                                <ul class="listView nobrd">
+                                    <li>
+                                        <span class="label" id="spnLocalization">@Html.LabelFor(m => m.ClientModel.Localization)<small>*</small></span>
+                                        <span class="inputText">
+                                            @Html.ValidationMessageFor(m => m.ClientModel.Localization, "", new { style = "display:none" })
+                                            @Html.DropDownListFor(m => m.ClientModel.Localization, Model.LocalizationsList, "--Select--", new { @class = "form-control search  select2picker", style = "width:100%;" })
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label" id="spnLocalizationLocation">@Html.LabelFor(m => m.ClientModel.LocalizationLocation)</span>
+                                        <span class="inputText">
+                                            @Html.TextBoxFor(m => m.ClientModel.LocalizationLocation, new { @class = "form-control search m-input", @style = "color:black", autocomplete = "off", maxlength = "63" })
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label" id="spnLocalizationCompany">@Html.LabelFor(m => m.ClientModel.LocalizationCompany)</span>
+                                        <span class="inputText">
+                                            @Html.TextBoxFor(m => m.ClientModel.LocalizationCompany, new { @class = "form-control search m-input", @style = "color:black", autocomplete = "off", maxlength = "63" })
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label" id="spnLocalizationHierarchicalLevel1">@Html.LabelFor(m => m.ClientModel.LocalizationHierarchicalLevel1)</span>
+                                        <span class="inputText">
+                                            @Html.TextBoxFor(m => m.ClientModel.LocalizationHierarchicalLevel1, new { @class = "form-control search m-input", @style = "color:black", autocomplete = "off", maxlength = "63" })
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label" id="spnLocalizationHierarchicalLevel2">@Html.LabelFor(m => m.ClientModel.LocalizationHierarchicalLevel2)</span>
+                                        <span class="inputText">
+                                            @Html.TextBoxFor(m => m.ClientModel.LocalizationHierarchicalLevel2, new { @class = "form-control search m-input", @style = "color:black", autocomplete = "off", maxlength = "63" })
+                                        </span>
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <div class="tabsArea nobg" id="DefaultUIConfigurationInformation" style="display:none;">
+                                <ul class="listView nobrd">
+                                    <li style="height:auto;">
+                                        <span class="label" id="spnUIConfigurationCompany">@Html.LabelFor(m => m.ClientModel.UIConfiguration)<small>*</small></span>
+                                        <span class="inputText">
+                                            @Html.ValidationMessageFor(m => m.ClientModel.UIConfiguration, "", new { style = "display:none" })
+                                            @Html.TextBoxFor(m => m.ClientModel.UIConfiguration, new { @class = "form-control search m-input", @style = "color:black", autocomplete = "off", maxlength = "63" })
+                                        </span>
+                                        <div style="clear:both;"></div>
+                                    </li>
+                                    <li>
+                                        <span class="label" id="spnUIConfigurationLocation">@Html.LabelFor(m => m.ClientModel.UIConfigurationLocation)</span>
+                                        <span class="inputText">
+                                            @Html.TextBoxFor(m => m.ClientModel.UIConfigurationLocation, new { @class = "form-control search m-input", @style = "color:black", autocomplete = "off", maxlength = "63" })
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label" id="spnUIConfigurationHierarchicalLevel1">@Html.LabelFor(m => m.ClientModel.UIConfigurationHierarchicalLevel1)</span>
+                                        <span class="inputText">
+                                            @Html.TextBoxFor(m => m.ClientModel.UIConfigurationHierarchicalLevel1, new { @class = "form-control search m-input", @style = "color:black", autocomplete = "off", maxlength = "63" })
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label" id="spnUIConfigurationLocation">@Html.LabelFor(m => m.ClientModel.UIConfigurationHierarchicalLevel2)</span>
+                                        <span class="inputText">
+                                            @Html.TextBoxFor(m => m.ClientModel.UIConfigurationHierarchicalLevel2, new { @class = "form-control search m-input", @style = "color:black", autocomplete = "off", maxlength = "63" })
+                                        </span>
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <div class="tabsArea nobg" id="SystemInformation" style="display:none;">
+                                <ul class="listView nobrd">
+                                    <li id="lblCS" style="height:auto;">
+                                        <span class="label" id="spnCS">@Html.LabelFor(m => m.ClientModel.ConnectionString)<small>*</small></span>
+                                        <span class="inputText inputAdjust" style="height:auto;">
+                                            @Html.ValidationMessageFor(m => m.ClientModel.ConnectionString, "", new { style = "display:none" })
+                                            @Html.TextAreaFor(m => m.ClientModel.ConnectionString, new { @class = "form-control search m-input", @style = "color:black", autocomplete = "off", maxlength = "400" })
+                                        </span>
+                                        <div class="testConnectionBtn">
+                                            <span>
+                                                <button type="button" class="btn btn-white mobBttn" name="Command" id="btnTestConnection" style="cursor:pointer;width:100%" value="conTest"><i class="fa fa-external-link faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalTestConnectionString").FirstOrDefault().Value.ToString()</button>
+                                            </span>
+                                        </div>
+                                        <div style="clear:both;"></div>
+                                    </li>
+
+                                    <li>
+                                        <span class="label" id="spnDefaultCustomerManager">@Html.LabelFor(m => m.ClientModel.DefaultCustomerManager)<small>*</small></span>
+                                        <span class="inputText">
+                                            @Html.ValidationMessageFor(m => m.ClientModel.DefaultCustomerManager, "", new { style = "display:none" })
+                                            @Html.TextBoxFor(m => m.ClientModel.DefaultCustomerManager, new { @class = "form-control search m-input", @style = "color:black", autocomplete = "off", maxlength = "63" })
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label" id="spnDefaultTimeZone">@Html.LabelFor(m => m.ClientModel.DefaultTimeZone)<small>*</small></span>
+                                        <span class="inputText">
+                                            @Html.ValidationMessageFor(m => m.ClientModel.DefaultTimeZone, "", new { style = "display:none" })
+                                            @Html.DropDownListFor(m => m.ClientModel.DefaultTimeZone, Model.TimeZonelist, "--Select--", new { @class = "form-control search  select2picker", style = "width:100%;" })
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label" id="spnPackageLevel">@Html.LabelFor(m => m.ClientModel.PackageLevel)<small>*</small></span>
+                                        <span class="inputText">
+                                            @Html.ValidationMessageFor(m => m.ClientModel.PackageLevel, "", new { style = "display:none" })
+                                            @Html.DropDownListFor(m => m.ClientModel.PackageLevel, Model.ClientModel.PackagelevelList, "--Select--", new { @class = "form-control search  m-input select2picker", style = "width:100%;" })
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label" id="spnPackageLevel">@Html.LabelFor(m => m.ClientModel.Status)<small>*</small></span>
+                                        <span class="inputText">
+                                            @Html.ValidationMessageFor(m => m.ClientModel.Status, "", new { style = "display:none" })
+                                            @Html.DropDownListFor(m => m.ClientModel.Status, Model.InactiveFlagList, "--Select--", new { @class = "form-control search  select2picker", style = "width:100%;" })
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label" id="spnMaxAttempts">@Html.LabelFor(m => m.ClientModel.MaxAttempts)</span>
+                                        <span class="inputText">@Html.TextBoxFor(m => m.ClientModel.MaxAttempts, new { @class = "form-control search longinput", @style = "color:black", autocomplete = "off" })</span>
+                                    </li>
+                                    <li>
+                                        <span class="label" id="spnMaxTimeOut">@Html.LabelFor(m => m.ClientModel.MaxTimeOut)</span>
+                                        <span class="inputText">@Html.TextBoxFor(m => m.ClientModel.MaxTimeOut, new { @class = "form-control search longinput", @style = "color:black", autocomplete = "off" })</span>
+                                    </li>
+                                    <li>
+                                        <span class="label" id="spnSiteControl">@Html.LabelFor(m => m.ClientModel.SiteControl)</span>
+                                        <span class="inputText">@Html.CheckBoxFor(m => m.ClientModel.SiteControl, new { @class = "form-control m-input", id = "SiteControl", @style = "color:black; width: auto; margin-top: 12px;" })</span>
+                                    </li>
+
+                                    <li>
+                                        <span class="label" id="spnMaxSites">@Html.LabelFor(m => m.ClientModel.MaxSites)<small>*</small></span>
+                                        <span class="inputText">
+                                            @Html.ValidationMessageFor(m => m.ClientModel.MaxSites, "", new { style = "display:none" })
+                                            @Html.TextBoxFor(m => m.ClientModel.MaxSites, new { @class = "form-control search  longinput", @style = "color:black", autocomplete = "off" })
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label" id="spnSites">@Html.LabelFor(m => m.ClientModel.Sites)</span>
+                                        <span class="inputText">@Html.TextBoxFor(m => m.ClientModel.Sites, new { @class = "form-control search longinput readonly", @readonly = "readonly", @style = "color:black", autocomplete = "off" })</span>
+                                    </li>
+                                    <li>
+                                        @if (!Model.ClientModel.SiteControl)
+                                        {
+                                            <span class="label" id="spnMaxAppUsers">@Html.LabelFor(m => m.ClientModel.MaxAppUsers)<small id="MaxAppUsersReqId">*</small></span>
+                                            <span class="inputText">
+                                                @Html.ValidationMessageFor(m => m.ClientModel.MaxAppUsers, "", new { style = "display:none" })
+                                                @Html.TextBoxFor(m => m.ClientModel.MaxAppUsers, new { @class = "form-control search longinput", @style = "color:black", autocomplete = "off" })
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="label" id="spnMaxAppUsers">@Html.LabelFor(m => m.ClientModel.MaxAppUsers)<small id="MaxAppUsersReqId" style="display:none">*</small></span>
+                                            <span class="inputText">
+                                                @Html.ValidationMessageFor(m => m.ClientModel.MaxAppUsers, "", new { style = "display:none" })
+                                                @Html.TextBoxFor(m => m.ClientModel.MaxAppUsers, new { @class = "form-control search longinput readonly", @readonly = "readonly", @style = "color:black", autocomplete = "off" })
+                                            </span>
+                                        }
+                                    </li>
+                                    <li>
+                                        <span class="label" id="spnAppUsers">@Html.LabelFor(m => m.ClientModel.AppUsers)</span>
+                                        <span class="inputText">@Html.TextBoxFor(m => m.ClientModel.AppUsers, new { @class = "form-control search longinput readonly", @readonly = "readonly", @style = "color:black", autocomplete = "off" })</span>
+                                    </li>
+                                    <li>
+                                        <span class="label" id="spnMaxWorkRequestUsers">@Html.LabelFor(m => m.ClientModel.MaxWorkRequestUsers)</span>
+                                        <span class="inputText">
+                                            @if (!Model.ClientModel.SiteControl)
+                                            {
+                                                @Html.TextBoxFor(m => m.ClientModel.MaxWorkRequestUsers, new { @class = "form-control search longinput", @style = "color:black", autocomplete = "off" })
+                                            }
+                                            else
+                                            {
+                                                @Html.TextBoxFor(m => m.ClientModel.MaxWorkRequestUsers, new { @class = "form-control search longinput readonly", @readonly = "readonly", @style = "color:black", autocomplete = "off" })
+                                            }
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label" id="spnWorkRequestUsers">@Html.LabelFor(m => m.ClientModel.WorkRequestUsers)</span>
+                                        <span class="inputText">@Html.TextBoxFor(m => m.ClientModel.WorkRequestUsers, new { @class = "form-control search longinput readonly", @readonly = "readonly", @style = "color:black", autocomplete = "off" })</span>
+                                    </li>
+                                    <li>
+                                        @if (!Model.ClientModel.SiteControl)
+                                        {
+                                            <span class="label" id="spnMaxLimitedUsers">@Html.LabelFor(m => m.ClientModel.MaxLimitedUsers)<small id="MaxLimitedUsersReqId">*</small></span>
+                                            <span class="inputText">
+                                                @Html.ValidationMessageFor(m => m.ClientModel.MaxLimitedUsers, "", new { style = "display:none" })
+                                                @Html.TextBoxFor(m => m.ClientModel.MaxLimitedUsers, new { @class = "form-control search longinput", @style = "color:black", autocomplete = "off" })
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="label" id="spnMaxLimitedUsers">@Html.LabelFor(m => m.ClientModel.MaxLimitedUsers)<small id="MaxLimitedUsersReqId" style="display:none">*</small></span>
+                                            <span class="inputText">
+                                                @Html.ValidationMessageFor(m => m.ClientModel.MaxLimitedUsers, "", new { style = "display:none" })
+                                             @Html.TextBoxFor(m => m.ClientModel.MaxLimitedUsers, new { @class = "form-control search longinput readonly", @readonly = "readonly", @style = "color:black", autocomplete = "off" })</span>
+                                        }
+                                    </li>
+                                    <li>
+                                        <span class="label" id="spnLimitedUsers">@Html.LabelFor(m => m.ClientModel.LimitedUsers)</span>
+                                        <span class="inputText">@Html.TextBoxFor(m => m.ClientModel.LimitedUsers, new { @class = "form-control search longinput readonly", @style = "color:black", @readonly = "readonly", autocomplete = "off" })</span>
+                                    </li>
+                                    <li>
+                                        <span class="label" id="spnMaxSuperUsers">@Html.LabelFor(m => m.ClientModel.MaxSuperUsers)</span>
+                                        <span class="inputText">
+                                            @if (!Model.ClientModel.SiteControl)
+                                            {
+                                                @Html.TextBoxFor(m => m.ClientModel.MaxSuperUsers, new { @class = "form-control search longinput", @style = "color:black", autocomplete = "off" })
+                                            }
+                                            else
+                                            {
+                                                @Html.TextBoxFor(m => m.ClientModel.MaxSuperUsers, new { @class = "form-control search longinput readonly", @readonly = "readonly", @style = "color:black", autocomplete = "off" })
+                                            }
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label" id="spnSuperUsers">@Html.LabelFor(m => m.ClientModel.SuperUsers)</span>
+                                        <span class="inputText">@Html.TextBoxFor(m => m.ClientModel.SuperUsers, new { @class = "form-control search longinput readonly", @style = "color:black", @readonly = "readonly", autocomplete = "off" })</span>
+
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <div style="clear:both;"></div>
+
+                            <div class="idBttns">
+                                <div class="bttn_pagin">
+                                    <div class="bttns2">
+                                        <button type="submit" class="btn btn-blue mobBttn" name="Command" id="btnSave" style="cursor:pointer" value="save"><i class="fa fa-save faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+                                    </div>
+                                    <div class="bttns"><button type="button" class="btn btn-blue mobBttn" id="btnCancelEditClient" style="cursor:pointer"><i class="fa fa-close faIcon"></i> &nbsp;  @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button></div>
+                                    <div style="clear:both;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+@Html.HiddenFor(m => m.ClientModel.ClientId)
+
+<style type="text/css">
+    .select2-container--default .select2-selection--single .select2-selection__rendered { padding-right: 30px; }
+    .readOnlyEdit { background: #f5f4f4 !important; }
+    .ui-tooltip.ui-tooltip1 { z-index: 101 !important; }
+    .testConnectionBtn { float:right; }
+    .openMenu .inputText.inputAdjust { width: 53.5% !important; }
+    .closeMenu .inputText.inputAdjust { width: 55.5% !important; }
+    @@media screen and (max-width: 1599px) {
+        .openMenu .inputText.inputAdjust { width: 49.5% !important; }
+        .closeMenu .inputText.inputAdjust { width: 52.5% !important; }
+    }
+    @@media screen and (max-width: 1359px) {
+        .openMenu .inputText.inputAdjust { width: 45.5% !important; }
+        .closeMenu .inputText.inputAdjust { width: 49.5% !important; }
+    }
+    @@media screen and (max-width: 1199px) {
+        .openMenu .inputText.inputAdjust { width: 48% !important; }
+        .closeMenu .inputText.inputAdjust { width: 52.4% !important; }
+    }
+    @@media screen and (max-width: 1023px) {
+        .testConnectionBtn { margin-top:10px; }
+    }
+    @@media screen and (max-width: 639px) {
+        ul.listView.nobrd li:last-child span.label { line-height: normal; }
+    }
+    @@media screen and (max-width: 479px) {
+        .testConnectionBtn { float:none; }
+    }
+</style>

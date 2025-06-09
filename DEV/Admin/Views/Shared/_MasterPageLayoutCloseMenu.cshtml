@@ -1,0 +1,469 @@
+﻿@using DataContracts
+@using Admin.Common
+@using Common.Constants
+@using Admin.Models
+@{
+    bool PurchaseOrderImportInUse = false;
+    bool PurchaseOrderImportSwitch1 = false;
+    var menulist = (List<ViewModels.MenuVM>)Session["AdminMenuDetails"];
+    var userdata = Session["AdminUserData"];
+    UserData userData = new UserData();
+    userData = (UserData)userdata;
+
+    var encKeyV = System.Configuration.ConfigurationManager.AppSettings["encKeyV"].ToString();
+    string userNameIntials = ((userData.DatabaseKey.User.FirstName != null && userData.DatabaseKey.User.FirstName.Length > 0) ? userData.DatabaseKey.User.FirstName.Trim()[0].ToString() : "")
+                              + ((userData.DatabaseKey.User.LastName != null && userData.DatabaseKey.User.LastName.Length > 0) ? userData.DatabaseKey.User.LastName.Trim()[0].ToString() : "");
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>
+        @ViewBag.Title
+    </title>
+    <meta name="description" content="Latest updates and statistic charts">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/webfont/1.6.16/webfont.js"></script>
+    <script>
+        WebFont.load({
+            google: { "families": ["Poppins:300,400,500,600,700", "Roboto:300,400,500,600,700"] },
+            active: function () {
+                sessionStorage.fonts = true;
+            }
+        });
+    </script>
+
+    <link rel="shortcut icon" href="~/Content/Images/favicon.png" />
+    @Styles.Render("~/Content/LayoutStyle")
+    @Styles.Render("~/Content/Common")
+</head>
+
+<body class="m-page--fluid m--skin- m-content--skin-light2 m-header--fixed m-header--fixed-mobile m-aside-left--enabled m-aside-left--skin-dark m-aside-left--offcanvas m-footer--push m-aside--offcanvas-default m-brand--minimize m-aside-left--minimize">
+    @Html.Partial("_DisplayMsgLocalization")
+    @Html.Hidden("encKeyV", encKeyV)
+    <div class="overlay"></div>
+    <div class="m-grid m-grid--hor m-grid--root m-page">
+        <header class="m-grid__item m-header" data-minimize-offset="200" data-minimize-mobile-offset="200">
+            <div class="m-container m-container--fluid m-container--full-height">
+                <div class="m-stack m-stack--ver m-stack--desktop">
+                    <div class="m-stack__item m-brand  m-brand--skin-dark ">
+                        <div class="m-stack m-stack--ver m-stack--general">
+                            <div class="m-stack__item m-stack__item--middle m-brand__logo newLogo">
+                                <a href="/Admin/Dashboard/Dashboard" class="m-brand__logo-wrapper">
+                                    @*<img src="~/Content/Images/somaxLogo.png" style="width:130px; height:auto;" />*@
+                                    <img src="~/Content/Images/somaxLogoInner.png" style="width:130px; height:auto;" />
+                                </a>
+                            </div>
+                            <div class="m-stack__item m-stack__item--middle m-brand__tools toggleMenu">
+                                <a href="javascript:;" id="m_aside_left_minimize_toggle" class="m-brand__icon m-brand__toggler m-brand__toggler--left m--visible-desktop-inline-block">
+                                    <span></span>
+                                </a>
+                                <a href="javascript:;" id="m_aside_left_offcanvas_toggle" class="m-brand__icon m-brand__toggler m-brand__toggler--left m--visible-tablet-and-mobile-inline-block">
+                                    <span></span>
+                                </a>
+                                <a id="m_aside_header_menu_mobile_toggle" href="javascript:;" class="m-brand__icon m-brand__toggler m--visible-tablet-and-mobile-inline-block">
+                                    <span></span>
+                                </a>
+                                <a id="m_aside_header_topbar_mobile_toggle" href="javascript:;" class="m-brand__icon m--visible-tablet-and-mobile-inline-block">
+                                    <i class="flaticon-more"></i>
+                                </a>
+                            </div>
+                            <div class="SmallLogo" style="display:block;">
+                                <a href="/Admin/Dashboard/Dashboard" class="m-brand__logo-wrapper">
+                                    <img src="~/Content/Images/smallLogo.png" style="width:auto;height:45px;" />
+                                    @*<img src="~/Scripts/Metronic/assets/app/media/img/logos/smallLogo.png" style="width:auto;height:45px;" />*@
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="m-stack__item m-stack__item--fluid m-header-head" id="m_header_nav">
+                        <button class="m-aside-header-menu-mobile-close  m-aside-header-menu-mobile-close--skin-dark " id="m_aside_header_menu_mobile_close_btn">
+                            <i class="la la-close"></i>
+                        </button>
+                        <div id="m_header_topbar" class="m-topbar  m-stack m-stack--ver m-stack--general">
+                            <div class="m-stack__item m-topbar__nav-wrapper">
+                                <ul class="m-topbar__nav m-nav m-nav--inline">
+                                    <li class="m-nav__item m-topbar__user-profile m-topbar__user-profile--img  m-dropdown m-dropdown--medium m-dropdown--arrow m-dropdown--header-bg-fill m-dropdown--align-right m-dropdown--mobile-full-width m-dropdown--skin-light" data-dropdown-toggle="click">
+                                        <a href="#" class="m-nav__link m-dropdown__toggle">
+                                            <span class="m-topbar__userpic profileName">
+                                                <span class="m--img-rounded m--marginless m--img-centered nameinitials">@userNameIntials</span>
+                                            </span>
+                                        </a>
+                                        <div class="m-dropdown__wrapper">
+                                            <span class="m-dropdown__arrow m-dropdown__arrow--right m-dropdown__arrow--adjust"></span>
+                                            <div class="m-dropdown__inner">
+                                                <div class="m-dropdown__header m--align-center" style="background: url(../Scripts/Metronic/assets/app/media/img/misc/user_profile_bg.jpg); background-size: cover;">
+                                                    <div class="m-card-user m-card-user--skin-dark">
+                                                        <div class="m-card-user__pic profileName2">
+                                                            <span class="m--img-rounded m--marginless nameinitials">@userNameIntials</span>
+                                                        </div>
+                                                        <div class="m-card-user__details">
+                                                            <span class="m-card-user__name m--font-weight-500" id="layoutusercompletename">
+                                                                @userData.DatabaseKey.User.FirstName @userData.DatabaseKey.User.LastName
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="m-dropdown__body">
+                                                    <div class="m-dropdown__content">
+                                                        <ul class="m-nav m-nav--skin-light">
+                                                            <li class="m-nav__section m--hide">
+                                                                <span class="m-nav__section-text">
+                                                                    @UtilityFunction.GetMessageFromResource("spnSection", LocalizeResourceSetConstants.PartDetails)
+                                                                </span>
+                                                            </li>
+                                                            <li class="m-nav__item">
+                                                                <a href="javascript:void(0)" class="m-nav__link" id="showUserProfile">
+                                                                    <i class="m-nav__link-icon flaticon-profile-1"></i>
+                                                                    <span class="m-nav__link-title">
+                                                                        <span class="m-nav__link-wrap">
+                                                                            <span class="m-nav__link-text">
+                                                                                @UtilityFunction.GetMessageFromResource("spnMyProfile", LocalizeResourceSetConstants.Menu)
+                                                                            </span>
+                                                                        </span>
+                                                                    </span>
+                                                                </a>
+                                                            </li>
+                                                            
+                                                            <li class="m-nav__item">
+                                                                <a href="https://help.somax.com/" target="_blank" class="m-nav__link">
+                                                                    <i class="m-nav__link-icon flaticon-lifebuoy"></i>
+                                                                    <span class="m-nav__link-text">
+                                                                        @UtilityFunction.GetMessageFromResource("spnSupport", LocalizeResourceSetConstants.Menu)
+                                                                    </span>
+                                                                </a>
+                                                            </li>
+                                                            <li class="m-nav__separator m-nav__separator--fit"></li>
+                                                            <li class="m-nav__item">
+                                                                <a href="~/LogIn/LogOut?returnUrl=+@Request.Url.PathAndQuery" class="btn m-btn--pill btn-secondary m-btn m-btn--custom m-btn--label-brand m-btn--bolder proflogoutBttn">
+                                                                    @UtilityFunction.GetMessageFromResource("spnLogout", LocalizeResourceSetConstants.Menu)
+                                                                </a>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+        <div class="m-grid__item m-grid__item--fluid m-grid m-grid--ver-desktop m-grid--desktop m-body">
+            <button class="m-aside-left-close  m-aside-left-close--skin-dark " id="m_aside_left_close_btn">
+                <i class="la la-close"></i>
+            </button>
+            <div id="m_aside_left" class="m-grid__item	m-aside-left  m-aside-left--skin-dark mCustomScrollbar light" data-mcs-theme="minimal-dark">
+                <div id="m_ver_menu"
+                     class="m-aside-menu  m-aside-menu--skin-dark m-aside-menu--submenu-skin-dark "
+                     data-menu-vertical="true"
+                     data-menu-scrollable="false" data-menu-dropdown-timeout="500">
+                    <ul class="m-menu__nav  m-menu__nav--dropdown-submenu-arrow ">
+                        @if (menulist[0].MenuName.ToLower() == "dashboard")
+                        {
+                            <li class="m-menu__item" aria-haspopup="true">
+                                <a href="/Admin/Dashboard/Dashboard" class="m-menu__link ">
+                                    <i class="m-menu__link-icon flaticon-line-graph"></i>
+                                    <span class="m-menu__link-title">
+                                        <span class="m-menu__link-wrap">
+                                            <span class="m-menu__link-text">
+                                                @menulist[0].LocalizedName
+                                            </span>
+                                        </span>
+                                    </span>
+                                </a>
+                            </li>
+                        }
+                        @foreach (var m in menulist)
+                        {
+                            if (m.ParentMenuId == 0 && m.MenuName.ToLower().Trim() != "dashboard")
+                            {
+                                <li id="@m.LocalizedName.Replace(" ","_")" class="m-menu__item  m-menu__item--submenu rootli" aria-haspopup="true" data-menu-submenu-toggle="hover">
+                                    @if (m.Childlist.Count == 0)
+                                    {
+                                        if (m.MenuName.ToLower() == "events")
+                                        {
+                                            <a href="@string.Concat(m.MenuUrl,"?page=",m.LocalizedName.Replace(" ","_"))" class="m-menu__link">
+                                                <span class="m-menu__item-here"></span>
+                                                <i class="m-menu__link-icon @m.CssClass"></i>
+                                                <span class="m-menu__link-text">
+                                                    @m.LocalizedName
+                                                </span>
+                                                @if ((userData.Site.Sanitation == false && userData.Site.CMMS == false && userData.Site.APM == true))
+                                                {
+
+                                                    <span class="m-menu__link-badge apmBadgesmenu" style="display:none" id="spnopeneventcontainer">
+                                                        <span class="m-badge m-badge--danger" id="spnopenevent"></span>
+                                                    </span>
+                                                }
+                                                else
+                                                { <span class="m-menu__link-badge newBadges" style="display:none" id="spnopeneventcontainer">
+                                                        <span class="m-badge m-badge--danger" id="spnopenevent"></span>
+                                                    </span>}
+                                            </a>
+                                        }
+                                        else
+                                        {
+                                            <a href="@string.Concat(m.MenuUrl,"?page=",m.LocalizedName.Replace(" ","_"))" class="m-menu__link">
+                                                <span class="m-menu__item-here"></span>
+                                                <i class="m-menu__link-icon @m.CssClass"></i>
+                                                <span class="m-menu__link-text">
+                                                    @m.LocalizedName
+                                                </span>
+                                            </a>
+                                        }
+
+                                    }
+                                    else
+                                    {
+                                        <a href="@string.Concat(m.MenuUrl,"?page=",m.LocalizedName.Replace(" ","_"))" class="m-menu__link m-menu__toggle">
+                                            <span class="m-menu__item-here"></span>
+                                            <i class="m-menu__link-icon @m.CssClass"></i>
+                                            <span class="m-menu__link-text">
+                                                @m.LocalizedName
+                                            </span>
+                                            <i class="m-menu__ver-arrow la la-angle-right"></i>
+                                        </a>
+
+                                        <div class="m-menu__submenu m-menu__submenu--down">
+                                            <span class="m-menu__arrow"></span>
+                                            <ul class="m-menu__subnav">
+                                                @foreach (var c in m.Childlist)
+                                                {
+                                                    if (c.Childlist.Count == 0)
+                                                    {
+                                                        var ItemId = $"{m.LocalizedName.Replace(" ", "_")}_{c.LocalizedName.Replace(" ", "_")}";
+                                                        <li id="@ItemId" class="m-menu__item " aria-haspopup="true">
+                                                            <a href="@string.Concat(c.MenuUrl,"?page=", ItemId)" class="m-menu__link ">
+                                                                <i class="m-menu__link-bullet @c.CssClass">
+                                                                    <span></span>
+                                                                </i>
+                                                                @if (c.MenuName.ToLower() == "events")
+                                                                {
+                                                                    <span class="m-menu__link-text">
+                                                                        @c.LocalizedName
+                                                                    </span>
+                                                                    <span class="m-menu__link-badge newBadges" style="display:none" id="spnopeneventcontainer">
+                                                                        <span class="m-badge m-badge--danger" id="spnopenevent"></span>
+                                                                    </span>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <span class="m-menu__link-text">
+                                                                        @c.LocalizedName
+                                                                    </span>
+                                                                }
+                                                            </a>
+                                                        </li>
+                                                    }
+                                                    else
+                                                    {
+                                                        var ItemId = $"{m.LocalizedName.Replace(" ", "_")}_{c.LocalizedName.Replace(" ", "_")}";
+                                                        <li id="@ItemId" class="m-menu__item  m-menu__item--submenu" aria-haspopup="true" data-menu-submenu-toggle="hover" data-redirect="true">
+                                                            <a href="@string.Concat(c.MenuUrl,"?page=",ItemId)" class="m-menu__link m-menu__toggle">
+                                                                <i class="m-menu__link-bullet @c.CssClass">
+                                                                    <span></span>
+                                                                </i>
+
+                                                                @if (c.MenuName.ToLower() == "workorder")
+                                                                {
+                                                                    <span class="m-menu__link-text">
+                                                                        @c.LocalizedName
+                                                                    </span>
+                                                                    <span class="m-menu__link-badge newBadges" style="display:none" id="spnopenwocontainer">
+                                                                        <span class="m-badge m-badge--danger" id="spnopenwo"></span>
+                                                                    </span>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <span class="m-menu__link-text">
+                                                                        @c.LocalizedName
+                                                                    </span>
+                                                                }
+                                                                @if (c.Childlist.Count != 0)
+                                                                {
+                                                                    <i class="m-menu__ver-arrow la la-angle-right"></i>
+                                                                }
+                                                            </a>
+                                                            @if (c.Childlist.Count != 0)
+                                                            {
+                                                                if (c.Childlist.Count > 1)
+                                                                {
+                                                                    <div class="m-menu__submenu">
+                                                                        <span class="m-menu__arrow"></span>
+                                                                        <ul class="m-menu__subnav">
+                                                                            @foreach (var s in c.Childlist)   //-----for subtosub menu---------
+                                                                            {
+                                                                                ItemId = $"{m.LocalizedName.Replace(" ", "_")}_{c.LocalizedName.Replace(" ", "_")}_{s.LocalizedName.Replace(" ", "_")}";
+
+                                                                                <li id="@ItemId" class="m-menu__item " aria-haspopup="true" data-redirect="true">
+                                                                                    <a href="@string.Concat(s.MenuUrl,"?page=",ItemId)" class="m-menu__link ">
+                                                                                        <i class="m-menu__link-bullet @s.CssClass">
+                                                                                            <span></span>
+                                                                                        </i>
+                                                                                        <span class="m-menu__link-title">
+                                                                                            <span class="m-menu__link-wrap">
+                                                                                                <span class="m-menu__link-text">
+                                                                                                    @s.LocalizedName
+                                                                                                </span>
+                                                                                            </span>
+                                                                                        </span>
+                                                                                    </a>
+                                                                                </li>
+
+                                                                            }
+                                                                        </ul>
+                                                                    </div>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <div class="m-menu__submenu m-menu__submenu--up">
+                                                                        <span class="m-menu__arrow"></span>
+                                                                        <ul class="m-menu__subnav">
+                                                                            @foreach (var s in c.Childlist)   //-----for subtosub menu---------
+                                                                            {
+                                                                                ItemId = $"{m.LocalizedName.Replace(" ", "_")}_{c.LocalizedName.Replace(" ", "_")}_{s.LocalizedName.Replace(" ", "_")}";
+
+                                                                                <li id="@ItemId" class="m-menu__item " aria-haspopup="true" data-redirect="true">
+                                                                                    <a href="@string.Concat(s.MenuUrl,"?page=",ItemId)" class="m-menu__link ">
+                                                                                        <i class="m-menu__link-icon @s.CssClass">
+                                                                                            <span></span>
+                                                                                        </i>
+                                                                                        <span class="m-menu__link-title">
+                                                                                            <span class="m-menu__link-wrap">
+                                                                                                <span class="m-menu__link-text">
+                                                                                                    @s.LocalizedName
+                                                                                                </span>
+                                                                                            </span>
+                                                                                        </span>
+                                                                                    </a>
+                                                                                </li>
+                                                                            }
+                                                                        </ul>
+                                                                    </div>
+                                                                }
+                                                            }
+                                                        </li>
+                                                    }
+                                                }
+                                            </ul>
+                                        </div>
+                                    }
+                                </li>
+                            }
+                        }
+                    </ul>
+                </div>
+            </div>
+            <div class="m-grid__item m-grid__item--fluid m-wrapper">
+                <div class="m-content closeMenu">
+                    @RenderBody()
+                </div>
+            </div>
+        </div>
+        <footer class="m-grid__item		m-footer ">
+            <div class="m-container m-container--fluid m-container--full-height m-page__container">
+                <div class="m-stack m-stack--flex-tablet-and-mobile m-stack--ver m-stack--desktop">
+                    <div class="m-stack__item m-stack__item--left m-stack__item--middle m-stack__item--last">
+                        <span class="m-footer__copyright">
+                            @UtilityFunction.GetMessageFromResource("spnCopyRights", LocalizeResourceSetConstants.Global)
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+    <div class="m-scroll-top m-scroll-top--skin-top" data-toggle="m-scroll-top" data-scroll-offset="500" data-scroll-speed="300">
+        <i class="la la-arrow-up"></i>
+    </div>
+    @Html.Partial("_UserProfileUpdateModal")
+   
+    @Scripts.Render("~/bundles/LayoutScript")
+    @Scripts.Render("~/bundles/jqueryval")
+    <script type="text/javascript">
+        $.validator.setDefaults({ ignore: null });
+    </script>
+    @RenderSection("scripts", required: false)
+    <script type="text/javascript">
+        var dataTableLocalisationUrl = "@Url.Action("GetDataTableLanguageJson", "base")";
+        var getLookUpListByTypeUrl = "@Url.Action("GetLookUpListByType", "base")";
+        var getLookUpListByTypeLineItemUrl = "@Url.Action("GetLookUpListByTypeLineItem", "base")";
+        var gridStateSaveUrl = "@Url.Action("CreateUpdateState", "base")";
+        var gridStateLoadUrl = "@Url.Action("GetState", "base")";
+    </script>
+</body>
+</html>
+
+
+<style type="text/css">
+    .dataTables_wrapper.no-footer .dataTables_scrollBody {
+        border-bottom: 1px solid #ddd !important;
+    }
+
+    .custom-sort thead .sorting {
+        background-image: none !important;
+    }
+
+    .dataTables_wrapper .dataTables_info {
+        clear: none;
+        padding-top: 1em;
+        margin-right: 10px;
+    }
+
+    .dataTables_wrapper .dataTables_paginate {
+        padding-top: 0.55em;
+        float: left;
+    }
+
+    .dataTables_wrapper .dataTables_length {
+        display: none;
+        padding-top: 0.55em !important;
+        float: right;
+    }
+
+    .dataTables_length span.select2 {
+        width: 60px !important;
+    }
+
+    .dataTables_wrapper .dataTables_length select {
+        color: #000;
+    }
+
+    table.dataTable.nowrap th, table.dataTable.nowrap td {
+        outline: 0 !important;
+    }
+
+    .dataTables_wrapper .dataTables_processing {
+        padding-top: 0px;
+    }
+
+    .card {
+        border: none;
+    }
+
+    .alert.m-alert--icon .m-alert__close .close {
+        padding: 12px 10px;
+    }
+
+    .alert.m-alert--icon .m-alert__text {
+        padding: 10px;
+    }
+
+    .alert.m-alert--icon.m-alert--outline.m-alert--icon-solid .m-alert__icon {
+        padding: 10px;
+    }
+
+    .alert.m-alert--icon .m-alert__icon [class^="flaticon-"], .alert.m-alert--icon .m-alert__icon [class*=" flaticon-"] {
+        font-size: 18px;
+    }
+
+    .m-topbar .m-topbar__nav.m-nav {
+        margin: 0 20px 0 10px;
+    }
+</style>

@@ -1,0 +1,77 @@
+﻿@model Admin.Models.SupportTicket.SupportTicketVM
+<div class="modal-content">
+    <div class="modal-header">
+        <button type="button" class="close clearstate" data-dismiss="modal">&times;</button>
+        @if (Model.STNotesModel.Type == STNotesTypesConstants.Reply)
+        {
+            <h4 class="modal-title">@Model.Loc.Where(a => a.ResourceId == "spnReply").FirstOrDefault().Value.ToString()</h4>
+        }
+        else if (Model.STNotesModel.Type == STNotesTypesConstants.Note)
+        {
+            <h4 class="modal-title">@Model.Loc.Where(a => a.ResourceId == "spnGlobalNote").FirstOrDefault().Value.ToString()</h4>
+        }
+    </div>
+    <div class="modal-body">
+        <div class="form-group" style="margin-bottom:0;">
+            <div class="bottomBlock">
+                <div class="tabsArea nobg">
+                    <ul class="listView nobrd" style="border-bottom:0;">
+                        <li id="lblTopicDesc">
+                            <span class="label" id="spnContent">@Model.Loc.Where(a => a.ResourceId == "noteContent").FirstOrDefault().Value.ToString()<small> *</small></span>
+                            <span class="inputText" style="height:auto;">
+                                @Html.ValidationMessageFor(m => m.STNotesModel.Content, "", new { style = "display:none" })
+                                <main>
+                                    <div class="document-editor">
+                                        <div class="toolbar-container"></div>
+                                        <div class="content-container form-control">
+                                            <div id="editor"></div>
+                                            @Html.HiddenFor(x => x.STNotesModel.Content)
+                                        </div>
+                                    </div>
+                                </main>
+                            </span>
+                        </li>
+
+
+
+                    </ul>
+                </div>
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-footer" style="padding:15px 25px !important;">
+        <div class="idBttns">
+            <div class="bttn_pagin">
+                <div class="bttns2" style="margin:0;">
+                    <button type="submit" class="btn btn-blue mobBttn" style="cursor:pointer" value="save" id="btnAddreplySave"><i class="fa fa-save faIcon"></i> &nbsp;@Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+                </div>
+                <div class="bttns" style="margin:0;"><button type="button" data-dismiss="modal" class="btn btn-blue mobBttn clearstate" id="btnAddreplycancel"><i class="fa fa-close faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button></div>
+
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@Html.HiddenFor(m => m.STNotesModel.ClientId)
+@Html.HiddenFor(m => m.STNotesModel.STNotesId)
+@Html.HiddenFor(m => m.STNotesModel.SupportTicketId)
+@Html.HiddenFor(m => m.STNotesModel.Type)
+
+@*}*@
+<script>
+    $(document).ready(function () {
+        $('form').each(function () {
+            if ($(this).data('validator')) {
+                $(this).data('validator').settings.ignore = ".ck";
+            }
+        });
+    });
+</script>
+<style>
+    .ck.ck-balloon-panel {
+        z-index: 9999;
+    }
+</style>

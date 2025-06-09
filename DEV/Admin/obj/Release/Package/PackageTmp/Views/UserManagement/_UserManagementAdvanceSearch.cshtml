@@ -1,0 +1,49 @@
+﻿@model Admin.Models.UserManagement.UserManagementVM
+<nav id="sidebar">
+    <div id="dismiss">
+        <i class="fa fa-close"></i>
+    </div>
+    <div class="sidebar-header">
+        <h3><i class="fa fa-filter" style="position: relative; top: -2px;"></i>&nbsp; @Model.Loc.Where(a => a.ResourceId == "globalFilter").FirstOrDefault().Value.ToString() <span class="filteritemcount">0</span></h3>
+        <button type="button" class="btn btn-blue filterSearch" id="btnuserDataAdvSrch">
+            @Model.Loc.Where(a => a.ResourceId == "GlobalApply").FirstOrDefault().Value.ToString()
+        </button>
+    </div>
+    <div class="sidebar-content" id="advsearchsidebar">
+        <div class="form-group">
+            <label for="UserName">@Model.Loc.Where(a => a.ResourceId == "spnUserName").FirstOrDefault().Value.ToString() :</label>
+            <input type="text" class="form-control search adv-item" id="UserName" autocomplete="off">
+        </div>
+        <div class="form-group">
+            <label for="LastName">@Model.Loc.Where(a => a.ResourceId == "spnLastName").FirstOrDefault().Value.ToString() :</label>
+            <input type="text" class="form-control search adv-item" id="LastName" autocomplete="off">
+        </div>
+        <div class="form-group">
+            <label for="FirstName">@Model.Loc.Where(a => a.ResourceId == "spnFirstName").FirstOrDefault().Value.ToString() :</label>
+            <input type="text" class="form-control search adv-item" id="FirstName" autocomplete="off">
+        </div>
+        <div class="form-group">
+            <label for="ClientId">@Model.Loc.Where(a => a.ResourceId == "GlobalClient").FirstOrDefault().Value.ToString() :</label>
+            @Html.DropDownList("ClientId", Model.ClientList, "--Select--", new { @class = "form-control search adv-item select2picker" })
+
+        </div>
+        <div class="form-group">
+            <label for="SiteId">@Model.Loc.Where(a => a.ResourceId == "spnSiteGlobal").FirstOrDefault().Value.ToString() :</label>
+            @if (Model.SiteList != null)
+            {
+            @Html.DropDownList("SiteId", Model.SiteList, "--Select--", new { @class = "form-control search adv-item select2picker"})
+            }
+            else
+            {
+            @Html.DropDownList("SiteId", null, "--Select--", new { @class = "form-control search adv-item select2picker" })
+            }
+
+        </div>
+    </div>
+</nav>
+<style>
+    .select2-container--default .select2-selection--multiple {
+        height: auto !important;
+        min-height: 34px;
+    }
+</style>

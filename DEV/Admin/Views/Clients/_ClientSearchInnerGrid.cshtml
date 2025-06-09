@@ -1,0 +1,66 @@
+﻿@model Admin.Models.Client.ClientVM
+@{
+    Layout = null;
+}
+<table id="" dt-options="dtOptions" class="clientsinnerDataTable childtable cell-border" style="width:100%">
+    <thead>
+        <tr>
+            <th style="text-align:center !important;">@Model.Loc.Where(a => a.ResourceId == "globalSiteID").FirstOrDefault().Value.ToString()</th>
+            <th>@Model.Loc.Where(a => a.ResourceId == "spnSiteNameGlobal").FirstOrDefault().Value.ToString()</th>
+            <th style="text-align:center !important;">@Model.Loc.Where(a => a.ResourceId == "GlobalStatus").FirstOrDefault().Value.ToString()</th>
+            <th style="text-align:center !important;">@Model.Loc.Where(a => a.ResourceId == "GlobalAPM").FirstOrDefault().Value.ToString()</th>
+            <th style="text-align:center !important;">@Model.Loc.Where(a => a.ResourceId == "GlobalCMMS").FirstOrDefault().Value.ToString()</th>
+            <th style="text-align:center !important;">@Model.Loc.Where(a => a.ResourceId == "spnGlobalSanitation").FirstOrDefault().Value.ToString()</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model.listChildGridModel.Count > 0)
+        {
+            foreach (var pro in Model.listChildGridModel)
+            {
+                <tr>
+                    <td>@pro.SiteId</td>
+                    <td>@pro.Name</td>
+                    <td>@pro.Status </td>
+                    <td>@pro.APM</td>
+                    <td>@pro.CMMS</td>
+                    <td>@pro.Sanitation</td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+<style type="text/css">
+    .childtable tr th {
+        background: #4da5fe;
+        color: #fff !important;
+        white-space: nowrap !important;
+        text-align: center !important;
+        font-weight: 400 !important;
+    }
+
+    .link {
+        color: #235ddd;
+    }
+
+        .link:hover {
+            color: #32bf0e;
+        }
+
+    .nolink {
+        pointer-events: none;
+        color: #91a0a0;
+    }
+
+    table.dataTable thead .sorting {
+        padding-right: 15px;
+    }
+
+    table.dataTable thead .sorting_asc {
+        padding-right: 15px;
+    }
+
+    table.dataTable.display tbody tr:first-child td {
+        width: 1%;
+    }
+</style>

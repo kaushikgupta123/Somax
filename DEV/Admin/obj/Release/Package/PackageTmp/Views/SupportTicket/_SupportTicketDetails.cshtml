@@ -1,0 +1,76 @@
+﻿@model Admin.Models.SupportTicket.SupportTicketVM
+
+<link href="~/Scripts/Metronic/assets/demo/default/base/style_newCustom.css" rel="stylesheet" />
+<div class="m-subheader fixedDiv1">
+    <div class="new-m-subheader">
+        <div class="filterDescription">
+            <a href="javascript:void(0)" id="linkToSearch"><span id="spnlinkToSearch"></span></a> - @Model.SupportTicketModel.SupportTicketId
+        </div>
+        <div style="clear:both;"></div>
+    </div>
+</div>
+<div class="pushDiv1"></div>
+
+<div class="row fixedDiv2">
+    @Html.Partial("_SupportTicketSummary", Model)
+</div>
+
+<div class="row">
+    <div class="col-xl-12">
+        <div class="row" style="margin-top: 75px;">
+
+            <div class="col-xl-12" id="btnnblock">
+                <div class="m-portlet" id="m_portlet" style="padding:15px;">
+                    <div class="tabsArea nobg" id="Clienttab" style="display:block;">
+                        <div class="row">
+                            <div class="col-xl-12">
+                                <div class="lds-ellipsis lds-adjust" id="commentsdataloader">
+                                    <div></div>
+                                    <div></div>
+                                    <div></div>
+                                    <div></div>
+                                </div>
+                                <div id="auditlogcontainer">
+                                    @Html.Partial("_TicketResponsesLogs")
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+@Html.HiddenFor(m => m.SupportTicketModel.SupportTicketId)
+@Html.HiddenFor(m => m.SupportTicketModel.ClientId)
+@Html.HiddenFor(m => m.SupportTicketModel.SiteId)
+@Html.HiddenFor(m => m.SupportTicketModel.Status)
+
+<div id="NotesModalpopup" class="modal fade" role="dialog">
+    <div class="modal-dialog" id="NotesPopUp">
+    </div>
+</div>
+<style>
+    ul.listView li span.label {
+        width: 25%;
+    }
+
+    ul.listView li span.inputText {
+        width: 75%;
+    }
+
+    .filterDescription {
+        width: auto;
+        float: left;
+        font-size: 1.2rem;
+        color: #000;
+        font-weight: 500;
+        line-height: 33px;
+    }
+
+        .filterDescription a {
+            color: #36a3f7;
+            text-decoration: none !important;
+        }
+</style>

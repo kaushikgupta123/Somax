@@ -1,0 +1,202 @@
+﻿@model Admin.Models.UserManagement.UserManagementVM
+
+<div id="userModelsscontainer">
+    <div class="m-subheader">
+        <div class="new-m-subheader">
+            <div class="filterDescription">
+                <a href="javascript:void(0)" id="linkToSearch"><span id="spnlinkToSearch"></span></a> - @Model.userModels.UserName
+            </div>
+            <div style="clear:both;"></div>
+        </div>
+    </div>
+    @if ((Model.userModels.IsActive == false))
+    {
+        <div class="col-xl-12">
+            <div class="row m-row--col-separator-xl" style="margin-bottom:15px;">
+                <div class="col-md-12 col-lg-6 col-xl-3">
+                    <div class="m-widget24 imageBox macHeights">
+                        <div class="imgInfoUser" style="position:relative; height:20px;">
+                            <span class="introTagsUser">@Model.Loc.Where(a => a.ResourceId == "globalInActive").FirstOrDefault().Value.ToString()</span>
+                        </div>
+                        <div style="clear:both;"></div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    }
+    <div class="row">
+        <div class="col-xl-3">
+            <div class="m-portlet">
+                <div class="sideMenuArea nobg">
+                    <ul class="vtabs" id="detmaintab">
+                        <li class="active" data-val="@Model.userModels.UserInfoId" id="liuser"><a href="#Usertab">@Model.Loc.Where(a => a.ResourceId == "UserOverView").FirstOrDefault().Value.ToString() </a></li>
+
+                        <li id="lisites"><a href="#Sites" onclick="openCity(event, 'Sites')">@Model.Loc.Where(a => a.ResourceId == "Sites").FirstOrDefault().Value.ToString()</a></li>
+                    </ul>
+                </div>
+                <div class="selectTabs" id="selectTabs">
+                    <select class="form-control" id="colorselector">
+                        <option value="Usertab">@Model.Loc.Where(a => a.ResourceId == "UserOverView").FirstOrDefault().Value.ToString() </option>
+                        <option value="Sites">@Model.Loc.Where(a => a.ResourceId == "Sites").FirstOrDefault().Value.ToString()</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-9">
+            <div class="row">
+                <div class="col-xl-12">
+                    <div class="m-portlet" id="m_portlet" style="padding:15px;">
+                        <div class="bottomBlock">
+                            <div class="tabsArea nobg" id="Usertab" style="display:block;">
+                                <div id="Details" class="" style="display:block;">
+                                    <ul class="listView">
+                                        <li>
+                                            <span class="label">@Html.LabelFor(m => m.userModels.UserName) : </span>
+                                            <span class="inputText">@Model.userModels.UserName</span>
+                                        </li>
+
+                                        <li>
+                                            <span class="label">@Html.LabelFor(m => m.userModels.FirstName) :</span>
+                                            <span class="inputText">@Model.userModels.FirstName</span>
+                                        </li>
+                                        <li>
+                                            <span class="label">@Html.LabelFor(m => m.userModels.MiddleName) : <small></small></span>
+                                            <span class="inputText">@Model.userModels.MiddleName</span>
+                                        </li>
+                                        <li>
+                                            <span class="label">@Html.LabelFor(m => m.userModels.LastName) : <small></small></span>
+                                            <span class="inputText">@Model.userModels.LastName</span>
+                                        </li>
+                                        <li>
+                                            <span class="label">@Html.LabelFor(m => m.userModels.UserType) : <small></small></span>
+                                            <span class="inputText" id="txtUserType">@Model.userModels.UserType</span>
+                                        </li>
+                                        <li>
+                                            <span class="label">@Html.LabelFor(m => m.userModels.Email) : <small></small></span>
+                                            <span class="inputText">@Model.userModels.Email</span>
+                                        </li>
+
+                                        <li>
+                                            <span class="label">@Html.LabelFor(m => m.userModels.SecurityProfileId) : <small></small></span>
+                                            @*<span class="inputText">@Model.userModels.SecurityProfile</span>*@
+                                            <span class="inputText">@Model.userModels.SecurityProfileDescription</span>
+                                        </li>
+                                        <li>
+                                            <span class="label">@Html.LabelFor(m => m.userModels.IsActive) : </span>
+                                            <span class="inputText">
+                                                @Html.CheckBoxFor(m => m.userModels.IsActive, new { @class = "form-control m-input", onclick = "return false;", @style = "color:black; width: auto; margin-top: 12px;" })
+                                            </span>
+                                        </li>
+                                        <li>
+                                            <span class="label">@Html.LabelFor(m => m.userModels.IsSuperUser) : </span>
+                                            <span class="inputText">
+                                                @Html.CheckBoxFor(m => m.userModels.IsSuperUser, new { @class = "form-control m-input", onclick = "return false;", @style = "color:black; width: auto; margin-top: 12px;" })
+                                            </span>
+                                        </li>
+
+                                    </ul>
+                                </div>
+
+                            </div>
+                            <div class=" nobg" id="SiteTab" style="display:none;">
+                                <div class="table-responsive">
+                                    <table id="siteTable" class="eqpDtlTbl row-border custom-sort" style="width:100%;">
+                                        <thead>
+                                            <tr>
+                                                <th>@Model.Loc.Where(a => a.ResourceId == "spnSiteGlobal").FirstOrDefault().Value.ToString()               </th>
+                                                <th>@Model.Loc.Where(a => a.ResourceId == "spnSiteNameGlobal").FirstOrDefault().Value.ToString()</th>
+                                                <th>@Model.Loc.Where(a => a.ResourceId == "Craft").FirstOrDefault().Value.ToString()</th>
+                                                <th width="17%" style="text-align:center !important;">@Model.Loc.Where(a => a.ResourceId == "globalAction").FirstOrDefault().Value.ToString()</th>
+
+                                            </tr>
+                                        </thead>
+                                    </table>
+                                </div>
+                                <div style="clear:both;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div style="clear:both;"></div>
+    <div class="col-xl-12">
+        <div class="" id="ClientActivity" style="margin-top: 20px; display: block">
+            <div class="m-portlet" id="m_portlet" style="padding:15px; margin-bottom:0;">
+                <div class="m-portlet__head" style="padding:0; height:2.5rem; margin-bottom:15px;">
+                    <div class="m-portlet__head-caption">
+                        <div class="m-portlet__head-title">
+                            <h3 class="m-portlet__head-text" style="vertical-align:top;">
+                                @Model.Loc.Where(a => a.ResourceId == "GlobalActivity").FirstOrDefault().Value.ToString()
+                            </h3>
+                        </div>
+                    </div>
+                    <div style="clear:both;"></div>
+                </div>
+
+                <div style="clear:both;"></div>
+                <div class="table-responsive">
+                    <table id="ActivityTable" class="eqpDtlTbl row-border custom-sort" style="width:100%;">
+                        <thead>
+                            <tr>
+                                <th class="CreateDate" data-col="0">@Model.Loc.Where(a => a.ResourceId == "GlobalDate").FirstOrDefault().Value.ToString()</th>
+                                <th class="SessionId" data-col="2">@Model.Loc.Where(a => a.ResourceId == "spnGlobalSessionID").FirstOrDefault().Value.ToString()</th>
+                                <th class="Browser" data-col="3">@Model.Loc.Where(a => a.ResourceId == "spnGlobalBrowser").FirstOrDefault().Value.ToString()</th>
+                                <th class="IPAddress" data-col="4">@Model.Loc.Where(a => a.ResourceId == "spnIPAddress").FirstOrDefault().Value.ToString()</th>
+
+                            </tr>
+                        </thead>
+
+                    </table>
+                </div>
+                <div style="clear:both"></div>
+            </div>
+        </div>
+    </div>
+</div>
+@Html.HiddenFor(m => m.userModels.UserInfoId, new { id = "UserInfoId" })
+@Html.HiddenFor(m => m.UserDetail.ClientId, new { id = "userClientId" })
+@Html.HiddenFor(m => m.userModels.IsSuperUser)
+@Html.HiddenFor(m => m.userModels.PersonnelId)
+@Html.HiddenFor(m => m.userModels.UserName)
+@Html.HiddenFor(m => m.userModels.ClientLookupId)
+@Html.HiddenFor(m => m.userModels.SecurityProfileId)
+@Html.HiddenFor(m => m.userModels.UserType)
+@Html.HiddenFor(m => m.userModels.SecurityProfileName)
+@Html.HiddenFor(m => m.userModels.SecurityProfileId)
+@Html.HiddenFor(m => m.userModels.DefaultSiteId)
+@Html.HiddenFor(m => m.userModels.DefaultPersonnelId)
+@Html.HiddenFor(m => m.userModels.FirstName)
+@Html.HiddenFor(m => m.userModels.MiddleName)
+@Html.HiddenFor(m => m.userModels.LastName)
+@Html.HiddenFor(m => m.userModels.IsSuperUser)
+@Html.HiddenFor(m => m.userModels.SiteControlled)
+
+<style>
+    .filterDescription {
+        width: auto;
+        float: left;
+        font-size: 1.2rem;
+        color: #000;
+        font-weight: 500;
+        line-height: 33px;
+    }
+
+        .filterDescription a {
+            color: #36a3f7;
+            text-decoration: none !important;
+        }
+
+    .modal-open {
+        overflow: hidden;
+    }
+
+    @@media screen and (max-width: 567px) {
+        .filterDescription {
+            width: 100%;
+            float: none;
+        }
+    }
+</style>

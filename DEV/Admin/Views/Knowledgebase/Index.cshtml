@@ -1,0 +1,29 @@
+﻿@model Admin.Models.KnowledgebaseCombined
+@{
+    ViewBag.Title = "Somax | Knowledgebase";
+}
+@Styles.Render("~/Content/datatable")
+
+<link href="~/Content/sidebar_custom.css" rel="stylesheet" />
+<link href="~/Scripts/Metronic/assets/demo/default/base/GlobalSearchGrid.css" rel="stylesheet" />
+<link href="~/Content/tagify.css" rel="stylesheet" />
+@section scripts {
+    @Scripts.Render("~/bundles/datatable")
+    @Scripts.Render("~/bundles/Knowledgebase")
+    <script src="~/Scripts/ckeditor/ckeditor.js"></script>
+    <script src="~/Scripts/Somax/tagify.min.js"></script>
+    <script type="text/javascript">
+        var IsAdd = '@ViewBag.IsKnowledgebaseAdd';
+    </script>
+}
+
+<div id="kbtopicsmaincontainer">
+    @if (ViewBag.IsKnowledgebaseAdd == true)
+    {
+        @Html.Partial("KnowledgebaseAdd", Model)
+    }
+    else
+    {
+        @Html.Partial("KnowledgebaseSearch", Model)
+    }
+</div>

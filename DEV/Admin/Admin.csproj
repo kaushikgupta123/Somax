@@ -1,0 +1,1053 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.0\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props" Condition="Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.0\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" />
+  <Import Project="..\packages\Microsoft.Net.Compilers.2.1.0\build\Microsoft.Net.Compilers.props" Condition="Exists('..\packages\Microsoft.Net.Compilers.2.1.0\build\Microsoft.Net.Compilers.props')" />
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{6C9FBE13-0352-4B84-A188-97A36A39D05A}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Admin</RootNamespace>
+    <AssemblyName>Admin</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <MvcBuildViews>false</MvcBuildViews>
+    <UseIISExpress>true</UseIISExpress>
+    <Use64BitIISExpress>
+    </Use64BitIISExpress>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+    <UseGlobalApplicationHostFile />
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Antlr3.Runtime, Version=3.5.0.2, Culture=neutral, PublicKeyToken=eb42632606e9261f, processorArchitecture=MSIL">
+      <HintPath>..\packages\Antlr.3.5.0.2\lib\Antlr3.Runtime.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.Charts.v24.1.Core, Version=24.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\DevExpress.Charts.v24.1.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.CodeParser.v24.1, Version=24.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\DevExpress.CodeParser.v24.1.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.Data.Desktop.v24.1, Version=24.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\DevExpress.Data.Desktop.v24.1.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.Data.v24.1, Version=24.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <HintPath>..\packages\DevExpress.Data.24.1.5\lib\net452\DevExpress.Data.v24.1.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.DataAccess.v24.1, Version=24.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\DevExpress.DataAccess.v24.1.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.DataVisualization.v24.1.Core, Version=24.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\DevExpress.DataVisualization.v24.1.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.Drawing.v24.1, Version=24.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\DevExpress.Drawing.v24.1.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.Images.v24.1, Version=24.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\DevExpress.Images.v24.1.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.Office.v24.1.Core, Version=24.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\DevExpress.Office.v24.1.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.Pdf.v24.1.Core, Version=24.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\DevExpress.Pdf.v24.1.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.Pdf.v24.1.Drawing, Version=24.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\DevExpress.Pdf.v24.1.Drawing.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.PivotGrid.v24.1.Core, Version=24.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\DevExpress.PivotGrid.v24.1.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.Printing.v24.1.Core, Version=24.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\DevExpress.Printing.v24.1.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.RichEdit.v24.1.Core, Version=24.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\DevExpress.RichEdit.v24.1.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.RichEdit.v24.1.Export, Version=24.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\DevExpress.RichEdit.v24.1.Export.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.Sparkline.v24.1.Core, Version=24.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\DevExpress.Sparkline.v24.1.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.SpellChecker.v24.1.Core, Version=24.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\DevExpress.SpellChecker.v24.1.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.Spreadsheet.v24.1.Core, Version=24.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\DevExpress.Spreadsheet.v24.1.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.TreeMap.v24.1.Core, Version=24.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\DevExpress.TreeMap.v24.1.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.Web.ASPxDiagram.v24.1, Version=24.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\DevExpress.Web.ASPxDiagram.v24.1.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.Web.ASPxGantt.v24.1, Version=24.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\DevExpress.Web.ASPxGantt.v24.1.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.Web.ASPxHtmlEditor.v24.1, Version=24.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\DevExpress.Web.ASPxHtmlEditor.v24.1.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.Web.ASPxPivotGrid.v24.1, Version=24.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\DevExpress.Web.ASPxPivotGrid.v24.1.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.Web.ASPxRichEdit.v24.1, Version=24.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\DevExpress.Web.ASPxRichEdit.v24.1.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.Web.ASPxScheduler.v24.1, Version=24.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\DevExpress.Web.ASPxScheduler.v24.1.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.Web.ASPxSpellChecker.v24.1, Version=24.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\DevExpress.Web.ASPxSpellChecker.v24.1.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.Web.ASPxSpreadsheet.v24.1, Version=24.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\DevExpress.Web.ASPxSpreadsheet.v24.1.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.Web.ASPxThemes.v24.1, Version=24.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\DevExpress.Web.ASPxThemes.v24.1.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.Web.ASPxTreeList.v24.1, Version=24.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\DevExpress.Web.ASPxTreeList.v24.1.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.Web.Mvc5.v24.1, Version=24.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\DevExpress.Web.Mvc5.v24.1.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.Web.Resources.v24.1, Version=24.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\DevExpress.Web.Resources.v24.1.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.Web.v24.1, Version=24.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\DevExpress.Web.v24.1.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.Xpo.v24.1, Version=24.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\DevExpress.Xpo.v24.1.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.XtraCharts.v24.1, Version=24.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\DevExpress.XtraCharts.v24.1.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.XtraCharts.v24.1.Web, Version=24.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\DevExpress.XtraCharts.v24.1.Web.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.XtraGauges.v24.1.Core, Version=24.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\DevExpress.XtraGauges.v24.1.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.XtraReports.v24.1, Version=24.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\DevExpress.XtraReports.v24.1.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.XtraReports.v24.1.Web, Version=24.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\DevExpress.XtraReports.v24.1.Web.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.XtraReports.v24.1.Web.WebForms, Version=24.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\DevExpress.XtraReports.v24.1.Web.WebForms.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.XtraScheduler.v24.1.Core, Version=24.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\DevExpress.XtraScheduler.v24.1.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.XtraScheduler.v24.1.Core.Desktop, Version=24.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\DevExpress.XtraScheduler.v24.1.Core.Desktop.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.XtraTreeMap.v24.1, Version=24.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\DevExpress.XtraTreeMap.v24.1.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.Core, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Identity.Core.2.2.3\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.Owin, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Identity.Owin.2.2.3\lib\net45\Microsoft.AspNet.Identity.Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.SessionState.SessionStateModule, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.AspNet.SessionState.SessionStateModule.1.1.0\lib\Net462\Microsoft.AspNet.SessionState.SessionStateModule.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Azure.KeyVault.Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Azure.KeyVault.Core.1.0.0\lib\net40\Microsoft.Azure.KeyVault.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.0\lib\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.Owin, Version=4.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.4.2.0\lib\net45\Microsoft.Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Host.SystemWeb, Version=4.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Host.SystemWeb.4.2.0\lib\net45\Microsoft.Owin.Host.SystemWeb.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security, Version=4.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Security.4.2.0\lib\net45\Microsoft.Owin.Security.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.Cookies, Version=4.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Security.Cookies.4.2.0\lib\net45\Microsoft.Owin.Security.Cookies.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.OAuth, Version=4.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Security.OAuth.4.2.0\lib\net45\Microsoft.Owin.Security.OAuth.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.WindowsAzure.Storage, Version=9.3.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\WindowsAzure.Storage.9.3.3\lib\net45\Microsoft.WindowsAzure.Storage.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.13.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="Owin, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f0ebd12fd5e55cc5, processorArchitecture=MSIL">
+      <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="RazorEngine, Version=3.10.0.0, Culture=neutral, PublicKeyToken=9ee697374c7e744a, processorArchitecture=MSIL">
+      <HintPath>..\packages\RazorEngine.3.10.0\lib\net45\RazorEngine.dll</HintPath>
+    </Reference>
+    <Reference Include="QRCoder, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Presentation\Website\Client\bin\QRCoder.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Rotativa">
+      <HintPath>..\Presentation\Website\Client\bin\Rotativa.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Net.Http.Formatting, Version=5.2.7.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.2.7\lib\net45\System.Net.Http.Formatting.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.Caching" />
+    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.5.0.0\lib\net45\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Threading.Tasks.Extensions, Version=4.2.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Threading.Tasks.Extensions.4.5.4\lib\net461\System.Threading.Tasks.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.7\lib\net45\System.Web.Helpers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Abstractions" />
+    <Reference Include="System.Web.Http, Version=5.2.7.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.5.2.7\lib\net45\System.Web.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Http.WebHost, Version=5.2.4.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\System.Web.Http.WebHost.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Mvc, Version=5.2.7.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Mvc.5.2.7\lib\net45\System.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Razor.3.2.7\lib\net45\System.Web.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Routing" />
+    <Reference Include="System.Web.WebPages, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.7\lib\net45\System.Web.WebPages.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Deployment, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.7\lib\net45\System.Web.WebPages.Deployment.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.7\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.EnterpriseServices" />
+    <Reference Include="System.Net.Http">
+    </Reference>
+    <Reference Include="System.Net.Http.WebRequest">
+    </Reference>
+    <Reference Include="System.Web.Optimization">
+      <HintPath>..\packages\Microsoft.AspNet.Web.Optimization.1.1.3\lib\net40\System.Web.Optimization.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="Unity.Abstractions, Version=5.11.7.0, Culture=neutral, PublicKeyToken=489b6accfaf20ef0, processorArchitecture=MSIL">
+      <HintPath>..\packages\Unity.Abstractions.5.11.7\lib\net48\Unity.Abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Container, Version=5.11.1.0, Culture=neutral, PublicKeyToken=489b6accfaf20ef0, processorArchitecture=MSIL">
+      <HintPath>..\packages\Unity.5.11.1\lib\net46\Unity.Container.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Mvc5, Version=1.4.0.0, Culture=neutral, PublicKeyToken=43da31bc42a85347, processorArchitecture=MSIL">
+      <HintPath>..\packages\Unity.Mvc5.1.4.0\lib\net45\Unity.Mvc5.dll</HintPath>
+    </Reference>
+    <Reference Include="WebActivatorEx, Version=2.0.0.0, Culture=neutral, PublicKeyToken=7b26dc2a43f6a0d4, processorArchitecture=MSIL">
+      <HintPath>..\packages\WebActivatorEx.2.2.0\lib\net40\WebActivatorEx.dll</HintPath>
+    </Reference>
+    <Reference Include="WebGrease, Version=1.6.5135.21930, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\WebGrease.1.6.0\lib\WebGrease.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.ApplicationInsights">
+      <HintPath>..\packages\Microsoft.ApplicationInsights.2.2.0\lib\net45\Microsoft.ApplicationInsights.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AI.Agent.Intercept">
+      <HintPath>..\packages\Microsoft.ApplicationInsights.Agent.Intercept.2.0.6\lib\net45\Microsoft.AI.Agent.Intercept.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AI.DependencyCollector">
+      <HintPath>..\packages\Microsoft.ApplicationInsights.DependencyCollector.2.2.0\lib\net45\Microsoft.AI.DependencyCollector.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AI.PerfCounterCollector">
+      <HintPath>..\packages\Microsoft.ApplicationInsights.PerfCounterCollector.2.2.0\lib\net45\Microsoft.AI.PerfCounterCollector.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AI.ServerTelemetryChannel">
+      <HintPath>..\packages\Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel.2.2.0\lib\net45\Microsoft.AI.ServerTelemetryChannel.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AI.WindowsServer">
+      <HintPath>..\packages\Microsoft.ApplicationInsights.WindowsServer.2.2.0\lib\net45\Microsoft.AI.WindowsServer.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AI.Web">
+      <HintPath>..\packages\Microsoft.ApplicationInsights.Web.2.2.0\lib\net45\Microsoft.AI.Web.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ActionFilters\ConfigMenuSelectionAttribute.cs" />
+    <Compile Include="ActionFilters\CustomAuthorizeAttribute.cs" />
+    <Compile Include="ActionFilters\CustomHandleErrorAttribute.cs" />
+    <Compile Include="ActionFilters\EncryptedActionParameterAttribute.cs" />
+    <Compile Include="ActionFilters\NoCacheActionFilterAttribute.cs" />
+    <Compile Include="ActionFilters\NoDirectAccessAttribute.cs" />
+    <Compile Include="ActionFilters\SessionExpiredAttribute.cs" />
+    <Compile Include="ActionFilters\SiteUnderMaintennceAttribute.cs" />
+    <Compile Include="ActionFilters\SkipSessionExpiaryActionFilterAttribute.cs" />
+    <Compile Include="ActionFilters\SomaxMenuSelectionAttribute.cs" />
+    <Compile Include="App_Start\BundleConfig.cs" />
+    <Compile Include="App_Start\FilterConfig.cs" />
+    <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="App_Start\UnityConfig.cs" />
+    <Compile Include="BusinessWrapper\Client\ClientWrapper.cs" />
+    <Compile Include="BusinessWrapper\Common\CommonWrapper.cs" />
+    <Compile Include="BusinessWrapper\Common\GridStateWrapper.cs" />
+    <Compile Include="Models\Common\TableHaederProp.cs" />
+    <Compile Include="BusinessWrapper\Knowledgebase\IKnowledgebaseWrapper.cs" />
+    <Compile Include="BusinessWrapper\Knowledgebase\KnowledgebaseWrapper.cs" />
+    <Compile Include="BusinessWrapper\Login\ILoginWrapper.cs" />
+    <Compile Include="BusinessWrapper\Login\LoginWrapper.cs" />
+    <Compile Include="BusinessWrapper\Metrics\MetricsWrapper.cs" />
+    <Compile Include="BusinessWrapper\SiteBilling\SiteBillingWrapper.cs" />
+    <Compile Include="BusinessWrapper\SiteMaintenance\SiteMaintenanceWrapper.cs" />
+    <Compile Include="BusinessWrapper\SupportTicket\SupportTicketWrapper.cs" />
+    <Compile Include="BusinessWrapper\UserManagment\UsermanagmentWrapper.cs" />
+    <Compile Include="BusinessWrapper\UserProfile\UserProfileWrapper.cs" />
+    <Compile Include="BusinessWrapper\Site\SiteWrapper.cs" />
+    <Compile Include="Common\Constants\Constants.cs" />
+    <Compile Include="Common\Constants\JsonReturnEnum.cs" />
+    <Compile Include="Common\Constants\PackageLevelConstant.cs" />
+    <Compile Include="Common\Constants\SecurityQuestConstant.cs" />
+    <Compile Include="Common\Utility\UtilityExtensions.cs" />
+    <Compile Include="Common\Utility\UtilityFunction.cs" />
+    <Compile Include="Controllers\ClientNew\ClientsController.cs" />
+    <Compile Include="Controllers\Client\ClientController.cs" />
+    <Compile Include="Controllers\Common\ErrorController.cs" />
+    <Compile Include="Controllers\Common\SomaxBaseController.cs" />
+    <Compile Include="Controllers\Dashboard\DashboardController.cs" />
+    <Compile Include="Controllers\Common\BaseController.cs" />
+    <Compile Include="Controllers\Knowledgebase\KnowledgebaseController.cs" />
+    <Compile Include="Controllers\Login\LoginController.cs" />
+    <Compile Include="Controllers\SupportTicket\SupportTicketController.cs" />
+    <Compile Include="Controllers\UserManagement\UserManagementController.cs" />
+    <Compile Include="Controllers\UserProfile\UserProfileController.cs" />
+    <Compile Include="CustomValidation\RequiredIfAttribute.cs" />
+    <Compile Include="CustomValidation\RequiredIfValueExistAttribute.cs" />
+    <Compile Include="Controllers\Site\SiteController.cs" />
+    <Compile Include="Global.asax.cs">
+      <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="Localization\LocalizableModelValidator.cs" />
+    <Compile Include="Localization\LocalizableModelValidatorProvider.cs" />
+    <Compile Include="Localization\MetadataProvider.cs" />
+    <Compile Include="Models\ClientMessages\ClientMessages.cs" />
+    <Compile Include="Models\Client\ChangeClientIDModel.cs" />
+    <Compile Include="Models\Client\ChildGridModel.cs" />
+    <Compile Include="Models\Client\CreateClientModel.cs" />
+    <Compile Include="Models\Client\ClientPrintModel.cs" />
+    <Compile Include="Models\Client\ClientPDFPrintModel.cs" />
+    <Compile Include="Models\Common\DataTableLanguageRoot.cs" />
+    <Compile Include="Models\Common\DropDownModel.cs" />
+    <Compile Include="Models\Common\LoginAuditingInfo.cs" />
+    <Compile Include="Models\Common\EventLogModel.cs" />
+    <Compile Include="Models\Common\GridDataLayoutModel.cs" />
+    <Compile Include="Models\Common\LocalisationBaseVM.cs" />
+    <Compile Include="Models\Common\UserMentionDataModel.cs" />
+    <Compile Include="Models\CustomModelBinder\DateTimeModelBinder.cs" />
+    <Compile Include="Models\Dashboard\DashBoardVM.cs" />
+    <Compile Include="Models\Knowledgebase\KnowledgebaseModel.cs" />
+    <Compile Include="Models\Knowledgebase\KnowledgebaseCombied.cs" />
+    <Compile Include="Models\Knowledgebase\KnowledgebasePrintModel.cs" />
+    <Compile Include="Models\Knowledgebase\KnowledgebaseSearchModel.cs" />
+    <Compile Include="Models\Login\CreatePassword.cs" />
+    <Compile Include="Models\Login\ResetPassword.cs" />
+    <Compile Include="Models\Client\ClientModel.cs" />
+    <Compile Include="Models\Client\ClientVM.cs" />
+    <Compile Include="Models\Client\ClientSummaryModel.cs" />
+    <Compile Include="Models\Client\ClientSearchModel.cs" />
+    <Compile Include="Models\Login\UserInfo.cs" />
+    <Compile Include="Models\Login\VMLogin.cs" />
+    <Compile Include="Models\Metrics\MetricsInventoryModelForAdmin.cs" />
+    <Compile Include="Models\Metrics\MetricsMaintenanceModelForAdmin.cs" />
+    <Compile Include="Models\Metrics\MetricsPurchasingModelForAdmin.cs" />
+    <Compile Include="Models\LookupList.cs" />
+    <Compile Include="Models\Client\SiteBillingModelView.cs" />
+    <Compile Include="Models\SiteMaintenance\SiteMaintenanceVM.cs" />
+    <Compile Include="Models\Site\CreatedLastUpdatedModel.cs" />
+    <Compile Include="Models\Client\SiteModelView.cs" />
+    <Compile Include="Models\Site\UserValidateModel.cs" />
+    <Compile Include="Models\Site\SitePrintModel.cs" />
+    <Compile Include="Models\SupportTicket\STNotesModel.cs" />
+    <Compile Include="Models\SupportTicket\SupportTicketPrintModel.cs" />
+    <Compile Include="Models\SupportTicket\SupportTicketModel.cs" />
+    <Compile Include="Models\SupportTicket\SupportTicketVM.cs" />
+    <Compile Include="Models\UserManagement\LookUpListModel.cs" />
+    <Compile Include="Models\UserManagement\UserManagementPersonnelModel.cs" />
+    <Compile Include="Models\UserManagement\InnerGridUserManagement.cs" />
+    <Compile Include="Models\UserManagement\PrintUserModel.cs" />
+    <Compile Include="Models\UserManagement\UMPdfPrintModel.cs" />
+    <Compile Include="Models\UserManagement\UMPrintParams.cs" />
+    <Compile Include="Models\UserManagement\UserManagementModel.cs" />
+    <Compile Include="Models\UserManagement\UserManagementVM.cs" />
+    <Compile Include="Models\UserManagement\UserModel.cs" />
+    <Compile Include="Models\UserManagement\UserSiteModel.cs" />
+    <Compile Include="Models\UserProfile\UserProfileModel.cs" />
+    <Compile Include="Models\Site\SiteModel.cs" />
+    <Compile Include="Models\Site\SiteSearchModel.cs" />
+    <Compile Include="Models\Site\SiteSummaryModel.cs" />
+    <Compile Include="Models\Site\SiteVM.cs" />
+    <Compile Include="Models\ViewModels\MenuVM.cs" />
+    <Compile Include="Models\ViewModels\ViewModelBase.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SecurityService\CustomPrincipal.cs" />
+    <Compile Include="SecurityService\Encryption.cs" />
+    <Compile Include="Startup.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Content\bootstrap-theme.css" />
+    <Content Include="Content\bootstrap-theme.min.css" />
+    <Content Include="Content\bootstrap.css" />
+    <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\contactchip.css" />
+    <Content Include="Content\Dashboard\dashboard.css" />
+    <Content Include="Content\daterangepicker_custom.css" />
+    <Content Include="Content\daterangepicker_theme.css" />
+    <Content Include="Content\dialog-mobile.css" />
+    <Content Include="Content\ex-custom-styles.css" />
+    <Content Include="Content\Images\arrow-left.png" />
+    <Content Include="Content\Images\arrow-right.png" />
+    <Content Include="Content\Images\changePassword.png" />
+    <Content Include="Content\Images\checkmark.png" />
+    <Content Include="Content\Images\errorIcon.png" />
+    <Content Include="Content\Images\favicon.png" />
+    <Content Include="Content\Images\forgotIcon.png" />
+    <Content Include="Content\Images\image_1197421.gif" />
+    <Content Include="Content\Images\image_1197421_bk.gif" />
+    <Content Include="Content\Images\loader2.gif" />
+    <Content Include="Content\Images\loading.gif" />
+    <Content Include="Content\Images\lockIcon.png" />
+    <Content Include="Content\Images\smallLogo.png" />
+    <Content Include="Content\Images\somaxLogo.png" />
+    <Content Include="Content\Images\somaxLogoInner.png" />
+    <Content Include="Content\Images\timeoutIcon.png" />
+    <Content Include="Content\Select2\bootstrap-select.css" />
+    <Content Include="Content\Select2\select2.css" />
+    <Content Include="Content\Select2\select2.min.css" />
+    <Content Include="Content\Select2\select2custom.css" />
+    <Content Include="Content\sidebar_custom.css" />
+    <Content Include="Content\tagify.css" />
+    <Content Include="Content\user-notification.css" />
+    <Content Include="Content\_CustomizeGridSetup.css" />
+    <Content Include="favicon.ico" />
+    <Content Include="fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="Global.asax" />
+    <Content Include="Content\Site.css" />
+    <Content Include="Images\bgTheme.png" />
+    <Content Include="Images\calender.png" />
+    <Content Include="Images\caretArrow.png" />
+    <Content Include="Images\caretArrow2.png" />
+    <Content Include="Images\caretTick.png" />
+    <Content Include="Images\details_close.png" />
+    <Content Include="Images\details_open.png" />
+    <Content Include="Images\DisplayImg\NoImage.jpg" />
+    <Content Include="Images\drop-grid-first.png" />
+    <Content Include="Images\drop-grid-last.png" />
+    <Content Include="Images\drop-grid-next.png" />
+    <Content Include="Images\drop-grid-prev.png" />
+    <Content Include="Images\footerBg.jpg" />
+    <Content Include="Images\headerBg.jpg" />
+    <Content Include="Images\hoverTick.jpg" />
+    <Content Include="Images\hoverTick.png" />
+    <Content Include="Images\lineLoader.gif" />
+    <Content Include="Images\logo.png" />
+    <Content Include="Images\somaxLogo.png" />
+    <Content Include="Images\sort_asc.png" />
+    <Content Include="Images\sort_both.png" />
+    <Content Include="Images\sort_desc.png" />
+    <Content Include="Images\toggleMenu.png" />
+    <Content Include="Images\under-construction.png" />
+    <Content Include="Rotativa\help-wkhtmltoimage.txt" />
+    <Content Include="Rotativa\help-wkhtmltopdf.txt" />
+    <Content Include="Rotativa\msvcp120.dll" />
+    <Content Include="Rotativa\msvcp140.dll" />
+    <Content Include="Rotativa\msvcr120.dll" />
+    <Content Include="Rotativa\vccorlib120.dll" />
+    <Content Include="Rotativa\vcruntime140.dll" />
+    <Content Include="Rotativa\wkhtmltoimage.exe" />
+    <Content Include="Rotativa\wkhtmltopdf.exe" />
+    <Content Include="Scripts\bootstrap-multiselect.js" />
+    <Content Include="Scripts\bootstrap.js" />
+    <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="ApplicationInsights.config" />
+    <Content Include="Scripts\ckeditor\ckeditor.js" />
+    <Content Include="Scripts\ckeditor\sample\index.html" />
+    <Content Include="Scripts\ckeditor\sample\styles.css" />
+    <Content Include="Scripts\css\admin_login.css" />
+    <Content Include="Scripts\css\fonts\flaticon\Flaticon.svg" />
+    <Content Include="Scripts\css\fonts\font-awesome\fontawesome-webfont.svg" />
+    <Content Include="Scripts\css\fonts\line-awesome\line-awesome.svg" />
+    <Content Include="Scripts\css\fonts\metronic\Metronic_fda1334c35d0f5fe2afb3afebbb6774a.svg" />
+    <Content Include="Scripts\css\fonts\socicon\socicon.svg" />
+    <Content Include="Scripts\css\sidebar_custom.css" />
+    <Content Include="Scripts\css\_CustomizeGridSetup.css" />
+    <Content Include="Scripts\dropzone\basic.css" />
+    <Content Include="Scripts\dropzone\basic.min.css" />
+    <Content Include="Scripts\dropzone\dropzone-amd-module.js" />
+    <Content Include="Scripts\dropzone\dropzone-amd-module.min.js" />
+    <Content Include="Scripts\dropzone\dropzone.css" />
+    <Content Include="Scripts\dropzone\dropzone.js" />
+    <Content Include="Scripts\dropzone\dropzone.min.css" />
+    <Content Include="Scripts\dropzone\dropzone.min.js" />
+    <Content Include="Scripts\dropzone\dropzoneBg.png" />
+    <Content Include="Scripts\js\CreateNewPassword.js" />
+    <Content Include="Scripts\js\ResetPassword.js" />
+    <Content Include="Scripts\Metronic\assets\login\demo\default\base\style.bundle.css" />
+    <Content Include="Scripts\Metronic\assets\font-awesome-4.7.0\font-awesome-4.7.0\css\font-awesome.css" />
+    <Content Include="Scripts\Metronic\assets\font-awesome-4.7.0\font-awesome-4.7.0\css\font-awesome.min.css" />
+    <Content Include="Scripts\Metronic\assets\font-awesome-4.7.0\font-awesome-4.7.0\fonts\fontawesome-webfont.svg" />
+    <Content Include="Scripts\Metronic\assets\font-awesome-4.7.0\font-awesome-4.7.0\HELP-US-OUT.txt" />
+    <Content Include="Scripts\Metronic\assets\snippets\pages\user\login.js" />
+    <Content Include="Scripts\Metronic\assets\vendors\base\vendors.bundle.js" />
+    <Content Include="Scripts\Metronic\Images\arrow_left.png" />
+    <Content Include="Scripts\Metronic\Images\arrow_right.png" />
+    <Content Include="Scripts\Metronic\Images\currentArrow.png" />
+    <Content Include="Scripts\Metronic\Images\downArrow.png" />
+    <Content Include="Scripts\Metronic\Images\downArrow1.png" />
+    <Content Include="Scripts\Metronic\Images\sort_asc.png" />
+    <Content Include="Scripts\Metronic\Images\sort_both.png" />
+    <Content Include="Scripts\Metronic\Images\sort_desc.png" />
+    <Content Include="Scripts\Metronic\Images\upArrow.png" />
+    <Content Include="Scripts\Metronic\Images\upArrow1.png" />
+    <Content Include="Scripts\modernizr-2.8.3.js" />
+    <Content Include="Scripts\Pages\ClientNew\ClientDetailsNew.js" />
+    <Content Include="Scripts\Pages\ClientNew\ClientNew.js" />
+    <Content Include="Scripts\Pages\Client\ClientSearch.js" />
+    <Content Include="Scripts\Pages\Dashboard\Dashboard.js" />
+    <Content Include="Scripts\Pages\Knowledgebase\KnowledgebaseSearchNew.js" />
+    <Content Include="Scripts\Pages\Site\SiteSearch.js" />
+    <Content Include="Scripts\Pages\Client\ClientDetails.js" />
+    <Content Include="Scripts\Pages\SupportTicket\SupportTicket.js" />
+    <Content Include="Scripts\Pages\UserManagement\UserManagement.js" />
+    <Content Include="Scripts\Pages\UserManagement\UserManagementDetails.js" />
+    <Content Include="Scripts\Somax\jquery.selectlistactions.js" />
+    <Content Include="Scripts\Somax\tagify.min.js" />
+    <Content Include="Views\Login\ResetPassword.cshtml" />
+    <Content Include="write\UploadedImages\images\5c396a98-3352-4e23-94bb-198db0f01c9e\calender.png" />
+    <Content Include="fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="fonts\glyphicons-halflings-regular.woff" />
+    <None Include="Properties\PublishProfiles\somax - Admin - FTP.pubxml" />
+    <None Include="Properties\PublishProfiles\somax - Admin - Web Deploy.pubxml" />
+    <None Include="Properties\PublishProfiles\somax - FTP.pubxml" />
+    <None Include="Properties\PublishProfiles\somax - Interface - Web Deploy.pubxml" />
+    <None Include="Properties\PublishProfiles\somax - Interface - Web Deploy1.pubxml" />
+    <None Include="Properties\PublishProfiles\somax - ReadOnly - FTP.pubxml" />
+    <None Include="Properties\PublishProfiles\somax - ReadOnly - FTP1.pubxml" />
+    <None Include="Properties\PublishProfiles\SOMAX V2 - Admin - DEVL - FTP.pubxml" />
+    <None Include="Properties\PublishProfiles\SOMAX V2 - Admin - DEVL - Web Deploy.pubxml" />
+    <None Include="Properties\PublishProfiles\somax-UAT - Admin - FTP.pubxml" />
+    <None Include="Properties\PublishProfiles\somax-UAT - Admin - Web Deploy.pubxml" />
+    <Content Include="Scripts\css\fonts\flaticon\Flaticon.eot" />
+    <Content Include="Scripts\css\fonts\flaticon\Flaticon.ttf" />
+    <Content Include="Scripts\css\fonts\flaticon\Flaticon.woff" />
+    <Content Include="Scripts\css\fonts\font-awesome\fontawesome-webfont.eot" />
+    <Content Include="Scripts\css\fonts\font-awesome\fontawesome-webfont.ttf" />
+    <Content Include="Scripts\css\fonts\font-awesome\fontawesome-webfont.woff" />
+    <Content Include="Scripts\css\fonts\font-awesome\fontawesome-webfont.woff2" />
+    <Content Include="Scripts\css\fonts\font-awesome\FontAwesome.otf" />
+    <Content Include="Scripts\css\fonts\line-awesome\line-awesome.eot" />
+    <Content Include="Scripts\css\fonts\line-awesome\line-awesome.ttf" />
+    <Content Include="Scripts\css\fonts\line-awesome\line-awesome.woff" />
+    <Content Include="Scripts\css\fonts\line-awesome\line-awesome.woff2" />
+    <Content Include="Scripts\css\fonts\metronic\Metronic_fda1334c35d0f5fe2afb3afebbb6774a.eot" />
+    <Content Include="Scripts\css\fonts\metronic\Metronic_fda1334c35d0f5fe2afb3afebbb6774a.ttf" />
+    <Content Include="Scripts\css\fonts\metronic\Metronic_fda1334c35d0f5fe2afb3afebbb6774a.woff" />
+    <Content Include="Scripts\css\fonts\metronic\Metronic_fda1334c35d0f5fe2afb3afebbb6774a.woff2" />
+    <Content Include="Scripts\css\fonts\socicon\socicon.eot" />
+    <Content Include="Scripts\css\fonts\socicon\socicon.ttf" />
+    <Content Include="Scripts\css\fonts\socicon\socicon.woff" />
+    <Content Include="Scripts\css\fonts\summernote\summernote.eot" />
+    <Content Include="Scripts\css\fonts\summernote\summernote.ttf" />
+    <Content Include="Scripts\css\fonts\summernote\summernote.woff" />
+    <None Include="Properties\PublishProfiles\SomaxAdmin - FTP.pubxml" />
+    <None Include="Properties\PublishProfiles\SomaxAdmin - Web Deploy.pubxml" />
+    <None Include="Properties\PublishProfiles\SOMAXV2-Admin-Debug-File.pubxml" />
+    <Content Include="Scripts\ckeditor\README.md" />
+    <None Include="Scripts\jquery-1.10.2-vsdoc.js" />
+    <Content Include="Scripts\Common\sweetalert.min.js" />
+    <Content Include="Scripts\Common\tooltipvalidatormessage.js" />
+    <Content Include="Scripts\css\bootstrap-multiselect.css" />
+    <Content Include="Scripts\css\custom-dropdown-style.css" />
+    <Content Include="Scripts\css\daterangepicker_custom.css" />
+    <Content Include="Scripts\css\daterangepicker_theme.css" />
+    <Content Include="Scripts\css\jquery-ui.css" />
+    <Content Include="Scripts\css\style.bundle.css" />
+    <Content Include="Scripts\css\sweetalert.css" />
+    <Content Include="Scripts\css\tootltipcustom.css" />
+    <Content Include="Scripts\css\vendors.bundle.css" />
+    <Content Include="Scripts\GridLib\buttons.dataTables.min.css" />
+    <Content Include="Scripts\GridLib\buttons.html5.min.js" />
+    <Content Include="Scripts\GridLib\buttons.print.min.js" />
+    <Content Include="Scripts\GridLib\customDataTable.css" />
+    <Content Include="Scripts\GridLib\dataTables.bootstrap4.min.js" />
+    <Content Include="Scripts\GridLib\dataTables.buttons.min.js" />
+    <Content Include="Scripts\GridLib\dataTables.colReorder.min.js" />
+    <Content Include="Scripts\GridLib\dataTables.fixedColumns.min.js" />
+    <Content Include="Scripts\GridLib\fixedColumns.dataTables.min.css" />
+    <Content Include="Scripts\GridLib\jquery.dataTables.min.css" />
+    <Content Include="Scripts\GridLib\jquery.dataTables.min.js" />
+    <Content Include="Scripts\GridLib\jszip.min.js" />
+    <Content Include="Scripts\GridLib\pdfmake.min.js" />
+    <Content Include="Scripts\GridLib\vfs_fonts.js" />
+    <Content Include="Scripts\jquery-1.10.2.js" />
+    <Content Include="Scripts\jquery-1.10.2.min.js" />
+    <None Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\jquery-ui-1.12.1.min.js" />
+    <Content Include="Scripts\jquery.unobtrusive-ajax.min.js" />
+    <Content Include="Scripts\jquery.validate.js" />
+    <Content Include="Scripts\jquery.validate.min.js" />
+    <Content Include="Scripts\jquery.validate.unobtrusive.js" />
+    <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\js\login.js" />
+    <Content Include="Scripts\js\scripts.bundle.js" />
+    <Content Include="Scripts\js\vendors.bundle.js" />
+    <Content Include="Scripts\mcx-dialog.js" />
+    <Content Include="Scripts\Metronic\assets\app\media\img\bg\bg-1.jpg" />
+    <Content Include="Scripts\Metronic\assets\app\media\img\bg\bg-2.jpg" />
+    <Content Include="Scripts\Metronic\assets\app\media\img\bg\bg-3.jpg" />
+    <Content Include="Scripts\Metronic\assets\app\media\img\bg\bg-4.jpg" />
+    <Content Include="Scripts\Metronic\assets\app\media\img\bg\bg-5.jpg" />
+    <Content Include="Scripts\Metronic\assets\app\media\img\bg\bg-6.jpg" />
+    <Content Include="Scripts\Metronic\assets\app\media\img\bg\bg-6.png" />
+    <Content Include="Scripts\Metronic\assets\app\media\img\bg\somaxBg.jpg" />
+    <Content Include="Scripts\Metronic\assets\app\media\img\blog\blog1.jpg" />
+    <Content Include="Scripts\Metronic\assets\app\media\img\blog\blog2.jpg" />
+    <Content Include="Scripts\Metronic\assets\app\media\img\blog\blog3.jpg" />
+    <Content Include="Scripts\Metronic\assets\app\media\img\blog\blog4.jpg" />
+    <Content Include="Scripts\Metronic\assets\app\media\img\blog\blog5.jpg" />
+    <Content Include="Scripts\Metronic\assets\app\media\img\client-logos\logo1.png" />
+    <Content Include="Scripts\Metronic\assets\app\media\img\client-logos\logo2.png" />
+    <Content Include="Scripts\Metronic\assets\app\media\img\client-logos\logo3.png" />
+    <Content Include="Scripts\Metronic\assets\app\media\img\client-logos\logo4.png" />
+    <Content Include="Scripts\Metronic\assets\app\media\img\client-logos\logo5.png" />
+    <Content Include="Scripts\Metronic\assets\app\media\img\envato\screen1.jpg" />
+    <Content Include="Scripts\Metronic\assets\app\media\img\envato\screen2.jpg" />
+    <Content Include="Scripts\Metronic\assets\app\media\img\error\bg1.jpg" />
+    <Content Include="Scripts\Metronic\assets\app\media\img\error\bg2.jpg" />
+    <Content Include="Scripts\Metronic\assets\app\media\img\error\bg3.jpg" />
+    <Content Include="Scripts\Metronic\assets\app\media\img\error\bg4.jpg" />
+    <Content Include="Scripts\Metronic\assets\app\media\img\error\bg5.jpg" />
+    <Content Include="Scripts\Metronic\assets\app\media\img\error\bg6.jpg" />
+    <Content Include="Scripts\Metronic\assets\app\media\img\files\css.svg" />
+    <Content Include="Scripts\Metronic\assets\app\media\img\files\csv.svg" />
+    <Content Include="Scripts\Metronic\assets\app\media\img\files\doc.svg" />
+    <Content Include="Scripts\Metronic\assets\app\media\img\files\html.svg" />
+    <Content Include="Scripts\Metronic\assets\app\media\img\files\javascript.svg" />
+    <Content Include="Scripts\Metronic\assets\app\media\img\files\jpg.svg" />
+    <Content Include="Scripts\Metronic\assets\app\media\img\files\mp4.svg" />
+    <Content Include="Scripts\Metronic\assets\app\media\img\files\pdf.svg" />
+    <Content Include="Scripts\Metronic\assets\app\media\img\files\xml.svg" />
+    <Content Include="Scripts\Metronic\assets\app\media\img\files\zip.svg" />
+    <Content Include="Scripts\Metronic\assets\app\media\img\icons\exchange.svg" />
+    <Content Include="Scripts\Metronic\assets\app\media\img\icons\logout.svg" />
+    <Content Include="Scripts\Metronic\assets\app\media\img\icons\question.svg" />
+    <Content Include="Scripts\Metronic\assets\app\media\img\icons\warning.svg" />
+    <Content Include="Scripts\Metronic\assets\app\media\img\logos\amCharts_downtime.png" />
+    <Content Include="Scripts\Metronic\assets\app\media\img\logos\amCharts_wocomp&amp;sche.png" />
+    <Content Include="Scripts\Metronic\assets\app\media\img\logos\amCharts_WOContSafe.png" />
+    <Content Include="Scripts\Metronic\assets\app\media\img\logos\changePassword.png" />
+    <Content Include="Scripts\Metronic\assets\app\media\img\logos\forgotIcon.png" />
+    <Content Include="Scripts\Metronic\assets\app\media\img\logos\home.png" />
+    <Content Include="Scripts\Metronic\assets\app\media\img\logos\home_hover.png" />
+    <Content Include="Scripts\Metronic\assets\app\media\img\logos\imgThumb.png" />
+    <Content Include="Scripts\Metronic\assets\app\media\img\logos\languageIcon.png" />
+    <Content Include="Scripts\Metronic\assets\app\media\img\logos\lftChart.png" />
+    <Content Include="Scripts\Metronic\assets\app\media\img\logos\lockIcon.png" />
+    <Content Include="Scripts\Metronic\assets\app\media\img\logos\logo-1.png" />
+    <Content Include="Scripts\Metronic\assets\app\media\img\logos\logo-2.png" />
+    <Content Include="Scripts\Metronic\assets\app\media\img\logos\logo-3.png" />
+    <Content Include="Scripts\Metronic\assets\app\media\img\logos\logoIcon.png" />
+    <Content Include="Scripts\Metronic\assets\app\media\img\logos\messages.jpg" />
+    <Content Include="Scripts\Metronic\assets\app\media\img\logos\msg_icon.png" />
+    <Content Include="Scripts\Metronic\assets\app\media\img\logos\rhtChart.png" />
+    <Content Include="Scripts\Metronic\assets\app\media\img\logos\separator.png" />
+    <Content Include="Scripts\Metronic\assets\app\media\img\logos\SiteLogo.png" />
+    <Content Include="Scripts\Metronic\assets\app\media\img\logos\SiteLogo2.png" />
+    <Content Include="Scripts\Metronic\assets\app\media\img\logos\smallLogo.png" />
+    <Content Include="Scripts\Metronic\assets\app\media\img\logos\somaxLogo.png" />
+    <Content Include="Scripts\Metronic\assets\app\media\img\misc\notification_bg.jpg" />
+    <Content Include="Scripts\Metronic\assets\app\media\img\misc\quick_actions_bg.jpg" />
+    <Content Include="Scripts\Metronic\assets\app\media\img\misc\somaxBg.jpg" />
+    <Content Include="Scripts\Metronic\assets\app\media\img\misc\user_profile_bg.jpg" />
+    <Content Include="Scripts\Metronic\assets\app\media\img\products\product1.jpg" />
+    <Content Include="Scripts\Metronic\assets\app\media\img\products\product10.jpg" />
+    <Content Include="Scripts\Metronic\assets\app\media\img\products\product11.jpg" />
+    <Content Include="Scripts\Metronic\assets\app\media\img\products\product2.jpg" />
+    <Content Include="Scripts\Metronic\assets\app\media\img\products\product3.jpg" />
+    <Content Include="Scripts\Metronic\assets\app\media\img\products\product4.jpg" />
+    <Content Include="Scripts\Metronic\assets\app\media\img\products\product5.jpg" />
+    <Content Include="Scripts\Metronic\assets\app\media\img\products\product6.jpg" />
+    <Content Include="Scripts\Metronic\assets\app\media\img\products\product7.jpg" />
+    <Content Include="Scripts\Metronic\assets\app\media\img\products\product8.jpg" />
+    <Content Include="Scripts\Metronic\assets\app\media\img\products\product9.jpg" />
+    <Content Include="Scripts\Metronic\assets\app\media\img\users\profBkgrnd.jpg" />
+    <Content Include="Scripts\Metronic\assets\demo\default\base\dataTables.bootstrap4.min.css" />
+    <Content Include="Scripts\Metronic\assets\demo\default\base\dataTables.bootstrap4.min.js" />
+    <Content Include="Scripts\Metronic\assets\demo\default\base\GlobalSearchGrid.css" />
+    <Content Include="Scripts\Metronic\assets\demo\default\base\jquery.dataTables.min.js" />
+    <Content Include="Scripts\Metronic\assets\demo\default\base\jquery.mCustomScrollbar.concat.min.js" />
+    <Content Include="Scripts\Metronic\assets\demo\default\base\jquery.mCustomScrollbar.css" />
+    <Content Include="Scripts\Metronic\assets\demo\default\base\jquery.slimscroll.js" />
+    <Content Include="Scripts\Metronic\assets\demo\default\base\responsive.css" />
+    <Content Include="Scripts\Metronic\assets\demo\default\base\scripts.bundle.js" />
+    <Content Include="Scripts\Metronic\assets\demo\default\base\style.bundle.css" />
+    <Content Include="Scripts\Metronic\assets\demo\default\base\style_custom.css" />
+    <Content Include="Scripts\Metronic\assets\demo\default\base\style_fleet.css" />
+    <Content Include="Scripts\Metronic\assets\demo\default\base\style_newCustom.css" />
+    <Content Include="Scripts\Metronic\assets\demo\default\custom\components\forms\widgets\input-mask.js" />
+    <Content Include="Scripts\Metronic\assets\demo\demo3\base\scripts.bundle.js" />
+    <Content Include="Scripts\Metronic\assets\login\demo\default\base\jquery.mCustomScrollbar.concat.min.js" />
+    <Content Include="Scripts\Metronic\assets\vendors\base\fonts\flaticon\Flaticon.svg" />
+    <Content Include="Scripts\Metronic\assets\vendors\base\fonts\font-awesome\fontawesome-webfont.svg" />
+    <Content Include="Scripts\Metronic\assets\vendors\base\fonts\line-awesome\line-awesome.svg" />
+    <Content Include="Scripts\Metronic\assets\vendors\base\fonts\metronic\Metronic_fda1334c35d0f5fe2afb3afebbb6774a.svg" />
+    <Content Include="Scripts\Metronic\assets\vendors\base\fonts\socicon\socicon.svg" />
+    <Content Include="Scripts\Metronic\assets\vendors\base\vendors.bundle.min.js" />
+    <Content Include="Scripts\Pages\Customvalidator\customvalidator.js" />
+    <Content Include="Scripts\Pages\JsConstants.js" />
+    <Content Include="Scripts\Pages\Knowledgebase\KnowledgebaseDetails.js" />
+    <Content Include="Scripts\Somax\AdminSomax_main.js" />
+    <Content Include="Scripts\css\style_custom.css" />
+    <Content Include="Scripts\Metronic\assets\vendors\base\vendors.bundle.css" />
+    <Content Include="Scripts\respond.js" />
+    <Content Include="Scripts\respond.min.js" />
+    <Content Include="Scripts\treeTable.js" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+    <Content Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+    <Content Include="Views\Web.config" />
+    <Content Include="Views\_ViewStart.cshtml" />
+    <Content Include="Views\Shared\Error.cshtml" />
+    <Content Include="Views\Shared\_MasterPageLayout.cshtml" />
+    <Content Include="Views\Login\AdminLogin.cshtml" />
+    <Content Include="Views\Login\_LoginPartial.cshtml" />
+    <Content Include="Views\Login\_ForgetPasswordPartial.cshtml" />
+    <Content Include="Views\Dashboard\Dashboard.cshtml" />
+    <Content Include="Views\Shared\_MasterPageLayoutCloseMenu.cshtml" />
+    <Content Include="Views\Shared\DisplayMsg.cshtml" />
+    <Content Include="Views\Shared\NotAuthorized.cshtml" />
+    <Content Include="Views\Shared\NotFound.cshtml" />
+    <Content Include="Views\Shared\SessionExpired.cshtml" />
+    <Content Include="Views\Shared\_DisplayMsgLocalization.cshtml" />
+    <Content Include="Views\Shared\_ErrorDiv.cshtml" />
+    <Content Include="Views\Shared\_Export.cshtml" />
+    <Content Include="Scripts\Metronic\assets\vendors\base\fonts\flaticon\Flaticon.eot" />
+    <Content Include="Scripts\Metronic\assets\vendors\base\fonts\flaticon\Flaticon.ttf" />
+    <Content Include="Scripts\Metronic\assets\vendors\base\fonts\flaticon\Flaticon.woff" />
+    <Content Include="Scripts\Metronic\assets\vendors\base\fonts\font-awesome\fontawesome-webfont.eot" />
+    <Content Include="Scripts\Metronic\assets\vendors\base\fonts\font-awesome\fontawesome-webfont.ttf" />
+    <Content Include="Scripts\Metronic\assets\vendors\base\fonts\font-awesome\fontawesome-webfont.woff" />
+    <Content Include="Scripts\Metronic\assets\vendors\base\fonts\font-awesome\fontawesome-webfont.woff2" />
+    <Content Include="Scripts\Metronic\assets\vendors\base\fonts\font-awesome\FontAwesome.otf" />
+    <Content Include="Scripts\Metronic\assets\vendors\base\fonts\line-awesome\line-awesome.eot" />
+    <Content Include="Scripts\Metronic\assets\vendors\base\fonts\line-awesome\line-awesome.ttf" />
+    <Content Include="Scripts\Metronic\assets\vendors\base\fonts\line-awesome\line-awesome.woff" />
+    <Content Include="Scripts\Metronic\assets\vendors\base\fonts\line-awesome\line-awesome.woff2" />
+    <Content Include="Scripts\Metronic\assets\vendors\base\fonts\metronic\Metronic_fda1334c35d0f5fe2afb3afebbb6774a.eot" />
+    <Content Include="Scripts\Metronic\assets\vendors\base\fonts\metronic\Metronic_fda1334c35d0f5fe2afb3afebbb6774a.ttf" />
+    <Content Include="Scripts\Metronic\assets\vendors\base\fonts\metronic\Metronic_fda1334c35d0f5fe2afb3afebbb6774a.woff" />
+    <Content Include="Scripts\Metronic\assets\vendors\base\fonts\metronic\Metronic_fda1334c35d0f5fe2afb3afebbb6774a.woff2" />
+    <Content Include="Scripts\Metronic\assets\vendors\base\fonts\socicon\socicon.eot" />
+    <Content Include="Scripts\Metronic\assets\vendors\base\fonts\socicon\socicon.ttf" />
+    <Content Include="Scripts\Metronic\assets\vendors\base\fonts\socicon\socicon.woff" />
+    <Content Include="Scripts\Metronic\assets\vendors\base\fonts\summernote\summernote.eot" />
+    <Content Include="Scripts\Metronic\assets\vendors\base\fonts\summernote\summernote.ttf" />
+    <Content Include="Scripts\Metronic\assets\vendors\base\fonts\summernote\summernote.woff" />
+    <Content Include="Views\Login\ResetIdMailTemplate.cshtml" />
+    <Content Include="Views\Login\PasswordResetMailTemplate.cshtml" />
+    <Content Include="Views\Login\_ResetPasswordPopup.cshtml" />
+    <Content Include="Scripts\Metronic\assets\font-awesome-4.7.0\font-awesome-4.7.0\fonts\fontawesome-webfont.eot" />
+    <Content Include="Scripts\Metronic\assets\font-awesome-4.7.0\font-awesome-4.7.0\fonts\fontawesome-webfont.ttf" />
+    <Content Include="Scripts\Metronic\assets\font-awesome-4.7.0\font-awesome-4.7.0\fonts\fontawesome-webfont.woff" />
+    <Content Include="Scripts\Metronic\assets\font-awesome-4.7.0\font-awesome-4.7.0\fonts\fontawesome-webfont.woff2" />
+    <Content Include="Scripts\Metronic\assets\font-awesome-4.7.0\font-awesome-4.7.0\fonts\FontAwesome.otf" />
+    <Content Include="Scripts\Metronic\assets\font-awesome-4.7.0\font-awesome-4.7.0\less\animated.less" />
+    <Content Include="Scripts\Metronic\assets\font-awesome-4.7.0\font-awesome-4.7.0\less\bordered-pulled.less" />
+    <Content Include="Scripts\Metronic\assets\font-awesome-4.7.0\font-awesome-4.7.0\less\core.less" />
+    <Content Include="Scripts\Metronic\assets\font-awesome-4.7.0\font-awesome-4.7.0\less\fixed-width.less" />
+    <Content Include="Scripts\Metronic\assets\font-awesome-4.7.0\font-awesome-4.7.0\less\font-awesome.less" />
+    <Content Include="Scripts\Metronic\assets\font-awesome-4.7.0\font-awesome-4.7.0\less\icons.less" />
+    <Content Include="Scripts\Metronic\assets\font-awesome-4.7.0\font-awesome-4.7.0\less\larger.less" />
+    <Content Include="Scripts\Metronic\assets\font-awesome-4.7.0\font-awesome-4.7.0\less\list.less" />
+    <Content Include="Scripts\Metronic\assets\font-awesome-4.7.0\font-awesome-4.7.0\less\mixins.less" />
+    <Content Include="Scripts\Metronic\assets\font-awesome-4.7.0\font-awesome-4.7.0\less\path.less" />
+    <Content Include="Scripts\Metronic\assets\font-awesome-4.7.0\font-awesome-4.7.0\less\rotated-flipped.less" />
+    <Content Include="Scripts\Metronic\assets\font-awesome-4.7.0\font-awesome-4.7.0\less\screen-reader.less" />
+    <Content Include="Scripts\Metronic\assets\font-awesome-4.7.0\font-awesome-4.7.0\less\stacked.less" />
+    <Content Include="Scripts\Metronic\assets\font-awesome-4.7.0\font-awesome-4.7.0\less\variables.less" />
+    <Content Include="Scripts\Metronic\assets\font-awesome-4.7.0\font-awesome-4.7.0\scss\_animated.scss" />
+    <Content Include="Scripts\Metronic\assets\font-awesome-4.7.0\font-awesome-4.7.0\scss\_bordered-pulled.scss" />
+    <Content Include="Scripts\Metronic\assets\font-awesome-4.7.0\font-awesome-4.7.0\scss\_core.scss" />
+    <Content Include="Scripts\Metronic\assets\font-awesome-4.7.0\font-awesome-4.7.0\scss\_fixed-width.scss" />
+    <Content Include="Scripts\Metronic\assets\font-awesome-4.7.0\font-awesome-4.7.0\scss\_icons.scss" />
+    <Content Include="Scripts\Metronic\assets\font-awesome-4.7.0\font-awesome-4.7.0\scss\_larger.scss" />
+    <Content Include="Scripts\Metronic\assets\font-awesome-4.7.0\font-awesome-4.7.0\scss\_list.scss" />
+    <Content Include="Scripts\Metronic\assets\font-awesome-4.7.0\font-awesome-4.7.0\scss\_mixins.scss" />
+    <Content Include="Scripts\Metronic\assets\font-awesome-4.7.0\font-awesome-4.7.0\scss\_path.scss" />
+    <Content Include="Scripts\Metronic\assets\font-awesome-4.7.0\font-awesome-4.7.0\scss\_rotated-flipped.scss" />
+    <Content Include="Scripts\Metronic\assets\font-awesome-4.7.0\font-awesome-4.7.0\scss\_screen-reader.scss" />
+    <Content Include="Scripts\Metronic\assets\font-awesome-4.7.0\font-awesome-4.7.0\scss\_stacked.scss" />
+    <Content Include="Scripts\Metronic\assets\font-awesome-4.7.0\font-awesome-4.7.0\scss\_variables.scss" />
+    <Content Include="Scripts\Metronic\assets\font-awesome-4.7.0\font-awesome-4.7.0\scss\font-awesome.scss" />
+    <Content Include="Views\Login\PasswordChangeConfirmMailTemplate.cshtml" />
+    <Content Include="Views\Knowledgebase\KnowledgebaseSearch.cshtml" />
+    <Content Include="Views\Knowledgebase\Index.cshtml" />
+    <Content Include="Views\Shared\_CustomizeGridSetup.cshtml" />
+    <Content Include="Views\Knowledgebase\_KnowledgebaseAdd.cshtml" />
+    <Content Include="Views\Knowledgebase\_KnowledgebaseAdvancedSearch.cshtml" />
+    <Content Include="Views\Client\_ClientSearch.cshtml" />
+    <Content Include="Views\Client\_ClientAdvancedSearch.cshtml" />
+    <Content Include="Views\Shared\_CustomizeGridSetup.cshtml" />
+    <Content Include="Views\Knowledgebase\KnowledgebaseDetails.cshtml" />
+    <Content Include="Views\Client\Index.cshtml" />
+    <Content Include="Views\Knowledgebase\_KnowledgebaseEdit.cshtml" />
+    <Content Include="Views\Shared\_UserProfileUpdateModal.cshtml" />
+    <Content Include="Views\Client\_ClientDetails.cshtml" />
+    <Content Include="Views\Site\Index.cshtml" />
+    <Content Include="Views\Site\_SiteAdvancedSearch.cshtml" />
+    <Content Include="Views\Site\_SiteSearch.cshtml" />
+    <Content Include="Views\Login\_NewUserPasswordCreate.cshtml" />
+    <Content Include="Views\Login\UnderConstruction.cshtml" />
+    <Content Include="Views\Client\_ClientAdd.cshtml" />
+    <Content Include="Views\Site\_SiteDetails.cshtml" />
+    <Content Include="Views\Client\_ClientEdit.cshtml" />
+    <Content Include="Views\Site\_CreatedLastUpdatedModal.cshtml" />
+    <Content Include="Views\Site\_SiteAdd.cshtml" />
+    <Content Include="Views\Site\_SiteEdit.cshtml" />
+    <Content Include="Views\Login\_IsIEBrowser.cshtml" />
+    <Content Include="Views\SupportTicket\Index.cshtml" />
+    <Content Include="Views\SupportTicket\_SupportTicketSearch.cshtml" />
+    <Content Include="Views\SupportTicket\_SupportTicketAdd.cshtml" />
+    <Content Include="Views\SupportTicket\_SupportTicketSummary.cshtml" />
+    <Content Include="Views\SupportTicket\_SupportTicketDetails.cshtml" />
+    <Content Include="Views\SupportTicket\_SupportTicketAdvancedSearch.cshtml" />
+    <Content Include="Views\SupportTicket\_TicketResponsesLogs.cshtml" />
+    <Content Include="Views\SupportTicket\_TicketResponsesList.cshtml" />
+    <Content Include="Views\SupportTicket\_AddReply.cshtml" />
+    <Content Include="Views\UserManagement\_UserManagementAdvanceSearch.cshtml" />
+    <Content Include="Views\UserManagement\Index.cshtml" />
+    <Content Include="Views\UserManagement\UserManagementDetails.cshtml" />
+    <Content Include="Views\Clients\_ClientSearch.cshtml" />
+    <Content Include="Views\Clients\Index.cshtml" />
+    <Content Include="Views\Clients\_ClientAdvancedSearch.cshtml" />
+    <Content Include="Views\Clients\_ClientSearchInnerGrid.cshtml" />
+    <Content Include="Views\Clients\ClientsGridPdfPrintTemplate.cshtml" />
+    <Content Include="Views\Clients\_ClientAdd.cshtml" />
+    <Content Include="Views\Clients\_ClientEdit.cshtml" />
+    <Content Include="Views\Clients\_ClientDetails.cshtml" />
+    <Content Include="Views\Clients\_SiteBillingDetailsByClientIdSiteId.cshtml" />
+    <Content Include="Views\Clients\_SiteDetailsByClientIdSiteId.cshtml" />
+    <Content Include="Views\Clients\_SiteEdit.cshtml" />
+    <Content Include="Views\Clients\_SiteBillingEdit.cshtml" />
+    <Content Include="Views\Clients\_SiteAdd.cshtml" />
+    <Content Include="Views\Clients\_ClientSiteMaintainanceNewSearch.cshtml" />
+    <Content Include="Views\Clients\_EditSiteMaintenance.cshtml" />
+    <Content Include="Views\Clients\_AddSiteMaintenance.cshtml" />
+    <Content Include="Views\Clients\_MessageSelectedClientSearch.cshtml" />
+    <Content Include="Views\Clients\_MessageAllClientSearch.cshtml" />
+    <Content Include="Views\Clients\_AddMessageSelectedClient.cshtml" />
+    <Content Include="Views\Clients\_EditMessageSelectedClient.cshtml" />
+    <Content Include="Views\Clients\_AddMessageAllClient.cshtml" />
+    <Content Include="Views\Clients\_EditMessageAllClient.cshtml" />
+    <Content Include="Views\UserManagement\_InnerGridUserManagement.cshtml" />
+    <Content Include="Views\UserManagement\UMGridPdfPrintTemplate.cshtml" />
+    <Content Include="Views\UserManagement\_AddEditUMSite.cshtml" />
+    <Content Include="Views\Site\_GuestURLModal.cshtml" />
+    <Content Include="Views\Site\_PartIssueURLModal.cshtml" />
+    <Content Include="Views\Site\_UserNameValidateModal.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="App_Data\" />
+    <Folder Include="bin\" />
+    <Folder Include="Models\SiteBilling\" />
+    <Folder Include="Scripts\Metronic\GridLib\" />
+    <Folder Include="Views\Base\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
+    <Content Include="Scripts\jquery-1.10.2.min.map" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\AzureUtil\AzureUtil.csproj">
+      <Project>{403edc05-cb37-499b-bea8-e1a5026592ae}</Project>
+      <Name>AzureUtil</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Business.Common\Business.Common.csproj">
+      <Project>{04628c0c-7725-4cab-b6df-b53703138e94}</Project>
+      <Name>Business.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Business\Authentication\Authentication.csproj">
+      <Project>{d388fc98-22c9-402a-a065-a8577842af4f}</Project>
+      <Name>Authentication</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Data\DataCommon\Data.Common.csproj">
+      <Project>{6bc3ffd2-4ddf-42cd-bed1-4e1c3bed16a5}</Project>
+      <Name>Data.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Data\DataContracts\DataContracts.csproj">
+      <Project>{ad21da6f-0e58-4a46-8c4e-4729bf74de71}</Project>
+      <Name>DataContracts</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Presentation.Common\Presentation.Common.csproj">
+      <Project>{292348f0-5608-4ff3-8556-377a0c3457e3}</Project>
+      <Name>Presentation.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Utility\Utility.csproj">
+      <Project>{fae90d6a-29da-4346-b1b6-c65528e22132}</Project>
+      <Name>Utility</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <Target Name="MvcBuildViews" AfterTargets="AfterBuild" Condition="'$(MvcBuildViews)'=='true'">
+    <AspNetCompiler VirtualPath="temp" PhysicalPath="$(WebProjectOutputDir)" />
+  </Target>
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>True</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>0</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>http://localhost:53024/Admin</IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\Microsoft.Net.Compilers.2.1.0\build\Microsoft.Net.Compilers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Net.Compilers.2.1.0\build\Microsoft.Net.Compilers.props'))" />
+    <Error Condition="!Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.0\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.0\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props'))" />
+  </Target>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target> -->
+</Project>

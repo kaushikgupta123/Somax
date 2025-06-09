@@ -1,0 +1,101 @@
+﻿@model Admin.Models.Client.ClientVM
+<div class="row">
+    <div class="col-xl-12">
+        <div class="m-portlet" id="m_portlet" style="padding:15px;">
+            <div>
+                <ul class="listView flexlist">
+                    
+                    <li>
+                        <h3>
+                            <span>
+                                @Model.Loc.Where(a => a.ResourceId == "spnGlobalSubscription").FirstOrDefault().Value.ToString()
+                            </span>
+                        </h3>
+                    </li>
+                    <li>
+                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnGlobalAnniversaryDate").FirstOrDefault().Value.ToString() :</span>
+                        <span class="inputText">
+
+                            @if (Model.SiteBillingModelView.AnniversaryDate.HasValue && Model.SiteBillingModelView.AnniversaryDate.Value != default(DateTime))
+                            {
+                                @Model.SiteBillingModelView.AnniversaryDate.Value.ToString("MM/dd/yyyy", CultureInfo.InvariantCulture)
+                            }
+                        </span>
+                    </li>
+                    <li>
+                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnGlobalInvoiceFreq").FirstOrDefault().Value.ToString() :</span>
+                        <span class="inputText">@Model.SiteBillingModelView.InvoiceFreq</span>
+                    </li>
+                    <li>
+                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnGlobalTerms").FirstOrDefault().Value.ToString() :</span>
+                        <span class="inputText">@Model.SiteBillingModelView.Terms</span>
+                    </li>
+                    <li>
+                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnCurrentInvoice").FirstOrDefault().Value.ToString() :</span>
+                        <span class="inputText">@Model.SiteBillingModelView.CurrentInvoice</span>
+                    </li>
+                    <li>
+                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnInvoiceDate").FirstOrDefault().Value.ToString() :</span>
+                        <span class="inputText">
+                            @if (Model.SiteBillingModelView.InvoiceDate.HasValue && Model.SiteBillingModelView.InvoiceDate.Value != default(DateTime))
+                            {
+                                @Model.SiteBillingModelView.InvoiceDate.Value.ToString("MM/dd/yyyy", CultureInfo.InvariantCulture)
+                            }
+                        </span>
+                    </li>
+                    <li>
+                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnNextInvoiceDate").FirstOrDefault().Value.ToString() :</span>
+                        <span class="inputText">
+                            @if (Model.SiteBillingModelView.NextInvoiceDate.HasValue && Model.SiteBillingModelView.NextInvoiceDate.Value != default(DateTime))
+                            {
+                                @Model.SiteBillingModelView.NextInvoiceDate.Value.ToString("MM/dd/yyyy", CultureInfo.InvariantCulture)
+                            }
+                        </span>
+                    </li>
+                    <li>
+                        <span class="label">@Model.Loc.Where(a => a.ResourceId == "spnQuoteRequired").FirstOrDefault().Value.ToString() :</span>
+                        <span class="inputText">
+                            @Html.CheckBoxFor(m => m.SiteBillingModelView.QuoteRequired, new { @class = "form-control m-input", style = "color:black; width: auto; margin-top: 12px;", onclick = "return false;" })
+                        </span>
+                    </li>
+
+                </ul>
+            </div>
+            <div class="editBttn">
+
+                <button type="button" class="btn btn-blue" id="btnEditSiteBilling"><i class="fa fa-pencil" style="margin-top:-3px;"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalEdit").FirstOrDefault().Value.ToString()</button>
+                <div style="clear:both;"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<style>
+    .flexlist li {
+        height: auto;
+        display: flex;
+        padding-top: 10px;
+        padding-bottom: 10px;
+        min-height: 48px;
+        height: auto !important;
+    }
+
+
+
+        .flexlist li .inputText input {
+            margin-top: 5px !important;
+        }
+
+    ul.listView.flexlist li span.inputText, ul.listView.flexlist li span.label {
+        float: none !important;
+        height: auto !important;
+        line-height: 20px !important;
+    }
+
+    ul.listView.flexlist li span.inputText {
+        height: auto !important;
+    }
+
+    ul.listView.flexlist li span.label {
+        padding-right: 15px;
+    }
+</style>

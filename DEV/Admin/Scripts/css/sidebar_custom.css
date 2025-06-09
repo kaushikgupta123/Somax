@@ -1,0 +1,119 @@
+﻿/* ---------------------------------------------------
+    SIDEBAR STYLE START
+----------------------------------------------------- */
+.sidebar {
+    width: 320px;
+    position: fixed;
+    top: 0;
+    right: -320px;
+    height: 100vh;
+    z-index: 999;
+    background: #fff;
+    color: #fff;
+    transition: all 0.3s;
+    overflow-y: scroll;
+    box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.2);
+}
+.sidebar.active {
+    right: 0;
+}
+.dismiss {
+    width: 30px;
+    height: 30px;
+    line-height: 30px;
+    text-align: center;
+    background: none;
+    position: absolute;
+    top: 16px;
+    right: 10px;
+    cursor: pointer;
+    -webkit-transition: all 0.3s;
+    -o-transition: all 0.3s;
+    transition: all 0.3s;
+    color: #333333;
+    z-index: 1;
+}
+.dismiss:hover {
+    background: none;
+    color: #333333;
+}
+.overlay {
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.7);
+    /*z-index: 999;*/
+    z-index: 104;
+    display: none;
+    left: 0;
+    top: 0;
+}
+.sidebar .sidebar-header {
+    padding: 20px;
+    background: #fff;
+    border-bottom: 1px solid #b8c2c4;
+}
+.sidebar .sidebar-header h3 {
+    padding: 0;
+    margin: 0;
+    color: #333;
+    font-size: 18px;
+    position: relative;
+}
+.sidebar .sidebar-header h3 span {
+    background: #ff7200;
+    position: absolute;
+    width: 23px;
+    height: 23px;
+    display: block;
+    left: 90px;
+    top: -2px;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 23px;
+    font-size: 14px;
+    color: #FFF;
+}
+.sidebar ul.components {
+    padding: 20px 0;
+    border-bottom: 1px solid #47748b;
+}
+.sidebar ul p {
+    color: #fff;
+    padding: 10px;
+}
+.sidebar ul li a {
+    padding: 10px;
+    font-size: 1.1em;
+    display: block;
+}
+.sidebar ul li a:hover {
+    color: #7386D5;
+    background: #fff;
+}
+.sidebar ul li.active > a, a[aria-expanded="true"] {
+    color: #fff;
+    background: #6d7fcc;
+}
+.sidebar .sidebar-content {
+    padding: 20px;
+    background: #fff;
+}
+.sidebar .sidebar-content label {
+    font-size: 14px;
+    color: #000;
+    font-weight: normal;
+}
+.filterSearch {
+    position: absolute;
+    right: 45px;
+    top: 13px;
+}
+/* ---------------------------------------------------
+    SIDEBAR STYLE END
+----------------------------------------------------- */
+.partdetaildrop {
+    opacity: 1 !important;
+    position: static !important;
+    width: 100% !important;
+}

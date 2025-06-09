@@ -1,0 +1,233 @@
+﻿@model Admin.Models.UserInfoDetails
+@{
+    if (Model.FailureMessage != null || Model.FailureMessage == string.Empty)
+    {
+        <script type="text/javascript">
+            window.onload = function () {
+                $('#errormsg').text('@Model.FailureMessage');
+                $('#errormsg').css('display', 'block');
+            };
+        </script>
+    }
+}
+
+
+<h2>@Model.localization.Where(t => t.ResourceId == "m-login__title").FirstOrDefault().Value</h2>
+@using (Html.BeginForm("LogIn", "Login", FormMethod.Post, new { @class = "m-login__form m-form", @id = "signInFormAdmin" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="login-box">
+        <div class="form-group m-form__group adjust form__group">
+            @Html.TextBoxFor(model => model.UserName, new { @class = "form-control m-input UserName form__field",@placeholder="", @autocomplete = "off", @id = "UserName", @name = "username" })
+            <label for="UserName" class="form__label" style="color:#fff !important;">@Model.localization.Where(t => t.ResourceId == "UserName").FirstOrDefault().Value</label>
+        </div>
+        <div class="form-group m-form__group form__group">
+            @Html.PasswordFor(model => model.Password, new { @class = "form-control m-input Password form__field", @placeholder = "", @autocomplete = "off", @id = "Password", @name = "Password" })
+            <label for="Password" class="form__label pass-lable" style="color:#fff !important;">@Model.localization.Where(t => t.ResourceId == "PasswordId").FirstOrDefault().Value</label>
+            <div id="errormsg" style="display:none;"></div>
+            <a href="javascript:void(0)" class="password_eyes"><i id="Eye" class="fa fa-eye-slash"></i></a>
+        </div>
+    </div>
+    <div class="row m-login__form-sub">
+        <div class="col m--align-center">
+            <label class="m-checkbox m-checkbox--focus">
+                @Html.CheckBoxFor(m => m.RememberMe)
+                Remember My ID
+                <span></span>
+            </label>
+        </div>
+    </div>
+    <div class="m-login__form-action">
+        <button id="m_login_signin_submit" class="btn btn-focus m-btn m-btn--pill m-btn--custom m-btn--air">
+            @Model.localization.Where(t => t.ResourceId == "m-login__title").FirstOrDefault().Value
+        </button>
+    </div>
+    <div class="col m--align-center">
+        <a href="javascript:;" id="m_login_forget_password" class="m-link">
+            @Model.localization.Where(t => t.ResourceId == "m_login_forget_password").FirstOrDefault().Value
+        </a>
+    </div>
+    @Html.HiddenFor(t => t.ReturnUrl)
+    if (!string.IsNullOrEmpty(ViewBag.SystemUnderMaintenanceMessage))
+    {
+        <div class="alertboxme">
+            <p class="alert-title">
+                <i class="fa fa-exclamation-circle"></i>&nbsp; @ViewBag.SystemUnderMaintenanceMessage
+            </p>
+        </div>
+    }
+}
+
+<style type="text/css">
+    /*.alertboxme {
+        font-family: Roboto;
+        display: block;
+        position: relative;
+        border-radius: 6px;
+        font-size: 1rem;
+        padding: 15px;
+        margin-top: 1.5rem;
+        background-color: #f64e60;
+        color: #fff;
+        transition: height .5s ease-in,opacity .5s ease-in;
+        word-wrap: break-word;
+        word-break: break-word;
+    }
+
+    .alertboxme p {
+        margin-top: 10px;
+        margin-bottom: 0;
+        word-wrap: break-word;
+    }
+
+    .alertboxme p.alert-title {
+        padding: 0;
+        margin: 0;
+        font-size: 15px;
+    }
+
+    a.popClosedBoxMe {
+        position: absolute;
+        right: 15px;
+        color: #fff;
+        font-weight: 300;
+    }*/
+    #errormsg {
+        padding: 0px;
+        text-align: center;
+        color: #f4516c !important;
+        font-weight: 500;
+        background: #ffffff;
+        margin: 10px 0;
+    }
+    @@media (max-width: 1200px) and (min-width: 993px) {
+        .m-login.m-login--1 .m-login__aside { width: 700px; margin: 0 auto; padding: 3rem 3rem; }
+    }
+    @@media (max-width: 992px) {
+        .m-login.m-login--1 .m-login__aside .m-login__wrapper .m-login__logo { margin: 0 auto 6rem auto; }
+    }
+    @@media (max-width: 567px) {
+        .m-login.m-login--1.m-login--signin .m-login__signin { padding: 60px 40px; }
+        .m-login.m-login--1 .m-login__wrapper { padding: 2rem 0; }
+    }
+
+    a.password_eyes {
+        position: absolute;
+        right: 6px;
+        top: 22px;
+        color: #fff;
+        cursor: pointer;
+        z-index: 9;
+    }
+
+
+        @* region V2-987 *@
+    input::-ms-reveal,
+    input::-ms-clear {
+        display: none;
+    }
+        .login-box .form__group {
+            position: relative;
+            padding: 15px 0 0;
+            margin-top: 10px;
+        }
+
+        .login-box .form__field {
+            font-family: inherit;
+            width: 100%;
+            border-radius: 5px;
+            border: 1px solid #3d516e;
+            outline: 0;
+            font-size: 14px;
+            color: #fff;
+            padding: 10px;
+            background: transparent;
+            transition: border-color 0.2s;
+        }
+
+            .login-box .form__field::-moz-placeholder {
+                color: transparent;
+            }
+
+            .login-box .form__field:-ms-input-placeholder {
+                color: transparent;
+            }
+
+            .login-box .form__field::placeholder {
+                color: transparent;
+            }
+
+            .login-box .form__field:-moz-placeholder-shown ~ .form__label {
+                font-size: 16px;
+                cursor: text;
+                top: 20px;
+                text-align: center;
+            }
+
+            .login-box .form__field:-ms-input-placeholder ~ .form__label {
+                font-size: 16px;
+                cursor: text;
+                top: 15px;
+                text-align: center;
+            }
+
+            .login-box .form__field:placeholder-shown ~ .form__label {
+                font-size: 14px;
+                cursor: text;
+                width: 100%;
+                top: 20px;
+                left: 0px;
+                color: #fff !important;
+                text-align: center;
+            }
+
+            .login-box label,
+            .login-box .form__field:focus ~ .form__label, .login-box input:-webkit-autofill:focus ~ .form__label {
+                position: absolute;
+                width: 100%;
+                top: -2px;
+                left: 0;
+                display: block;
+                transition: 0.2s;
+                font-size: 12px;
+                color: #3d516e;
+                padding: 0 5px;
+                text-align: center;
+            }
+            .login-box .form__group {
+                position:relative;
+            }
+            .login-box label {
+                width: 100%;
+                text-align: center;
+                top: 0px;
+                position: absolute;
+            }
+
+            /*input.form__field:autofill ~ .form__label, {
+                width: 100%;
+                top: -2px;
+                left: 0;
+                display: block;
+            }*/
+    /*.login-box .form__field:focus ~ .form__label.pass-lable {
+            margin-left: -50px !important;
+        }*/
+    .login-box .form-group input[type="text"], .login-box .form-group input[type="password"] {
+        padding: 25px 0 12px !important;
+        text-align: center;
+        appearance: none;
+    }
+
+        .login-box .form__field:focus ~ .form__label {
+            color: #fff;
+            text-align: center;
+        }
+
+        .login-box .form__field:focus {
+            border: 1px solid #fff;
+        }
+
+        @* region V2-987 end*@
+
+</style>

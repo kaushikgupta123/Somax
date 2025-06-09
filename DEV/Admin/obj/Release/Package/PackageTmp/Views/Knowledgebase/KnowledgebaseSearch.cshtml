@@ -1,0 +1,268 @@
+﻿@model Admin.Models.KnowledgebaseCombined
+@using Common.Constants;
+<link href="~/Scripts/Metronic/assets/demo/default/base/style_newCustom.css" rel="stylesheet" />
+@if (Convert.ToString(Session["AdminMenuState"]) == "" || Convert.ToString(Session["AdminMenuState"]) == "open")
+{
+    <div class="m-subheader fixedDiv1">
+        <div class="new-m-subheader">
+            <div class="PageTitle">
+                <div class="align-items-center">
+                    <h3 class="m-subheader__title" style="padding:0;">                       
+                        <span style="line-height:35px;" id="kbtopicssearchtitle">
+                            @Model.Loc.Where(a => a.ResourceId == "spnKBTopic").FirstOrDefault().Value.ToString()
+                        </span>
+                    </h3>
+                </div>
+            </div>
+
+            <div class="ActionBttnArea">
+                <button type="button" class="btn newBtn-add AddKBTopics pull-left" id="AddKbTopics" title="Add Topic">@Model.Loc.Where(a => a.ResourceId == "spnNewKBTopics").FirstOrDefault().Value.ToString()</button>
+                <div style="clear:both;"></div>
+            </div>
+            <div style="clear:both;"></div>
+        </div>
+    </div>
+}
+else
+{
+    <div class="m-subheader fixedDiv1 fixupperpannel2">
+        <div class="new-m-subheader">
+            <div class="PageTitle">
+                <div class="align-items-center">
+                    <h3 class="m-subheader__title" style="padding:0;">
+                        <span style="line-height:35px;" id="kbtopicssearchtitle">
+                            @Model.Loc.Where(a => a.ResourceId == "spnKBTopic").FirstOrDefault().Value.ToString()
+                        </span>
+                    </h3>
+                </div>
+            </div>
+
+            <div class="ActionBttnArea">
+                <button type="button" class="btn newBtn-add AddKBTopics pull-left" id="AddKbTopics" title="Add Topic">@Model.Loc.Where(a => a.ResourceId == "spnNewKBTopics").FirstOrDefault().Value.ToString()</button>
+                <div style="clear:both;"></div>
+            </div>
+            <div style="clear:both;"></div>
+        </div>
+    </div>
+}
+<div class="pushDiv1"></div>
+<div class="row">
+    <div class="col-xl-12">
+        <div class="m-portlet" id="m_portlet" style="padding:15px;">
+            <div class="actionBar" style="display:block" id="kbtopicsGridAction">
+                <div class="pull-left" style="position:relative;">
+                    <button type="button" class="btn btn-white navbar-btn" title="Search" id="SrchBttnNew"><i class="fa fa-search" style="font-size: 1.1rem;position: relative;top: -2px;left: -2px;"></i> @Model.Loc.Where(a => a.ResourceId == "globalSearch").FirstOrDefault().Value.ToString()</button>
+                    <button type="button" class="btn btn-white navbar-btn" id="sidebarCollapse" title="Advance Search"><i class="fa fa-filter" style="font-size: 1.3rem;"></i></button>
+                    <div style="clear:both;"></div>
+                    <div class="searchBttnDrop desktop" id="searchBttnNewDrop" style="display:none;">
+                        <div class="form-group" style="position:relative;">
+                            <i class="fa fa-search txtSearchClick" style="font-size: 1.1rem;position: absolute;top: 9px;left: 15px;"></i>
+                            <a href="javascript:void(0)" id="cancelText"><i class="fa fa-close" style="font-size: 1.1rem;position: absolute;top: 9px;right: 15px;"></i></a>
+                            <input type="text" id="txtColumnSearch" class="form-control search" placeholder="Search..." style="padding: 0.65rem 2.75rem;" autocomplete="off">
+                        </div>
+                        <div class="searchTips">
+                            <div class="titleText">@Model.Loc.Where(a => a.ResourceId == "spnSearchTips").FirstOrDefault().Value.ToString()</div>
+                            @if (Model.Loc.Any(a => a.ResourceId == SearchTipsType.KBTopicsSearchTips))
+                            {
+                                <div class="infoText">@Model.Loc.Where(a => a.ResourceId == SearchTipsType.KBTopicsSearchTips).FirstOrDefault().Value.ToString()</div>
+                            }
+                            else
+                            {
+                                <div class="infoText">Search for KBTopics by Topic Name, Description and Tags.</div>
+                            }
+
+                            <div style="clear:both;"></div>
+                        </div>
+
+                        <div class="searchInfo">
+                            <span class="recent">@Model.Loc.Where(a => a.ResourceId == "GlobalRecentlySearched").FirstOrDefault().Value.ToString()</span>
+                            <div class="searchList" id="wosearchList">
+                                <ul id="UlSearchList"></ul>
+                            </div>
+                            <span class="clear"><a href="javascript:void(0)" id="clearText">@Model.Loc.Where(a => a.ResourceId == "globalClear").FirstOrDefault().Value.ToString()</a></span>
+                            <div style="clear:both;"></div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="pull-right">
+                    <button type="button" class="btn btn-white import-export" id="btnkbtopicsExport" disabled onclick="funcShowExportbtn()">@Model.Loc.Where(a => a.ResourceId == "spnExport").FirstOrDefault().Value.ToString()</button>
+                    <button type="button" class="btn btn-white" id="liCustomize" title="Customize" data-toggle="modal" data-target="#gridcolumncustomizemodal"><i class="fa fa-cog" style="font-size: 1.3rem;"></i></button>
+                    <div class="dropdown btn-sort" id="shortDrop">
+                        <button class="btn btn-blue dropdown-toggle" type="button" id="btnsortmenu" data-toggle="dropdown">@Model.Loc.Where(a => a.ResourceId == "GlobalSorting").FirstOrDefault().Value.ToString()</button>
+                        <ul class="dropdown-menu" role="menu" aria-labelledby="btnsortmenu">
+                            <li role="presentation" class="srtkbtopicscolumn" data-col="0"><a role="menuitem" tabindex="-1" href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnKBTopicsId").FirstOrDefault().Value.ToString()</a></li>
+                            <li role="presentation" class="srtkbtopicscolumn" data-col="1"><a role="menuitem" tabindex="-1" href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnTitle").FirstOrDefault().Value.ToString()</a></li>
+                            <li role="presentation" class="srtkbtopicscolumn" data-col="2"><a role="menuitem" tabindex="-1" href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "spnCategory").FirstOrDefault().Value.ToString()</a></li>
+                            <li style="border-top:1px solid #ccc; margin: 0 10px;"></li>
+                            <li role="presentation" data-mode="asc" class="srtkbtopicsorder"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "globalAscending").FirstOrDefault().Value.ToString()</a></li>
+                            <li role="presentation" data-mode="desc" class="srtkbtopicsorder"><a href="javascript:void(0)">@Model.Loc.Where(a => a.ResourceId == "globalDescending").FirstOrDefault().Value.ToString()</a></li>
+                        </ul>
+                    </div>
+                    <div style="clear:both;"></div>
+                </div>
+                <div style="clear:both;"></div>
+                <div id="dvFilterSearchSelect2"></div>
+                <div style="clear:both;"></div>
+            </div>
+
+            <div class="updateArea" style="display:none;">
+                <div class="pull-left">
+                    <ul class="filter_apply2">
+                        <li><span class="itemcount">0</span> @Model.Loc.Where(a => a.ResourceId == "globalItemsSelected").FirstOrDefault().Value.ToString()</li>
+                    </ul>
+                    <button type="button" class="btn btn-blue" title="Print Labels" id="printQrcode" disabled="disabled"><i class="fa fa-print" style="margin-top:-3px;"></i></button>
+                </div>
+                <div class="pull-right">
+                </div>
+                <div style="clear:both;"></div>
+            </div>
+            <div style="clear:both;"></div>
+
+            <div id="Active" class="tabcontent" style="display:block;">
+                <div class="table-responsive">
+                    <table id="kbtopicsSearch" class="eqpDtlTbl row-border custom-sort tblMain" style="width:100%;">
+                        <thead>
+                            <tr>
+                                <th id="thKBTopicsId" class="th-KBTopicsId" data-th-index="0">@Model.Loc.Where(a => a.ResourceId == "spnKBTopicsId").FirstOrDefault().Value.ToString()</th>
+                                <th id="thTitle" data-th-index="1">@Model.Loc.Where(a => a.ResourceId == "spnTitle").FirstOrDefault().Value.ToString()</th>
+                                <th id="thCategory" data-th-index="2">@Model.Loc.Where(a => a.ResourceId == "spnCategory").FirstOrDefault().Value.ToString()</th>
+                                <th id="thFolder" data-th-index="3">@Model.Loc.Where(a => a.ResourceId == "spnFolder").FirstOrDefault().Value.ToString()</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="printqrcodemodalcontainer"></div>
+@if (Convert.ToString(Session["AdminMenuState"]) == "" || Convert.ToString(Session["AdminMenuState"]) == "open")
+{
+    <div id="searcharea" class="slideToggleBar" style="display:none">
+        <div class="searchBoxArea">
+            <div class="form-group" style="margin-bottom:0; position:relative;">
+                <i class="fa fa-search" style="font-size: 1.1rem;position: absolute;top: 8px;left: 0px;"></i>
+                <input type="text" class="form-control searched" placeholder="Search for a view" id="knbsearctxtbox">
+            </div>
+        </div>
+
+        <div class="searchList">
+            <ul id="knbsearchListul">                
+            </ul>
+        </div>
+    </div>
+}
+else
+{
+    <div id="searcharea" class="slideToggleBar" style="display:none;left:81px !important;">
+        <div class="searchBoxArea">
+            <div class="form-group" style="margin-bottom:0; position:relative;">
+                <i class="fa fa-search" style="font-size: 1.1rem;position: absolute;top: 8px;left: 0px;"></i>
+                <input type="text" class="form-control searched" placeholder="Search for a view" id="knbsearctxtbox">
+            </div>
+        </div>
+
+        <div class="searchList">
+            <ul id="knbsearchListul">              
+            </ul>
+        </div>
+    </div>
+}
+
+
+
+@Html.Partial("_CustomizeGridSetup")
+@Html.Partial("_Export")
+
+<style type="text/css">
+        #popupExport {
+            right: 181px;
+        }
+
+        @@media only screen and (max-width: 767px) and (min-width: 640px) {
+            .actionBar div.pull-left {
+                width: auto;
+            }
+            .actionBar div.pull-right {
+                width: auto;
+                float:right;
+                margin-top:0;
+            }
+        }
+        @@media only screen and (min-width: 568px) and (max-width: 639px) {
+            .actionBar div.pull-left {
+                width: auto;
+            }
+            .actionBar div.pull-right {
+                width: auto;
+                float: right;
+                margin-top: 0;
+            }
+        }
+        @@media only screen and (max-width: 567px) and (min-width: 480px) {
+            #shortDrop {
+                margin-top: 0 !important;
+                margin-right: 10px !important;
+            }
+        }
+        @@media only screen and (max-width: 479px) and (min-width: 360px) {
+            .updateArea {
+                padding: 0;
+            }
+        }
+        @@media only screen and (max-width: 359px) and (min-width: 320px) {
+            .updateArea .pull-right {
+                float: left !important;
+            }
+
+            .BulkUpdate {
+                margin-left: 0 !important;
+            }
+
+            #liCustomize {
+                margin-top: 0 !important;
+                margin-left: 0 !important;
+            }
+        }
+        @@media only screen and (width:414px) {
+            #shortDrop {
+                margin-top: 0 !important;
+                margin-right: 10px !important;
+            }
+        }
+        @@media only screen and (width:411px) {
+            .updateArea {
+                padding: 0;
+            }
+            #shortDrop {
+                margin-top: 0 !important;
+                margin-right: 10px !important;
+            }
+        }
+        @@media only screen and (width:1360px) {
+            #popupExport { right: 171px !important; }
+        }
+        @@media only screen and (width:1200px) {
+            #popupExport { right: 171px !important; }
+        }
+
+        @@media only screen and (min-width: 360px) and (max-width: 479px) {
+        #shortDrop {
+            margin-top: 0 !important;
+            margin-right: 0 !important;
+        }
+         #btnsortmenu {
+                margin-right: 10px;
+                width: 160px;
+         }
+        }
+    @@media only screen and (min-width: 320px) and (max-width: 359px) {
+        #btnsortmenu {
+            width: 145px !important;
+        }
+    }
+</style>
+@Html.Partial("_KnowledgebaseAdvancedSearch")
+

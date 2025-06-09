@@ -1,0 +1,10 @@
+﻿@{
+    if (Convert.ToString(Session["AdminMenuState"]) == "" || Convert.ToString(Session["AdminMenuState"]) == "open")
+    {
+        Layout = "~/Views/Shared/_MasterPageLayout.cshtml";
+    }
+    else
+    {
+        Layout = "~/Views/Shared/_MasterPageLayoutCloseMenu.cshtml";
+    }
+}

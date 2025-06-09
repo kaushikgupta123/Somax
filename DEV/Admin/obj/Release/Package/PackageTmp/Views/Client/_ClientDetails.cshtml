@@ -1,0 +1,241 @@
+﻿@model Admin.Models.Client.ClientVM
+
+<link href="~/Scripts/Metronic/assets/demo/default/base/style_newCustom.css" rel="stylesheet" />
+<div class="m-subheader fixedDiv1">
+    <div class="new-m-subheader">
+        <div class="filterDescription">
+            <a href="javascript:void(0)" id="linkToSearch"><span id="spnlinkToSearch"></span></a> - @Model.ClientModel.ClientId
+        </div>
+
+        <div class="ActionBttnArea">
+            @*<div class="actionDiv pull-left" id="ad1"></div>*@
+            <button type="button" class="btn newBtn-add AddClient innerBtn pull-left" id="AddClient" title="Add Client"><i class="fa fa-plus"></i></button>
+            <div style="clear:both;"></div>
+        </div>
+        <div style="clear:both;"></div>
+    </div>
+</div>
+<div class="pushDiv1"></div>
+
+<div class="row">
+    <div class="col-xl-12">
+        <div class="row">
+          
+                <div class="col-xl-12" id="btnnblock">
+                    <div class="m-portlet" id="m_portlet" style="padding:15px;">
+                                <div class="tabsArea nobg" id="Clienttab" style="display:block;">
+                                    <div class="tab">
+                                        <button class="tablinks2 active" onclick="openCity2(event, 'Identification')" id="btnIdentification">@Model.Loc.Where(a => a.ResourceId == "spnClientInformation").FirstOrDefault().Value.ToString()</button>
+                                        <button class="tablinks2" onclick="openCity2(event, 'DefualtLocalization')" id="btnDefualtLocalization">@Model.Loc.Where(a => a.ResourceId == "spnDefualtLocalizationInformation").FirstOrDefault().Value.ToString() </button>
+                                        <button class="tablinks2" onclick="openCity2(event, 'DefaultUIConfiguration')" id="btnDefaultUIConfiguration">@Model.Loc.Where(a => a.ResourceId == "spnDefaultUIConfigurationInformation").FirstOrDefault().Value.ToString()</button>
+                                        <button class="tablinks2" onclick="openCity2(event, 'SystemInformation')" id="btnSystemInformation">@Model.Loc.Where(a => a.ResourceId == "spnSystemInformation").FirstOrDefault().Value.ToString()</button>
+                                        
+                                    </div>
+                                    <div class="selectTab">
+                                        <select class="form-control search" id="tabselector">
+                                            <option value="Identification">@Model.Loc.Where(a => a.ResourceId == "spnClientInformation").FirstOrDefault().Value.ToString()</option>
+                                            <option value="DefualtLocalization">@Model.Loc.Where(a => a.ResourceId == "spnDefualtLocalizationInformation").FirstOrDefault().Value.ToString()</option>
+                                            <option value="DefaultUIConfiguration">@Model.Loc.Where(a => a.ResourceId == "spnDefaultUIConfigurationInformation").FirstOrDefault().Value.ToString()</option>
+                                            <option value="SystemInformation">@Model.Loc.Where(a => a.ResourceId == "spnSystemInformation").FirstOrDefault().Value.ToString()</option>                                           
+                                        </select>
+                                    </div>
+                                    <div id="Identification" class="tabcontent2 tabcontentIdentification" style="display:block;">
+                                        <ul class="listView">
+                                            <li>
+                                                <span class="label" id="spnTitle">@Model.Loc.Where(a => a.ResourceId == "spnClientId").FirstOrDefault().Value.ToString() :</span>
+                                                <span class="inputText">@Model.ClientModel.ClientId</span>
+                                            </li>
+                                            <li>
+                                                <span class="label" id="spnName">@Model.Loc.Where(a => a.ResourceId == "spnName").FirstOrDefault().Value.ToString() :</span>
+                                                <span class="inputText">@(String.IsNullOrEmpty(@Model.ClientModel.Name) ? "" : (@Model.ClientModel.Name))</span>
+                                            </li>
+
+                                            <li style="height:auto;">
+                                                <span class="label" id="spnLegalName">@Model.Loc.Where(a => a.ResourceId == "spnLegalName").FirstOrDefault().Value.ToString()  :</span>
+                                                <span class="inputText description-span">@Model.ClientModel.LegalName</span>
+                                                <div style="clear:both;"></div>
+                                            </li>
+
+                                            <li style="height:auto;">
+                                                <span class="label" id="spnContact">@Model.Loc.Where(a => a.ResourceId == "spnContact").FirstOrDefault().Value.ToString() :</span>
+                                                <span class="inputText description-span">@Model.ClientModel.Contact</span>
+                                                <div style="clear:both;"></div>
+                                            </li>
+                                            <li style="height:auto;">
+                                                <span class="label" id="spnEmail">@Model.Loc.Where(a => a.ResourceId == "spnEmail").FirstOrDefault().Value.ToString()	:</span>
+                                                <span class="inputText description-span">@Model.ClientModel.Email</span>
+                                                <div style="clear:both;"></div>
+                                            </li>
+                                            <li>
+                                                <span class="label" id="spnBusinessType">@Model.Loc.Where(a => a.ResourceId == "spnBusinessType").FirstOrDefault().Value.ToString()</span>
+                                                <span class="inputText">@Model.ClientModel.BusinessType</span>
+                                            </li>
+                                            <li>
+                                                <span class="label" id="spnWebsite">@Model.Loc.Where(a => a.ResourceId == "spnWebsite").FirstOrDefault().Value.ToString() :</span>
+                                                <span class="inputText">@Model.ClientModel.Website</span>
+                                            </li>
+                                            <li style="height:auto;">
+                                                <span class="label" id="spnAnnualSales">@Model.Loc.Where(a => a.ResourceId == "spnAnnualSales").FirstOrDefault().Value.ToString() :</span>
+                                                <span class="inputText description-span">@Model.ClientModel.AnnualSales</span>
+                                                <div style="clear:both;"></div>
+                                            </li> 
+                                        </ul>
+                                    </div>
+                                    <div id="DefualtLocalization" class="tabcontent2">
+                                        <ul class="listView">
+                                            <li style="height:auto;">
+                                                <span class="label" id="spnLocalization">@Model.Loc.Where(a => a.ResourceId == "spnLocalization").FirstOrDefault().Value.ToString()	:</span>
+                                                <span class="inputText description-span">@Model.ClientModel.LocalizationName</span>
+                                                <div style="clear:both;"></div>
+                                            </li>  
+                                            
+                                            <li style="height:auto;">
+                                                <span class="label" id="spnLocalizationLocation">@Model.Loc.Where(a => a.ResourceId == "spnLocalizationLocation").FirstOrDefault().Value.ToString() :</span>
+                                                <span class="inputText description-span">@Model.ClientModel.LocalizationLocation</span>
+                                                <div style="clear:both;"></div>
+                                            </li> 
+
+                                            <li style="height:auto;">
+                                                <span class="label" id="spnLocalizationCompany">@Model.Loc.Where(a => a.ResourceId == "spnLocalizationCompany").FirstOrDefault().Value.ToString()	:</span>
+                                                <span class="inputText description-span">@Model.ClientModel.LocalizationCompany</span>
+                                                <div style="clear:both;"></div>
+                                            </li> 
+
+                                            <li style="height:auto;">
+                                                <span class="label" id="spnLocalizationHierarchicalLevel1">@Model.Loc.Where(a => a.ResourceId == "spnLocalizationHierarchicalLevel1").FirstOrDefault().Value.ToString()	:</span>
+                                                <span class="inputText description-span">@Model.ClientModel.LocalizationHierarchicalLevel1</span>
+                                                <div style="clear:both;"></div>
+                                            </li> 
+
+                                            <li style="height:auto;">
+                                                <span class="label" id="spnLocalizationHierarchicalLevel2">@Model.Loc.Where(a => a.ResourceId == "spnLocalizationHierarchicalLevel2").FirstOrDefault().Value.ToString() :</span>
+                                                <span class="inputText description-span">@Model.ClientModel.LocalizationHierarchicalLevel2</span>
+                                                <div style="clear:both;"></div>
+                                            </li> 
+                                      
+                                        </ul>
+                                    </div>
+                                    <div id="DefaultUIConfiguration" class="tabcontent2">
+                                        <ul class="listView">
+                                            <li style="height:auto;">
+                                                <span class="label" id="spnUIConfigurationCompany">@Model.Loc.Where(a => a.ResourceId == "spnUIConfigurationCompany").FirstOrDefault().Value.ToString()	:</span>
+                                                <span class="inputText description-span">@Model.ClientModel.UIConfiguration</span>
+                                                <div style="clear:both;"></div>
+                                            </li>                                        
+                                            <li>
+                                                <span class="label" id="spnUIConfigurationLocation">@Model.Loc.Where(a => a.ResourceId == "spnUIConfigurationLocation").FirstOrDefault().Value.ToString() :</span>
+                                                <span class="inputText">@Model.ClientModel.UIConfigurationLocation</span>
+                                            </li>
+                                            <li>
+                                                <span class="label" id="spnUIConfigurationHierarchicalLevel1">@Model.Loc.Where(a => a.ResourceId == "spnUIConfigurationHierarchicalLevel1").FirstOrDefault().Value.ToString() :</span>
+                                                <span class="inputText">@Model.ClientModel.UIConfigurationHierarchicalLevel1 </span> 
+                                            </li>
+                                            <li>
+                                                <span class="label" id="spnUIConfigurationHierarchicalLevel2"> @Model.Loc.Where(a => a.ResourceId == "spnUIConfigurationHierarchicalLevel2").FirstOrDefault().Value.ToString():</span>
+                                                <span class="inputText">@Model.ClientModel.UIConfigurationHierarchicalLevel2</span> 
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div id="SystemInformation" class="tabcontent2">
+                                        <ul class="listView">
+                                            <li style="height:auto;">
+                                                <span class="label" id="spnConnectionString">@Model.Loc.Where(a => a.ResourceId == "spnConnectionString").FirstOrDefault().Value.ToString() :</span>
+                                                <span class="inputText description-span" style="height:65px;">@Model.ClientModel.ConnectionString</span>
+                                                <div style="clear:both;"></div>
+                                            </li>
+                                            <li>
+                                                <span class="label" id="spnDefaultCustomerManager">@Model.Loc.Where(a => a.ResourceId == "spnDefaultCustomerManager").FirstOrDefault().Value.ToString() :</span>
+                                                <span class="inputText">@Model.ClientModel.DefaultCustomerManager</span>
+                                            </li>
+                                            <li>
+                                                <span class="label" id="spnDefaultTimeZone">@Model.Loc.Where(a => a.ResourceId == "spnDefaultTimeZone").FirstOrDefault().Value.ToString()	:</span>
+                                                <span class="inputText">@Model.ClientModel.TimeZoneName</span>
+                                            </li>
+                                           <li>
+                                                <span class="label" id="spnPackageLevel">@Model.Loc.Where(a => a.ResourceId == "spnPackageLevel").FirstOrDefault().Value.ToString()</span>
+                                                <span class="inputText">@Model.ClientModel.PackageLevel</span>
+                                            </li>
+                                            <li>
+                                                <span class="label" id="spnStatus">@Model.Loc.Where(a => a.ResourceId == "spnStatus").FirstOrDefault().Value.ToString()</span>
+                                                <span class="inputText">@Model.ClientModel.Status</span>
+                                            </li>
+                                            <li>
+                                                <span class="label" id="spnMaxAttempts">@Model.Loc.Where(a => a.ResourceId == "spnMaxAttempts").FirstOrDefault().Value.ToString()	:</span>
+                                                <span class="inputText">@Model.ClientModel.MaxAttempts</span>
+                                            </li>
+                                            <li>
+                                                <span class="label" id="spnMaxTimeOut">@Model.Loc.Where(a => a.ResourceId == "spnMaxTimeOut").FirstOrDefault().Value.ToString() :</span>
+                                                <span class="inputText">@Model.ClientModel.MaxTimeOut</span>
+                                            </li>
+                                            <li>
+                                                <span class="label" id="spnSiteControl">@Model.Loc.Where(a => a.ResourceId == "spnSiteControl").FirstOrDefault().Value.ToString() :</span>
+                                                <span class="inputText">@Html.CheckBoxFor(m => m.ClientModel.SiteControl, new { @class = "form-control m-input", onclick = "return false;", @style = "color:black; width: auto; margin-top: 12px;" })</span>
+                                            </li>
+                                            <li>
+                                                <span class="label" id="spnMaxSites">@Model.Loc.Where(a => a.ResourceId == "spnMaxSites").FirstOrDefault().Value.ToString() :</span>
+                                                <span class="inputText">@Model.ClientModel.MaxSites</span>
+                                            </li>
+                                            <li>
+                                                <span class="label" id="spnSites">@Model.Loc.Where(a => a.ResourceId == "spnSiteGlobal").FirstOrDefault().Value.ToString()	 :</span>
+                                                <span class="inputText">@Model.ClientModel.Sites</span>
+                                            </li>
+                                            <li>
+                                                <span class="label" id="spnMaxAppUsers">@Model.Loc.Where(a => a.ResourceId == "spnMaxAppUsers").FirstOrDefault().Value.ToString() :</span>
+                                                <span class="inputText">@Model.ClientModel.MaxAppUsers</span>
+                                            </li>
+                                            <li>
+                                                <span class="label" id="spnAppUsers">@Model.Loc.Where(a => a.ResourceId == "spnAppUsers").FirstOrDefault().Value.ToString()	:</span>
+                                                <span class="inputText">@Model.ClientModel.AppUsers</span>
+                                            </li>
+                                            <li>
+                                                <span class="label" id="spnMaxWorkRequestUsers">@Model.Loc.Where(a => a.ResourceId == "spnMaxWorkRequestUsers").FirstOrDefault().Value.ToString()  :</span>
+                                                <span class="inputText">@Model.ClientModel.MaxWorkRequestUsers</span>
+                                            </li>
+                                            <li>
+                                                <span class="label" id="spnWorkRequestUsers">@Model.Loc.Where(a => a.ResourceId == "spnWorkRequestUsers").FirstOrDefault().Value.ToString() :</span>
+                                                <span class="inputText">@Model.ClientModel.WorkRequestUsers</span>
+                                            </li>
+                                            <li>
+                                                <span class="label" id="spnMaxLimitedUsers">@Model.Loc.Where(a => a.ResourceId == "spnMaxLimitedUsers").FirstOrDefault().Value.ToString()	:</span>
+                                                <span class="inputText">@Model.ClientModel.MaxLimitedUsers</span>
+                                            </li>
+                                            <li>
+                                                <span class="label" id="spnLimitedUsers">@Model.Loc.Where(a => a.ResourceId == "spnLimitedUsers").FirstOrDefault().Value.ToString() :</span>
+                                                <span class="inputText">@Model.ClientModel.LimitedUsers</span>
+                                            </li>
+                                            <li>
+                                                <span class="label" id="spnMaxSuperUsers">@Model.Loc.Where(a => a.ResourceId == "spnMaxSuperUsers").FirstOrDefault().Value.ToString() :</span>
+                                                <span class="inputText">@Model.ClientModel.MaxSuperUsers</span>
+                                            </li>
+                                            <li>
+                                                <span class="label" id="spnSuperUsers">@Model.Loc.Where(a => a.ResourceId == "spnSuperUsers").FirstOrDefault().Value.ToString() :</span>
+                                                <span class="inputText">@Model.ClientModel.SuperUsers</span>
+                                            </li>
+                                        </ul>
+                                    </div>
+                        
+                                    <div class="editBttn">
+                                       
+                                            <button type="button" class="btn btn-blue" id="btnclientedit"><i class="fa fa-pencil" style="margin-top:-3px;"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalEdit").FirstOrDefault().Value.ToString()</button>
+                                            <div style="clear:both;"></div>
+                                    </div>
+                                </div>
+
+
+                    </div>
+                </div>
+
+
+
+        </div>
+    </div>
+</div>
+@Html.HiddenFor(m => m.Mode)
+@Html.HiddenFor(m => m.ClientModel.ClientId)
+
+<style>
+    ul.listView li span.label { width: 25%; }
+    ul.listView li span.inputText { width: 75%; }
+    .filterDescription { width: auto; float: left; font-size: 1.2rem; color: #000; font-weight: 500; line-height: 33px; }
+    .filterDescription a { color: #36a3f7; text-decoration: none !important; }
+</style>

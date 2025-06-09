@@ -1,0 +1,100 @@
+﻿@model Admin.Models.Client.ClientVM
+
+@using (Ajax.BeginForm("AddEditSiteMaintenance", "Clients", new AjaxOptions { HttpMethod = "Post", OnSuccess = "SiteMaintenceOnSuccess", OnBegin = "AjaxBeginFormBegin", OnComplete = "AjaxBeginFormComplete", OnFailure = "AjaxBeginFormFaillure" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(m => m._SiteMaintenanceModel.SiteMaintenanceModel.SiteMaintenanceId)
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close btncancel" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title">@Model.Loc.Where(a => a.ResourceId == "globalEdit").FirstOrDefault().Value.ToString()</h4>
+        </div>
+        <div class="modal-body">
+            @Html.Partial("_ErrorDiv")
+            <div class="form-group" style="margin-bottom:0;">
+                <div class="bottomBlock">
+                    <div class="tabsArea nobg">
+                        <ul class="listView nobrd" style="border-bottom:0;">
+
+                            <li style="margin-bottom:4px;">
+                                <span class="label">@Html.LabelFor(m => m._SiteMaintenanceModel.SiteMaintenanceModel.LoginPageMessage) : <small>*</small></span>
+                                <span class="inputText">
+                                    @Html.ValidationMessageFor(m => m._SiteMaintenanceModel.SiteMaintenanceModel.LoginPageMessage, "", new { style = "display:none" })
+                                    @Html.TextBoxFor(m => m._SiteMaintenanceModel.SiteMaintenanceModel.LoginPageMessage, "", new { @class = "form-control search", autocomplete = "off" })
+                                </span>
+                            </li>
+                            <li style="margin-bottom:4px;">
+                                <span class="label">@Html.LabelFor(m => m._SiteMaintenanceModel.SiteMaintenanceModel.DashboardMessage) : <small>*</small></span>
+                                <span class="inputText">
+                                    @Html.ValidationMessageFor(m => m._SiteMaintenanceModel.SiteMaintenanceModel.DashboardMessage, "", new { style = "display:none" })
+                                    @Html.TextBoxFor(m => m._SiteMaintenanceModel.SiteMaintenanceModel.DashboardMessage, "", new { @class = "form-control search", autocomplete = "off" })
+                                </span>
+                            </li>
+                            <li style="margin-bottom:0;">
+                                <span class="label">@Html.LabelFor(m => m._SiteMaintenanceModel.SiteMaintenanceModel.DowntimeStartDate) : <small>*</small></span>
+                                <span class="inputText">
+                                    @Html.ValidationMessageFor(m => m._SiteMaintenanceModel.SiteMaintenanceModel.DowntimeStartDate, "", new { style = "display:none" })
+                                    @Html.TextBoxFor(m => m._SiteMaintenanceModel.SiteMaintenanceModel.DowntimeStartDate, "{0:MM/dd/yyyy}", new { @class = "form-control search dtpicker restkey", autocomplete = "off", @readonly = "readonly", id = "DowntimeStartDate" })
+                                    @Html.TextBoxFor(m => m._SiteMaintenanceModel.SiteMaintenanceModel.DowntimeStartTime, new { @class = "form-control search timerId restkey", autocomplete = "off", id = "DowntimeStartTime" })
+                                </span>
+                            </li>
+                            <li style="margin-bottom:0;">
+                                <span class="label">@Html.LabelFor(m => m._SiteMaintenanceModel.SiteMaintenanceModel.DowntimeEndDate) : <small>*</small></span>
+                                <span class="inputText">
+                                    @Html.ValidationMessageFor(m => m._SiteMaintenanceModel.SiteMaintenanceModel.DowntimeEndDate, "", new { style = "display:none" })
+                                    @Html.TextBoxFor(m => m._SiteMaintenanceModel.SiteMaintenanceModel.DowntimeEndDate, "{0:MM/dd/yyyy}", new { @class = "form-control search dtpicker restkey", autocomplete = "off", @readonly = "readonly", id = "DowntimeEndDate" })
+                                    @Html.TextBoxFor(m => m._SiteMaintenanceModel.SiteMaintenanceModel.DowntimeEndTime, new { @class = "form-control search timerId restkey ", autocomplete = "off", id = "DowntimeEndTime" })
+                                </span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div style="clear:both;"></div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer" style="padding:15px 25px !important;">
+            <div class="idBttns">
+                <div class="bttn_pagin">
+                    <div class="bttns2" style="margin:0;">
+                        <button type="submit" onclick="return chkValidDate();" class="btn btn-blue mobBttn" style="cursor:pointer" value="save"><i class="fa fa-save faIcon"></i> &nbsp;@Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+                    </div>
+                    <div class="bttns" style="margin:0;"><button type="button" data-dismiss="modal" class="btn btn-blue mobBttn btncancel"><i class="fa fa-close faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button></div>
+
+                    <div style="clear:both;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+<style type="text/css">
+    .dtpicker { /*width: 120px;*/
+        width: 95px;
+        float: left;
+    }
+
+    .timerId { /*width: 100px;*/
+        width: 90px;
+        float: left;
+    }
+
+    .ui-datepicker-trigger {
+        float: left;
+        margin-left: -3px;
+        margin-right: 10px;
+    }
+
+    .errorMsgBlk {
+        background-color: #d86564;
+        font-size: 13px;
+        color: #fff;
+        font-weight: 400;
+        line-height: 37px;
+        padding: 0 10px;
+    }
+
+    @@media screen and (max-width: 639px) {
+        .ui-datepicker-trigger {
+            height: 34px;
+        }
+    }
+</style>

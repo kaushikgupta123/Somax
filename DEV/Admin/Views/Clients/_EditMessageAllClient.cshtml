@@ -1,0 +1,96 @@
+﻿@model Admin.Models.Client.ClientVM
+
+@using (Ajax.BeginForm("AddEditMessageAllClient", "Clients", new AjaxOptions { HttpMethod = "Post", OnSuccess = "MessageAllClientOnSuccess", OnBegin = "AjaxBeginFormBegin", OnComplete = "AjaxBeginFormComplete", OnFailure = "AjaxBeginFormFaillure" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(m => m._ClientMessage.ClientMessageId)
+    @Html.HiddenFor(m => m._ClientMessage.ClientId)
+
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close btncancel" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title">@Model.Loc.Where(a => a.ResourceId == "globalEdit").FirstOrDefault().Value.ToString()</h4>
+        </div>
+
+        <div class="modal-body">
+            @Html.Partial("_ErrorDiv")
+            <div class="form-group" style="margin-bottom:0;">
+                <div class="bottomBlock">
+                    <div class="tabsArea nobg">
+                        <ul class="listView nobrd" style="border-bottom:0;">
+
+                            <li style="margin-bottom:4px;">
+                                <span class="label">@Html.LabelFor(m => m._ClientMessage.Message) : <small>*</small></span>
+                                <span class="inputText">
+                                    @Html.ValidationMessageFor(m => m._ClientMessage.Message, "", new { style = "display:none" })
+                                    @Html.TextBoxFor(m => m._ClientMessage.Message, "", new { @class = "form-control search", autocomplete = "off" })
+                                </span>
+                            </li>
+                            <li style="margin-bottom:0;">
+                                <span class="label">@Html.LabelFor(m => m._ClientMessage.CMStartDate) : <small>*</small></span>
+                                <span class="inputText">
+                                    @Html.ValidationMessageFor(m => m._ClientMessage.CMStartDate, "", new { style = "display:none" })
+                                    @Html.TextBoxFor(m => m._ClientMessage.CMStartDate, "{0:MM/dd/yyyy}", new { @class = "form-control search dtpicker restkey", autocomplete = "off", id = "CMStartDate" })
+                                    @Html.TextBoxFor(m => m._ClientMessage.CMStartTime, new { @class = "form-control search timerId restkey", autocomplete = "off", id = "CMStartTime" })
+                                </span>
+                            </li>
+                            <li style="margin-bottom:0;">
+                                <span class="label">@Html.LabelFor(m => m._ClientMessage.CMEndDate) : <small>*</small></span>
+                                <span class="inputText">
+                                    @Html.ValidationMessageFor(m => m._ClientMessage.CMEndDate, "", new { style = "display:none" })
+                                    @Html.TextBoxFor(m => m._ClientMessage.CMEndDate, "{0:MM/dd/yyyy}", new { @class = "form-control search dtpicker restkey", autocomplete = "off", id = "CMEndDate" })
+                                    @Html.TextBoxFor(m => m._ClientMessage.CMEndTime, new { @class = "form-control search timerId restkey", autocomplete = "off", id = "CMEndTime" })
+                                </span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div style="clear:both;"></div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer" style="padding:15px 25px !important;">
+            <div class="idBttns">
+                <div class="bttn_pagin">
+                    <div class="bttns2" style="margin:0;">
+                        <button type="submit" onclick="return chkValidDate();" class="btn btn-blue mobBttn" style="cursor:pointer" value="save"><i class="fa fa-save faIcon"></i> &nbsp;@Model.Loc.Where(a => a.ResourceId == "globalSave").FirstOrDefault().Value.ToString()</button>
+                    </div>
+                    <div class="bttns" style="margin:0;"><button type="button" data-dismiss="modal" class="btn btn-blue mobBttn btncancel"><i class="fa fa-close faIcon"></i> &nbsp; @Model.Loc.Where(a => a.ResourceId == "globalCancel").FirstOrDefault().Value.ToString()</button></div>
+
+                    <div style="clear:both;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+<style type="text/css">
+    .dtpicker { /*width: 120px;*/
+        width: 95px;
+        float: left;
+    }
+
+    .timerId { /*width: 100px;*/
+        width: 90px;
+        float: left;
+    }
+
+    .ui-datepicker-trigger {
+        float: left;
+        margin-left: -3px;
+        margin-right: 10px;
+    }
+
+    .errorMsgBlk {
+        background-color: #d86564;
+        font-size: 13px;
+        color: #fff;
+        font-weight: 400;
+        line-height: 37px;
+        padding: 0 10px;
+    }
+
+    @@media screen and (max-width: 639px) {
+        .ui-datepicker-trigger {
+            height: 34px;
+        }
+    }
+</style>
